@@ -77,17 +77,11 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
          *  Utility panel properties
          */
         utilityPanelConfig: {
-            /** api: config[utilityPanelConfig.thumbnailPanel] 
-             *  Collapsed thumbnail panel on startup. Default is false.
-             */
-            thumbnailPanel: {
-                collapsed: false
-            },
             /** api: config[utilityPanelConfig.relationPanel] 
              *  Collapsed relation panel on startup. Default is true.
              */
             relationPanel: {
-                collapsed: true
+                collapsed: false
             },
             /** api: config[utilityPanelConfig.validationPanel] 
              *  Collapsed validation panel on startup. Default is true.
@@ -115,7 +109,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     relationPanel: undefined,
     helpPanel: undefined,
     suggestionPanel: undefined,
-    thumbnailPanel: undefined,
     editorMainPanel: undefined,
     metadataId: undefined,
     versionId: undefined,
@@ -298,7 +291,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  :param  extent: ``String`` Initial map extent.
      *
      */
-    showGeoPublisherPanel: function(id, uuid, title, name, accessStatus, nodeName, insertNodeRef, extent){
+    showGeoPublisherPanel: function(id, uuid, title, mdabstract, name, accessStatus, nodeName, insertNodeRef, extent){
         //Ext.QuickTips.init();
         var editorPanel = this;
         
@@ -362,7 +355,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 iconCls: 'repository'
             });
         }
-        this.geoPublisherWindow.items.get(0).setRef(id, uuid, title, name, accessStatus);
+        this.geoPublisherWindow.items.get(0).setRef(id, uuid, title, mdabstract, name, accessStatus);
         this.geoPublisherWindow.setTitle(OpenLayers.i18n('geoPublisherWindowTitle') + " " + name);
         this.geoPublisherWindow.show();
         
@@ -898,9 +891,8 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         if (!this.managerInitialized) {
             this.initManager();
         }
-        
         if (success) {
-            this.metadataLoaded();
+            this.metadataLoaded(true);
         } else {
             this.getError(response);
         }
@@ -949,17 +941,28 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  Update editor content
      */
     updateEditor: function(html){
-        this.editorMainPanel.update(html, false, this.metadataLoaded.bind(this));
+        var panel = this;
+        this.editorMainPanel.update(html, false, function () {
+            panel.metadataLoaded(true);
+        });
     },
     /** private: method[metadataLoaded]
      * 
      *  Init editor after metadata loaded.
      */
-    metadataLoaded: function(){
+    metadataLoaded: function(restoreScroll){
         this.metadataSchema = document.mainForm.schema.value;
         this.metadataType = Ext.getDom('template');
         this.metadataId = document.mainForm.id.value;
         this.versionId = document.mainForm.version.value;
+        
+        // Make height = 100%  for textarea in XML mode
+        var currTab = document.mainForm.currTab.value;
+        if (currTab === 'xml') {
+            var area = Ext.DomQuery.selectNode('textarea.xml', this.body.dom);
+            Ext.get(area).setStyle('min-height', this.editorMainPanel.ownerCt.getInnerHeight() - 5 + 'px');
+        }
+        
         
         this.toolbar.setIsMinor(document.mainForm.minor.value);
         this.toolbar.setIsTemplate(this.metadataType.value);
@@ -968,7 +971,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             this.setDisabled(false);
         }
         
-        this.onMetadataUpdated();
         
         //console.log("metadata schema: " + this.metadataSchema.value + " type:" + this.metadataType.value + " tab:" + this.metadataCurrTab.value);
         
@@ -1022,6 +1024,12 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         }, this);
         
         this.updateViewMenu();
+        
+        if (restoreScroll) {
+            this.editorMainPanel.getEl().parent().dom.scrollTop = this.position;
+        }
+        
+        this.onMetadataUpdated();
     },
     /** private: method[validateMetadataField]
      * 
@@ -1202,7 +1210,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 
                 // Remove mode and children tabs if not in current mode
                 if (!activeMode) {
-                    Ext.get(modes[i]).parent().remove();
+                    var p = Ext.get(modes[i]).parent();
+                    p.setVisibilityMode(Ext.Element.DISPLAY);
+                    p.setVisible(false);
                 } else {
                     // Remove tab if only one tab in that mode
                     if (next && tabs.length === 1) {
@@ -1246,12 +1256,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     initManager: function(){
         var mgr = this.editorMainPanel.getUpdater();
         
+        // Save editor scroll top before updating the editor
         mgr.on('beforeupdate', function(el, url, params){
             this.position = this.editorMainPanel.getEl().parent().dom.scrollTop;
-        }, this);
-        
-        mgr.on('update', function(el, response){
-            this.editorMainPanel.getEl().parent().dom.scrollTop = this.position;
         }, this);
         
         this.managerInitialized = true;
@@ -1318,7 +1325,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             split: true,
             autoScroll: true,
             tbar: this.toolbar,
-            minHeigth: 400,
+//            minHeigth: 400,
             items: [this.editorMainPanel]
         };
         this.add(editorPanel);
@@ -1342,16 +1349,10 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             editor: this,
             metadataId: this.metadataId,
             metadataSchema: this.metadataSchema,
-            serviceUrl: this.catalogue.services.mdRelation
+            catalogue: this.catalogue,
+            serviceUrl: this.catalogue.services.mdRelation,
+            imagePath: this.selectionPanelImgPath
         }, this.utilityPanelConfig.relationPanel));
-        
-        this.thumbnailPanel = new GeoNetwork.editor.ThumbnailPanel(Ext.applyIf({
-            metadataId: this.metadataId,
-            editor: this,
-            getThumbnail: this.catalogue.services.mdGetThumbnail,
-            setThumbnail: this.catalogue.services.mdSetThumbnail,
-            unsetThumbnail: this.catalogue.services.mdUnsetThumbnail
-        }, this.utilityPanelConfig.thumbnailPanel));
         
         this.suggestionPanel = new GeoNetwork.editor.SuggestionsPanel(Ext.applyIf({
             metadataId : this.metadataId,
@@ -1371,7 +1372,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             minWidth: 280,
             width: 280,
             items: [
-                this.thumbnailPanel, 
                 this.relationPanel, 
                 this.suggestionPanel,
                 this.validationPanel, 
@@ -1379,7 +1379,8 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         };
         this.add(optionsPanel);
         /** private: event[metadataUpdated] 
-         *  Fires after the metadata is refreshed (save, reset, change view mode).
+         *  Fires after the metadata form is loaded (save, reset, change view mode)
+         *  and the form is initialized (eg. calendar, map widget).
          */
         /** private: event[editorClosed] 
          *  Fires before the editor is closed.
@@ -1392,6 +1393,8 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             }
             this.initPanelLayout();
         }, this);
+        
+//        this.on('hidden', this.onEditorClosed, this);
     }
 });
 

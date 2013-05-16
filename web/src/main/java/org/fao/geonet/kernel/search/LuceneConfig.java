@@ -35,16 +35,11 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.ConfigurationOverrides;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
-import org.apache.lucene.facet.search.params.FacetRequest.SortBy;
-import org.apache.lucene.facet.search.params.FacetRequest.SortOrder;
-
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.util.NumericUtils;
 import org.apache.lucene.util.Version;
@@ -103,7 +98,7 @@ public class LuceneConfig {
     /**
      * Facet configuration
      */
-    public class FacetConfig {
+    public static class FacetConfig {
         private String name;
         private String plural;
         private String indexKey;
@@ -247,14 +242,29 @@ public class LuceneConfig {
 			return precisionStep;
 		}
 
-		public boolean equals(Object a) {
-			if (this == a)
-				return true;
-			if (!(a instanceof LuceneConfigNumericField))
-				return false;
-			LuceneConfigNumericField f = (LuceneConfigNumericField) a;
-			return f.getName().equals(this.name);
-		}
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + getOuterType().hashCode();
+            result = prime * result + ((name == null) ? 0 : name.hashCode());
+            return result;
+        }
+
+
+        public boolean equals(Object a) {
+            if (this == a)
+                return true;
+            if (!(a instanceof LuceneConfigNumericField))
+                return false;
+            LuceneConfigNumericField f = (LuceneConfigNumericField) a;
+            return f.getName().equals(this.name);
+        }
+
+        private LuceneConfig getOuterType() {
+            return LuceneConfig.this;
+        }
+		
 	};
 
 	private Set<String> tokenizedFields = new HashSet<String>();
@@ -267,15 +277,15 @@ public class LuceneConfig {
 	private Map<String, String> fieldSpecificAnalyzers = new HashMap<String, String>();
 	private Map<String, Float> fieldBoost = new HashMap<String, Float>();
 	private Map<String, Object[]> analyzerParameters = new HashMap<String, Object[]>();
-	private Map<String, Class[]> analyzerParametersClass = new HashMap<String, Class[]>();
+	private Map<String, Class<?>[]> analyzerParametersClass = new HashMap<String, Class<?>[]>();
 
 	private String boostQueryClass;
 	private Map<String, Object[]> boostQueryParameters = new HashMap<String, Object[]>();
-	private Map<String, Class[]> boostQueryParametersClass = new HashMap<String, Class[]>();
+	private Map<String, Class<?>[]> boostQueryParametersClass = new HashMap<String, Class<?>[]>();
 
 	private String documentBoostClass;
 	private Map<String, Object[]> documentBoostParameters = new HashMap<String, Object[]>();
-	private Map<String, Class[]> documentBoostParametersClass = new HashMap<String, Class[]>();
+	private Map<String, Class<?>[]> documentBoostParametersClass = new HashMap<String, Class<?>[]>();
 
 	private Element luceneConfig;
 
@@ -321,14 +331,14 @@ public class LuceneConfig {
 			luceneConfig = Xml.loadStream(new FileInputStream(
 					this.configurationFile));
 			if (servletContext != null) {
-				ConfigurationOverrides.updateWithOverrides(luceneConfigXmlFile, servletContext, appPath, luceneConfig);
+				ConfigurationOverrides.DEFAULT.updateWithOverrides(luceneConfigXmlFile, servletContext, appPath, luceneConfig);
 			}
 			
 			// Main Lucene index configuration option
 			Element elem = luceneConfig.getChild("index");
 			String version = elem.getChildText("luceneVersion");
 
-			if (version == null) {
+			if (version != null) {
 				try {
 					LUCENE_VERSION = Version.valueOf("LUCENE_" + version);
 					if (LUCENE_VERSION == null) {
@@ -451,8 +461,9 @@ public class LuceneConfig {
 			elem = luceneConfig.getChild("defaultAnalyzer");
 			if (elem != null) {
 				defaultAnalyzerClass = elem.getAttribute("name").getValue();
-				loadClassParameters(ANALYZER_CLASS, "",
-						defaultAnalyzerClass, elem.getChildren("Param"));
+				List<?> paramChildren = elem.getChildren("Param");
+                loadClassParameters(ANALYZER_CLASS, "",
+						defaultAnalyzerClass, paramChildren);
 			}
 
 			// Fields specific analyzer
@@ -572,7 +583,7 @@ public class LuceneConfig {
 			Element taxonomyConfig = Xml.loadStream(new FileInputStream(
 					this.taxonomyConfigurationFile));
 			if (servletContext != null) {
-				ConfigurationOverrides.updateWithOverrides(taxonomyConfigFile, servletContext, appPath, taxonomyConfig);
+				ConfigurationOverrides.DEFAULT.updateWithOverrides(taxonomyConfigFile, servletContext, appPath, taxonomyConfig);
 			}
 			
 			taxonomy = new HashMap<String, Map<String,FacetConfig>>();
@@ -642,7 +653,7 @@ public class LuceneConfig {
      * @param clazz
      * @param children
      */
-	private void loadClassParameters(int type, String field, String clazz, List<Object> children) {
+	private void loadClassParameters(int type, String field, String clazz, List<?> children) {
 		if (children == null)
 			return; // No params
 
@@ -650,7 +661,7 @@ public class LuceneConfig {
             Log.debug(Geonet.SEARCH_ENGINE, "  Field: " + field + ", loading class " + clazz + " ...");
 
 		Object[] params = new Object[children.size()];
-		Class[] paramsClass = new Class[children.size()];
+		Class<?>[] paramsClass = new Class<?>[children.size()];
 		int i = 0;
 		for (Object o : children) {
 			if (o instanceof Element) {
@@ -807,7 +818,7 @@ public class LuceneConfig {
 	 *            with class name for specific field analyzer)
 	 * @return The list of classes for analyzer parameters
 	 */
-	public Class[] getAnalyzerParameterClass(String analyzer) {
+	public Class<?>[] getAnalyzerParameterClass(String analyzer) {
 		return this.analyzerParametersClass.get(analyzer);
 	}
 
@@ -823,7 +834,7 @@ public class LuceneConfig {
 	 * 
 	 * @return The list of classes for boost query parameters.
 	 */
-	public Class[] getBoostQueryParameterClass() {
+	public Class<?>[] getBoostQueryParameterClass() {
 		return this.boostQueryParametersClass.get(boostQueryClass);
 	}
 
@@ -847,7 +858,7 @@ public class LuceneConfig {
      * 
      * @return The list of classes for document boost parameters.
      */
-    public Class[] getDocumentBoostParameterClass() {
+    public Class<?>[] getDocumentBoostParameterClass() {
         return this.documentBoostParametersClass.get(documentBoostClass);
     }
 

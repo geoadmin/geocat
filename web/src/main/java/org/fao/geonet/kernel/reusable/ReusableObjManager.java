@@ -39,7 +39,6 @@ import org.fao.geonet.services.extent.ExtentManager;
 import org.fao.geonet.util.ElementFinder;
 import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.LangUtils;
-import org.fao.geonet.util.XslUtil;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -288,8 +287,8 @@ public class ReusableObjManager
 
         for (Content extent : originalElems) {
         	Element extentAsElem = (Element) extent;
-			Element exExtent = extentAsElem.getChild("EX_Extent", XslUtil.GMD_NAMESPACE);
-			boolean needToProcessDescendants = exExtent != null && exExtent.getDescendants(new ElementFinder("EX_Extent", XslUtil.GMD_NAMESPACE, "*")).hasNext();
+			Element exExtent = extentAsElem.getChild("EX_Extent", Geonet.Namespaces.GMD);
+			boolean needToProcessDescendants = exExtent != null && exExtent.getDescendants(new ElementFinder("EX_Extent", Geonet.Namespaces.GMD, "*")).hasNext();
         	if(needToProcessDescendants) {
         		int index = extentAsElem.indexOf(exExtent);
 	            List<Element> changed = process(params.updateElementToProcess(exExtent));

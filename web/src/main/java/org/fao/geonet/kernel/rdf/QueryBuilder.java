@@ -3,7 +3,6 @@ package org.fao.geonet.kernel.rdf;
 import static java.text.MessageFormat.format;
 import static org.fao.geonet.kernel.rdf.Selectors.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -116,6 +115,9 @@ public class QueryBuilder<Q> {
         ResultInterpreter<String> newInterpreter = new IdentityResultInterpreter().onlyColumn("language").map(new com.google.common.base.Function<Value,String>(){
             @Override
             public String apply(Value input) {
+                if(input == null) {
+                    throw new AssertionError("Input of ResultInterpreter must not be null");
+                }
                 return mapper.iso639_1_to_iso639_2(input.toString(), "");
             }
         });

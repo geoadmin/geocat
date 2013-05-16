@@ -58,7 +58,6 @@ import org.fao.geonet.kernel.search.keyword.SortDirection;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.util.ElementFinder;
-import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 import org.openrdf.model.GraphException;
 import org.openrdf.model.URI;
@@ -139,9 +138,9 @@ public final class KeywordsStrategy extends ReplacementStrategy
         List<Pair<Element,String>> allKeywords = new ArrayList<Pair<Element,String>>();
         for (Element element : elKeywords) {
             allKeywords.addAll(zip(element, Utils.convertToList(originalElem.getDescendants(new ElementFinder(
-                    "CharacterString", XslUtil.GCO_NAMESPACE, "keyword")), Element.class)));
+                    "CharacterString", Geonet.Namespaces.GCO, "keyword")), Element.class)));
             allKeywords.addAll(zip(element, Utils.convertToList(originalElem.getDescendants(new ElementFinder(
-                    "LocalisedCharacterString", XslUtil.GMD_NAMESPACE, "textGroup")), Element.class)));
+                    "LocalisedCharacterString", Geonet.Namespaces.GMD, "textGroup")), Element.class)));
         }
         return allKeywords;
     }
@@ -158,7 +157,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
     private List<Element> getKeywordElements(Element originalElem)
     {
         List<Element> allKeywords = Utils.convertToList(originalElem.getDescendants(new ElementFinder(
-                "keyword", XslUtil.GMD_NAMESPACE, "MD_Keywords")), Element.class);
+                "keyword", Geonet.Namespaces.GMD, "MD_Keywords")), Element.class);
         return allKeywords;
     }
 
@@ -311,7 +310,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
     private Element xlinkIt(String thesaurus, String id, boolean validated) throws UnsupportedEncodingException
     {
         String encoded = URLEncoder.encode(id, "UTF-8");
-        Element descriptiveKeywords = new Element("descriptiveKeywords", XslUtil.GMD_NAMESPACE);
+        Element descriptiveKeywords = new Element("descriptiveKeywords", Geonet.Namespaces.GMD);
 
         descriptiveKeywords.setAttribute(XLink.HREF, XLink.LOCAL_PROTOCOL+"che.keyword.get?thesaurus=" + thesaurus
                 + "&id=" + encoded + "&locales=en,it,de,fr", XLink.NAMESPACE_XLINK);

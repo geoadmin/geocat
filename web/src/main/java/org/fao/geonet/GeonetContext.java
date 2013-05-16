@@ -37,15 +37,13 @@ import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.services.metadata.StatusActions;
 import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.services.extent.ExtentManager;
 import org.springframework.context.ApplicationContext;
 
-//=============================================================================
-
-public class GeonetContext
-{
+public class GeonetContext {
     /* package */ ExtentManager     extentMan;
     /* package */ ReusableObjManager reusableObjMan;
 	/* package */ DataManager       dataMan;
@@ -63,9 +61,8 @@ public class GeonetContext
 	/* package */ ApplicationContext app_context;
   /* package */ MetadataNotifierManager metadataNotifierMan;
 	/* package */ ThreadPool        threadPool;
-	/* package */ Email             email;
-
-	Class statusActionsClass;
+	Class<StatusActions> statusActionsClass;
+    boolean readOnly;
 
 
     //---------------------------------------------------------------------------
@@ -95,8 +92,13 @@ public class GeonetContext
 
 	public String getSiteId()   { return settingMan.getValue("system/site/siteId"); }
 	public String getSiteName() { return settingMan.getValue("system/site/name");   }
-	public Class getStatusActionsClass() { return statusActionsClass; }
+	public Class<StatusActions> getStatusActionsClass() { return statusActionsClass; }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
+    }
 }
-
-//=============================================================================
-

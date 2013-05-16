@@ -9,10 +9,10 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.services.extent.Source.FeatureType;
 import org.fao.geonet.util.LangUtils;
-import org.fao.geonet.util.XslUtil;
 import org.geotools.data.FeatureStore;
 import org.geotools.data.Query;
 import org.geotools.factory.CommonFactoryFinder;
@@ -320,7 +320,7 @@ public class ExtentHelper
 
     public static double decimal(Element child)
     {
-        Element decimalElem = child.getChild("Decimal", XslUtil.GCO_NAMESPACE);
+        Element decimalElem = child.getChild("Decimal", Geonet.Namespaces.GCO);
         if (decimalElem == null)
             throw new NoSuchElementException(child.getName() + " does not have a valid decimal child element");
 
@@ -414,10 +414,10 @@ public class ExtentHelper
     }
 
     public static int bboxSrid(Element bboxElem) {
-        Element elem = bboxElem.getChild("westBoundLongitude", XslUtil.GMD_NAMESPACE);
+        Element elem = bboxElem.getChild("westBoundLongitude", Geonet.Namespaces.GMD);
         if(elem == null)throw new NoSuchElementException(bboxElem.getName() + " does not have wesBoundLongitude");
 
-        Element decElem = elem.getChild("Decimal", XslUtil.GCO_NAMESPACE);
+        Element decElem = elem.getChild("Decimal", Geonet.Namespaces.GCO);
         if (decElem == null)
             throw new NoSuchElementException(elem.getName() + " does not have a valid decimal child element");
         return decElem.getTextTrim().endsWith("ch")?21781:4326;

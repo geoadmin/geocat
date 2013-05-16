@@ -36,7 +36,9 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 //=============================================================================
 
@@ -140,10 +142,10 @@ public class List implements Service
 		java.util.List<Element> alToRemove = new ArrayList<Element>();
 
 		if (!findingShared && !session.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
-			for(Iterator i=elUsers.getChildren().iterator(); i.hasNext(); )
-			{
-				Element elRec = (Element) i.next();
+			@SuppressWarnings("unchecked")
+            java.util.List<Element> elUserList = elUsers.getChildren();
 	
+			for (Element elRec : elUserList) {
 				String userId = elRec.getChildText("id");
 				String profile= elRec.getChildText("profile");
 				
@@ -195,11 +197,12 @@ public class List implements Service
 		if (profile.equals(ProfileManager.ADMIN)) {
 			groups = dbms.select("SELECT id FROM Groups");
 		} if (profile.equals(Geonet.Profile.USER_ADMIN)) {
-			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE profile='UserAdmin' AND userId=?", new Integer(id));
+			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE profile='UserAdmin' AND userId=?", Integer.valueOf(id));
 		} else {
-			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE userId=?", new Integer(id));
+			groups = dbms.select("SELECT groupId AS id FROM UserGroups WHERE userId=?", Integer.valueOf(id));
 		}
 
+		@SuppressWarnings("unchecked")
 		java.util.List<Element> list = groups.getChildren();
 
 		Set<String> hs = new HashSet<String>();

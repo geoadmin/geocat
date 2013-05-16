@@ -47,6 +47,7 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import jeeves.xlink.XLink;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.services.extent.Add;
 import org.fao.geonet.services.extent.ExtentHelper;
@@ -57,7 +58,6 @@ import org.fao.geonet.services.extent.Source;
 import org.fao.geonet.services.extent.Source.FeatureType;
 import org.fao.geonet.util.ElementFinder;
 import org.fao.geonet.util.LangUtils;
-import org.fao.geonet.util.XslUtil;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.FeatureStore;
 import org.geotools.data.Query;
@@ -96,10 +96,10 @@ import com.vividsolutions.jts.geom.Polygon;
 public final class ExtentsStrategy extends ReplacementStrategy {
 
     public static final ElementFinder BBOX_FINDER = new ElementFinder("EX_GeographicBoundingBox",
-            XslUtil.GMD_NAMESPACE, "geographicElement");
-    public static final ElementFinder POLYGON_FINDER = new ElementFinder("EX_BoundingPolygon", XslUtil.GMD_NAMESPACE,
+            Geonet.Namespaces.GMD, "geographicElement");
+    public static final ElementFinder POLYGON_FINDER = new ElementFinder("EX_BoundingPolygon", Geonet.Namespaces.GMD,
             "geographicElement");
-    public static final ElementFinder GEO_ID_FINDER = new ElementFinder("geographicIdentifier", XslUtil.GMD_NAMESPACE,
+    public static final ElementFinder GEO_ID_FINDER = new ElementFinder("geographicIdentifier", Geonet.Namespaces.GMD,
             "*");
 
     public static final Envelope DEFAULT_BBOX = new Envelope(5.5, 10.5, 45.5, 48);
@@ -211,7 +211,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
             }
 
             @SuppressWarnings("rawtypes")
-            Iterator polygonIter = originalElem.getDescendants(new ElementFinder("polygon", XslUtil.GMD_NAMESPACE,
+            Iterator polygonIter = originalElem.getDescendants(new ElementFinder("polygon", Geonet.Namespaces.GMD,
                     "EX_BoundingPolygon"));
             if (results.isEmpty()) {
                 return NULL;
@@ -271,7 +271,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
         Element parentElement = placeholder.getParentElement();
 
         if (parentElement.getName().contains("SV_ServiceIdentification")) {
-            return XslUtil.SRV_NAMESPACE;
+            return Geonet.Namespaces.SRV;
         } else {
             return originalElement.getNamespace();
         }
@@ -483,13 +483,13 @@ public final class ExtentsStrategy extends ReplacementStrategy {
         if(elem.getName() == "EX_Extent") {
             exExtent = (Element) elem.clone();
         } else {
-            exExtent = new Element("EX_Extent",XslUtil.GMD_NAMESPACE);
+            exExtent = new Element("EX_Extent",Geonet.Namespaces.GMD);
             
-            Element geographicElem = new Element("geographicElement", XslUtil.GMD_NAMESPACE);
+            Element geographicElem = new Element("geographicElement", Geonet.Namespaces.GMD);
             geographicElem.addContent((Element) elem.clone());
             exExtent.addContent(geographicElem);
         }
-        Element extent = new Element("extent", XslUtil.GMD_NAMESPACE);
+        Element extent = new Element("extent", Geonet.Namespaces.GMD);
 
         extent.addContent(exExtent);
 
@@ -697,7 +697,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
 
         while (polygonIter.hasNext()) {
             Element polygonBBoxElem = (Element) polygonIter.next();
-            Element polygonElem = polygonBBoxElem.getChild("polygon", XslUtil.GMD_NAMESPACE);
+            Element polygonElem = polygonBBoxElem.getChild("polygon", Geonet.Namespaces.GMD);
             if (polygonElem == null) {
                 continue;
             }
@@ -761,10 +761,10 @@ public final class ExtentsStrategy extends ReplacementStrategy {
 
                 showNative = srid == 21781;
 
-                double minx = ExtentHelper.decimal(bboxElem.getChild("westBoundLongitude", XslUtil.GMD_NAMESPACE));
-                double maxx = ExtentHelper.decimal(bboxElem.getChild("eastBoundLongitude", XslUtil.GMD_NAMESPACE));
-                double miny = ExtentHelper.decimal(bboxElem.getChild("southBoundLatitude", XslUtil.GMD_NAMESPACE));
-                double maxy = ExtentHelper.decimal(bboxElem.getChild("northBoundLatitude", XslUtil.GMD_NAMESPACE));
+                double minx = ExtentHelper.decimal(bboxElem.getChild("westBoundLongitude", Geonet.Namespaces.GMD));
+                double maxx = ExtentHelper.decimal(bboxElem.getChild("eastBoundLongitude", Geonet.Namespaces.GMD));
+                double miny = ExtentHelper.decimal(bboxElem.getChild("southBoundLatitude", Geonet.Namespaces.GMD));
+                double maxy = ExtentHelper.decimal(bboxElem.getChild("northBoundLatitude", Geonet.Namespaces.GMD));
 
                 Envelope env = new Envelope(minx, maxx, miny, maxy);
     
@@ -803,17 +803,17 @@ public final class ExtentsStrategy extends ReplacementStrategy {
     @SuppressWarnings("rawtypes")
     private String findDesc(Element originalElem, String metadataLang, String appPath) throws Exception {
         Element descElem = null;
-        Iterator idIter = originalElem.getDescendants(new ElementFinder("description", XslUtil.GMD_NAMESPACE, "*"));
+        Iterator idIter = originalElem.getDescendants(new ElementFinder("description", Geonet.Namespaces.GMD, "*"));
 
         if (idIter.hasNext()) {
             Element id = (Element) idIter.next();
             descElem = id;
         } else {
-            idIter = originalElem.getDescendants(new ElementFinder("MD_Identifier", XslUtil.GMD_NAMESPACE,
+            idIter = originalElem.getDescendants(new ElementFinder("MD_Identifier", Geonet.Namespaces.GMD,
                     "geographicIdentifier"));
             if (idIter.hasNext()) {
                 Element id = (Element) idIter.next();
-                idIter = id.getDescendants(new ElementFinder("CharacterString", XslUtil.GCO_NAMESPACE, "code"));
+                idIter = id.getDescendants(new ElementFinder("CharacterString", Geonet.Namespaces.GCO, "code"));
                 if (idIter.hasNext()) {
                     id = (Element) idIter.next();
                     descElem = id.getParentElement();
@@ -856,11 +856,11 @@ public final class ExtentsStrategy extends ReplacementStrategy {
     }
 
     private boolean inclusion(Element polygonBBoxElem) {
-        Element code = polygonBBoxElem.getChild("extentTypeCode", XslUtil.GMD_NAMESPACE);
+        Element code = polygonBBoxElem.getChild("extentTypeCode", Geonet.Namespaces.GMD);
         if(code == null) {
             return true;
         }
-        String bool = code.getChildTextNormalize("Boolean", XslUtil.GCO_NAMESPACE);
+        String bool = code.getChildTextNormalize("Boolean", Geonet.Namespaces.GCO);
         
         return bool == null || !(bool.equalsIgnoreCase("false") || bool.equalsIgnoreCase("0"));
     }

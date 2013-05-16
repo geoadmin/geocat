@@ -29,6 +29,7 @@ import org.jdom.Element;
 import bak.pcj.map.ObjectKeyIntMapIterator;
 
 import java.text.Collator;
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,7 +42,8 @@ import java.util.Map;
 
 public class SummaryComparator implements Comparator<SummaryComparator.SummaryElement>
 {
-    
+    private static final long serialVersionUID = -4668989929284491497L;
+
 public static class SummaryElement {
     public final String name;
     public final int count;
@@ -55,7 +57,7 @@ public static class SummaryElement {
         STRING
         {
             @Override
-            public Comparable value(String string, Locale locale, Element configuration)
+            public Comparable<LocalizedStringComparable> value(String string, Locale locale, Element configuration)
             {
                 return new LocalizedStringComparable(string, locale);
             }
@@ -64,7 +66,7 @@ public static class SummaryElement {
         NUMBER
         {
             @Override
-            public Comparable value(String string, Locale locale, Element configuration)
+            public Comparable<Double> value(String string, Locale locale, Element configuration)
             {
             	try {
             		return Double.valueOf(string.trim());
@@ -76,7 +78,7 @@ public static class SummaryElement {
         SCALE
         {
             @Override
-            public Comparable value(String string, Locale locale, Element configuration)
+            public Comparable<Double> value(String string, Locale locale, Element configuration)
             {
                 String scale = string;
                 /**
@@ -87,7 +89,7 @@ public static class SummaryElement {
                     String[] parts = string.split("/");
                     scale = parts[parts.length - 1];
                 } else if (string.contains("\\")) {
-                    String[] parts = string.split("\\");
+                    String[] parts = string.split("\\\\");
                     scale = parts[parts.length - 1];
                 } else if (string.contains(":")) {
                     String[] parts = string.split(":");
@@ -103,7 +105,7 @@ public static class SummaryElement {
         DATE
         {
             @Override
-            public Comparable value(String string, Locale locale, Element configuration)
+            public Comparable<java.util.Date> value(String string, Locale locale, Element configuration)
             {
                 List<DateFormat> formats = new ArrayList<DateFormat>();
                 for (Object child : configuration.getChildren("dateFormat")) {
@@ -133,7 +135,7 @@ public static class SummaryElement {
             }
         };
 
-        public abstract Comparable value(String string, Locale locale, Element configuration);
+        public abstract Comparable<? extends Object> value(String string, Locale locale, Element configuration);
 
         private static Map<Object, DateFormat> dateformats = new HashMap<Object, DateFormat>();
         static {
@@ -179,6 +181,10 @@ public static class SummaryElement {
 
     public int compare(SummaryElement me1, SummaryElement me2)
     {
+        String key1 = (String) me1.getKey();
+        String key2 = (String) me2.getKey();
+        Integer count1 = (Integer) me1.getValue();
+        Integer count2 = (Integer) me2.getValue();
         String key1 = me1.name;
         String key2 = me2.name;
         int count1 = me1.count;
@@ -205,34 +211,21 @@ public static class SummaryElement {
 
     private int compareCount(int count1, int count2)
     {
-        int cmp = count2 - count1;
+        int cmp = count2.compareTo(count1);
         if (cmp != 0)
             return cmp;
         else
             return -1;
     }
 
+    @SuppressWarnings("unchecked")
     private int compareKeys(String key1, String key2)
     {
+        @SuppressWarnings("rawtypes")
         Comparable value1 = _type.value(key1, _locale, _configuration);
+        @SuppressWarnings("rawtypes")
         Comparable value2 = _type.value(key2, _locale, _configuration);
         return value1.compareTo(value2);
     }
-    
-    private static class LocalizedStringComparable implements Comparable<LocalizedStringComparable>
-    {
-        public final String _wrapped;
-        private Collator _comparator;
-
-        public LocalizedStringComparable(String wrapped, Locale locale)
-        {
-            this._wrapped = wrapped;
-            _comparator = java.text.Collator.getInstance(locale);
-        }
-
-        public int compareTo(LocalizedStringComparable anotherString)
-        {
-            return _comparator.compare(_wrapped, anotherString._wrapped);
-        }
-    }
+ 
 }

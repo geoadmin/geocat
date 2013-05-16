@@ -30,7 +30,6 @@ import java.util.Hashtable;
 import java.util.List;
 
 import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -49,11 +48,17 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.reusable.ReusableObjManager;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Attribute;
+import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.Text;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Utilities.
@@ -114,7 +119,7 @@ class EditUtils {
 			throw new BadParameterEx("id", id);
 
 		if (!accessMan.canEdit(context, id))
-			throw new OperationNotAllowedEx();
+		    Lib.resource.denyAccess(context);
 	}
 
     /**
@@ -145,12 +150,10 @@ class EditUtils {
 		//--- build hashtable with changes
 		//--- each change is a couple (pos, value)
 
-		Hashtable htChanges = new Hashtable(100);
-        Hashtable htHide    = new Hashtable(100);
-		List list = params.getChildren();
-		for(int i=0; i<list.size(); i++) {
-			Element el = (Element) list.get(i);
-
+		Map<String, String> htChanges = new HashMap<String, String>(100);
+		@SuppressWarnings("unchecked")
+        List<Element> list = params.getChildren();
+		for (Element el : list) {
 			String sPos = el.getName();
 			String sVal = el.getText();
 
@@ -211,8 +214,9 @@ class EditUtils {
      * @return
      * @throws Exception
      */
-    private Element applyChanges(Dbms dbms, String id, Hashtable changes, Hashtable htHide, String currVersion, String lang) throws Exception {
-        Element md = xmlSerializer.select(dbms, "Metadata", id, context);
+    private Element applyChanges(Dbms dbms, String id, Map<String, String> changes, String currVersion, String lang) throws Exception {
+        Lib.resource.checkEditPrivilege(context, id);
+        Element md = xmlSerializer.select(dbms, "Metadata", id);
 
 		//--- check if the metadata has been deleted
 		if (md == null) {
@@ -233,9 +237,9 @@ class EditUtils {
         HashSet<Element> updatedXLinks = new HashSet<Element>();
 
 		//--- update elements
-		for(Enumeration e=changes.keys(); e.hasMoreElements();) {
-			String ref = ((String) e.nextElement()) .trim();
-			String val = ((String) changes.get(ref)).trim();
+		for (Map.Entry<String, String> entry : changes.entrySet()) {
+			String ref = entry.getKey().trim();
+			String val = entry.getValue().trim();
 			String attr= null;
 
 			if(updatedLocalizedTextElement(md, ref, val, editLib, updatedXLinks) && updatedLocalizedURLElement(md, ref, val, editLib, updatedXLinks)) {
@@ -294,11 +298,14 @@ class EditUtils {
 				el.addContent(Xml.loadString(val, false));
             }
 			else {
-				List content = el.getContent();
-				for(int i=0; i<content.size(); i++) {
-					if (content.get(i) instanceof Text) {
-						el.removeContent((Text) content.get(i));
-						i--;
+				@SuppressWarnings("unchecked")
+                List<Content> content = el.getContent();
+
+				for (Iterator<Content> iterator = content.iterator(); iterator.hasNext();) {
+                    Content content2 = iterator.next();
+                    
+					if (content2 instanceof Text) {
+					    iterator.remove();
 					}
 				}
 				el.addContent(val);

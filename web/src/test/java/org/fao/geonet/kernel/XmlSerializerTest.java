@@ -1,8 +1,7 @@
 package org.fao.geonet.kernel;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyMapOf;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Matchers.anyVararg;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
@@ -12,31 +11,23 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import jeeves.constants.Jeeves;
-import jeeves.guiservices.session.JeevesUser;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.ProfileManager;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 
 import org.apache.commons.io.IOUtils;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 import org.junit.Test;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextImpl;
 
 public class XmlSerializerTest {
 	
-	public class DummyXmlSerializer extends XmlSerializer {
+	public static class DummyXmlSerializer extends XmlSerializer {
 
 		public DummyXmlSerializer(SettingManager settingManager) {
 			super(settingManager);
@@ -101,34 +92,34 @@ public class XmlSerializerTest {
 		assertHiddenElements(false, false, null);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testInternalSelectHidingWithheldNullServiceContext() throws Exception {
+
 		Field field = ServiceContext.class.getDeclaredField("threadLocalInstance");
 		field.setAccessible(true);
-		@SuppressWarnings("unchecked")
 		InheritableThreadLocal<ServiceContext> threadLocalInstance = (InheritableThreadLocal<ServiceContext>) field.get(null);
 		threadLocalInstance.set(null);
-
-		assertHiddenElements(true, null);
+		assertHiddenElements(true);
 	}
 
 	@Test
 	public void testInternalSelectHidingWithheldAdministrator() throws Exception {
-		ServiceContext context = mockServiceContext(true, "3333");
+		mockServiceContext(true);
 		
 		assertHiddenElements(false, context);
 	}
 
 	@Test
 	public void testInternalSelectHidingWithheldNotLoggedIn() throws Exception {
-		ServiceContext context = mockServiceContext(false, null);
+		mockServiceContext(false);
 		
 		assertHiddenElements(true, context);
 	}
 
 	@Test
 	public void testInternalCompleteHidingHiddenElement() throws Exception {
-		ServiceContext context = mockServiceContext(false, OWNER_ID+"3");
+		mockServiceContext(false);
 		
 		SettingManager settingManager = mockSettingManager(true, false);
 		XmlSerializer xmlSerializer = new DummyXmlSerializer(settingManager);
@@ -143,14 +134,14 @@ public class XmlSerializerTest {
 
 	@Test
 	public void testInternalSelectHidingWithheldNotOwner() throws Exception {
-		ServiceContext context = mockServiceContext(false, OWNER_ID+"3");
+		mockServiceContext(false);
 		
 		assertHiddenElements(true, context);
 	}
 	
 	@Test
 	public void testInternalSelectHidingWithheldOwner() throws Exception {
-		ServiceContext context = mockServiceContext(false, OWNER_ID);
+		mockServiceContext(true);
 		
 		assertHiddenElements(false, context);
 	}
@@ -158,41 +149,16 @@ public class XmlSerializerTest {
 	/**
 	 * @param userId null if not logged in non-null to login
 	 */
-	private ServiceContext mockServiceContext(boolean isAdmin, String userId) {
-		ProfileManager profileManager = mock(ProfileManager.class);
-		Set<String> adminProfiles = new HashSet<String>();
-		adminProfiles.add(ProfileManager.ADMIN);
-		when(profileManager.getProfilesSet(ProfileManager.ADMIN)).thenReturn(adminProfiles);
-		
-		Set<String> editorProfiles = new HashSet<String>();
-		final String editorProfile = "Editor";
-		editorProfiles.add(editorProfile);
-		when(profileManager.getProfilesSet(editorProfile)).thenReturn(editorProfiles);
-		
+	private ServiceContext mockServiceContext(boolean canEdit) throws Exception{//boolean isAdmin, String userId) {
 		ServiceContext context = mock(ServiceContext.class);
 		doCallRealMethod().when(context).setAsThreadLocal();
-		when(context.getProfileManager()).thenReturn(profileManager);
-		UserSession userSession = new UserSession();
-		if (userId != null) {
-			String profile;
-			if (isAdmin) {
-				profile = ProfileManager.ADMIN;
-			} else {
-				profile = editorProfile;
-			}
-			SecurityContextImpl secContext = new SecurityContextImpl();
-			JeevesUser user = new JeevesUser(profileManager);
-			user.setId(userId);
-			user.setUsername("username");
-			user.setProfile(profile);
-			Authentication authentication = new UsernamePasswordAuthenticationToken(user, null);
-            secContext.setAuthentication(authentication);
-			SecurityContextHolder.setContext(secContext);
-		} else {
-		    SecurityContextHolder.clearContext();
-		}
-		when(context.getUserSession()).thenReturn(userSession);
 
+        AccessManager accessManager = mock(AccessManager.class);
+        when(accessManager.canEdit(any(ServiceContext.class), anyString())).thenReturn(canEdit);
+        GeonetContext gc = mock(GeonetContext.class);
+        when(gc.getAccessManager()).thenReturn(accessManager);
+        when(context.getHandlerContext(Geonet.CONTEXT_NAME)).thenReturn(gc);
+        
 		context.setAsThreadLocal();
 		return context;
 	}

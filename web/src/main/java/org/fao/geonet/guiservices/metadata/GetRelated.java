@@ -44,6 +44,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.Show;
 import org.fao.geonet.services.relations.Get;
+import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
@@ -159,7 +160,7 @@ public class GetRelated implements Service {
             }
 						Element response = new Element("response");
             if (md != null) {
-                List<?> sibs = Xml.selectNodes(md, "*//gmd:aggregationInfo/*[gmd:aggregateDataSetIdentifier/*/gmd:code and gmd:initiativeType/gmd:DS_InitiativeTypeCode and string(gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue)='crossReference']", nsList);
+                List<?> sibs = Xml.selectNodes(md, "*//gmd:aggregationInfo/*[gmd:aggregateDataSetIdentifier/*/gmd:code and gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue!='' and gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue!='']", nsList);
 								for (Object o : sibs) {
 									if (o instanceof Element) {
 										Element sib = (Element)o;
@@ -235,24 +236,34 @@ public class GetRelated implements Service {
             // Or feature catalogue define in feature catalogue citation
             relatedRecords.addContent(search(uuid, "hasfeaturecat", context, from,
                     to, fast));
-
         }
 
+        // XSL transformation is used on the metadata record to extract
+        // distribution information or thumbnails
+        if (type.equals("") || type.contains("online") || type.contains("thumbnail")) {
+            relatedRecords.addContent(new Element("metadata").addContent((Content) md.clone()));
+        }
+        
+        
         return relatedRecords;
 
     }
 
     private StringBuffer filterMetadata(Element md, ElementFilter el) {
+        @SuppressWarnings("unchecked")
         Iterator<Element> i = md.getDescendants(el);
         StringBuffer uuids = new StringBuffer("");
         boolean first = true;
         while (i.hasNext()) {
             Element e = i.next();
-            if (first) {
-                uuids.append(e.getAttributeValue("uuidref"));
-                first = false;
-            } else {
-                uuids.append(" or " + e.getAttributeValue("uuidref"));
+            String uuid = e.getAttributeValue("uuidref");
+            if (!"".equals(uuid)) {
+                if (first) {
+                    uuids.append(uuid);
+                    first = false;
+                } else {
+                    uuids.append(" or " + uuid);
+                }
             }
         }
         return uuids;

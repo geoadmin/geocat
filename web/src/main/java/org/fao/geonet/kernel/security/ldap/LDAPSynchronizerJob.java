@@ -22,22 +22,11 @@
 //==============================================================================
 package org.fao.geonet.kernel.security.ldap;
 
-import java.sql.SQLException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.SearchResult;
-
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
-
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -45,6 +34,14 @@ import org.quartz.JobExecutionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
+
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.SearchResult;
+import java.sql.SQLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LDAPSynchronizerJob extends QuartzJobBean {
     
@@ -189,7 +186,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
         Element e = dbms.select(query, LDAPConstants.LDAP_FLAG);
         for (Object record : e.getChildren("record")) {
             Element r = (Element) record;
-            int userId = new Integer(r.getChildText("id"));
+            int userId = Integer.valueOf(r.getChildText("id"));
             Log.debug(Geonet.LDAP, "  - Removing user: " + userId);
             try {
                 dbms.execute("DELETE FROM UserGroups WHERE userId=?", userId);
@@ -241,18 +238,9 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
             String groupId = null;
             
             if (groupRecord == null) {
-                if (Log.isDebugEnabled(Geonet.LDAP)) {
-                    Log.debug(Geonet.LDAP, "  - Add non existing group '"
-                            + groupName + "' in local database.");
-                }
-                
-                // If LDAP group does not exist in local database, create it
-                groupId = serialFactory.getSerial(dbms, "Groups") + "";
-                String query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
-                dbms.execute(query, new Integer(groupId), groupName);
-                Lib.local.insert(dbms, "Groups", new Integer(groupId),
-                        groupName);
-            } else if (groupRecord != null) {
+                LDAPUtils.createIfNotExist(groupName, groupId, dbms, serialFactory);
+
+            } else {
                 groupId = groupRecord.getChildText("id");
                 // Update something ?
                 // Group description is only defined in catalog, not in LDAP for the time

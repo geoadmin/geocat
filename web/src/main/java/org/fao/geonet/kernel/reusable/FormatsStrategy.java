@@ -45,7 +45,6 @@ import jeeves.xlink.XLink;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.util.ElementFinder;
-import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 
 public final class FormatsStrategy extends ReplacementStrategy
@@ -80,14 +79,14 @@ public final class FormatsStrategy extends ReplacementStrategy
             return NULL;
 
         Element name = name(originalElem);
-        if (name != null && name.getChild("CharacterString", XslUtil.GCO_NAMESPACE) != null) {
+        if (name != null && name.getChild("CharacterString", Geonet.Namespaces.GCO) != null) {
             String query = "SELECT "+ID_COL+","+VALIDATED_COL+" FROM "+TABLE+" WHERE TRIM("+NAME_COL+") ILIKE TRIM(?)";
-            String sname = name.getChildTextTrim("CharacterString", XslUtil.GCO_NAMESPACE);
+            String sname = name.getChildTextTrim("CharacterString", Geonet.Namespaces.GCO);
             Element version = version(originalElem);
             Element el;
-            if (version != null && version.getChild("CharacterString", XslUtil.GCO_NAMESPACE) != null) {
+            if (version != null && version.getChild("CharacterString", Geonet.Namespaces.GCO) != null) {
                 query += " AND TRIM("+VERSION_COL+") ILIKE TRIM(?) ORDER By validated DESC";
-                String sversion = version.getChildTextTrim("CharacterString", XslUtil.GCO_NAMESPACE);
+                String sversion = version.getChildTextTrim("CharacterString", Geonet.Namespaces.GCO);
                 el = _dbms.select(query, sname, sversion);
             } else {
                 el = _dbms.select(query+" ORDER By validated DESC", sname);
@@ -112,7 +111,7 @@ public final class FormatsStrategy extends ReplacementStrategy
     private Element version(Element originalElem)
     {
         List<Element> version = Utils.convertToList(originalElem.getDescendants(new ElementFinder("version",
-                XslUtil.GMD_NAMESPACE, "MD_Format")), Element.class);
+                Geonet.Namespaces.GMD, "MD_Format")), Element.class);
 
         if(version.isEmpty()) return null;
         return version.get(0);
@@ -121,7 +120,7 @@ public final class FormatsStrategy extends ReplacementStrategy
     private Element name(Element originalElem)
     {
         List<Element> name = Utils.convertToList(originalElem.getDescendants(new ElementFinder("name",
-                XslUtil.GMD_NAMESPACE, "MD_Format")), Element.class);
+                Geonet.Namespaces.GMD, "MD_Format")), Element.class);
 
         if(name.isEmpty()) {
             return null;

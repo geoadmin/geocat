@@ -106,7 +106,6 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
-        
         /* Other actions */
         this.duplicateAction = new Ext.Action({
             text: OpenLayers.i18n('duplicate'),
@@ -147,6 +146,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });*/
+
         // TODO : enable only if SVN manager is on.
         /*this.versioningAction = new Ext.Action({
             text: OpenLayers.i18n('versioning'),
@@ -167,7 +167,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
-                
+
         this.adminMenuSeparator = new Ext.menu.Separator();
         
         /* Public menu */
@@ -251,7 +251,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
-        
+
         /* Rating menu */
         // Swisstopo: Disable rating
         if ((Ext.ux.RatingItem) && (false)) { // Check required widget are loaded before displaying context menu
@@ -405,9 +405,9 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
     },
    
     composeMenu: function(){
+        if(!this.catalogue.isReadOnly()) {
         this.add(this.editAction);
         this.add(this.deleteAction);
-        
         this.otherActions = new Ext.menu.Item({
             text: OpenLayers.i18n('otherActions'),
             menu: {
@@ -415,6 +415,16 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                                                                                                                 // this.versioningAction,
             }
         });
+        }
+        else {
+            this.otherActions = new Ext.menu.Item({
+                text: OpenLayers.i18n('otherActions'),
+                menu: {
+                    items: []
+                }
+            });
+        }
+
         this.add(this.otherActions);
         this.add(this.adminMenuSeparator);
         
@@ -462,10 +472,11 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             isHarvested = this.record.get('isharvested') === 'y' ? true : false,
             harvesterType = this.record.get('harvestertype'),
             identified = this.catalogue.isIdentified() && 
-                (this.catalogue.identifiedUser && this.catalogue.identifiedUser.role !== 'RegisteredUser');
+                (this.catalogue.identifiedUser && this.catalogue.identifiedUser.role !== 'RegisteredUser'),
+            isReadOnly = this.catalogue.isReadOnly();
 
         /* Actions and menu visibility for logged in user */
-        if (!identified) {
+        if (!identified || isReadOnly) {
             this.editAction.hide();
             this.deleteAction.hide();
         } else {
@@ -476,16 +487,16 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.adminMenuSeparator.setVisible(identified);
         
         /* Actions status depend on records */
-        this.editAction.setDisabled(!isEditable);
-        this.adminAction.setDisabled(!isEditable && !isHarvested);
+        this.editAction.setDisabled(!isEditable || isReadOnly);
+        this.adminAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         //this.statusAction.setDisabled(!isEditable && !isHarvested);
         //this.versioningAction.setDisabled(!isEditable && !isHarvested);
-        this.categoryAction.setDisabled(!isEditable && !isHarvested);
-        this.deleteAction.setDisabled(!isEditable && !isHarvested);
+        this.categoryAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+        this.deleteAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         
         if (this.ratingWidget) {
             this.ratingWidget.reset();
-            if (isHarvested && harvesterType !== 'geonetwork') {
+            if ((isHarvested && harvesterType !== 'geonetwork') || isReadOnly) {
                 /* TODO : add tooltip message to explain why */
                 this.ratingWidget.disable();
             } else {

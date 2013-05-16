@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -35,6 +34,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.kernel.UnpublishInvalidMetadataJob;
 import org.fao.geonet.kernel.UnpublishInvalidMetadataJob.Validity;
 import org.jdom.Element;
@@ -45,20 +45,19 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-//=============================================================================
-
-/** Stores all operations allowed for a metadata
+/**
+ * Stores all operations allowed for a metadata.
   */
-
-public class BatchUpdatePrivileges implements Service
-{
+public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception {
+        super.init(appPath, params);
+    }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -66,7 +65,7 @@ public class BatchUpdatePrivileges implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getDataManager();
@@ -90,9 +89,9 @@ public class BatchUpdatePrivileges implements Service
 			//--- check access
 			MdInfo info = dm.getMetadataInfo(dbms, id);
 			if (info == null) {
-				notFound.add(new Integer(id));
+				notFound.add(Integer.valueOf(id));
 			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(new Integer(id));
+				notOwner.add(Integer.valueOf(id));
 			} else {
 
 				//--- remove old operations
@@ -112,12 +111,10 @@ public class BatchUpdatePrivileges implements Service
 				dm.deleteMetadataOper(dbms, id, skip);
 
 				//--- set new ones
+				@SuppressWarnings("unchecked")
+                List<Element> list = params.getChildren();
 
-				List list = params.getChildren();
-
-				for(int i=0; i<list.size(); i++) {
-					Element el = (Element) list.get(i);
-
+				for (Element el : list) {
 					String name  = el.getName();
 
 					if (name.startsWith("_")) {
@@ -133,7 +130,7 @@ public class BatchUpdatePrivileges implements Service
 						dm.setOperation(context, dbms, id, groupId, operId);
 					}
 				}
-				metadata.add(new Integer(id));
+				metadata.add(Integer.valueOf(id));
 				if(published && !publishedAgain) {
 		              new UnpublishInvalidMetadataJob.Record(uuid, Validity.UNKNOWN, false, context.getUserSession().getUsername(), "Manually unpublished by user", "").insertInto(dbms);
 		        } else if (!published && publishedAgain) {
@@ -157,6 +154,3 @@ public class BatchUpdatePrivileges implements Service
 					.addContent(new Element("notFound").setText(notFound.size()+""));
 	}
 }
-
-//=============================================================================
-

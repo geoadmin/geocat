@@ -202,7 +202,6 @@ public class GetDomain extends AbstractOperation implements CatalogService
 			
 
 	        IndexAndTaxonomy indexAndTaxonomy= sm.getNewIndexReader(null);
-			try {
 			    GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 				BooleanQuery groupsQuery = (BooleanQuery) CatalogSearcher.getGroupsQuery(context);
                 BooleanQuery query = null;
@@ -243,6 +242,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 						property = indexField;
 
 					// check if params asked is in the index using getFieldNames ?
+					@SuppressWarnings("resource")
 					FieldInfos fi = new SlowCompositeReaderWrapper(reader).getFieldInfos();
 					if (fi.fieldInfo(property) == null)
 						continue;

@@ -7,8 +7,8 @@
   <packaging>pom</packaging>
   <version>1.2.0-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
-  <description>GeoNetwork opensource is a standards based, Free and 
-    Open Source catalog application to manage spatially referenced 
+  <description>GeoNetwork opensource is a standards based, Free and
+    Open Source catalog application to manage spatially referenced
     resources through the web.</description>
   <url>http://geonetwork-opensource.org</url>
   <scm>
@@ -59,7 +59,7 @@
       <archive>http://n2.nabble.com/GeoNetwork-commit-f2020497.html</archive>
     </mailingList>
   </mailingLists>
-  
+
   <!-- TODO developer part-->
   <developers>
     <developer>
@@ -74,16 +74,16 @@
       <timezone></timezone>
     </developer>
   </developers>
-  
+
   <licenses>
     <license>
       <name>General Public License (GPL)</name>
       <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
     </license>
   </licenses>
-  
+
   <build>
-    
+
     <!-- =========================================================== -->
     <!--     Plugin Management                                       -->
     <!--     If a POM declares one of those plugins, then it         -->
@@ -100,7 +100,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
-          <version>2.1-alpha-2</version>
+          <version>2.3</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -112,10 +112,56 @@
           <artifactId>maven-release-plugin</artifactId>
           <version>2.0</version>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>findbugs-maven-plugin</artifactId>
+          <version>2.5.2</version>
+          <configuration>
+            <effort>Default</effort>
+            <threshold>Default</threshold>
+            <xmlOutput>true</xmlOutput>
+            <xmlOutput>true</xmlOutput>
+            <excludeFilterFile>${rootProjectDir}/code_quality/findbugs-excludes.xml</excludeFilterFile>
+            <debug>false</debug>
+            <includeTests>false</includeTests>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <phase>test</phase>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>2.10</version>
+          <executions>
+            <execution>
+              <id>check</id>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <phase>test</phase>
+            </execution>
+          </executions>
+          <configuration>
+            <enableRulesSummary>false</enableRulesSummary>
+            <configLocation>${rootProjectDir}/code_quality/checkstyle_checks.xml</configLocation>
+            <propertyExpansion>samedir=${rootProjectDir}/code_quality/</propertyExpansion>
+            <logViolationsToConsole>true</logViolationsToConsole>
+            <maxAllowedViolations>0</maxAllowedViolations>
+            <violationSeverity>warning</violationSeverity>
+            <encoding>UTF-8</encoding>
+          </configuration>
+        </plugin>
 	  </plugins>
     </pluginManagement>
 
     <plugins>
+
       <!--     Compilation.                                        -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -167,7 +213,7 @@
                 <location>${project.build.directory}/../web/target/geonetwork.war</location>
                 <type>war</type>
               </deployable>
-<!--              <deployable>
+              <!--              <deployable>
                 <location>${project.build.directory}/../intermap/target/intermap.war</location>
                 <type>war</type>
               </deployable> -->
@@ -193,7 +239,6 @@
           <outputDirectory>${project.build.directory}/release</outputDirectory>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
 
@@ -231,7 +276,7 @@
       <dependency>
         <groupId>net.sf.saxon</groupId>
         <artifactId>saxon</artifactId>
-        <version>9.1.0.8b-patch</version> 
+        <version>9.1.0.8b-patch</version>
       </dependency>
 			<dependency>
         <groupId>net.sf.saxon</groupId>
@@ -266,13 +311,13 @@
         <groupId>org.openrdf</groupId>
         <artifactId>sesame</artifactId>
         <version>1.2.7</version>
-      </dependency>	  
+      </dependency>
       <dependency>
         <groupId>org.openrdf</groupId>
         <artifactId>rio</artifactId>
         <version>1.0.9</version>
       </dependency>
-      
+
       <!-- PDF stuff: Managed by Mapfish -->
       <!--dependency>
         <groupId>com.lowagie</groupId>
@@ -284,7 +329,7 @@
         <artifactId>fop</artifactId>
         <version>0.95</version>
       </dependency>
-     
+
       <!-- Jetty stuff -->
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
@@ -450,7 +495,7 @@
         <artifactId>jcommon</artifactId>
         <version>1.0.15</version>
       </dependency>
-			<!-- May be required to register connection unwrappers with 
+      <!-- May be required to register connection unwrappers with
 			     geotools
       <dependency>
         <groupId>org.springframework</groupId>
@@ -458,7 +503,7 @@
         <version>2.5.3</version>
       </dependency>
 			-->
- 
+
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
       <dependency>
         <groupId>org.dspace</groupId>
@@ -475,7 +520,7 @@
         <artifactId>marc4j</artifactId>
         <version>2.3.1</version>
       </dependency>
-      <dependency> 
+      <dependency>
         <groupId>jdbm</groupId>
      	<artifactId>jdbm</artifactId>
      	<version>1.0</version>
@@ -653,7 +698,7 @@
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
         <version>1.3.152</version>
-      </dependency> 
+      </dependency>
       <!-- Other stuff -->
       <dependency>
         <groupId>dlib</groupId>  <!--FIXME Handled by local repository -->
@@ -693,7 +738,7 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.6</version>
+        <version>4.10</version>
         <!--<scope>test</scope>-->
       </dependency>
       <dependency>
@@ -709,7 +754,7 @@
         <artifactId>xmlunit</artifactId>
         <version>1.2</version>
       </dependency>
-      
+
       <dependency>
       	<groupId>org.mockito</groupId>
       	<artifactId>mockito-all</artifactId>
@@ -727,7 +772,7 @@
         <artifactId>postgis-jdbc</artifactId>
         <version>1.3.3</version>
       </dependency>
-      <!-- Postgres JDBC4 for Java 1.6 -->  
+      <!-- Postgres JDBC4 for Java 1.6 -->
       <!--dependency>
         <groupId>postgresql</groupId>
         <artifactId>postgresql</artifactId>
@@ -799,6 +844,11 @@
            <artifactId>spring-security-web</artifactId>
            <version>${spring.version}</version>
          </dependency>
+      <dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>jsr305</artifactId>
+        <version>2.0.1</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -806,6 +856,12 @@
   <!--     Dependencies to be inherited by all modules.            -->
   <!-- =========================================================== -->
   <dependencies>
+    <!-- This find bugs jars allows annotations like @Nullable and @Nonnull see the jsr305 -->
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -817,7 +873,7 @@
       <groupId>org.jdom</groupId>
       <artifactId>jdom</artifactId>
     </dependency>
-    <dependency> 
+    <dependency>
       <groupId>jdbm</groupId>
       <artifactId>jdbm</artifactId>
     </dependency>
@@ -848,8 +904,8 @@
       <name>Developer k-int repository</name>
       <url>http://developer.k-int.com/maven2/</url>
     </repository>
-    
-    <!-- Local repository which allow to handle temporarly local dependencies 
+
+    <!-- Local repository which allow to handle temporarly local dependencies
      // FIXME : Should be a remote repository -->
     <repository>
       <snapshots>
@@ -863,17 +919,17 @@
       <url>file://maven_repo</url>
     </repository>
 
-	<repository>
-		<id>mvnrepository.com</id>
-		<name>Repository that has juniversalchardet</name>
-		<url>http://mvnrepository.com/artifact</url>
-	</repository>
+    <repository>
+      <id>mvnrepository.com</id>
+      <name>Repository that has juniversalchardet</name>
+      <url>http://mvnrepository.com/artifact</url>
+    </repository>
 
     <!-- seasar repo, has jsonic - used by langdetect -->
     <repository>
-        <id>maven.seasar.org</id>
-        <name>The Seasar Foundation Maven2 Repository</name>
-        <url>http://maven.seasar.org/maven2</url>
+      <id>maven.seasar.org</id>
+      <name>The Seasar Foundation Maven2 Repository</name>
+      <url>http://maven.seasar.org/maven2</url>
     </repository>
 
   </repositories>
@@ -890,21 +946,22 @@
   <!--     Modules for the build in approximate dependency order   -->
   <!-- =========================================================== -->
   <modules>
-    
-    <!-- Remove comment tag to include documentation in the build. 
-      Python and Latex are required to build the documentation. -->
-    
-<!--    <module>docs</module> -->
-
     <module>cachingxslt</module>
-    <module>jeeves</module> 
+    <module>jeeves</module>
     <module>oaipmh</module>
     <module>sde</module>
     <module>web-client</module>
     <module>web</module>
   </modules>
-  
+
   <profiles>
+    <!-- Python and Latex are required to build the documentation. -->
+    <profile>
+      <id>with-doc</id>
+      <modules>
+        <module>docs</module>
+      </modules>
+    </profile>
     <profile>
       <id>itests</id>
       <modules>
@@ -934,5 +991,6 @@
     <spring.version>3.1.1.RELEASE</spring.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
+    <rootProjectDir>..</rootProjectDir>
   </properties>
 </project>

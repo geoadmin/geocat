@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel.search.function;
 
 import org.apache.lucene.index.AtomicReaderContext;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queries.CustomScoreProvider;
 import org.apache.lucene.queries.CustomScoreQuery;
 import org.apache.lucene.search.FieldCache;
@@ -45,8 +44,6 @@ import java.io.IOException;
  * @author fxprunayre
  */
 public class RecencyBoostingQuery extends CustomScoreQuery {
-
-	private static final long serialVersionUID = 1L;
 	private double multiplier;
 	private ISODate today;
 	private int maxDaysAgo;
@@ -103,4 +100,43 @@ public class RecencyBoostingQuery extends CustomScoreQuery {
 			throws IOException {
 		return new RecencyBooster(r);
 	}
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((dayField == null) ? 0 : dayField.hashCode());
+        result = prime * result + maxDaysAgo;
+        long temp;
+        temp = Double.doubleToLongBits(multiplier);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + ((today == null) ? 0 : today.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        RecencyBoostingQuery other = (RecencyBoostingQuery) obj;
+        if (dayField == null) {
+            if (other.dayField != null)
+                return false;
+        } else if (!dayField.equals(other.dayField))
+            return false;
+        if (maxDaysAgo != other.maxDaysAgo)
+            return false;
+        if (Double.doubleToLongBits(multiplier) != Double.doubleToLongBits(other.multiplier))
+            return false;
+        if (today == null) {
+            if (other.today != null)
+                return false;
+        } else if (!today.equals(other.today))
+            return false;
+        return true;
+    }
 }

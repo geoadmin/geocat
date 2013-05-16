@@ -25,10 +25,8 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadParameterEx;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -39,6 +37,8 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
@@ -49,8 +49,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-//=============================================================================
 
 /**
  * Process a metadata with an XSL transformation declared for the metadata
@@ -86,8 +84,7 @@ import java.util.Set;
  *
  * @author fxprunayre
  */
-
-public class XslProcessing implements Service {
+public class XslProcessing extends NotInReadOnlyModeService {
 	private String _appPath;
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
@@ -97,7 +94,14 @@ public class XslProcessing implements Service {
 		// in order to not to check process each time.
 	}
 
-	public Element exec(Element params, ServiceContext context)
+    /**
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception
+     */
+    public Element serviceSpecificExec(Element params, ServiceContext context)
 			throws Exception {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -108,18 +112,18 @@ public class XslProcessing implements Service {
 
 		Set<Integer> metadata = new HashSet<Integer>();
 		Set<Integer> notFound = new HashSet<Integer>();
-		Set<Integer> notOwner = new HashSet<Integer>();
+        Set<Integer> notEditable = new HashSet<Integer>();
 		Set<Integer> notProcessFound = new HashSet<Integer>();
 
 		String id = Utils.getIdentifierFromParameters(params, context);
 		Element processedMetadata;
 		try {
 			processedMetadata = process(id, process, save, _appPath, params,
-				context, metadata, notFound, notOwner, notProcessFound, false, dataMan.getSiteURL());
+                    context, metadata, notFound, notEditable, notProcessFound, false, dataMan.getSiteURL());
 			if (processedMetadata == null) {
 				throw new BadParameterEx("Processing failed",
 						"Not found:" + notFound.size() +
-						", Not owner:" + notOwner.size() +
+                                ", Not owner:" + notEditable.size() +
 						", No process found:" + notProcessFound.size() +
 						".");
 			}
@@ -148,17 +152,16 @@ public class XslProcessing implements Service {
 	 * @param context	The current context
 	 * @param metadata
 	 * @param notFound
-	 * @param notOwner
+     * @param notEditable
 	 * @param notProcessFound
 	 * @return
 	 * @throws Exception
 	 */
 	public static Element process(String id, String process, boolean save,
 	        String appPath, Element params, ServiceContext context,
-	        Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner,
+                                  Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notEditable,
 			Set<Integer> notProcessFound, boolean useIndexGroup, String siteUrl) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		UserSession session = context.getUserSession();
 		DataManager dataMan = gc.getDataManager();
 		SchemaManager schemaMan = gc.getSchemamanager();
 		AccessManager accessMan = gc.getAccessManager();
@@ -168,9 +171,9 @@ public class XslProcessing implements Service {
 		MdInfo info = dataMan.getMetadataInfo(dbms, id);
 
 		if (info == null) {
-			notFound.add(new Integer(id));
-		} else if (!accessMan.isOwner(context, id)) {
-			notOwner.add(new Integer(id));
+            notFound.add(Integer.valueOf(id));
+        } else if (!accessMan.canEdit(context, id)) {
+            notEditable.add(Integer.valueOf(id));
 		} else {
 
 			// -----------------------------------------------------------------------
@@ -181,7 +184,7 @@ public class XslProcessing implements Service {
 			File xslProcessing = new File(filePath);
 			if (!xslProcessing.exists()) {
 				context.info("  Processing instruction not found for " + schema + " schema. Looking for "+filePath);
-				notProcessFound.add(new Integer(id));
+                notProcessFound.add(Integer.valueOf(id));
 				return null;
 			}
 			// --- Process metadata
@@ -189,6 +192,7 @@ public class XslProcessing implements Service {
             Element md = dataMan.getGeocatMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes,false,allowDbmsClosing);
 
             // -- here we send parameters set by user from URL if needed.
+            @SuppressWarnings("unchecked")
 			List<Element> children = params.getChildren();
 			Map<String, String> xslParameter = new HashMap<String, String>();
 	        xslParameter.put("guiLang", context.getLanguage());
@@ -203,6 +207,8 @@ public class XslProcessing implements Service {
 
 			// --- save metadata and return status
             if (save) {
+                Lib.resource.checkEditPrivilege(context, id);
+
                 boolean validate = true;
                 boolean ufo = true;
                 boolean index = false;
@@ -218,7 +224,7 @@ public class XslProcessing implements Service {
     			}
             }
 
-			metadata.add(new Integer(id));
+            metadata.add(Integer.valueOf(id));
 
 			return processedMetadata;
 		}

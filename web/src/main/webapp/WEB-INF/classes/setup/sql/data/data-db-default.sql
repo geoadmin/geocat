@@ -398,7 +398,7 @@ INSERT INTO Settings VALUES (12,10,'siteId','Dummy');
 INSERT INTO Settings VALUES (13,10,'organization','My organization');
 INSERT INTO Settings VALUES (14,1,'platform',NULL);
 -- FIXME : needs to use maven filter for version and subVersion
-INSERT INTO Settings VALUES (15,14,'version','1.1.0');
+INSERT INTO Settings VALUES (15,14,'version','1.2.0');
 INSERT INTO Settings VALUES (16,14,'subVersion','geocat');
 INSERT INTO Settings VALUES (17,10,'svnUuid','');
 INSERT INTO Settings VALUES (20,1,'server',NULL);
@@ -521,7 +521,7 @@ INSERT INTO Users VALUES  ( 1003,     1002, 'site'                , NULL)
 INSERT INTO Users VALUES  ( 1004,     1002, 'options'             , NULL)
 INSERT INTO Users VALUES  ( 1005,     1002, 'info'                , NULL)
 INSERT INTO Users VALUES  ( 1006,     1002, 'content'             , NULL)
-INSERT INTO Users VALUES  ( 1007,     1003, 'name'                , 'Kanton ZÃ¼rich')
+INSERT INTO Users VALUES  ( 1007,     1003, 'name'                , 'Kanton Zürich')
 INSERT INTO Users VALUES  ( 1008,     1003, 'uuid'                , '84be1273-ba53-469a-8a86-8b7e6107128e')
 INSERT INTO Users VALUES  ( 1009,     1003, 'useAccount'          , 'true')
 INSERT INTO Users VALUES  ( 1010,     1009, 'username'            , 'geocat_ZH')

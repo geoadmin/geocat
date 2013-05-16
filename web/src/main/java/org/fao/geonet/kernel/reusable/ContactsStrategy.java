@@ -54,8 +54,8 @@ import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.util.ElementFinder;
+import org.fao.geonet.util.GeocatXslUtil;
 import org.fao.geonet.util.LangUtils;
-import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.Filter;
@@ -91,7 +91,7 @@ public final class ContactsStrategy extends ReplacementStrategy
         String key = email + firstname + lastname;
 
         Element roleElem = Utils.nextElement(originalElem.getDescendants(new ElementFinder("CI_RoleCode",
-                XslUtil.GMD_NAMESPACE, "role")));
+                Geonet.Namespaces.GMD, "role")));
         String query = "select id,validated,organisation from Users where COALESCE(TRIM(email),'')||COALESCE(TRIM(name),'')||COALESCE(TRIM(surname),'') ILIKE ? AND profile=?";
         List<Element> records = _dbms.select(query, key, SHARED).getChildren();
 
@@ -139,10 +139,10 @@ public final class ContactsStrategy extends ReplacementStrategy
     public static String lookupElement(Element originalElem, String name, final String defaultMetadataLang)
     {
         Element elem = Utils.nextElement(originalElem.getDescendants(new ContactElementFinder("CharacterString",
-                XslUtil.GCO_NAMESPACE, name)));
+                Geonet.Namespaces.GCO, name)));
         if (elem == null) {
             Iterator freeTexts = originalElem.getDescendants(new ContactElementFinder("PT_FreeText",
-                    XslUtil.GMD_NAMESPACE, name));
+                    Geonet.Namespaces.GMD, name));
             while (freeTexts.hasNext()) {
                 Element next = (Element) freeTexts.next();
                 Iterator<Element> defaultLangElem = next.getDescendants(new Filter()
@@ -181,7 +181,7 @@ public final class ContactsStrategy extends ReplacementStrategy
     private Collection<Element> xlinkIt(Element originalElem, String role, String id, boolean validated)
     {
         String schema = "iso19139";
-        if (originalElem.getChild("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE) != null) {
+        if (originalElem.getChild("CHE_CI_ResponsibleParty", GeocatXslUtil.CHE_NAMESPACE) != null) {
             schema = "iso19139.che";
         }
 
@@ -311,9 +311,9 @@ public final class ContactsStrategy extends ReplacementStrategy
     {
         if (xml==null || xml.getChildren().isEmpty()) return null;
 
-        Element parentInfo = xml.getChild("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE);
+        Element parentInfo = xml.getChild("CHE_CI_ResponsibleParty", GeocatXslUtil.CHE_NAMESPACE);
         Element toReplace = Utils.nextElement(original.getDescendants(new ElementFinder("parentResponsibleParty",
-                XslUtil.CHE_NAMESPACE, "CHE_CI_ResponsibleParty")));
+                GeocatXslUtil.CHE_NAMESPACE, "CHE_CI_ResponsibleParty")));
 
 
         Integer finalId = null;

@@ -23,6 +23,7 @@
 
 package org.fao.geonet.lib;
 
+import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.Log;
 import org.fao.geonet.constants.Geonet;
@@ -66,10 +67,10 @@ public class DbLib {
 
 		Element result = dbms.select(query);
 
-		Iterator i = result.getChildren().iterator();
+		@SuppressWarnings("unchecked")
+        List<Element> resultChildren = result.getChildren();
 
-		while (i.hasNext()) {
-			Element record = (Element) i.next();
+		for (Element record : resultChildren) {
 			record.setName(name);
 		}
 
@@ -206,7 +207,7 @@ public class DbLib {
 	}
 
 	public void runSQL(ServletContext servletContext, Dbms dbms, File sqlFile, boolean failOnError) throws Exception {
-		List<String> data = Lib.text.load(servletContext, sqlFile.getCanonicalPath(), "UTF-8");
+		List<String> data = Lib.text.load(servletContext, sqlFile.getCanonicalPath(), Jeeves.ENCODING);
 		runSQL(dbms, data, failOnError);
 	}
 	
@@ -336,7 +337,7 @@ public class DbLib {
 		String file = checkFilePath(filePath, filePrefix, getDBType(dbms));
 		
 		// --- load the sql data
-		return Lib.text.load(servletContext, appPath, file, "UTF-8");
+		return Lib.text.load(servletContext, appPath, file, Jeeves.ENCODING);
 	}
 
 	private String getObjectName(String createStatem) {
@@ -356,7 +357,7 @@ public class DbLib {
 		return st.nextToken();
 	}
 
-	class ObjectInfo {
+	static final class ObjectInfo {
 		public String name;
 		public String type;
 	}

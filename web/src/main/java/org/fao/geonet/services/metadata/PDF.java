@@ -20,7 +20,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.format.ImageReplacedElementFactory;
-import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.util.GeocatXslUtil;
 import org.jdom.Element;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
@@ -43,7 +43,7 @@ public class PDF implements Service {
         }
 
         Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
-        XslUtil.setNoScript();
+        GeocatXslUtil.setNoScript();
         LocalServiceRequest request = LocalServiceRequest.create("metadata.show.xml", params);
         request.setLanguage(context.getLanguage());
         request.setDebug(false);

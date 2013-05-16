@@ -1195,7 +1195,7 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
     <inspireTab>Vue INSPIRE</inspireTab>
     <inspireSection>
         <identification>
-            <title>Identification</title>
+        	<title>Identification de la ressource</title>
         <help>
 				<div>
 				The following metadata elements shall be provided:
@@ -1219,7 +1219,7 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 			</help>
 		</identification>
         <classification>
-            <title>Classification des données ou services</title>
+        	<title>Classification des données et services géographiques</title>
         <help>
 				<div>
 					<ul>
@@ -1234,7 +1234,7 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 			</help>
 		</classification>
         <keywords>
-            <title>Mots-clés &amp; thèmes INSPIRE</title>
+        	<title>Mots clés, thème INSPIRE et catégorie de service</title>
         <help>
 				<div>
 					According to the INSPIRE Implementing Rule for Metadata, if a resource is a spatial data set or spatial data set series, at least one keyword shall be provided from the General Environmental Multi-lingual Thesaurus (GEMET) describing the relevant spatial data theme as defined in Annex I, II or III to Directive 2007/2/EC.
@@ -1246,7 +1246,7 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 			</help>
 		</keywords>
         <geoloc>
-            <title>Localisation géographique</title>
+        	<title>Situation géographique</title>
         <help>
 				<div>
 					The requirement for geographic location referred to in Article 11(2)(e) of Directive 2007/2/EC shall be expressed with the metadata element geographic bounding box.
@@ -1306,7 +1306,7 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 			</help>
 		</conformity>
         <constraint>
-            <title>Constrainte d'accès et d'utilisation</title>
+        	<title>Contraintes en matière d'accès et d'utilisation de la ressource</title>
         <help>
 				<div>
 					A constraint related to access and use shall be either or both of the following:
@@ -1669,6 +1669,34 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
     <cswServerFees>Frais</cswServerFees>
     <cswServerAccessConstraints>Contraintes d'accès</cswServerAccessConstraints>
     <cswServerContact>Contact</cswServerContact>
+
+	<virtualcswServer>Ajouter un point d'accès CSW</virtualcswServer>
+	<virtualcswServerDes>Configuration des serveurs CSW virtuels</virtualcswServerDes>
+    <virtualcswServerConfig>Configuration des serveurs CSW virtuels</virtualcswServerConfig>
+    <virtualcswInsert>Configuration du serveur CSW virtuel</virtualcswInsert>
+    <virtualcswServiceName>Nom du service</virtualcswServiceName>
+    <virtualcswServiceDescription>Description du service</virtualcswServiceDescription>
+    <virtualcswClassName>Classe</virtualcswClassName>
+    <virtualcswNewService>Ajouter un service</virtualcswNewService>
+    <virtualcswParamName>Type de filtre</virtualcswParamName>
+    <virtualcswParamValue>Valeur du filtre</virtualcswParamValue>
+    <virtualcswServicenameMandatory>Le nom de service est obligatoire.</virtualcswServicenameMandatory>
+    <virtualcswServicenameTooLong>Le nom de service est trop long (48 caractères max)</virtualcswServicenameTooLong>
+    <virtualcswServicenameSpecialChars>Le nom de service ne doit pas contenir de caractères accentués.</virtualcswServicenameSpecialChars>
+    <virtualcswClassnameMandatory>La classe est obligatoire.</virtualcswClassnameMandatory>
+    <virtualcswServiceNameStartsWith>Le nom du service doit commencer par \"csw-\".</virtualcswServiceNameStartsWith>
+    
+    <virtualcswUpdateService>Mise à jour d'un serveur CSW virtuel</virtualcswUpdateService>
+    
+    <virtualcswAny>Texte libre</virtualcswAny>
+    <virtualcswTitle>Titre</virtualcswTitle>
+	<virtualcswAbstract>Résumé</virtualcswAbstract>
+	<virtualcswKeywords>Mot-clé</virtualcswKeywords>
+	<virtualcswDenominator>Échelle</virtualcswDenominator>
+	<virtualcswCatalog>Catalogue</virtualcswCatalog>
+	<virtualcswGroup>Groupe</virtualcswGroup>
+	<virtualcswCategory>Catégorie</virtualcswCategory>
+	<virtualcswType>Type de ressource</virtualcswType>
 
     <customize-elementset>Personnaliser ensemble d'éléments</customize-elementset>
     <csw-server-disabled>Serveur CSW est désactivé.</csw-server-disabled>

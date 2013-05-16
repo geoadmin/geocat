@@ -1,4 +1,5 @@
-eclipse/
+
+*.iml
 web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/schematron/schematron*.xsl
 web/src/main/webapp/WEB-INF/data/config/schemaplugin-uri-catalog.xml
 web/src/main/webapp/WEB-INF/classes/JZKitConfig.xml
@@ -7,6 +8,8 @@ web/src/main/webapp/images/logos/*
 web/logs/
 web/jcs_caching/
 geonetwork*.db
+geonetwork-*
+changes-*
 web/coverage.ec
 */target/
 web/src/main/webapp/data/
@@ -26,6 +29,10 @@ web-client/src/main/resources/apps/search/js/App-mini.js
 web-client/src/main/resources/apps/tabsearch/js/App-mini.js
 *.iml
 .idea/
+eclipse/
+web/src/main/webapp/WEB-INF/data/data
+web/src/main/webapp/WEB-INF/data/index
+web-itest/jcs_caching
 bin/config_delawen.sh
 web-client/src/main/resources/apps/geocatch/js/App-mini.js
 web/dev-config/log4j-delawen.cfg

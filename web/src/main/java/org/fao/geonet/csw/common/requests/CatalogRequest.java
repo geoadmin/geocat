@@ -270,16 +270,16 @@ public abstract class CatalogRequest
 	//--- GET fill methods
 	//---------------------------------------------------------------------------
 
-	protected void fill(String param, Iterable iter)
+	protected void fill(String param, Iterable<?> iter)
 	{
 		fill(param, iter, "");
 	}
 
 	//---------------------------------------------------------------------------
 
-	protected void fill(String param, Iterable iter, String prefix)
+	protected void fill(String param, Iterable<?> iter, String prefix)
 	{
-		Iterator i = iter.iterator();
+		Iterator<?> i = iter.iterator();
 
 		if (!i.hasNext())
 			return;
@@ -303,9 +303,9 @@ public abstract class CatalogRequest
 	//---------------------------------------------------------------------------
 
 	protected void fill(Element root, String parentName, String childName,
-							  Iterable iter, Namespace ns)
+							  Iterable<?> iter, Namespace ns)
 	{
-		Iterator i = iter.iterator();
+		Iterator<?> i = iter.iterator();
 
 		if (!i.hasNext())
 			return;
@@ -325,9 +325,9 @@ public abstract class CatalogRequest
 
 	//---------------------------------------------------------------------------
 
-	protected void fill(Element root, String childName, Iterable iter)
+	protected void fill(Element root, String childName, Iterable<?> iter)
 	{
-		Iterator i = iter.iterator();
+		Iterator<?> i = iter.iterator();
 
 		if (!i.hasNext())
 			return;
@@ -360,9 +360,9 @@ public abstract class CatalogRequest
 
 	//---------------------------------------------------------------------------
 
-	protected void setAttrib(Element el, String name, Iterable iter, String prefix)
+	protected void setAttrib(Element el, String name, Iterable<?> iter, String prefix)
 	{
-		Iterator i = iter.iterator();
+		Iterator<?> i = iter.iterator();
 
 		if (!i.hasNext())
 			return;
@@ -383,9 +383,9 @@ public abstract class CatalogRequest
 
     	//---------------------------------------------------------------------------
 
-	protected void setAttribComma(Element el, String name, Iterable iter, String prefix)
+	protected void setAttribComma(Element el, String name, Iterable<?> iter, String prefix)
 	{
-		Iterator i = iter.iterator();
+		Iterator<?> i = iter.iterator();
 
 		if (!i.hasNext())
 			return;
@@ -589,12 +589,13 @@ public abstract class CatalogRequest
 		if (body == null)
 			throw new Exception("Bad SOAP response");
 
-		List list = body.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = body.getChildren();
 
 		if (list.size() == 0)
 			throw new Exception("Bas SOAP response");
 
-		return (Element) list.get(0);
+		return list.get(0);
 	}
 
 	//---------------------------------------------------------------------------

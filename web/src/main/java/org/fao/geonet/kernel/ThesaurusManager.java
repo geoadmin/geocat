@@ -23,6 +23,7 @@
 package org.fao.geonet.kernel;
 
 import jeeves.resources.dbms.Dbms;
+import jeeves.utils.IO;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import jeeves.server.resources.ResourceManager;
@@ -30,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.xlink.Processor;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
 import org.fao.geonet.constants.Geonet;
@@ -48,10 +50,10 @@ import org.openrdf.sesame.repository.local.LocalService;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import java.util.concurrent.ExecutorService;
@@ -77,8 +79,6 @@ public class ThesaurusManager implements ThesaurusFinder {
 	private ResourceManager rm;
 
 	private DataManager dm;
-
-	private String THESAURUS_MANAGER_NOTIFIER_ID;
 
 	// Single instance 
  	private static ThesaurusManager _instance = null; 
@@ -107,7 +107,6 @@ public class ThesaurusManager implements ThesaurusFinder {
 
 		this.dm = dm;
 		this.rm = rm;
- 		THESAURUS_MANAGER_NOTIFIER_ID = UUID.randomUUID().toString();
 
 		batchBuildTable(context, thesauriDir);
 	}
@@ -254,7 +253,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 						}
 
             try {
-                addThesaurus(gst);
+                addThesaurus(gst, false);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -305,20 +304,19 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * 
 	 * @return the thesaurus file path.
 	 */
-	public String buildThesaurusFilePath(String fname, String type, String dname) {
+	public String buildThesaurusFilePath(String fname, String type, String dname) throws IOException {
 		String dirPath = thesauriDirectory + File.separator + type + File.separator + Geonet.CodeList.THESAURUS + File.separator + dname;
 		File dir = new File(dirPath);
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
+		IO.mkdirs(dir, "Thesaurus dname specific directory");
 		return dirPath + File.separator + fname;
 	}	
 
 	/**
 	 * 
 	 * @param gst
+	 * @param writeTitle TODO
 	 */
-	public void addThesaurus(Thesaurus gst) throws Exception {
+	public void addThesaurus(Thesaurus gst, boolean writeTitle) throws Exception {
 
 		String thesaurusName = gst.getKey();
 
@@ -329,8 +327,13 @@ public class ThesaurusManager implements ThesaurusFinder {
 			throw new Exception ("A thesaurus exists with code " + thesaurusName);
 		}
 		
-		createThesaurusRepository(gst);	
+		createThesaurusRepository(gst);
 		thesauriMap.put(thesaurusName, gst);
+		
+		if (writeTitle) {
+		    gst.addTitleElement(gst.getTitle());
+	}
+
 	}
 	
 	/**
@@ -413,19 +416,20 @@ public class ThesaurusManager implements ThesaurusFinder {
 		File outputRdf = new File(thesaurusFile);
 		Thesaurus gst = new Thesaurus(aRdfDataFile, root, type, outputRdf, dm.getSiteURL());
 
+		FileOutputStream outputRdfStream = null;
 		try {
-			FileOutputStream outputRdfStream = new FileOutputStream(outputRdf);
+            outputRdfStream = new FileOutputStream(outputRdf);
 			getRegisterMetadataAsRdf(uuid, outputRdfStream);
-			outputRdfStream.close();
 		} catch (Exception e) {
 			Log.error(Geonet.THESAURUS_MAN, "Register thesaurus "+aRdfDataFile+" could not be read/converted from ISO19135 record in catalog - skipping");
 			e.printStackTrace();
+		} finally {
+		    IOUtils.closeQuietly(outputRdfStream);
 		}
 
 		String theKey = gst.getKey();
 		gst.retrieveThesaurusTitle();
 
-		synchronized(thesauriMap) {
 			if (thesauriMap.replace(theKey, gst) == null) {
 				createThesaurusRepository(gst);
 				thesauriMap.put(theKey, gst);
@@ -437,7 +441,6 @@ public class ThesaurusManager implements ThesaurusFinder {
                 if(Log.isDebugEnabled(Geonet.THESAURUS_MAN))
                     Log.debug(Geonet.THESAURUS_MAN, "Rebuilt thesaurus "+theKey+" from register "+uuid);
 			}
-		}
 
 		return theKey;
 	}

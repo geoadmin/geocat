@@ -23,33 +23,41 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.util.List;
-import java.util.StringTokenizer;
-
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Util;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.UnpublishInvalidMetadataJob;
 import org.fao.geonet.kernel.UnpublishInvalidMetadataJob.Validity;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
-//=============================================================================
 
-/** Stores all operations allowed for a metadata. Called by the metadata.admin service
+/**
+ * Stores all operations allowed for a metadata for each groups. 
+ * 
+ * In order to set a value for a group use _<groupId>_<operationId>.
+ * 
+ * By default, all operations are removed and then added according to the parameter.
+ * In order to set or unset existing operations, add the update parameter
+ * with value true and set the off/on status for each operations (eg. _<groupId>_<operationId>=<off|on>.
+ * 
+ * Called by the metadata.admin service (ie. privileges panel).
+ * 
+ * Sample URL: http://localhost:8080/geonetwork/srv/eng/metadata.admin?update=true&id=13962&_1_0=off&_1_1=off&_1_5=off&_1_6=off
+ * 
   */
-
-public class UpdateAdminOper implements Service
-{
+public class UpdateAdminOper extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
@@ -64,7 +72,7 @@ public class UpdateAdminOper implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getDataManager();
@@ -73,6 +81,7 @@ public class UpdateAdminOper implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String id = Utils.getIdentifierFromParameters(params, context);
+		boolean update = Util.getParam(params, Params.UPDATEONLY, "false").equals("true");
 
 		//-----------------------------------------------------------------------
 		//--- check access
@@ -101,17 +110,17 @@ public class UpdateAdminOper implements Service
 		final boolean published = UnpublishInvalidMetadataJob.isPublished(id, dbms);
         boolean publishedAgain = false;
 		
+		if (!update) {
 		dm.deleteMetadataOper(dbms, id, skip);
-
+		}
+		
 		//-----------------------------------------------------------------------
 		//--- set new ones
 
-		List list = params.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = params.getChildren();
 		
-		for(int i=0; i<list.size(); i++)
-		{
-			Element el = (Element) list.get(i);
-
+		for (Element el : list) {
 			String name  = el.getName();
 
 			if (name.startsWith("_"))
@@ -125,7 +134,16 @@ public class UpdateAdminOper implements Service
 				    publishedAgain = true;
 				}
 				
+				if (!update) {
 				dm.setOperation(context, dbms, id, groupId, operId);
+				} else {
+					boolean publish = "on".equals(el.getTextTrim());
+					if (publish) {
+						dm.setOperation(context, dbms, id, groupId, operId);
+					} else {
+						dm.unsetOperation(context, dbms, id, groupId, operId);
+			}
+		}
 			}
 		}
 

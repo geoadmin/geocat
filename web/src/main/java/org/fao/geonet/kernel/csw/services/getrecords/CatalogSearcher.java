@@ -37,6 +37,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import javax.annotation.Nonnull;
+
+import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
@@ -314,17 +317,21 @@ public class CatalogSearcher {
 	// ---------------------------------------------------------------------------
 
 	private void checkForErrors(Element elem) throws InvalidParameterValueEx {
-		List children = elem.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = elem.getChildren();
 
 		if (elem.getName().equals("error")) {
 			String type = elem.getAttributeValue("type");
-			String oper = Xml.getString((Element) children.get(0));
+			String oper = "unknown";
+			if (!children.isEmpty()) {
+			    oper = Xml.getString((Element) children.get(0));
+			}
 
 			throw new InvalidParameterValueEx(type, oper);
 		}
 
-        for (Object aChildren : children) {
-            checkForErrors((Element) aChildren);
+        for (Element aChildren : children) {
+            checkForErrors(aChildren);
         }
 	}
 
@@ -353,9 +360,10 @@ public class CatalogSearcher {
 		}
 
 		else {
-			List children = elem.getChildren();
+			@SuppressWarnings("unchecked")
+            List<Element> children = elem.getChildren();
 
-            for (Object aChildren : children) {
+            for (Element aChildren : children) {
                 convertPhrases((Element) aChildren);
             }
 		}
@@ -384,10 +392,11 @@ public class CatalogSearcher {
 						+ field); // FIXME log doesn't work
 		}
 
-		List children = elem.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> children = elem.getChildren();
 
-        for (Object aChildren : children) {
-            remapFields((Element) aChildren);
+        for (Element aChildren : children) {
+            remapFields(aChildren);
         }
 	}
 
@@ -414,16 +423,16 @@ public class CatalogSearcher {
      * @throws Exception
      */
 	private Pair<Element, List<ResultItem>> performSearch(ServiceContext context, Element luceneExpr,
-                                                          Element filterExpr, String filterVersion, Sort sort,
+                                                          @Nonnull Element filterExpr, String filterVersion, Sort sort,
                                                           ResultType resultType, int startPosition, int maxRecords,
                                                           int maxHitsInSummary, String cswServiceSpecificContraint,
                                                           GeonetworkMultiReader reader, TaxonomyReader taxonomyReader)
             throws Exception {
 
-        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+        if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
             Log.debug(Geonet.CSW_SEARCH, "CatalogSearcher performSearch()");
-        if (filterExpr != null) {
-            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+        }
+        if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
                 Log.debug(Geonet.CSW_SEARCH, "CatS performsearch: filterXpr:\n"+ Xml.getString(filterExpr));
         }
 
@@ -445,14 +454,15 @@ public class CatalogSearcher {
         Query data;
         if (luceneExpr == null) {
             data = null;
+            Log.info(Geonet.CSW_SEARCH, "LuceneSearcher made null query");
         } else {
             PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(_lang, true);
             String requestedLanguageOnly = sm.get_settingInfo().getRequestedLanguageOnly();
             data = LuceneSearcher.makeLocalisedQuery(luceneExpr,
                 analyzer, _luceneConfig,
                 _lang, requestedLanguageOnly);
+            Log.info(Geonet.CSW_SEARCH, "LuceneSearcher made query:\n" + data.toString());
         }
-        Log.info(Geonet.CSW_SEARCH,"LuceneSearcher made query:\n" + data.toString());
 
         Query cswCustomFilterQuery = null;
         Log.info(Geonet.CSW_SEARCH,"LuceneSearcher cswCustomFilter:\n" + cswServiceSpecificContraint);
@@ -671,7 +681,7 @@ public class CatalogSearcher {
         encoder.setNamespaceAware(true);
 
         encoder.encode(SpatialIndexWriter.toMultiPolygon(fullGeom), org.geotools.gml3.GML.MultiPolygon, out);
-        Element geomElem = org.fao.geonet.csw.common.util.Xml.loadString(out.toString(), false);
+        Element geomElem = org.fao.geonet.csw.common.util.Xml.loadString(out.toString(Jeeves.ENCODING), false);
         parentElement.setContent(index, geomElem);
     }
 

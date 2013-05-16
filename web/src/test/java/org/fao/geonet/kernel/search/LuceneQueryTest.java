@@ -1,11 +1,6 @@
 package org.fao.geonet.kernel.search;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import junit.framework.TestCase;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
@@ -14,6 +9,10 @@ import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.jdom.DefaultJDOMFactory;
 import org.jdom.Element;
 import org.jdom.JDOMFactory;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -320,7 +319,8 @@ public class LuceneQueryTest extends TestCase {
         LuceneQueryInput lQI = new LuceneQueryInput(request);
 
 		// build lucene query
-		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
+		LuceneQueryBuilder luceneQueryBuilder = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null);
+        Query query = luceneQueryBuilder.build(lQI);
 		// verify query
 		assertEquals("unexpected Lucene query", "+(title:xxx title:yyy (+any:xxx +any:yyy)) +_isTemplate:n", query.toString());
     }
@@ -1720,7 +1720,7 @@ public class LuceneQueryTest extends TestCase {
 		// build lucene query
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
 		// verify query
-		assertEquals("unexpected Lucene query", "+eastBL:[55.0 TO 55.0] +westBL:[43.0 TO 43.0] +northBL:[12.0 TO 12.0] +southBL:[9.0 TO 9.0] +_isTemplate:n", query.toString());
+		assertEquals("unexpected Lucene query", "+eastBL:[55.0 TO 55.0] +westBL:[43.0 TO 43.0] +southBL:[9.0 TO 9.0] +northBL:[12.0 TO 12.0] +_isTemplate:n", query.toString());
 	}
 
 	/**
@@ -1750,7 +1750,7 @@ public class LuceneQueryTest extends TestCase {
 		// build lucene query
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
 		// verify query
-		assertEquals("unexpected Lucene query", "+eastBL:[43.0 TO 180.0] +westBL:[-180.0 TO 55.0] +northBL:[9.0 TO 90.0] +southBL:[-90.0 TO 12.0] +_isTemplate:n", query.toString());
+		assertEquals("unexpected Lucene query", "+westBL:[-180.0 TO 55.0] +eastBL:[43.0 TO 180.0] +northBL:[9.0 TO 90.0] +southBL:[-90.0 TO 12.0] +_isTemplate:n", query.toString());
 	}
 
 	/**
@@ -1780,7 +1780,7 @@ public class LuceneQueryTest extends TestCase {
 		// build lucene query
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
 		// verify query
-		assertEquals("unexpected Lucene query", "+eastBL:[55.0 TO 180.0] +westBL:[-180.0 TO 43.0] +northBL:[12.0 TO 90.0] +southBL:[-90.0 TO 9.0] +_isTemplate:n", query.toString());
+		assertEquals("unexpected Lucene query", "+eastBL:[55.0 TO 180.0] +westBL:[-180.0 TO 43.0] +southBL:[-90.0 TO 9.0] +northBL:[12.0 TO 90.0] +_isTemplate:n", query.toString());
 	}
 
 	/**
@@ -1810,7 +1810,7 @@ public class LuceneQueryTest extends TestCase {
 		// build lucene query
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
 		// verify query
-		assertEquals("unexpected Lucene query", "+eastBL:[43.0 TO 55.0] +westBL:[43.0 TO 55.0] +northBL:[9.0 TO 12.0] +southBL:[9.0 TO 12.0] +_isTemplate:n", query.toString());
+		assertEquals("unexpected Lucene query", "+eastBL:[43.0 TO 55.0] +westBL:[43.0 TO 55.0] +southBL:[9.0 TO 12.0] +northBL:[9.0 TO 12.0] +_isTemplate:n", query.toString());
 	}
 
 	/**
@@ -1840,7 +1840,7 @@ public class LuceneQueryTest extends TestCase {
 		// build lucene query
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
 		// verify query
-		assertEquals("unexpected Lucene query", "eastBL:[-180.0 TO 43.0] westBL:[55.0 TO 180.0] northBL:[-90.0 TO 0.0] southBL:[30.0 TO 90.0] +_isTemplate:n", query.toString());
+		assertEquals("unexpected Lucene query", "westBL:[55.0 TO 180.0] eastBL:[-180.0 TO 43.0] northBL:[-90.0 TO 0.0] southBL:[30.0 TO 90.0] +_isTemplate:n", query.toString());
 	}
 
 	/**
@@ -1870,7 +1870,7 @@ public class LuceneQueryTest extends TestCase {
 		// build lucene query
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
 		// verify query
-		assertEquals("unexpected Lucene query", "+eastBL:[-180.0 TO 180.0] +westBL:[-180.0 TO 180.0] +northBL:[-90.0 TO 90.0] +southBL:[-90.0 TO 90.0] +_isTemplate:n", query.toString());
+		assertEquals("unexpected Lucene query", "+westBL:[-180.0 TO 180.0] +eastBL:[-180.0 TO 180.0] +northBL:[-90.0 TO 90.0] +southBL:[-90.0 TO 90.0] +_isTemplate:n", query.toString());
 	}
 
 	/**
@@ -1947,7 +1947,7 @@ public class LuceneQueryTest extends TestCase {
 		// build lucene query
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
 		// verify query
-		assertEquals("unexpected Lucene query", "+(_op0:1 _op2:1 _op0:0 _op2:0) +eastBL:[-180.0 TO 180.0] +westBL:[-180.0 TO 180.0] +northBL:[-90.0 TO 90.0] +southBL:[-90.0 TO 90.0] +title:hoi +_isTemplate:n", query.toString());
+		assertEquals("unexpected Lucene query", "+(_op0:1 _op2:1 _op0:0 _op2:0) +westBL:[-180.0 TO 180.0] +eastBL:[-180.0 TO 180.0] +northBL:[-90.0 TO 90.0] +southBL:[-90.0 TO 90.0] +title:hoi +_isTemplate:n", query.toString());
 	}
 
 	/**
@@ -2061,7 +2061,7 @@ public class LuceneQueryTest extends TestCase {
 		// build lucene query
 		Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
 		// verify query
-		assertEquals("unexpected Lucene query", "+_isTemplate:n +eastBL:[-180.0 TO 180.0] +westBL:[-180.0 TO 180.0] +northBL:[-90.0 TO 90.0] +southBL:[-90.0 TO 90.0]", query.toString());
+		assertEquals("unexpected Lucene query", "+_isTemplate:n +westBL:[-180.0 TO 180.0] +eastBL:[-180.0 TO 180.0] +northBL:[-90.0 TO 90.0] +southBL:[-90.0 TO 90.0]", query.toString());
 	}
 
 

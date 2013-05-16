@@ -112,7 +112,7 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 	 * NOTE: Must be called by implementing classes after creating their own
 	 * (extended) datasource.
 	 */
-	public void setDataSource(DataSource dataSource) {
+	public synchronized void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
@@ -228,6 +228,21 @@ public abstract class AbstractDbmsPool implements ResourceProvider {
 
 	public void removeListener(ResourceListener l) {
 		hsListeners.remove(l);
+	}
+
+	// --------------------------------------------------------------------------
+
+	protected int getPreparedStatementCacheSize(Element config) throws NumberFormatException {
+		int iMaxOpen = -1;
+		String maxOpenPreparedStatements = config.getChildText(Jeeves.Res.Pool.MAX_OPEN_PREPARED_STATEMENTS);
+		if (maxOpenPreparedStatements != null) {
+			try {
+				iMaxOpen = Integer.valueOf(maxOpenPreparedStatements);
+			} catch (NumberFormatException nfe) {
+				throw new IllegalArgumentException(Jeeves.Res.Pool.MAX_OPEN_PREPARED_STATEMENTS+" has non-integer value "+maxOpenPreparedStatements);
+			}
+		}
+		return iMaxOpen;
 	}
 
 	//---------------------------------------------------------------------------

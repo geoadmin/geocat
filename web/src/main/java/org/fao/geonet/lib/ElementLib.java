@@ -31,7 +31,7 @@ import org.jdom.Text;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -112,10 +112,9 @@ public class ElementLib
 	{
 		//--- handle attributes
 
-		for (Iterator i=el.getAttributes().iterator(); i.hasNext();)
-		{
-			Attribute a = (Attribute) i.next();
-
+		@SuppressWarnings("unchecked")
+        List<Attribute> attributes = el.getAttributes();
+		for (Attribute a : attributes) {
 			String text = a.getValue();
 			text = substitute(text, vars);
 			a.setValue(text);
@@ -145,11 +144,11 @@ public class ElementLib
 
 	private String substitute(String text, Map<String, ? extends Object> vars)
 	{
-		
-		for (String name : vars.keySet()) {
-			String value = "";
-			if(vars.get(name) != null) value = vars.get(name).toString();
-			text = Util.replaceString(text, name, value);
+		for (Map.Entry<String, ? extends Object> entry : vars.entrySet()){
+		    String name = entry.getKey();
+            String value = "";
+            if(entry.getValue() != null) value = entry.getValue().toString();
+			text = Util.replaceString(text, name, value));
 		}
 
 		return text;

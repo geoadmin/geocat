@@ -35,7 +35,7 @@ import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.pattern.NodeKindTest;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.util.GeocatXslUtil;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -321,7 +321,7 @@ public class TranslateAndValidate {
 		
 		xslFileName.insert(0, finalWebappDir);
     	
-    	String xml = XslUtil.writeXml(doc.getRoot());
+    	String xml = GeocatXslUtil.writeXml(doc.getRoot());
     	AxisIterator iter = doc.iterateAxis(Axis.DESCENDANT, NodeKindTest.ELEMENT);
     	while(iter.moveNext()) {
     		NodeInfo next = (NodeInfo) iter.next();

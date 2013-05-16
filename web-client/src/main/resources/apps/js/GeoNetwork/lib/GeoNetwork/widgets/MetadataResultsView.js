@@ -803,6 +803,15 @@ GeoNetwork.MetadataResultsView = Ext
                                                                                         href : kmlLink
                                                                                     });
                                                                         }
+                            } else if (currentType === 'application/vnd.ogc.wmc') {
+                                linkButton.push({
+                                    text: record.get('title') || record.get('name'),
+                                    handler: function (b, e) {
+                                        // FIXME : ref to app
+                                        app.switchMode('1', true);
+                                        app.getIMap().addWMC(record.get('href'));
+                                    }
+                                });
                                                                     } else {
                                                                         // If
                                                                         // link
@@ -854,14 +863,8 @@ GeoNetwork.MetadataResultsView = Ext
 
                                                             });
                                                     // Add the latest button
-                                                    if ((linkButton !== null)
-                                                            && (linkButton.length > 0)) {
-                                                        view
-                                                                .addLinkMenu(
-                                                                        linkButton,
-                                                                        '',
-                                                                        currentType,
-                                                                        el);
+                    if (linkButton !== null && linkButton.length !== 0) {
+                        view.addLinkMenu(linkButton, label, currentType, el);
                                                     }
 
                                                     if ((kmlButton !== null)

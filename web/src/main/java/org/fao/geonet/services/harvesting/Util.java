@@ -48,6 +48,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.xpath.XPath;
 
+import java.util.List;
+
 //=============================================================================
 
 public class Util
@@ -77,13 +79,12 @@ public class Util
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-		Iterator i = params.getChildren().iterator();
+		@SuppressWarnings("unchecked")
+        List<Element> paramList = params.getChildren();
 
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 
-		while (i.hasNext())
-		{
-			Element el  = (Element) i.next();
+		for (Element el : paramList) {
 			String  id  = el.getText();
 			String  res = job.execute(dbms, hm, id).toString();
 

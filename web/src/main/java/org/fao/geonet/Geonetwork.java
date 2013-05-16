@@ -33,6 +33,9 @@ import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContext;
 
@@ -43,9 +46,10 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
-import jeeves.server.ConfigurationOverrides;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.overrides.ConfigurationOverrides;
+import jeeves.server.resources.ResourceManager;
 import jeeves.utils.ProxyInfo;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -87,6 +91,7 @@ import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.services.extent.ExtentManager;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.services.metadata.StatusActions;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
 import org.fao.geonet.util.ThreadPool;
@@ -119,7 +124,6 @@ public class Geonetwork implements ApplicationHandler {
 	private ThreadPool        threadPool;
 	private String   FS         = File.separator;
 	private Element dbConfiguration;
-
 	private static final String       SPATIAL_INDEX_FILENAME    = "spatialindex";
 	private static final String       IDS_ATTRIBUTE_NAME        = "id";
 
@@ -140,8 +144,6 @@ public class Geonetwork implements ApplicationHandler {
 	/**
      * Inits the engine, loading all needed data.
 	  */
-
-	@SuppressWarnings(value = "unchecked")
 	public Object start(Element config, ServiceContext context) throws Exception {
 	    Processor.addUriMapper(new SharedObjectUriMapper());
 	    
@@ -164,7 +166,9 @@ public class Geonetwork implements ApplicationHandler {
 		logger.info("Initializing GeoNetwork " + version +  "." + subVersion +  " ...");
 
 		// Get main service config handler
-		ServiceConfig handlerConfig = new ServiceConfig(config.getChildren());
+		@SuppressWarnings("unchecked")
+        List<Element> serviceConfigElems = config.getChildren();
+        ServiceConfig handlerConfig = new ServiceConfig(serviceConfigElems);
 		
 		// Init configuration directory
 		new GeonetworkDataDirectory(webappName, path, handlerConfig, context.getServlet());
@@ -176,13 +180,15 @@ public class Geonetwork implements ApplicationHandler {
 		String dataDir =  handlerConfig.getMandatoryValue(Geonet.Config.DATA_DIR);
 		String luceneConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.LUCENE_CONFIG);
 		String summaryConfigXmlFile = handlerConfig.getMandatoryValue(Geonet.Config.SUMMARY_CONFIG);
+
 		logger.info("Data directory: " + systemDataDir);
 
 		setProps(path, handlerConfig);
 
 		// Status actions class - load it
 		String statusActionsClassName = handlerConfig.getMandatoryValue(Geonet.Config.STATUS_ACTIONS_CLASS); 
-		Class statusActionsClass = Class.forName(statusActionsClassName);
+		@SuppressWarnings("unchecked")
+        Class<StatusActions> statusActionsClass = (Class<StatusActions>) Class.forName(statusActionsClassName);
 
         String languageProfilesDir = handlerConfig
                 .getMandatoryValue(Geonet.Config.LANGUAGE_PROFILES_DIR);
@@ -190,15 +196,15 @@ public class Geonetwork implements ApplicationHandler {
 		JeevesJCS.setConfigFilename(path + "WEB-INF/classes/cache.ccf");
 
 		// force caches to be config'd so shutdown hook works correctly
-		JeevesJCS jcsDummy = JeevesJCS.getInstance(Processor.XLINK_JCS);
-		jcsDummy = JeevesJCS.getInstance(XmlResolver.XMLRESOLVER_JCS);
+		JeevesJCS.getInstance(Processor.XLINK_JCS);
+		JeevesJCS.getInstance(XmlResolver.XMLRESOLVER_JCS);
 
 		
 
 		// --- Check current database and create database if an emty one is found
 		String dbConfigurationFilePath = path + "/WEB-INF/config-db.xml";
 		dbConfiguration = Xml.loadFile(dbConfigurationFilePath);
-        ConfigurationOverrides.updateWithOverrides(dbConfigurationFilePath, servletContext, path, dbConfiguration);
+        ConfigurationOverrides.DEFAULT.updateWithOverrides(dbConfigurationFilePath, servletContext, path, dbConfiguration);
 
 		Pair<Dbms,Boolean> pair = initDatabase(context);
 		Dbms dbms = pair.one();
@@ -233,7 +239,6 @@ public class Geonetwork implements ApplicationHandler {
 
 		boolean z3950Enable    = settingMan.getValueAsBool("system/z3950/enable", false);
 		String  z3950port      = settingMan.getValue("system/z3950/port");
-		String  host           = settingMan.getValue(Geonet.Settings.SERVER_HOST);
 
 		// null means not initialized
 		ApplicationContext app_context = null;
@@ -406,14 +411,6 @@ public class Geonetwork implements ApplicationHandler {
 		thesaurusMan = ThesaurusManager.getInstance(context, path, dataMan, context.getResourceManager(), thesauriDir);
 		dataMan.setThesaurusManager(thesaurusMan);
 		//------------------------------------------------------------------------
-		//--- initialize harvesting subsystem
-
-		logger.info("  - Harvest manager...");
-
-		harvestMan = new HarvestManager(context, settingMan, dataMan);
-		dataMan.setHarvestManager(harvestMan);
-
-		//------------------------------------------------------------------------
 		//--- initialize catalogue services for the web
 
 		logger.info("  - Catalogue services for the web...");
@@ -456,7 +453,6 @@ public class Geonetwork implements ApplicationHandler {
 		gnContext.config      = handlerConfig;
 		gnContext.catalogDis  = catalogDis;
 		gnContext.settingMan  = settingMan;
-		gnContext.harvestMan  = harvestMan;
         gnContext.thesaurusMan= thesaurusMan;
         gnContext.extentMan   = extentMan;
         gnContext.reusableObjMan = reusableObjMan;
@@ -469,6 +465,17 @@ public class Geonetwork implements ApplicationHandler {
 		gnContext.statusActionsClass = statusActionsClass;
 
 		logger.info("Site ID is : " + gnContext.getSiteId());
+
+        //------------------------------------------------------------------------
+        //--- initialize harvesting subsystem
+
+        logger.info("  - Harvest manager...");
+
+        harvestMan = new HarvestManager(context, gnContext, settingMan, dataMan);
+        dataMan.setHarvestManager(harvestMan);
+
+        gnContext.harvestMan  = harvestMan;
+
 
         // Creates a default site logo, only if the logo image doesn't exists
         // This can happen if the application has been updated with a new version preserving the database and
@@ -490,29 +497,99 @@ public class Geonetwork implements ApplicationHandler {
 			String  proxyPort      = settingMan.getValue("system/proxy/port");
 			String  username       = settingMan.getValue("system/proxy/username");
 			String  password       = settingMan.getValue("system/proxy/password");
-			pi.setProxyInfo(proxyHost, new Integer(proxyPort), username, password);
+			pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
 		}
 
+        //
+        // db heartbeat configuration -- for failover to readonly database
+        //
+        boolean dbHeartBeatEnabled = Boolean.parseBoolean(handlerConfig.getValue(Geonet.Config.DB_HEARTBEAT_ENABLED, "false"));
+        if(dbHeartBeatEnabled) {
+            Integer dbHeartBeatInitialDelay = Integer.parseInt(handlerConfig.getValue(Geonet.Config.DB_HEARTBEAT_INITIALDELAYSECONDS, "5"));
+            Integer dbHeartBeatFixedDelay = Integer.parseInt(handlerConfig.getValue(Geonet.Config.DB_HEARTBEAT_FIXEDDELAYSECONDS, "60"));
+            createDBHeartBeat(context.getResourceManager(), gnContext, dbHeartBeatInitialDelay, dbHeartBeatFixedDelay);
+        }
 		return gnContext;
 	}
 
     /**
+     * Sets up a periodic check whether GeoNetwork can successfully write to the database. If it can't, GeoNetwork will
+     * automatically switch to read-only mode.
+     */
+    private void createDBHeartBeat(final ResourceManager rm, final GeonetContext gc, Integer initialDelay, Integer fixedDelay) {
+        logger.info("creating DB heartbeat with initial delay of " + initialDelay + " s and fixed delay of " + fixedDelay + " s" );
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+        Runnable DBHeartBeat = new Runnable() {
+            private static final String INSERT = "INSERT INTO Settings(id, parentId, name, value) VALUES(?, ?, ?, ?)";
+            private static final String REMOVE = "DELETE FROM Settings WHERE id=?";
+
+            /**
      *
-     * @param webappName
-     * @param handlerConfig
-     * @param dataDir
+             */
+            @Override
+            public void run() {
+                try {
+                    boolean readOnly = gc.isReadOnly();
+                    logger.debug("DBHeartBeat: GN is read-only ? " + readOnly);
+                    boolean canWrite = checkDBWrite();
+                    HarvestManager hm = gc.getHarvestManager();
+                    if(readOnly && canWrite) {
+                        logger.warning("GeoNetwork can write to the database, switching to read-write mode");
+                        readOnly = false;
+                        gc.setReadOnly(readOnly);
+                        hm.setReadOnly(readOnly);
+                    }
+                    else if(!readOnly && !canWrite) {
+                        logger.warning("GeoNetwork can not write to the database, switching to read-only mode");
+                        readOnly = true;
+                        gc.setReadOnly(readOnly);
+                        hm.setReadOnly(readOnly);
+                    }
+                    else {
+                        if(readOnly) {
+                            logger.info("GeoNetwork remains in read-only mode");
+                        }
+                        else {
+                            logger.debug("GeoNetwork remains in read-write mode");
+                        }
+                    }
+                }
+                // any uncaught exception would cause the scheduled execution to silently stop
+                catch(Throwable x) {
+                    logger.error("DBHeartBeat error: " + x.getMessage() + " This error is ignored.");
+                    x.printStackTrace();
+                }
+            }
+
+            /**
+             *
      * @return
      */
-    private String locateThesaurusDir(String webappName, ServiceConfig handlerConfig, String dataDir) {
-        String defaultThesaurusDir = handlerConfig.getValue(Geonet.Config.CODELIST_DIR, null);
-        String thesaurusSystemDir = System.getProperty(webappName + ".codeList.dir");
-        String thesauriDir = (thesaurusSystemDir != null ? thesaurusSystemDir :
-                                (defaultThesaurusDir != null ? defaultThesaurusDir : dataDir + "/codelist/")
-                                );
-        thesauriDir = new File(thesauriDir).getAbsoluteFile().getPath();
-        handlerConfig.setValue(Geonet.Config.CODELIST_DIR, thesauriDir);
-        System.setProperty(webappName + ".codeList.dir", thesauriDir);
-        return thesauriDir;
+            private boolean checkDBWrite() {
+                Dbms dbms = null;
+                try {
+                    Integer testId = Integer.valueOf("100000");
+                    dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
+                    dbms.execute(INSERT, testId, Integer.valueOf("1"), "DBHeartBeat", "Yeah !");
+                    dbms.execute(REMOVE, testId);
+                    return true;
+    }
+                catch (Exception x) {
+                    logger.info("DBHeartBeat Exception: " + x.getMessage());
+                    return false;
+                }
+                finally {
+                    try {
+                        if (dbms != null) rm.close(Geonet.Res.MAIN_DB, dbms);
+                    }
+                    catch (Exception x) {
+                        logger.error("DBHeartBeat failed to close DB connection. Your system is unstable! Error: " + x.getMessage());
+                        x.printStackTrace();
+                    }
+                }
+            }
+        };
+        scheduledExecutorService.scheduleWithFixedDelay(DBHeartBeat, initialDelay, fixedDelay, TimeUnit.SECONDS);
     }
 
     /**
@@ -560,7 +637,7 @@ public class Geonetwork implements ApplicationHandler {
                 //&& subVersion.equals(dbSubVersion) Check only on version number
         ) {
             logger.info("      Webapp version = Database version, no migration task to apply.");
-        } else {
+		} else if (to > from) {
             boolean anyMigrationAction = false;
             boolean anyMigrationError = false;
             
@@ -654,6 +731,8 @@ public class Geonetwork implements ApplicationHandler {
                 logger.warning("      Error occurs during migration. Check the log file for more details.");
             }
             // TODO : Maybe some migration stuff has to be done in Java ?
+		} else {
+	          logger.info("      Running on a newer database version.");
         }
     }
 
@@ -756,7 +835,7 @@ public class Geonetwork implements ApplicationHandler {
             if (!logo.exists()) {
                 FileOutputStream os = new FileOutputStream(logo);
                 try {
-                    os.write(Resources.loadImage(servletContext, appPath, "logos/dummy.gif", new byte[0]).one());
+                    os.write(Resources.loadImage(servletContext, appPath, "images/logos/dummy.gif", new byte[0]).one());
                     logger.info("      Setting catalogue logo for current node identified by: " + nodeUuid);
                 } finally {
                     os.close();
@@ -858,13 +937,15 @@ public class Geonetwork implements ApplicationHandler {
 	private DataStore createShapefileDatastore(String indexDir) throws Exception {
 
 		File file = new File(indexDir + "/" + SPATIAL_INDEX_FILENAME + ".shp");
-		file.getParentFile().mkdirs();
+		if(!file.getParentFile().mkdirs() && !file.getParentFile().exists()) {
+		    throw new RuntimeException("Unable to create the spatial index (shapefile) directory: "+file.getParentFile());
+		}
 		if (!file.exists()) {
 			logger.info("Creating shapefile "+file.getAbsolutePath());
 		} else {
 			logger.info("Using shapefile "+file.getAbsolutePath());
 		}
-		IndexedShapefileDataStore ids = new IndexedShapefileDataStore(file.toURI().toURL(), new URI("http://geonetwork.org"), false, false, IndexType.QIX, Charset.forName("UTF-8"));
+		IndexedShapefileDataStore ids = new IndexedShapefileDataStore(file.toURI().toURL(), new URI("http://geonetwork.org"), false, false, IndexType.QIX, Charset.forName(Jeeves.ENCODING));
 		CoordinateReferenceSystem crs = CRS.decode("EPSG:4326");
 
 		if (crs != null) {
@@ -883,5 +964,4 @@ public class Geonetwork implements ApplicationHandler {
 		logger.info("NOTE: Using shapefile for spatial index, this can be slow for larger catalogs");
 		return ids;
 	}
-
 }

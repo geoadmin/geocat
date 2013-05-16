@@ -51,9 +51,11 @@ import jeeves.interfaces.Activator;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.interfaces.Logger;
 import jeeves.monitor.MonitorManager;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
+import jeeves.server.overrides.ConfigurationOverrides;
 import jeeves.server.resources.ProviderManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.server.sources.ServiceRequest;
@@ -64,6 +66,7 @@ import jeeves.utils.TransformerFactoryFactory;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.PropertyConfigurator;
 import org.jdom.Element;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -86,7 +89,10 @@ public class JeevesEngine
 	private String  appPath;
 	private boolean defaultLocal;
 	private boolean debugFlag;
-
+	
+    private Dbms dbms;
+    private boolean dbLoaded;
+    
 	/** true if the 'general' part has been loaded */
 	private boolean generalLoaded;
 
@@ -101,6 +107,10 @@ public class JeevesEngine
 	private Vector<Activator> vActivators = new Vector<Activator>();
 	private XmlCacheManager xmlCacheManager = new XmlCacheManager();
     private MonitorManager monitorManager;
+    
+    private List<Element> dbservices = new ArrayList<Element>();
+    
+
 
     //---------------------------------------------------------------------------
 	//---
@@ -171,6 +181,8 @@ public class JeevesEngine
 			scheduleMan.setSerialFactory(serialFact);
 			scheduleMan.setBaseUrl(baseUrl);
 
+			dbLoaded = false;
+			
 			loadConfigFile(servletContext, configPath, Jeeves.CONFIG_FILE, serviceMan);
 
             info("Initializing profiles...");
@@ -178,7 +190,6 @@ public class JeevesEngine
             scheduleMan.setProfileManager(profileManager);
             // Add ResourceManager as a bean to the spring application context so that GeonetworkAuthentication can access it
             jeevesAppContext.getBeanFactory().registerSingleton("resourceManager", new ResourceManager(this.monitorManager, this.providerMan));
-            profileManager.setApplicationContext(jeevesAppContext);
             jeevesAppContext.getBeanFactory().registerSingleton("profileManager", profileManager);
             jeevesAppContext.getBeanFactory().registerSingleton("serialFactory", serialFact);
 
@@ -230,6 +241,7 @@ public class JeevesEngine
     private void setupXSLTTransformerFactory(JeevesServlet servlet) throws IOException, TransformerConfigurationException {
     	
     	InputStream in = null;
+    	BufferedReader br = null;
     	// In debug mode, Jeeves may load a different file
     	// Load javax.xml.transform.TransformerFactory from application path instead
     	if(servlet != null) {
@@ -242,16 +254,15 @@ public class JeevesEngine
         try {
             
             if(in != null) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(in));
+                br = new BufferedReader(new InputStreamReader(in, Jeeves.ENCODING));
                 String line;
                 while ((line = br.readLine()) != null)   {
-                    if(line == null || line.length() == 0) {
+                    if(line.length() == 0) {
                         warning("Malformed definition of XSLT transformer (in: META-INF/services/javax.xml.transform.TransformerFactory).");
                     }
                     TransformerFactoryFactory.init(line);
                     break;
                 }
-                in.close();
             }
         }
         catch(IOException x) {
@@ -264,8 +275,9 @@ public class JeevesEngine
             x.printStackTrace();
         }
         finally {
-            if(in != null) {
-                in.close();
+            IOUtils.closeQuietly(in);
+            if(br != null) {
+                IOUtils.closeQuietly(br);
             }
         }
     }
@@ -282,7 +294,7 @@ public class JeevesEngine
 
 		Element configRoot = Xml.loadFile(file);
 
-        ConfigurationOverrides.updateWithOverrides(file, servletContext, appPath, configRoot);
+        ConfigurationOverrides.DEFAULT.updateWithOverrides(file, servletContext, appPath, configRoot);
 
 		Element elGeneral = configRoot.getChild(ConfigFile.Child.GENERAL);
 		Element elDefault = configRoot.getChild(ConfigFile.Child.DEFAULT);
@@ -312,10 +324,11 @@ public class JeevesEngine
 		//--- init resources
 
 		List<Element> resList = configRoot.getChildren(ConfigFile.Child.RESOURCES);
-
+		
 		for(int i=0; i<resList.size(); i++)
 			initResources(resList.get(i), file);
 
+		
 		//--- init app-handlers
 
 		appHandList.addAll(configRoot.getChildren(ConfigFile.Child.APP_HANDLER));
@@ -323,10 +336,21 @@ public class JeevesEngine
 		//--- init services
 
 		List<Element> srvList = configRoot.getChildren(ConfigFile.Child.SERVICES);
-
+		
 		for(int i=0; i<srvList.size(); i++)
 			initServices(srvList.get(i));
 
+		if (!dbLoaded) {
+			setDBServicesElement(dbms);
+			for(int i=0; i<dbservices.size(); i++){
+				initServices(dbservices.get(i));
+			}
+			dbLoaded = true;
+		}
+		
+		
+
+		
 		//--- init schedules
 
 		List<Element> schedList = configRoot.getChildren(ConfigFile.Child.SCHEDULES);
@@ -385,7 +409,12 @@ public class JeevesEngine
 		if (!uploadDir.endsWith("/"))
 			uploadDir += "/";
 
-		new File(uploadDir).mkdirs();
+		File uploadDirFile = new File(uploadDir);
+		if( !uploadDirFile.mkdirs() && !uploadDirFile.exists()) {
+		    throw new RuntimeException("Unable to make upload directory: "+uploadDirFile);
+		} else {
+		    Log.info(Log.JEEVES, "Upload directory is: "+uploadDir);
+		}
 
 		debugFlag = "true".equals(general.getChildText(ConfigFile.General.Child.DEBUG));
 
@@ -470,6 +499,7 @@ public class JeevesEngine
 			if ((enabled == null) || enabled.equals("true"))
 			{
 				info("   Adding resource : " + name);
+
 				resourceFound = true;
 				try
 				{
@@ -490,7 +520,10 @@ public class JeevesEngine
 
 					// Try and open a resource from the provider
 					providerMan.getProvider(name).open();
-
+					
+					if (name.equals("main-db")){
+						dbms = (Dbms) providerMan.getProvider(name).open();
+				}
 				}
 				catch(Exception e)
 				{
@@ -528,7 +561,6 @@ public class JeevesEngine
 	//---
 	//---------------------------------------------------------------------------
 
-	@SuppressWarnings("unchecked")
 	private void initAppHandler(Element handler, JeevesServlet servlet, JeevesApplicationContext jeevesApplicationContext) throws Exception
 	{
 		if (handler == null)
@@ -544,7 +576,7 @@ public class JeevesEngine
 
 			info("Found handler : " +className);
 
-			Class c = Class.forName(className);
+			Class<?> c = Class.forName(className);
 
 			ApplicationHandler h = (ApplicationHandler) c.newInstance();
 
@@ -600,7 +632,7 @@ public class JeevesEngine
 	  */
 
 	@SuppressWarnings("unchecked")
-	private void initServices(Element services) throws Exception
+	public void initServices(Element services) throws Exception
 	{
 		info("Initializing services...");
 
@@ -614,7 +646,7 @@ public class JeevesEngine
 					.getAttributeValue(ConfigFile.Service.Attr.NAME);
 
 			info("   Adding service : " + name);
-
+			
 			try {
 				serviceMan.addService(pack, service);
 			} catch (Exception e) {
@@ -783,8 +815,55 @@ public class JeevesEngine
 	public ServiceManager getServiceManager() {
 		return serviceMan;
 	}
+	
+    /**
+     * Create Jeeves services from a configuration stored in the Services table
+     * of the DBMS resource.
+     * 
+     * @param _dbms
+     */
+    private void setDBServicesElement(Dbms _dbms) {
+        try {
+            Element eltServices = new Element("services");
+            eltServices.setAttribute("package", "org.fao.geonet");
+            String selectServiceQuery = "SELECT * FROM Services";
+            @SuppressWarnings("unchecked")
+            java.util.List<Element> serviceList = _dbms.select(selectServiceQuery)
+                    .getChildren();
+
+            if (!dbLoaded) {
+                for (Element eltService : serviceList) {
+                    Element srv = new Element("service");
+                    Element cls = new Element("class");
+                    String selectServiceParamsQuery = "SELECT name, value FROM ServiceParameters WHERE service =?";
+                    Integer serviceId = Integer.valueOf(eltService.getChildText("id"));
+                    @SuppressWarnings("unchecked")
+                    java.util.List<Element> paramList = _dbms.select(selectServiceParamsQuery, serviceId).getChildren();
+
+                    for (Element eltParam : paramList) {
+                        if (eltParam.getChildText("value") != null
+                                && !eltParam.getChildText("value").equals("")) {
+                            cls.addContent(new Element("param").setAttribute(
+                                    "name", "filter").setAttribute(
+                                    "value",
+                                    "+" + eltParam.getChildText("name") + ":"
+                                            + eltParam.getChildText("value")));
+                        }
+                    }
+
+                    srv.setAttribute("name", eltService.getChildText("name"))
+                            .addContent(
+                                    cls.setAttribute("name",
+                                            eltService.getChildText("class")));
+                    eltServices.addContent(srv);
+                }
+            }
+
+            dbservices.add(eltServices);
+        } catch (Exception e) {
+            warning("Jeeves DBMS service configuration lookup failed (database may not be available yet). Message is: "
+                    + e.getMessage());
+        }
+
+    }
 }
-
-//=============================================================================
-
-

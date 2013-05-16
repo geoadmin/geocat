@@ -26,17 +26,9 @@ public class ThesaurusBasedRegionsDAOTest {
 
     private static IsoLanguagesMapper langMapper = new IsoLanguagesMapper() {
         {
-			iso639_2_to_iso639_1IsoLanguagesMap.put("eng", "en");
-			iso639_2_to_iso639_1IsoLanguagesMap.put("deu", "de");
-			iso639_2_to_iso639_1IsoLanguagesMap.put("ger", "de");
-			iso639_2_to_iso639_1IsoLanguagesMap.put("fra", "fr");
-			iso639_2_to_iso639_1IsoLanguagesMap.put("fre", "fr");
-			iso639_2_to_iso639_1IsoLanguagesMap.put("ita", "it");
-			
-			iso639_1_to_iso639_2IsoLanguagesMap.put("en", "eng");
-			iso639_1_to_iso639_2IsoLanguagesMap.put("de", "ger");
-			iso639_1_to_iso639_2IsoLanguagesMap.put("fr", "fre");
-			iso639_1_to_iso639_2IsoLanguagesMap.put("it", "ita");
+            isoLanguagesMap639.put("de", "ger");
+            isoLanguagesMap639.put("fr", "fre");
+            isoLanguagesMap639.put("en", "eng");
         }
     };
     private static ThesaurusManager thesaurusManager;

@@ -55,7 +55,7 @@ import java.util.Map;
 
 public class CatalogDispatcher
 {
-	public static Map<String, CatalogService> hmServices = new HashMap<String, CatalogService>();
+	public static final Map<String, CatalogService> hmServices = new HashMap<String, CatalogService>();
 
 	//---------------------------------------------------------------------------
 	//---
@@ -197,11 +197,10 @@ public class CatalogDispatcher
 	{
 		HashMap<String, String> hm = new HashMap<String, String>();
 
-		List params = request.getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> params = request.getChildren();
 
-        for (Object param1 : params) {
-            Element param = (Element) param1;
-
+        for (Element param : params) {
             String name = param.getName().toLowerCase();
             String value = param.getTextTrim();
 

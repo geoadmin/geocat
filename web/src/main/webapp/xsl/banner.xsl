@@ -8,6 +8,11 @@
 
     <xsl:template name="banner">
 
+        <xsl:variable name="readonly" select="/root/gui/env/readonly = 'true'"/>
+        <xsl:if test="$readonly">
+            <div style="border:5px solid yellow;position:absolute;top:10px;left:30px;color:yellow;padding:10px;font-size:xx-large;">CATALOGUE IS IN READ-ONLY MODE</div>
+        </xsl:if>
+
         <table width="100%">
             <!-- print banner -->
             <tr id="banner-img1" class="banner doprint" style="display:none;white-space:nowrap">
@@ -230,4 +235,3 @@
 	<xsl:template mode="casParams" match="casLogin" priority="10"></xsl:template>
 	<xsl:template mode="casParams" match="*">&amp;<xsl:value-of select="name(.)"/><xsl:if test="normalize-space(text())!=''">=<xsl:value-of select="text()"/></xsl:if></xsl:template>
 </xsl:stylesheet>
-

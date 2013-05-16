@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2013 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -20,40 +20,50 @@
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
+package org.fao.geonet.guiservices.csw.virtual;
 
-package org.fao.geonet.services.status;
-
-import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.constants.Params;
 import org.jdom.Element;
 
-//=============================================================================
+/**
+ * Retrieves a particular service
+ */
+public class Get implements Service {
 
-/** Retrieves all status values in the system
-  */
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
-public class List implements Service
-{
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+    public Element exec(Element params, ServiceContext context)
+            throws Exception {
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+        String id = params.getChildText(Params.ID);
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+        Dbms dbms = (Dbms) context.getResourceManager()
+                .open(Geonet.Res.MAIN_DB);
 
-		return Lib.local.retrieve(dbms, "StatusValues").setName(Jeeves.Elem.RESPONSE);
-	}
+        Element elService = dbms.select("SELECT * FROM Services WHERE id=?",
+                Integer.valueOf(id));
+
+        Element elParameters = new Element(Geonet.Elem.FILTER);
+
+        String selectServiceParamsQuery = "SELECT name, value FROM ServiceParameters WHERE service =?";
+        @SuppressWarnings("unchecked")
+        java.util.List<Element> list = dbms.select(selectServiceParamsQuery, Integer.valueOf(id)).getChildren();
+
+        for (int i = 0; i < list.size(); i++) {
+
+            Element filter = (Element) list.get(i);
+            elParameters.addContent(new Element(filter.getChildText("name"))
+                    .setText(filter.getChildText("value")));
+        }
+        elService.addContent(elParameters);
+
+        return elService;
+    }
 }
-
-//=============================================================================
-

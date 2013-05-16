@@ -182,6 +182,11 @@ public class ServiceManager
 		if (al == null) {
 			al = new ArrayList<ServiceInfo>();
 			htServices.put(name, al);
+		} else {
+		    info("Service " + name + " already exist, re-register it.");
+		    htServices.remove(name);
+		    al = new ArrayList<ServiceInfo>();
+		    htServices.put(name, al);
 		}
 
 		al.add(si);
@@ -434,8 +439,6 @@ public class ServiceManager
 				//---------------------------------------------------------------------
 				//--- check access
 
-				String profile = ProfileManager.GUEST;
-
                 TimerContext timerContext = monitorManager.getTimer(ServiceManagerServicesTimer.class).time();
                 try{
 				    response = srvInfo.execServices(req.getParams(), context);
@@ -526,7 +529,7 @@ public class ServiceManager
 				req.write(SOAPUtil.embedExc(error, sender, id, message));
 			}
 
-			else if (input == InputMethod.XML || output == OutputMethod.XML || srvInfo == null)
+			else if (input == InputMethod.XML || output == OutputMethod.XML)
 			{
 				req.setStatusCode(code);
 				req.beginStream("application/xml; charset=UTF-8", cache);
@@ -537,7 +540,7 @@ public class ServiceManager
 			{
 				//--- try to dispatch to the error output
 
-				ErrorPage errPage = (srvInfo != null) ? srvInfo.findErrorPage(id) : null;
+				ErrorPage errPage = srvInfo.findErrorPage(id);
 
 				if (errPage == null)
 					errPage = findErrorPage(id);

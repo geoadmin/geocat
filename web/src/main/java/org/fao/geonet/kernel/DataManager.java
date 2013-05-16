@@ -76,6 +76,8 @@ import org.jdom.Namespace;
 import org.jdom.Parent;
 import org.jdom.filter.ElementFilter;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -99,6 +101,7 @@ import java.util.concurrent.TimeUnit;
  *
  */
 public class DataManager {
+
 
 	//--------------------------------------------------------------------------
 	//---
@@ -138,17 +141,17 @@ public class DataManager {
 		this.xmlSerializer = parameterObject.xmlSerializer;
 		this.svnManager    = parameterObject.svnManager;
 
-		UserSession session = new UserSession();
-		session.loginAs(new JeevesUser(servContext.getProfileManager()).setUsername("admin").setId("-1").setProfile(Geonet.Profile.ADMINISTRATOR));
+        UserSession session = new UserSession();
+        session.loginAs(new JeevesUser(servContext.getProfileManager()).setUsername("admin").setId("-1").setProfile(Geonet.Profile.ADMINISTRATOR));
         servContext.setUserSession(session);
 		init(parameterObject.context, parameterObject.dbms, false);
 	}
 
 	/**
-	 * Init Data manager and refresh index if needed. 
-	 * Can also be called after GeoNetwork startup in order to rebuild the lucene 
+     * Init Data manager and refresh index if needed.
+     * Can also be called after GeoNetwork startup in order to rebuild the lucene
 	 * index
-	 * 
+     *
 	 * @param context
 	 * @param dbms
 	 * @param force         Force reindexing all from scratch
@@ -156,10 +159,10 @@ public class DataManager {
 	 **/
 	public synchronized void init(ServiceContext context, Dbms dbms, Boolean force) throws Exception {
 
-	    
+
 		// get all metadata from DB
 		Element result = dbms.select("SELECT id, changeDate FROM Metadata ORDER BY id ASC");
-		
+
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
 		    Log.debug(Geonet.DATA_MANAGER, "DB CONTENT:\n'"+ Xml.getString(result) +"'");
 
@@ -177,7 +180,6 @@ public class DataManager {
 			// get metadata
 			Element record = (Element) result.getContent(i);
 			String  id     = record.getChildText("id");
-			int iId = Integer.parseInt(id);
 
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
                 Log.debug(Geonet.DATA_MANAGER, "- record ("+ id +")");
@@ -188,18 +190,18 @@ public class DataManager {
 			if (idxLastChange == null) {
 				Log.debug(Geonet.DATA_MANAGER, "-  will be indexed");
 				toIndex.add(id);
-	
+
 			// else, if indexed version is not the latest index it
 			} else {
 				docs.remove(id);
-	
+
 				String lastChange    = record.getChildText("changedate");
 
                 if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
                     Log.debug(Geonet.DATA_MANAGER, "- lastChange: " + lastChange);
                 if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
                     Log.debug(Geonet.DATA_MANAGER, "- idxLastChange: " + idxLastChange);
-	
+
 				// date in index contains 't', date in DBMS contains 'T'
 				if (force || !idxLastChange.equalsIgnoreCase(lastChange)) {
                     if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
@@ -237,7 +239,7 @@ public class DataManager {
      * @throws Exception
      */
 	public synchronized void rebuildIndexXLinkedMetadata(ServiceContext context) throws Exception {
-		
+
 		// get all metadata with XLinks
 		Set<Integer> toIndex = searchMan.getDocsWithXLinks();
 
@@ -255,7 +257,7 @@ public class DataManager {
             batchRebuild(context,stringIds);
 		}
 	}
-    
+
     /**
      * TODO javadoc.
      *
@@ -296,7 +298,6 @@ public class DataManager {
      */
     public void indexInThreadPoolIfPossible(Dbms dbms, String id, boolean processSharedObjects) throws Exception {
         if(ServiceContext.get() == null ) {
-            boolean indexGroup = false;
             indexMetadata(dbms, id, processSharedObjects, getServiceContext());
         } else {
             indexInThreadPool(ServiceContext.get(), id, dbms, processSharedObjects);
@@ -334,14 +335,22 @@ public class DataManager {
                 Runnable worker = new IndexMetadataTask(context, processSharedObjects, ids, performValidation);
                 gc.getThreadPool().runTask(worker, 5, TimeUnit.SECONDS);
             }
-        } 
+        }
         catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, e.getMessage());
             e.printStackTrace();
             // TODO why swallow
         }
     }
-
+    
+    Set<IndexMetadataTask> indexing = Collections.synchronizedSet(new HashSet<IndexMetadataTask>());
+    
+    public boolean isIndexing() {
+        synchronized (indexing) {
+            return !indexing.isEmpty();
+        }
+    }
+    
     Set<IndexMetadataTask> indexing = Collections.synchronizedSet(new HashSet<IndexMetadataTask>());
 
     /**
@@ -356,11 +365,16 @@ public class DataManager {
         private final boolean processSharedObjects;
         private final boolean performValidation;
         private JeevesUser user;
+        private JeevesUser user;
 
         IndexMetadataTask(ServiceContext context, boolean processSharedObjects, List<String> ids, boolean performValidation) {
             synchronized (indexing) {
                 indexing.add(this);
             }
+            synchronized (indexing) {
+                indexing.add(this);
+            }
+            
             this.context = context;
             this.ids = ids;
             this.beginIndex = 0;
@@ -375,6 +389,7 @@ public class DataManager {
             synchronized (indexing) {
                 indexing.add(this);
             }
+            
             this.context = context;
             this.ids = ids;
             this.beginIndex = beginIndex;
@@ -452,8 +467,8 @@ public class DataManager {
 	public void indexMetadata(Dbms dbms, String id, boolean processSharedObjects, ServiceContext servContext, boolean performValidation, boolean fastIndex) throws Exception {
         try {
             Vector<Element> moreFields = new Vector<Element>();
-            int id$ = new Integer(id);
-            
+            int id$ = Integer.valueOf(id);
+
             // get metadata, extracting and indexing any xlinks
 
             Element md   = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, true, servContext);
@@ -561,13 +576,13 @@ public class DataManager {
 
             if (owner != null) {
                 String userQuery = "SELECT username, surname, name, profile FROM Users WHERE id = ?";
-                
-                Element user = dbms.select(userQuery,  new Integer(owner)).getChild("record");
-                
+
+                Element user = dbms.select(userQuery,  Integer.valueOf(owner)).getChild("record");
+
                 if (user != null) {
-                    moreFields.add(SearchManager.makeField("_userinfo", 
+                    moreFields.add(SearchManager.makeField("_userinfo",
                            user.getChildText("username") + "|" + user.getChildText("surname") + "|" +
-                           user.getChildText("name") + "|" + user.getChildText("profile"), 
+                                    user.getChildText("name") + "|" + user.getChildText("profile"),
                            true, false));
                 }
             }
@@ -582,12 +597,12 @@ public class DataManager {
             }
 
             // get privileges
-            List operations = dbms
+            @SuppressWarnings("unchecked")
+            List<Element> operations = dbms
                               .select("SELECT groupId, operationId, g.name FROM OperationAllowed o, groups g WHERE g.id = o.groupId AND metadataId = ? ORDER BY operationId ASC", id$)
                                  .getChildren();
 
-            for (Object operation1 : operations) {
-                Element operation = (Element) operation1;
+            for (Element operation : operations) {
                 String groupId = operation.getChildText("groupid");
                 String operationId = operation.getChildText("operationid");
                 moreFields.add(SearchManager.makeField("_op" + operationId, groupId, true, true));
@@ -597,17 +612,18 @@ public class DataManager {
                 }
             }
             // get categories
-            List categories = dbms
+            @SuppressWarnings("unchecked")
+            List<Element> categories = dbms
                                 .select("SELECT id, name FROM MetadataCateg, Categories WHERE metadataId = ? AND categoryId = id ORDER BY id", id$)
                                     .getChildren();
 
-            for (Object category1 : categories) {
-                Element category = (Element) category1;
+            for (Element category : categories) {
                 String categoryName = category.getChildText("name");
                 moreFields.add(SearchManager.makeField("_cat", categoryName, true, true));
             }
 
             // get status
+            @SuppressWarnings("unchecked")
             List<Element> statuses = dbms.select("SELECT statusId, userId, changeDate FROM MetadataStatus WHERE metadataId = ? ORDER BY changeDate DESC", id$)
                                     .getChildren();
 						if (statuses.size() > 0) {
@@ -622,6 +638,7 @@ public class DataManager {
             // -1 : not evaluated
             // 0 : invalid
             // 1 : valid
+            @SuppressWarnings("unchecked")
             List<Element> validationInfo = dbms
                                              .select("SELECT valType, status FROM Validation WHERE metadataId = ?", id$)
                                                  .getChildren();
@@ -732,7 +749,7 @@ public class DataManager {
      * @throws Exception
      */
 	public void validate(String schema, Document doc) throws Exception {
-		Xml.validate(doc);	
+        Xml.validate(doc);
 	}
 
     /**
@@ -749,13 +766,13 @@ public class DataManager {
 		if (schemaLoc == null) schemaLoc = "";
 
 		if (schema == null) {
-			// must use schemaLocation 
+            // must use schemaLocation
 			Xml.validate(md);
 		} else {
 			// if schemaLocation use that
-			if (!schemaLoc.equals("")) { 
+            if (!schemaLoc.equals("")) {
 				Xml.validate(md);
-			// otherwise use supplied schema name 
+                // otherwise use supplied schema name
 			} else {
 				Xml.validate(getSchemaDir(schema) + Geonet.File.SCHEMA, md);
 			}
@@ -780,13 +797,13 @@ public class DataManager {
 		if (schemaLoc == null) schemaLoc = "";
 
 		if (schema == null) {
-			// must use schemaLocation 
+            // must use schemaLocation
 			return Xml.validateInfo(md, eh);
 		} else {
 			// if schemaLocation use that
-			if (!schemaLoc.equals("")) { 
+            if (!schemaLoc.equals("")) {
 				return Xml.validateInfo(md, eh);
-			// otherwise use supplied schema name 
+                // otherwise use supplied schema name
 			} else {
 				return Xml.validateInfo(getSchemaDir(schema) + Geonet.File.SCHEMA, md, eh);
 			}
@@ -801,18 +818,18 @@ public class DataManager {
      * @return
      * @throws Exception
      */
-	public Element doSchemaTronForEditor(String schema,Element md,String lang) throws Exception { 
-    	// enumerate the metadata xml so that we can report any problems found  
-    	// by the schematron_xml script to the geonetwork editor 
-    	editLib.enumerateTree(md); 
-    	
-    	// get an xml version of the schematron errors and return for error display 
-    	Element schemaTronXmlReport = getSchemaTronXmlReport(schema, md, lang, null); 
-    	
-    	// remove editing info added by enumerateTree 
-    	editLib.removeEditingInfo(md); 
-    	
-    	return schemaTronXmlReport; 
+    public Element doSchemaTronForEditor(String schema,Element md,String lang) throws Exception {
+        // enumerate the metadata xml so that we can report any problems found
+        // by the schematron_xml script to the geonetwork editor
+        editLib.enumerateTree(md);
+
+        // get an xml version of the schematron errors and return for error display
+        Element schemaTronXmlReport = getSchemaTronXmlReport(schema, md, lang, null);
+
+        // remove editing info added by enumerateTree
+        editLib.removeEditingInfo(md);
+
+        return schemaTronXmlReport;
 	}
 
     /**
@@ -824,13 +841,14 @@ public class DataManager {
      * @throws Exception
      */
 	public String getMetadataSchema(Dbms dbms, String id) throws Exception {
-		List list = dbms.select("SELECT schemaId FROM Metadata WHERE id = ?", new Integer(id)).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> list = dbms.select("SELECT schemaId FROM Metadata WHERE id = ?", Integer.valueOf(id)).getChildren();
 
 		if (list.size() == 0)
 			throw new IllegalArgumentException("Metadata not found for id : " +id);
 		else {
 			// get metadata
-			Element record = (Element) list.get(0);
+            Element record = list.get(0);
 			return record.getChildText("schemaid");
 		}
 	}
@@ -889,7 +907,7 @@ public class DataManager {
 
 		DataManager dataMan = gc.getDataManager();
 
-		dataMan.setNamespacePrefix(xml);
+        DataManager.setNamespacePrefix(xml);
 		try {
 			dataMan.validate(schema, xml);
 		} catch (XSDValidationErrorEx e) {
@@ -899,14 +917,6 @@ public class DataManager {
 				throw new XSDValidationErrorEx(e.getMessage(),e.getObject());
 			}
 		}
-
-		//-----------------------------------------------------------------------
-		//--- if the uuid does not exist we generate it
-
-		String uuid = dataMan.extractUUID(schema, xml);
-
-		if (uuid.length() == 0)
-			uuid = UUID.randomUUID().toString();
 
 		//--- Now do the schematron validation on this file - if there are errors
 		//--- then we say what they are!
@@ -948,12 +958,12 @@ public class DataManager {
      * @throws Exception
      */
 	private Element getSchemaTronXmlReport(String schema, Element md, String lang, Map<String, Integer[]> valTypeAndStatus) throws Exception {
-		// NOTE: this method assumes that you've run enumerateTree on the 
+        // NOTE: this method assumes that you've run enumerateTree on the
 		// metadata
 
 		MetadataSchema metadataSchema = getSchema(schema);
 		String[] rules = metadataSchema.getSchematronRules();
-		
+
 		// Schematron report is composed of one or more report(s)
 		// for each set of rules.
 		Element schemaTronXmlOut = new Element("schematronerrors",
@@ -968,7 +978,7 @@ public class DataManager {
     			Element report = new Element("report", Edit.NAMESPACE);
     			report.setAttribute("rule", ruleId,
     					Edit.NAMESPACE);
-    
+
     			String schemaTronXmlXslt = metadataSchema.getSchemaDir() + File.separator
     					+ "schematron" + File.separator + rule;
     			try {
@@ -979,35 +989,35 @@ public class DataManager {
     				Element xmlReport = Xml.transform(md, schemaTronXmlXslt, params);
     				if (xmlReport != null) {
     					report.addContent(xmlReport);
-    				}
     				// add results to persitent validation information
     				int firedRules = 0;
-    				Iterator<Element> i = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
-    				while (i.hasNext()) {
-                        i.next();
+                        Iterator<?> firedRulesElems = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
+                        while (firedRulesElems.hasNext()) {
+                            firedRulesElems.next();
                         firedRules ++;
                     }
     				int invalidRules = 0;
-                    i = xmlReport.getDescendants(new ElementFilter ("failed-assert", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
-                    while (i.hasNext()) {
-                        i.next(); 
-                    	invalidRules ++;
+                        Iterator<?> faileAssertElements = xmlReport.getDescendants(new ElementFilter ("failed-assert", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
+                        while (faileAssertElements.hasNext()) {
+                            faileAssertElements.next();
+                            invalidRules ++;
                     }
     				Integer[] results = {invalidRules!=0?0:1, firedRules, invalidRules};
     				if (valTypeAndStatus != null) {
     				    valTypeAndStatus.put(ruleId, results);
     				}
+                    }
     			} catch (Exception e) {
     				Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+schemaTronXmlXslt+" failed");
-    
+
                     // If an error occurs that prevents to verify schematron rules, add to show in report
                     Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
                     errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
                     report.addContent(errorReport);
-    
+
     				e.printStackTrace();
     			}
-    
+
     			// -- append report to main XML report.
     			schemaTronXmlOut.addContent(report);
     		}
@@ -1029,7 +1039,7 @@ public class DataManager {
 		ErrorHandler errorHandler = new ErrorHandler();
 		errorHandler.setNs(Edit.NAMESPACE);
 		Element xsdErrors;
-		
+
 		try {
 		    xsdErrors = validateInfo(schema,
 				md, errorHandler);
@@ -1037,21 +1047,21 @@ public class DataManager {
 		    xsdErrors = JeevesException.toElement(e);
 		    return xsdErrors;
         }
-		
+
 		if (xsdErrors != null) {
 			MetadataSchema mds = getSchema(schema);
 			List<Namespace> schemaNamespaces = mds.getSchemaNS();
-		
+
 			//-- now get each xpath and evaluate it
-			//-- xsderrors/xsderror/{message,xpath} 
-			List list = xsdErrors.getChildren();
-			for (Object o : list) {
-				Element elError = (Element) o;
+            //-- xsderrors/xsderror/{message,xpath}
+            @SuppressWarnings("unchecked")
+            List<Element> list = xsdErrors.getChildren();
+            for (Element elError : list) {
 				String xpath = elError.getChildText("xpath", Edit.NAMESPACE);
 				String message = elError.getChildText("message", Edit.NAMESPACE);
 				message = "\\n" + message;
 
-				//-- get the element from the xpath and add the error message to it 
+                //-- get the element from the xpath and add the error message to it
 				Element elem = null;
 				try {
 					elem = Xml.selectElement(md, xpath, schemaNamespaces);
@@ -1088,7 +1098,7 @@ public class DataManager {
     /**
      * Extract UUID from the metadata record using the schema
      * XSL for UUID extraction ({@link Geonet.File.EXTRACT_UUID})
-     * 
+     *
      * @param schema
      * @param md
      * @return
@@ -1196,12 +1206,13 @@ public class DataManager {
 	public String getMetadataId(Dbms dbms, String uuid) throws Exception {
 		String query = "SELECT id FROM Metadata WHERE uuid=?";
 
-		List list = dbms.select(query, uuid).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, uuid).getChildren();
 
 		if (list.size() == 0)
 			return null;
 
-		Element record = (Element) list.get(0);
+        Element record = list.get(0);
 
 		return record.getChildText("id");
 	}
@@ -1216,12 +1227,13 @@ public class DataManager {
 	public String getMetadataUuid(Dbms dbms, String id) throws Exception {
 		String query = "SELECT uuid FROM Metadata WHERE id=?";
 
-		List list = dbms.select(query, new Integer(id)).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, Integer.valueOf(id)).getChildren();
 
 		if (list.size() == 0)
 			return null;
 
-		Element record = (Element) list.get(0);
+        Element record = list.get(0);
 
 		return record.getChildText("uuid");
 	}
@@ -1236,12 +1248,13 @@ public class DataManager {
 	public String getMetadataTemplate(Dbms dbms, String id) throws Exception {
 		String query = "SELECT istemplate FROM Metadata WHERE id=?";
 
-		List list = dbms.select(query, new Integer(id)).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, Integer.valueOf(id)).getChildren();
 
 		if (list.size() == 0)
 			return null;
 
-		Element record = (Element) list.get(0);
+        Element record = list.get(0);
 
 		return record.getChildText("istemplate");
 	}
@@ -1259,38 +1272,15 @@ public class DataManager {
 							"FROM   Metadata "+
 							"WHERE id=?";
 
-		List list = dbms.select(query, new Integer(id)).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, Integer.valueOf(id)).getChildren();
 
 		if (list.size() == 0)
 			return null;
 
-		Element record = (Element) list.get(0);
+        Element record = list.get(0);
 
-		MdInfo info = new MdInfo();
-
-		info.id          = id;
-		info.uuid        = record.getChildText("uuid");
-		info.schemaId    = record.getChildText("schemaid");
-		info.isHarvested = "y".equals(record.getChildText("isharvested"));
-		info.createDate  = record.getChildText("createdate");
-		info.changeDate  = record.getChildText("changedate");
-		info.source      = record.getChildText("source");
-		info.title       = record.getChildText("title");
-		info.root        = record.getChildText("root");
-		info.owner       = record.getChildText("owner");
-		info.groupOwner  = record.getChildText("groupowner");
-        info.displayOrder  = record.getChildText("displayOrder");
-
-		String temp = record.getChildText("istemplate");
-
-		if ("y".equals(temp))
-			info.template = MdInfo.Template.TEMPLATE;
-
-		else if ("s".equals(temp))
-			info.template = MdInfo.Template.SUBTEMPLATE;
-
-		else
-			info.template = MdInfo.Template.METADATA;
+        MdInfo info = new MdInfo(id, record);
 
 		return info;
 	}
@@ -1351,7 +1341,6 @@ public class DataManager {
      */
 	public void setHarvested(Dbms dbms, int id, String harvestUuid) throws Exception {
 		setHarvestedExt(dbms, id, harvestUuid);
-        boolean indexGroup = false;
         ServiceContext context = ServiceContext.get();
         if(context == null) context = servContext;
 
@@ -1415,7 +1404,7 @@ public class DataManager {
      * @throws NoSchemaMatchesException
      * @return
      */
-	public String autodetectSchema(Element md) throws SchemaMatchConflictException, NoSchemaMatchesException {
+    public @Nonnull String autodetectSchema(Element md) throws SchemaMatchConflictException, NoSchemaMatchesException {
 		return autodetectSchema(md, schemaMan.getDefaultSchema());
 	}
 
@@ -1429,7 +1418,7 @@ public class DataManager {
      * @throws NoSchemaMatchesException
      * @return
      */
-	public String autodetectSchema(Element md, String defaultSchema) throws SchemaMatchConflictException, NoSchemaMatchesException {
+    public @CheckForNull String autodetectSchema(Element md, String defaultSchema) throws SchemaMatchConflictException, NoSchemaMatchesException {
 
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "Autodetect schema for metadata with :\n * root element:'" + md.getQualifiedName()
@@ -1450,7 +1439,7 @@ public class DataManager {
      */
   public void updateDisplayOrder(Dbms dbms, String id, String displayOrder) throws Exception {
     String query = "UPDATE Metadata SET displayOrder = ? WHERE id = ?";
-    dbms.execute(query, new Integer(displayOrder), new  Integer(id));
+        dbms.execute(query, Integer.valueOf(displayOrder), new  Integer(id));
   }
 
     /**
@@ -1460,9 +1449,17 @@ public class DataManager {
      * @throws Exception hmm
      */
 	public void increasePopularity(ServiceContext srvContext, String id) throws Exception {
+        // READONLYMODE
 		GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
+        if(!gc.isReadOnly()) {
 		gc.getThreadPool().runTask(new IncreasePopularityTask(srvContext, id));
 	}
+        else {
+            if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                Log.debug(Geonet.DATA_MANAGER, "GeoNetwork is operating in read-only mode. IncreasePopularity is skipped.");
+            }
+        }
+    }
 
     /**
      * Rates a metadata.
@@ -1478,31 +1475,35 @@ public class DataManager {
 		//
 		// update rating on the database
 		//
-		String query = "UPDATE MetadataRating SET rating=? WHERE metadataId=? AND ipAddress=?";
-		int res = dbms.execute(query, rating, id, ipAddress);
+        String updateRatingQuery = "UPDATE MetadataRating SET rating=? WHERE metadataId=? AND ipAddress=?";
+        int res = dbms.execute(updateRatingQuery, rating, id, ipAddress);
 
 		if (res == 0) {
-			query = "INSERT INTO MetadataRating(metadataId, ipAddress, rating) VALUES(?,?,?)";
-			dbms.execute(query, id, ipAddress, rating);
+            String insertRatingQuery = "INSERT INTO MetadataRating(metadataId, ipAddress, rating) VALUES(?,?,?)";
+            dbms.execute(insertRatingQuery, id, ipAddress, rating);
 		}
 
         //
 		// calculate new rating
         //
-		query = "SELECT sum(rating) as total FROM MetadataRating WHERE metadataId=?";
-		List list = dbms.select(query, id).getChildren();
-		String sum = ((Element) list.get(0)).getChildText("total");
-		query = "SELECT count(*) as numr FROM MetadataRating WHERE metadataId=?";
-		list  = dbms.select(query, id).getChildren();
-		String count = ((Element) list.get(0)).getChildText("numr");
+        String sumRatingQuery = "SELECT sum(rating) as total FROM MetadataRating WHERE metadataId=?";
+        @SuppressWarnings("unchecked")
+        List<Element> sumResultList = dbms.select(sumRatingQuery, id).getChildren();
+        String sum = sumResultList.get(0).getChildText("total");
+
+        String countQuery = "SELECT count(*) as numr FROM MetadataRating WHERE metadataId=?";
+        @SuppressWarnings("unchecked")
+        List<Element> countResultList  = dbms.select(countQuery, id).getChildren();
+        String count = countResultList.get(0).getChildText("numr");
 		rating = (int)(Float.parseFloat(sum) / Float.parseFloat(count) + 0.5);
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "Setting rating for id:"+ id +" --> rating is:"+rating);
+
         //
 		// update metadata and reindex it
         //
-		query = "UPDATE Metadata SET rating=? WHERE id=?";
-		dbms.execute(query, rating, id);
+        String updateMetadataRatingQuery = "UPDATE Metadata SET rating=? WHERE id=?";
+        dbms.execute(updateMetadataRatingQuery, rating, id);
 
         indexInThreadPoolIfPossible(dbms,Integer.toString(id), false);
 
@@ -1534,14 +1535,15 @@ public class DataManager {
 	public String createMetadata(ServiceContext context, Dbms dbms, String templateId, String groupOwner,
 										  SerialFactory sf, String source, int owner,
 										  String parentUuid, String isTemplate, boolean fullRightsForGroup) throws Exception {
-		int iTemplateId = new Integer(templateId);
+        int iTemplateId = Integer.valueOf(templateId);
 		String query = "SELECT schemaId, data FROM Metadata WHERE id=?";
-		List listTempl = dbms.select(query, iTemplateId).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> listTempl = dbms.select(query, iTemplateId).getChildren();
 
 		if (listTempl.size() == 0) {
 			throw new IllegalArgumentException("Template id not found : " + templateId);
         }
-		Element el = (Element) listTempl.get(0);
+        Element el = listTempl.get(0);
 
 		String schema = el.getChildText("schemaid");
 		String data   = el.getChildText("data");
@@ -1549,22 +1551,22 @@ public class DataManager {
 
 		//--- generate a new metadata id
 		int serial = sf.getSerial(dbms, "Metadata");
-		
+
 		// Update fixed info for metadata record only, not for subtemplates
 		Element xml = Xml.loadString(data, false);
 		if (!isTemplate.equals("s")) {
 		    xml = updateFixedInfo(schema, Integer.toString(serial), uuid, xml, parentUuid, DataManager.UpdateDatestamp.yes, dbms, context);
 		}
-		
+
 		//--- store metadata
 		String id = xmlSerializer.insert(dbms, schema, xml, serial, source, uuid, null, null, isTemplate, null, owner, groupOwner, "", context);
 		copyDefaultPrivForGroup(context, dbms, id, groupOwner, fullRightsForGroup);
 
 		//--- store metadata categories copying them from the template
-		List categList = dbms.select("SELECT categoryId FROM MetadataCateg WHERE metadataId = ?",iTemplateId).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> categList = dbms.select("SELECT categoryId FROM MetadataCateg WHERE metadataId = ?",iTemplateId).getChildren();
 
-        for (Object aCategList : categList) {
-            Element elRec = (Element) aCategList;
+        for (Element elRec : categList) {
             String catId = elRec.getChildText("categoryid");
             setCategory(context, dbms, id, catId);
         }
@@ -1715,7 +1717,7 @@ public class DataManager {
     /**
      * Retrieves a metadata (in xml) given its id; adds editing information if requested and validation errors if
      * requested.
-     * 
+     *
      * @param srvContext
      * @param id
      * @param forEditing        Add extra element to build metadocument {@link EditLib#expandElements(String, Element)}
@@ -1738,7 +1740,7 @@ public class DataManager {
 		if (forEditing) { // copy in xlink'd fragments but leave xlink atts to editor
 			if (doXLinks) Processor.processXLink(md, srvContext);
 			String schema = getMetadataSchema(dbms, id);
-			
+
 			if (withEditorValidationErrors) {
 			    version = doValidate(srvContext, dbms, schema, id, md, srvContext.getLanguage(), forEditing).two();
 			}
@@ -1797,7 +1799,7 @@ public class DataManager {
      */
 	public boolean existsMetadata(Dbms dbms, int id) throws Exception {
 		//FIXME : should use lucene
-		List list = dbms.select("SELECT id FROM Metadata WHERE id=?", new Integer(id)).getChildren();
+        List<?> list = dbms.select("SELECT id FROM Metadata WHERE id=?", Integer.valueOf(id)).getChildren();
 		return list.size() != 0;
 	}
 
@@ -1811,7 +1813,7 @@ public class DataManager {
 	public boolean existsMetadataUuid(Dbms dbms, String uuid) throws Exception {
 		//FIXME : should use lucene
 
-		List list = dbms.select("SELECT uuid FROM Metadata WHERE uuid=?",uuid).getChildren();
+        List<?> list = dbms.select("SELECT uuid FROM Metadata WHERE uuid=?",uuid).getChildren();
 		return list.size() != 0;
 	}
 
@@ -1822,7 +1824,7 @@ public class DataManager {
      * @throws Exception
      */
 	public Element getKeywords() throws Exception {
-		Vector keywords = searchMan.getTerms("keyword");
+        Collection<String> keywords = searchMan.getTerms("keyword");
 		Element el = new Element("keywords");
 
         for (Object keyword : keywords) {
@@ -1847,7 +1849,7 @@ public class DataManager {
      * @throws Exception
      */
 	public synchronized void updateMetadataOwner(Dbms dbms, int id, String owner, String groupOwner) throws Exception {
-		dbms.execute("UPDATE Metadata SET owner=?, groupOwner=? WHERE id=?", new Integer(owner), new Integer(groupOwner), id);
+        dbms.execute("UPDATE Metadata SET owner=?, groupOwner=? WHERE id=?", Integer.valueOf(owner), Integer.valueOf(groupOwner), id);
 	}
 
     /**
@@ -1889,7 +1891,7 @@ public class DataManager {
         if (schemaMan.getSchema(schema).isReadwriteUUID()) {
             uuid = extractUUID(schema, md);
         }
-        
+
 		//--- write metadata to dbms
         xmlSerializer.update(dbms, id, md, changeDate, updateDateStamp, uuid, context);
 
@@ -1910,7 +1912,6 @@ public class DataManager {
         finally {
             if(index) {
                 //--- update search criteria
-                boolean indexGroup = false;
                 boolean processSharedObjects = false;
                 indexMetadata(dbms, id, processSharedObjects, servContext);
             }
@@ -1954,7 +1955,7 @@ public class DataManager {
 
 	/**
 	 * Used by harvesters that need to validate metadata.
-	 * 
+     *
 	 * @param dbms connection to database
 	 * @param schema name of the schema to validate against
 	 * @param id metadata id - used to record validation status
@@ -1969,7 +1970,7 @@ public class DataManager {
 		if (doc.getDocType() != null) {
             if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
                 Log.debug(Geonet.DATA_MANAGER, "Validating against dtd " + doc.getDocType());
-			
+
 			// if document has a doctype then validate using that (assuming that the
 			// dtd is either mapped locally or will be cached after first validate)
 			try {
@@ -2003,7 +2004,7 @@ public class DataManager {
      		valTypeAndStatus.put("xsd", results);
             if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
                 Log.debug(Geonet.DATA_MANAGER, "Valid.");
-    	}	
+            }
 			// then do schematron validation
 			Element schematronError = null;
 			try {
@@ -2033,7 +2034,7 @@ public class DataManager {
 
 	/**
 	 * Used by the validate embedded service. The validation report is stored in the session.
-	 * 
+     *
 	 * @param session
 	 * @param schema
 	 * @param id
@@ -2072,8 +2073,8 @@ public class DataManager {
 		Element errorReport = new Element ("report", Edit.NAMESPACE);
 		errorReport.setAttribute("id", id, Edit.NAMESPACE);
 
-		//-- get an XSD validation report and add results to the metadata 
-		//-- as geonet:xsderror attributes on the affected elements 
+        //-- get an XSD validation report and add results to the metadata
+        //-- as geonet:xsderror attributes on the affected elements
 		Element xsdErrors = getXSDXmlReport(schema,md);
 		if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
 			errorReport.addContent(xsdErrors);
@@ -2089,7 +2090,7 @@ public class DataManager {
 
 		// ...then schematrons
 		Element schematronError;
-		
+
 		// edit mode
         if (forEditing) {
             if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
@@ -2097,9 +2098,9 @@ public class DataManager {
               //-- now expand the elements and add the geonet: elements
               editLib.expandElements(schema, md);
               version = editLib.getVersionForEditing(schema, id, md);
-                    
+
               //-- get a schematron error report if no xsd errors and add results
-              //-- to the metadata as a geonet:schematronerrors element with 
+            //-- to the metadata as a geonet:schematronerrors element with
               //-- links to the ref id of the affected element
               schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
               if (schematronError != null) {
@@ -2109,7 +2110,7 @@ public class DataManager {
               }
 		}
         else {
-	        // enumerate the metadata xml so that we can report any problems found 
+            // enumerate the metadata xml so that we can report any problems found
 	        // by the schematron_xml script to the geonetwork editor
 	        editLib.enumerateTree(md);
 
@@ -2119,7 +2120,7 @@ public class DataManager {
 	        // remove editing info added by enumerateTree
 	        editLib.removeEditingInfo(md);
 		}
-        
+
         if (schematronError != null && schematronError.getContent().size() > 0) {
             Element schematron = new Element("schematronerrors", Edit.NAMESPACE);
             Element idElem = new Element("id", Edit.NAMESPACE);
@@ -2128,30 +2129,30 @@ public class DataManager {
             errorReport.addContent(schematronError);
             //throw new SchematronValidationErrorEx("Schematron errors detected - see schemaTron report for "+id+" in htmlCache for more details",schematron);
         }
-        
+
         // Save report in session (invalidate by next update) and db
         if(session != null) {
-            session.setProperty(Geonet.Session.VALIDATION_REPORT + id, errorReport);
+        session.setProperty(Geonet.Session.VALIDATION_REPORT + id, errorReport);
         }
 		saveValidationStatus(dbms, id, valTypeAndStatus, new ISODate().toString());
-   		
+
 		return Pair.read(errorReport, version);
 	}
-	
+
 	/**
 	 * Saves validation status information into the database for the current record.
-	 * 
+     *
 	 * @param id   the metadata record internal identifier
 	 * @param valTypeAndStatus  the validation type could be xsd or schematron rules set identifier
 	 * @param date the validation date time
 	 */
 	private void saveValidationStatus (Dbms dbms, String id, Map<String, Integer[]> valTypeAndStatus, String date) throws Exception {
 	    clearValidationStatus(dbms, id);
-	    Set<String> i = valTypeAndStatus.keySet();
-	    for (String type : i) {
-	        String query = "INSERT INTO Validation (metadataId, valType, status, tested, failed, valDate) VALUES (?,?,?,?,?,?)";
-            Integer[] results = valTypeAndStatus.get(type);
-            dbms.execute(query, new Integer(id), type, results[0], results[1], results[2], date);
+        final String query = "INSERT INTO Validation (metadataId, valType, status, tested, failed, valDate) VALUES (?,?,?,?,?,?)";
+        for (Map.Entry<String, Integer[]> entry : valTypeAndStatus.entrySet()) {
+            String type = entry.getKey();
+            Integer[] results = entry.getValue();
+            dbms.execute(query, Integer.valueOf(id), type, results[0], results[1], results[2], date);
         }
         dbms.commit();
 	}
@@ -2163,7 +2164,7 @@ public class DataManager {
 	 * @param id   the metadata record internal identifier
 	 */
 	private void clearValidationStatus (Dbms dbms, String id) throws Exception {
-	    dbms.execute("DELETE FROM Validation WHERE metadataId=?", new Integer(id));
+        dbms.execute("DELETE FROM Validation WHERE metadataId=?", Integer.valueOf(id));
 	    dbms.commit();
 	}
 
@@ -2174,8 +2175,10 @@ public class DataManager {
 	 * @param id   the metadata record internal identifier
 	 * @return
 	 */
+    @SuppressWarnings("unchecked")
 	private List<Element> getValidationStatus (Dbms dbms, String id) throws Exception {
-	    return dbms.select("SELECT valType, status, tested, failed FROM Validation WHERE metadataId=?", new Integer(id)).getChildren();
+        String query = "SELECT valType, status, tested, failed FROM Validation WHERE metadataId=?";
+        return dbms.select(query, Integer.valueOf(id)).getChildren();
     }
 
 	//--------------------------------------------------------------------------
@@ -2185,6 +2188,30 @@ public class DataManager {
 	//--------------------------------------------------------------------------
 
     /**
+     * TODO Javadoc.
+     *
+     * @param dbms
+     * @param context
+     * @param id
+     * @throws Exception
+     */
+    private void deleteMetadataFromDB(Dbms dbms, ServiceContext context, String id) throws Exception {
+		//--- remove operations
+		deleteMetadataOper(dbms, id, false);
+
+		//--- remove categories
+		deleteAllMetadataCateg(dbms, id);
+
+        dbms.execute("DELETE FROM MetadataRating WHERE metadataId=?", Integer.valueOf(id));
+        dbms.execute("DELETE FROM Validation WHERE metadataId=?", Integer.valueOf(id));
+
+        dbms.execute("DELETE FROM MetadataStatus WHERE metadataId=?", Integer.valueOf(id));
+
+		//--- remove metadata
+		xmlSerializer.delete(dbms, "Metadata", id, context);
+    }
+
+    /**
      * Removes a metadata.
      *
      * @param context
@@ -2192,23 +2219,10 @@ public class DataManager {
      * @param id
      * @throws Exception
      */
-	public synchronized void deleteMetadata(ServiceContext context, Dbms dbms, String id) throws Exception {
+    public synchronized void deleteMetadata(ServiceContext context, Dbms dbms, String id) throws Exception {
         String uuid = getMetadataUuid(dbms, id);
         String isTemplate = getMetadataTemplate(dbms, id);
-
-		//--- remove operations
-		deleteMetadataOper(dbms, id, false);
-
-		//--- remove categories
-		deleteAllMetadataCateg(dbms, id);
-
-		dbms.execute("DELETE FROM MetadataRating WHERE metadataId=?", new Integer(id));
-		dbms.execute("DELETE FROM Validation WHERE metadataId=?", new Integer(id));
-
-		dbms.execute("DELETE FROM MetadataStatus WHERE metadataId=?", new Integer(id));
-
-		//--- remove metadata
-		xmlSerializer.delete(dbms, "Metadata", id, context);
+        deleteMetadataFromDB(dbms, context, id);
 
         // Notifies the metadata change to metatada notifier service
         if (isTemplate.equals("n")) {
@@ -2227,19 +2241,7 @@ public class DataManager {
      * @throws Exception
      */
 	public synchronized void deleteMetadataGroup(ServiceContext context, Dbms dbms, String id) throws Exception {
-		//--- remove operations
-		deleteMetadataOper(dbms, id, false);
-
-		//--- remove categories
-		deleteAllMetadataCateg(dbms, id);
-
-		dbms.execute("DELETE FROM MetadataRating WHERE metadataId=?", new Integer(id));
-        dbms.execute("DELETE FROM Validation WHERE metadataId=?", new Integer(id));
-		dbms.execute("DELETE FROM MetadataStatus WHERE metadataId=?", new Integer(id));
-
-		//--- remove metadata
-		xmlSerializer.delete(dbms, "Metadata", id, context);
-
+        deleteMetadataFromDB(dbms, context, id);
 		//--- update search criteria
 		searchMan.deleteGroup("_id", id + "");
 	}
@@ -2257,7 +2259,7 @@ public class DataManager {
 		if (skipAllIntranet)
 			query += " AND groupId>1";
 
-		dbms.execute(query, new Integer(id));
+        dbms.execute(query, Integer.valueOf(id));
 	}
 
     /**
@@ -2270,7 +2272,7 @@ public class DataManager {
 	public void deleteAllMetadataCateg(Dbms dbms, String id) throws Exception {
 		String query = "DELETE FROM MetadataCateg WHERE metadataId=?";
 
-		dbms.execute(query, new Integer(id));
+        dbms.execute(query, Integer.valueOf(id));
 	}
 
 	//--------------------------------------------------------------------------
@@ -2313,23 +2315,23 @@ public class DataManager {
      * @param file
      * @throws Exception
      */
-	public void setThumbnail(ServiceContext context, Dbms dbms, String id, boolean small, String file, boolean indexAfterChange) throws Exception {
+    public void setThumbnail(ServiceContext context, Dbms dbms, String id, boolean small, String file, boolean indexAfterChange) throws Exception {
 		int    pos = file.lastIndexOf('.');
 		String ext = (pos == -1) ? "???" : file.substring(pos +1);
 
 		Element env = new Element("env");
 		env.addContent(new Element("file").setText(file));
 		env.addContent(new Element("ext").setText(ext));
-		
+
 		String host    = settingMan.getValue(Geonet.Settings.SERVER_HOST);
 		String port    = settingMan.getValue(Geonet.Settings.SERVER_PORT);
 		String baseUrl = context.getBaseUrl();
-		
+
 		env.addContent(new Element("host").setText(host));
 		env.addContent(new Element("port").setText(port));
 		env.addContent(new Element("baseUrl").setText(baseUrl));
-		
-		manageThumbnail(context, dbms, id, small, env, Geonet.File.SET_THUMBNAIL, indexAfterChange);
+
+        manageThumbnail(context, dbms, id, small, env, Geonet.File.SET_THUMBNAIL, indexAfterChange);
 	}
 
     /**
@@ -2339,10 +2341,10 @@ public class DataManager {
      * @param small
      * @throws Exception
      */
-	public void unsetThumbnail(ServiceContext context, Dbms dbms, String id, boolean small, boolean indexAfterChange) throws Exception {
+    public void unsetThumbnail(ServiceContext context, Dbms dbms, String id, boolean small, boolean indexAfterChange) throws Exception {
 		Element env = new Element("env");
 
-		manageThumbnail(context, dbms, id, small, env, Geonet.File.UNSET_THUMBNAIL, indexAfterChange);
+        manageThumbnail(context, dbms, id, small, env, Geonet.File.UNSET_THUMBNAIL, indexAfterChange);
 	}
 
     /**
@@ -2352,12 +2354,11 @@ public class DataManager {
      * @param small
      * @param env
      * @param styleSheet
-     * @param indexAfterChange 
+     * @param indexAfterChange
      * @throws Exception
      */
 	private void manageThumbnail(ServiceContext context, Dbms dbms, String id, boolean small, Element env,
-										  String styleSheet, boolean indexAfterChange) throws Exception {
-		
+                                 String styleSheet, boolean indexAfterChange) throws Exception {
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
         Element md = getGeocatMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes,false, false);
 
@@ -2383,19 +2384,19 @@ public class DataManager {
      * @param env
      * @param schema
      * @param styleSheet
-     * @param indexAfterChange 
+     * @param indexAfterChange
      * @throws Exception
      */
-	private void transformMd(Dbms dbms, ServiceContext context, String id, Element md, Element env, String schema, String styleSheet, boolean indexAfterChange) throws Exception {
-		
+    private void transformMd(Dbms dbms, ServiceContext context, String id, Element md, Element env, String schema, String styleSheet, boolean indexAfterChange) throws Exception {
+
 		if(env.getChild("host")==null){
 			String host    = settingMan.getValue(Geonet.Settings.SERVER_HOST);
 			String port    = settingMan.getValue(Geonet.Settings.SERVER_PORT);
-			
+
 			env.addContent(new Element("host").setText(host));
 			env.addContent(new Element("port").setText(port));
 		}
-		
+
 		//--- setup root element
 		Element root = new Element("root");
 		root.addContent(md);
@@ -2410,14 +2411,14 @@ public class DataManager {
         if (schemaMan.getSchema(schema).isReadwriteUUID()) {
             uuid = extractUUID(schema, md);
         }
-        
+
 		xmlSerializer.update(dbms, id, md, changeDate, true, uuid, context);
 
         if (indexAfterChange) {
             // Notifies the metadata change to metatada notifier service
             notifyMetadataChange(dbms, md, id);
 
-		    //--- update search criteria
+            //--- update search criteria
             indexInThreadPoolIfPossible(dbms,id, false);
         }
 	}
@@ -2435,14 +2436,18 @@ public class DataManager {
      * @throws Exception
      */
 	public void setDataCommons(Dbms dbms, ServiceContext context, String id, String licenseurl, String imageurl, String jurisdiction, String licensename, String type) throws Exception {
+        Element env = prepareCommonsEnv(licenseurl, imageurl, jurisdiction, licensename, type);
+        manageCommons(dbms,context,id,env,Geonet.File.SET_DATACOMMONS);
+    }
+
+    private Element prepareCommonsEnv(String licenseurl, String imageurl, String jurisdiction, String licensename, String type) {
 		Element env = new Element("env");
 		env.addContent(new Element("imageurl").setText(imageurl));
 		env.addContent(new Element("licenseurl").setText(licenseurl));
 		env.addContent(new Element("jurisdiction").setText(jurisdiction));
 		env.addContent(new Element("licensename").setText(licensename));
 		env.addContent(new Element("type").setText(type));
-
-		manageCommons(dbms,context,id,env,Geonet.File.SET_DATACOMMONS);
+        return env;
 	}
 
     /**
@@ -2458,13 +2463,7 @@ public class DataManager {
      * @throws Exception
      */
 	public void setCreativeCommons(Dbms dbms, ServiceContext context, String id, String licenseurl, String imageurl, String jurisdiction, String licensename, String type) throws Exception {
-		Element env = new Element("env");
-		env.addContent(new Element("imageurl").setText(imageurl));
-		env.addContent(new Element("licenseurl").setText(licenseurl));
-		env.addContent(new Element("jurisdiction").setText(jurisdiction));
-		env.addContent(new Element("licensename").setText(licensename));
-		env.addContent(new Element("type").setText(type));
-
+        Element env = prepareCommonsEnv(licenseurl, imageurl, jurisdiction, licensename, type);
 		manageCommons(dbms,context,id,env,Geonet.File.SET_CREATIVECOMMONS);
 	}
 
@@ -2478,14 +2477,15 @@ public class DataManager {
      * @throws Exception
      */
 	private void manageCommons(Dbms dbms, ServiceContext context, String id, Element env, String styleSheet) throws Exception {
-		Element md = xmlSerializer.select(dbms, "Metadata", id, context);
+        Lib.resource.checkEditPrivilege(context, id);
+        Element md = xmlSerializer.select(dbms, "Metadata", id);
 
 		if (md == null) return;
 
 		md.detach();
 
 		String schema = getMetadataSchema(dbms, id);
-		transformMd(dbms,context,id,md,env,schema,styleSheet,true);
+        transformMd(dbms,context,id,md,env,schema,styleSheet,true);
 	}
 
 	//--------------------------------------------------------------------------
@@ -2505,24 +2505,24 @@ public class DataManager {
      * @throws Exception
      */
 	public void setOperation(ServiceContext context, Dbms dbms, String mdId, String grpId, String opId) throws Exception {
-		setOperation(context,dbms,new Integer(mdId),new Integer(grpId),new Integer(opId));
+        setOperation(context,dbms,Integer.valueOf(mdId),Integer.valueOf(grpId),Integer.valueOf(opId));
 	}
 
     /**
      * Set metadata privileges.
-     * 
+     *
      * Administrator can set operation for any groups.
-     * 
+     *
      * For reserved group (ie. Internet, Intranet & Guest), user MUST be reviewer of one group.
      * For other group, if "Only set privileges to user's groups" is set in catalog configuration
      * user MUST be a member of the group.
-     * 
+     *
      * @param context
      * @param dbms
      * @param mdId The metadata identifier
      * @param grpId The group identifier
      * @param opId The operation identifier
-     * 
+     *
      * @throws Exception
      */
 	public void setOperation(ServiceContext context, Dbms dbms, int mdId, int grpId, int opId) throws Exception {
@@ -2530,7 +2530,7 @@ public class DataManager {
         // Session may not be defined when a harvester is running
         if (context.getUserSession() != null) {
             String userProfile = context.getUserSession().getProfile();
-            if (!userProfile.equals(Geonet.Profile.ADMINISTRATOR)) {
+            if (! (userProfile.equals(Geonet.Profile.ADMINISTRATOR) || userProfile.equals(Geonet.Profile.USER_ADMIN)) ) {
                 int userId = Integer.parseInt(context.getUserSession()
                         .getUserId());
                 // Reserved groups
@@ -2547,9 +2547,6 @@ public class DataManager {
                                         + " because the user in not a Reviewer of any group.");
                     }
                 } else {
-
-                    GeonetContext gc = (GeonetContext) context
-                            .getHandlerContext(Geonet.CONTEXT_NAME);
                     String userGroupsOnly = settingMan
                             .getValue("system/metadataprivs/usergrouponly");
                     if (userGroupsOnly.equals("true")) {
@@ -2589,7 +2586,7 @@ public class DataManager {
      * @throws Exception
      */
 	public void unsetOperation(ServiceContext context, Dbms dbms, String mdId, String grpId, String opId) throws Exception {
-		unsetOperation(context,dbms,new Integer(mdId),new Integer(grpId),new Integer(opId));
+        unsetOperation(context,dbms,Integer.valueOf(mdId),Integer.valueOf(grpId),Integer.valueOf(opId));
 	}
 
     /**
@@ -2629,9 +2626,9 @@ public class DataManager {
 		setOperation(context, dbms, id, groupId, AccessManager.OPER_VIEW);
 		setOperation(context, dbms, id, groupId, AccessManager.OPER_NOTIFY);
 		//
-		// Restrictive: new and inserted records should not be editable, 
-		// their resources can't be downloaded and any interactive maps can't be 
-		// displayed by users in the same group 
+        // Restrictive: new and inserted records should not be editable,
+        // their resources can't be downloaded and any interactive maps can't be
+        // displayed by users in the same group
 		if(fullRightsForGroup) {
 			setOperation(context, dbms, id, groupId, AccessManager.OPER_EDITING);
 			setOperation(context, dbms, id, groupId, AccessManager.OPER_DOWNLOAD);
@@ -2658,6 +2655,53 @@ public class DataManager {
 		return (elRes.getChildren().size() != 0);
 	}
 
+    public boolean existsUser(Dbms dbms, int id) throws Exception {
+        String query= "SELECT * FROM Users WHERE id=?";
+        List<?> list = dbms.select(query, id).getChildren();
+        return list.size() > 0;
+    }
+
+    /**
+     * Returns id of one of the Administrator users.
+     * @return
+     */
+    public String pickAnyAdministrator(Dbms dbms) throws Exception{
+        String query = "SELECT id FROM users WHERE profile=?";
+        Element elRes = dbms.select(query, Geonet.Profile.ADMINISTRATOR);
+        String id = null;
+        if(elRes != null) {
+            Element elRec = elRes.getChild("record");
+            if(elRec != null) {
+                Element elId = elRec.getChild("id");
+                if(elId != null) {
+                    id = elId.getText();
+                }
+            }
+        }
+        if(StringUtils.isNotEmpty(id)) {
+            return id;
+        }
+        // should never happen
+        else {
+            throw new Exception("Unable to find any Administrator user");
+        }
+    }
+
+    public String getUserProfile(Dbms dbms, int userId) throws Exception {
+        String query = "SELECT profile FROM users WHERE id=?";
+        Element elRes = dbms.select(query, userId);
+        if(elRes != null) {
+            Element elRec = elRes.getChild("record");
+            if(elRec != null) {
+                Element elProfile = elRec.getChild("profile");
+                if(elProfile != null) {
+                    return elProfile.getText();
+                }
+            }
+        }
+        return null;
+    }
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Status API
@@ -2671,7 +2715,7 @@ public class DataManager {
 		 *
      * @param dbms
      * @param id
-		 * @return 
+     * @return
      * @throws Exception
 		 *
      */
@@ -2685,13 +2729,14 @@ public class DataManager {
      *
      * @param dbms
      * @param id
-		 * @return 
+     * @return
      * @throws Exception
 		 *
      */
 	public String getCurrentStatus(Dbms dbms, int id) throws Exception {
 		Element status = getStatus(dbms, id);
 		if (status == null) return Params.Status.UNKNOWN;
+        @SuppressWarnings("unchecked")
 		List<Element> statusKids = status.getChildren();
 		if (statusKids.size() == 0) return Params.Status.UNKNOWN;
 		return statusKids.get(0).getChildText("statusid");
@@ -2745,7 +2790,7 @@ public class DataManager {
      * @throws Exception
      */
 	public void setCategory(ServiceContext context, Dbms dbms, String mdId, String categId) throws Exception {
-		Object args[] = { new Integer(mdId), new Integer(categId) };
+        Object args[] = { Integer.valueOf(mdId), Integer.valueOf(categId) };
 
 		if (!isCategorySet(dbms, mdId, categId)) {
 			dbms.execute("INSERT INTO MetadataCateg(metadataId, categoryId) VALUES(?,?)", args);
@@ -2765,7 +2810,7 @@ public class DataManager {
      */
 	public boolean isCategorySet(Dbms dbms, String mdId, String categId) throws Exception {
 		String query = "SELECT metadataId FROM MetadataCateg " +"WHERE metadataId=? AND categoryId=?";
-		Element elRes = dbms.select(query, new Integer(mdId), new Integer(categId));
+        Element elRes = dbms.select(query, Integer.valueOf(mdId), Integer.valueOf(categId));
 		return (elRes.getChildren().size() != 0);
 	}
 
@@ -2778,7 +2823,7 @@ public class DataManager {
      */
 	public void unsetCategory(ServiceContext context, Dbms dbms, String mdId, String categId) throws Exception {
 		String query = "DELETE FROM MetadataCateg WHERE metadataId=? AND categoryId=?";
-		dbms.execute(query, new Integer(mdId), new Integer(categId));
+        dbms.execute(query, Integer.valueOf(mdId), Integer.valueOf(categId));
 		if (svnManager != null) {
 		    svnManager.setHistory(dbms, mdId+"", context);
 		}
@@ -2793,13 +2838,13 @@ public class DataManager {
      */
 	public Element getCategories(Dbms dbms, String mdId) throws Exception {
 		String query = "SELECT id, name FROM Categories, MetadataCateg WHERE id=categoryId AND metadataId=?";
-		return dbms.select(query, new Integer(mdId));
+        return dbms.select(query, Integer.valueOf(mdId));
 	}
 
     /**
      * Update metadata record (not template) using update-fixed-info.xsl
-     * 
-     * 
+     *
+     *
      * @param schema
      * @param id
      * @param uuid If the metadata is a new record (not yet saved), provide the uuid for that record
@@ -2815,14 +2860,14 @@ public class DataManager {
         if(autoFixing) {
             if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
                 Log.debug(Geonet.DATA_MANAGER, "Autofixing is enabled, trying update-fixed-info (updateDatestamp: " + updateDatestamp.name() + ")");
-            
+
         	String query = "SELECT uuid, isTemplate FROM Metadata WHERE id = ?";
-            Element rec = dbms.select(query, new Integer(id)).getChild("record");
+            Element rec = dbms.select(query, Integer.valueOf(id)).getChild("record");
             Boolean isTemplate = rec != null && !rec.getChildText("istemplate").equals("n");
-            
+
             // don't process templates
                 uuid = uuid == null ? rec.getChildText("uuid") : uuid;
-                
+
                 //--- setup environment
                 Element env = new Element("env");
                 env.addContent(new Element("id").setText(id));
@@ -2830,7 +2875,7 @@ public class DataManager {
 								Element schemaLoc = new Element("schemaLocation");
                 schemaLoc.setAttribute(schemaMan.getSchemaLocation(schema,context));
 								env.addContent(schemaLoc);
-                
+
                 if (updateDatestamp == UpdateDatestamp.yes) {
                         env.addContent(new Element("changeDate").setText(new ISODate().toString()));
                 }
@@ -2878,7 +2923,8 @@ public class DataManager {
 
         String query = "select m.id, m.uuid, m.data, mn.notifierId, mn.action from metadata m left join metadatanotifications mn on m.id = mn.metadataId\n" +
                 "where (mn.notified is null or mn.notified = 'n') and (mn.action <> 'd') and (mn.notifierId is null or mn.notifierId = ?)";
-        List<Element> results = dbms.select(query, new Integer(notifierId)).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> results = dbms.select(query, Integer.valueOf(notifierId)).getChildren();
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadata after select: " + (results != null));
 
@@ -2913,7 +2959,8 @@ public class DataManager {
 
         String query = "select metadataId as id, metadataUuid as uuid, notifierId, action from metadatanotifications " +
                 "where (notified = 'n') and (action = 'd') and (notifierId = ?)";
-        List<Element> results = dbms.select(query, new Integer(notifierId)).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> results = dbms.select(query, Integer.valueOf(notifierId)).getChildren();
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadataToDelete after select: " + (results != null));
 
@@ -2943,12 +2990,12 @@ public class DataManager {
      */
     public void setMetadataNotified(String metadataId, String metadataUuid, String notifierId, boolean deleteNotification, Dbms dbms) throws Exception {
         String query = "DELETE FROM MetadataNotifications WHERE metadataId=? AND notifierId=?";
-        dbms.execute(query, new Integer(metadataId), new Integer(notifierId));
+        dbms.execute(query, Integer.valueOf(metadataId), Integer.valueOf(notifierId));
         dbms.commit();
 
         if (!deleteNotification) {
             query = "INSERT INTO MetadataNotifications (metadataId, notifierId, metadataUuid, notified, action) VALUES (?,?,?,?,?)";
-            dbms.execute(query, new Integer(metadataId), new Integer(notifierId), metadataUuid, "y", "u");
+            dbms.execute(query, Integer.valueOf(metadataId), Integer.valueOf(notifierId), metadataUuid, "y", "u");
             dbms.commit();
         }
 
@@ -2969,11 +3016,11 @@ public class DataManager {
             Log.debug(Geonet.DATA_MANAGER, "setMetadataNotifiedError");
        try {
        String query = "DELETE FROM MetadataNotifications WHERE metadataId=? AND notifierId=?";
-       dbms.execute(query, new Integer(metadataId), new Integer(notifierId));
+            dbms.execute(query, Integer.valueOf(metadataId), Integer.valueOf(notifierId));
 
        String action = (deleteNotification == true)?"d":"u";
        query = "INSERT INTO MetadataNotifications (metadataId, notifierId, metadataUuid, notified, action, errormsg) VALUES (?,?,?,?,?,?)";
-       dbms.execute(query, new Integer(metadataId), new Integer(notifierId), metadataUuid, "n", action, error);
+            dbms.execute(query, Integer.valueOf(metadataId), Integer.valueOf(notifierId), metadataUuid, "n", action, error);
        dbms.commit();
 
            if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
@@ -2993,18 +3040,20 @@ public class DataManager {
      */
     public List<Element> retrieveNotifierServices(Dbms dbms) throws Exception {
         String query = "SELECT id, url, username, password FROM MetadataNotifiers WHERE enabled = 'y'";
-        return dbms.select(query).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> children = dbms.select(query).getChildren();
+        return children;
     }
 
-	
+
 	/**
 	 * Updates all children of the selected parent. Some elements are protected
 	 * in the children according to the stylesheet used in
 	 * xml/schemas/[SCHEMA]/update-child-from-parent-info.xsl.
-	 * 
-	 * Children MUST be editable and also in the same schema of the parent. 
-	 * If not, child is not updated. 
-	 * 
+     *
+     * Children MUST be editable and also in the same schema of the parent.
+     * If not, child is not updated.
+     *
 	 * @param srvContext
 	 *            service context
 	 * @param parentUuid
@@ -3077,9 +3126,8 @@ public class DataManager {
 
 			String styleSheet = getSchemaDir(parentSchema)
 					+ Geonet.File.UPDATE_CHILD_FROM_PARENT_INFO;
-			Element childForUpdate = new Element("root");
-			childForUpdate = Xml.transform(rootEl, styleSheet, params);
-			
+            Element childForUpdate = Xml.transform(rootEl, styleSheet, params);
+
 			xmlSerializer.update(dbms, childId, childForUpdate, new ISODate().toString(), true, null, srvContext);
 
 
@@ -3149,7 +3197,7 @@ public class DataManager {
 									"uuid, isHarvested, harvestUuid, popularity, rating, owner, groupOwner, displayOrder FROM Metadata WHERE id = ?";
 
 		// add Metadata table infos: schemaId, createDate, changeDate, source,
-		Element rec = dbms.select(query, new Integer(id)).getChild("record");
+        Element rec = dbms.select(query, Integer.valueOf(id)).getChild("record");
 
 		String  schema     = rec.getChildText("schemaid");
 		String  createDate = rec.getChildText("createdate");
@@ -3206,23 +3254,23 @@ public class DataManager {
         }
 		// add owner name
 		query = "SELECT username FROM Users WHERE id = ?";
-		Element record = dbms.select(query, new Integer(owner)).getChild("record");
+        Element record = dbms.select(query, Integer.valueOf(owner)).getChild("record");
 		if (record != null) {
 			String ownerName = record.getChildText("username");
 			addElement(info, Edit.Info.Elem.OWNERNAME, ownerName);
 		}
 
 		// add categories
-		List categories = dbms.select("SELECT id, name FROM MetadataCateg, Categories "+
-												"WHERE metadataId = ? AND categoryId = id ORDER BY id", new Integer(id)).getChildren();
+        @SuppressWarnings("unchecked")
+        List<Element> categories = dbms.select("SELECT id, name FROM MetadataCateg, Categories "+
+                "WHERE metadataId = ? AND categoryId = id ORDER BY id", Integer.valueOf(id)).getChildren();
 
-        for (Object category1 : categories) {
-            Element category = (Element) category1;
+        for (Element category : categories) {
             addElement(info, Edit.Info.Elem.CATEGORY, category.getChildText("name"));
         }
 
 		// add subtemplates
-		/* -- don't add as we need to investigate indexing for the fields 
+		/* -- don't add as we need to investigate indexing for the fields
 		   -- in the metadata table used here
 		List subList = getSubtemplates(dbms, schema);
 		if (subList != null) {
@@ -3247,7 +3295,7 @@ public class DataManager {
                     isValid = "0";
                 }
                 String ratio = "xsd".equals(type) ? "" : vi.getChildText("failed") + "/" + vi.getChildText("tested");
-                
+
                 info.addContent(new Element(Edit.Info.Elem.VALID + "_details").
                         addContent(new Element("type").setText(type)).
                         addContent(new Element("status").setText(status)).
@@ -3256,7 +3304,7 @@ public class DataManager {
             }
             addElement(info, Edit.Info.Elem.VALID, isValid);
         }
-        
+
 		// add baseUrl of this site (from settings)
         String protocol = settingMan.getValue(Geonet.Settings.SERVER_PROTOCOL);
 		String host    = settingMan.getValue(Geonet.Settings.SERVER_HOST);
@@ -3278,24 +3326,27 @@ public class DataManager {
         Map<String, String> result = new HashMap<String, String>();
         if(iso639_1_set!= null && !iso639_1_set.isEmpty() ) {
             Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-            String query = "SELECT code, shortcode FROM IsoLanguages WHERE ";
+            StringBuilder queryBuilder = new StringBuilder("SELECT code, shortcode FROM IsoLanguages WHERE ");
+            Object[] iso639_1_array = new String[iso639_1_set.size()];
+            int i = 0;
             for(String iso639_1 : iso639_1_set) {
-                query += "shortcode = ? OR ";
+                iso639_1_array[i++] = iso639_1;
+                queryBuilder.append ("shortcode = ? OR ");
             }
-            query = query.substring(0, query.lastIndexOf("OR"));
+            String query = queryBuilder.substring(0, queryBuilder.lastIndexOf("OR"));
             @SuppressWarnings(value = "unchecked")
-            List<Element> records = dbms.select(query, iso639_1_set.toArray()).getChildren();
+            List<Element> records = dbms.select(query, iso639_1_array).getChildren();
             for(Element record : records) {
                 result.put(record.getChildText("shortcode"), record.getChildText("code"));
             }
         }
-        return result;       
+        return result;
     }
 
 	/**
 	 * Add extra information about the metadata record
 	 * which depends on context and could not be stored in db or Lucene index.
-	 * 
+     *
 	 * @param context
 	 * @param id
 	 * @param info
@@ -3344,7 +3395,7 @@ public class DataManager {
 		return settingMan.getValue("system/site/siteId");
 	}
 
-	
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Static methods are for external modules like GAST to be able to use
@@ -3391,16 +3442,18 @@ public class DataManager {
 		//--- if the metadata has no namespace or already has a namespace prefix
 		//--- then we must skip this phase
 		Namespace ns = md.getNamespace();
-		if (ns == Namespace.NO_NAMESPACE)  
+        if (ns == Namespace.NO_NAMESPACE)
 			return;
 
 		MetadataSchema mds = schemaMan.getSchema(schema);
-		
+
 		//--- get the namespaces and add prefixes to any that are
 		//--- default (ie. prefix is '') if namespace match one of the schema
-		ArrayList nsList = new ArrayList();
+        ArrayList<Namespace> nsList = new ArrayList<Namespace>();
 		nsList.add(ns);
-		nsList.addAll(md.getAdditionalNamespaces());
+        @SuppressWarnings("unchecked")
+        List<Namespace> additionalNamespaces = md.getAdditionalNamespaces();
+        nsList.addAll(additionalNamespaces);
         for (Object aNsList : nsList) {
             Namespace aNs = (Namespace) aNsList;
             if (aNs.getPrefix().equals("")) { // found default namespace
@@ -3431,6 +3484,7 @@ public class DataManager {
         if (isTemplate.equals("n")) {
             GeonetContext gc = (GeonetContext) servContext.getHandlerContext(Geonet.CONTEXT_NAME);
 
+            XmlSerializer.removeWithheldElements(md, gc.getSettingManager());
             String uuid = getMetadataUuid(dbms, id);
             gc.getMetadataNotifier().updateMetadata(md, id, uuid, dbms, gc);
         }
@@ -3445,13 +3499,13 @@ public class DataManager {
      */
     private void notifyMetadataDelete(Dbms dbms, String id, String uuid) throws Exception {
         GeonetContext gc = (GeonetContext) servContext.getHandlerContext(Geonet.CONTEXT_NAME);
-        gc.getMetadataNotifier().deleteMetadata(id, uuid, dbms, gc);        
+        gc.getMetadataNotifier().deleteMetadata(id, uuid, dbms, gc);
     }
 
 	/**
 	 * Update group owner when handling privileges during import.
 	 * Does not update the index.
-	 * 
+     *
 	 * @param dbms
 	 * @param mdId
 	 * @param grpId
@@ -3486,6 +3540,7 @@ public class DataManager {
         cswCapabilitiesInfo.setLangId(language);
         Element capabilitiesInfoRecord = dbms.select("SELECT * FROM CswServerCapabilitiesInfo WHERE langId = ?", language);
 
+        @SuppressWarnings("unchecked")
         List<Element> records = capabilitiesInfoRecord.getChildren();
         for(Element record : records) {
             String field = record.getChild("field").getText();
@@ -3549,6 +3604,7 @@ public class DataManager {
      */
     public List<Element> getCustomElementSets(Dbms dbms) throws Exception {
 		Element customElementSetList = dbms.select("SELECT * FROM CustomElementSet");
+        @SuppressWarnings("unchecked")
         List<Element> records = customElementSetList.getChildren();
         return records;
     }
@@ -3707,16 +3763,16 @@ public class DataManager {
     	}
 
 		public void run() {
-        Dbms dbms = null;
+            Dbms dbms = null;
         try {
-       	    dbms  = (Dbms) srvContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
-            String updateQuery = "UPDATE Metadata SET popularity = popularity +1 WHERE id = ?";
-            Integer iId = new Integer(id);
-            dbms.execute(updateQuery, iId);
+                dbms  = (Dbms) srvContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
+                String updateQuery = "UPDATE Metadata SET popularity = popularity +1 WHERE id = ?";
+                Integer iId = Integer.valueOf(id);
+                dbms.execute(updateQuery, iId);
             indexMetadata(dbms, id, false, srvContext, false, false);
         }
         catch (Exception e) {
-            Log.error(Geonet.DATA_MANAGER, "The following exception is ignored: " + e.getMessage());
+                Log.error(Geonet.DATA_MANAGER, "The following exception is ignored: " + e.getMessage());
 			e.printStackTrace();
 		}
         finally {

@@ -88,11 +88,12 @@ public class Thesaurus {
     
     private String defaultNamespace;
 
-	private String version;
-
     private String downloadUrl;
 
     private String keywordUrl;
+
+/*    @SuppressWarnings("unused")
+	private String version;
 
 	@SuppressWarnings("unused")
 	private String name;
@@ -107,8 +108,8 @@ public class Thesaurus {
 	private String langue;
 
 	@SuppressWarnings("unused")
-	private String autority;
-
+	private String authority;
+*/
 	private IsoLanguagesMapper isoLanguageMapper;
 
 	/**
@@ -118,9 +119,9 @@ public class Thesaurus {
 	 * @param dname category/domain name of thesaurus
 	 */
 	public Thesaurus(IsoLanguagesMapper mapper, String fname, String type, String dname, File thesaurusFile, String siteUrl) {
-	    this(mapper, fname, type, dname, thesaurusFile, siteUrl, false);
+	    this(mapper, fname, null, null, type, dname, thesaurusFile, siteUrl, false);
 	}
-    public Thesaurus(IsoLanguagesMapper mapper, String fname, String type, String dname, File thesaurusFile, String siteUrl, boolean ignoreMissingError) {
+    public Thesaurus(IsoLanguagesMapper mapper, String fname, String tname, String tnamespace, String type, String dname, File thesaurusFile, String siteUrl, boolean ignoreMissingError) {
 		super();
 		this.isoLanguageMapper = mapper;
 		this.fname = fname;
@@ -130,7 +131,13 @@ public class Thesaurus {
 		this.downloadUrl = buildDownloadUrl(fname, type, dname, siteUrl);
 		this.keywordUrl = buildKeywordUrl(fname, type, dname, siteUrl);
 		
+		this.defaultNamespace = (tnamespace == null ? DEFAULT_THESAURUS_NAMESPACE : tnamespace);
+		
+		if (tname != null) {
+		    this.title = tname;
+		} else {
         retrieveThesaurusTitle(thesaurusFile, dname + "." + fname, ignoreMissingError);
+	}
 	}
 
 	
@@ -589,6 +596,38 @@ public class Thesaurus {
 		return this;
 	}
 
+	
+    /**
+     * Set the title of the thesaurus and save the graph to the repository.
+     * 
+     * @param thesaurusTitle
+     * @throws AccessDeniedException 
+     * @throws IOException 
+     * @throws GraphException 
+     */
+    public void addTitleElement(String thesaurusTitle) throws IOException, AccessDeniedException, GraphException{
+      
+      Graph myGraph = new org.openrdf.model.impl.GraphImpl();
+
+      ValueFactory myFactory = myGraph.getValueFactory();
+      
+      String namespaceSkos = "http://www.w3.org/2004/02/skos/core#";
+      String namespaceDC = "http://purl.org/dc/elements/1.1/";
+      
+      URI mySubject = myFactory.createURI( "http://geonetwork-opensource.org/" , thesaurusTitle);
+      URI skosClass = myFactory.createURI(namespaceSkos, "ConceptScheme");
+      URI titleURI = myFactory.createURI(namespaceDC, "title");
+      
+      URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
+      
+      mySubject.addProperty(rdfType, skosClass);
+      
+      Value valueObj = myFactory.createLiteral(thesaurusTitle);
+      myGraph.add(mySubject, titleURI, valueObj );
+      
+      repository.addGraph(myGraph);
+    }
+    
     /**
      * Retrieves the thesaurus title from rdf file.
      *
@@ -601,7 +640,6 @@ public class Thesaurus {
 				// may not be present yet
 				this.title = defaultTitle;
         this.date = new ISODate().toString();
-				this.version = "unknown"; // not really acceptable!
 
         try {
             Element thesaurusEl = Xml.loadFile(thesaurusFile);
@@ -614,12 +652,13 @@ public class Thesaurus {
             theNSs.add(Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/"));
 
             this.defaultNamespace = null;
-            Element title = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dc:title", theNSs);
+            Element title = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dc:title|rdf:Description/dc:title", theNSs);
             if (title != null) {
                 this.title = title.getValue();
                 this.defaultNamespace = title.getParentElement().getAttributeValue("about", rdfNamespace);
             } else {
                 this.title = defaultTitle;
+                this.defaultNamespace = DEFAULT_THESAURUS_NAMESPACE;
             }
             
             try {
@@ -646,9 +685,12 @@ public class Thesaurus {
                 this.date = df.format(thesaususDate);
             }
 
+            if (Log.isDebugEnabled(Geonet.THESAURUS_MAN)) {
+                Log.debug(Geonet.THESAURUS_MAN, "Thesaurus information: " + this.title + " (" + this.date + ")");
+            }
         } catch (Exception ex) {
             if(!ignoreMissingError)
-                Log.error(Geonet.THESAURUS_MAN, "Error getting thesaurus info: " + ex.getMessage());
+                Log.error(Geonet.THESAURUS_MAN, "Error getting thesaurus info for " + thesaurusFile + ". Error is: " + ex.getMessage());
         }
     }
 

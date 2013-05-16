@@ -111,18 +111,18 @@ public final class LangUtils
             xml = xml.getParentElement();
         }
 
-        Iterator iter = xml.getDescendants(new ElementFinder("language", XslUtil.GMD_NAMESPACE,
+        Iterator iter = xml.getDescendants(new ElementFinder("language", Geonet.Namespaces.GMD,
                 "CHE_MD_Metadata"));
         if (!iter.hasNext()) {
             iter = xml
-                    .getDescendants(new ElementFinder("language", XslUtil.GMD_NAMESPACE, "MD_Metadata"));
+                    .getDescendants(new ElementFinder("language", Geonet.Namespaces.GMD, "MD_Metadata"));
         }
 
         String defaultLang = "eng";
         if (iter.hasNext()) {
             Element langElem = (Element) iter.next();
-            if (langElem.getChild("CharacterString", XslUtil.GCO_NAMESPACE) != null) {
-                defaultLang = langElem.getChildTextTrim("CharacterString", XslUtil.GCO_NAMESPACE);
+            if (langElem.getChild("CharacterString", Geonet.Namespaces.GCO) != null) {
+                defaultLang = langElem.getChildTextTrim("CharacterString", Geonet.Namespaces.GCO);
             }
         }
         return defaultLang;
@@ -137,15 +137,15 @@ public final class LangUtils
      */
     public static String iso19139TranslatedText(Element element, String preferredLang, String defaultLang)
     {
-        Element charString = element.getChild("CharacterString", XslUtil.GCO_NAMESPACE);
+        Element charString = element.getChild("CharacterString", Geonet.Namespaces.GCO);
         if (preferredLang.equalsIgnoreCase(defaultLang)
                 && charString != null) {
-            return element.getChild("CharacterString", XslUtil.GCO_NAMESPACE).getTextTrim();
+            return element.getChild("CharacterString", Geonet.Namespaces.GCO).getTextTrim();
         }
 
         String fallback = null;
 
-        ElementFinder finder = new ElementFinder("LocalisedCharacterString", XslUtil.GMD_NAMESPACE, "textGroup");
+        ElementFinder finder = new ElementFinder("LocalisedCharacterString", Geonet.Namespaces.GMD, "textGroup");
         Iterator<Element> localised = element.getDescendants(finder);
 
         while( localised.hasNext() ){

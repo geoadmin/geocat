@@ -39,6 +39,7 @@ Ext.namespace('GeoNetwork.view');
  *      * a metadata menu (:class:`GeoNetwork.MetadataMenu`)
  *      * a print mode menu (for pretty HTML printing)
  *      * a menu to turn off tooltips (on metadata descriptors)
+ *      * an option to give metadata-specific feedback
  *
  */
 GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
@@ -80,6 +81,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
     catalogue: undefined,
     metadataUuid: undefined,
     record: undefined,
+    showFeedBackButton: undefined,
     resultsView: undefined,
     actionMenu: undefined,
     permalinkMenu: undefined,
@@ -416,6 +418,27 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
             listeners: {
                 click: function(c, pressed){
                 	window.open(this.printUrl + '?uuid=' + this.metadataUuid + '&currTab=' + this.printMode + "&hl=" + this.lang);
+                },
+                scope: this
+            }
+        });
+    },
+    createFeedbackMenu: function() {
+        var disabledButton;
+        if(this.showFeedBackButton) {
+            disabledButton = false;
+        }
+        else {
+            disabledButton = true;
+        }
+        return new Ext.Button({
+            iconCls: 'feedback',
+            tooltip: OpenLayers.i18n('Feedback'),
+            disabled: disabledButton,
+            listeners: {
+                click: function(c, pressed) {
+                    var feedbackWindow = new GeoNetwork.FeedbackForm(null, this.record);
+                    feedbackWindow.show();
                 },
                 scope: this
             }

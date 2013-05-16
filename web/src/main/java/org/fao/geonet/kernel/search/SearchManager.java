@@ -22,41 +22,18 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.TreeSet;
-import java.util.Vector;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import javax.servlet.ServletContext;
-
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.index.SpatialIndex;
 import jeeves.exceptions.JeevesException;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.IO;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
@@ -77,14 +54,8 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.util.BytesRef;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
@@ -123,9 +94,28 @@ import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
+import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.TreeSet;
+import java.util.Vector;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Indexes metadata using Lucene.
@@ -437,7 +427,7 @@ public class SearchManager {
 	/**
 	 * Create, configure and optionnaly register in a list a per field analyzer wrapper.
 	 * 
-	 * @param defaultAnalyzer The default analyzer to use
+	 * @param defaultAnalyzerClass The default analyzer to use
 	 * @param fieldAnalyzers	The list of extra analyzer per field
 	 * @param referenceMap	A map where to reference the per field analyzer
 	 * @param referenceKey	The reference key
@@ -523,9 +513,7 @@ public class SearchManager {
         }
 
 		File htmlCacheDirTest   = new File(htmlCacheDir);
-		if (!htmlCacheDirTest.isDirectory() && !htmlCacheDirTest.mkdirs()) {
-            throw new IllegalArgumentException("directory " + htmlCacheDir + " not found");
-        }
+		IO.mkdirs(htmlCacheDirTest, "Html cache directory");
 		_htmlCacheDir = htmlCacheDir;
 
 
@@ -533,12 +521,13 @@ public class SearchManager {
 		if (!_luceneDir.isAbsolute()) {
             _luceneDir = new File(luceneDir+ NON_SPATIAL_DIR);
         }
-        _luceneDir.getParentFile().mkdirs();
+        IO.mkdirs(_luceneDir.getParentFile(), "Lucene Index container directory");
+
         _spatial = new Spatial(dataStore, maxWritesInTransaction);
 
 		_luceneTaxonomyDir = new File(luceneDir + TAXONOMY_DIR);
 		if (!_luceneTaxonomyDir.isAbsolute()) _luceneTaxonomyDir = new File(luceneDir+ TAXONOMY_DIR);
-		_luceneTaxonomyDir.getParentFile().mkdirs();
+		IO.mkdirs(_luceneTaxonomyDir.getParentFile(), "Unable to make luceneTaxony parent dir: {dir} because: {cause}");
 
      	 _logAsynch = logAsynch;
 		 _logSpatialObject = logSpatialObject;
@@ -745,21 +734,6 @@ public class SearchManager {
 		_spatial.writer().delete(txt);
 	}
 	
-	private void deleteIndexDocument(String id, boolean group) throws Exception {
-	    if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-            Log.debug(Geonet.INDEX_ENGINE, "Deleting "+id+" from index");
-	    }
-        if (group) {
-            deleteGroup("_id", id);
-        } else {
-            delete("_id", id);
-        }
-        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-            Log.debug(Geonet.INDEX_ENGINE, "Finished Delete");
-        }
-
-	}
-	
     /**
      * TODO javadoc.
      *
@@ -894,7 +868,7 @@ public class SearchManager {
 		field.setAttribute(LuceneFieldAttribute.INDEX.toString(), Boolean.toString(index));
 		return field;
 	}
-    private enum LuceneFieldAttribute {
+    public enum LuceneFieldAttribute {
         NAME {
             @Override
             public String toString() {
@@ -935,13 +909,12 @@ public class SearchManager {
 				sb.append(" ");
 			sb.append(text);
 		}
-		List children = metadata.getChildren();
-		if (children.size() > 0) {
-            for (Object aChildren : children) {
-                allText((Element) aChildren, sb);
+		@SuppressWarnings("unchecked")
+        List<Element> children = metadata.getChildren();
+        for (Element aChildren : children) {
+            allText(aChildren, sb);
             }
 		}
-	}
 
     /**
      *  deletes a document.
@@ -987,7 +960,7 @@ public class SearchManager {
 					continue;
 				}
 				if (hasxlinks.trim().equals("1")) {
-					docs.add(new Integer(id));
+					docs.add(Integer.valueOf(id));
 				}
 			}
 			return docs;
@@ -1041,20 +1014,24 @@ public class SearchManager {
 	 * @throws Exception
 	 */
     public Vector<String> getTerms(String fld) throws Exception {
-        Vector<String> terms = new Vector<String>();
+        Vector<String> foundTerms = new Vector<String>();
         IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
         try {
+            @SuppressWarnings("resource")
             AtomicReader reader = new SlowCompositeReaderWrapper(indexAndTaxonomy.indexReader);
-            TermsEnum enu = reader.terms(fld).iterator(null);
+            Terms terms = reader.terms(fld);
+            if (terms != null) {
+                TermsEnum enu = terms.iterator(null);
             BytesRef term = enu.next();
             while (term != null) {
                 if (!term.utf8ToString().equals(fld)) {
                     break;
                 }
-                terms.add(term.utf8ToString());
+                    foundTerms.add(term.utf8ToString());
                 term = enu.next();
             }
-            return terms;
+            }
+            return foundTerms;
         } finally {
             releaseIndexReader(indexAndTaxonomy);
         }
@@ -1075,10 +1052,13 @@ public class SearchManager {
 	 * @return	An unsorted and unordered list of terms with their frequency.
 	 * @throws Exception
 	 */
-	public List<TermFrequency> getTermsFequency(String fieldName, String searchValue, int maxNumberOfTerms,
+	public Collection<TermFrequency> getTermsFequency(String fieldName, String searchValue, int maxNumberOfTerms,
 	                                            int threshold) throws Exception {
-        List<TermFrequency> termList = new ArrayList<TermFrequency>();
+        Collection<TermFrequency> termList = new ArrayList<TermFrequency>();
         IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
+        String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
+        boolean startsWithOnly = !searchValue.startsWith("*") && searchValue.endsWith("*");
+        
         try {
             GeonetworkMultiReader multiReader = indexAndTaxonomy.indexReader;
             @SuppressWarnings("resource")
@@ -1090,9 +1070,12 @@ public class SearchManager {
                     BytesRef term = termEnum.next();
                     while (term != null && i++ < maxNumberOfTerms) {
                         String text = term.utf8ToString();
-                        if (termEnum.docFreq() >= threshold && StringUtils.containsIgnoreCase(text, searchValue)) {
-                            TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
-                            termList.add(freq);
+                        if (termEnum.docFreq() >= threshold) {
+                            if ((startsWithOnly && StringUtils.startsWithIgnoreCase(text, searchValueWithoutWildcard))
+                                    || (!startsWithOnly && StringUtils.containsIgnoreCase(text, searchValueWithoutWildcard))) {
+                                TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
+                                termList.add(freq);
+                            }
                         }
                         term = termEnum.next();
                     }
@@ -1108,8 +1091,8 @@ public class SearchManager {
      *
 	 */
 	public static class TermFrequency implements Comparable<Object> {
-		String term;
-		int frequency;
+		private String term;
+		private int frequency;
 
 		public TermFrequency(String term, int frequency) {
 			this.term = term;
@@ -1123,18 +1106,43 @@ public class SearchManager {
 		public int getFrequency() {
 			return this.frequency;
 		}
-
+		
+        public void setFrequency(int frequency) {
+            this.frequency = frequency;
+        }
+        
 		public int compareTo(Object o) {
 			if (o instanceof TermFrequency) {
 				TermFrequency oFreq = (TermFrequency) o;
-				return new CompareToBuilder().append(frequency, oFreq.frequency).append(term, oFreq.term).toComparison();
-			}
-            else {
+				return term.compareTo(oFreq.term);
+			} else {
 				return 0;
 			}
 		}
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + frequency;
+            result = prime * result + ((term == null) ? 0 : term.hashCode());
+            return result;
 	}
 
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            TermFrequency other = (TermFrequency) obj;
+            return compareTo(other) == 0;
+        }
+		
+		
+	}
 	// utilities
 
     /**
@@ -1142,7 +1150,6 @@ public class SearchManager {
      *
      * @param schemaDir
      * @param xml
-     * @param translationForSorting 
      * @return
      * @throws Exception
      */
@@ -1409,11 +1416,11 @@ public class SearchManager {
 		float documentBoost = 1;
         // Set boost to promote some types of document selectively according to DocumentBoosting class
         if (_documentBoostClass != null) {
-            Float f = (_documentBoostClass).getBoost(doc);
+            Float f = (_documentBoostClass).getBoost(xml);
             if (f != null) {
                 if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
                     Log.debug(Geonet.INDEX_ENGINE, "Boosting document with boost factor: " + f);
-                documentBoost = 1;
+                documentBoost = f;
             }
         }
 
@@ -1460,14 +1467,18 @@ public class SearchManager {
                     
                     // As of lucene 4.0 to boost a document all field boosts must be premultiplied by documentBoost
                     // because there is no doc.setBoost method anymore.
-                    // Boost a particular field according to Lucene config. 
+                    // Boost a particular field according to Lucene config.
+                    
+                    // You cannot set an index-time boost on an unindexed field, or one that omits norms
+                    if (bIndex && !f.fieldType().omitNorms()) {
                     Float boost = _luceneConfig.getFieldBoost(name);
                     if (boost != null) {
                         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
-                            Log.debug(Geonet.INDEX_ENGINE, "Boosting field: " + name + " with boost factor: " + boost);
+                                Log.debug(Geonet.INDEX_ENGINE, "Boosting field: " + name + " with boost factor: " + boost + " x " + documentBoost);
                         f.setBoost(documentBoost * boost);
-                    } else if(documentBoost > -0.0001 && documentBoost < 0.0001) {
+                        } else if(documentBoost != 1) {
                         f.setBoost(documentBoost);
+                    }
                     }
                     doc.add(f);
                     
@@ -1493,12 +1504,10 @@ public class SearchManager {
 	/**
 	 * Creates Lucene numeric field.
 	 * 
-	 * @param doc	The document to add the field
 	 * @param name	The field name
 	 * @param string	The value to be indexed. It is parsed to its numeric type. If exception occurs
 	 * field is not added to the index. 
-	 * @param store
-	 * @param index
+	 * @param fieldType
 	 * @return
 	 * @throws Exception 
 	 */
@@ -1715,7 +1724,7 @@ public class SearchManager {
                 String relation = Util.getParam(request, Geonet.SearchResult.RELATION,
                         Geonet.SearchResult.Relation.INTERSECTION);
                 if(geom.size() == 1) {
-                    return _types.get(relation.toLowerCase()).newInstance(query, numHits, geom.iterator().next(), new SpatialIndexAccessor());
+                    return _types.get(relation).newInstance(query, numHits, geom.iterator().next(), new SpatialIndexAccessor());
                 } else {
                     Collection<SpatialFilter> filters = new ArrayList<SpatialFilter>(geom.size());
                     Envelope bounds = null;

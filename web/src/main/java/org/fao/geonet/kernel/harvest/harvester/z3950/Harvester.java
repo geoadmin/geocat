@@ -24,17 +24,16 @@ package org.fao.geonet.kernel.harvest.harvester.z3950;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.HarvestValidationEnum;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.Privileges;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -54,7 +53,8 @@ import java.util.Set;
 
 //=============================================================================
 
-class Harvester {
+class Harvester extends BaseAligner {
+
 	private UUIDMapper localUuids;
 	private final DataManager dataMan;
 	private final SearchManager searchMan;
@@ -66,10 +66,8 @@ class Harvester {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, Dbms dbms,
-			Z3950Params params) {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
+	public Harvester(Logger log, ServiceContext context, Dbms dbms, Z3950Params params) {
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		this.context = context;
 		this.log = log;
 		this.searchMan = gc.getSearchmanager();
@@ -174,7 +172,7 @@ class Harvester {
 				String repoName = repoElem.getChildText("name");
 				codes.put(repoId.getAttributeValue("serverCode")+":"+repoId.getAttributeValue("code"), repoName);
 				// create a result holder for this repository
-				Z3950Result result = serverResults.getServerResult(repoName);
+				serverResults.getServerResult(repoName);
 
 				// sanitize the name of the category
 				String categName = repoName.replaceAll("[^\\w]",""); 
@@ -239,7 +237,7 @@ class Harvester {
 				md.removeChildren(Edit.RootChild.INFO, Edit.NAMESPACE);
 				String repoName = codes.get(colCode);
                 if(log.isDebugEnabled()) log.debug("Processing record from server "+repoName);
-				Z3950Result result = serverResults.getServerResult(repoName);
+				HarvestResult result = serverResults.getServerResult(repoName);
 				result.totalMetadata++;
 
 				if (eName.equals("error")) {
@@ -262,7 +260,7 @@ class Harvester {
 				}
 
 				// detect schema, extract uuid and add
-				String schema = dataMan.autodetectSchema(md);
+				String schema = dataMan.autodetectSchema(md, null);
 				if (schema == null) {
 					log.warning("Skipping metadata with unknown schema.");
 					result.unknownSchema++;
@@ -325,8 +323,9 @@ class Harvester {
 					continue;
 				}
 
-				addPrivileges(id$);
-				addCategories(id$, catCodes.get(colCode));
+                addPrivileges(id$, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+                addCategories(id$, params.getCategories(), localCateg, dataMan, dbms, context, log, catCodes.get(colCode));
+
 
 				dataMan.setTemplateExt(dbms, id, "n", null);
 				dataMan.setHarvestedExt(dbms, id, params.uuid, params.name);
@@ -354,65 +353,6 @@ class Harvester {
 		return serverResults;
 	}
 
-	/**
-	 * Add categories according to harvesting configuration TODO : This is a
-	 * common part of different harvester.
-	 *
-	 * @param id
-	 *            GeoNetwork internal identifier
-	 *
-	 */
-	private void addCategories(String id, String serverCategory) throws Exception {
-		UserSession session = context.getUserSession();
-		for (String catId : params.getCategories()) {
-			String name = localCateg.getName(catId);
-
-			if (name == null) {
-                if(log.isDebugEnabled()) log.debug("    - Skipping removed category with id:" + catId);
-			} else {
-				dataMan.setCategory(context, dbms, id, catId);
-			}
-		}
-
-		if (serverCategory != null) {
-			String catId = localCateg.getID(serverCategory);
-			if (catId == null) {
-                if(log.isDebugEnabled()) log.debug("    - Skipping removed category :" + serverCategory);
-			} else {
-				dataMan.setCategory(context, dbms, id, catId);
-			}
-		}
-	}
-
-	/**
-	 * Add privileges according to harvesting configuration
-	 *
-	 * @param id
-	 *            GeoNetwork internal identifier
-	 *
-	 */
-	private void addPrivileges(String id) throws Exception {
-		UserSession session = context.getUserSession();
-		for (Privileges priv : params.getPrivileges()) {
-			String name = localGroups.getName(priv.getGroupId());
-
-			if (name == null)
-                if(log.isDebugEnabled())
-                    log.debug("    - Skipping removed group with id:" + priv.getGroupId());
-			else {
-				for (int opId : priv.getOperations()) {
-					name = dataMan.getAccessManager().getPrivilegeName(opId);
-
-					// --- allow only: view, dynamic, featured
-					if (opId == 0 || opId == 5 || opId == 6) {
-						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId + "");
-					} else
-                    if(log.isDebugEnabled()) log.debug("       --> " + name + " (skipped)");
-				}
-			}
-		}
-	}
-
 	// ---------------------------------------------------------------------------
 	// ---
 	// --- Variables
@@ -426,6 +366,3 @@ class Harvester {
 	private CategoryMapper localCateg;
 	private GroupMapper localGroups;
 }
-
-// =============================================================================
-

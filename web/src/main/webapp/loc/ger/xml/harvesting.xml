@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <selectownergroup>Harvester gehört zur Gruppe</selectownergroup>
 	<select>Ausgewählt</select>
 	<name>Name</name>
 	<directoryname>Verzeichnis</directoryname>
@@ -20,6 +21,11 @@
 	<info type="geonetwork20">
 		<short>GeoNetwork 2.0</short>
 		<long>GeoNetwork v2.0 entfernter Knoten</long>
+	</info>
+	
+	<info type="geoPREST">
+		<short>GeoPortal REST</short>
+		<long>GeoPortal 9.3.x via REST interface</long>
 	</info>
 	
 	<info type="webdav">
@@ -81,8 +87,10 @@
 	
 	<site>Site</site>
 		
-	<category>Kategorie</category>
-	<clearConfig>Z3950 Server Konfiguration löschen</clearConfig>
+	<baseUrl>Base URL of GeoPortal service</baseUrl>
+
+	<category>Category</category>
+	<clearConfig>Clear Z3950 Server Configuration</clearConfig>
 
 	<wxstype>Art des OGC webservice</wxstype>
 	<wxstypes>
@@ -143,7 +151,8 @@
 	
 	<content>Geharvesteter Inhalt</content>
 	<importxslt>Dieses XSLT auf geharvestete Metadaten anwenden</importxslt>
-
+	<rejectDuplicateResource>Check for duplicate resources based on resource identifier (only for records in ISO19139 or ISO profiles)</rejectDuplicateResource>
+	
 	<at>Run at</at>
     <atSpec>( hour of day : minute eg. 23:15 )</atSpec>
     <interval>Will run again every</interval>
@@ -404,6 +413,7 @@
 		<couldNotInsert>Konnte nicht einfügen</couldNotInsert>
     <subtemplatesUpdated>Untervorlagen aktualisiert</subtemplatesUpdated>
 		<recordsUpdated>Einträge aktualisiert</recordsUpdated>
+		<duplicatedResource>Duplicated resource</duplicatedResource>
 	</tipHeader>
 	
 	<notRun>Warten auf das erste Update</notRun>

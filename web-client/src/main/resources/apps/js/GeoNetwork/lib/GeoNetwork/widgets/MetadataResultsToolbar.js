@@ -37,6 +37,16 @@ Ext.namespace('GeoNetwork');
  *
  */
 GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
+    defaultConfig: {
+        /** api: config[withPaging] 
+         * ``boolean`` Add paging button. Default is false.
+         */
+        withPaging: false,
+        /** api: config[searchCb] 
+         * ``Function`` The search callback to call while paging
+         */
+        searchCb: null
+    },
     /** api: config[catalogue] 
      * ``GeoNetwork.Catalogue`` Catalogue to use
      */
@@ -131,10 +141,14 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      *  Initializes the toolbar results view.
      */
     initComponent: function(){
+        Ext.applyIf(this, this.defaultConfig);
+        
         var cmp = [];
         cmp.push(this.createSelectionToolBar());
         cmp.push(OpenLayers.i18n('hitsPerPage'), this.getHitsPerPage());
-        
+        if (this.withPaging) {
+            cmp.push(this.createPaging());
+        }
         cmp.push(['->']);
 
         var previousAction = new Ext.Action(
@@ -185,14 +199,16 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         }, '|');
 
         var sortOption = this.getSortByCombo();
-        cmp.push(OpenLayers.i18n('sortBy'), sortOption, '|');
-        
+        cmp.push(OpenLayers.i18n('sortBy'), sortOption);
+        cmp.push(['|']);
         cmp.push(this.createTemplateMenu());
+        cmp.push(this.createSelectionToolBar());
         cmp.push(this.createOtherActionMenu());
         
         // Permalink
         if(this.permalinkProvider) {
             var l = this.permalinkProvider.getLink;
+            cmp.push(['|']);
             cmp.push(GeoNetwork.Util.buildPermalinkMenu(l, this.permalinkProvider));
         }
         
@@ -207,7 +223,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
  		   url: this.catalogue.services.mdSelect,
  		   success: function(response, opts) {
  			  var numSelected = response.responseXML.getElementsByTagName('Selected')[0].firstChild.nodeValue;
- 			  this.updateSelectionInfo(this.catalogue, numSelected);
+ 			  this.updateSelectionInfo(this.catalogue, parseInt(numSelected));
  		  },
  		  scope:this
  		});
@@ -369,7 +385,8 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         
         this.selectionActions.push(this.deleteAction,this.notifyByMailAction, this.unpublishSelectionAction, this.ownerAction, this.updateCategoriesAction, 
                 this.updatePrivilegesAction); //, this.updateStatusAction, this.updateVersionAction);
-        
+
+        if(!this.catalogue.isReadOnly()) {
         this.actionMenu.addItem(this.notifyByMailAction);
         this.actionMenu.addItem(this.unpublishSelectionAction);
         this.actionMenu.addItem(this.ownerAction);
@@ -378,6 +395,35 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         //this.actionMenu.addItem(this.updateStatusAction);
         //this.actionMenu.addItem(this.updateVersionAction);
         this.actionMenu.addItem(this.deleteAction);
+    },
+    createPaging: function () {
+        var self = this;
+        var previousAction = new Ext.Action({
+            id: 'previousBt',
+            text: '&lt;&lt;',
+            handler: function () {
+                var from = catalogue.startRecord - parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
+                if (from > 0) {
+                    catalogue.startRecord = from;
+                    self.searchCb();
+                }
+            }
+        });
+        
+        var nextAction = new Ext.Action({
+            id: 'nextBt',
+            text: '&gt;&gt;',
+            handler: function () {
+                catalogue.startRecord += parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
+                self.searchCb();
+            }
+        });
+        
+        return [previousAction, {
+                xtype: 'tbtext',
+                text: '',
+                id: 'info'
+            }, nextAction];
     },
     /** private: method[createAdminMenu] 
      *  Create quick admin action menu to not require to go to
@@ -392,6 +438,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         this.actionMenu.addItem(this.otherItem);
         this.createMetadataAction = new Ext.menu.Item({
             text: OpenLayers.i18n('newMetadata'),
+            ctCls: 'gn-bt-main',
             iconCls: 'addIcon',
             handler: function(){
                 // FIXME : could be improved. Here we clean the window
@@ -425,9 +472,10 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this,
             hidden: hide
         });
-        
+        if(!this.catalogue.isReadOnly()) {
         this.actionMenu.addItem(this.createMetadataAction);
-        
+        }
+
         this.mdImportAction = new Ext.menu.Item({
             text: OpenLayers.i18n('importMetadata'),
             handler: function(){
@@ -436,8 +484,10 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this,
             hidden: hide
             });
+        if(!this.catalogue.isReadOnly()) {
         this.actionMenu.addItem(this.mdImportAction);
-        
+        }
+
         this.adminAction = new Ext.menu.Item({
             text: OpenLayers.i18n('administration'),
             handler: function(){

@@ -25,7 +25,6 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.exceptions.BadParameterEx;
 import jeeves.exceptions.BadServerResponseEx;
-import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -42,12 +41,11 @@ import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetParams;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import java.util.List;
-
-//=============================================================================
 
 /**
  * User rating of metadata. If the metadata was harvested using the 'GeoNetwork' protocol and
@@ -59,8 +57,7 @@ import java.util.List;
  * When a remote rating is applied, the local rating is not updated. It will be updated 
  * on the next harvest run (FIXME ?).
  */
-public class Rate implements Service
-{
+public class Rate extends NotInReadOnlyModeService {
 
 	//--------------------------------------------------------------------------
 	//---
@@ -76,7 +73,7 @@ public class Rate implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
+	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
@@ -112,7 +109,7 @@ public class Rate implements Service
 		
 		if (localRating || harvUuid == null)
 			//--- metadata is local, just rate it
-			rating = dm.rateMetadata(dbms, new Integer(id), ip, rating);
+			rating = dm.rateMetadata(dbms, Integer.valueOf(id), ip, rating);
 		else
 		{
 			//--- the metadata is harvested, is type=geonetwork?
@@ -135,14 +132,15 @@ public class Rate implements Service
 	{
 		String query = "SELECT harvestUuid FROM Metadata WHERE id=?";
 
-		List list = dbms.select(query, new Integer(id)).getChildren();
+		@SuppressWarnings("unchecked")
+        List<Element> list = dbms.select(query, Integer.valueOf(id)).getChildren();
 
 		//--- if we don't have any metadata, just return
 
-		if (list.size() == 0)
+		if (list.isEmpty())
 			throw new MetadataNotFoundEx("id:"+ id);
 
-		Element rec = (Element) list.get(0);
+		Element rec = list.get(0);
 
 		String harvUuid = rec.getChildText("harvestuuid");
 
@@ -174,6 +172,3 @@ public class Rate implements Service
 		return Integer.parseInt(response.getText());
 	}
 }
-
-//=============================================================================
-

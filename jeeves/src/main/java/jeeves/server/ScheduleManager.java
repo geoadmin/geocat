@@ -57,8 +57,8 @@ public class ScheduleManager
 	private ProviderManager providMan;
 	private SerialFactory   serialFact;
     private MonitorManager monitorManager;
-    private ProfileManager profileManager;
     private JeevesApplicationContext jeevesApplicationContext;
+    private ProfileManager profileManager;
 
 	private Hashtable<String, Object> htContexts = new Hashtable<String, Object>();
 	private Scheduler scheduler;
@@ -111,7 +111,7 @@ public class ScheduleManager
     public SerialFactory getSerialFact() {return serialFact;}
     public MonitorManager getMonitorManager() {return monitorManager;}
     public JeevesApplicationContext getApplicationContext() { return jeevesApplicationContext; }
-    public Hashtable<String, Object> getHtContexts() {return htContexts;}
+    public Hashtable<String, Object> getHtContexts() {return new Hashtable<String, Object>(htContexts);}
 
     //--------------------------------------------------------------------------
 

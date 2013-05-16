@@ -14,9 +14,10 @@ import java.util.Set;
 import jeeves.utils.Xml;
 import jeeves.xlink.XLink;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AbstractThesaurusBasedTest;
 import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.util.GeocatXslUtil;
 import org.fao.xsl.support.Attribute;
 import org.fao.xsl.support.Count;
 import org.fao.xsl.support.EqualAttribute;
@@ -163,11 +164,11 @@ public class CharacterStringToLocalisedTest {
 
         Element transformed = Xml.transform(testData, pathToXsl);
 
-        assertEquals(1, transformed.getChildren("PT_FreeURL", XslUtil.CHE_NAMESPACE).size());
+        assertEquals(1, transformed.getChildren("PT_FreeURL", GeocatXslUtil.CHE_NAMESPACE).size());
         assertEquals(1, transformed.getChildren().size());
         assertEquals(2,
-                transformed.getChild("PT_FreeURL", XslUtil.CHE_NAMESPACE)
-                        .getChildren("URLGroup", XslUtil.CHE_NAMESPACE).size());
+                transformed.getChild("PT_FreeURL", GeocatXslUtil.CHE_NAMESPACE)
+                        .getChildren("URLGroup", GeocatXslUtil.CHE_NAMESPACE).size());
     }
 
     @Test
@@ -189,14 +190,14 @@ public class CharacterStringToLocalisedTest {
                                 + "</che:CHE_MD_Metadata>", false);
 
         Element transformed1 = Xml.transform(testData1, pathToXsl).getChild("contactInstructions",
-                XslUtil.GMD_NAMESPACE);
+                Geonet.Namespaces.GMD);
         Element transformed2 = Xml.transform(testData2, pathToXsl).getChild("contactInstructions",
-                XslUtil.GMD_NAMESPACE);
+                Geonet.Namespaces.GMD);
 
-        assertNotNull(transformed1.getAttribute("type", XslUtil.XSI_NAMESPACE));
-        assertNotNull(transformed2.getAttribute("type", XslUtil.XSI_NAMESPACE));
-        assertEquals(1, transformed1.getChildren("PT_FreeText", XslUtil.GMD_NAMESPACE).size());
-        assertEquals(1, transformed2.getChildren("PT_FreeText", XslUtil.GMD_NAMESPACE).size());
+        assertNotNull(transformed1.getAttribute("type", Geonet.Namespaces.XSI));
+        assertNotNull(transformed2.getAttribute("type", Geonet.Namespaces.XSI));
+        assertEquals(1, transformed1.getChildren("PT_FreeText", Geonet.Namespaces.GMD).size());
+        assertEquals(1, transformed2.getChildren("PT_FreeText", Geonet.Namespaces.GMD).size());
     }
 
     @Test
@@ -206,11 +207,11 @@ public class CharacterStringToLocalisedTest {
         String testData = "/data/non_validating/iso19139che/problemTitle_remove_charstrings.xml";
         Element data = TransformationTestSupport.transform(getClass(), pathToXsl, testData);
 
-        List titleTextGroups = data.getChild("identificationInfo", XslUtil.GMD_NAMESPACE)
-                .getChild("CHE_MD_DataIdentification", XslUtil.CHE_NAMESPACE)
-                .getChild("citation", XslUtil.GMD_NAMESPACE).getChild("CI_Citation", XslUtil.GMD_NAMESPACE)
-                .getChild("title", XslUtil.GMD_NAMESPACE).getChild("PT_FreeText", XslUtil.GMD_NAMESPACE)
-                .getChildren("textGroup", XslUtil.GMD_NAMESPACE);
+        List titleTextGroups = data.getChild("identificationInfo", Geonet.Namespaces.GMD)
+                .getChild("CHE_MD_DataIdentification", GeocatXslUtil.CHE_NAMESPACE)
+                .getChild("citation", Geonet.Namespaces.GMD).getChild("CI_Citation", Geonet.Namespaces.GMD)
+                .getChild("title", Geonet.Namespaces.GMD).getChild("PT_FreeText", Geonet.Namespaces.GMD)
+                .getChildren("textGroup", Geonet.Namespaces.GMD);
         assertEquals(1, titleTextGroups.size());
     }
 

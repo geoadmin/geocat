@@ -40,8 +40,8 @@ import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.reusable.*;
+import org.fao.geonet.util.GeocatXslUtil;
 import org.fao.geonet.util.LangUtils;
-import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 
 import scala.actors.threadpool.Arrays;
@@ -85,9 +85,9 @@ public class ReferencingMetadata implements Service
             Utils.addChild(record, "id", metadataRecord.id);
 
             try {
-                Element titleElement = metadataRecord.xml.getChild("identificationInfo", XslUtil.GMD_NAMESPACE).getChild(
-                        "CHE_MD_DataIdentification", XslUtil.CHE_NAMESPACE).getChild("citation", XslUtil.GMD_NAMESPACE).getChild(
-                        "CI_Citation", XslUtil.GMD_NAMESPACE).getChild("title", XslUtil.GMD_NAMESPACE);
+                Element titleElement = metadataRecord.xml.getChild("identificationInfo", Geonet.Namespaces.GMD).getChild(
+                        "CHE_MD_DataIdentification", GeocatXslUtil.CHE_NAMESPACE).getChild("citation", Geonet.Namespaces.GMD).getChild(
+                        "CI_Citation", Geonet.Namespaces.GMD).getChild("title", Geonet.Namespaces.GMD);
 
                 String translated = LangUtils.iso19139TranslatedText(titleElement, context.getLanguage(),
                         iso19139DefaultLang(metadataRecord.xml));

@@ -200,7 +200,8 @@ GeoNetwork.app = function () {
             url: services.opensearchSuggest,
             rootId: 1,
             baseParams: {
-                field: 'orgName'
+                field: 'orgName',
+                sortBy: 'ALPHA'
             }
         });
         var orgNameField = new Ext.ux.form.SuperBoxSelect({
@@ -226,7 +227,8 @@ GeoNetwork.app = function () {
             url: services.opensearchSuggest,
             rootId: 1,
             baseParams: {
-                field: 'keyword'
+                field: 'keyword',
+                sortBy: 'ALPHA'
             }
         });
 //        FIXME : could not underline current search criteria in tpl
@@ -290,20 +292,24 @@ GeoNetwork.app = function () {
             hidden: true
         });
 
-        var hideInspirePanel = catalogue.getInspireInfo().enable === "false";
-
-        var inspire = new Ext.form.FieldSet({
-            title: OpenLayers.i18n('inspireSearchOptions'),
-            hidden: hideInspirePanel,
-            collapsible: true,
-            collapsed: true,
-            items:  GeoNetwork.util.INSPIRESearchFormTools.getINSPIREFields(catalogue.services, true)
-        });
 
         advancedCriteria.push(themekeyField, orgNameField, categoryField, 
                                 when, spatialTypes, denominatorField, 
                                 catalogueField, groupField, 
-                                metadataTypeField, validField, statusField, ownerField, isHarvestedField, inspire);
+                                metadataTypeField, validField, statusField, ownerField, isHarvestedField);
+        
+        // Create INSPIRE fields if enabled in administration
+        var inspirePanel = catalogue.getInspireInfo().enableSearchPanel === "true";
+        if (inspirePanel) {
+            var inspire = new Ext.form.FieldSet({
+                title: OpenLayers.i18n('inspireSearchOptions'),
+                collapsible: true,
+                collapsed: true,
+                items:  GeoNetwork.util.INSPIRESearchFormTools.getINSPIREFields(catalogue.services, true)
+            });
+            advancedCriteria.push(inspire);
+        }
+        
         var adv = new Ext.form.FieldSet({
             title: OpenLayers.i18n('advancedSearchOptions'),
             autoHeight: true,
@@ -324,11 +330,22 @@ GeoNetwork.app = function () {
             mapOptions = GeoNetwork.map.MAP_OPTIONS;
         }
         
+        
         var formItems = [];
-        formItems.push(GeoNetwork.util.SearchFormTools.getSimpleFormFields(catalogue.services, 
-                    GeoNetwork.map.BACKGROUND_LAYERS, mapOptions, true, 
-                    GeoNetwork.searchDefault.activeMapControlExtent, undefined, {width: 290}),
-                    adv, GeoNetwork.util.SearchFormTools.getOptions(catalogue.services, undefined));
+        formItems.push(
+                new GeoNetwork.form.OpenSearchSuggestionTextField({
+                    hideLabel: true,
+                    minChars: 2,
+                    loadingText: '...',
+                    hideTrigger: true,
+                    url: catalogue.services.opensearchSuggest
+                }),
+                GeoNetwork.util.SearchFormTools.getTypesFieldWithAutocompletion(catalogue.services),
+                GeoNetwork.util.SearchFormTools.getSimpleMap(GeoNetwork.map.BACKGROUND_LAYERS, mapOptions, 
+                GeoNetwork.searchDefault.activeMapControlExtent, {width: 290}),
+                adv, 
+                GeoNetwork.util.SearchFormTools.getOptions(catalogue.services, undefined)
+        );
         // Add advanced mode criteria to simple form - end
         
         
@@ -406,44 +423,6 @@ GeoNetwork.app = function () {
             initMap();
         }
     }
-    /**
-     * Bottom bar
-     *
-     * @return
-     */
-    function createBBar() {
-        var previousAction = new Ext.Action({
-            id: 'previousBt',
-            text: '&lt;&lt;',
-            handler: function () {
-                var from = catalogue.startRecord - parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
-                if (from > 0) {
-                    catalogue.startRecord = from;
-                    search();
-                }
-            },
-            scope: this
-        });
-        
-        var nextAction = new Ext.Action({
-            id: 'nextBt',
-            text: '&gt;&gt;',
-            handler: function () {
-                catalogue.startRecord += parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
-                search();
-            },
-            scope: this
-        });
-        
-        return new Ext.Toolbar({
-            items: [previousAction, '|', nextAction, '|', {
-                xtype: 'tbtext',
-                text: '',
-                id: 'info'
-            }]
-        });
-        
-    }
     
     /**
      * Results panel layout with top, bottom bar and DataView
@@ -468,10 +447,11 @@ GeoNetwork.app = function () {
             searchFormCmp: Ext.getCmp('searchForm'),
             sortByCmp: Ext.getCmp('E_sortBy'),
             metadataResultsView: metadataResultsView,
-            permalinkProvider: permalinkProvider
+            permalinkProvider: permalinkProvider,
+            withPaging: true,
+            searchCb: search
         });
         
-        bBar = createBBar();
         
         var resultPanel = new Ext.Panel({
             id: 'resultsPanel',
@@ -481,9 +461,7 @@ GeoNetwork.app = function () {
             autoWidth: true,
             layout: 'fit',
             tbar: tBar,
-            items: metadataResultsView,
-            // paging bar on the bottom
-            bbar: bBar
+            items: metadataResultsView
         });
         return resultPanel;
     }
@@ -710,7 +688,7 @@ GeoNetwork.app = function () {
     
     function createHeader() {
         var info = catalogue.getInfo();
-        Ext.getDom('title').innerHTML = '<img class="catLogo" src="../../images/logos/' + info.siteId + '.gif"/>&nbsp;' + info.name;
+        Ext.getDom('title').innerHTML = '<img class="catLogo" alt="Logo" src="../../images/logos/' + info.siteId + '.gif"/><div><h1>' + info.name + '</h1></div>';
         document.title = info.name;
     }
     
@@ -760,8 +738,11 @@ GeoNetwork.app = function () {
             
             // Extra stuffs
             infoPanel = createInfoPanel();
-            helpPanel = createHelpPanel();
-            
+            try {
+                helpPanel = createHelpPanel();
+            } catch (e) {
+                // TODO: IE7 does not support help panel
+            }
             createHeader();
             
             // Search form
@@ -804,7 +785,8 @@ GeoNetwork.app = function () {
                     region: 'west',
                     id: 'west',
                     split: true,
-                    minWidth: 300,
+                    border: false,
+                    minWidth: 200,
                     width: 300,
                     maxWidth: 400,
                     autoScroll: true,
@@ -822,6 +804,7 @@ GeoNetwork.app = function () {
                     region: 'center',
                     id: 'center',
                     split: true,
+                    border: false,
                     margins: margins,
                     items: [infoPanel, resultsPanel]
                 }, {
@@ -829,6 +812,7 @@ GeoNetwork.app = function () {
                     id: 'east',
                     layout: 'fit',
                     split: true,
+                    border: false,
                     collapsible: true,
                     hideCollapseTool: true,
                     collapseMode: 'mini',

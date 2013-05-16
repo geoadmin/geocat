@@ -16,6 +16,7 @@ import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Element;
@@ -26,10 +27,8 @@ import org.jdom.filter.ElementFilter;
 import org.jdom.filter.Filter;
 import org.jdom.input.JDOMParseException;
 
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +44,6 @@ public class AjaxEditUtils extends EditUtils {
     private static final String XML_FRAGMENT_SEPARATOR = "&&&";
     private static final String MSG_ELEMENT_NOT_FOUND_AT_REF = "Element not found at ref = ";
     private static final String COLON_SEPARATOR = "COLON";
-    private static final int COLON_SEPARATOR_SIZE = COLON_SEPARATOR.length();
     
     public AjaxEditUtils(ServiceContext context) {
         super(context);
@@ -89,7 +87,8 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
     protected Element applyChangesEmbedded(Dbms dbms, String id, 
-                                        Hashtable changes, Hashtable htHide, String currVersion, String lang) throws Exception {
+                                        Map<String, String> changes, String currVersion, String lang) throws Exception {
+        Lib.resource.checkEditPrivilege(context, id);
         String schema = dataManager.getMetadataSchema(dbms, id);
         EditLib editLib = dataManager.getEditLib();
 
@@ -108,9 +107,9 @@ public class AjaxEditUtils extends EditUtils {
         HashSet<Element> updatedXLinks = new HashSet<Element>();
 
         // --- update elements
-        for (Enumeration e = changes.keys(); e.hasMoreElements();) {
-            String ref = ((String) e.nextElement()).trim();
-            String value = ((String) changes.get(ref)).trim();
+        for (Map.Entry<String, String> entry : changes.entrySet()) {
+            String ref = entry.getKey().trim();
+            String value = entry.getValue().trim();
             String attribute = null;
             
             // Avoid empty key
@@ -177,12 +176,13 @@ public class AjaxEditUtils extends EditUtils {
                 }
             } else {
                 // Process element value
-                List content = el.getContent();
+                @SuppressWarnings("unchecked")
+                List<Content> content = el.getContent();
                 
-                for (int i = 0; i < content.size(); i++) {
-                    if (content.get(i) instanceof Text) {
-                        el.removeContent((Text) content.get(i));
-                        i--;
+                for (Iterator<Content> iterator = content.iterator(); iterator.hasNext();) {
+                    Content content2 = iterator.next();
+                    if (content2 instanceof Text) {
+                        iterator.remove();
                     }
                 }
                 el.addContent(value);
@@ -193,8 +193,9 @@ public class AjaxEditUtils extends EditUtils {
         if (!xmlInputs.isEmpty()) {
             
             // Loop over each XML fragments to insert or replace
-            for (String ref : xmlInputs.keySet()) {
-                String value = xmlInputs.get(ref);
+            for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
+                String ref = entry.getKey();
+                String value = entry.getValue();
                 String name = null;
                 int addIndex = ref.indexOf('_');
                 if (addIndex != -1) {
@@ -385,6 +386,7 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
 	public synchronized Element addElementEmbedded(Dbms dbms, UserSession session, String id, String ref, String name, String childName)  throws Exception {
+	    Lib.resource.checkEditPrivilege(context, id);
 		String  schema = dataManager.getMetadataSchema(dbms, id);
 		//--- get metadata from session
 		Element md = getMetadataFromSession(session, id);
@@ -406,9 +408,9 @@ public class AjaxEditUtils extends EditUtils {
 		if (childName != null) {
 			if (childName.equals("geonet:attribute")) {
 				String defaultValue = "";
-				List attributeDefs = el.getChildren(Edit.RootChild.ATTRIBUTE, Edit.NAMESPACE);
-				for (Object a : attributeDefs) {
-					Element attributeDef = (Element) a;
+				@SuppressWarnings("unchecked")
+                List<Element> attributeDefs = el.getChildren(Edit.RootChild.ATTRIBUTE, Edit.NAMESPACE);
+				for (Element attributeDef : attributeDefs) {
 					if (attributeDef != null && attributeDef.getAttributeValue(Edit.Attribute.Attr.NAME).equals(name)) {
 						Element defaultChild = attributeDef.getChild(Edit.Attribute.Child.DEFAULT, Edit.NAMESPACE);
 						if (defaultChild != null) {
@@ -486,6 +488,7 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
 	public synchronized Element deleteElementEmbedded(Dbms dbms, UserSession session, String id, String ref, String parentRef) throws Exception {
+	    Lib.resource.checkEditPrivilege(context, id);
 
 		String schema = dataManager.getMetadataSchema(dbms, id);
 
@@ -519,10 +522,10 @@ public class AjaxEditUtils extends EditUtils {
 
 				//--- get geonet child element with attribute name = unqualified name
 				Filter chFilter = new ElementFilter(Edit.RootChild.CHILD, Edit.NAMESPACE);
-				List children = parent.getContent(chFilter);
+				@SuppressWarnings("unchecked")
+                List<Element> children = parent.getContent(chFilter);
 
-				for (int i = 0; i < children.size(); i++) {
-					Element ch = (Element) children.get(i);
+				for (Element ch : children) {
 					String name = ch.getAttributeValue("name");
 					if (name != null && name.equals(uName)) {
 						result = (Element) ch.clone();
@@ -593,6 +596,8 @@ public class AjaxEditUtils extends EditUtils {
 	 * @throws Exception
 	 */
 	public synchronized Element deleteAttributeEmbedded(Dbms dbms, UserSession session, String id, String ref) throws Exception {
+	    Lib.resource.checkEditPrivilege(context, id);
+
 		String[] token = ref.split("_");
 		String elementId = token[1];
 		String attributeName = token[2];
@@ -643,6 +648,8 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
 	public synchronized void swapElementEmbedded(Dbms dbms, UserSession session, String id, String ref, boolean down) throws Exception {
+	    Lib.resource.checkEditPrivilege(context, id);
+
         dataManager.getMetadataSchema(dbms, id);
 
 		//--- get metadata from session
@@ -658,14 +665,17 @@ public class AjaxEditUtils extends EditUtils {
 		//--- swap the elements
 		int iSwapIndex = -1;
 
-		List list = ((Element) elSwap.getParent()).getChildren(elSwap.getName(), elSwap.getNamespace());
+		@SuppressWarnings("unchecked")
+        List<Element> list = elSwap.getParentElement().getChildren(elSwap.getName(), elSwap.getNamespace());
 
-		for(int i=0; i<list.size(); i++)
-			if (list.get(i) == elSwap)
-			{
+		int i = -1;
+		for (Element element : list) {
+		    i++;
+            if (element == elSwap) {
 				iSwapIndex = i;
 				break;
 			}
+        }
 
 		if (iSwapIndex == -1)
 			throw new IllegalStateException("Index not found for element --> " + elSwap);
@@ -720,7 +730,9 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
 	public synchronized boolean addAttribute(Dbms dbms, String id, String ref, String name, String currVersion, ServiceContext srvContext) throws Exception {
-		Element md = xmlSerializer.select(dbms, "Metadata", id,srvContext);
+	    Lib.resource.checkEditPrivilege(context, id);
+
+		Element md = xmlSerializer.select(dbms, "Metadata", id, srvContext);
 
 		//--- check if the metadata has been deleted
 		if (md == null)
@@ -780,7 +792,9 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
 	public synchronized boolean deleteAttribute(Dbms dbms, String id, String ref, String name, String currVersion, ServiceContext srvContext) throws Exception {
-		Element md = xmlSerializer.select(dbms, "Metadata", id,srvContext);
+	    Lib.resource.checkEditPrivilege(context, id);
+
+		Element md = xmlSerializer.select(dbms, "Metadata", id, srvContext);
 
 		//--- check if the metadata has been deleted
 		if (md == null)

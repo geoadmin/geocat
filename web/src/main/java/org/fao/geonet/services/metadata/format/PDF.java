@@ -32,7 +32,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 
 import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.util.GeocatXslUtil;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -44,18 +44,18 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
  */
 public class PDF implements Service {
 	
-    private final String TMP_PDF_FILE = "Document";
+	private static final String TMP_PDF_FILE = "Document";
 	
     public Element exec(Element metadata, ServiceContext context) throws Exception {
         
     	Element htmlDoc = metadata.getChild("html");
         XMLOutputter printer = new XMLOutputter();
         String htmlContent = printer.outputString(htmlDoc);
-        XslUtil.setNoScript();
+        GeocatXslUtil.setNoScript();
         File tempDir = (File) context.getServlet().getServletContext().
         	       getAttribute( "javax.servlet.context.tempdir" );
 
-        File tempFile = File.createTempFile(this.TMP_PDF_FILE, ".pdf", tempDir);
+        File tempFile = File.createTempFile(TMP_PDF_FILE, ".pdf", tempDir);
         OutputStream os = new FileOutputStream(tempFile);
         
         try {
