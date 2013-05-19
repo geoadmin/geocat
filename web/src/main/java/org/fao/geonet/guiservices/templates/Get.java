@@ -27,6 +27,8 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -84,10 +86,8 @@ public class Get implements Service
 
 		root.addContent(result);
 
-		List list = Xml.transform(root, styleSheet).getChildren();
-
 		@SuppressWarnings("unchecked")
-        List<Element> list = result.getChildren();
+		List<Element> list = Xml.transform(root, styleSheet).getChildren();
 
 		Element response = new Element("dummy");
 

@@ -243,5 +243,5 @@ public class CGPQueryCriteria
 	/**
 	 * List of query expression Elements.
 	 */
-	private List<Element> expressionElms = new ArrayList(2);
+	private List<Element> expressionElms = new ArrayList<Element>(2);
 }

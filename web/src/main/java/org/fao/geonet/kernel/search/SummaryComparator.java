@@ -28,8 +28,6 @@ import org.jdom.Element;
 
 import bak.pcj.map.ObjectKeyIntMapIterator;
 
-import java.text.Collator;
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,14 +42,16 @@ public class SummaryComparator implements Comparator<SummaryComparator.SummaryEl
 {
     private static final long serialVersionUID = -4668989929284491497L;
 
-public static class SummaryElement {
-    public final String name;
-    public final int count;
-    public SummaryElement( ObjectKeyIntMapIterator next ) {
-        this.name = (String) next.getKey();
-        this.count = next.getValue();
-    }
-}
+	public static class SummaryElement {
+		public final String name;
+		public final int count;
+
+		public SummaryElement(ObjectKeyIntMapIterator next) {
+			this.name = (String) next.getKey();
+			this.count = next.getValue();
+		}
+	}
+
     public enum Type
     {
         STRING
@@ -180,38 +180,34 @@ public static class SummaryElement {
     }
 
     public int compare(SummaryElement me1, SummaryElement me2)
-    {
-        String key1 = (String) me1.getKey();
-        String key2 = (String) me2.getKey();
-        Integer count1 = (Integer) me1.getValue();
-        Integer count2 = (Integer) me2.getValue();
-        String key1 = me1.name;
-        String key2 = me2.name;
-        int count1 = me1.count;
-        int count2 = me2.count;
-        switch (_option)
-        {
-        case NAME:
-        {
-
-            int cmp = compareKeys(key1, key2);
-            if (cmp != 0)
-                return cmp;
-            else
-                return compareCount(count1, count2);
-        }
-        case FREQUENCY:
-        {
-            return compareCount(count1, count2);
-        }
-        default:
-            throw new AssertionError(_option + "is not handled by this method");
-        }
-    }
+	{
+	    String key1 = me1.name;
+	    String key2 = me2.name;
+	    int count1 = me1.count;
+	    int count2 = me2.count;
+	    switch (_option)
+	    {
+	    case NAME:
+	    {
+	
+	        int cmp = compareKeys(key1, key2);
+	        if (cmp != 0)
+	            return cmp;
+	        else
+	            return compareCount(count1, count2);
+	    }
+	    case FREQUENCY:
+	    {
+	        return compareCount(count1, count2);
+	    }
+	    default:
+	        throw new AssertionError(_option + "is not handled by this method");
+	    }
+	}
 
     private int compareCount(int count1, int count2)
     {
-        int cmp = count2.compareTo(count1);
+    	int cmp = (count1 < count2) ? -1 : ((count1 == count2) ? 0 : 1);
         if (cmp != 0)
             return cmp;
         else

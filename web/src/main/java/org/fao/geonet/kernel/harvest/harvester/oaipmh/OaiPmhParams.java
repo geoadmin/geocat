@@ -154,7 +154,7 @@ public class OaiPmhParams extends AbstractParams
 
 	public String url;
 	public String icon;
-
+	boolean validate;
 	private ArrayList<Search> alSearches = new ArrayList<Search>();
 }
 

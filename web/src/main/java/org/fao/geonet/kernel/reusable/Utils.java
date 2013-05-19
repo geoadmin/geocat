@@ -34,7 +34,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -49,11 +48,9 @@ import javax.mail.internet.AddressException;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
-import jeeves.utils.Xml;
 import jeeves.xlink.XLink;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
@@ -132,7 +129,7 @@ public final class Utils {
 
     static final String XSL_REUSABLE_OBJECT_DATA_XSL = "xsl/reusable-object-snippet-flatten.xsl";
 
-    static <T> List<T> convertToList( Iterator iter, Class<T> class1 ) {
+    static <T> List<T> convertToList( Iterator<?> iter, Class<T> class1 ) {
         List<T> placeholders = new ArrayList<T>();
         while( iter.hasNext() ) {
             placeholders.add(class1.cast(iter.next()));
@@ -365,8 +362,9 @@ public final class Utils {
 
         try {
             Set<String> unnotifiedIds = new HashSet<String>();
-
-            for( Element element : (List<Element>) emailRecords.getChildren() ) {
+            @SuppressWarnings("unchecked")
+			List<Element> elems = emailRecords.getChildren();
+            for( Element element : elems ) {
                 final String id = element.getChildText("id");
                 String email = element.getChildText("email");
                 if (!Email.isValidEmailAddress(email)) {
@@ -466,9 +464,7 @@ public final class Utils {
     }
 
     private static boolean findSameChild( List<Element> currentChildren, Element required ) {
-        String rstring = Xml.getString(required);
         for( Element child : currentChildren ) {
-            String cstring = Xml.getString(child);
             if (equalElem(required, child)) {
                 child.detach();
                 return true;

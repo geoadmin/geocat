@@ -14,6 +14,7 @@ import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.UnfailingIterator;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.w3c.dom.Node;
 

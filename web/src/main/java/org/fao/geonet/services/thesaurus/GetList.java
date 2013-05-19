@@ -38,7 +38,6 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
-import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 

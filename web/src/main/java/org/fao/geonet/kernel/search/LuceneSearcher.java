@@ -34,7 +34,6 @@ import jeeves.server.dispatchers.ServiceManager;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
@@ -111,6 +110,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -1611,7 +1611,7 @@ public class LuceneSearcher extends MetaSearcher {
 
         try {
             IndexSearcher searcher = new IndexSearcher(reader);
-            TermQuery query = new TermQuery(new Term(idField, id));
+            TermQuery query = new TermQuery(new Term(field, value));
             SettingInfo settingInfo = _sm.get_settingInfo();
             boolean sortRequestedLanguageOnTop = settingInfo.getRequestedLanguageOnTop();
             if(Log.isDebugEnabled(Geonet.LUCENE))

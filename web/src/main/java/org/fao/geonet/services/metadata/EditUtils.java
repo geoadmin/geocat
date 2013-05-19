@@ -23,10 +23,7 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.sql.SQLException;
-import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
 
 import jeeves.exceptions.BadParameterEx;
@@ -57,7 +54,6 @@ import org.jdom.Text;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -151,6 +147,7 @@ class EditUtils {
 		//--- each change is a couple (pos, value)
 
 		Map<String, String> htChanges = new HashMap<String, String>(100);
+		Map<String, String> htHide = new HashMap<String, String>(100);
 		@SuppressWarnings("unchecked")
         List<Element> list = params.getChildren();
 		for (Element el : list) {
@@ -214,9 +211,9 @@ class EditUtils {
      * @return
      * @throws Exception
      */
-    private Element applyChanges(Dbms dbms, String id, Map<String, String> changes, String currVersion, String lang) throws Exception {
+    private Element applyChanges(Dbms dbms, String id, Map<String, String> changes, Map<String, String> htHide, String currVersion, String lang) throws Exception {
         Lib.resource.checkEditPrivilege(context, id);
-        Element md = xmlSerializer.select(dbms, "Metadata", id);
+        Element md = xmlSerializer.select(dbms, "Metadata", id, context);
 
 		//--- check if the metadata has been deleted
 		if (md == null) {
@@ -323,17 +320,17 @@ class EditUtils {
         return md;
     }
 
-    public static void applyHiddenElements( ServiceContext context, DataManager dataManager, EditLib editLib, Dbms dbms, Element md, String id, Hashtable htHide ) throws Exception {
+    public static void applyHiddenElements( ServiceContext context, DataManager dataManager, EditLib editLib, Dbms dbms, Element md, String id, Map<String, String> htHide ) throws Exception {
         // Add Hiding info to MD tree
         dataManager.addHidingInfo(context, md, id);
 
         // Generate and manage XPath/levels for Elements to be hidden
         Integer idInteger = new Integer(id);
         String insertSQL = "INSERT INTO HiddenMetadataElements (metadataId, xPathExpr, level) VALUES (?, ?, ?)";
-        for (Enumeration e = htHide.keys(); e.hasMoreElements();)
+        for (Map.Entry<String, String> entry: htHide.entrySet())
         {
-            String ref = ((String) e.nextElement()).trim();
-            String level = ((String) htHide.get(ref)).trim();
+            String ref = entry.getKey();
+            String level = entry.getValue();
             String xPathExpr = null;
 
             // System.out.println("HIDING ref = " + ref + " - level = " + level); // DEBUG

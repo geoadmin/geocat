@@ -32,6 +32,7 @@ import jeeves.utils.Log;
 import jeeves.utils.SerialFactory;
 
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.Map;
 
 //=============================================================================

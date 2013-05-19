@@ -28,13 +28,13 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.PasswordUtil;
-import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -78,7 +78,7 @@ class Harvester
 		this.dbms = dbms;
 		this.params = params;
 
-		result = new CGPResult();
+		result = new HarvestResult();
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		dataMan = gc.getDataManager();
@@ -93,7 +93,7 @@ class Harvester
 	/**
 	 * Start the harvesting of a CGP server.
 	 */
-	public CGPResult harvest() throws Exception
+	public HarvestResult harvest() throws Exception
 	{
 		log.info("Retrieving remote CGP metadata information for: " + params.name);
 
@@ -308,7 +308,7 @@ class Harvester
 			// This sometimes occurs...
 			log.warning("DB insert error: " + t + " msg=" + t.getMessage() + "  Remote objectid : " + anObjectId + " md=" + Xml.getString(md));
 
-			result.databaseError++;
+			result.couldNotInsert++;
 			return;
 		}
 
@@ -324,7 +324,7 @@ class Harvester
 		{
 			// This sometimes occurs...
 			log.warning("MD indexing error: " + t + " msg=" + t.getMessage() + "  Remote objectid : " + anObjectId);
-			result.databaseError++;
+			result.couldNotInsert++;
 			return;
 		}
 	}
@@ -335,6 +335,7 @@ class Harvester
 	private void removeNamespaces(Element rootElm) throws Exception
 	{
 		rootElm.setNamespace(null);
+		@SuppressWarnings("unchecked")
 		List<Element> childElms = rootElm.getChildren();
 		for (Element elm : childElms)
 		{
@@ -524,7 +525,7 @@ class Harvester
 	private final DataManager dataMan;
 	private CategoryMapper localCateg;
 	private GroupMapper localGroups;
-	private final CGPResult result;
+	private final HarvestResult result;
 	private UUIDMapper localUuids;
 }
 

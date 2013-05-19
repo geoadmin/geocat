@@ -31,6 +31,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import jeeves.constants.Jeeves;
 import jeeves.server.resources.ResourceListener;
 import jeeves.server.resources.ResourceProvider;
 import jeeves.server.resources.Stats;

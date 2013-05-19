@@ -148,7 +148,7 @@ public class ElementLib
 		    String name = entry.getKey();
             String value = "";
             if(entry.getValue() != null) value = entry.getValue().toString();
-			text = Util.replaceString(text, name, value));
+			text = Util.replaceString(text, name, value);
 		}
 
 		return text;

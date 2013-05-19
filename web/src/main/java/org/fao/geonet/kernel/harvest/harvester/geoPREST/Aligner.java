@@ -31,6 +31,7 @@ import jeeves.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
@@ -159,7 +160,7 @@ public class Aligner extends BaseAligner
         addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+		dataMan.indexMetadata(dbms, id, false, context);
 		result.addedMetadata++;
 	}
 
@@ -201,7 +202,7 @@ public class Aligner extends BaseAligner
 				boolean ufo = false;
 				boolean index = false;
 				String language = context.getLanguage();
-				dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate, false);
+				dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate, false, false);
 
 				dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
                 addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
@@ -210,7 +211,7 @@ public class Aligner extends BaseAligner
                 addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
 
 				dbms.commit();
-				dataMan.indexMetadata(dbms, id);
+				dataMan.indexMetadata(dbms, id, false, context, false, false);
 				result.updatedMetadata++;
 			}
 		}
@@ -271,7 +272,7 @@ public class Aligner extends BaseAligner
 			if(log.isDebugEnabled()) log.debug("Record got:\n"+Xml.getString(response));
 
 			// validate it here if requested
-			if (params.validate) {
+			if (params.validate == HarvestValidationEnum.XSDVALIDATION) {
 				if(!dataMan.validate(response))  {
 					log.info("Ignoring invalid metadata with uuid " + uuid);
 					result.doesNotValidate++;

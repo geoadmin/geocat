@@ -212,7 +212,9 @@ public class ReusableObjManager
                     + ".  " + (changed ? "Metadata was modified" : "No change was made"));
 
             if (changed) {
-                ArrayList<Element> results = new ArrayList<Element>(xml.getChild("metadata").getChildren());
+            	@SuppressWarnings("unchecked")
+				List<Element> metadata = xml.getChild("metadata").getChildren();
+                ArrayList<Element> results = new ArrayList<Element>(metadata);
                 for (Element md : results) {
                     md.detach();
                     for (Object ns : elementToProcess.getAdditionalNamespaces()) {
@@ -282,7 +284,8 @@ public class ReusableObjManager
 
         ExtentsStrategy strategy = new ExtentsStrategy(baseURL, _appPath, extentMan, null);
 
-        Iterator iter = xml.getChild(EXTENTS).getChildren().iterator();
+        @SuppressWarnings("unchecked")
+		Iterator<Element> iter = xml.getChild(EXTENTS).getChildren().iterator();
         List<Content> originalElems = Utils.convertToList(iter, Content.class);
 
         for (Content extent : originalElems) {
@@ -311,12 +314,14 @@ public class ReusableObjManager
     	HashSet<String> updatedElements = new HashSet<String>();
     	Map<String,Element> currentXLinkElements = new HashMap<String, Element>();
     	
-        Iterator iter = xml.getChild("metadata").getDescendants(new PlaceholderFilter(placeholderElemName));
+        @SuppressWarnings("unchecked")
+		Iterator<Content> iter = xml.getChild("metadata").getDescendants(new PlaceholderFilter(placeholderElemName));
 
         List<Element> placeholders = Utils.convertToList(iter, Element.class);
 
-        iter = xml.getChild(originalElementName).getChildren().iterator();
-        Iterator<Content> originalElems = Utils.convertToList(iter, Content.class).iterator();
+        @SuppressWarnings("unchecked")
+		Iterator<Element> iter2 = xml.getChild(originalElementName).getChildren().iterator();
+        Iterator<Content> originalElems = Utils.convertToList(iter2, Content.class).iterator();
 
         boolean changed = false;
 

@@ -23,6 +23,9 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.util.List;
+import java.util.StringTokenizer;
+
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;

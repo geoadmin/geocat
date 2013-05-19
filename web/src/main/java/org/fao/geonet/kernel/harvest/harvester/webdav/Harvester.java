@@ -31,6 +31,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -237,11 +238,11 @@ class Harvester extends BaseAligner {
                 }
                 schema = dataMan.autodetectSchema(md);
 			}
-			if (!params.validate || validates(schema, md)) {
+			if (params.validate == HarvestValidationEnum.NOVALIDATION || validates(schema, md)) {
 				return (Element) md.detach();
 			} else {
 
-                if (!params.validate || validates(schema, md)) {
+                if (params.validate == HarvestValidationEnum.NOVALIDATION || validates(schema, md)) {
                     return (Element) md.detach();
                 }
                 log.warning("Skipping metadata that does not validate. Path is : "+ rf.getPath());

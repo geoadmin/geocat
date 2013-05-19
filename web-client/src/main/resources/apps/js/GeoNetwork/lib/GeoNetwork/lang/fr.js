@@ -23,10 +23,10 @@ GeoNetwork.Lang.fr = {
     'creationDate': 'Date de création',
     'modificationDate': 'Date de modification',
     'publicationDate': 'Date de publication',
-	'previousPage': 'Page précédente',
-	'nextPage': 'Page suivante',
-	'upInPage': 'Se déplacer vers le haut des résultats',
-	'downInPage': 'Se déplacer vers le bas des résultats',
+    'previousPage': 'Page précédente',
+    'nextPage': 'Page suivante',
+    'upInPage': 'Se déplacer vers le haut des résultats',
+    'downInPage': 'Se déplacer vers le bas des résultats',
     'example': "Exemple :",
     'noInfo': 'Aucune information',
     'helper': "Suggestion :",
@@ -644,10 +644,9 @@ GeoNetwork.Lang.fr = {
     'linklabel-text/plain': 'Liens',
     'linklabel-image/png': 'Images',
     'linklabel-image/jpeg': 'Images',
-    'linklabel-': 'Liens'
-
-        'WMS Layer' : 'WMS Couche',
-        'KML Layer' : 'KML Couche',
-        'Link' : 'Liens'
+    'linklabel-': 'Liens',
+    'WMS Layer' : 'WMS Couche',
+    'KML Layer' : 'KML Couche',
+    'Link' : 'Liens'
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.Lang.fr);

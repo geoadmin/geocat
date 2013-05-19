@@ -59,8 +59,6 @@ public class CgpDispatcher implements Service
 	public static final String MD_ATTR_CATEGORY = "/MD_Metadata/identificationInfo/topicCategory";
 
 	private File xsl19139CHEtoGM03;
-	private File xsdGM03;
-	private File xsd19139CHE;
 	private String appPath;
 
 	public void init(String appPath, ServiceConfig params) throws Exception
@@ -68,8 +66,6 @@ public class CgpDispatcher implements Service
 		this.appPath = appPath;
 
 		xsl19139CHEtoGM03 = initFile(params.getValue("xsl19139CHEtoGM03"));
-		xsdGM03 = initFile(params.getValue("xsdGM03"));
-		xsd19139CHE = initFile(params.getValue("xsd19139CHE"));
 	}
 
 	public File initFile(String path)
@@ -221,19 +217,21 @@ public class CgpDispatcher implements Service
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		String query = "SELECT id FROM Categories WHERE name=?";
+		@SuppressWarnings("unchecked")
 		List<Element> list = dbms.select(query, category).getChildren();
 		if (list.size() != 1)
 		{
-			return new ArrayList(0);
+			return new ArrayList<Element>(0);
 		}
 
 		String categoryId = list.get(0).getChildText("id");
 		if (categoryId == null)
 		{
-			return new ArrayList(0);
+			return new ArrayList<Element>(0);
 		}
 
 		query = "SELECT Metadata.data FROM Metadata INNER JOIN MetadataCateg ON Metadata.id=MetadataCateg.metadataId WHERE MetadataCateg.categoryId=?";
+		@SuppressWarnings("unchecked")
 		List<Element> mdStringElms = dbms.select(query, categoryId).getChildren();
 
 		List<Element> mdXMLElms = new ArrayList<Element>(mdStringElms.size());
@@ -283,6 +281,7 @@ public class CgpDispatcher implements Service
 		presentRequest.addContent(new Element("from").setText("1"));
 		presentRequest.addContent(new Element("to").setText(searcher.getSize()+ ""));
 
+		@SuppressWarnings("unchecked")
 		List<Element> mdInfoElms = searcher.present(context, presentRequest, null).getChildren();
 		List<Element> mdElms = new ArrayList<Element>(mdInfoElms.size());
 
@@ -326,7 +325,7 @@ public class CgpDispatcher implements Service
 		DOMOutputter outputter = new DOMOutputter();
 
 		// Walk through List and transform each Element
-		List<Element> gm03Elms = new ArrayList(iso19139Elms.size());
+		List<Element> gm03Elms = new ArrayList<Element>(iso19139Elms.size());
 		Element gm03Element;
 		for (Element iso19139Elm : iso19139Elms)
 		{

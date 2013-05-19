@@ -159,7 +159,8 @@ public class CswHarvester extends AbstractHarvester {
 		settingMan.add(dbms, "id:"+siteId, "capabUrl", params.capabUrl);
 		settingMan.add(dbms, "id:"+siteId, "icon",     params.icon);
 		// GeoCat issue #133729
-                settingMan.add(dbms, "id:"+siteId, "rejectDuplicateResource", params.rejectDuplicateResource, "outputSchema", params.outputSchema);
+		settingMan.add(dbms, "id:"+siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
+		settingMan.add(dbms, "id:"+siteId, "outputSchema", params.outputSchema);
 		
 		//--- store dynamic search nodes
 		String  searchID = settingMan.add(dbms, path, "search", "");	

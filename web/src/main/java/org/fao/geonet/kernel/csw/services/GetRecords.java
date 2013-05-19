@@ -50,7 +50,6 @@ import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.util.ISODate;
-import org.geotools.data.DataStore;
 import org.fao.geonet.util.xml.NamespaceUtils;
 import org.jdom.Attribute;
 import org.jdom.Element;

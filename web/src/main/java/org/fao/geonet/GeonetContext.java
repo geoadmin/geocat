@@ -63,6 +63,7 @@ public class GeonetContext {
 	/* package */ ThreadPool        threadPool;
 	Class<StatusActions> statusActionsClass;
     boolean readOnly;
+	Email email;
 
 
     //---------------------------------------------------------------------------

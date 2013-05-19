@@ -23,30 +23,23 @@
 
 package org.fao.geonet.services.harvesting;
 
-import java.util.Iterator;
 import java.util.UUID;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Logger;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.Email;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.HarvestManager;
-import org.fao.geonet.kernel.harvest.harvester.ErrorTracker;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.xpath.XPath;
 
 import java.util.List;
 
@@ -133,7 +126,7 @@ public class Util
 	"-- \nGeoCatalogue automatic mail system";
 
     public static String uuid(ServiceContext context, Dbms dbms, String url, Element md, Logger log, 
-            String resource, ErrorTracker tracker, String schema) throws Exception {
+            String resource, HarvestResult result, String schema) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getDataManager();
         
@@ -142,7 +135,7 @@ public class Util
         if (tempUuid != null) {
             // check if the UUID is not already in database
             if (dataMan.getMetadataId(dbms, tempUuid) != null) {
-                tracker.incrementError();
+                result.incompatibleMetadata++;
                 Util.warnAdminByMail(context, Util.SKEL_MAIL_UUID_CLASH, url, tempUuid, resource);
                 log.debug("  - UUID clash : record already in database ; mailing the GC admins");
                 return null;

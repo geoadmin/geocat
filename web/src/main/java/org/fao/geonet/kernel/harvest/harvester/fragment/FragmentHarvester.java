@@ -572,7 +572,7 @@ public class FragmentHarvester extends BaseAligner {
              dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
          }
 
-         dataMan.indexMetadata(dbms, id);
+         dataMan.indexMetadata(dbms, id, false, context, false, false);
         dbms.commit();
 	}
 

@@ -4,7 +4,6 @@ import static org.junit.Assert.assertTrue;
 import jeeves.utils.Xml;
 
 import org.fao.xsl.support.Count;
-import org.fao.xsl.support.EqualText;
 import org.fao.xsl.support.EqualTrimText;
 import org.fao.xsl.support.Finder;
 import org.fao.xsl.support.Requirement;

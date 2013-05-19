@@ -53,6 +53,7 @@ import org.fao.geonet.kernel.reusable.ReusableTypes;
 import org.fao.geonet.kernel.reusable.SendEmailParameter;
 import org.fao.geonet.kernel.reusable.Utils;
 import org.fao.geonet.kernel.reusable.Utils.FindXLinks;
+import org.jdom.Content;
 import org.jdom.Element;
 
 import com.google.common.base.Function;
@@ -155,7 +156,8 @@ public class Reject implements Service
         Map<String/* oldHref */, String/* newHref */> updatedHrefs = new HashMap<String, String>();
         for (MetadataRecord metadataRecord : results) {
             for (String href : metadataRecord.xlinks) {
-                Iterator<Element> xlinks = metadataRecord.xml.getDescendants(new FindXLinks(href));
+                @SuppressWarnings("unchecked")
+				Iterator<Element> xlinks = metadataRecord.xml.getDescendants(new FindXLinks(href));
                 while (xlinks.hasNext()) {
                     Element xlink = xlinks.next();
                     String oldHRef = xlink.getAttributeValue(XLink.HREF, XLink.NAMESPACE_XLINK);
@@ -164,7 +166,8 @@ public class Reject implements Service
                         Element fragment = Processor.resolveXLink(oldHRef,context);
                         fragment.setAttribute(XLink.TITLE, "rejected", XLink.NAMESPACE_XLINK);
                         
-                        Iterator iter = fragment.getDescendants();
+                        @SuppressWarnings("unchecked")
+						Iterator<Content> iter = fragment.getDescendants();
                         while(iter.hasNext()) {
                         	Object next = iter.next();
                         	if (next instanceof Element) {

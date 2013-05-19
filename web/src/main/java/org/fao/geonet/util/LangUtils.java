@@ -53,7 +53,8 @@ public final class LangUtils
         return codeList;
     }
 
-    private static void addCodeLists(String codeListName, List<Element> codeList, File file) throws IOException, JDOMException {
+    @SuppressWarnings("unchecked")
+	private static void addCodeLists(String codeListName, List<Element> codeList, File file) throws IOException, JDOMException {
         if (file.exists()) {
             Element xmlDoc = Xml.loadFile(file);
 
@@ -76,7 +77,9 @@ public final class LangUtils
                 } else {
                     String[] result = new String[path.length - 1];
                     System.arraycopy(path, 1, result, 0, result.length);
-                    return translate(result, defaultVal, e.getChildren());
+                    @SuppressWarnings("unchecked")
+					List<Element> children2 = e.getChildren();
+					return translate(result, defaultVal, children2);
                 }
             }
         }
@@ -84,7 +87,8 @@ public final class LangUtils
         return defaultVal;
     }
 
-    public static List<Element> loadStrings(String appDir, String langCode) throws IOException, JDOMException
+    @SuppressWarnings("unchecked")
+	public static List<Element> loadStrings(String appDir, String langCode) throws IOException, JDOMException
     {
         File file = new File(appDir + "/loc/" + langCode + "/xml/strings.xml");
         if (file.exists()) {
@@ -104,18 +108,18 @@ public final class LangUtils
     /**
      * Returns the default language of the metadata
      */
-    public static String iso19139DefaultLang(Element xml)
+    @SuppressWarnings("unchecked")
+	public static String iso19139DefaultLang(Element xml)
     {
 
         while (xml.getParentElement() !=null ){
             xml = xml.getParentElement();
         }
 
-        Iterator iter = xml.getDescendants(new ElementFinder("language", Geonet.Namespaces.GMD,
+        Iterator<Element> iter = xml.getDescendants(new ElementFinder("language", Geonet.Namespaces.GMD,
                 "CHE_MD_Metadata"));
         if (!iter.hasNext()) {
-            iter = xml
-                    .getDescendants(new ElementFinder("language", Geonet.Namespaces.GMD, "MD_Metadata"));
+            iter = xml.getDescendants(new ElementFinder("language", Geonet.Namespaces.GMD, "MD_Metadata"));
         }
 
         String defaultLang = "eng";
@@ -146,7 +150,8 @@ public final class LangUtils
         String fallback = null;
 
         ElementFinder finder = new ElementFinder("LocalisedCharacterString", Geonet.Namespaces.GMD, "textGroup");
-        Iterator<Element> localised = element.getDescendants(finder);
+        @SuppressWarnings("unchecked")
+		Iterator<Element> localised = element.getDescendants(finder);
 
         while( localised.hasNext() ){
             Element next = localised.next();
@@ -165,8 +170,9 @@ public final class LangUtils
         }
 
         if(fallback == null ){
-            Iterator children = element.getDescendants(finder);
-            return ((Element) children.next()).getTextTrim();
+            @SuppressWarnings("unchecked")
+			Iterator<Element> children = element.getDescendants(finder);
+            return children.next().getTextTrim();
         }
         return fallback;
     }
@@ -176,7 +182,8 @@ public final class LangUtils
      *
      * @see org.fao.geonet.util.LangUtils#createDescFromParams(org.jdom.Element, String)
      */
-    public static String getTranslation(String descAt, String locale) throws IOException, JDOMException
+    @SuppressWarnings("unchecked")
+	public static String getTranslation(String descAt, String locale) throws IOException, JDOMException
     {
         Element desc = loadInternalMultiLingualElem(descAt);
         if( locale==null ){
@@ -253,7 +260,9 @@ public final class LangUtils
     public static List<Content> loadInternalMultiLingualElemCollection(String basicValue) throws IOException, JDOMException
     {
         Element multiLingualElem = loadInternalMultiLingualElem(basicValue);
-        List<Content> nodes = new ArrayList<Content>(multiLingualElem.getContent());
+        @SuppressWarnings("unchecked")
+		List<Content> content = multiLingualElem.getContent();
+		List<Content> nodes = new ArrayList<Content>(content);
         Set<String> locales = new HashSet<String>();
 
         for (Iterator<Content> iter = nodes.iterator(); iter.hasNext(); ) {
@@ -274,6 +283,7 @@ public final class LangUtils
     public static List<String> analyzeForSearch(Reader reader) throws IOException {
         ArrayList<String> strings = new ArrayList<String>();
         GeoNetworkAnalyzer analyzer = new GeoNetworkAnalyzer();
+        try {
         TokenStream stream = analyzer.tokenStream(null, reader);
         stream.reset();
         do {
@@ -288,6 +298,9 @@ public final class LangUtils
             }
         } while (stream.incrementToken());
         return strings;
+        } finally {
+        	analyzer.close();
+        }
     }
 
     public static String to2CharLang(String s) {
@@ -326,7 +339,8 @@ public final class LangUtils
 
         Element converted = Xml.transform(descElem, appPath+styleSheet, params);
 
-        List<Element> allTranslations = converted.getChildren();
+        @SuppressWarnings("unchecked")
+		List<Element> allTranslations = converted.getChildren();
         StringBuilder builder = new StringBuilder(converted.getTextTrim());
 
         for (Element element : allTranslations) {
@@ -358,10 +372,11 @@ public final class LangUtils
                 return false;
             }
         };
-        Iterator iter = elUser.getDescendants(findMultilingualElements);
+        @SuppressWarnings("unchecked")
+		Iterator<Element> iter = elUser.getDescendants(findMultilingualElements);
         List<Element> toResolve = new ArrayList<Element>();
         while (iter.hasNext()) {
-            toResolve.add((Element) iter.next());
+            toResolve.add(iter.next());
         }
 
         for (Element elem : toResolve) {

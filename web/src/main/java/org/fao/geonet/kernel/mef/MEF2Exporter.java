@@ -35,6 +35,7 @@ import static org.fao.geonet.kernel.mef.MEFConstants.SCHEMA;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.Set;
 import java.util.zip.ZipOutputStream;
 

@@ -26,6 +26,7 @@ package org.fao.xsl.support;
 import java.util.Iterator;
 
 import org.fao.geonet.services.extent.ExtentHelper.ExtentTypeCode;
+import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
 
@@ -85,7 +86,8 @@ public class PolygonValidator implements Filter
 
                 boolean extentTypeCodeMatches = true;
                 if( _extentTypeCode != ExtentTypeCode.NA){
-                    Iterator descendants = elem.getDescendants(EXTENT_TYPE_CODE_FINDER);
+                    @SuppressWarnings("unchecked")
+					Iterator<Element> descendants = elem.getDescendants(EXTENT_TYPE_CODE_FINDER);
                     if( !descendants.hasNext() ) return false;
                     String typeCode = ((Element) descendants.next()).getTextTrim();
                     switch (_extentTypeCode)
@@ -116,7 +118,8 @@ public class PolygonValidator implements Filter
 
     private int count(Element elem, Finder finder)
     {
-        Iterator found = elem.getDescendants(finder);
+        @SuppressWarnings("unchecked")
+		Iterator<Content> found = elem.getDescendants(finder);
         int c = 0;
         while (found.hasNext()) {
             c++;

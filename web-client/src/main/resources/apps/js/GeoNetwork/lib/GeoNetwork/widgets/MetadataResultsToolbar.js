@@ -151,53 +151,6 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         }
         cmp.push(['->']);
 
-        var previousAction = new Ext.Action(
-            {
-                id : 'previousBt_up',
-                text : '&lt;&lt;',
-                handler : function() {
-                    var from = catalogue.startRecord - parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
-                    if(from < 0)
-                        from = 0;
-                    if (from > 0) {
-                        catalogue.startRecord = from;
-                        //Swisstopo specific
-                        catalogue.search(
-                                app.searchApp.getSearchForm().id,
-                                app.searchApp.loadResults,
-                                null,
-                                catalogue.startRecord,
-                                true);
-                    }
-                },
-                scope : this
-            });
-
-        cmp.push(previousAction, '|');
-
-
-        var nextAction = new Ext.Action({
-            id : 'nextBt_up',
-            text : '&gt;&gt;',
-            handler : function() {
-                catalogue.startRecord += parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
-                //Swisstopo specific
-                catalogue.search(
-                    app.searchApp.getSearchForm().id,
-                    app.searchApp.loadResults, null,
-                    catalogue.startRecord, true);
-            },
-            scope : this
-        });
-
-        cmp.push(nextAction, '|');
-
-        cmp.push({
-            xtype : 'tbtext',
-            text : '',
-            id : 'info_up'
-        }, '|');
-
         var sortOption = this.getSortByCombo();
         cmp.push(OpenLayers.i18n('sortBy'), sortOption);
         cmp.push(['|']);
@@ -387,14 +340,15 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                 this.updatePrivilegesAction); //, this.updateStatusAction, this.updateVersionAction);
 
         if(!this.catalogue.isReadOnly()) {
-        this.actionMenu.addItem(this.notifyByMailAction);
-        this.actionMenu.addItem(this.unpublishSelectionAction);
-        this.actionMenu.addItem(this.ownerAction);
-        this.actionMenu.addItem(this.updateCategoriesAction);
-        this.actionMenu.addItem(this.updatePrivilegesAction);
-        //this.actionMenu.addItem(this.updateStatusAction);
-        //this.actionMenu.addItem(this.updateVersionAction);
-        this.actionMenu.addItem(this.deleteAction);
+            this.actionMenu.addItem(this.notifyByMailAction);
+            this.actionMenu.addItem(this.unpublishSelectionAction);
+            this.actionMenu.addItem(this.ownerAction);
+            this.actionMenu.addItem(this.updateCategoriesAction);
+            this.actionMenu.addItem(this.updatePrivilegesAction);
+            //this.actionMenu.addItem(this.updateStatusAction);
+            //this.actionMenu.addItem(this.updateVersionAction);
+            this.actionMenu.addItem(this.deleteAction);
+        }
     },
     createPaging: function () {
         var self = this;
@@ -405,7 +359,13 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                 var from = catalogue.startRecord - parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
                 if (from > 0) {
                     catalogue.startRecord = from;
-                    self.searchCb();
+                    //Swisstopo specific
+                    catalogue.search(
+                            app.searchApp.getSearchForm().id,
+                            app.searchApp.loadResults,
+                            null,
+                            catalogue.startRecord,
+                            true);
                 }
             }
         });
@@ -415,7 +375,11 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             text: '&gt;&gt;',
             handler: function () {
                 catalogue.startRecord += parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
-                self.searchCb();
+              //Swisstopo specific
+                catalogue.search(
+                    app.searchApp.getSearchForm().id,
+                    app.searchApp.loadResults, null,
+                    catalogue.startRecord, true);
             }
         });
         
@@ -473,7 +437,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             hidden: hide
         });
         if(!this.catalogue.isReadOnly()) {
-        this.actionMenu.addItem(this.createMetadataAction);
+            this.actionMenu.addItem(this.createMetadataAction);
         }
 
         this.mdImportAction = new Ext.menu.Item({
@@ -485,7 +449,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             hidden: hide
             });
         if(!this.catalogue.isReadOnly()) {
-        this.actionMenu.addItem(this.mdImportAction);
+            this.actionMenu.addItem(this.mdImportAction);
         }
 
         this.adminAction = new Ext.menu.Item({
@@ -713,7 +677,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      *  Update privileges after user login
      */
     updatePrivileges: function(catalogue, user){
-        var editingActions = [this.deleteAction, this.updateCategoriesAction,
+        var editingActions = [this.deleteAction, this.updateCategoriesAction, 
                         this.updatePrivilegesAction, this.createMetadataAction,
                         this.mdImportAction],
             adminActions = [this.ownerAction],

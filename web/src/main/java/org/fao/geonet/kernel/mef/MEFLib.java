@@ -29,6 +29,7 @@ import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.BinaryFile;
 import jeeves.utils.Xml;
+import jeeves.xlink.Processor;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;

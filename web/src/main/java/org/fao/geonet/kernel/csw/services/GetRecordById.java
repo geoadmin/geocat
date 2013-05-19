@@ -53,7 +53,6 @@ import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.gm03.ISO19139CHEtoGM03;
 import org.fao.geonet.services.gm03.ISO19139CHEtoGM03Base;
-import org.geotools.data.DataStore;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.DOMBuilder;

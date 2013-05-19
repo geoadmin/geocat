@@ -69,7 +69,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.filter.Filter;
 
 /**
  * List all the available extents

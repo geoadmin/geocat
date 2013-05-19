@@ -40,11 +40,10 @@ import java.util.UUID;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 
-import net.sf.saxon.om.NodeInfo;
 
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.Validator;
@@ -54,7 +53,6 @@ import org.fao.geonet.services.gm03.ISO19139CHEtoGM03;
 import org.fao.geonet.services.gm03.TranslateAndValidate;
 import org.fao.geonet.services.gm03.ISO19139CHEtoGM03Base.FlattenerException;
 import org.fao.geonet.util.ISODate;
-import org.hamcrest.core.IsInstanceOf;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Text;
@@ -116,16 +114,18 @@ public final class TransformationTestSupport {
     }
 
     static File copy( File in, File out ) throws IOException {
-        FileChannel inChannel = new FileInputStream(in).getChannel();
-        FileChannel outChannel = new FileOutputStream(out).getChannel();
+        FileChannel inChannel = null;
+        FileChannel outChannel = null; 
         try {
+        	inChannel = new FileInputStream(in).getChannel();
+        	outChannel = new FileOutputStream(out).getChannel();
             inChannel.transferTo(0, inChannel.size(), outChannel);
             return out;
         } catch (IOException e) {
             throw e;
         } finally {
-            if (inChannel != null) inChannel.close();
-            if (outChannel != null) outChannel.close();
+        	IOUtils.closeQuietly(inChannel);
+        	IOUtils.closeQuietly(outChannel);
         }
     }
 
@@ -153,14 +153,14 @@ public final class TransformationTestSupport {
     public static final File gm03Xsd = new File(geonetworkWebapp, "WEB-INF/data/config/schema_plugins/iso19139.che/GM03_2_1.xsd");
     public static final File isoXsd = new File(geonetworkWebapp, "WEB-INF/data/config/schema_plugins/iso19139.che/schema.xsd");
 
-    public static Element transform( Class root, String pathToXsl, String testData ) throws IOException, JDOMException, Exception {
+    public static Element transform( Class<?> root, String pathToXsl, String testData ) throws IOException, JDOMException, Exception {
         Element xml = getXML(root, testData);
         String sSheet = new File(pathToXsl).getAbsolutePath();
         Element transform = Xml.transform(xml, sSheet);
         return transform;
     }
 
-    public static Element getXML( Class root, String name ) throws IOException, JDOMException {
+    public static Element getXML( Class<?> root, String name ) throws IOException, JDOMException {
         if (root == null) root = TransformationTestSupport.class;
         InputStream xmlsource = root.getResourceAsStream(name);
         return Xml.loadStream(xmlsource);
@@ -201,7 +201,8 @@ public final class TransformationTestSupport {
 
         Element schemaTronXml = VALIDATOR.getSchemaTronXmlReport(mds, root, Geonet.DEFAULT_LANGUAGE);
 
-        List<Element> schematronReport = schemaTronXml.getChildren("report", Edit.NAMESPACE);
+        @SuppressWarnings("unchecked")
+		List<Element> schematronReport = schemaTronXml.getChildren("report", Edit.NAMESPACE);
 
         StringBuilder errors = new StringBuilder();
 
@@ -209,12 +210,17 @@ public final class TransformationTestSupport {
         for( Element schematronerrors : schematronReport ) {
 
             if (schematronerrors.getChildren("errorFound", Edit.NAMESPACE).size() != 0) {
-                for( Element element : (List<Element>) schematronerrors.getDescendants() ) {
+            	@SuppressWarnings("unchecked")
+				Iterator<Element> errorsDesc = schematronerrors.getDescendants();
+            	while (errorsDesc.hasNext()) {
+            		Element element = errorsDesc.next();
                     if (element.getName().equals("failed-assert")) {
                         String patternName = element.getChild("pattern", Edit.NAMESPACE).getAttributeValue("name");
-                        Iterator<Text> diagTxt = element.getChild("diagnostics", Edit.NAMESPACE).getDescendants(new Filter(){
+                        @SuppressWarnings("unchecked")
+						Iterator<Text> diagTxt = element.getChild("diagnostics", Edit.NAMESPACE).getDescendants(new Filter(){
+							private static final long serialVersionUID = 1L;
 
-                            public boolean matches( Object arg0 ) {
+							public boolean matches( Object arg0 ) {
 
                                 return (arg0 instanceof Text);
                             }

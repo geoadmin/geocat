@@ -37,6 +37,7 @@ import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -79,8 +80,8 @@ public class List implements Service
 		if (userProfile != null) {
 		    hsMyGroups = getGroups(dbms, session.getUserId(), userProfile);
 		}
-		Set profileSet = (userProfile == null) ?
-							Collections.emptySet():context.getProfileManager().getProfilesSet(userProfile);
+		Set<String> profileSet = (userProfile == null) ?
+							Collections.<String>emptySet():context.getProfileManager().getProfilesSet(userProfile);
 
         boolean sortByValidated = "true".equalsIgnoreCase(Util.getParam(params, "sortByValidated", "false"));
         String sortBy;
@@ -171,7 +172,9 @@ public class List implements Service
 
 		for (Element elem : alToRemove) elem.detach();
 
-		ArrayList<Element> toResolve = new ArrayList(elUsers.getChildren());
+		@SuppressWarnings("unchecked")
+		java.util.List<Element> children = elUsers.getChildren();
+		ArrayList<Element> toResolve = new ArrayList<Element>(children);
 
 		for (Element e : toResolve) {
 

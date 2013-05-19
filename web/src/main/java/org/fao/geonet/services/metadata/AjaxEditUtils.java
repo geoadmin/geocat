@@ -28,6 +28,7 @@ import org.jdom.filter.Filter;
 import org.jdom.input.JDOMParseException;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +88,7 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
     protected Element applyChangesEmbedded(Dbms dbms, String id, 
-                                        Map<String, String> changes, String currVersion, String lang) throws Exception {
+                                        Map<String, String> changes, Map<String, String> htHide, String currVersion, String lang) throws Exception {
         Lib.resource.checkEditPrivilege(context, id);
         String schema = dataManager.getMetadataSchema(dbms, id);
         EditLib editLib = dataManager.getEditLib();

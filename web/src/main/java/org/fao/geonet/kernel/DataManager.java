@@ -42,9 +42,6 @@ import jeeves.utils.Xml;
 import jeeves.utils.Xml.ErrorHandler;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.FieldType;
-import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geocat;
@@ -351,8 +348,6 @@ public class DataManager {
         }
     }
     
-    Set<IndexMetadataTask> indexing = Collections.synchronizedSet(new HashSet<IndexMetadataTask>());
-
     /**
      * TODO javadoc.
      */
@@ -364,7 +359,6 @@ public class DataManager {
         private final int count;
         private final boolean processSharedObjects;
         private final boolean performValidation;
-        private JeevesUser user;
         private JeevesUser user;
 
         IndexMetadataTask(ServiceContext context, boolean processSharedObjects, List<String> ids, boolean performValidation) {
@@ -2478,7 +2472,7 @@ public class DataManager {
      */
 	private void manageCommons(Dbms dbms, ServiceContext context, String id, Element env, String styleSheet) throws Exception {
         Lib.resource.checkEditPrivilege(context, id);
-        Element md = xmlSerializer.select(dbms, "Metadata", id);
+        Element md = xmlSerializer.select(dbms, "Metadata", id, context);
 
 		if (md == null) return;
 
@@ -3793,12 +3787,6 @@ public class DataManager {
         yes, no
     }
 
-
-	public boolean isIndexing() {
-	    synchronized (indexing) {
-	        return !indexing.isEmpty();
-        }
-    }
 
     public void updateXlinkObjects(Dbms dbms, String metadataId, String lang, Element md, Element... updatedXLinks) throws Exception {
         ProcessParams params = new ProcessParams(dbms, ReusableObjectLogger.THREAD_SAFE_LOGGER, metadataId, md, md, thesaurusMan,

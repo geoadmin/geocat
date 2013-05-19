@@ -31,7 +31,6 @@ import jeeves.server.resources.ResourceManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
-import org.fao.geonet.kernel.harvest.harvester.ErrorTracker;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
@@ -175,52 +174,6 @@ public class CGPHarvester extends AbstractHarvester
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- AbstractParameters
-	//---
-	//---------------------------------------------------------------------------
-
-	public AbstractParams getParams()
-	{
-		return params;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- AddInfo
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doAddInfo(Element node)
-	{
-		//--- if the harvesting is not started yet, we don't have any info
-
-		if (result == null)
-		{
-			return;
-		}
-
-		//--- ok, add proper info
-
-		Element info = node.getChild("info");
-		Element res = new Element("result");
-
-		add(res, "total",          result.totalMetadata);
-		add(res, "added",          result.addedMetadata);
-//		add(res, "updated",        result.updatedMetadata);
-//		add(res, "unchanged",      result.unchangedMetadata);
-		add(res, "unknownSchema",  result.unknownSchema);
-		add(res, "removed",        result.locallyRemoved);
-		add(res, "unretrievable",  result.unretrievable);
-		add(res, "databaseError",  result.databaseError);
-		add(res, "doesNotValidate",result.doesNotValidate);
-//		add(res, "thumbnails", result.thumbnails);
-//		add(res, "thumbnailsFailed", result.thumbnailsFailed);
-
-		info.addContent(res);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
 	//--- Harvest
 	//---
 	//---------------------------------------------------------------------------
@@ -235,53 +188,9 @@ public class CGPHarvester extends AbstractHarvester
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- GetResult
-	//---
-	//---------------------------------------------------------------------------
-	protected Element getResult() {
-		Element res  = new Element("result");
-		if (result != null) {
-			add(res, "total",          result.totalMetadata);
-			add(res, "added",          result.addedMetadata);
-//			add(res, "updated",        result.updatedMetadata);
-//			add(res, "unchanged",      result.unchangedMetadata);
-			add(res, "unknownSchema",  result.unknownSchema);
-			add(res, "removed",        result.locallyRemoved);
-			add(res, "unretrievable",  result.unretrievable);
-			add(res, "databaseError",  result.databaseError);
-			add(res, "doesNotValidate",result.doesNotValidate);
-		}
-		return res;
-	}
-
-
-	//---------------------------------------------------------------------------
-	//---
 	//--- Variables
 	//---
 	//---------------------------------------------------------------------------
 
 	private CGPParams params;
-	private CGPResult result;
 }
-
-//=============================================================================
-
-class CGPResult implements ErrorTracker
-{
-	public int totalMetadata;			// = md for data and service (ie. data + 1)
-	public int addedMetadata;			// = total
-//	public int updatedMetadata;
-//	public int unchangedMetadata;
-	public int locallyRemoved;	// = md removed
-	public int unknownSchema;	// = md with unknown schema
-	public int unretrievable;	// = http connection failed
-	public int databaseError;		//
-	public int doesNotValidate;	// = 0 cos' not validated
-    public void incrementError() {
-       databaseError++;
-    }
-}
-
-//=============================================================================
-

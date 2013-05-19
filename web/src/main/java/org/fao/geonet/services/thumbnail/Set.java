@@ -256,7 +256,7 @@ public class Set extends NotInReadOnlyModeService {
             removeOldThumbnail(context,dbms,id,type, false);
             saveThumbnail(scaling, file, type, dataDir, scalingDir, scalingFactor, dataMan, dbms, id, context);
 
-            dataMan.indexInThreadPool(context, id, dbms);
+            dataMan.indexInThreadPool(context, id, dbms, false);
         }
         
         public void removeHarvested(Element params, ServiceContext context, Dbms dbms) throws Exception {

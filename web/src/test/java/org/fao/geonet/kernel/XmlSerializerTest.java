@@ -95,31 +95,32 @@ public class XmlSerializerTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testInternalSelectHidingWithheldNullServiceContext() throws Exception {
+		ServiceContext context = mockServiceContext(true);
 
 		Field field = ServiceContext.class.getDeclaredField("threadLocalInstance");
 		field.setAccessible(true);
 		InheritableThreadLocal<ServiceContext> threadLocalInstance = (InheritableThreadLocal<ServiceContext>) field.get(null);
 		threadLocalInstance.set(null);
-		assertHiddenElements(true);
+		assertHiddenElements(true, context);
 	}
 
 	@Test
 	public void testInternalSelectHidingWithheldAdministrator() throws Exception {
-		mockServiceContext(true);
+		ServiceContext context = mockServiceContext(true);
 		
 		assertHiddenElements(false, context);
 	}
 
 	@Test
 	public void testInternalSelectHidingWithheldNotLoggedIn() throws Exception {
-		mockServiceContext(false);
+		ServiceContext context = mockServiceContext(false);
 		
 		assertHiddenElements(true, context);
 	}
 
 	@Test
 	public void testInternalCompleteHidingHiddenElement() throws Exception {
-		mockServiceContext(false);
+		ServiceContext context = mockServiceContext(false);
 		
 		SettingManager settingManager = mockSettingManager(true, false);
 		XmlSerializer xmlSerializer = new DummyXmlSerializer(settingManager);
@@ -134,14 +135,14 @@ public class XmlSerializerTest {
 
 	@Test
 	public void testInternalSelectHidingWithheldNotOwner() throws Exception {
-		mockServiceContext(false);
+		ServiceContext context = mockServiceContext(false);
 		
 		assertHiddenElements(true, context);
 	}
 	
 	@Test
 	public void testInternalSelectHidingWithheldOwner() throws Exception {
-		mockServiceContext(true);
+		ServiceContext context = mockServiceContext(true);
 		
 		assertHiddenElements(false, context);
 	}
