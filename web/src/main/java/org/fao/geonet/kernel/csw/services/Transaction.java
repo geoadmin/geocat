@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.csw.services;
 
-import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;

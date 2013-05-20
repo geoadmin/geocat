@@ -617,17 +617,21 @@ public class Importer {
 			boolean groupOwner = group.getAttributeValue("groupOwner") != null;
 			String grpId = mapLocalEntity(locGrps, grpName);
 
-			if (grpId == null)
-                if(Log.isDebugEnabled(Geonet.MEF))
-                    Log.debug(Geonet.MEF, " - Skipping non-existent group : " + grpName);
-			else {
+			if (grpId == null) {
+				if (Log.isDebugEnabled(Geonet.MEF)) {
+					Log.debug(Geonet.MEF, " - Skipping non-existent group : " + grpName);
+				}
+			} else {
 				// --- metadata group exists locally
 
-                    if(Log.isDebugEnabled(Geonet.MEF))
-                        Log.debug(Geonet.MEF, " - Setting privileges for group : " + grpName);
+				if (Log.isDebugEnabled(Geonet.MEF)) {
+					Log.debug(Geonet.MEF, " - Setting privileges for group : " + grpName);
+				}
 				addOperations(context, dm, dbms, group, id, grpId);
 				if (groupOwner) {
-                    if(Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, grpName + " set as group Owner ");
+					if (Log.isDebugEnabled(Geonet.MEF)) {
+						Log.debug(Geonet.MEF, grpName + " set as group Owner ");
+					}
 					dm.setGroupOwner(dbms, id, grpId);
 				}
 			}
@@ -676,7 +680,7 @@ public class Importer {
 
 		if(entities.size() > 0) {
 		    int id = 0;
-		    Iterator iter = entities.iterator();
+		    Iterator<Element> iter = entities.iterator();
 		    while(iter.hasNext() && id < 2) {
 		        id = Integer.parseInt(((Element) iter.next()).getChildText("id"));
 		    }

@@ -1567,7 +1567,8 @@ public class DataManager {
 
 
         // --- store metadata hiding by copying them from the template
-        List hidingList = dbms.select(
+        @SuppressWarnings("unchecked")
+		List<Element> hidingList = dbms.select(
                 "SELECT xPathExpr, level FROM HiddenMetadataElements WHERE metadataId = " + templateId).getChildren();
 
         String insertSQL = "INSERT INTO HiddenMetadataElements (metadataId, xPathExpr, level) VALUES (?, ?, ?)";
@@ -3142,14 +3143,16 @@ public class DataManager {
         Element xPathExpressions = dbms.select(
                 "SELECT xPathExpr, level FROM HiddenMetadataElements WHERE metadataId = ?", new Integer(id));
 
-        List elements = Xml.selectNodes(xPathExpressions, "*//xpathexpr");
+        @SuppressWarnings("unchecked")
+		List<Element> elements = (List<Element>) Xml.selectNodes(xPathExpressions, "*//xpathexpr");
         xPathExpressions.detach();
-        List levels = Xml.selectNodes(xPathExpressions, "*//level");
+        @SuppressWarnings("unchecked")
+		List<Element> levels = (List<Element>) Xml.selectNodes(xPathExpressions, "*//level");
 
-        Iterator l = levels.iterator();
+        Iterator<Element> l = levels.iterator();
 
         // System.out.println(Xml.getString(xPathExpressions)); // DEBUG
-        for (Iterator i = elements.iterator(); i.hasNext();)
+        for (Iterator<Element> i = elements.iterator(); i.hasNext();)
         {
             try
             {

@@ -34,12 +34,10 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.ThesaurusManager;
-import org.fao.geonet.kernel.reusable.KeywordsStrategy;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.kernel.search.keyword.KeywordSort;
@@ -69,7 +67,6 @@ public class GeocatEditElement implements Service {
 		String uri 		= Util.getParam(params, Params.URI, "");
 		String mode	 	= Util.getParam(params, Params.MODE, "");
 		String lang 	= context.getLanguage();
-		String locales = Util.getParam(params, "locales", "");
 		String modeType 	= "add";
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);

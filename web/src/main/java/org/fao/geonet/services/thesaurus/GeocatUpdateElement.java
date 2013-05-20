@@ -113,7 +113,8 @@ public class GeocatUpdateElement implements Service {
 		return elResp;
 	}
 
-    static Map<String, String> lookupLabels(Element params)
+    @SuppressWarnings("unchecked")
+	static Map<String, String> lookupLabels(Element params)
     {
         final String prefix = "prefLab";
 

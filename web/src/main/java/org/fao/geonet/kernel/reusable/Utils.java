@@ -137,7 +137,7 @@ public final class Utils {
         return placeholders;
     }
 
-    static Element nextElement( Iterator<Content> elements ) {
+    static Element nextElement( Iterator<? extends Content> elements ) {
         Content originalElem = null;
         while( !(originalElem instanceof Element) && elements.hasNext() ) {
             originalElem = elements.next();
@@ -448,8 +448,11 @@ public final class Utils {
 
         for( Attribute attribute : currAtts ) {
             String value = originalElem.getAttributeValue(attribute.getName(), attribute.getNamespace());
-            if (value == null && attribute.getValue() != null) return false;
-            if (!value.equals(attribute.getValue())) return false;
+            if (value == null && attribute.getValue() != null) {
+            	return false;
+            } else  if (!value.equals(attribute.getValue())) {
+            	return false;
+            }
         }
         return true;
     }

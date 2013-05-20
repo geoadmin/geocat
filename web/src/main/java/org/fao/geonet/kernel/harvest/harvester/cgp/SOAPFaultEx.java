@@ -11,6 +11,8 @@ import org.jdom.Element;
  */
 public class SOAPFaultEx extends JeevesClientEx
 {
+	private static final long serialVersionUID = 1L;
+
 	public SOAPFaultEx(Element faultElm)
 	{
 		super(Xml.getString(faultElm), faultElm);

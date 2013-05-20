@@ -64,7 +64,8 @@ public class CovertLocalisedURLTest
                 "<description><EN>EN</EN><EN>EN2</EN></description>", false);
 
         isoData = Xml.transform(duplicateTranslation, pathToXsl);
-        Iterator textGroups = isoData.getDescendants(new Filter()
+        @SuppressWarnings("unchecked")
+		Iterator<Element> textGroups = isoData.getDescendants(new Filter()
         {
             private static final long serialVersionUID = 1L;
 

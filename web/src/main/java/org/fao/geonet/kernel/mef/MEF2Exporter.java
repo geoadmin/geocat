@@ -57,7 +57,6 @@ import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.gm03.ISO19139CHEtoGM03;
-import org.fao.geonet.services.gm03.TranslateAndValidate;
 import org.fao.geonet.services.relations.Get;
 import org.jdom.Element;
 

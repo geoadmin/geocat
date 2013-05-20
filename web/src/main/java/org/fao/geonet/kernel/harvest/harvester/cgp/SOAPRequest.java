@@ -1,5 +1,6 @@
 package org.fao.geonet.kernel.harvest.harvester.cgp;
 
+import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadSoapResponseEx;
 import jeeves.exceptions.BadXmlResponseEx;
 import jeeves.utils.Xml;
@@ -61,7 +62,7 @@ public class SOAPRequest
 			// the standard SAX parser fails upon. For now we convert
 			// the byte input to a char stream.
 			if (url.getHost().indexOf("geoportal.ch") != -1)  {
-				responseDoc = builder.build(new InputStreamReader(httpMethod.getResponseBodyAsStream()));
+				responseDoc = builder.build(new InputStreamReader(httpMethod.getResponseBodyAsStream(), Jeeves.ENCODING));
 			} else {
 				responseDoc = builder.build(httpMethod.getResponseBodyAsStream());
 			}

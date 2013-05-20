@@ -65,7 +65,7 @@ public class CGPParams extends AbstractParams
 
 		url = Util.getParam(site, "url", "");
 		icon = Util.getParam(site, "icon", "");
-		validate = Util.getParam(options, "validate", false);
+		validateBool = Util.getParam(options, "validate", false);
 
 		addSearches(searches);
 	}
@@ -86,7 +86,7 @@ public class CGPParams extends AbstractParams
 
 		url = Util.getParam(site, "url", url);
 		icon = Util.getParam(site, "icon", icon);
-		validate = Util.getParam(options, "validate", validate);
+		validateBool = Util.getParam(options, "validate", validateBool);
 
 		//--- if some search queries are given, we drop the previous ones and
 		//--- set these new ones
@@ -129,7 +129,7 @@ public class CGPParams extends AbstractParams
 
 		copy.url = url;
 		copy.icon = icon;
-		copy.validate = validate;
+		copy.validateBool = validateBool;
 
 		for (Search s : alSearches)
 		{
@@ -155,11 +155,12 @@ public class CGPParams extends AbstractParams
 			return;
 		}
 
-		Iterator searchList = searches.getChildren("search").iterator();
+		@SuppressWarnings("unchecked")
+		Iterator<Element> searchList = searches.getChildren("search").iterator();
 
 		while (searchList.hasNext())
 		{
-			Element search = (Element) searchList.next();
+			Element search = searchList.next();
 
 			alSearches.add(new Search(search));
 		}
@@ -173,7 +174,7 @@ public class CGPParams extends AbstractParams
 
 	public String url;
 	public String icon;
-	public boolean validate;
+	public boolean validateBool;
 	private List<Search> alSearches = new ArrayList<Search>(2);
 }
 

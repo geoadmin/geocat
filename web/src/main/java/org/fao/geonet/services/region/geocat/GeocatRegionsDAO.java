@@ -44,7 +44,7 @@ public class GeocatRegionsDAO extends RegionsDAO {
 			CoordinateReferenceSystem sourceSRS = (CoordinateReferenceSystem) geom.getUserData();
 	        Integer sourceCode = CRS.lookupEpsgCode(sourceSRS, false);
 	        Integer desiredCode = CRS.lookupEpsgCode(projection, false);
-	        if ((sourceCode == null || desiredCode == null || desiredCode != sourceCode) && !CRS.equalsIgnoreMetadata(sourceSRS, projection)) {
+	        if ((sourceCode == null || desiredCode == null || desiredCode.intValue() != sourceCode.intValue()) && !CRS.equalsIgnoreMetadata(sourceSRS, projection)) {
 	            MathTransform transform = CRS.findMathTransform(sourceSRS, projection, true);
 	            geom = JTS.transform(geom, transform);
 	        }

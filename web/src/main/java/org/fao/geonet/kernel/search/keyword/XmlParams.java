@@ -49,7 +49,7 @@ public final class XmlParams {
      * 
      * Optional default is to only load the language of the current gui language
      */
-    public static String pLanguages = "pLanguage";
+    public static final String pLanguages = "pLanguage";
     /**
      * If present then a search clause for the uri is included
      */

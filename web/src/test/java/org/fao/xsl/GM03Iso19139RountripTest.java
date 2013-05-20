@@ -66,14 +66,14 @@ public class GM03Iso19139RountripTest
         }
     }
 
-    @Test
+    @Test @Ignore
     public void iso19139RoundTrip() throws Throwable
     {
         File[] xml = new File(TransformationTestSupport.data,"iso19139").listFiles();
 
         testFile(new File(TransformationTestSupport.data, "iso19139/service_19139che.xml"), Control.START_WITH_ISO, false);
         for (File file : xml) {
-        //    testFile(file, Control.START_WITH_ISO, false);
+            testFile(file, Control.START_WITH_ISO, false);
         }
     }
 

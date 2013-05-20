@@ -21,7 +21,7 @@ public enum HarvestValidationEnum {
 	XSDVALIDATION {
 
 		public void validate(DataManager dataMan, ServiceContext context, Element xml) throws Exception {
-			dataMan.setNamespacePrefix(xml);
+			DataManager.setNamespacePrefix(xml);
 			
 			String schema=((GeonetContext)context.getHandlerContext(Geonet.CONTEXT_NAME)).getSchemamanager().autodetectSchema(xml);
 			dataMan.validate(schema, xml);

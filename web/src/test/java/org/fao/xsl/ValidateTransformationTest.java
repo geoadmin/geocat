@@ -899,7 +899,8 @@ public class ValidateTransformationTest
         }
 
         Element xml = Xml.loadFile(transformed);
-        Iterator errorTags = xml.getDescendants(new Filter(){
+        @SuppressWarnings("unchecked")
+		Iterator<Element> errorTags = xml.getDescendants(new Filter(){
             private static final long serialVersionUID = 1L;
 
             public boolean matches(Object obj) {

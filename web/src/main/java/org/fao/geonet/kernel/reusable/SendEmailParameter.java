@@ -3,7 +3,6 @@ package org.fao.geonet.kernel.reusable;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Multimap;
 
 public class SendEmailParameter

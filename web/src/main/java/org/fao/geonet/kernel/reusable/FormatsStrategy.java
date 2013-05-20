@@ -58,7 +58,6 @@ public final class FormatsStrategy extends ReplacementStrategy
 
     private final Dbms   _dbms;
     private final String _styleSheet;
-    private final String _currentLocale;
     private final SerialFactory _serialFactory;
 
 
@@ -68,7 +67,6 @@ public final class FormatsStrategy extends ReplacementStrategy
         
         this._dbms = dbms;
         this._styleSheet = appPath + Utils.XSL_REUSABLE_OBJECT_DATA_XSL;
-        this._currentLocale = currentLocale;
     }
 
     public Pair<Collection<Element>, Boolean> find(Element placeholder, Element originalElem, String defaultMetadataLang)
@@ -131,7 +129,8 @@ public final class FormatsStrategy extends ReplacementStrategy
 
     public Element findNonValidated(UserSession session) throws Exception
     {
-        List<Element> results = _dbms.select("SELECT "+ID_COL+","+NAME_COL+","+VERSION_COL+" FROM "+TABLE+" WHERE "+VALIDATED_COL+"='n'").getChildren("record");
+        @SuppressWarnings("unchecked")
+		List<Element> results = _dbms.select("SELECT "+ID_COL+","+NAME_COL+","+VERSION_COL+" FROM "+TABLE+" WHERE "+VALIDATED_COL+"='n'").getChildren("record");
         Element formats = new Element(REPORT_ROOT);
 
         for (Element result : results) {
@@ -202,7 +201,8 @@ public final class FormatsStrategy extends ReplacementStrategy
     public Collection<Element> add(Element placeholder, Element originalElem, Dbms dbms, String metadataLang)
             throws Exception
     {
-        List<Element> xml = Xml.transform(originalElem, _styleSheet).getChildren("format");
+        @SuppressWarnings("unchecked")
+		List<Element> xml = Xml.transform(originalElem, _styleSheet).getChildren("format");
         if (!xml.isEmpty()) {
             List<Element> results = new ArrayList<Element>();
             for (Element element : xml) {
@@ -301,7 +301,8 @@ public final class FormatsStrategy extends ReplacementStrategy
         public Formats(Dbms dbms) throws SQLException {
             Element results = dbms.select("SELECT * FROM "+TABLE);
 
-            List<Element> records = results.getChildren("record");
+            @SuppressWarnings("unchecked")
+			List<Element> records = results.getChildren("record");
 
             for (Element record : records) {
                 String id = record.getChildTextNormalize(ID_COL);

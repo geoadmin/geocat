@@ -24,8 +24,7 @@ abstract class AbstractInterceptUrlUpdater implements Updater {
 
         @Override
         @Nullable
-        public OverridesMetadataSource apply(@Nullable
-        FilterSecurityInterceptor interceptor) {
+        public OverridesMetadataSource apply(@Nullable FilterSecurityInterceptor interceptor) {
             FilterInvocationSecurityMetadataSource metadataSource = interceptor.getSecurityMetadataSource();
 
             OverridesMetadataSource overrideSource;

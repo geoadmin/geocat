@@ -90,7 +90,8 @@ public final class GeoNetworkAnalyzer extends Analyzer {
      * @param reader   the reader passed to the {@link Tokenizer} constructor
      * @return the {@link TokenStreamComponents} for this analyzer.
      */
-    @Override
+    @SuppressWarnings("resource")
+	@Override
     protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
 		/*
         final Tokenizer source = new StandardTokenizer(Geonet.LUCENE_VERSION, reader);

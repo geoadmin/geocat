@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.local.LocalServiceRequest;

@@ -146,9 +146,6 @@ public class XmlSerializerSvn extends XmlSerializer {
      */
 	public void update(Dbms dbms, String id, Element xml, String changeDate, boolean updateDateStamp, String uuid, ServiceContext context) throws Exception {
 
-		// old XML comes from the database
-	  Element oldXml = super.internalSelect(dbms, "metadata", id, false, context);		
-
 		updateDb(dbms, id, xml, changeDate, xml.getQualifiedName(), updateDateStamp, uuid);
 
 		if (svnMan == null) { // do nothing

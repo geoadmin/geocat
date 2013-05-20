@@ -23,8 +23,6 @@
 
 package org.fao.geonet.guiservices.util;
 
-import java.util.List;
-
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;

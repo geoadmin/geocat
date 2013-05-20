@@ -38,7 +38,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-import jeeves.xlink.Processor;
 
 import org.apache.log4j.Priority;
 import org.fao.geonet.GeonetContext;
@@ -256,8 +255,6 @@ public abstract class XmlSerializer {
 					 String changeDate, String isTemplate, String root, String title,
 					 int owner, String groupOwner, String docType) throws SQLException {
 	
-		if (false && resolveXLinks()) Processor.removeXLink(xml);
-
 		String date = new ISODate().toString();
 
 		if (createDate == null)
@@ -317,7 +314,6 @@ public abstract class XmlSerializer {
      * @throws SQLException
      */
 	protected void updateDb(Dbms dbms, String id, Element xml, String changeDate, String root, boolean updateDateStamp, String uuid) throws SQLException {
-		if (false && resolveXLinks()) Processor.removeXLink(xml);
         if (logEmptyWithheld(id, xml, "XmlSerializer.updateDb")) {
             StackTraceElement[] stacktrace = new Exception("").getStackTrace();
             StringBuffer info = new StringBuffer();

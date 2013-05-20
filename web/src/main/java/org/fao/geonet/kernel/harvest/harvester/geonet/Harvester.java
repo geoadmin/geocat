@@ -44,8 +44,6 @@ import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;

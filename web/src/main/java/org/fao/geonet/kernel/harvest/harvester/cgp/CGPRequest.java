@@ -116,6 +116,7 @@ public class CGPRequest extends SOAPRequest
 	 *
 	 * @return List of Elements in GM03Small format.
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Element> query(CGPQueryCriteria criteria) throws SOAPFaultEx, JDOMException, IOException, BadXmlResponseEx, BadSoapResponseEx
 	{
 		String reqString = QUERY_REQ.replaceAll("CRITERIA", criteria.toString());
@@ -152,7 +153,7 @@ public class CGPRequest extends SOAPRequest
 		requestID.addContent(messageId);
 
 		Element dateAndTime = new Element("dateAndTime", NAMESPACE_GCH);
-		dateAndTime.setText(DATE_FORMAT.format(calendar.getTime()));
+		dateAndTime.setText(datFormat.format(calendar.getTime()));
 		requestID.addContent(dateAndTime);
 		return requestID;
 	}
@@ -190,5 +191,5 @@ public class CGPRequest extends SOAPRequest
 	}
 
 	private static Calendar calendar = Calendar.getInstance();
-	private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+	private SimpleDateFormat datFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
 }

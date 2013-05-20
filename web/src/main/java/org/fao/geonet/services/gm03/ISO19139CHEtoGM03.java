@@ -68,8 +68,6 @@ public class ISO19139CHEtoGM03 extends ISO19139CHEtoGM03Base {
         root.appendChild(cur);
 
         String backRefName = dummyBackRef.getAttributes().getNamedItem("name").getTextContent();
-        String patchedName = backRefName;
-        if( backRefName.equals("DQ_Qualitiy") ) patchedName="DQ_DataQuality";
 
         final Document doc = cur.getOwnerDocument();
         Node backRef = doc.createElementNS(NS, backRefName);

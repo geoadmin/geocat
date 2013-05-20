@@ -4,13 +4,16 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.TransformerFactoryFactory;
 import net.sf.saxon.om.Axis;
@@ -76,16 +80,16 @@ public class TranslateAndValidate {
             String[] xmlFilenames) throws SAXException,
             TransformerConfigurationException, IOException {
 
-        // Compile the schema.
-        // Here the schema is loaded from a java.io.File, but you could use
-        // a java.net.URL or a javax.xml.transform.Source instead.
-        File schemaLocation = new File(schemaFilename);
         Schema schema = null;
 
         // Only validate if a schemafile is provided
-        if (schemaFilename != null)
-            schema = SCHEMA_FACTORY.newSchema(schemaLocation);
-
+		if (schemaFilename != null) {
+			// Compile the schema.
+			// Here the schema is loaded from a java.io.File, but you could use
+			// a java.net.URL or a javax.xml.transform.Source instead.
+			File schemaLocation = new File(schemaFilename);
+			schema = SCHEMA_FACTORY.newSchema(schemaLocation);
+		}
         Transformer xslt = TRANSFORMER_FACTORY.newTransformer(new StreamSource(
                 xslFilename));
 
@@ -179,11 +183,11 @@ public class TranslateAndValidate {
 			if (errorHandler.hasErrors()) {
 				errorHandler.printError(System.out);
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				errorHandler.printError(new PrintStream(out));
+				errorHandler.printError(new PrintStream(out, true, Jeeves.ENCODING));
 				if(xmlFilename != null) {
 					generateTempFiles(doc, xslt, xmlFilename);
 				}
-				throw new AssertionError(out.toString());
+				throw new AssertionError(out.toString(Jeeves.ENCODING));
 			} else {
 				// System.out.println(xmlFilename + " is valid.");
 			}
@@ -198,7 +202,7 @@ public class TranslateAndValidate {
 	public void validate(Schema schema, final String xmlFilename)
 			throws IOException {
 
-		Source source = new StreamSource(new FileReader(xmlFilename));
+		Source source = new StreamSource(new InputStreamReader(new FileInputStream(xmlFilename), Jeeves.ENCODING));
 
 		// 3. Get a validator from the schema.
 		Validator validator = schema.newValidator();
@@ -210,16 +214,16 @@ public class TranslateAndValidate {
 			if (errorHandler.hasErrors()) {
 				errorHandler.printError(System.out);
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				errorHandler.printError(new PrintStream(out));
-				throw new AssertionError(out.toString());
+				errorHandler.printError(new PrintStream(out, true, Jeeves.ENCODING));
+				throw new AssertionError(out.toString(Jeeves.ENCODING));
 			} else {
 				// System.out.println(xmlFilename + " is valid.");
 			}
 		} catch (SAXException ex) {
 			errorHandler.printError(System.out);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			errorHandler.printError(new PrintStream(out));
-			throw new AssertionError(out.toString());
+			errorHandler.printError(new PrintStream(out, true, Jeeves.ENCODING));
+			throw new AssertionError(out.toString(Jeeves.ENCODING));
 		}
 	}
 
@@ -276,12 +280,12 @@ public class TranslateAndValidate {
 			}
 		}
 
-		public void throwErrors() {
+		public void throwErrors() throws UnsupportedEncodingException {
 			if (hasErrors()) {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				PrintStream stream = new PrintStream(out);
+				PrintStream stream = new PrintStream(out, true, Jeeves.ENCODING);
 				printError(stream);
-				String msg = out.toString();
+				String msg = out.toString(Jeeves.ENCODING);
 
 				throw new RuntimeException(msg, exceptions.get(0));
 			}
@@ -290,8 +294,12 @@ public class TranslateAndValidate {
 
 	public void run(File gm03StyleSheet, File gm03Xsd, String[] xmlFilenames)
 			throws Exception {
-		run(gm03StyleSheet.getAbsolutePath(), (gm03Xsd != null ? gm03Xsd
-				.getAbsolutePath() : null), xmlFilenames);
+		String schemaFilename;
+		if (gm03Xsd != null)
+			schemaFilename = gm03Xsd.getAbsolutePath();
+		else
+			schemaFilename = null;
+		run(gm03StyleSheet.getAbsolutePath(), schemaFilename, xmlFilenames);
 
 	}
 

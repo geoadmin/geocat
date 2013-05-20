@@ -264,9 +264,10 @@ public class ExtentHelper
 
         StringBuilder strings = new StringBuilder();
         Element parsed = Xml.loadString("<desc>" + desc + "</desc>", false);
-        Iterator iter = parsed.getDescendants();
+        @SuppressWarnings("unchecked")
+		Iterator<Content> iter = parsed.getDescendants();
         while (iter.hasNext()) {
-            Content next = (Content) iter.next();
+            Content next = iter.next();
             if (next instanceof Text) {
                 strings.append(((Text) next).getText());
                 strings.append(" ");

@@ -40,7 +40,6 @@ import java.util.Map;
 
 public class SummaryComparator implements Comparator<SummaryComparator.SummaryElement>
 {
-    private static final long serialVersionUID = -4668989929284491497L;
 
 	public static class SummaryElement {
 		public final String name;

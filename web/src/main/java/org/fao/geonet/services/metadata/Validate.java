@@ -26,7 +26,6 @@ package org.fao.geonet.services.metadata;
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -64,8 +63,6 @@ public class Validate extends NotInReadOnlyModeService {
 		DataManager   dataMan = gc.getDataManager();
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
-		UserSession session = context.getUserSession();
 
 		String id = Utils.getIdentifierFromParameters(params, context);
 

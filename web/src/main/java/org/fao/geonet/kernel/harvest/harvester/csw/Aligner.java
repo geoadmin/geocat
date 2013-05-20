@@ -346,6 +346,7 @@ public class Aligner extends BaseAligner
 			//removing geonet:info extra information
 			XPath xp = XPath.newInstance("geonet:info");
 			xp.addNamespace("geonet", "http://www.fao.org/geonetwork");
+			@SuppressWarnings("unchecked")
 			List<Element> lst = xp.selectNodes(response);
 			if (lst != null)
 			{

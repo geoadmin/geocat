@@ -25,7 +25,6 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.jdom.Content;
@@ -67,7 +66,9 @@ public class List implements Service {
         }
 
         if("validated".equalsIgnoreCase(params.getChildTextNormalize("order"))) {
-            java.util.List<Content> children = new ArrayList<Content>(el.getChildren());
+			@SuppressWarnings("unchecked")
+			java.util.List<Content> c = el.getChildren();
+			java.util.List<Content> children = new ArrayList<Content>(c);
 
             for (Content child : children) {
                 child.detach();

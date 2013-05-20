@@ -23,14 +23,9 @@
 
 package org.fao.geonet.services.group;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.UUID;
-
-import javax.imageio.ImageIO;
 
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;

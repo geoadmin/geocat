@@ -8,7 +8,6 @@ import java.util.Map;
 
 import jeeves.utils.Xml;
 
-import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.Filter;
@@ -65,7 +64,8 @@ public class CovertLocalisedCharstringTest
                 "<description><EN>EN</EN><EN>EN2</EN></description>", false);
 
         isoData = Xml.transform(duplicateTranslation, pathToXsl);
-        Iterator textGroups = isoData.getDescendants(new Filter()
+        @SuppressWarnings("unchecked")
+		Iterator<Element> textGroups = isoData.getDescendants(new Filter()
         {
             private static final long serialVersionUID = 1L;
 

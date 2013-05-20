@@ -54,7 +54,8 @@ public class Select implements Service
 
         synchronized (selection.ids) {
 
-            java.util.Iterator<Object> iter = params.getChildren().iterator();
+            @SuppressWarnings("unchecked")
+			java.util.Iterator<Object> iter = params.getChildren().iterator();
             while (iter.hasNext()) {
                 Object next = (Content) iter.next();
                 if (next instanceof Element) {

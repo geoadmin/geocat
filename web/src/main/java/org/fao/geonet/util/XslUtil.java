@@ -342,17 +342,12 @@ public final class XslUtil {
 		return GeocatXslUtil.geom(next);
 	}
 
-	@SuppressWarnings("rawtypes")
 	static Polygon parsePolygon(NodeInfo next) throws Exception {
 		return GeocatXslUtil.parsePolygon(next);
 	}
 
 	static Boolean inclusion(NodeInfo next) {
 		return GeocatXslUtil.inclusion(next);
-	}
-
-	private static Boolean booleanText(NodeInfo next) {
-		return GeocatXslUtil.booleanText(next);
 	}
 
 	public static String writeXml(Node doc) throws Exception {
@@ -378,21 +373,6 @@ public final class XslUtil {
 	 */
 	public static String toHyperlinksSplitNodes(String textString, Configuration configuration) throws Exception {
 		return GeocatXslUtil.toHyperlinksSplitNodes(textString, configuration);
-	}
-
-	/**
-	 * Add hyperlinks and split long lines
-	 * @param configuration
-	 */
-	private static String toHyperlinksFromText(Configuration configuration, String textString) throws Exception {
-		return GeocatXslUtil.toHyperlinksFromText(configuration, textString);
-	}
-
-	/**
-	 * Insert line breaks
-	 */
-	private static String insertBR(String word) {
-		return GeocatXslUtil.insertBR(word);
 	}
 
 	public static UnfailingIterator parse(Configuration configuration, String string, boolean printError)

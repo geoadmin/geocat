@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel.csw.services.getrecords;
 
 import jeeves.constants.Jeeves;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.utils.Log;
@@ -48,7 +47,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneConfig;
-import org.fao.geonet.kernel.search.SearchLoggerTask;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.geotools.gml2.GMLConfiguration;
 import org.jdom.Content;

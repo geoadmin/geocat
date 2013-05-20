@@ -135,11 +135,12 @@ public class Get implements Service
         
         Element elGroups = new Element(Geonet.Elem.GROUPS);
 
-        java.util.List list =dbms.select("SELECT groupId FROM UserGroups WHERE userId=?", Integer.valueOf(id)).getChildren();
+        @SuppressWarnings("unchecked")
+		java.util.List<Element> list = dbms.select("SELECT groupId FROM UserGroups WHERE userId=?", Integer.valueOf(id)).getChildren();
 
         for(int i=0; i<list.size(); i++)
         {
-            String grpId = ((Element)list.get(i)).getChildText("groupid");
+            String grpId = list.get(i).getChildText("groupid");
 
             elGroups.addContent(new Element(Geonet.Elem.ID).setText(grpId));
         }

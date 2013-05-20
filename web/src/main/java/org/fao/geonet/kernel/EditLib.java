@@ -34,7 +34,6 @@ import jeeves.xlink.XLink;
 
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.kernel.schema.MetadataAttribute;
 import org.fao.geonet.kernel.schema.MetadataSchema;

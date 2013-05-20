@@ -343,7 +343,8 @@ public final class KeywordsStrategy extends ReplacementStrategy
     private URI doUpdateKeyword(Element originalElem, String nonValidThesaurusName, String code, String metadataLang,
             boolean update) throws Exception, GraphException, IOException, AccessDeniedException
     {
-        List<Element> xml = Xml.transform((Element) originalElem.clone(), _styleSheet).getChildren("keyword");
+        @SuppressWarnings("unchecked")
+		List<Element> xml = Xml.transform((Element) originalElem.clone(), _styleSheet).getChildren("keyword");
 
         Thesaurus thesaurus = _thesaurusMan.getThesaurusByName(nonValidThesaurusName);
 

@@ -207,7 +207,8 @@ public class CharacterStringToLocalisedTest {
         String testData = "/data/non_validating/iso19139che/problemTitle_remove_charstrings.xml";
         Element data = TransformationTestSupport.transform(getClass(), pathToXsl, testData);
 
-        List titleTextGroups = data.getChild("identificationInfo", Geonet.Namespaces.GMD)
+        @SuppressWarnings("unchecked")
+		List<Element> titleTextGroups = data.getChild("identificationInfo", Geonet.Namespaces.GMD)
                 .getChild("CHE_MD_DataIdentification", GeocatXslUtil.CHE_NAMESPACE)
                 .getChild("citation", Geonet.Namespaces.GMD).getChild("CI_Citation", Geonet.Namespaces.GMD)
                 .getChild("title", Geonet.Namespaces.GMD).getChild("PT_FreeText", Geonet.Namespaces.GMD)

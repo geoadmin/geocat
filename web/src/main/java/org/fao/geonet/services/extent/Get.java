@@ -32,7 +32,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -174,7 +176,9 @@ public class Get implements Service
 
     private final GMLConfiguration gmlConfiguration = new GMLConfiguration();
     {
-    	gmlConfiguration.getProperties().add(GMLConfiguration.NO_SRS_DIMENSION);
+    	@SuppressWarnings("unchecked")
+		Set<Object> props = gmlConfiguration.getProperties();
+    	props.add(GMLConfiguration.NO_SRS_DIMENSION);
     }
     private String                 _appPath;
 
@@ -395,7 +399,7 @@ public class Get implements Service
             exExtent.addContent(0, descElem);
         } catch (final Exception e) {
             final ByteArrayOutputStream out = new ByteArrayOutputStream();
-            e.printStackTrace(new PrintStream(out));
+            e.printStackTrace(new PrintStream(out, true, Jeeves.ENCODING));
             Log.error("org.fao.geonet.services.xlink.Extent", "Error parsing XML from feature:\n" + out);
         }
 
@@ -523,7 +527,7 @@ public class Get implements Service
 
         ExtentHelper.addGmlId(transformed);
         encoder.encode(transformed, org.geotools.gml3.GML.geometryMember, outputStream);
-        String gmlString = outputStream.toString();
+        String gmlString = outputStream.toString(Jeeves.ENCODING);
 		Element geometryMembers = Xml.loadString(gmlString, false);
         @SuppressWarnings("rawtypes")
 		Iterator iter = geometryMembers.getChildren().iterator();

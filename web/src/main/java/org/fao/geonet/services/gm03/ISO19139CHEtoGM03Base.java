@@ -244,7 +244,9 @@ public abstract class ISO19139CHEtoGM03Base {
     }
 
     public static class FlattenerException extends Exception {
-        public FlattenerException(String message) {
+		private static final long serialVersionUID = 1L;
+
+		public FlattenerException(String message) {
             super(message);
         }
     }

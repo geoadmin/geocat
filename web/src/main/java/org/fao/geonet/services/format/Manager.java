@@ -21,8 +21,6 @@
 
 package org.fao.geonet.services.format;
 
-import static org.fao.geonet.services.extent.ExtentHelper.ID;
-
 import org.jdom.*;
 
 import jeeves.constants.*;

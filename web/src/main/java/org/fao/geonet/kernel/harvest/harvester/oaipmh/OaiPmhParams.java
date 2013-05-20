@@ -64,7 +64,7 @@ public class OaiPmhParams extends AbstractParams
 		url      = Util.getParam(site, "url",  "");
 		icon     = Util.getParam(site, "icon", "");
 
-		validate = Util.getParam(options, "validate", false);
+		validateBool = Util.getParam(options, "validate", false);
 
 		addSearches(searches);
 	}
@@ -86,7 +86,7 @@ public class OaiPmhParams extends AbstractParams
 		url      = Util.getParam(site,  "url",  url);
 		icon     = Util.getParam(site,  "icon", icon);
 
-		validate = Util.getParam(options, "validate", validate);
+		validateBool = Util.getParam(options, "validate", validateBool);
 
 		//--- if some search queries are given, we drop the previous ones and
 		//--- set these new ones
@@ -117,7 +117,7 @@ public class OaiPmhParams extends AbstractParams
 		copy.url  = url;
 		copy.icon = icon;
 
-		copy.validate = validate;
+		copy.validateBool = validateBool;
 
 		for (Search s : alSearches)
 			copy.alSearches.add(s.copy());
@@ -154,7 +154,7 @@ public class OaiPmhParams extends AbstractParams
 
 	public String url;
 	public String icon;
-	boolean validate;
+	boolean validateBool;
 	private ArrayList<Search> alSearches = new ArrayList<Search>();
 }
 

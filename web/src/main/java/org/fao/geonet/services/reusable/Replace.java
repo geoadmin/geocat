@@ -38,7 +38,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.services.metadata.IndexRebuild;
-import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
 /**
@@ -75,7 +74,8 @@ public class Replace implements Service
             elements = new HashSet<String>();
 
             String query = "SELECT id FROM Metadata";
-            List<Element> ids = dbms.select(query).getChildren("record");
+            @SuppressWarnings("unchecked")
+			List<Element> ids = dbms.select(query).getChildren("record");
             for (Element record : ids) {
                 elements.add(record.getChildText("id"));
             }

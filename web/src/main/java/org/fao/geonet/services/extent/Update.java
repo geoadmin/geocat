@@ -33,6 +33,7 @@ import static org.fao.geonet.services.extent.ExtentHelper.SOURCE;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -53,6 +54,7 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.feature.type.Name;
 
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -64,7 +66,9 @@ import com.vividsolutions.jts.geom.Geometry;
 public class Update implements Service
 {
 
-    public void init(String appPath, ServiceConfig params) throws Exception
+    private static final Logger LOGGER = Logging.getLogger("org.geotools.data.communication");
+
+	public void init(String appPath, ServiceConfig params) throws Exception
     {
     }
 
@@ -104,7 +108,7 @@ public class Update implements Service
         }
 
         final java.util.List<Object> newValues = new ArrayList<Object>();
-        final java.util.List<AttributeDescriptor> attributes = new ArrayList<AttributeDescriptor>();
+        final java.util.List<Name> attributes = new ArrayList<Name>();
         final java.util.List<Element> changes = new ArrayList<Element>();
 
         Geometry geometry = null;
@@ -117,7 +121,7 @@ public class Update implements Service
                     .getFeatureSource().getSchema());
             // geometry.setSRID(4326);
             newValues.add(geometry);
-            attributes.add(descriptor);
+            attributes.add(descriptor.getName());
             final Element change = new Element("change");
             change.setText("Attribute " + descriptor.getLocalName() + " updated to " + geomParam);
             changes.add(change);
@@ -130,7 +134,7 @@ public class Update implements Service
             newValues.add(encodeDescription);
             searchAt += ExtentHelper.encodeDescription(ExtentHelper.reduceDesc(desc));
             final AttributeDescriptor descriptor = store.getSchema().getDescriptor(featureType.descColumn);
-            attributes.add(descriptor);
+            attributes.add(descriptor.getName());
 
             final Element change = new Element("change");
             change.setText("Attribute " + descriptor.getLocalName() + " updated to " + desc);
@@ -145,7 +149,7 @@ public class Update implements Service
             searchAt += ExtentHelper.encodeDescription(ExtentHelper.reduceDesc(geoId));
 
             final AttributeDescriptor descriptor = store.getSchema().getDescriptor(featureType.geoIdColumn);
-            attributes.add(descriptor);
+            attributes.add(descriptor.getName());
 
             final Element change = new Element("change");
             change.setText("Attribute " + descriptor.getLocalName() + " updated to " + geoId);
@@ -154,14 +158,14 @@ public class Update implements Service
 
         newValues.add(searchAt);
         final AttributeDescriptor searchDescriptor = store.getSchema().getDescriptor(featureType.searchColumn);
-        attributes.add(searchDescriptor);
+        attributes.add(searchDescriptor.getName());
 
         if (attributes.isEmpty()) {
             return ExtentHelper.error("No updates were requested.  One or both of geom and " + DESC
                     + " must be defined for an update");
         }
-        Logging.getLogger("org.geotools.data.communication").setLevel(Level.FINEST);
-        store.modifyFeatures(attributes.toArray(new AttributeDescriptor[attributes.size()]), newValues.toArray(),
+        LOGGER.setLevel(Level.FINEST);
+        store.modifyFeatures(attributes.toArray(new Name[attributes.size()]), newValues.toArray(),
                 featureType.createFilter(id));
 
         Processor.uncacheXLinkUri(ExtentsStrategy.baseHref(id,wfs.wfsId,featureType.typename));

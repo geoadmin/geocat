@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -233,7 +234,7 @@ public class GeocatXslUtil {
 	    }
 	}
 	public static String randomId() {
-	    return "N" + Math.abs(RANDOM.nextLong());
+	    return "N" + RANDOM.nextInt(Integer.MAX_VALUE);
 	}
 	public static Object bbox(Object description, Object src) throws Exception {
 	
@@ -300,7 +301,7 @@ public class GeocatXslUtil {
 	                Item next2 = iter2.next();
 	
 	                while(next2 !=null) {
-	                    if (next2 instanceof NodeInfo & ((NodeInfo)next2).getNodeKind() == Type.ELEMENT) {
+	                    if (next2 instanceof NodeInfo && ((NodeInfo)next2).getNodeKind() == Type.ELEMENT) {
 	                        NodeInfo info = (NodeInfo) next2;
 	
 	                        String nodeXml = GeocatXslUtil.writeXml(info).replaceAll("LinearRing srsDimension=\"\\d\"", "LinearRing");
@@ -439,7 +440,7 @@ public class GeocatXslUtil {
 	}
 	static Pattern LINK_PATTERN = Pattern.compile("(mailto:|https://|http://|ftp://|ftps://)[^\\s<>]*\\w");
 	static Pattern NODE_PATTERN = Pattern.compile("<.+?>");
-	static Boolean inclusion(NodeInfo next) {
+	static @Nullable Boolean inclusion(NodeInfo next) {
 	    if ("extentTypeCode".equals(next.getLocalPart())) {
 	        return booleanText(next);
 	    }
@@ -511,7 +512,7 @@ public class GeocatXslUtil {
 	
 	    String linked = toHyperlinksSplitNodes(textString, text.getConfiguration());
 	
-	    if (linked.equals(text)) {
+	    if (linked.equals(textString)) {
 	        return text;
 	    }
 	    Object nodes = parse(text.getConfiguration(), linked, true);

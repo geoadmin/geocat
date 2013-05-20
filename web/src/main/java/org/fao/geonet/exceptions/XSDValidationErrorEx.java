@@ -35,6 +35,8 @@ public class XSDValidationErrorEx extends JeevesClientEx
 	//---
 	//--------------------------------------------------------------------------
 
+	private static final long serialVersionUID = 1L;
+
 	public XSDValidationErrorEx(String name) { this(name, null); }
 
 	public XSDValidationErrorEx(String name, Object value)

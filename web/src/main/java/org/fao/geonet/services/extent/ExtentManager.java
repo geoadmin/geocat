@@ -22,7 +22,8 @@ import static org.fao.geonet.services.extent.ExtentHelper.*;
  */
 public class ExtentManager {
 
-    private static ExtentManager instance;
+    private static final java.util.logging.Logger LOGGER = Logging.getLogger("org.geotools.data");
+	private static ExtentManager instance;
     public static final String GEOTOOLS_LOG_NAME = "geotools";
 
     public static ExtentManager getInstance() {
@@ -53,8 +54,8 @@ public class ExtentManager {
     public ExtentManager(DataStore dataStore, java.util.List<Element> extentConfig) throws Exception {
         instance = this;
         if (Logger.getLogger(GEOTOOLS_LOG_NAME).isDebugEnabled()) {
-            Logging.getLogger("org.geotools.data").setLevel(java.util.logging.Level.FINE);
-            Logging.getLogger("org.geotools.data").addHandler(new SourcesLogHandler());
+            LOGGER.setLevel(java.util.logging.Level.FINE);
+            LOGGER.addHandler(new SourcesLogHandler());
         }
         if (extentConfig == null) {
             Log.error(Geocat.Module.EXTENT, "No Extent configuration found.");

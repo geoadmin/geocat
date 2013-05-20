@@ -112,7 +112,8 @@ public class SharedUpdate implements Service
 		String      myProfile = usrSess.getProfile();
 		String      myUserId  = usrSess.getUserId();
 
-		java.util.List listGroups = params.getChildren(Params.GROUPS);
+		@SuppressWarnings("unchecked")
+		java.util.List<Element> listGroups = params.getChildren(Params.GROUPS);
 
 
 			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
@@ -125,7 +126,8 @@ public class SharedUpdate implements Service
 			if (operation.equals("newuser") || operation.equals("editinfo")) {
 				if (!(myUserId.equals(id)) && myProfile.equals("UserAdmin")) {
 					Element bull = dbms.select("SELECT groupId from UserGroups WHERE userId="+myUserId);
-					java.util.List adminlist = bull.getChildren();
+					@SuppressWarnings("unchecked")
+					java.util.List<Element> adminlist = bull.getChildren();
 					for(int i=0; i<listGroups.size(); i++) {
 						String group = ((Element) listGroups.get(i)).getText();
 						Boolean found = false;

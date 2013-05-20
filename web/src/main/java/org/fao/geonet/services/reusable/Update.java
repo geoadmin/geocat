@@ -14,7 +14,6 @@ import org.jdom.Element;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Update a reusable object by passing the xml

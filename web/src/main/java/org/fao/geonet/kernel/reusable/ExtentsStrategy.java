@@ -576,7 +576,8 @@ public final class ExtentsStrategy extends ReplacementStrategy {
         return updatedId;
     }
 
-    public Map<String, String> markAsValidated(String[] ids, Dbms dbms, UserSession session) throws Exception {
+    @SuppressWarnings("deprecation")
+	public Map<String, String> markAsValidated(String[] ids, Dbms dbms, UserSession session) throws Exception {
         FeatureType dest = _extentMan.getSource().getFeatureType(XLINK_TYPE);
 
         FeatureType from = _extentMan.getSource().getFeatureType(NON_VALIDATED_TYPE);
@@ -790,9 +791,11 @@ public final class ExtentsStrategy extends ReplacementStrategy {
             result = new Extent(ExtentTypeCode.EXCLUDE, exclusion,format, showNative);
         } else if (inclusion != null && exclusion == null) {
             result = new Extent(ExtentTypeCode.INCLUDE,inclusion,format, showNative);
-        } else {
+        } else if (inclusion != null && exclusion != null){
             Pair<ExtentTypeCode, MultiPolygon> diff = ExtentHelper.diff(fac, inclusion, exclusion);
             result = new Extent(diff.one(), diff.two(),format, showNative);
+        } else {
+        	throw new IllegalArgumentException("???");
         }
         
         return result;
@@ -877,7 +880,8 @@ public final class ExtentsStrategy extends ReplacementStrategy {
         return null;
     }
 
-    public Collection<Element> updateObject(Element xlink, Dbms dbms, String metadataLang) throws Exception {
+    @SuppressWarnings("deprecation")
+	public Collection<Element> updateObject(Element xlink, Dbms dbms, String metadataLang) throws Exception {
         Extent parseResult = parseGeometry(xlink);
 
         MultiPolygon geom = parseResult.geom;
@@ -1039,6 +1043,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
         private boolean matchingBBOX(Info previous, Info current) {
             final Geometry prevEnv = previous.geom.getEnvelope();
             prevEnv.setSRID(previous.geom.getSRID());
+            
             final Geometry currEnv = current.geom.getEnvelope();
             currEnv.setSRID(current.geom.getSRID());
 

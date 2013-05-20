@@ -71,7 +71,8 @@ public final class DeletedObjects
     public static Element list(Dbms dbms) throws SQLException
     {
 
-        List<Element> records = dbms.select("SELECT id,description,deletionDate FROM DeletedObjects").getChildren();
+        @SuppressWarnings("unchecked")
+		List<Element> records = dbms.select("SELECT id,description,deletionDate FROM DeletedObjects").getChildren();
 
         Element deleted = new Element(ReplacementStrategy.REPORT_ROOT);
         for (Element element : records) {

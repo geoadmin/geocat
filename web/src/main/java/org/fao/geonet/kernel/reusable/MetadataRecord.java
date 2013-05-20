@@ -3,8 +3,6 @@ package org.fao.geonet.kernel.reusable;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 

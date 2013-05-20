@@ -77,10 +77,12 @@ public class ExtractGmlTest
         String pathToXsl = "iso19139/extract-gml.xsl";
         Element transform = TransformationTestSupport.transform(getClass(), BASE_XML_DIR+pathToXsl, "/data/extractgeoms/mixed-19139.xml");
         assertEquals("GeometryCollection", transform.getName());
-        Iterator coordinates = transform.getDescendants(new Filter()
+        @SuppressWarnings("unchecked")
+		Iterator<Element> coordinates = transform.getDescendants(new Filter()
         {
+			private static final long serialVersionUID = 1L;
 
-            public boolean matches(Object arg0)
+			public boolean matches(Object arg0)
             {
                 if (arg0 instanceof Element) {
                     Element elem = (Element) arg0;
@@ -107,10 +109,12 @@ public class ExtractGmlTest
         String pathToXsl = "iso19139.che/extract-gml.xsl";
         Element transform = TransformationTestSupport.transform(getClass(), BASE_XML_DIR+pathToXsl, "/data/extractgeoms/mixed-19139.xml");
         assertEquals("GeometryCollection", transform.getName());
-        Iterator coordinates = transform.getDescendants(new Filter()
+        @SuppressWarnings("unchecked")
+		Iterator<Element> coordinates = transform.getDescendants(new Filter()
         {
-            
-            public boolean matches(Object arg0)
+			private static final long serialVersionUID = 1L;
+
+			public boolean matches(Object arg0)
             {
                 if (arg0 instanceof Element) {
                     Element elem = (Element) arg0;

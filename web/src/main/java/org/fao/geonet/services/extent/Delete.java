@@ -128,13 +128,14 @@ public class Delete implements Service
         FeatureType currentType = null;
 
         synchronized (selection.ids) {
-            Pair[] array = selection.ids.toArray(new Pair[selection.ids.size()]);
-            Arrays.sort(array, new Comparator<Pair>()
+            @SuppressWarnings("unchecked")
+			Pair<FeatureType, String>[] array = selection.ids.toArray(new Pair[selection.ids.size()]);
+            Arrays.sort(array, new Comparator<Pair<FeatureType, String>>()
             {
 
-                public int compare(Pair o1, Pair o2)
+                public int compare(Pair<FeatureType, String> o1, Pair<FeatureType, String> o2)
                 {
-                    return ((FeatureType) o1.one()).typename.compareTo((String) o2.two());
+                    return o1.one().typename.compareTo(o2.two());
                 }
 
             });

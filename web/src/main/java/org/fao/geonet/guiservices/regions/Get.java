@@ -27,7 +27,6 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.services.region.List;
 import org.fao.geonet.services.region.Region;
 import org.jdom.Element;
 
@@ -35,8 +34,6 @@ import org.jdom.Element;
 
 public class Get implements Service
 {
-	private Element regions;
-
     public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------

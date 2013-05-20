@@ -26,10 +26,8 @@ package org.fao.geonet.services.cgp;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Logger;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Edit;
@@ -211,41 +209,41 @@ public class CgpDispatcher implements Service
 		gwReqElm.addContent(queryResultElm);
 		rspMsg.setBodyContent(gwReqElm);
 	}
-
-	private List<Element> queryByCategory(String category, ServiceContext context) throws Exception
-	{
-
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		String query = "SELECT id FROM Categories WHERE name=?";
-		@SuppressWarnings("unchecked")
-		List<Element> list = dbms.select(query, category).getChildren();
-		if (list.size() != 1)
-		{
-			return new ArrayList<Element>(0);
-		}
-
-		String categoryId = list.get(0).getChildText("id");
-		if (categoryId == null)
-		{
-			return new ArrayList<Element>(0);
-		}
-
-		query = "SELECT Metadata.data FROM Metadata INNER JOIN MetadataCateg ON Metadata.id=MetadataCateg.metadataId WHERE MetadataCateg.categoryId=?";
-		@SuppressWarnings("unchecked")
-		List<Element> mdStringElms = dbms.select(query, categoryId).getChildren();
-
-		List<Element> mdXMLElms = new ArrayList<Element>(mdStringElms.size());
-		Element mdXMLElm;
-		String iso19139Str;
-		for (Element mdStringElm : mdStringElms)
-		{
-			iso19139Str = mdStringElm.getChildText("data");
-			mdXMLElm = Xml.loadString(iso19139Str, false);
-			mdXMLElms.add(mdXMLElm);
-		}
-
-		return mdXMLElms;
-	}
+//
+//	private List<Element> queryByCategory(String category, ServiceContext context) throws Exception
+//	{
+//
+//		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+//		String query = "SELECT id FROM Categories WHERE name=?";
+//		@SuppressWarnings("unchecked")
+//		List<Element> list = dbms.select(query, category).getChildren();
+//		if (list.size() != 1)
+//		{
+//			return new ArrayList<Element>(0);
+//		}
+//
+//		String categoryId = list.get(0).getChildText("id");
+//		if (categoryId == null)
+//		{
+//			return new ArrayList<Element>(0);
+//		}
+//
+//		query = "SELECT Metadata.data FROM Metadata INNER JOIN MetadataCateg ON Metadata.id=MetadataCateg.metadataId WHERE MetadataCateg.categoryId=?";
+//		@SuppressWarnings("unchecked")
+//		List<Element> mdStringElms = dbms.select(query, categoryId).getChildren();
+//
+//		List<Element> mdXMLElms = new ArrayList<Element>(mdStringElms.size());
+//		Element mdXMLElm;
+//		String iso19139Str;
+//		for (Element mdStringElm : mdStringElms)
+//		{
+//			iso19139Str = mdStringElm.getChildText("data");
+//			mdXMLElm = Xml.loadString(iso19139Str, false);
+//			mdXMLElms.add(mdXMLElm);
+//		}
+//
+//		return mdXMLElms;
+//	}
 
 	/**
 	 * Search MD by category.

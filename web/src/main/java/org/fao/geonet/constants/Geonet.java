@@ -609,6 +609,6 @@ public final class Geonet {
 		public static final Namespace XSD = Namespace.getNamespace("xsd", XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		public static final Namespace XSI = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
 		@SuppressWarnings("unchecked")
-		public static List<Namespace> iso19139Namespaces = Arrays.asList(new Namespace[]{GCO, GEONET, GMX, GMD, SRV, XSD, XSI, XLINK});
+		public static final List<Namespace> iso19139Namespaces = Arrays.asList(new Namespace[]{GCO, GEONET, GMX, GMD, SRV, XSD, XSI, XLINK});
 	}
 }

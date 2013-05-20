@@ -24,8 +24,6 @@
 package org.fao.geonet.guiservices.metadata;
 
 import java.util.List;
-import java.util.Random;
-
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -85,7 +83,8 @@ public class GetMostPopular implements Service {
 				presentRequest.addContent(new Element("to").setText(searcher
 						.getSize()
 						+ ""));
-				List results = searcher.present(context, presentRequest,
+				@SuppressWarnings("unchecked")
+				List<Element> results = searcher.present(context, presentRequest,
 						_config).getChildren();
 
 				_response = new Element("response");

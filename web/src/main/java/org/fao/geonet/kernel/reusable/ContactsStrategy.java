@@ -45,7 +45,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.PasswordUtil;
 import jeeves.utils.SerialFactory;
-import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
@@ -56,6 +55,7 @@ import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.util.ElementFinder;
 import org.fao.geonet.util.GeocatXslUtil;
 import org.fao.geonet.util.LangUtils;
+import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.Filter;
@@ -90,10 +90,13 @@ public final class ContactsStrategy extends ReplacementStrategy
 
         String key = email + firstname + lastname;
 
-        Element roleElem = Utils.nextElement(originalElem.getDescendants(new ElementFinder("CI_RoleCode",
-                Geonet.Namespaces.GMD, "role")));
+        @SuppressWarnings("unchecked")
+		Iterator<Content> descendants = originalElem.getDescendants(new ElementFinder("CI_RoleCode",
+                Geonet.Namespaces.GMD, "role"));
+		Element roleElem = Utils.nextElement(descendants);
         String query = "select id,validated,organisation from Users where COALESCE(TRIM(email),'')||COALESCE(TRIM(name),'')||COALESCE(TRIM(surname),'') ILIKE ? AND profile=?";
-        List<Element> records = _dbms.select(query, key, SHARED).getChildren();
+        @SuppressWarnings("unchecked")
+		List<Element> records = _dbms.select(query, key, SHARED).getChildren();
 
         for (Element record : records) {
             String role;
@@ -121,7 +124,8 @@ public final class ContactsStrategy extends ReplacementStrategy
         return NULL;
     }
 
-    private String translation(Element elemOrg, String defaultMetadataLang)
+    @SuppressWarnings("unchecked")
+	private String translation(Element elemOrg, String defaultMetadataLang)
     {
         defaultMetadataLang = defaultMetadataLang.substring(0, 2);
         for (Element e : (List<Element>) elemOrg.getChildren()) {
@@ -141,10 +145,10 @@ public final class ContactsStrategy extends ReplacementStrategy
         Element elem = Utils.nextElement(originalElem.getDescendants(new ContactElementFinder("CharacterString",
                 Geonet.Namespaces.GCO, name)));
         if (elem == null) {
-            Iterator freeTexts = originalElem.getDescendants(new ContactElementFinder("PT_FreeText",
+            Iterator<Element> freeTexts = originalElem.getDescendants(new ContactElementFinder("PT_FreeText",
                     Geonet.Namespaces.GMD, name));
             while (freeTexts.hasNext()) {
-                Element next = (Element) freeTexts.next();
+                Element next = freeTexts.next();
                 Iterator<Element> defaultLangElem = next.getDescendants(new Filter()
                 {
 
@@ -312,8 +316,10 @@ public final class ContactsStrategy extends ReplacementStrategy
         if (xml==null || xml.getChildren().isEmpty()) return null;
 
         Element parentInfo = xml.getChild("CHE_CI_ResponsibleParty", GeocatXslUtil.CHE_NAMESPACE);
-        Element toReplace = Utils.nextElement(original.getDescendants(new ElementFinder("parentResponsibleParty",
-                GeocatXslUtil.CHE_NAMESPACE, "CHE_CI_ResponsibleParty")));
+        @SuppressWarnings("unchecked")
+		Iterator<Content> descendants = original.getDescendants(new ElementFinder("parentResponsibleParty",
+                GeocatXslUtil.CHE_NAMESPACE, "CHE_CI_ResponsibleParty"));
+		Element toReplace = Utils.nextElement(descendants);
 
 
         Integer finalId = null;
@@ -375,7 +381,8 @@ public final class ContactsStrategy extends ReplacementStrategy
     {
         final String query = "SELECT id,email,username,name,surname FROM Users WHERE profile='" + SHARED
                 + "' AND validated='n'";
-        List<Element> results = _dbms.select(query).getChildren("record");
+        @SuppressWarnings("unchecked")
+		List<Element> results = _dbms.select(query).getChildren("record");
         Element category = new Element(REPORT_ROOT);
         for (Element result : results) {
             Element e = new Element(REPORT_ELEMENT);

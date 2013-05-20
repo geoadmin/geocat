@@ -205,7 +205,8 @@ public class Add implements Service
         return !store.getFeatures(featureType.createQuery(id, new String[] { featureType.idColumn })).isEmpty();
     }
 
-    private String addFeature(String id, String geoId, String desc, Geometry geometry, FeatureType featureType,
+    @SuppressWarnings("deprecation")
+	private String addFeature(String id, String geoId, String desc, Geometry geometry, FeatureType featureType,
                               FeatureStore<SimpleFeatureType, SimpleFeature> store, SimpleFeatureType schema, boolean showNative) throws Exception
     {
 

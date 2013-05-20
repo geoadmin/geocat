@@ -4,7 +4,6 @@
 package org.fao.geonet.kernel;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,7 +121,8 @@ public class Validator {
 
 			// -- now get each xpath and evaluate it
 			// -- xsderrors/xsderror/{message,xpath}
-			List list = xsdErrors.getChildren();
+			@SuppressWarnings("unchecked")
+			List<Element> list = xsdErrors.getChildren();
 			for (Object o : list) {
 				Element elError = (Element) o;
 				String xpath = elError.getChildText("xpath", Edit.NAMESPACE);

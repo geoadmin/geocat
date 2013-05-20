@@ -37,7 +37,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
@@ -92,9 +91,6 @@ public class Util
 	}
 	
 	public static void warnAdminByMail(ServiceContext context, String mailBody, String server, String UUID, String filePath) {
-		GeonetContext ctx = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager settings = ctx.getSettingManager();
-		
 		String fServer = (server == null ? "" : String.format("\n\t- Server : %s", server));
 		String fUUID = (UUID == null ? "" : String.format("\n\t- UUID : %s", UUID));
 		String fFile = (filePath == null ? "" : String.format("\n\t- File : %s", filePath));
@@ -116,7 +112,7 @@ public class Util
 	"Sincerely yours,\n" +
 	"-- \nGeoCatalogue automatic mail system";
 	
-	public static String SKEL_MAIL_WEBDAV_ERROR = "Hello,\n\n" +
+	public static final String SKEL_MAIL_WEBDAV_ERROR = "Hello,\n\n" +
 	"This e-mail was sent automatically in order to warn you that the current harvested metadata :\n"+
 	"%s" +
 	"%s" +
