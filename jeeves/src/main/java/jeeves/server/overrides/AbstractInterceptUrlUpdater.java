@@ -25,8 +25,11 @@ abstract class AbstractInterceptUrlUpdater implements Updater {
         @Override
         @Nullable
         public OverridesMetadataSource apply(@Nullable FilterSecurityInterceptor interceptor) {
+            if(interceptor == null) {
+                throw new IllegalArgumentException();
+            } else {
             FilterInvocationSecurityMetadataSource metadataSource = interceptor.getSecurityMetadataSource();
-
+    
             OverridesMetadataSource overrideSource;
             if (metadataSource instanceof OverridesMetadataSource) {
                 overrideSource = (OverridesMetadataSource) metadataSource;
@@ -35,6 +38,7 @@ abstract class AbstractInterceptUrlUpdater implements Updater {
                 interceptor.setSecurityMetadataSource(overrideSource);
             }
             return overrideSource;
+            }
 
         }
     };

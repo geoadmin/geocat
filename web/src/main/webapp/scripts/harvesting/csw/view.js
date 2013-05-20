@@ -294,7 +294,7 @@ function addEmptySearch()
 			addSearchCap(search);
     	},
     	failure: function(result) {
-            console.log("failure");
+            alert("failure");
     	}
 	});
 

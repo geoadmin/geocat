@@ -285,14 +285,13 @@ public class GetDomain extends AbstractOperation implements CatalogService
 
 					SummaryComparator valuesComparator = new SummaryComparator(SortOption.FREQUENCY, Type.STRING, context.getLanguage(), null);
 					TreeSet<SummaryComparator.SummaryElement> sortedValuesFrequency = new TreeSet<SummaryComparator.SummaryElement>(valuesComparator);
-		            ObjectKeyIntMapIterator entries = duplicateValues.entries();
-		            
-		            while(entries.hasNext()) {
-		                sortedValuesFrequency.add(new SummaryComparator.SummaryElement(entries));
-		                entries.next();
-		            }
-
-
+                    ObjectKeyIntMapIterator entries = duplicateValues.entries();
+                    
+                    while(entries.hasNext()) {
+                        sortedValuesFrequency.add(new SummaryComparator.SummaryElement(entries));
+                        entries.next();
+                    }
+					
 					if (freq)
 						return createValuesByFrequency(sortedValuesFrequency);
 					else
@@ -436,12 +435,11 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	 * @return
 	 */
 	private static List<Element> createValuesByFrequency(TreeSet<SummaryComparator.SummaryElement> sortedValuesFrequency) {
-
+		
 		List<Element> values = new ArrayList<Element>();
 		Element value;
 
         for (SummaryComparator.SummaryElement element : sortedValuesFrequency) {
-
             value = new Element("Value", Csw.NAMESPACE_CSW);
             value.setAttribute("count", Integer.toString(element.count));
             value.setText(element.name);

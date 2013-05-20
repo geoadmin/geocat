@@ -28,6 +28,7 @@ import org.jdom.Element;
 
 import bak.pcj.map.ObjectKeyIntMapIterator;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,19 +39,19 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class SummaryComparator implements Comparator<SummaryComparator.SummaryElement>
+public class SummaryComparator implements Comparator<SummaryComparator.SummaryElement>, Serializable
 {
+    private static final long serialVersionUID = -4668989929284491497L;
 
-	public static class SummaryElement {
-		public final String name;
-		public final int count;
+    public static class SummaryElement {
+        public final String name;
+        public final int count;
 
-		public SummaryElement(ObjectKeyIntMapIterator next) {
-			this.name = (String) next.getKey();
-			this.count = next.getValue();
-		}
-	}
-
+        public SummaryElement(ObjectKeyIntMapIterator next) {
+            this.name = (String) next.getKey();
+            this.count = next.getValue();
+        }
+    }
     public enum Type
     {
         STRING
@@ -180,10 +181,10 @@ public class SummaryComparator implements Comparator<SummaryComparator.SummaryEl
 
     public int compare(SummaryElement me1, SummaryElement me2)
 	{
-	    String key1 = me1.name;
-	    String key2 = me2.name;
-	    int count1 = me1.count;
-	    int count2 = me2.count;
+        String key1 = me1.name;
+        String key2 = me2.name;
+        int count1 = me1.count;
+        int count2 = me2.count;
 	    switch (_option)
 	    {
 	    case NAME:

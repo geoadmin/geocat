@@ -305,17 +305,15 @@ GeoNetwork.MetadataResultsView = Ext
                             }
                         }
                     },
-                    actionMenuInit : function(idx, node) {
-                        this.acMenu = Ext.get(Ext.DomQuery.selectNode(
-                                'span.md-action-menu', node));
-                        this.acMenu.on('click', function() {
-                            this.createMenu(idx, this);
-                            this.contextMenu.showAt([
-                                    this.acMenu.getX(),
-                                    this.acMenu.getY()
-                                            + this.acMenu.getHeight() ]);
-                        }, this);
-                        this.acMenu.show();
+    actionMenuInit: function(idx, node){
+        this.acMenu = Ext.get(Ext.DomQuery.selectNode('span.md-action-menu', node));
+        if(this.acMenu) {
+            this.acMenu.on('click', function(){
+                this.createMenu(idx, this);
+                this.contextMenu.showAt([this.acMenu.getX(), this.acMenu.getY() + this.acMenu.getHeight()]);
+            }, this);
+            this.acMenu.show();
+        }
                     },
                     createMenu : function(id, dv) {
                         var record = this.getStore().getAt(id);
@@ -734,11 +732,12 @@ GeoNetwork.MetadataResultsView = Ext
                                                                         }
                                                                         linkButton = [];
                                                                         kmlButton = [];
-                                                                        currentType = record
-                                                                                .get('type');
-                                                                        label = OpenLayers
-                                                                                .i18n('linklabel-'
-                                                                                        + currentType);
+                                currentType = record.get('type');
+                                var labelKey = 'linklabel-' + currentType;
+                                label = OpenLayers.i18n(labelKey);
+                                if (label === labelKey) { // Default label if not found in translation
+                                    label = OpenLayers.i18n('linklabel-');
+                                }
                                                                         if (currentType === 'application/x-compressed') {
                                                                             hasDownloadAction = true;
                                                                         }
