@@ -598,11 +598,15 @@ public class DataManager {
                               .select("SELECT groupId, operationId, g.name FROM OperationAllowed o, groups g WHERE g.id = o.groupId AND metadataId = ? ORDER BY operationId ASC", id$)
                                  .getChildren();
 
+            boolean isPublished = false;
             for (Element operation : operations) {
                 String groupId = operation.getChildText("groupid");
                 String operationId = operation.getChildText("operationid");
                 moreFields.add(SearchManager.makeField("_op" + operationId, groupId, true, true));
                 if(operationId.equals("0")) {
+                	if ("1".equals(groupId)) {
+                		isPublished = true;
+                	}
                 	String name = operation.getChildText("name");
                 	moreFields.add(SearchManager.makeField("_groupPublished", name, true, true));
                 }
@@ -656,7 +660,7 @@ public class DataManager {
 
                 // toPublish index field: metadata is valid, schema=iso19139.che, not a template and not harvested
                 if (isValid.equals("1") && schema.trim().equals("iso19139.che")
-                        && isTemplate.equals("n") && isHarvested.equals("n")) {
+                        && isTemplate.equals("n") && isHarvested.equals("n") && !isPublished) {
                     moreFields.add(SearchManager.makeField("toPublish", "y", true, true));
                 }
             }
@@ -1545,6 +1549,9 @@ public class DataManager {
 		String data   = el.getChildText("data");
 		String uuid   = UUID.randomUUID().toString();
 
+		if (!schema.equals("iso19139.che")) {
+				throw new IllegalArgumentException("Tried to a make a metadata with schema: '"+schema+"' only metadata of schema 'iso19139.che' are allowed in this catalog");
+		}
 		//--- generate a new metadata id
 		int serial = sf.getSerial(dbms, "Metadata");
 
@@ -1910,7 +1917,7 @@ public class DataManager {
             if(index) {
                 //--- update search criteria
                 boolean processSharedObjects = false;
-                indexMetadata(dbms, id, processSharedObjects, servContext);
+                indexMetadata(dbms, id, processSharedObjects, servContext, true, false);
             }
 		}
 		return true;
