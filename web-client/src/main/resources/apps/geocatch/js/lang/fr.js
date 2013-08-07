@@ -35,8 +35,8 @@ GeoNetwork.GeoCatCh.Lang.fr = {
 	'unChecked': 'Non contrôlé',
 	'recordType': 'Type',
 
-	'includearchived': 'Archives inclues',
-	'excludearchived': 'Archives exclues',
+	'includearchived': 'Archives incluses',
+	'excludearchived': 'Archives excluses',
 	'onlyarchived': 'Archives seules',
 	'owner': 'Propriétaire',
 	
