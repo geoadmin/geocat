@@ -32,7 +32,7 @@ GeoNetwork.GeoCatCh.Lang.fr = {
 	'geodata': 'Archive',
 	'yes': 'Oui',
 	'no': 'Non',
-	'unChecked': 'Unchecked',
+	'unChecked': 'Non contrôlé',
 	'recordType': 'Type',
 
 	'includearchived': 'Archives inclues',
