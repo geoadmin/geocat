@@ -19,19 +19,41 @@
   <description>
     Caching xslt project.
   </description>
-  
-  <licenses>
-    <license>
-      <name>General Public License (GPL)</name>
-      <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-  
-  <dependencies>
-    <dependency>
-      <groupId>net.sf.saxon</groupId>
-      <artifactId>saxon</artifactId>
-    </dependency>
-  </dependencies>
+
+	<licenses>
+		<license>
+			<name>General Public License (GPL)</name>
+			<url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<dependencies>
+		<dependency>
+			<groupId>net.sf.saxon</groupId>
+			<artifactId>saxon</artifactId>
+		</dependency>
+	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>run-static-analysis</id>
+			<activation>
+				<property>
+					<name>!skipTests</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>findbugs-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	<properties>
+		<rootProjectDir>${basedir}/..</rootProjectDir>
+	</properties>
 </project>

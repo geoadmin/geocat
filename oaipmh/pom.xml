@@ -19,26 +19,48 @@
   <description>
     Oaipmh project.
   </description>
-  
-  <licenses>
-    <license>
-      <name>General Public License (GPL)</name>
-      <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-  
 
-  <dependencies>
-    <dependency>
-      <groupId>commons-httpclient</groupId>
-      <artifactId>commons-httpclient</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>ch.geocat</groupId>
-      <artifactId>jeeves</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-  </dependencies>
-      
+	<licenses>
+		<license>
+			<name>General Public License (GPL)</name>
+			<url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+
+	<dependencies>
+		<dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>jeeves</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
+
+	<profiles>
+		<profile>
+			<id>run-static-analysis</id>
+			<activation>
+				<property>
+					<name>!skipTests</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>findbugs-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	<properties>
+		<rootProjectDir>${basedir}/..</rootProjectDir>
+	</properties>
 </project>

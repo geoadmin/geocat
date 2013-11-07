@@ -19,7 +19,10 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.en = {
+    'metadata-not-found': 'Metadata with UUID ${uuid} not found or not shared with you.',
     'harvestingAdmin': 'Harvesting',
+    'checkAllOrNone': 'Check all/none',
+    'filterGroup': 'Filter group ...',
     'updateUserInfo': 'Edit my profile',
     'updatePassword': 'Change my password',
     'myMetadata': 'My metadata',
@@ -277,8 +280,12 @@ GeoNetwork.Lang.en = {
     'administration': 'Administration',
     'validationReport': 'Validation report',
     'setStatus': 'Metadata status',
-    'status': 'Status',
+    'status': 'Change status',
     'updateStatus': 'Update status',
+    'currentStatus': ' (current status is ${status})',
+    'enableWorkflow': 'Enable worklow',
+    'enableWorkflowTT': 'Set metadata status to draft and enable workflow',
+    'enableWorkflowStart': 'Metadata status set to draft.',
     'updateVersion': 'Activate versioning',
     'addLayerSelection': 'Add layers of selection to the map',
     'statusTT': 'Change the status of a record according to its life cycle phase',
@@ -411,6 +418,7 @@ GeoNetwork.Lang.en = {
     'removeSelected': 'Remove selected',
     'ownerName': 'Metadata record owner',
     'setPrivileges': 'Set privileges',
+    'setBatchPrivileges': 'Overwrite privileges of selected records',
     'setCategories': 'Set categories',
     'massiveOp': 'Batch operation ',
     'prepareDownload': 'Download files',
@@ -551,7 +559,6 @@ GeoNetwork.Lang.en = {
     'feedbackerrorMsg' : 'An error has occurred when sending. Please try again later.',
     'feedbackcancel' : 'Cancel',
     'feedbackWindowTitle' : 'feedback',
-
     // Suggestion processing
     'add-extent-from-geokeywordsreplace': 'Replace existing extent',
     'add-info-from-wmssetExtent': 'Set extent',
@@ -585,6 +592,8 @@ GeoNetwork.Lang.en = {
     'thesaurusFromFile': 'From local file',
     'thesaurusFromURL': 'From remote file (URL)',
     'id': 'Identifier',
+    'mdIdentifier': 'Record internal identifier: ',
+    'mdUUID': 'Record unique identifier: ',
     'label': 'Label',
     'definition': '-',
     'xmin': 'X min',
@@ -660,7 +669,29 @@ GeoNetwork.Lang.en = {
     'linklabel-image/jpeg': 'Image link',
     'linklabel-website': 'Web link',
     'linklabel-application/octet-stream': 'Link',
-    'linklabel-': 'Link'
+    'linklabel-': 'Link',
+    'cookies.warning': 'This webpage uses cookies, which will save on your computer information about your usage and statistics.',
+    'insertMode': 'Insert Mode',
+    'fileUpload': 'File upload',
+    'copyPaste': 'Copy/Paste',
+    'fileType': 'File Type',
+    'singleFile' :'Single File (XML, SLD, WMC...)',
+    'mefFile': 'MEF file',
+    'importActions': 'Import actions',
+    'noActionOnImport': 'No action on import',
+    'overwriteMD': 'Overwrite metadata with same UUID' ,
+    'generateUuid': 'Generate UUID for inserted metadata',
+    'styleSheet': 'StyleSheet',
+    'validate': 'Validate',
+    'assignCurCat': 'Assign to current catalog',
+    'metadata': 'Metadata',
+    'mdInsertResults': 'Results of metadata import',
+    'mdInsertSuccess': 'Metadata inserted with',
+    'mdInsertFailure': 'Error while inserting metadata : ',
+    'mdRecordsProcessed': 'Total number of metadata records processed',
+    'mdRecordsAdded': 'Total number of metadata records added',
+    'chooseCategory': 'Choose a category',
+    'no-thumbnail': 'No thumbnail available'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.Lang.en);

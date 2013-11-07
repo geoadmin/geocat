@@ -23,34 +23,24 @@
 
 package jeeves.server.context;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.CheckForNull;
-
-import jeeves.config.springutil.JeevesApplicationContext;
-import jeeves.interfaces.Logger;
-import jeeves.monitor.MonitorManager;
-import jeeves.server.ProfileManager;
+import jeeves.component.ProfileManager;
+import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.local.LocalServiceRequest;
-import jeeves.server.resources.ProviderManager;
-import jeeves.server.resources.ResourceManager;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.JeevesServlet;
-import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
+import org.fao.geonet.Logger;
+import org.fao.geonet.utils.Log;
+import org.jdom.Element;
+import org.springframework.context.ConfigurableApplicationContext;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.List;
+import javax.annotation.CheckForNull;
+import javax.persistence.EntityManager;
+import java.util.HashMap;
 import java.util.Map;
 
-import org.jdom.Element;
 import org.jdom.JDOMException;
 
 //=============================================================================
@@ -83,7 +73,6 @@ public class ServiceContext extends BasicContext
 
 
     private UserSession    userSession = new UserSession();
-	private ProfileManager profilMan;
 
 	private InputMethod    input;
 	private OutputMethod   output;
@@ -97,7 +86,7 @@ public class ServiceContext extends BasicContext
 	private JeevesServlet servlet;
 	private boolean startupError = false;
 	Map<String,String> startupErrors;
-    private XmlCacheManager xmlCacheManager;
+    private EntityManager entityManager;
     /**
      * Property to be able to add custom response headers depending on the code
      * (and not the xml of Jeeves)
@@ -127,12 +116,11 @@ public class ServiceContext extends BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public ServiceContext(String service, JeevesApplicationContext jeevesApplicationContext, XmlCacheManager cacheManager, MonitorManager mm, ProviderManager pm, SerialFactory sf, ProfileManager p, Map<String, Object> contexts)
+	public ServiceContext(String service, ConfigurableApplicationContext jeevesApplicationContext, Map<String, Object> contexts, EntityManager entityManager)
 	{
-		super(jeevesApplicationContext, mm, pm, sf, contexts);
+		super(jeevesApplicationContext, contexts);
 
-		this.xmlCacheManager = cacheManager;
-		profilMan    = p;
+        this.entityManager = entityManager;
 		setService(service);
 
         setResponseHeaders(new HashMap<String, String>());
@@ -151,7 +139,7 @@ public class ServiceContext extends BasicContext
     public int getMaxUploadSize() { return maxUploadSize; }
 
 	public UserSession    getUserSession()    { return userSession; }
-	public ProfileManager getProfileManager() { return profilMan;   }
+	public ProfileManager getProfileManager() { return getBean(ProfileManager.class);   }
 
 	public InputMethod  getInputMethod()  { return input;  }
 	public OutputMethod getOutputMethod() { return output; }
@@ -280,7 +268,7 @@ public class ServiceContext extends BasicContext
     }
     
     public XmlCacheManager getXmlCacheManager() {
-        return this.xmlCacheManager;
+        return getBean(XmlCacheManager.class);
     }
     public Map<String, String> getResponseHeaders() {
         return responseHeaders;
@@ -298,7 +286,9 @@ public class ServiceContext extends BasicContext
         return statusCode;
     }
 
-
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
 }
 
 //=============================================================================

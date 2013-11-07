@@ -39,15 +39,26 @@ Ext.namespace('GeoNetwork');
  * TODO: * Add links to the contextual menu of a record
  * 
  */
-GeoNetwork.MetadataResultsView = Ext
-        .extend(
-                Ext.DataView,
-                {
-                    /**
-                     * api: config[catalogue] ``GeoNetwork.Catalogue`` Catalogue
-                     * to use
-                     */
-                    catalogue : undefined,
+GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
+    /** api: config[catalogue] 
+     * ``GeoNetwork.Catalogue`` Catalogue to use
+     */
+    catalogue: undefined,
+    
+    /** api: config[templates]
+     *  An optional array of templates
+     */
+    templates: null,
+    
+    //multiSelect : true,
+    overClass: 'md-over',
+    
+    itemSelector: 'li.md',
+    
+    records: null,
+    
+            pointRadius: 2,
+            pointRadius: 2,
 
                     /**
                      * api: config[templates] An optional array of templates
@@ -328,111 +339,227 @@ GeoNetwork.MetadataResultsView = Ext
                         } else {
                             this.contextMenu.setRecord(record);
                         }
-
-                    },
-                    /**
-                     * private: method[zoomTo] Zoom to metadata bounding boxes
-                     * for all registered maps.
-                     */
-                    zoomTo : function(uuid) {
-                        var i, j;
-
-                        for (j = 0; j < this.maps.length; j++) {
-                            var l = this.maps[j].layer;
-                            if (l.features) {
-                                for (i = 0; i < l.features.length; i++) {
-                                    if (uuid === l.features[i].attributes.id) {
-                                        var bounds = l.features[i].geometry
-                                                .getBounds();
-                                        if (bounds) {
-                                            this.maps[j].map
-                                                    .zoomToExtent(bounds);
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    /**
-                     * private: method[initComponent] Initializes the metadata
-                     * results view.
-                     */
-                    initComponent : function() {
-                        var i;
-                        Ext.applyIf(this, this.defaultConfig);
-
-                        // TODO : add utility to add/remove templates
-                        this.templates = this.templates || {
-                            SIMPLE : GeoNetwork.Templates.SIMPLE,
-                            THUMBNAIL : GeoNetwork.Templates.THUMBNAIL,
-                            FULL : GeoNetwork.Templates.FULL
-                        };
-
-                        GeoNetwork.MetadataResultsView.superclass.initComponent
-                                .call(this);
-
-                        this.setStore(this.catalogue.metadataStore);
-                        this.relatedTpl = new Ext.XTemplate(this.relatedTpl
-                                || GeoNetwork.Templates.Relation.SHORT);
-
-                        if (this.maps) {
-                            if (this.maps instanceof OpenLayers.Map) {
-                                var map = this.maps;
-                                this.maps = [];
-                                this.addMap(map); // Add one map
-                            } else {
-                                // Array
-                                for (i = 0; i < this.maps.length; i++) {
-                                    var m = this.maps[i];
-                                    this.initMap(m);
-                                }
-                            }
-                        } else {
-                            this.maps = [];
-                        }
-                        // TODO : only register if one map available ?
-
-                        this.on('selectionchange', this.selectionChange);
-                    },
-                    /**
-                     * api: method[setStore] :param store:
-                     * ``GeoNetwork.data.MetadataResultsStore`` A metadata store
-                     * 
-                     * Set metadata view store.
-                     */
-                    setStore : function(store) {
-                        // Unregister previous events
-                        if (this.getStore()) {
-                            this.getStore()
-                                    .un("load", this.resultsLoaded, this);
-                            this.getStore().un("clear",
-                                    this.destroyMetadataBbox, this);
-                        }
-
-                        // Register events on metadata results store
-                        this.store = store;
-
-                        this.getStore().on({
-                            "load" : this.resultsLoaded,
-                            "clear" : this.destroyMetadataBbox,
-                            scope : this
+                        break;
+                    }
+                }
+            }
+        }
+    },
+    /** private: method[initComponent] 
+     *  Initializes the metadata results view.
+     */
+    initComponent: function(){
+        var i;
+        Ext.applyIf(this, this.defaultConfig);
+        
+        // TODO : add utility to add/remove templates
+        this.templates = this.templates || {
+            SIMPLE: GeoNetwork.Templates.SIMPLE,
+            THUMBNAIL: GeoNetwork.Templates.THUMBNAIL,
+            FULL: GeoNetwork.Templates.FULL
+        };
+        
+        GeoNetwork.MetadataResultsView.superclass.initComponent.call(this);
+        
+        this.setStore(this.catalogue.metadataStore);
+        this.relatedTpl = new Ext.XTemplate(this.relatedTpl || GeoNetwork.Templates.Relation.SHORT);
+        
+        if (this.maps) {
+            if (this.maps instanceof OpenLayers.Map) {
+                var map = this.maps;
+                this.maps = [];
+                this.addMap(map); // Add one map
+            } else {
+                // Array
+                for (i = 0; i < this.maps.length; i++) {
+                    var m = this.maps[i];
+                    this.initMap(m);
+                }
+            }
+        } else {
+            this.maps = [];
+        }
+        // TODO : only register if one map available ?
+       
+        this.on('selectionchange', this.selectionChange);
+    },
+    /** api: method[setStore] 
+     *  :param store: ``GeoNetwork.data.MetadataResultsStore`` A metadata store
+     *
+     *  Set metadata view store.
+     */
+    setStore: function(store){
+        // Unregister previous events
+        if (this.getStore()) {
+            this.getStore().un("load", this.resultsLoaded, this);
+            this.getStore().un("clear", this.destroyMetadataBbox, this);
+        }
+        
+        // Register events on metadata results store
+        this.store = store;
+        
+        this.getStore().on({
+            "load": this.resultsLoaded,
+            "clear": this.destroyMetadataBbox,
+            scope: this
+        });
+    },
+    /** api: method[addMap] 
+     *  :param map: ``OpenLayers.Map`` An OpenLayers map
+     *  :param zoomToExtentOnSearch: ``Boolean`` Zoom to results extent on store update
+     *
+     *  Register a new map to the results view.
+     */
+    addMap: function(map, zoomToExtentOnSearch){
+        var found = false, i;
+        for (i = 0; i < this.maps.length; i++) {
+            if (this.maps[i].map.id === map.id) {
+                found = true;
+                
+                break;
+            }
+        }
+        if (!found) {
+            var m = {
+                map: map,
+                zoomToExtentOnSearch: zoomToExtentOnSearch || false
+            };
+            this.mapsProjection = map.projection;
+            this.projectionFrom = new OpenLayers.Projection("EPSG:4326");
+            this.projectionTo = new OpenLayers.Projection(this.mapsProjection);
+            this.maps.push(m);
+            this.initMap(m);
+        }
+    },
+    /** private: method[initMap]
+     *  :param map: An OpenLayers map
+     *  :param idx: Index
+     *  Add a Vector layer to the map
+     */
+    initMap: function(map){
+        if (!this.styleInitialized) {
+            this.initStyle();
+            this.styleInitialized = true;
+            // TODO : a map may be initialized twice by 2 differents results views
+        }
+        
+        // TODO : Translate layer name based on a search name ?
+        var l = new OpenLayers.Layer.Vector(OpenLayers.i18n("mdResultsLayer"), {
+            styleMap: new OpenLayers.StyleMap({'default': this.layer_style, 'hover': this.layer_style_hover})
+        });
+        this.addCurrentFeatures(l);
+        map.layer = l;
+        map.map.addLayer(l);
+    },
+    /** api: method[removeMap] 
+     *  :param mapId: ``OpenLayers.Map.id`` An OpenLayers map id
+     *
+     *
+     */
+    removeMap: function(mapId){
+        this.maps.splice(mapId, 1);
+        //this.layers.splice(mapId, 1);
+    },
+    /** api: method[getTemplates] 
+     *  Return templates
+     */
+    getTemplates: function(){
+        return this.templates;
+    },
+    /** api: method[removeTemplate] 
+     *  :param name: ``String`` template key
+     *  
+     *  Remove a template
+     */
+    removeTemplate: function(name){
+        delete this.templates[name];
+    },
+    /** api: method[getTemplates] 
+     *  :param name: ``String`` The template key
+     *  :param template: ``XTempalte`` The template
+     *
+     *  Add templates
+     */
+    addTemplate: function(name, template){
+        this.templates[name] = template;
+    },
+    /** api: method[applyTemplate]
+     *  :param name: ``String`` template key
+     *  
+     *  Apply one templates
+     */
+    applyTemplate: function(name){
+        this.tpl = this.templates[name];
+        this.refresh();
+    },
+    /** private: method[initStyle]
+     *  Define default layer styles
+     */
+    initStyle: function(){
+        // A one colormap by default
+        if (!this.colormap) {
+            this.colormap = [this.featurecolor];
+        }
+        // Define a custom CSS rules if more than one color used
+        if (this.colormap.length > 1) {
+            this.featurecolorCSS = this.featurecolorCSS || "border-left-width: 3px;border-left-style: solid; border-left-color: ${featurecolor}";
+        } else {
+            this.featurecolorCSS = undefined;
+        }
+    },
+    /** private: method[destroyMetadataBbox]
+     *
+     */
+    destroyMetadataBbox: function(){
+        var i;
+        
+        for (i = 0; i < this.maps.length; i++) {
+            var l = this.maps[i].layer;
+            if (l.features) {
+                if (l.features.length > 0) {
+                    this.features = [];
+                    l.destroyFeatures();
+                }
+            }
+        }
+    },
+    /** private: method[resultsLoaded]
+     *  After a search, initialize data view.
+     */
+    resultsLoaded: function(view, records, options){
+        this.records = records;
+    refreshLinks: function () {
+        this.dislayLinks(this.records);
+    },
+                var div = Ext.query('.md-links-' + id, view.el.dom.body);
+                Ext.each (div, function (e) {
+                    var el = Ext.get(e);
+                    var filter = el.getAttribute('data-filter');
+    
+                    // The template may not defined a md-links placeholder
+                    if (el) {
+                        var store = new Ext.data.ArrayStore({
+                            autoDestroy: true,
+                            idIndex: 0,  
+                            fields: [
+                                {name: 'href', mapping: 'href'}, 
+                                {name: 'name', mapping: 'name'}, 
+                                {name: 'protocol', mapping: 'protocol'}, 
+                                {name: 'title', mapping: 'title'}, 
+                                {name: 'type', mapping: 'type'}
+                            ],
+                            data: links
                         });
-                    },
-                    /**
-                     * api: method[addMap] :param map: ``OpenLayers.Map`` An
-                     * OpenLayers map :param zoomToExtentOnSearch: ``Boolean``
-                     * Zoom to results extent on store update
-                     * 
-                     * Register a new map to the results view.
-                     */
-                    addMap : function(map, zoomToExtentOnSearch) {
-                        var found = false, i;
-                        for (i = 0; i < this.maps.length; i++) {
-                            if (this.maps[i].map.id === map.id) {
-                                found = true;
-
-                                break;
+                        store.sort('type');
+                        
+                        
+                        var linkButton = [], label = null, currentType = null, bt,
+                             allowDynamic = r.get('dynamic'), allowDownload = r.get('download'),
+                             hasDownloadAction = false;
+                        store.each(function (record) {
+                            // Filter on type
+                            if (filter !== '' && filter.indexOf(record.get('type')) === -1) {
+                                return;
                             }
                         }
                         if (!found) {
@@ -547,76 +674,6 @@ GeoNetwork.MetadataResultsView = Ext
                                     this.features = [];
                                     l.destroyFeatures();
                                 }
-                            }
-                        }
-                    },
-                    /**
-                     * private: method[resultsLoaded] After a search, initialize
-                     * data view.
-                     */
-                    resultsLoaded : function(view, records, options) {
-                        this.drawMetadataBbox(view, records, options);
-                        this.contextMenu = undefined;
-                        this.initRatingWidget();
-                       //Swisstopo specific
-                        // this.dislayLinks(records);
-                        this.dislayRelations(records);
-                        this.initializeLoadingCatalog();
-                        // this.initMenu();
-                    },
-                    initializeLoadingCatalog : function() {
-                        var className = "loadCatalogName";
-                        var divs = Ext.DomQuery.select("*[class ^=" + className
-                                + "]", this.el.dom.body);
-
-                        var catalogNames = {};
-
-                        Ext
-                                .each(
-                                        divs,
-                                        function(div) {
-                                            var el = Ext.get(div);
-
-                                            var request = el.dom.className
-                                                    .substring(className.length);
-
-                                            var onmouseover = function() {
-
-                                                if (catalogNames[request]) {
-                                                    el.dom.title = catalogNames[request];
-                                                } else {
-
-                                                    var lang = /srv\/([a-z]{3})/
-                                                            .exec(window.location.href)[1];
-                                                    var url = GeoNetwork_URL
-                                                            + "/srv/"
-                                                            + lang
-                                                            + "/xml.info?type=catalogName&"
-                                                            + request;
-                                                    Ext.Ajax
-                                                            .request({
-                                                                url : url,
-                                                                success : function(
-                                                                        res) {
-                                                                    var xml = res.responseXML;
-                                                                    var info = xml
-                                                                            .getElementsByTagName("info")[0];
-
-                                                                    var text = info.textContent
-                                                                            || info.innerText
-                                                                            || info.text;
-                                                                    if (!text) {
-                                                                        text = '';
-                                                                    }
-                                                                    el.dom.title = text;
-                                                                    catalogNames[request] = text;
-                                                                }
-                                                            })
-                                                }
-
-                                                el.un('mouseover', onmouseover);
-                                            };
-                                            el.on('mouseover', onmouseover);
                                         });
                     },
 
@@ -732,84 +789,80 @@ GeoNetwork.MetadataResultsView = Ext
                                                                         }
                                                                         linkButton = [];
                                                                         kmlButton = [];
-                                currentType = record.get('type');
-                                var labelKey = 'linklabel-' + currentType;
-                                label = OpenLayers.i18n(labelKey);
-                                if (label === labelKey) { // Default label if not found in translation
-                                    label = OpenLayers.i18n('linklabel-');
-                                }
-                                                                        if (currentType === 'application/x-compressed') {
-                                                                            hasDownloadAction = true;
-                                                                        }
-                                                                    }
-
-                                                                    var text = null, handler = null;
-
-                                                                    // Only
-                                                                    // display
-                                                                    // WMS link
-                                                                    // if
-                                                                    // dynamic
-                                                                    // property
-                                                                    // set to
-                                                                    // true for
-                                                                    // current
-                                                                    // user &
-                                                                    // record
-                                                                    if ((currentType === 'application/vnd.ogc.wms_xml' || currentType === 'OGC:WMS')) {
-                                                                        if (allowDynamic) {
-                                                                            linkButton
-                                                                                    .push({
-                                                                                        text : record
-                                                                                                .get('title')
-                                                                                                || record
-                                                                                                        .get('name'),
-                                                                                        handler : function(
-                                                                                                b,
-                                                                                                e) {
-                                                                                            app.mapApp
-                                                                                                    .addWMSLayer([ [
-                                                                                                            record
-                                                                                                                    .get('title'),
-                                                                                                            record
-                                                                                                                    .get('href'),
-                                                                                                            record
-                                                                                                                    .get('name'),
-                                                                                                            uuid ] ]);
-                                                                                        }
-                                                                                    });
-
-                                                                            // Swisstopo:
-                                                                            // KML
-                                                                            // links
-                                                                            // are
-                                                                            // created
-                                                                            // from
-                                                                            // wmslinks
-                                                                            var kmlLink = catalogue.URL
-                                                                                    + '/srv/'
-                                                                                    + catalogue.LANG
-                                                                                    + "/google.kml?uuid="
-                                                                                    + uuid
-                                                                                    + "&layers="
-                                                                                    + record
-                                                                                            .get('href');
-                                                                            kmlButton
-                                                                                    .push({
-                                                                                        text : (record
-                                                                                                .get('title') || record
-                                                                                                .get('name')),
-                                                                                        href : kmlLink
-                                                                                    });
-                                                                        }
-                            } else if (currentType === 'application/vnd.ogc.wmc') {
-                                linkButton.push({
-                                    text: record.get('title') || record.get('name'),
-                                    handler: function (b, e) {
-                                        // FIXME : ref to app
-                                        app.switchMode('1', true);
-                                        app.getIMap().addWMC(record.get('href'));
+                            }
+                            
+                            // Avoid empty URL
+                            if (record.get('href') !== '') {
+                                // Check that current record type is the same as the previous record
+                                // In such case, add the previous button if exist
+                                // or create a new button to be added later
+                                if (currentType === null || currentType !== record.get('type')) {
+                                    if (linkButton.length !== 0) {
+                                        view.addLinkMenu(linkButton, label, currentType, el);
                                     }
+                                    linkButton = [];
+                                    currentType = record.get('type');
+                                    var labelKey = 'linklabel-' + currentType;
+                                    label = OpenLayers.i18n(labelKey);
+                                    if (label === labelKey) { // Default label if not found in translation
+                                        label = OpenLayers.i18n('linklabel-');
+                                    }
+                                    if (currentType === 'application/x-compressed') {
+                                        hasDownloadAction = true;
+                                    }
+                                }
+                                
+                                var text = null, handler = null;
+                                
+                                // Only display WMS link if dynamic property set to true for current user & record
+                                if ((currentType === 'application/vnd.ogc.wms_xml' || currentType === 'OGC:WMS')) {
+                                    if (allowDynamic) {
+                                        linkButton.push({
+                                            text: record.get('title') || record.get('name'),
+                                            handler: function (b, e) {
+                                                // FIXME : ref to app
+                                                app.switchMode('1', true);
+                                                app.getIMap().addWMSLayer([[record.get('title'), record.get('href'), record.get('name'), uuid]]);
+                                            }
+                                        });
+                                    }
+                                } else if (currentType === 'application/vnd.ogc.wmc') {
+                                            app.getIMap().addWMC(record.get('href'));
+                                        }
+                                    });
+                                } else {
+                                    // If link is uploaded to GeoNetwork the resources.get service is used
+                                    // Check if allowDownload 
+                                    var displayLink = true;
+                                    if (record.get('href').indexOf('resources.get') !== -1) {
+                                        displayLink = allowDownload;
+                                    } else if (currentType === 'application/vnd.google-earth.kml+xml') {
+                                        // Google earth link is provided when a WMS is provided
+                                        displayLink = allowDynamic;
+                                    }
+                                    if (displayLink) {
+                                        linkButton.push({
+                                            text: (record.get('title') || record.get('name')),
+                                            href: record.get('href')
+                                        });
+                                    }
+                                });
+                            } else {
+                                // If link is uploaded to GeoNetwork the resources.get service is used
+                                // Check if allowDownload 
+                                var displayLink = true;
+                                if (record.get('href').indexOf('resources.get') !== -1) {
+                                    displayLink = allowDownload;
+                                } else if (currentType === 'application/vnd.google-earth.kml+xml') {
+                                    // Google earth link is provided when a WMS is provided
+                                    displayLink = allowDynamic;
+                                }
+                                if (displayLink) {
+                                    linkButton.push({
+                                        text: (record.get('title') || record.get('name')),
+                                        href: record.get('href')
+                                    });
+                                }
                                 });
                                                                     } else {
                                                                         // If
@@ -1160,6 +1213,8 @@ GeoNetwork.MetadataResultsView = Ext
                                 if (m.zoomToExtentOnSearch) {
                                     m.map.zoomToExtent(m.layer.getDataExtent());
                                 }
+                                }
+                                
                             }
                         }
 
@@ -1206,6 +1261,10 @@ GeoNetwork.MetadataResultsView = Ext
                         var checkboxes = Ext.DomQuery.select('input.selector'), idx;
                         for (idx = 0; idx < checkboxes.length; ++idx) {
                             checkboxes[idx].checked = false;
+                        });
+                        // Add the latest button
+                        if (linkButton !== null && linkButton.length !== 0) {
+                            view.addLinkMenu(linkButton, label, currentType, el);
                         }
                     },
                     selectionChange : function(dv, nodes) {
@@ -1221,6 +1280,7 @@ GeoNetwork.MetadataResultsView = Ext
                             for (i = 0; i < records.length; i++) {
                                 uuid = records[i].get('uuid');
                                 selected[uuid] = true;
+                });
                             }
 
                             /* Keep selected and remove others */
@@ -1231,7 +1291,6 @@ GeoNetwork.MetadataResultsView = Ext
                                 } else {
                                     toRemove.push(uuid);
                                 }
-                            }
                             /* Add newly selected */
                             for (uuid in selected) {
                                 if (selected.hasOwnProperty(uuid)

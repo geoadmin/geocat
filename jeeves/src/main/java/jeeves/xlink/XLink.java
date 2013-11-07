@@ -1,13 +1,11 @@
 package jeeves.xlink;
 
+import org.jdom.Namespace;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.jdom.Attribute;
-import org.jdom.Element;
-import org.jdom.Namespace;
 
 /**
  * XLink allows elements to be inserted into XML documents 

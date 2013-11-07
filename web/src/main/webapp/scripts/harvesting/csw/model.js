@@ -118,6 +118,8 @@ var updateTemp =
 '      <capabilitiesUrl>{CAPAB_URL}</capabilitiesUrl>'+
 '      <outputSchema>{OUTPUT_SCHEMA}</outputSchema>'+
 '      <icon>{ICON}</icon>'+
+' 	   <hopCount>{HOPCOUNT}</hopCount>'+
+'      <queryScope>{QUERYSCOPE}</queryScope>'+
 '      <account>'+
 '        <use>{USE_ACCOUNT}</use>'+
 '        <username>{USERNAME}</username>'+

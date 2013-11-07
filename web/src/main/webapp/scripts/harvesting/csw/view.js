@@ -58,10 +58,13 @@ function init()
 		{ id:'csw.capabUrl',    type:'url' },
 		{ id:'csw.outputSchema',    type:'length',   minSize :1,  maxSize :200 },
 		{ id:'csw.username',    type:'length',   minSize :0,  maxSize :200 },
-		{ id:'csw.password',    type:'length',   minSize :0,  maxSize :200 }
+		{ id:'csw.password',    type:'length',   minSize :0,  maxSize :200 },
+		{ id:'csw.hopCount',    type:'integer',   minSize :0,  maxSize :200 },
+	 	{ id:'csw.queryScope',    type:'length',   minSize :0,  maxSize :200 }
 	]);
 
 	shower = new Shower('csw.useAccount', 'csw.account');
+	showerDistributed = new Shower('csw.queryScope', 'csw.queryScopeContainer');
 }
 
 //=====================================================================================
@@ -87,6 +90,7 @@ function setEmpty()
 		}
 
 	shower.update();
+	showerDistributed.update();
 	updateIcon();
 }
 
@@ -103,7 +107,9 @@ function setData(node)
 	hvutil.setOption(site, 'outputSchema', 'csw.outputSchema');
 	hvutil.setOption(site, 'icon',            'csw.icon');
     hvutil.setOption(site, 'rejectDuplicateResource', 'csw.rejectDuplicateResource');
-	
+    hvutil.setOption(site, 'hopCount', 'csw.hopCount');
+    hvutil.setOption(site, 'queryScope', 'csw.queryScope');
+    
 	//--- add search entries
 	
 	var list = searches.getElementsByTagName('search');
@@ -125,6 +131,7 @@ function setData(node)
 	this.selectCategories(node);	
 	
 	shower.update();
+	showerDistributed.update();
 	updateIcon();
 }
 
@@ -138,6 +145,8 @@ function getData()
 	data.OUTPUT_SCHEMA = $F('csw.outputSchema');
 	data.ICON      = $F('csw.icon');
 	data.REJECTDUPLICATERESOURCE = $('csw.rejectDuplicateResource').checked;
+	data.HOPCOUNT = $F('csw.hopCount');
+	data.QUERYSCOPE = $('csw.queryScope').checked;
 	//--- retrieve search information
 	
 	var searchData = [];
@@ -270,7 +279,9 @@ function addEmptySearch()
     		var queryables = [];
     		
 			for(var i=0; i < nodes.length; i++) {
-				if (nodes[i].attributes[0].value =='SupportedISOQueryables' || nodes[i].attributes[0].value =='AdditionalQueryables')
+				if (nodes[i].attributes[0].value =='SupportedISOQueryables' || 
+				        nodes[i].attributes[0].value =='SupportedQueryables' || 
+				        nodes[i].attributes[0].value =='AdditionalQueryables')
 				for(var j=0; j < nodes[i].childNodes.length; j++) {
 					if (nodes[i].childNodes[j].nodeName == 'ows:Value'){
 					    queryables.push(nodes[i].childNodes[j].firstChild.nodeValue)

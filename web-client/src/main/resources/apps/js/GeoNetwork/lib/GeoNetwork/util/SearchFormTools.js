@@ -292,7 +292,7 @@ GeoNetwork.util.SearchFormTools = {
             items.push(GeoNetwork.util.SearchFormTools.getRequestedLanguageCombo(services.getIsoLanguages));
         }
         
-        items.push(GeoNetwork.util.SearchFormTools.getSortByCombo());
+        items.push(GeoNetwork.util.SearchFormTools.getSortByCombo(config.sortBy));
         
         items.push(new Ext.form.ComboBox({
             id: 'E_hitsperpage',
@@ -387,7 +387,15 @@ GeoNetwork.util.SearchFormTools = {
             inputType: 'hidden',
             linkedCombo: combo
         });
+        
+        // Set default value
         combo.setValue(defaultValue || 'relevance#');
+        if (defaultValue) {
+            var tokens = defaultValue.split('#');
+            sortByField.setValue(tokens[0]);
+            sortOrderField.setValue(tokens[1]);
+        }
+        
         return [sortByField, sortOrderField, combo];
     },
     /** api:method[getSortByStore]
@@ -485,7 +493,8 @@ GeoNetwork.util.SearchFormTools = {
                 store: catStore,
                 valueField: 'id',
                 displayField: 'name',
-                tpl: tpl
+                tpl: tpl,
+                listWidth: 'width:auto'
             };
         
         if (multi) {
@@ -519,7 +528,8 @@ GeoNetwork.util.SearchFormTools = {
                 store: groupStore,
                 valueField: 'id',
                 displayField: 'name',
-                tpl: tpl
+                tpl: tpl,
+                listWidth: 'width:auto'
             };
         if (multi) {
             Ext.apply(config, {
@@ -559,7 +569,8 @@ GeoNetwork.util.SearchFormTools = {
                     data: [['n', OpenLayers.i18n('md')], ['y', OpenLayers.i18n('tpl')]]
                 }),
                 valueField: 'id',
-                displayField: 'name'
+                displayField: 'name',
+                listWidth: 'width:auto'
             };
         if (multi) {
             Ext.apply(config, {
@@ -595,7 +606,8 @@ GeoNetwork.util.SearchFormTools = {
             store: store,
             valueField: 'name',
             displayField: 'name',
-            tpl: tpl
+            tpl: tpl,
+            listWidth: 'width:auto'
         };
         if (multi) {
             var displaytpl = (imgUrl ?

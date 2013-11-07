@@ -23,12 +23,6 @@
 
 package jeeves.server.dispatchers;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jeeves.constants.ConfigFile;
-import jeeves.utils.Xml;
-
 import org.jdom.Element;
 
 //=============================================================================

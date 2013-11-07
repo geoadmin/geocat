@@ -96,7 +96,6 @@
       <!--Swisstopo specific -->
       <field name="_catalog" tagName="catalog"/>
       <field name="_userinfo" tagName="userinfo"/>
-      <field name="_isPublishedToAll" tagName="isPublishedToAll"/>
       <field name="_ownername" tagName="ownername"/>
       <field name="_cat" tagName="category"/>
       <field name="_valid" tagName="valid"/>
@@ -106,6 +105,7 @@
       <field name="_valid_xsd" tagName="valid_xsd"/>
       <field name="_selected" tagName="selected"/>
       <field name="_source" tagName="source"/>
+      <field name="_status" tagName="status"/>
       <field name="_edit" tagName="edit"/>
       <field name="_title" tagName="_title" multilingualSortField="true"/>
       <field name="title" tagName="title" multilingualSortField="true"/>
@@ -135,6 +135,7 @@
       <field name="groupLogoUuid" tagName="groupLogoUuid"/>
       <field name="wmsuri" tagName="wms_uri"/>
       <field name="revisionDate" tagName="revisionDate"/>
+      <field name="_op0" tagName="publishedForGroup"/>
     </dumpFields>
   </search>
 

@@ -4,23 +4,25 @@
 	xmlns:exslt="http://exslt.org/common">
 
 
-    <xsl:variable name="langs">
-        <langs>
-            <!-- TODO : add a master lang param to be able to compare to other lang than eng <eng master="true"/> -->
-            <fre/>
-            <spa/>
-            <chi/>
-            <ara/>
-            <ger/>
-            <ita/>
-        	<rus/>
-        	<dut/>
-        	<por/>
+	<xsl:variable name="langs">
+		<langs>
+			<!-- TODO : add a master lang param to be able to compare to other lang than eng <eng master="true"/> -->
+			<fre/>
+			<spa/>
+			<chi/>
+			<ara/>
+			<ger/>
+			<ita/>
+			<rus/>
+			<dut/>
+			<por/>
 			<cat/>
-            <fin/>
-            <nor/>
-        </langs>
-    </xsl:variable>
+			<fin/>
+			<nor/>
+			<tur/>
+			<pol/> 
+		</langs>
+	</xsl:variable>
 
 	<xsl:template match="/">
 		<h1>Test i18n</h1>
@@ -56,10 +58,10 @@
 
 		<table>
 			<th>
-			     <td width="20px"><b>eng</b></td>
-			     <xsl:for-each select="exslt:node-set($langs)/langs/*">
-			             <td width="20px"><b><xsl:value-of select="name(.)"/></b></td>
-			     </xsl:for-each>
+				<td width="20px"><b>eng</b></td>
+				<xsl:for-each select="exslt:node-set($langs)/langs/*">
+				<td width="20px"><b><xsl:value-of select="name(.)"/></b></td>
+				</xsl:for-each>
 			</th>
 			
 			<!-- FIXME: This loop over xml loc files is not really elegant :( -->
@@ -84,7 +86,7 @@
 				<xsl:for-each select="//about.eng/*">
 					<tr>
 						<xsl:call-template name="checki18n">
-                            <xsl:with-param name="elem" select="." />
+							<xsl:with-param name="elem" select="." />
 							<xsl:with-param name="file">about</xsl:with-param>
 						</xsl:call-template>
 					</tr>
@@ -97,7 +99,7 @@
 				<xsl:for-each select="//config.eng/*">
 					<tr>
 						<xsl:call-template name="checki18n">
-                            <xsl:with-param name="elem" select="." />
+							<xsl:with-param name="elem" select="." />
 							<xsl:with-param name="file">config</xsl:with-param>
 						</xsl:call-template>
 					</tr>
@@ -110,7 +112,7 @@
 				<xsl:for-each select="//harvesting.eng/*">
 					<tr>
 						<xsl:call-template name="checki18n">
-                            <xsl:with-param name="elem" select="." />
+							<xsl:with-param name="elem" select="." />
 							<xsl:with-param name="file">harvesting</xsl:with-param>
 						</xsl:call-template>
 					</tr>
@@ -120,33 +122,34 @@
 		</table>
 
 
-        <p>
-		TODO:
-		<ul>
-			<li>Check all elements exist somewhere in XSL files</li>
-			<li>Check all loc files</li>
-            <li>Add a master lang parameter</li>
-		</ul>
-        </p>
+		<p>
+			TODO:
+			<ul>
+				<li>Check all elements exist somewhere in XSL files</li>
+				<li>Check all loc files</li>
+				<li>Add a master lang parameter</li>
+			</ul>
+		</p>
 	</xsl:template>
 
 
 
 	<xsl:template name="checki18n">
 		<xsl:param name="elem"></xsl:param>
-        <xsl:param name="file"></xsl:param>
+		<xsl:param name="file"></xsl:param>
 		
-        <xsl:variable name="tag" select="name($elem)" />
+		<xsl:variable name="tag" select="name($elem)" />
 		<xsl:variable name="string" select="$elem/." />
-        <xsl:variable name="value" select="$elem/@value" />
-        <xsl:variable name="id" select="$elem/@id" />
-        <xsl:variable name="type" select="$elem/@type" />
+		<xsl:variable name="value" select="$elem/@value" />
+		<xsl:variable name="id" select="$elem/@id" />
+		<xsl:variable name="type" select="$elem/@type" />
+		<xsl:variable name="root" select="//*" />
 
 		
 		<td>
 			<xsl:attribute name="title">
-		          <xsl:value-of select="$string" />
-		    </xsl:attribute>
+				<xsl:value-of select="$string" />
+			</xsl:attribute>
 
 			<xsl:value-of select="$tag" />
 			<xsl:if test="$value">
@@ -304,37 +307,27 @@
 					select="exslt:node-set(//*[name(.)=concat($file, '.cat')])/*/*" />
 			</xsl:call-template>
 		</td>
-        <td>
-            <xsl:call-template name="compare">
-                <xsl:with-param name="tag" select="$tag" />
-                <xsl:with-param name="string" select="$string" />
-                <xsl:with-param name="value" select="$value" />
-                <xsl:with-param name="type" select="$type" />
-                <xsl:with-param name="id" select="$id" />
-                <xsl:with-param name="loctag1"
-                                select="exslt:node-set(//*[name(.)=concat($file, '.fin')])/*" />
-                <xsl:with-param name="loctag2"
-                                select="exslt:node-set(//*[name(.)=concat($file, '.fin')])/*/*" />
-            </xsl:call-template>
-        </td>
-        <td>
-            <xsl:call-template name="compare">
-                <xsl:with-param name="tag" select="$tag" />
-                <xsl:with-param name="string" select="$string" />
-                <xsl:with-param name="value" select="$value" />
-                <xsl:with-param name="type" select="$type" />
-                <xsl:with-param name="id" select="$id" />
-                <xsl:with-param name="loctag1"
-                                select="exslt:node-set(//*[name(.)=concat($file, '.nor')])/*" />
-                <xsl:with-param name="loctag2"
-                                select="exslt:node-set(//*[name(.)=concat($file, '.nor')])/*/*" />
-            </xsl:call-template>
-        </td>
-    </xsl:template>
 
+		<td title='eng' bgcolor="green"></td>
 
-
-
+		<xsl:for-each select="exslt:node-set($langs)/langs/*">
+			<xsl:variable name="la"><xsl:value-of select="concat($file, '.', name(.))"/></xsl:variable>
+			<xsl:element name="td">
+				<xsl:attribute name="title">
+					<xsl:value-of select="name(.)"/>
+				</xsl:attribute>
+				<xsl:call-template name="compare">
+					<xsl:with-param name="tag" select="$tag" />
+					<xsl:with-param name="string" select="$string" />
+					<xsl:with-param name="value" select="$value" />
+					<xsl:with-param name="type" select="$type" />
+					<xsl:with-param name="id" select="$id" />
+					<xsl:with-param name="loctag1" select="exslt:node-set($root)[name(.)=$la]/*" />
+					<xsl:with-param name="loctag2" select="exslt:node-set($root)[name(.)=$la]/*/*" />
+				</xsl:call-template>
+			</xsl:element>
+		</xsl:for-each> 
+	</xsl:template>
 
 	<xsl:template name="compare">
 		<xsl:param name="tag"></xsl:param>
@@ -363,9 +356,9 @@
 			<xsl:otherwise>
 				<xsl:choose>
 					<xsl:when test="$string=''"><!-- Empty tag -->
-					   <xsl:attribute name="bgcolor">green</xsl:attribute>
-                    </xsl:when>
-                    <xsl:when test="count($loctag2[name(.)=$tag])=1">
+						<xsl:attribute name="bgcolor">green</xsl:attribute>
+					</xsl:when>
+					<xsl:when test="count($loctag2[name(.)=$tag])=1">
 						<xsl:choose>
 							<xsl:when
 								test="$loctag2[name(.)=$tag]/. = $string">
@@ -394,7 +387,6 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
 
 </xsl:stylesheet>
 

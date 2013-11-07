@@ -7,7 +7,17 @@
 	<Match>
 		<Class name="~.*\..*Test" />
 	</Match>
-	
+
+    <!-- 			Domain Exceptions 					-->
+	<Match>
+		<Class name="~org\.fao\.geonet\.domain\.\S+_$" />
+	</Match>
+    <!-- 			Oaipmh Exceptions 					-->
+	<Match>
+		<Class name="org.fao.oaipmh.util.ISODate" />
+		<Bug pattern="REC_CATCH_EXCEPTION" />
+	</Match>
+
 	<!--              Jeeves  Exceptions                 -->
 	<Match>
 		<Class name="jeeves.server.JeevesEngine" />
@@ -73,6 +83,10 @@
 		<Method name="processCQLTermNode"/>
 	</Match>
 	<Match>
+		<Class name="de.fzi.dbs.xml.transform.CachingTransformerFactory" />
+		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+	</Match>
+	<Match>
 		<Class name="org.fao.geonet.services.metadata.BatchVersion" />
 		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
 		<Method name="exec"/>
@@ -82,17 +96,18 @@
 		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
 		<Method name="serviceSpecificExec"/>
 	</Match>
-	<Match>
-		<Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" />
-	</Match>
-	
-	<Match>
-		<Or>
-			<Class name="org.fao.geonet.services.extent.ExtentManager" />
-			<Class name="org.fao.geonet.services.extent.Update" />
-		</Or>
-		<Bug pattern="LG_LOST_LOGGER_DUE_TO_WEAK_REFERENCE " />
-	</Match>
+    <Match>
+        <Class name="org.fao.geonet.DatabaseMigration" />
+        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
+        <Method name="newLookup"/>
+    </Match>
+    <Match>
+        <Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" />
+    </Match>
+    <Match>
+        <Class name="org.fao.geonet.services.ownership.OwnershipUtils$1" />
+    </Match>
+
 	
 <!-- The following bugs are hard to fix should be fixed because they can cause problems in servers with multiple geonetworks running -->	
 	<Match>
@@ -100,7 +115,6 @@
 			<Class name="org.fao.geonet.kernel.search.LuceneSearcher" />
 			<Class name="org.fao.geonet.kernel.search.spatial.SpatialIndexWriter" />
 			<Class name="org.fao.geonet.kernel.search.SearchManager" />
-			<Class name="org.fao.geonet.services.extent.ExtentManager" />
 		</Or>
 		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
 	</Match>

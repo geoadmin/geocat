@@ -1,22 +1,20 @@
 package jeeves.server.dispatchers.guiservices;
 
+import jeeves.XmlFileCacher;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.utils.Log;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import javax.servlet.ServletContext;
-
-import jeeves.JeevesJCS;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.XmlFileCacher;
-
-import org.apache.jcs.access.exception.CacheException;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-
+@Component
 public class XmlCacheManager {
     private static final String XML_FILE_CACHE_KEY = "XmlFile";
 	Map<String, Map<String, XmlFileCacher>> eternalCaches = new HashMap<String, Map<String, XmlFileCacher>>();
