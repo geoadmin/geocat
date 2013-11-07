@@ -417,7 +417,8 @@ public class DataManager {
                         try {
                             for(int i=beginIndex; i<beginIndex+count; i++) {
                                 try {
-                                    indexMetadata(dbms, ids.get(i).toString(), processSharedObjects, context, performValidation, false);
+                                    indexMetadata(dbms, ids.get(i).toString(), processSharedObjects, context, performValidation, false,
+                                            false);
                                 }
                                 catch (Exception e) {
                                     Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '"+ids.get(i)+"': "+e.getMessage()+"\n"+ Util.getStackTrace(e));
@@ -428,7 +429,7 @@ public class DataManager {
                         }
                     }
                     else {
-                        indexMetadata(dbms, ids.get(0), processSharedObjects, context, performValidation, false);
+                        indexMetadata(dbms, ids.get(0), processSharedObjects, context, performValidation, false, false);
                     }
                 }
                 finally {
@@ -448,17 +449,18 @@ public class DataManager {
         }
     }
     public void indexMetadata(Dbms dbms, String id, boolean processSharedObjects, ServiceContext servContext) throws Exception {
-        indexMetadata(dbms, id, processSharedObjects, servContext, false, false);
+        indexMetadata(dbms, id, processSharedObjects, servContext, false, false, false);
     }
     /**
      * TODO javadoc.
      *
+     *
      * @param dbms
      * @param id
-     * @param b 
+     * @param reloadXLinks
      * @throws Exception
      */
-	public void indexMetadata(Dbms dbms, String id, boolean processSharedObjects, ServiceContext servContext, boolean performValidation, boolean fastIndex) throws Exception {
+	public void indexMetadata(Dbms dbms, String id, boolean processSharedObjects, ServiceContext servContext, boolean performValidation, boolean fastIndex, boolean reloadXLinks) throws Exception {
         try {
             Vector<Element> moreFields = new Vector<Element>();
             int id$ = Integer.valueOf(id);
@@ -466,6 +468,11 @@ public class DataManager {
             // get metadata, extracting and indexing any xlinks
 
             Element md   = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, true, servContext);
+
+            if (reloadXLinks) {
+                Processor.detachXLink(md, servContext);
+
+            }
 
             // get metadata table fields
             String query = "SELECT schemaId, createDate, changeDate, source, isTemplate, root, " +
@@ -557,9 +564,8 @@ public class DataManager {
             //Swisstopo specific
             if (isHarvested.contains("n")) {
                 moreFields.add(SearchManager.makeField("_catalog",      groupOwner,      true, true));
-            } else {
-                moreFields.add(SearchManager.makeField("_catalog",      source,      true, true));
             }
+            moreFields.add(SearchManager.makeField("_catalog",      source,      true, true));
             moreFields.add(SearchManager.makeField("_isTemplate",  isTemplate,  true, true));
             moreFields.add(SearchManager.makeField("_title",       title,       true, true));
             moreFields.add(SearchManager.makeField("_uuid",        uuid,        true, true));
@@ -647,6 +653,7 @@ public class DataManager {
             }
             else {
                 String isValid = "1";
+
                 for (Object elem : validationInfo) {
                     Element vi = (Element) elem;
                     String type = vi.getChildText("valtype");
@@ -1917,7 +1924,7 @@ public class DataManager {
             if(index) {
                 //--- update search criteria
                 boolean processSharedObjects = false;
-                indexMetadata(dbms, id, processSharedObjects, servContext, true, false);
+                indexMetadata(dbms, id, processSharedObjects, servContext, true, false, false);
             }
 		}
 		return true;
@@ -3196,7 +3203,7 @@ public class DataManager {
      * @return
      * @throws Exception
      */
-	private Element buildInfoElem(ServiceContext context, String id, String version) throws Exception {
+	public Element buildInfoElem(ServiceContext context, String id, String version) throws Exception {
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String query ="SELECT schemaId, createDate, changeDate, source, isTemplate, title, "+
@@ -3775,7 +3782,7 @@ public class DataManager {
                 String updateQuery = "UPDATE Metadata SET popularity = popularity +1 WHERE id = ?";
                 Integer iId = Integer.valueOf(id);
                 dbms.execute(updateQuery, iId);
-            indexMetadata(dbms, id, false, srvContext, false, false);
+            indexMetadata(dbms, id, false, srvContext, false, false, false);
         }
         catch (Exception e) {
                 Log.error(Geonet.DATA_MANAGER, "The following exception is ignored: " + e.getMessage());

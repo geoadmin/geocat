@@ -377,12 +377,12 @@ public final class ContactsStrategy extends ReplacementStrategy
         return email != null && email.trim().length() > 0;
     }
 
-    public Element findNonValidated(UserSession session) throws Exception
+    public Element find(UserSession session, boolean validated) throws Exception
     {
+
         final String query = "SELECT id,email,username,name,surname FROM Users WHERE profile='" + SHARED
-                + "' AND validated='n'";
-        @SuppressWarnings("unchecked")
-		List<Element> results = _dbms.select(query).getChildren("record");
+                + "' AND validated=?";
+        List<Element> results = _dbms.select(query, validated ? 'y' : 'n').getChildren("record");
         Element category = new Element(REPORT_ROOT);
         for (Element result : results) {
             Element e = new Element(REPORT_ELEMENT);
@@ -391,6 +391,8 @@ public final class ContactsStrategy extends ReplacementStrategy
 
             addChild(e, REPORT_URL, url);
             addChild(e, REPORT_ID, id);
+            addChild(e, REPORT_TYPE, "contact");
+            addChild(e, REPORT_XLINK, createXlinkHref(id, session, "") + "*");
             String email = result.getChildTextTrim("email");
             String username = result.getChildTextTrim("username");
             String name = result.getChildTextTrim("name");
@@ -405,6 +407,7 @@ public final class ContactsStrategy extends ReplacementStrategy
             desc = name + " " + surname + " &lt;" + desc + "&gt;";
 
             addChild(e, REPORT_DESC, desc);
+            addChild(e, REPORT_SEARCH, id+desc);
 
             category.addContent(e);
         }
@@ -421,7 +424,7 @@ public final class ContactsStrategy extends ReplacementStrategy
         dbms.execute("DELETE FROM UserGroups WHERE " + whereClause);
     }
 
-    public String createXlinkHref(String id, UserSession session, String strategySpecificData)
+    public String createXlinkHref(String id, UserSession session, String notRequired)
     {
         return XLink.LOCAL_PROTOCOL+"xml.user.get?id=" + id;
     }

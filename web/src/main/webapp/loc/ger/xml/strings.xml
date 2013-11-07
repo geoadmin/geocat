@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
+    <createNewSharedObject js="true">Bearbeite %objtype%</createNewSharedObject>
+    <noRecords js='true'>Keine Metadaten gefunden</noRecords>
+    <edit js='true'>Bearbeiten</edit>
+    <searchView js='true'>Suche</searchView>
+    <actions js='true'>Aktionen</actions>
+    <contacts js='true'>Kontakte</contacts>
+    <SharedObjects js='true'>Wiederverwendbare Objekte</SharedObjects>
+    <actions js='true'>Aktionen</actions>
+    <reusable_confirmValidate js="true">Bestätigen Sie die Validierung</reusable_confirmValidate>
+    <reusable_confirmDelete js="true">Bestätigen Sie das Löschen</reusable_confirmDelete>
+    <reusable_confirmDeleteMsg js="true">Sind Sie sicher, dass Sie das ausgewählte Objekt löschen möchten?</reusable_confirmDeleteMsg>
+    <reusable_confirmValidateMsg js="true">Sind Sie sicher, dass Sie das ausgewählte Objekt validieren möchten?</reusable_confirmValidateMsg>
+    <reusable_validated js="true">Bestätigt</reusable_validated>
+    <reusable_nonValidated js="true">Unbestätigt</reusable_nonValidated>
+    <reusable_nonValidTitle js="true">Wiederverwendbare Objekte</reusable_nonValidTitle>
+    <reusable_nonValidDesc js="true">Wiederverwendbare Objekte bestätigen/ablehnen</reusable_nonValidDesc>
+    <reusable_rejectTitle js="true">Nachricht zur Ablehnung von wiederverwendbaren Objekten</reusable_rejectTitle>
+    <reusable_rejectDefaultMsg js="true">Wählen Sie ein anderes wiederverwendbares Objekt...</reusable_rejectDefaultMsg>
+    <archived>Archiviert</archived>
+    <performingOperation js="true">Die Operation wird ausgeführt. Bitte warten...</performingOperation>
+    <description js="true">Beschreibung</description>
+
 	<local._none_.non_validated>geocat.ch Thesaurus (nicht validiert)</local._none_.non_validated>
 	<local._none_.geocat.ch>geocat.ch Thesaurus</local._none_.geocat.ch>
 	<external.theme.gemet-theme>GEMET Themen</external.theme.gemet-theme>
@@ -137,27 +159,19 @@
         -->
 	<statusSendEmail>Change log message: %s\r\n\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
 
-    <reject>Ablehnen</reject>
+    <reject js='true'>Ablehnen</reject>
     <rejected>abgelehnt</rejected>
     <replaceSharedObjects>Wiederverwendbare Elemente bestätigen</replaceSharedObjects>
     <format>
         <management>Datenformate</management>
         <manDes>Hinzufügen/Bearbeiten/Löschen und Anzeigen der Datenformate</manDes>
     </format>
-    <formats>Format</formats>
-    <extents>Ausdehnung</extents>
-    <deleted>Gelöscht</deleted>
+    <formats js='true'>Format</formats>
+    <extents js='true'>Ausdehnung</extents>
+    <deleted js='true'>Gelöscht</deleted>
     <insufficient.privileges.import.replace>Es gibt einen Metadatensatz mit diesem Identifikator, der nicht ersetzt werden kann, da Sie nicht über die nötigen Rechte verfügen.</insufficient.privileges.import.replace>
     <updateDatasetTitle>Datensatz updaten</updateDatasetTitle>
     <updateDatasetMsg>\'Datensatz updaten\' muss angekreuzt sein, um eine online Ressource bei Metadaten anzufügen, wo man kein Schreibrecht hat</updateDatasetMsg>
-    <reusable>
-        <validated>Bestätigt</validated>
-        <nonValidated>Unbestätigt</nonValidated>
-        <nonValidTitle>Unbestätigte wiederverwendbare Objekte</nonValidTitle>
-        <nonValidDesc>Wiederverwendbare Objekte bestätigen/ablehnen</nonValidDesc>
-        <rejectTitle>Nachricht zur Ablehnung von wiederverwendbaren Objekten</rejectTitle>
-        <rejectDefaultMsg>Wählen Sie ein anderes wiederverwendbares Objekt...</rejectDefaultMsg>
-    </reusable>
     <deletedSharedObject>
         <msg>Automatisch versendetes E-mail.
 Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgend finden Sie die Liste der betroffenen Metadatensätze und die Begründung der Ablehnung. Wir bitten Sie, diese Metadaten anzupassen und erneut zu publizieren. Nehmen Sie bei Fragen bitte direkt mit uns Kontakt auf geocat@swisstopo.ch.
@@ -570,10 +584,11 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<createIfNotExistButton js="true">Einen neuen Metadatensatz erstellen</createIfNotExistButton>
 	<associateService js="true"> Dienst-Metadaten verlinken</associateService>
 	<associateDataset js="true"> Daten-Metadaten verlinken</associateDataset>
+	<associateSibling js="true"> Geschwister-Metadaten verlinken</associateSibling>
+	<associateSiblingText js="true">Suchen Sie die Geschwister hinzufügen möchten. Doppelklicken Sie dann auf Beziehung klicken Spalte und geben Sie die &lt;br/&gt;Beziehung für jedes Geschwister.</associateSiblingText>
 	<associateServiceHelp>Um Dienst-Metadaten zu verlinken: nach Dienst-Metadaten suchen und Layername angeben.</associateServiceHelp>
 	<associateDatasetHelp>Um eine Beziehung zu einem Datensatz herzustellen, gehen Sie zu "ISO-Ansicht" &gt; Basisinformation und definieren Sie die "bezieht sich auf"-Elemente (Operates on).</associateDatasetHelp>
-
-	<addParent> Hinzufügen oder Aktualisieren eines Eltern-Metadatensatzes</addParent>
+	<addParent> Hinzufügen oder Aktualisieren eines Geschwister-Metadatensatzes</addParent>
 	<createAssoService>Eine Verbindung erstellen</createAssoService>
 	<updateMdd>Daten-Metadaten aktualisieren</updateMdd>
 	<datasetCreate>Einen Daten-Metadatensatz erstellen</datasetCreate>
@@ -583,12 +598,23 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<linkedParentMetadataHelp>Um eine Beziehung zu einem Eltern-Metadatensatz herzustellen, gehen Sie zu "ISO-Ansicht" &gt; Metadaten.</linkedParentMetadataHelp>
 	<linkedChildrenMetadata> Untergeordnete Metadaten:</linkedChildrenMetadata>
 	<linkedChildrenMetadataHelp>Liste der "Kinder" dieses Metadatensatzes</linkedChildrenMetadataHelp>
+	<linkedSiblingMetadata> Geschwister:</linkedSiblingMetadata>
+	<linkedSiblingMetadataHelp>Liste der Geschwister im Zusammenhang mit aktuellen Metadatensatz.</linkedSiblingMetadataHelp>
 	<linkedDatasetMetadata> Verlinkte Metadaten:</linkedDatasetMetadata>
 	<serviceCreate>Einen neuen Dienst-Metadatensatz erstellen</serviceCreate>
 	<parentSearch js="true">Nach Eltern-Datensatz suchen</parentSearch>
 	<linkedMetadataSelectionWindowTitle js="true">Metadaten verlinken</linkedMetadataSelectionWindowTitle>
+	<relatedMetadataTitle js="true">Metadaten verlinken</relatedMetadataTitle>
 	<searchText js="true">Alle Felder</searchText>
 	<mdTitle js="true">Titel der Metadaten</mdTitle>
+	<selectRelation js="true">Doppelklicken Sie auf Beziehung wählen</selectRelation>
+	<parent js="true">Eltern</parent>
+	<source js="true">Source</source>
+	<sourceLabel js="true">Source</sourceLabel>
+	<crossReference js="true">Cross Reference</crossReference>
+	<partOfSeamlessDatabase js="true">Part of Seamless Database</partOfSeamlessDatabase>
+	<stereoMate js="true">Stereo Mate</stereoMate>
+	<relationships js="true">Beziehungen</relationships>
 	<createRelation js="true">Verbindung erstellen</createRelation>
 	<export js="true">Export</export>
 	<exportText>Export (TXT)</exportText>	
@@ -609,6 +635,7 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<rateMetadataFailed js="true">Kann die Metadaten nicht bewerten.</rateMetadataFailed>
 	<error js="true">Fehler</error>
 	<errors>Fehler</errors>
+	<errorNotSelected js="true">Sie müssen mindestens ein Element auswählen.</errorNotSelected>
 	<northSouth js="true">Nord &lt; Süd</northSouth>
 	<north90 js="true">Nord &gt; 90 Grad</north90>
 	<south90 js="true">Süd &lt; -90 Grad</south90>
@@ -641,7 +668,7 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	
 	<about>Über</about>
 	<abstract js="true">Zusammenfassung</abstract>
-	<accept>Abschicken</accept>
+	<accept js="true">Abschicken</accept>
 	<actionOnSelect>Aktionen für ausgwählte Metadaten</actionOnSelect>
 	<add js="true">hinzufügen</add>
 	<addNewMetadata>Neue Metadaten</addNewMetadata>
@@ -684,7 +711,7 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<browset>Grafik Typ durchsuchen</browset>
 	<byGroup>Nach Gruppe</byGroup>
 	<byPackage>Nach Paket</byPackage>
-	<cancel>Abbrechen</cancel>
+	<cancel js="true">Abbrechen</cancel>
 	<categories>Kategorien</categories>
 	<category js="true">Kategorie</category>
 	<categoryManagement>Kategorie Management</categoryManagement>
@@ -925,7 +952,7 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<metadata.admin.index.rebuildxlinks.desc>XLink Cache leeren und Index von Daten mit XLinks neu aufbauen</metadata.admin.index.rebuildxlinks.desc>
 
 	<lucene.config.reload>Lucene Konfiguration neu laden</lucene.config.reload>
-	<reload>Neu laden</reload>
+	<reload js="true">Neu laden</reload>
 	<rebuildxlinks>XLinks neu aufbauen</rebuildxlinks>
 	<doYouReallyWantToDoThis js="true">Diese Operation kann bei grossen Katalogen einige Zeit in Anspruch nehmen und sollte nicht während Spitzenzeiten ausgeführt werden. Weiterfahren?</doYouReallyWantToDoThis>
 	<optimize>Optimisieren</optimize>
@@ -1179,7 +1206,7 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<userPw>Passwort ändern</userPw>
 	<userPwDes>Benutzerpasswort für Metadatenkatalog ändern</userPwDes>
 	<uuidAction>Import Aktionen:</uuidAction>
-	<validate>Validieren</validate>
+	<validate js='true'>Validieren</validate>
 	<assign>Diesem Katalog zuteilen</assign>
 	<validityBegins>Gültigkeit ab</validityBegins>
 	<validityEnds>und endet</validityEnds>

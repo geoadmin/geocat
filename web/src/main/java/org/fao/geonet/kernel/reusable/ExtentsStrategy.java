@@ -103,7 +103,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
 
     public static final Envelope DEFAULT_BBOX = new Envelope(5.5, 10.5, 45.5, 48);
     public static final String NON_VALIDATED_TYPE = "gn:non_validated";
-    private static final String XLINK_TYPE = "gn:xlinks";
+    public static final String XLINK_TYPE = "gn:xlinks";
 
     //private final String _baseURL;
     private final ExtentManager _extentMan;
@@ -496,8 +496,14 @@ public final class ExtentsStrategy extends ReplacementStrategy {
 
     }
 
-    public Element findNonValidated(UserSession session) throws Exception {
-        FeatureType featureType = _extentMan.getSource().getFeatureType(NON_VALIDATED_TYPE);
+    public Element find(UserSession session, boolean validated) throws Exception {
+        FeatureType featureType;
+        if (validated) {
+            featureType = _extentMan.getSource().getFeatureType(XLINK_TYPE);
+        } else {
+            featureType = _extentMan.getSource().getFeatureType(NON_VALIDATED_TYPE);
+        }
+
         FeatureSource<SimpleFeatureType, SimpleFeature> featureSource = featureType.getFeatureSource();
 
         String[] properties = { featureType.idColumn, featureType.descColumn, featureType.geoIdColumn };
@@ -516,6 +522,8 @@ public final class ExtentsStrategy extends ReplacementStrategy {
 
                 addChild(e, REPORT_URL, url);
                 addChild(e, REPORT_ID, id);
+                addChild(e, REPORT_TYPE, "extent");
+                addChild(e, REPORT_XLINK, createXlinkHref(id, session, featureType.typename) + "*");
 
                 Object att = feature.getAttribute(featureType.descColumn);
                 String desc = "No description";
@@ -529,10 +537,10 @@ public final class ExtentsStrategy extends ReplacementStrategy {
                 if (att != null) {
                     String geoIdAt = ExtentHelper.decodeDescription(att.toString());
                     String geoId = LangUtils.getTranslation(geoIdAt, _currentLocale);
-                    addChild(e, REPORT_DESC, desc + " &lt;" + geoId + "&gt;");
-                } else {
-                    addChild(e, REPORT_DESC, desc);
+                    desc = desc + " &lt;" + geoId + "&gt;";
                 }
+                addChild(e, REPORT_DESC, desc);
+                addChild(e, REPORT_SEARCH, id+desc);
 
                 extents.addContent(e);
             }

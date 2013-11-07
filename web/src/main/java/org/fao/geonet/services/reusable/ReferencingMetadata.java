@@ -59,6 +59,7 @@ public class ReferencingMetadata implements Service
 
         String id = Util.getParam(params, "id");
         String type = Util.getParam(params, "type");
+        boolean validated = Util.getParam(params, "validated", false);
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
         List<String> fields = new LinkedList<String>();
@@ -67,19 +68,21 @@ public class ReferencingMetadata implements Service
             fields.addAll(Arrays.asList(DeletedObjects.getLuceneIndexField()));
             idConverter= ReplacementStrategy.ID_FUNC;
         } else {
-
             final ReplacementStrategy replacementStrategy = Utils.strategy(ReusableTypes.valueOf(type), context);
-            fields.addAll(Arrays.asList(replacementStrategy.getInvalidXlinkLuceneField()));
-            fields.addAll(Arrays.asList(replacementStrategy.getValidXlinkLuceneField()));
+            if (validated) {
+                fields.addAll(Arrays.asList(replacementStrategy.getValidXlinkLuceneField()));
+            } else {
+                fields.addAll(Arrays.asList(replacementStrategy.getInvalidXlinkLuceneField()));
+            }
             idConverter=replacementStrategy.numericIdToConcreteId(context.getUserSession());
         }
 
-        Set<MetadataRecord> md = Utils.getReferencingMetadata(context, fields, id, true,idConverter);
-        Element reponse = new Element("reponse");
+        Set<MetadataRecord> md = Utils.getReferencingMetadata(context, fields, id, true, idConverter);
+        Element response = new Element("response");
         for (MetadataRecord metadataRecord : md) {
             
             Element record = new Element("record");
-            reponse.addContent(record);
+            response.addContent(record);
 
             Utils.addChild(record, "id", metadataRecord.id);
 
@@ -102,7 +105,7 @@ public class ReferencingMetadata implements Service
             Utils.addChild(record, "email", metadataRecord.email(dbms));
         }
 
-        return reponse;
+        return response;
     }
 
     public void init(String appPath, ServiceConfig params) throws Exception

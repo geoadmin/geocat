@@ -80,7 +80,7 @@
             <BACK_REF name="MD_Identification"/>
         </GM03_2_1Comprehensive.Comprehensive.aggregationInfo_MD_Identification>
     </xsl:template>
-    
+
     <xsl:template mode="DataIdentification" match="gmd:MD_AggregateInformation">
         <aggregationInfo REF="?">
             <GM03_2_1Comprehensive.Comprehensive.MD_AggregateInformation TID="x{util:randomId()}">
@@ -311,10 +311,19 @@
 		    	normalize-space(.) = 'planningCadastre' or
 		    	normalize-space(.) = 'geoscientificInformation' or
 		    	normalize-space(.) = 'utilitiesCommunication' or
-		    	normalize-space(.) = 'environment'"></xsl:when>
+		    	normalize-space(.) = 'environment'">
+
+                    <!-- We don't want these in GM03 -->
+
+		    	</xsl:when>
+			<xsl:when test="not(contains(normalize-space(.), '_'))">
+                <GM03_2_1Core.Core.MD_TopicCategoryCode_>
+                    <value><xsl:value-of select="normalize-space(.)"/></value>
+                </GM03_2_1Core.Core.MD_TopicCategoryCode_>
+		    	</xsl:when>
     		<xsl:otherwise>
 		        <GM03_2_1Core.Core.MD_TopicCategoryCode_>
-		          <value><xsl:value-of select="normalize-space(gmd:MD_TopicCategoryCode)"/></value>
+		          <value><xsl:value-of select="concat(substring-before(normalize-space(.), '_'),'.',normalize-space(.))"/></value>
 		        </GM03_2_1Core.Core.MD_TopicCategoryCode_>
     		</xsl:otherwise>
 		</xsl:choose>
@@ -390,7 +399,7 @@
     </xsl:template>
 
 
-    <xsl:template mode="DataIdentification" match="che:CHE_SV_ServiceIdentification">
+    <xsl:template mode="DataIdentification" match="che:CHE_SV_ServiceIdentification | srv:SV_ServiceIdentification">
         <GM03_2_1Comprehensive.Comprehensive.SV_ServiceIdentification TID="x{util:randomId()}">
             <xsl:call-template name="dataIdentification" />
             <xsl:apply-templates mode="DataIdentification" select="srv:credit"/>

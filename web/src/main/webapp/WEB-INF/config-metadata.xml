@@ -870,7 +870,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
             </class>
             <error id="illegal-params" sheet="metadata-error.xsl"/>
         </service>
-        
+
          <service name="metadata.formatter.pdf">
            <class name=".services.metadata.format.Format">
                <param name="user_xsl_dir" value="user_xsl" />
@@ -885,6 +885,10 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 			<class name=".services.metadata.schema.Validation" />
 			<output sheet="metadata-schema-validation.xsl" />
 		</service>
+
+         <service name="metadata.validation.status">
+           <class name=".services.metadata.GetValidationStatus"/>
+       </service>
         
     </services>
 </geonet>

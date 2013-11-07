@@ -19,6 +19,9 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.GeoCatCh.Lang');
 
 GeoNetwork.GeoCatCh.Lang.de = {
+	'indexSelection': 'Index Selected Metadata',
+	'indexSelectionRunning': 'Metadata Index process running. <br/><br/> Number of metadata being indexed: ',
+	'indexSelectionError': 'Error starting indexing: <br/><br/>',
 	'any': '- Alle -',
 	'dataset': 'Daten',
 	'basicgeodata': 'Geobasisdaten',
@@ -39,7 +42,7 @@ GeoNetwork.GeoCatCh.Lang.de = {
 	'includearchived': 'inklusive Archiv',
 	'excludearchived': 'exklusive Archiv',
 	'onlyarchived': 'nur Archiv',
-	'owner': 'Owner',
+	'owner': 'Eigentümer',
 
 	'withinGeo': 'vollständig innerhalb oder gleich',
 	'intersectGeo': 'schneidet',

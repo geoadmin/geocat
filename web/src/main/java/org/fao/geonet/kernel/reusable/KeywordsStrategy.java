@@ -197,14 +197,22 @@ public final class KeywordsStrategy extends ReplacementStrategy
         return searcher;
     }
 
-    public Element findNonValidated(UserSession session) throws Exception
+    public Element find(UserSession session, boolean validated) throws Exception
     {
+
+        String thesaurusName;
+
+        if (validated) {
+            thesaurusName = GEOCAT_THESAURUS_NAME;
+        } else {
+            thesaurusName = NON_VALID_THESAURUS_NAME;
+        }
         KeywordsSearcher searcher = new KeywordsSearcher(_thesaurusMan);
 
         KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(IsoLanguagesMapper.getInstance());
         builder.addLang(_currentLocale)
         	.keyword("*", KeywordSearchType.MATCH, false)
-        	.addThesaurus(NON_VALID_THESAURUS_NAME);
+        	.addThesaurus(thesaurusName);
         KeywordSearchParams params = builder.build();
 		searcher.search(params);
         searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
@@ -216,15 +224,19 @@ public final class KeywordsStrategy extends ReplacementStrategy
           StringBuilder uriBuilder = new StringBuilder();
           uriBuilder.append(XLink.LOCAL_PROTOCOL);
           uriBuilder.append("thesaurus.admin?thesaurus=");
-          uriBuilder.append(NON_VALID_THESAURUS_NAME);
+          uriBuilder.append(thesaurusName);
           uriBuilder.append("&id=");
           uriBuilder.append(URLEncoder.encode(bean.getUriCode(), "UTF-8"));
           uriBuilder.append("&lang=");
           uriBuilder.append(bean.getDefaultLang());
-          
-          addChild(e, REPORT_ID, Integer.toString(bean.getId()));
+
+            final String id = Integer.toString(bean.getId());
+            addChild(e, REPORT_ID, id);
           addChild(e, REPORT_URL, uriBuilder.toString());
+          addChild(e, REPORT_TYPE, "keyword");
+          addChild(e, REPORT_XLINK, createXlinkHref(id, session, bean.getThesaurusKey()));
           addChild(e, REPORT_DESC, bean.getDefaultValue());
+          addChild(e, REPORT_SEARCH, id+bean.getDefaultValue());
           keywords.addContent(e);
         }
 
@@ -241,14 +253,15 @@ public final class KeywordsStrategy extends ReplacementStrategy
 
     public void performDelete(String[] ids, Dbms dbms, UserSession session, String thesaurusName) throws Exception
     {
-       Thesaurus thesaurus = _thesaurusMan.getThesaurusByName(validateName(thesaurusName));
 
         for (String id : ids) {
             try {
                 // A test to see if id is from a previous search or 
                 KeywordBean concept = lookup(id, session);
+                Thesaurus thesaurus = _thesaurusMan.getThesaurusByName(concept.getThesaurusKey());
                 thesaurus.removeElement(concept);
             } catch (NumberFormatException e) {
+                Thesaurus thesaurus = _thesaurusMan.getThesaurusByName(validateName(thesaurusName));
                 thesaurus.removeElement(NAMESPACE, extractCode(id));
             }
         }

@@ -182,14 +182,106 @@ public final class XslUtil {
      * 
      * @return metadata title or an empty string if Lucene index or uuid could not be found
      */
-    public static String getIndexField(Object appName, Object uuid, Object field, Object lang) {
-        String id = uuid.toString();
-        String fieldname = field.toString();
-        String language = (lang.toString().equals("") ? null : lang.toString());
-        try {
-            String fieldValue = LuceneSearcher.getMetadataFromIndex(language, id, fieldname);
-            if(fieldValue == null) {
-                return getIndexFieldById(appName,uuid,field,lang);
+    public static Object toHyperlinks(NodeInfo text) throws Exception {
+
+        String textString = writeXml(text.getRoot());
+
+        String linked = toHyperlinksSplitNodes(textString, text.getConfiguration());
+
+        if (linked.equals(text)) {
+            return text;
+        }
+        Object nodes = parse(text.getConfiguration(), linked, true);
+
+        if (nodes == null) {
+            return text;
+        } else {
+            return nodes;
+        }
+    }    
+    /**
+     * Sometimes nodes can have urls in their attributes (namespace declarations)
+     * So nodes themselves should not be processed.  Also if a node is a
+     * anchor node then the text within should not be processed.
+     * @param configuration
+     */
+    public static String toHyperlinksSplitNodes(String textString, Configuration configuration) throws Exception {
+        Matcher nodes = NODE_PATTERN.matcher(textString);
+        if (nodes.find()) {
+            StringBuilder builder = new StringBuilder();
+            boolean inAnchor = false;
+            int i = 0;
+            do {
+                String beforeNode = textString.substring(i, nodes.start());
+                if (inAnchor) {
+                    // node is an anchor so just break lines
+                    builder.append(insertBR(beforeNode));
+                } else {
+                    builder.append(toHyperlinksFromText(configuration,beforeNode));
+                }
+
+                if (!nodes.group().startsWith("<?xml")) {
+                    builder.append(nodes.group());
+                }
+
+                if (nodes.group().startsWith("<a ")) {
+                    // entering an anchor
+
+                    inAnchor = true;
+                }
+                if (inAnchor && nodes.group().matches("</\\s*a\\s+.*")) {
+                    // exiting anchor
+                    inAnchor = false;
+                }
+
+                i = nodes.end();
+            } while (nodes.find());
+
+            builder.append(toHyperlinksFromText(configuration,textString.substring(i)));
+
+            return builder.toString();
+        } else {
+            return toHyperlinksFromText(configuration,textString);
+        }
+    }
+
+    /**
+     * Add hyperlinks and split long lines
+     * @param configuration
+     */
+    private static String toHyperlinksFromText(Configuration configuration, String textString) throws Exception {
+        StringBuilder builder = new StringBuilder();
+
+        int i = 0;
+        Matcher matcher = LINK_PATTERN.matcher(textString);
+
+
+        if (!matcher.find()) return textString;
+
+        do {
+            builder.append(insertBR(textString.substring(i, matcher.start())));
+
+            String linkText = insertBR(matcher.group());
+            final int maxLength = 80;
+			if (linkText.length() > maxLength) {
+				StringBuilder newText = new StringBuilder();
+				newText.append(linkText.substring(0, maxLength));
+
+            	String remaining = linkText.substring(80);
+            	while (remaining.length() > maxLength) {
+            		newText.append("<br/>");
+            		newText.append(remaining.substring(0, maxLength));
+            		remaining = remaining.substring(80);
+            	}
+            	newText.append("<br/>");
+        		newText.append(remaining);
+            	linkText = newText.toString();
+            }
+            String tag = "<a href=\"" + matcher.group() + "\" target=\"_newtab\">" + linkText + "</a>";
+
+            // do a test to make sure the new text makes a valid document
+            if (parse(configuration, builder.toString() + tag + textString.substring(matcher.end()), false) != null) {
+                builder.append(tag);
             } else {
                 return fieldValue;
             }

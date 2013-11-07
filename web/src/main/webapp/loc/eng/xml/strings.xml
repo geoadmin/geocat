@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
-	<archived>Archived</archived>
+    <createNewSharedObject js="true">Edit %objtype%</createNewSharedObject>
+    <format_name js="true">Enter format name</format_name>
+    <format_version js="true">Enter format version</format_version>
+    <noRecords js='true'>No Records found</noRecords>
+    <edit js='true'>Edit</edit>
+    <searchView js='true'>Search</searchView>
+    <actions js='true'>Actions</actions>
+    <contacts js='true'>Contacts</contacts>
+    <SharedObjects js='true'>Shared Objects</SharedObjects>
+    <openInSearch>Search View</openInSearch>
+    <reusable_confirmValidate js="true">Confirm Validate Action</reusable_confirmValidate>
+    <reusable_confirmDelete js="true">Confirm Delete Action</reusable_confirmDelete>
+    <reusable_confirmDeleteMsg js="true">Are you sure you wish to delete the selected object?</reusable_confirmDeleteMsg>
+    <reusable_confirmValidateMsg js="true">Are you sure you wish to validate the selected object?</reusable_confirmValidateMsg>
+    <reusable_validated js="true">Validated</reusable_validated>
+    <reusable_nonValidated js="true">Non-validated</reusable_nonValidated>
+    <reusable_nonValidTitle js="true">Shared objects</reusable_nonValidTitle>
+    <reusable_nonValidDesc js="true">Validate/Reject shared objects</reusable_nonValidDesc>
+    <reusable_rejectTitle js="true">Rejection Message</reusable_rejectTitle>
+    <reusable_rejectDefaultMsg js="true">Choose another shared object...</reusable_rejectDefaultMsg>
+    <archived>Archived</archived>
+    <performingOperation js="true">Performing Operation.  Please wait...</performingOperation>
+    <description js="true">Description</description>
+
+
 	<local._none_.non_validated>geocat.ch Thesaurus (non validated)</local._none_.non_validated>
 	<local._none_.geocat.ch>geocat.ch Thesaurus</local._none_.geocat.ch>
 	<external.theme.gemet-theme>GEMET themes</external.theme.gemet-theme>
@@ -140,7 +164,7 @@
 	<monitoring.service.disk>Disk monitor</monitoring.service.disk>
 	<monitoring.freespace>Free space</monitoring.freespace>
 
-    <reject>Reject</reject>
+    <reject js='true'>Reject</reject>
     <rejected>Rejected</rejected>
     <replaceSharedObjects>Validate shared objects</replaceSharedObjects>
     <format>
@@ -148,19 +172,11 @@
            <manDes>Add/modify/delete and show distribution formats</manDes>
     </format>
     <formats>Formats</formats>
-    <extents>Extents</extents>
-    <deleted>Deleted</deleted>
+    <extents js='true'>Extents</extents>
+    <deleted js='true'>Deleted</deleted>
     <insufficient.privileges.import.replace>A metadata record exists that you cannot replace because of insufficient privileges</insufficient.privileges.import.replace>
     <updateDatasetTitle>Update dataset</updateDatasetTitle>
     <updateDatasetMsg>You have to check \'Update dataset metadata\' to add an onlineResource section for not allowed metadata</updateDatasetMsg>
-    <reusable>
-        <validated>Validated</validated>
-        <nonValidated>Non-validated</nonValidated>
-        <nonValidTitle>Non-validated shared objects</nonValidTitle>
-        <nonValidDesc>Validate/Reject shared objects that have not yet been validated</nonValidDesc>
-        <rejectTitle>Rejection Message</rejectTitle>
-        <rejectDefaultMsg>Choose another shared object...</rejectDefaultMsg>
-    </reusable>
     <deletedSharedObject>
         <msg>Mail sent automatically.
     Shared metadata elements have been deleted that affect metadata document(s) that you own. The complete list of affected metadata objects are listed bellow. Please update the documents listed in this email.</msg>
@@ -592,10 +608,11 @@
 	<createIfNotExistButton js="true">Create a new metadata record</createIfNotExistButton>
 	<associateService js="true">Link service metadata</associateService>
 	<associateDataset js="true">Link dataset metadata</associateDataset>
+	<associateSibling js="true">Link sibling metadata</associateSibling>
+	<associateSiblingText js="true">Search the sibling you want to add. Then, double click on relationship column and specify the relationship for each sibling.</associateSiblingText>
 	<associateServiceHelp>To add a relation to a service metadata, search for service and define layer name.</associateServiceHelp>
 	<associateDatasetHelp>To add a relation to a dataset, go to ISO view > Identification section, and defined operates on elements.</associateDatasetHelp>
-
-	<addParent> Add or update parent metadata section</addParent>
+	<addParent> Add or update siblings metadata section</addParent>
 	<createAssoService>Create relation</createAssoService>
 	<updateMdd>Update dataset metadata</updateMdd>
 	<datasetCreate>Create dataset metadata</datasetCreate>
@@ -605,13 +622,24 @@
 	<linkedParentMetadataHelp>To add a relation to a parent, go to ISO view &gt; Metadata tab.</linkedParentMetadataHelp>
 	<linkedChildrenMetadata> Children metadata:</linkedChildrenMetadata>
 	<linkedChildrenMetadataHelp>List of children linked to current metadata record.</linkedChildrenMetadataHelp>
+	<linkedSiblingMetadata> Siblings:</linkedSiblingMetadata>
+	<linkedSiblingMetadataHelp>List of siblings linked to current metadata record.</linkedSiblingMetadataHelp>
 	<linkedDatasetMetadata> Related datasets:</linkedDatasetMetadata>
 	<serviceCreate>Create new service metadata</serviceCreate>
 	<parentSearch js="true">Search for a metadata record to set as parent of current record.</parentSearch>
 	<linkedMetadataSelectionWindowTitle js="true">Related metadata selection</linkedMetadataSelectionWindowTitle>
+	<relatedMetadataTitle js="true">Related metadata</relatedMetadataTitle>
 	<searchText js="true">Text search</searchText>
 	<mdTitle js="true">Metadata title</mdTitle>
+	<selectRelation js="true">Double click to select relationship</selectRelation>
 	<createRelation js="true">Create relation</createRelation>
+	<parent js="true">Parent</parent>
+	<source js="true">Source</source>
+	<sourceLabel js="true">Source</sourceLabel>
+	<crossReference js="true">Cross Reference</crossReference>
+	<partOfSeamlessDatabase js="true">Part of Seamless Database</partOfSeamlessDatabase>
+	<stereoMate js="true">Stereo Mate</stereoMate>
+	<relationships js="true">Relationships</relationships>
 	<export js="true">Export (ZIP)</export>
 	<exportText>Export (TXT)</exportText>
 	<addXMLFragment>Add from dictionary ...</addXMLFragment>
@@ -631,6 +659,7 @@
 	<rateMetadataFailed js="true">Cannot rate metadata.</rateMetadataFailed>
 	<error js="true">Error</error>
 	<errors>errors</errors>
+	<errorNotSelected js="true">You have to select at least one item.</errorNotSelected>
 	<northSouth js="true">North &lt; South</northSouth>
 	<north90 js="true">North &gt; 90 degrees</north90>
 	<south90 js="true">South &lt; -90 degrees</south90>
@@ -663,7 +692,7 @@
 	
 	<about>About</about>
 	<abstract js="true">Abstract</abstract>
-	<accept>Accept</accept>
+	<accept js="true">Accept</accept>
 	<actionOnSelect>actions on selection</actionOnSelect>
 	<add js="true">add</add>
 	<addNewMetadata>Add new metadata</addNewMetadata>
@@ -706,7 +735,7 @@
 	<browset>Browse Graphic File Type</browset>
 	<byGroup>By Group</byGroup>
 	<byPackage>By Package</byPackage>
-	<cancel>Cancel</cancel>
+	<cancel js="true">Cancel</cancel>
 	<categories>Categories</categories>
 	<category js="true">Category</category>
 	<categoryManagement>Category management</categoryManagement>
@@ -952,7 +981,7 @@
 	<metadata.admin.index.rebuildxlinks.desc>Clear XLink Cache and Rebuild Index of Records with XLinks</metadata.admin.index.rebuildxlinks.desc>
 
 	<lucene.config.reload>Reload Lucene configuration</lucene.config.reload>
-	<reload>Reload</reload>
+	<reload js="true">Reload</reload>
 	<rebuildxlinks>Rebuild XLinks</rebuildxlinks>
 	<doYouReallyWantToDoThis js="true">This operation may take some time on large catalogs and should not be done during peak usage. Continue?</doYouReallyWantToDoThis>
 	<optimize>Optimize</optimize>
@@ -1234,7 +1263,7 @@
 	<userPw>Change password</userPw>
 	<userPwDes>Allow current user to change password</userPwDes>
 	<uuidAction>Import actions:</uuidAction>
-	<validate>Validate</validate>
+	<validate js='true'>Validate</validate>
 	<assign>Assign to current catalog</assign>
 	<validityBegins>Validity begins</validityBegins>
 	<validityEnds>and ends</validityEnds>

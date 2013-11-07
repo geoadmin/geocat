@@ -131,6 +131,10 @@
 			<output sheet="home.xsl"/>
 		</service>
 
+		<service name="strings.js">
+			<output sheet="strings.xsl" contentType="application/json"/>
+		</service>
+
 		<service name="main.home">
 			<output sheet="main-page.xsl">
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
@@ -1145,6 +1149,11 @@
                 <call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
                 <call name="isoLang" class=".guiservices.isolanguages.Get" />
             </output>
+
+        <service name="metadata.selection.index">
+            <class name=".services.selection.Index">
+                <param name="maxToIndex" value="500" />
+            </class>
         </service>
 	  
 	  

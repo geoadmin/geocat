@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
+    <createNewSharedObject js="true">Edit %objtype%</createNewSharedObject>
+    <noRecords js='true'>Aucun enregistrement trouvé</noRecords>
+    <edit js='true'>Edition</edit>
+    <searchView js='true'>Recherche</searchView>
+    <actions js='true'>Actions</actions>
+    <contacts js='true'>Contacts</contacts>
+    <SharedObjects js='true'>Objets réutilisables</SharedObjects>
+    <actions js='true'>Actions</actions>
+    <reusable_confirmValidate js="true">Confirmer la validation</reusable_confirmValidate>
+    <reusable_confirmDelete js="true">Confirmer la suppression</reusable_confirmDelete>
+    <reusable_confirmDeleteMsg js="true">Etes-vous sûr de vouloir supprimer les objets sélectionnés?</reusable_confirmDeleteMsg>
+    <reusable_confirmValidateMsg js="true">Etes-vous sûr de vouloir valider les objets sélectionnés?</reusable_confirmValidateMsg>
+    <reusable_validated js="true">validé</reusable_validated>
+    <reusable_nonValidated js="true">non validé</reusable_nonValidated>
+    <reusable_nonValidTitle js="true">Gérer les objets réutilisables</reusable_nonValidTitle>
+    <reusable_nonValidDesc js="true">Valider/rejeter les objets réutilisables</reusable_nonValidDesc>
+    <reusable_rejectTitle js="true">Message de rejet</reusable_rejectTitle>
+    <reusable_rejectDefaultMsg js="true">Choisissez un autre objet réutilisable...</reusable_rejectDefaultMsg>
+    <archived>Archived</archived>
+    <performingOperation js="true">Performing Operation.  Please wait...</performingOperation>
+    <description js="true">Description</description>
+
 	<local._none_.non_validated>geocat.ch Thesaurus (non validié)</local._none_.non_validated>
 	<local._none_.geocat.ch>geocat.ch Thesaurus</local._none_.geocat.ch>
 	<external.theme.gemet-theme>GEMET themes</external.theme.gemet-theme>
@@ -126,27 +148,19 @@
     <monitoring.service.disk>Monitor du disque</monitoring.service.disk>
     <monitoring.freespace>Espace libre</monitoring.freespace>
 
-    <reject>Refuser</reject>
+    <reject js='true'>Refuser</reject>
     <rejected>rejeté</rejected>
     <replaceSharedObjects>Remplacer par des objets réutilisables</replaceSharedObjects>
     <format>
         <management>Gestion des formats de distribution</management>
         <manDes>Ajouter/modifier/supprimer des formats de distribution</manDes>
     </format>
-    <formats>Formats</formats>
-    <extents>Etendues</extents>
-    <deleted>Supprimé</deleted>
+    <formats js='true'>Formats</formats>
+    <extents js='true'>Etendues</extents>
+    <deleted js='true'>Supprimé</deleted>
     <insufficient.privileges.import.replace>Une métadonnée avec le même identifiant existe déjà. Vos privilèges ne suffisent pas pour la remplacer.</insufficient.privileges.import.replace>
     <updateDatasetTitle>Mettre à jour une MDD</updateDatasetTitle>
     <updateDatasetMsg>Il faut cocher \'Mettre à jour une MDD\' pour ajouter une section "ressource online" si on n\'a pas droit d\'édition sur la MDS</updateDatasetMsg>
-    <reusable>
-        <validated>validé</validated>
-        <nonValidated>non validé</nonValidated>
-        <nonValidTitle>Gérer les objets réutilisables non validés</nonValidTitle>
-        <nonValidDesc>Valider/rejeter les objets réutilisables non validés</nonValidDesc>
-        <rejectTitle>Message de rejet</rejectTitle>
-        <rejectDefaultMsg>Choisissez un autre objet réutilisable...</rejectDefaultMsg>
-    </reusable>
     <deletedSharedObject>
         <msg>Mail envoyé automatiquement.
 Des objets réutilisables que vous utilisez dans vos métadonnées ont été rejetés. Vous trouverez ci-contre la liste des métadonnées concernées et la raison du rejet. Nous vous prions de bien vouloir adapter ces métadonnées et de les republier. N&apos;hésitez pas à prendre contact avec nous en cas de questions: geocat@swisstopo.ch
@@ -579,6 +593,8 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<createIfNotExistButton js="true">Créer une nouvelle métadonnée</createIfNotExistButton>
 	<associateService js="true">Associer une métadonnée de service</associateService>
 	<associateDataset js="true">Associer une métadonnée de données</associateDataset>
+	<associateSibling js="true">Associer une métadonnée des fréres</associateSibling>
+	<associateSiblingText js="true">Rechercher le frère que vous souhaitez ajouter. Ensuite, double cliquez sur relation colonne et spécifier pour chaque frère.</associateSiblingText>
 	<associateServiceHelp>Pour associer une métadonnée de service, rechercher un service et choisir la couche associée.</associateServiceHelp>
 	<associateDatasetHelp>Pour associer une métadonnée de données, aller dans la vue ISO &gt; onglet Identification,
 		et définir l'élément "operates on".</associateDatasetHelp>
@@ -596,8 +612,17 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<serviceCreate>Créer une métadonnée de service</serviceCreate>
 	<parentSearch js="true">Chercher un parent pour la métadonnée en cours.</parentSearch>
 	<linkedMetadataSelectionWindowTitle js="true">Sélection des métadonnées associées</linkedMetadataSelectionWindowTitle>
+	<relatedMetadataTitle js="true">Métadonnées associées</relatedMetadataTitle>
 	<searchText js="true">Recherche libre</searchText>
 	<mdTitle js="true">Titre de la métadonnée</mdTitle>
+	<selectRelation js="true">Double-cliquez pour sélectionner relation</selectRelation>
+	<parent js="true">Père</parent>
+	<source js="true">Source</source>
+	<sourceLabel js="true">Source</sourceLabel>
+	<crossReference js="true">Cross Reference</crossReference>
+	<partOfSeamlessDatabase js="true">Part of Seamless Database</partOfSeamlessDatabase>
+	<stereoMate js="true">Stereo Mate</stereoMate>
+	<relationships js="true">Relations</relationships>
 	<createRelation js="true">Créer la relation</createRelation>
 	<export js="true">Exporter</export>
 	<exportText>Export (TXT)</exportText>
@@ -618,6 +643,7 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<rateMetadataFailed js="true">Impossible de noter la métadonnée.</rateMetadataFailed>
 	<error js="true">Erreur</error>
 	<errors>erreurs</errors>
+	<errorNotSelected js="true">Vous devez sélectionner au moins une chose.</errorNotSelected>
 	<northSouth js="true">Nord &lt; Sud</northSouth>
 	<north90 js="true">Nord &gt; 90 degrés</north90>
 	<south90 js="true">Sud &lt; -90 degrés</south90>
@@ -650,7 +676,7 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	
 	<about>A propos</about>
 	<abstract js="true">Résumé</abstract>
-	<accept>Accepter</accept>
+	<accept js="true">Accepter</accept>
 	<actionOnSelect>Actions sur la sélection</actionOnSelect>
 	<add js="true">Ajouter</add>
 	<addNewMetadata>Créer une nouvelle fiche de métadonnées</addNewMetadata>
@@ -693,7 +719,7 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<browset>Browse Graphic File Type</browset>
 	<byGroup>Vue ISO</byGroup>
 	<byPackage>Vue Avancée</byPackage>
-	<cancel>Annuler</cancel>
+	<cancel js="true">Annuler</cancel>
 	<categories>Catégories</categories>
 	<category js="true">Catégorie</category>
 	<categoryManagement>Gestion des catégories</categoryManagement>
@@ -937,7 +963,7 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<metadata.admin.index.rebuildxlinks.desc>Vider le cache d'XLink et reconstruire l'index</metadata.admin.index.rebuildxlinks.desc>
 
 	<lucene.config.reload>Recharger la configuration Lucene</lucene.config.reload>
-	<reload>Recharger</reload>
+	<reload js="true">Recharger</reload>
 	<rebuildxlinks>Reconstruire</rebuildxlinks>
 	<doYouReallyWantToDoThis js="true">Cette opération peut prendre du temps sur des catalogues volumineux. Il n'est pas recommandé de la lancer lors des périodes d'utilisation intense. Continuer ?</doYouReallyWantToDoThis>
 	<optimize>Optimiser</optimize>
@@ -1193,7 +1219,7 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<userPw>Modifier le mot de passe</userPw>
 	<userPwDes>Autoriser l'utilisateur en cours de changer le mot de passe</userPwDes>
 	<uuidAction>Actions à l'import :</uuidAction>
-	<validate>Valider</validate>
+	<validate js='true'>Valider</validate>
 	<assign>Affecter à ce catalogue</assign>
 	<validityBegins>Date de début de validité</validityBegins>
 	<validityEnds> et fin </validityEnds>

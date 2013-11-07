@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2009 GeoNetwork
  *
  * This file is part of GeoNetwork
@@ -19,6 +19,9 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.GeoCatCh.Lang');
 
 GeoNetwork.GeoCatCh.Lang.fr = {
+	'indexSelection': 'Index Selected Metadata',
+	'indexSelectionRunning': 'Metadata Index process running. <br/><br/> Number of metadata being indexed: ',
+	'indexSelectionError': 'Error starting indexing: <br/><br/>',
 	'any': '- Tous -',
 	'dataset': 'Données',
 	'basicgeodata': 'Geodonnées de base',

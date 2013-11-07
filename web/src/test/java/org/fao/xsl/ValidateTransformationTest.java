@@ -68,6 +68,15 @@ public class ValidateTransformationTest
     	rules.put("CHE_MD_Metadata/locale", new Exists(new Attribute("LanguageCode", "codeListValue", "roh")));
     	file = testFile(file, Control.GM03_2_ISO, rules, true);
     }
+    @Test
+    public void exportServiceMetadata() throws Throwable
+    {
+    	File file = new File(data, "iso19139/servicemetadata.xml");
+    	Multimap<String, Requirement> rules = ArrayListMultimap.create();
+    	rules.put("DATASECTION", new Not(new ContainsText("ERROR")));
+    	file = testFile(file, Control.ISO_GM03, rules, true);
+
+    }
 
     @Test
     public void smallGeom() throws Throwable
@@ -76,20 +85,34 @@ public class ValidateTransformationTest
 		Multimap<String, Requirement> rules = ArrayListMultimap.create();
 	    file = testFile(file, Control.GM03_2_ISO, rules, true);
     }
+
     @Test
     public void exportThesaurusTitle() throws Throwable
     {
-    	File file = new File(data, "non_validating/iso19139che/exportThesaurusTitleToGM03Bug.xml");
-    	Multimap<String, Requirement> rules = ArrayListMultimap.create();
-    	rules.put("GM03_2_1Core.Core.MD_Keywords", new Count(1, new Finder("thesaurus")));
-    	rules.put("GM03_2_1Core.Core.MD_Keywords", new Exists(new Attribute("thesaurus", "REF", null)));
-    	rules.put("TRANSFER/DATASECTION/GM03_2_1Comprehensive.Comprehensive", new Count(1, new Finder("GM03_2_1Core.Core.MD_Thesaurus/citation")));
-    	file = testFile(file, Control.ISO_GM03, rules, true);
-    	
-    	rules.clear();
-    	rules.put("CHE_MD_Metadata/identificationInfo/CHE_MD_DataIdentification", new Count(1, new Finder("descriptiveKeywords/MD_Keywords/keyword")));
-    	rules.put("CHE_MD_Metadata/identificationInfo/CHE_MD_DataIdentification", new Count(1, new Finder("descriptiveKeywords/MD_Keywords/thesaurusName/CI_Citation/title")));
-    	file = testFile(file, Control.GM03_2_ISO, rules, true);
+        File file = new File(data, "non_validating/iso19139che/exportThesaurusTitleToGM03Bug.xml");
+        Multimap<String, Requirement> rules = ArrayListMultimap.create();
+        rules.put("GM03_2_1Core.Core.MD_Keywords", new Count(1, new Finder("thesaurus")));
+        rules.put("GM03_2_1Core.Core.MD_Keywords", new Exists(new Attribute("thesaurus", "REF", null)));
+        rules.put("TRANSFER/DATASECTION/GM03_2_1Comprehensive.Comprehensive", new Count(1, new Finder("GM03_2_1Core.Core.MD_Thesaurus/citation")));
+        file = testFile(file, Control.ISO_GM03, rules, true);
+
+        rules.clear();
+        rules.put("CHE_MD_Metadata/identificationInfo/CHE_MD_DataIdentification", new Count(1, new Finder("descriptiveKeywords/MD_Keywords/keyword")));
+        rules.put("CHE_MD_Metadata/identificationInfo/CHE_MD_DataIdentification", new Count(1, new Finder("descriptiveKeywords/MD_Keywords/thesaurusName/CI_Citation/title")));
+        file = testFile(file, Control.GM03_2_ISO, rules, true);
+        System.out.println(file);
+    }
+
+    @Test
+    public void keywordGmdTitleInCorrectPlace() throws Throwable
+    {
+        File file = new File(data, "non_validating/iso19139che/exportThesaurusTitleToGM03Bug.xml");
+        Multimap<String, Requirement> rules = ArrayListMultimap.create();
+        file = testFile(file, Control.ISO_GM03, rules, true);
+
+        // ensure file validates
+        file = testFile(file, Control.GM03_2_ISO, rules, true);
+        System.out.println(file);
     }
 
     @Test
@@ -111,12 +134,18 @@ public class ValidateTransformationTest
         rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new DoesNotExist(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("geoscientificInformation"))));
         rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new DoesNotExist(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("environment"))));
         rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new DoesNotExist(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("utilitiesCommunication"))));
+        rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new Exists(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("planningCadastre.planningCadastre_Planning"))));
+        rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new Exists(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("imageryBaseMapsEarthCover.imageryBaseMapsEarthCover_BaseMaps"))));
+        rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new Exists(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("planningCadastre.planningCadastre_Planning"))));
+        rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new Exists(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("geoscientificInformation.geoscientificInformation_Geology"))));
+        rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new Exists(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("environment.environment_EnvironmentalProtection"))));
+        rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new Exists(new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value", new EqualText("utilitiesCommunication.utilitiesCommunication_Energy"))));
         rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification/topicCategory", new Count(7, new Finder("GM03_2_1Core.Core.MD_TopicCategoryCode_/value")));
         file = testFile(file, Control.ISO_GM03, rules, false);
         
         rules.clear();
         
-        file = testFile(file, Control.GM03_2_ISO, rules, false);
+        testFile(file, Control.GM03_2_ISO, rules, false);
         
     }
 

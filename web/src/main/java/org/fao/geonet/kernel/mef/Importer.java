@@ -393,7 +393,7 @@ public class Importer {
 					addOperations(context, dm, dbms, defaultPrivileges(), id.get(index), groupId);
 				}
 
-				dm.indexMetadata(dbms, id.get(index), true, context, true, false);
+				dm.indexMetadata(dbms, id.get(index), true, context, true, false, false);
 			}
 
             private Element defaultPrivileges() {

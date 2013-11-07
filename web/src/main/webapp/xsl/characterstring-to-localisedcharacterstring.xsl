@@ -38,8 +38,7 @@
 	che:organisationAcronym[gco:CharacterString] | 
 	gmd:statement[gco:CharacterString] | 
 	gmd:abstract[gco:CharacterString] | 
-	gmd:purpose[gco:CharacterString] | 
-	gmd:code[gco:CharacterString] | 
+	gmd:purpose[gco:CharacterString] |
 	gmd:keyword[gco:CharacterString] | 
 	gmd:issueIdentification[gco:CharacterString] | 
 	gmd:name[gco:CharacterString] | 
@@ -69,6 +68,7 @@
           </gmd:textGroup>
 	    </xsl:variable>
 		<xsl:variable name="mainLangText"><xsl:value-of select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = concat('#',$mainLang)]"/></xsl:variable>
+
 	    <xsl:choose>
 	       <xsl:when test="normalize-space($mainLangText) != ''">
 	       	    <xsl:copy>
@@ -81,7 +81,7 @@
 		          <xsl:attribute name="xsi:type">gmd:PT_FreeText_PropertyType</xsl:attribute>
 		           <gmd:PT_FreeText>
 		               <xsl:copy-of select="$textGroup"/>
-           		  	   <xsl:apply-templates mode="copy" select="gmd:PT_FreeText"/>
+           		  	   <xsl:apply-templates mode="copy" select="gmd:PT_FreeText/*"/>
 		           </gmd:PT_FreeText>
 	           </xsl:copy>
 	       </xsl:when>
@@ -240,7 +240,7 @@
     <!-- The following are NOT multilingual text -->
     <xsl:template priority="100" match="gmd:identifier|
         gmd:fileIdentifier|
-        
+        gmd:code|
         gmd:metadataStandardName|
         gmd:metadataStandardVersion|
         gmd:hierarchyLevelName|

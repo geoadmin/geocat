@@ -127,10 +127,13 @@ public final class FormatsStrategy extends ReplacementStrategy
         }
     }
 
-    public Element findNonValidated(UserSession session) throws Exception
+    public Element find(UserSession session, boolean validated) throws Exception
     {
+
         @SuppressWarnings("unchecked")
-		List<Element> results = _dbms.select("SELECT "+ID_COL+","+NAME_COL+","+VERSION_COL+" FROM "+TABLE+" WHERE "+VALIDATED_COL+"='n'").getChildren("record");
+        List<Element> results = _dbms.select("SELECT " + ID_COL + "," + NAME_COL + "," + VERSION_COL + " FROM " + TABLE + " WHERE "
+                + VALIDATED_COL + "=?", validated ? 'y' : 'n').getChildren("record");
+
         Element formats = new Element(REPORT_ROOT);
 
         for (Element result : results) {
@@ -146,8 +149,12 @@ public final class FormatsStrategy extends ReplacementStrategy
                 version = "";
             }
             addChild(e, REPORT_URL, url);
-            addChild(e, REPORT_DESC, name+" ("+version+")");
+            final String desc = name + " (" + version + ")";
+            addChild(e, REPORT_DESC, desc);
             addChild(e, REPORT_ID, id);
+            addChild(e, REPORT_TYPE, "format");
+            addChild(e, REPORT_XLINK, createXlinkHref(id, session, ""));
+            addChild(e, REPORT_SEARCH, id+desc);
 
             formats.addContent(e);
         }
@@ -155,7 +162,7 @@ public final class FormatsStrategy extends ReplacementStrategy
         return formats;
     }
 
-    public String createXlinkHref(String id, UserSession session, String strategySpecificData)
+    public String createXlinkHref(String id, UserSession session, String notRequired)
     {
         return XLink.LOCAL_PROTOCOL+"xml.format.get?id=" + id;
     }
@@ -186,12 +193,10 @@ public final class FormatsStrategy extends ReplacementStrategy
 
     private void xlinkIt(Element originalElem, String id, boolean validated)
     {
-        originalElem.setAttribute(XLink.HREF, XLink.LOCAL_PROTOCOL+"xml.format.get?id=" + id,
-                XLink.NAMESPACE_XLINK);
+        originalElem.setAttribute(XLink.HREF, XLink.LOCAL_PROTOCOL+"xml.format.get?id=" + id, XLink.NAMESPACE_XLINK);
 
         if (!validated) {
-            originalElem
-                    .setAttribute(XLink.ROLE, ReusableObjManager.NON_VALID_ROLE, XLink.NAMESPACE_XLINK);
+            originalElem.setAttribute(XLink.ROLE, ReusableObjManager.NON_VALID_ROLE, XLink.NAMESPACE_XLINK);
         }
         originalElem.setAttribute(XLink.SHOW, XLink.SHOW_EMBED, XLink.NAMESPACE_XLINK);
 

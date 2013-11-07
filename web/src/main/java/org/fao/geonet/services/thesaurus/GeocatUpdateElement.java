@@ -23,12 +23,21 @@
 
 package org.fao.geonet.services.thesaurus;
 
+<<<<<<< HEAD
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
+=======
+import java.util.*;
+
+import com.google.common.base.Functions;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
+>>>>>>> geocat_1.1.x
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
@@ -37,9 +46,19 @@ import jeeves.xlink.Processor;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+<<<<<<< HEAD
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+=======
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.KeywordBean;
+import org.fao.geonet.kernel.Thesaurus;
+import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.reusable.KeywordsStrategy;
+import org.fao.geonet.kernel.reusable.MetadataRecord;
+import org.fao.geonet.kernel.reusable.Utils;
+>>>>>>> geocat_1.1.x
 import org.jdom.Element;
 
 //=============================================================================
@@ -104,17 +123,48 @@ public class GeocatUpdateElement implements Service {
         }
 
         thesaurus.updateElement(bean, true);
+<<<<<<< HEAD
         
         Processor.clearCache();
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
+=======
+
+        reindex(context, gc, newid, manager);
+
+
+        Element elResp = new Element(Jeeves.Elem.RESPONSE);
+>>>>>>> geocat_1.1.x
 		elResp.addContent(new Element("selected").setText(ref));
 		elResp.addContent(new Element("mode").setText("edit"));
 		return elResp;
 	}
 
+<<<<<<< HEAD
     @SuppressWarnings("unchecked")
 	static Map<String, String> lookupLabels(Element params)
+=======
+    static void reindex(ServiceContext context, GeonetContext gc, String newid, ThesaurusManager manager) throws Exception {
+        Processor.clearCache();
+
+        final KeywordsStrategy strategy = new KeywordsStrategy(manager, context.getAppPath(), context.getBaseUrl(), context.getLanguage());
+        ArrayList<String> fields = new ArrayList<String>();
+
+        fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
+        fields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
+        final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, fields, newid, false,
+                Functions.<String>identity());
+
+
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        DataManager dm = gc.getDataManager();
+        for (MetadataRecord metadataRecord : referencingMetadata) {
+            dm.indexMetadata(dbms, metadataRecord.id, true, context, false, false, true);
+        }
+    }
+
+    static Map<String, String> lookupLabels(Element params)
+>>>>>>> geocat_1.1.x
     {
         final String prefix = "prefLab";
 

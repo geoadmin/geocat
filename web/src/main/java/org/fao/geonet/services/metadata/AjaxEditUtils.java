@@ -9,6 +9,7 @@ import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
 
 import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
@@ -148,6 +149,26 @@ public class AjaxEditUtils extends EditUtils {
                 Log.error(Geonet.EDITOR, MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
                 continue;
             }
+
+            // START GEOCAT CHANGE for extended topicCateogy
+            final String topicCategoryCode = "MD_TopicCategoryCode";
+            if (el.getName().equals(topicCategoryCode) && el.getNamespaceURI().equals(Geonet.Namespaces.GMD.getURI())
+                    && el.getTextTrim().contains("_")) {
+                final List<Element> topicCategories =
+                        el.getParentElement().getParentElement().getChildren("topicCategory", Geonet.Namespaces.GMD);
+
+                for (Element topicCategory : topicCategories) {
+                    if (topicCategory.getParentElement() != el) {
+                        final Element child = topicCategory.getChild(topicCategoryCode, Geonet.Namespaces.GMD);
+                        final String text = child.getText();
+                        if (el.getTextTrim().startsWith(text)) {
+                            topicCategory.detach();
+                            break;
+                        }
+                    }
+                }
+            }
+            // END GEOCAT CHANGE for extended topicCateogy
 
             Element xlinkParent = findXlinkParent(el);
             if( xlinkParent!=null && ReusableObjManager.isValidated(xlinkParent)){
@@ -592,8 +613,6 @@ public class AjaxEditUtils extends EditUtils {
 	 * @param session
 	 * @param id
 	 * @param ref	Attribute identifier (eg. _169_uom).
-	 * @return
-	 * @throws Exception
 	 */
 	public synchronized Element deleteAttributeEmbedded(Dbms dbms, UserSession session, String id, String ref) throws Exception {
 	    Lib.resource.checkEditPrivilege(context, id);
@@ -691,7 +710,6 @@ public class AjaxEditUtils extends EditUtils {
     /**
      * For Ajax Editing : retrieves metadata from session and validates it.
      *
-     * @param session
      * @param dbms
      * @param id
      * @param lang

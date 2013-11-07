@@ -184,7 +184,7 @@ public class Export implements Service {
 					+ " records.");
 
 			file = MEFLib
-					.doMEF2Export(context, uuids, format, false, stylePath, resolveXlink, removeXlinkAttribute);
+					.doMEF2Export(context, uuids, format, false, stylePath, resolveXlink, removeXlinkAttribute, false);
 		}
 
 		// -- Reset selection manager

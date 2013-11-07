@@ -46,12 +46,7 @@ import jeeves.xlink.XLink;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.reusable.DeletedObjects;
-import org.fao.geonet.kernel.reusable.MetadataRecord;
-import org.fao.geonet.kernel.reusable.ReplacementStrategy;
-import org.fao.geonet.kernel.reusable.ReusableTypes;
-import org.fao.geonet.kernel.reusable.SendEmailParameter;
-import org.fao.geonet.kernel.reusable.Utils;
+import org.fao.geonet.kernel.reusable.*;
 import org.fao.geonet.kernel.reusable.Utils.FindXLinks;
 import org.jdom.Content;
 import org.jdom.Element;
@@ -74,14 +69,21 @@ public class Reject implements Service
         String[] ids = Util.getParamText(params, "id").split(",");
         String msg = Util.getParamText(params, "msg");
         boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
-        
-        Element results = reject(context, ReusableTypes.valueOf(page), ids, msg, null, testing);
+        boolean isValidObject = Boolean.parseBoolean(Util.getParam(params, "isValidObject", "false"));
+
+
+        String specificData = null;
+        if (isValidObject && ReusableTypes.extents.toString().equals(page)) {
+            specificData = ExtentsStrategy.XLINK_TYPE;
+        }
+
+        Element results = reject(context, ReusableTypes.valueOf(page), ids, msg, specificData, isValidObject, testing);
 
         return results;
     }
 
     public Element reject(ServiceContext context, ReusableTypes reusableType, String[] ids, String msg,
-            String strategySpecificData, boolean testing) throws Exception
+                          String strategySpecificData, boolean isValidObject, boolean testing) throws Exception
     {
         Log.debug(Geocat.Module.REUSABLE, "Starting to reject following reusable objects: \n"
                 + reusableType + " (" + Arrays.toString(ids) + ")\nRejection message is:\n" + msg);
@@ -94,7 +96,7 @@ public class Reject implements Service
         Element results = new Element("results");
         if (strategy != null) {
             results.addContent(performReject(ids, strategy, context, gc, dbms, session, baseUrl, msg,
-                    strategySpecificData, testing));
+                    strategySpecificData, isValidObject, testing));
         }
         Log.info(Geocat.Module.REUSABLE, "Successfully rejected following reusable objects: \n"
                 + reusableType + " (" + Arrays.toString(ids) + ")\nRejection message is:\n" + msg);
@@ -103,16 +105,19 @@ public class Reject implements Service
     }
 
     private List<Element> performReject(String[] ids, final ReplacementStrategy strategy, ServiceContext context,
-            GeonetContext gc, Dbms dbms, final UserSession session, String baseURL, String msg,
-            String strategySpecificData, boolean testing) throws Exception
+                                        GeonetContext gc, Dbms dbms, final UserSession session, String baseURL, String msg,
+                                        String strategySpecificData, boolean isValidObject, boolean testing) throws Exception
     {
 
         final Function<String,String> idConverter = strategy.numericIdToConcreteId(session);
 
 	    List<String> luceneFields = new LinkedList<String>();
-	    luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
-	    luceneFields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
-	
+        if (isValidObject) {
+            luceneFields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
+        } else {
+            luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
+        }
+
         Multimap<String/* ownerid */, String/* metadataid */> emailInfo = HashMultimap.create();
         List<Element> result = new ArrayList<Element>();
         ArrayList<String> allAffectedMdIds = new ArrayList<String>();
@@ -151,8 +156,7 @@ public class Reject implements Service
     {
         Element newIds = new Element("newIds");
         // Move the reusable object to the DeletedObjects table and update
-        // the xlink attribute information
-        // so that the objects are obtained from that table
+        // the xlink attribute information so that the objects are obtained from that table
         Map<String/* oldHref */, String/* newHref */> updatedHrefs = new HashMap<String, String>();
         for (MetadataRecord metadataRecord : results) {
             for (String href : metadataRecord.xlinks) {
@@ -164,7 +168,6 @@ public class Reject implements Service
                     String newHref;
                     if (!updatedHrefs.containsKey(oldHRef)) {
                         Element fragment = Processor.resolveXLink(oldHRef,context);
-                        fragment.setAttribute(XLink.TITLE, "rejected", XLink.NAMESPACE_XLINK);
                         
                         @SuppressWarnings("unchecked")
 						Iterator<Content> iter = fragment.getDescendants();
@@ -175,22 +178,22 @@ public class Reject implements Service
 								e.removeAttribute("href", XLink.NAMESPACE_XLINK);
 								e.removeAttribute("show", XLink.NAMESPACE_XLINK);
 								e.removeAttribute("role", XLink.NAMESPACE_XLINK);
-								
 							}
                         }
                         // update xlink service
                         int newId = DeletedObjects.insert(dbms, context.getSerialFactory(), Xml.getString(fragment), href);
                         newIds.addContent(new Element("id").setText(String.valueOf(newId)));
-                        newHref = DeletedObjects.href(newId, baseURL);
+                        newHref = DeletedObjects.href(newId);
                         updatedHrefs.put(oldHRef, newHref);
                     } else {
                         newHref = updatedHrefs.get(oldHRef);
-
                     }
+
                     // Remove non_validated role value (if necessary) so that
                     // xlink is not editable
                     xlink.removeAttribute(XLink.ROLE, XLink.NAMESPACE_XLINK);
                     xlink.setAttribute(XLink.HREF, newHref, XLink.NAMESPACE_XLINK);
+                    xlink.setAttribute(XLink.TITLE, "rejected", XLink.NAMESPACE_XLINK);
                 }
             }
 

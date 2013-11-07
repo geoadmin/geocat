@@ -61,13 +61,24 @@ public class DeleteElement implements Service {
         
         // Retrieve thesaurus
         String sThesaurusName = Util.getParam(params, "pThesaurus");
+<<<<<<< HEAD
         
         if(sThesaurusName.equals("local._none_.non_validated") || sThesaurusName.equals("local._none_.geocat.ch")) {
+=======
+
+        final boolean isNonValidatedThesaurus = sThesaurusName.equals("local._none_.non_validated");
+        final boolean isValidatedThesaurus = sThesaurusName.equals("local._none_.geocat.ch");
+        if(isNonValidatedThesaurus || isValidatedThesaurus) {
+>>>>>>> geocat_1.1.x
             if(!Boolean.parseBoolean(Util.getParam(params, "forceDelete", "false"))) {
                 String msg = LangUtils.loadString("reusable.rejectDefaultMsg", context.getAppPath(), context.getLanguage());
 
                 String id = Util.getParam(params, "id", "");
+<<<<<<< HEAD
                 return new Reject().reject(context, ReusableTypes.keywords, new String[]{id}, msg, null, testing);
+=======
+                return new Reject().reject(context, ReusableTypes.keywords, new String[]{id}, msg, null, isValidatedThesaurus, testing);
+>>>>>>> geocat_1.1.x
             }
         }
         

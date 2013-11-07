@@ -25,6 +25,10 @@ package org.fao.geonet.kernel.search;
 
 import com.google.common.base.Splitter;
 import jeeves.utils.Log;
+<<<<<<< HEAD
+=======
+import org.apache.commons.collections.CollectionUtils;
+>>>>>>> geocat_1.1.x
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
@@ -184,20 +188,37 @@ public class LuceneQueryBuilder {
                     continue;
                 }
 
+<<<<<<< HEAD
                 @SuppressWarnings("resource")
+=======
+>>>>>>> geocat_1.1.x
                 Scanner scanner = new Scanner(fieldName).useDelimiter(FIELD_OR_SEPARATOR);
                 while (scanner.hasNext()) {
                     String field = scanner.next();
 
                     if(field.equals("or")) {
                         // handle as 'any', add ' or ' for space-separated values
+<<<<<<< HEAD
 
                             field = "any";
+=======
+                        for(String fieldValue : fieldValues) {
+                            field = "any";
+                            Scanner whitespaceScan = new Scanner(fieldValue).useDelimiter("\\w");
+                            while(whitespaceScan.hasNext()) {
+                                fieldValue += " or " + whitespaceScan.next();
+                            }
+                            fieldValue = fieldValue.substring(" or ".length());
+>>>>>>> geocat_1.1.x
                             Set<String> values = searchCriteriaOR.get(field);
                             if(values == null) values = new HashSet<String>();
                             values.addAll(fieldValues);
                             searchCriteriaOR.put(field, values);
                         }
+<<<<<<< HEAD
+=======
+                    }
+>>>>>>> geocat_1.1.x
                     else {
                             Set<String> values = searchCriteriaOR.get(field);
                             if(values == null) values = new HashSet<String>();
@@ -262,7 +283,30 @@ public class LuceneQueryBuilder {
                     if (LuceneIndexField.ANY.equals(fieldName) || "all".equals(fieldName)) {
                         BooleanClause anyClause = null;
                         if (!onlyWildcard(fieldValue)) {
+<<<<<<< HEAD
                             anyClause = tokenizeSearchParam(fieldValue, similarity, tokenOccur, occur);
+=======
+                            // tokenize searchParam
+                            StringTokenizer st = new StringTokenizer(fieldValue, STRING_TOKENIZER_DELIMITER);
+                            if (st.countTokens() == 1) {
+                                String token = st.nextToken();
+                                Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
+                                if (subQuery != null) {
+                                    anyClause = new BooleanClause(subQuery, tokenOccur);
+                                }
+                            } else {
+                                BooleanQuery orBooleanQuery = new BooleanQuery();
+                                while (st.hasMoreTokens()) {
+                                    String token = st.nextToken();
+                                    Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
+                                    if (subQuery != null) {
+                                        BooleanClause subClause = new BooleanClause(subQuery, occur);
+                                        orBooleanQuery.add(subClause);
+                                    }
+                                }
+                                anyClause = new BooleanClause(orBooleanQuery, tokenOccur);
+                            }
+>>>>>>> geocat_1.1.x
                         }
                         if (anyClause != null && StringUtils.isNotEmpty(anyClause.toString())) {
                             booleanQuery.add(anyClause);
@@ -304,6 +348,7 @@ public class LuceneQueryBuilder {
     }
 
     /**
+<<<<<<< HEAD
      * TODO Javadoc.
      *
      * @param fieldValue
@@ -339,6 +384,8 @@ public class LuceneQueryBuilder {
     }
 
     /**
+=======
+>>>>>>> geocat_1.1.x
      * Builds a query where AND operator is used for each search criteria.
      *
      * @param searchCriteria
@@ -384,6 +431,12 @@ public class LuceneQueryBuilder {
         for (String fieldValue : fieldValues) {
             if (LuceneIndexField.ANY.equals(fieldName)) {
                 addAnyTextQuery(fieldValue, similarity, (criteriaIsASet ? bq : query));
+<<<<<<< HEAD
+=======
+            }      // GEOCAT HACK
+             else if (fieldName.equals("format")) {
+                addFormatQuery(fieldValue, (criteriaIsASet ? bq : query));
+>>>>>>> geocat_1.1.x
             }
             else if (LuceneIndexField.UUID.equals(fieldName) || SearchParameter.UUID.equals(fieldName)) {
                 addUUIDQuery(fieldValue, similarity, criteriaIsASet, bq, query);
@@ -538,6 +591,7 @@ public class LuceneQueryBuilder {
             BooleanClause.Occur templateOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 
             Query templateQ;
+<<<<<<< HEAD
             if (fieldValue != null) {
                 if (fieldValue.contains(OR_SEPARATOR)) {
                     templateQ = new BooleanQuery();
@@ -548,6 +602,12 @@ public class LuceneQueryBuilder {
                     templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
             }
             } else {
+=======
+            if (fieldValue != null && (fieldValue.equals("y") || fieldValue.equals("s"))) {
+                templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, fieldValue));
+            }
+            else {
+>>>>>>> geocat_1.1.x
                 templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
             }
             query.add(templateQ, templateOccur);
@@ -648,9 +708,47 @@ public class LuceneQueryBuilder {
         // (this is because Lucene's StandardTokenizer would remove wildcards,
         // but that's not what we want)
         if (string.indexOf('*') >= 0 || string.indexOf('?') >= 0) {
+<<<<<<< HEAD
             WildCardStringAnalyzer wildCardStringAnalyzer = new WildCardStringAnalyzer();
             analyzedString = wildCardStringAnalyzer.analyze(string, luceneIndexField, _analyzer, _tokenizedFieldSet);
                     }
+=======
+            String starsPreserved = "";
+            String[] starSeparatedList = string.split("\\*");
+            for (String starSeparatedPart : starSeparatedList) {
+                String qPreserved = "";
+                // ? present
+                if (starSeparatedPart.indexOf('?') >= 0) {
+                    String[] qSeparatedList = starSeparatedPart.split("\\?");
+                    for (String qSeparatedPart : qSeparatedList) {
+                        String analyzedPart = LuceneSearcher.analyzeQueryText(luceneIndexField, qSeparatedPart, _analyzer, _tokenizedFieldSet);
+                        qPreserved += '?' + analyzedPart;
+                    }
+                    // remove leading ?
+                    qPreserved = qPreserved.substring(1);
+                    starsPreserved += '*' + qPreserved;
+                }
+                // no ? present
+                else {
+                    starsPreserved += '*' + LuceneSearcher.analyzeQueryText(luceneIndexField, starSeparatedPart, _analyzer, _tokenizedFieldSet);
+                }
+            }
+            // remove leading *
+            if (!StringUtils.isEmpty(starsPreserved)) {
+                starsPreserved = starsPreserved.substring(1);
+            }
+
+            // restore ending wildcard
+            if (string.endsWith("*")) {
+                starsPreserved += "*";
+            }
+            else if (string.endsWith("?")) {
+                starsPreserved += "?";
+            }
+
+            analyzedString = starsPreserved;
+        }
+>>>>>>> geocat_1.1.x
         // no wildcards
         else {
             analyzedString = LuceneSearcher.analyzeQueryText(luceneIndexField, string, _analyzer, _tokenizedFieldSet);
@@ -801,6 +899,7 @@ public class LuceneQueryBuilder {
 		if (StringUtils.isNotBlank(searchParam)) {
 			if (!_tokenizedFieldSet.contains(luceneIndexField)) {
 				// TODO : use similarity when needed
+<<<<<<< HEAD
 			    Term t = new Term(luceneIndexField, searchParam);
 			    Query termQuery;
 			    if (searchParam.indexOf('*') >= 0 || searchParam.indexOf('?') >= 0) {
@@ -810,6 +909,9 @@ public class LuceneQueryBuilder {
 			    }
 				
 				BooleanClause clause = new BooleanClause(termQuery, occur);
+=======
+				BooleanClause clause = new BooleanClause(textFieldToken(searchParam, luceneIndexField, similarity), occur);
+>>>>>>> geocat_1.1.x
 				query.add(clause);
 			}
             else {
@@ -856,8 +958,13 @@ public class LuceneQueryBuilder {
 
             for (String token : Splitter.on(separator).trimResults().split(text)) {
                 // TODO : here we should use similarity if set
+<<<<<<< HEAD
                 TermQuery termQuery = new TermQuery(new Term(fieldName, token));
                 BooleanClause clause = new BooleanClause(termQuery, occur);
+=======
+                Query subQuery = textFieldToken(token, fieldName, null);
+                BooleanClause clause = new BooleanClause(subQuery, occur);
+>>>>>>> geocat_1.1.x
                 query.add(clause);
             }
         }
@@ -875,8 +982,33 @@ public class LuceneQueryBuilder {
 		BooleanClause anyClause = null;
 		BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 		if (StringUtils.isNotBlank(any) && !onlyWildcard(any)) {
+<<<<<<< HEAD
             anyClause = tokenizeSearchParam(any, similarity, occur, occur);
 				}
+=======
+			// tokenize searchParam
+			StringTokenizer st = new StringTokenizer(any, STRING_TOKENIZER_DELIMITER);
+			if (st.countTokens() == 1) {
+				String token = st.nextToken();
+				Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
+				if (subQuery != null) {
+					anyClause = new BooleanClause(subQuery, occur);
+				}
+			}
+            else {
+				BooleanQuery booleanQuery = new BooleanQuery();
+				while (st.hasMoreTokens()) {
+					String token = st.nextToken();
+					Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
+					if (subQuery != null) {
+						BooleanClause subClause = new BooleanClause(subQuery, occur);
+                        booleanQuery.add(subClause);
+                    }
+				}
+				anyClause = new BooleanClause(booleanQuery, occur);
+			}
+		}
+>>>>>>> geocat_1.1.x
 		if (anyClause != null) {
 			query.add(anyClause);
 		}
@@ -1031,7 +1163,11 @@ public class LuceneQueryBuilder {
         if (min != null && max != null) {
             String type = _numericFieldSet.get(luceneIndexField).getType();
 
+<<<<<<< HEAD
             NumericRangeQuery<? extends Number> rangeQuery = buildNumericRangeQueryForType(luceneIndexField, min, max, minInclusive, maxExclusive, type);
+=======
+            NumericRangeQuery rangeQuery = buildNumericRangeQueryForType(luceneIndexField, min, max, minInclusive, maxExclusive, type);
+>>>>>>> geocat_1.1.x
 
             BooleanClause.Occur denoOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(required, false);
             BooleanClause rangeClause = new BooleanClause(rangeQuery, denoOccur);
@@ -1040,6 +1176,7 @@ public class LuceneQueryBuilder {
         }
     }
 
+<<<<<<< HEAD
     public static NumericRangeQuery<? extends Number> buildNumericRangeQueryForType(String fieldName, String min, String max,
                                                                   boolean minInclusive, boolean maxInclusive, String type) {
         NumericRangeQuery<? extends Number> rangeQuery;
@@ -1047,25 +1184,49 @@ public class LuceneQueryBuilder {
             rangeQuery = NumericRangeQuery.newDoubleRange(fieldName,
                     (min == null ? Double.MIN_VALUE : Double.parseDouble(min)),
                     (max == null ? Double.MAX_VALUE : Double.parseDouble(max)),
+=======
+    public static NumericRangeQuery buildNumericRangeQueryForType(String fieldName, String min, String max,
+                                                                  boolean minInclusive, boolean maxInclusive, String type) {
+        NumericRangeQuery rangeQuery;
+        if ("double".equals(type)) {
+            rangeQuery = NumericRangeQuery.newDoubleRange(fieldName,
+                    (min == null ? Double.MIN_VALUE : Double.valueOf(min)),
+                    (max == null ? Double.MAX_VALUE : Double.valueOf(max)),
+>>>>>>> geocat_1.1.x
                     true, true);
 
         }
         else if ("float".equals(type)) {
             rangeQuery = NumericRangeQuery.newFloatRange(fieldName,
+<<<<<<< HEAD
                     (min == null ? Float.MIN_VALUE : Float.parseFloat(min)),
                     (max == null ? Float.MAX_VALUE : Float.parseFloat(max)), true,
+=======
+                    (min == null ? Float.MIN_VALUE : Float.valueOf(min)),
+                    (max == null ? Float.MAX_VALUE : Float.valueOf(max)), true,
+>>>>>>> geocat_1.1.x
                     true);
         }
         else if ("long".equals(type)) {
             rangeQuery = NumericRangeQuery.newLongRange(fieldName,
+<<<<<<< HEAD
                     (min == null ? Long.MIN_VALUE : Long.parseLong(min)),
                     (max == null ? Long.MAX_VALUE : Long.parseLong(max)), true,
+=======
+                    (min == null ? Long.MIN_VALUE : Long.valueOf(min)),
+                    (max == null ? Long.MAX_VALUE : Long.valueOf(max)), true,
+>>>>>>> geocat_1.1.x
                     true);
         }
         else {
             rangeQuery = NumericRangeQuery.newIntRange(fieldName,
+<<<<<<< HEAD
                     (min == null ? Integer.MIN_VALUE : Integer.parseInt(min)),
                     (max == null ? Integer.MAX_VALUE : Integer.parseInt(max)),
+=======
+                    (min == null ? Integer.MIN_VALUE : Integer.valueOf(min)),
+                    (max == null ? Integer.MAX_VALUE : Integer.valueOf(max)),
+>>>>>>> geocat_1.1.x
                     true, true);
         }
         return rangeQuery;
@@ -1097,6 +1258,7 @@ public class LuceneQueryBuilder {
     }
 
     /**
+<<<<<<< HEAD
      * TODO Javadoc.
      *
      * @param query
@@ -1138,6 +1300,8 @@ public class LuceneQueryBuilder {
     }
 
     /**
+=======
+>>>>>>> geocat_1.1.x
      * Handle geographical search using Lucene.
      * 
      * East, North, South and West bounds are indexed as numeric in Lucene.
@@ -1166,48 +1330,141 @@ public class LuceneQueryBuilder {
         boolean inclusive = true;
 
         if (relation == null || relation.equals(Geonet.SearchResult.Relation.OVERLAPS)) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> geocat_1.1.x
             //
             // overlaps (default value) : uses the equivalence
             // -(a + b + c + d) = -a * -b * -c * -d
             //
+<<<<<<< HEAD
             addLatLongQuery(query, westBL, westBL, String.valueOf(maxBoundingLongitudeValue), LuceneIndexField.EAST,
                     eastBL, String.valueOf(minBoundingLongitudeValue), eastBL, LuceneIndexField.WEST,
                     southBL, southBL, String.valueOf(maxBoundingLatitudeValue), LuceneIndexField.NORTH,
                     northBL, String.valueOf(minBoundingLatitudeValue), northBL, LuceneIndexField.SOUTH, inclusive, true);
             }
+=======
+            // eastBL
+            if (westBL != null) {
+                addNumericRangeQuery(query, westBL, String.valueOf(maxBoundingLongitudeValue), inclusive, inclusive,
+                        LuceneIndexField.EAST, true);
+            }
+            // westBL
+            if (eastBL != null) {
+                addNumericRangeQuery(query, String.valueOf(minBoundingLongitudeValue), eastBL, inclusive, inclusive,
+                        LuceneIndexField.WEST, true);
+            }
+            // northBL
+            if (southBL != null) {
+                addNumericRangeQuery(query, southBL, String.valueOf(maxBoundingLatitudeValue), inclusive, inclusive,
+                        LuceneIndexField.NORTH, true);
+            }
+            // southBL
+            if (northBL != null) {
+                addNumericRangeQuery(query, String.valueOf(minBoundingLatitudeValue), northBL, inclusive, inclusive,
+                        LuceneIndexField.SOUTH, true);
+            }
+        }
+>>>>>>> geocat_1.1.x
         //
         // equal: coordinates of the target rectangle within 1 degree from
         // corresponding ones of metadata rectangle
         //
         else if (relation.equals(Geonet.SearchResult.Relation.EQUAL)) {
+<<<<<<< HEAD
             addLatLongQuery(query, westBL, westBL, westBL, LuceneIndexField.WEST,
                     eastBL, eastBL, eastBL, LuceneIndexField.EAST,
                     southBL, southBL, southBL, LuceneIndexField.SOUTH,
                     northBL, northBL, northBL, LuceneIndexField.NORTH,  inclusive, true);
             }
+=======
+            // eastBL
+            if (eastBL != null) {
+                addNumericRangeQuery(query, eastBL, eastBL, inclusive, inclusive, LuceneIndexField.EAST, true);
+            }
+            // westBL
+            if (westBL != null) {
+                addNumericRangeQuery(query, westBL, westBL, inclusive, inclusive, LuceneIndexField.WEST, true);
+            }
+            // northBL
+            if (northBL != null) {
+                addNumericRangeQuery(query, northBL, northBL, inclusive, inclusive, LuceneIndexField.NORTH, true);
+            }
+            // southBL
+            if (southBL != null) {
+                addNumericRangeQuery(query, southBL, southBL, inclusive, inclusive, LuceneIndexField.SOUTH, true);
+            }
+        }
+>>>>>>> geocat_1.1.x
         //
         // encloses: metadata rectangle encloses target rectangle
         //
         else if (relation.equals(Geonet.SearchResult.Relation.ENCLOSES)) {
+<<<<<<< HEAD
             addLatLongQuery(query, westBL, String.valueOf(minBoundingLongitudeValue), westBL, LuceneIndexField.WEST,
                     eastBL, eastBL, String.valueOf(maxBoundingLongitudeValue), LuceneIndexField.EAST,
                     southBL, String.valueOf(minBoundingLatitudeValue), southBL, LuceneIndexField.SOUTH,
                     northBL, northBL, String.valueOf(maxBoundingLatitudeValue), LuceneIndexField.NORTH, inclusive, true);
             }
+=======
+            // eastBL
+            if (eastBL != null) {
+                addNumericRangeQuery(query, eastBL, String.valueOf(maxBoundingLongitudeValue), inclusive, inclusive,
+                        LuceneIndexField.EAST, true);
+            }
+            // westBL
+            if (westBL != null) {
+                addNumericRangeQuery(query, String.valueOf(minBoundingLongitudeValue), westBL, inclusive, inclusive,
+                        LuceneIndexField.WEST, true);
+            }
+            // northBL
+            if (northBL != null) {
+                addNumericRangeQuery(query, northBL, String.valueOf(maxBoundingLatitudeValue), inclusive, inclusive,
+                        LuceneIndexField.NORTH, true);
+            }
+            // southBL
+            if (southBL != null) {
+                addNumericRangeQuery(query, String.valueOf(minBoundingLatitudeValue), southBL, inclusive, inclusive,
+                        LuceneIndexField.SOUTH, true);
+            }
+        }
+>>>>>>> geocat_1.1.x
         //
         // fullyEnclosedWithin: metadata rectangle fully enclosed within target
         // rectangle
         //
         else if (relation.equals(Geonet.SearchResult.Relation.ENCLOSEDWITHIN)) {
+<<<<<<< HEAD
             addLatLongQuery(query, westBL, westBL, eastBL, LuceneIndexField.WEST,
                     eastBL, westBL, eastBL, LuceneIndexField.EAST,
                     southBL, southBL, northBL, LuceneIndexField.SOUTH,
                     northBL, southBL, northBL, LuceneIndexField.NORTH, inclusive, true);
             }
+=======
+            // eastBL
+            if (eastBL != null) {
+                addNumericRangeQuery(query, westBL, eastBL, inclusive, inclusive, LuceneIndexField.EAST, true);
+            }
+            // westBL
+            if (westBL != null) {
+                addNumericRangeQuery(query, westBL, eastBL, inclusive, inclusive, LuceneIndexField.WEST, true);
+            }
+            // northBL
+            if (northBL != null) {
+                addNumericRangeQuery(query, southBL, northBL, inclusive, inclusive, LuceneIndexField.NORTH, true);
+            }
+            // southBL
+            if (southBL != null) {
+                addNumericRangeQuery(query, southBL, northBL, inclusive, inclusive, LuceneIndexField.SOUTH, true);
+            }
+        }
+>>>>>>> geocat_1.1.x
         //
         // fullyOutsideOf: one or more of the 4 forbidden halfplanes contains
         // the metadata
         // rectangle, that is, not true that all the 4 forbidden halfplanes do
+<<<<<<< HEAD
         // not contain the metadata rectangle
         else if (relation.equals(Geonet.SearchResult.Relation.OUTSIDEOF)) {
             addLatLongQuery(query, westBL, String.valueOf(minBoundingLongitudeValue), westBL, LuceneIndexField.EAST,
@@ -1216,6 +1473,34 @@ public class LuceneQueryBuilder {
                     northBL, northBL, String.valueOf(maxBoundingLatitudeValue), LuceneIndexField.SOUTH, inclusive, false);
             }
             }
+=======
+        // not contain
+        // the metadata rectangle
+        //
+        else if (relation.equals(Geonet.SearchResult.Relation.OUTSIDEOF)) {
+            // eastBL
+            if (westBL != null) {
+                addNumericRangeQuery(query, String.valueOf(minBoundingLongitudeValue), westBL, inclusive, inclusive,
+                        LuceneIndexField.EAST, false);
+            }
+            // westBL
+            if (eastBL != null) {
+                addNumericRangeQuery(query, eastBL, String.valueOf(maxBoundingLongitudeValue), inclusive, inclusive,
+                        LuceneIndexField.WEST, false);
+            }
+            // northBL
+            if (southBL != null) {
+                addNumericRangeQuery(query, String.valueOf(minBoundingLatitudeValue), southBL, inclusive, inclusive,
+                        LuceneIndexField.NORTH, false);
+            }
+            // southBL
+            if (northBL != null) {
+                addNumericRangeQuery(query, northBL, String.valueOf(maxBoundingLatitudeValue), inclusive, inclusive,
+                        LuceneIndexField.SOUTH, false);
+            }
+        }
+    }
+>>>>>>> geocat_1.1.x
 
     /**
      * Whether a string equals the wildcard *.
@@ -1257,4 +1542,20 @@ public class LuceneQueryBuilder {
 
         return booleanQuery;
     }
+<<<<<<< HEAD
 }
+=======
+
+    //GEOCAT specific
+    private void addFormatQuery(String fieldValue, BooleanQuery booleanClauses) {
+        if (fieldValue != null) {
+            String[] parts = fieldValue.split("_", 2);
+            booleanClauses.add(new BooleanClause(new TermQuery(new Term("format", parts[0])), BooleanClause.Occur.MUST));
+            if (parts.length == 2) {
+                booleanClauses.add(new BooleanClause(new TermQuery(new Term("formatversion", parts[1])), BooleanClause.Occur.MUST));
+            }
+        }
+    }
+
+}
+>>>>>>> geocat_1.1.x
