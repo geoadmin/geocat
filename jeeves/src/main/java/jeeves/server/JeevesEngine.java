@@ -169,7 +169,6 @@ public class JeevesEngine {
 
             //--- handlers must be started here because they may need the context
             //--- with the ProfileManager already loaded
-            scheduleMan.setProfileManager(profileManager);
             for (int i = 0; i < _appHandList.size(); i++)
                 initAppHandler((Element) _appHandList.get(i), servlet, jeevesAppContext);
 

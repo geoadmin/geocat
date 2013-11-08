@@ -2,6 +2,7 @@ package jeeves.server.dispatchers.guiservices;
 
 import jeeves.XmlFileCacher;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.JeevesJCS;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.jdom.JDOMException;

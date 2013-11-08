@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * Process XML document having XLinks to resolve, remove and detach fragments.
@@ -58,7 +59,7 @@ public final class Processor {
 
 	public static final String XLINK_JCS = "xlink";
 	
-	private static CopyOnWriteArraySet<URIMapper> uriMapper = new CopyOnWriteArraySet<URIMapper>(); 
+	private static CopyOnWriteArraySet<URIMapper> uriMapper = new CopyOnWriteArraySet<URIMapper>();
 	
 	/**
     * Default constructor.

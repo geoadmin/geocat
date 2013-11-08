@@ -208,37 +208,7 @@ public class ServiceContext extends BasicContext
     }
 
     public void executeOnly(LocalServiceRequest request) throws Exception {
-        ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(),
-                getXmlCacheManager(), getMonitorManager(), getProviderManager(), getSerialFactory(),
-                getProfileManager(), htContexts) {
-            public ResourceManager getResourceManager() {
-                return new ResourceManager(getMonitorManager(), getProviderManager()) {
-                    @Override
-                    public synchronized void abort() throws Exception {
-                    }
-
-                    @Override
-                    public synchronized void close() throws Exception {
-                    }
-
-                    @Override
-                    public synchronized void close(String name, Object resource) throws Exception {
-                    }
-
-                    @Override
-                    public synchronized void abort(String name, Object resource) throws Exception {
-                    }
-
-                    @Override
-                    protected void openMetrics(Object resource) {
-                    }
-
-                    @Override
-                    protected void closeMetrics(Object resource) {
-                    }
-                };
-            }
-        };
+        ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), htContexts, entityManager);
 
         UserSession session = userSession;
         if (userSession == null) {
@@ -246,7 +216,7 @@ public class ServiceContext extends BasicContext
         }
 
         try {
-            servlet.getEngine().getServiceManager().dispatch(request, session, context);
+            context.getBean(JeevesEngine.class).getServiceManager().dispatch(request, session, context);
         } catch (Exception e) {
             Log.error(Log.XLINK_PROCESSOR, "Failed to parse result xml" + request.getService());
             throw new ServiceExecutionFailedException(request.getService(), e);

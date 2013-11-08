@@ -23,6 +23,7 @@
 
 package jeeves.server;
 
+import jeeves.component.ProfileManager;
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.ConfigFile;
 import jeeves.interfaces.Schedule;
@@ -65,7 +66,7 @@ public class ScheduleManager
 
     private Map<String, ScheduleInfo> vSchedules = new HashMap<String, ScheduleInfo>();
 
-	
+
     //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -167,17 +168,6 @@ public class ScheduleManager
     public ScheduleInfo getScheduleInfo(String scheduleName) {
         return vSchedules.get(scheduleName);
     }
-
-	public void setProfileManager(ProfileManager profileManager) {
-		this.profileManager = profileManager;
-	}
-
-	public ProfileManager getProfileMan() {
-		return profileManager;
-	}
-
-	//---------------------------------------------------------------------------
-
 
 }
 

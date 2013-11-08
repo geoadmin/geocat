@@ -23,6 +23,7 @@
 
 package jeeves.server.context;
 
+import jeeves.component.ProfileManager;
 import jeeves.monitor.MonitorManager;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ApplicationContext;

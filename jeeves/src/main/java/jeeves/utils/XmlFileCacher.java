@@ -23,6 +23,7 @@
 
 package jeeves.utils;
 
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
