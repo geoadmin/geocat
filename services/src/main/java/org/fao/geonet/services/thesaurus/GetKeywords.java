@@ -28,6 +28,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.search.keyword.XmlParams;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
@@ -60,7 +61,18 @@ public class GetKeywords implements Service {
 		KeywordsSearcher searcher = null;
 		
 		boolean newSearch = Util.getParam(params, "pNewSearch").equals("true");
-		if (newSearch) {			
+
+		// For GEOCAT to handle search for *
+		if ("*".equals(Util.getParam(params, XmlParams.pLanguages, ""))) {
+			params.removeChildren(XmlParams.pLanguages);
+			params.addContent(new Element(XmlParams.pLanguages).setText("eng"));
+			params.addContent(new Element(XmlParams.pLanguages).setText("fre"));
+			params.addContent(new Element(XmlParams.pLanguages).setText("ger"));
+			params.addContent(new Element(XmlParams.pLanguages).setText("ita"));
+			params.addContent(new Element(XmlParams.pLanguages).setText("rom"));
+		}
+		// END
+		if (newSearch) {
 			// perform the search and save search result into session
 			GeonetContext gc = (GeonetContext) context
 					.getHandlerContext(Geonet.CONTEXT_NAME);

@@ -30,6 +30,8 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
+import jeeves.xlink.XLink;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -40,6 +42,7 @@ import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.jdom.Element;
 
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Set;
 
@@ -75,6 +78,10 @@ public class UpdateElement implements Service {
 
 		ThesaurusManager manager = gc.getBean(ThesaurusManager.class);
 		Thesaurus thesaurus = manager.getThesaurusByName(ref);
+		Processor.uncacheXLinkUri(XLink.LOCAL_PROTOCOL + "che.keyword.get?thesaurus=" + ref + "&id=" +
+                                  URLEncoder.encode(namespace + oldid, "UTF-8").toLowerCase() + "&locales=en,it,de,fr");
+		Processor.uncacheXLinkUri(XLink.LOCAL_PROTOCOL+"che.keyword.get?thesaurus=" + ref + "&id=" +
+                                  URLEncoder.encode(namespace+oldid, "UTF-8") + "&locales=en,it,de,fr");
 
 		if (!(oldid.equals(newid))) {
 			if (thesaurus.isFreeCode(namespace, newid)) {
@@ -126,6 +133,9 @@ public class UpdateElement implements Service {
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element("selected").setText(ref));
 		elResp.addContent(new Element("mode").setText("edit"));
+
+        GeocatUpdateElement.reindex(context, gc, newid, manager);
+
 		return elResp;
 	}
 }

@@ -94,6 +94,10 @@ public class Update extends NotInReadOnlyModeService {
         @SuppressWarnings("unchecked")
         java.util.List<Element> userGroups = params.getChildren(Params.GROUPS);
 
+        if (profile == Profile.Shared) {
+            throw new IllegalArgumentException("this service cannot edit shared users");
+        }
+
         if (profile == Profile.Administrator) {
             userGroups = new ArrayList<Element>();
         }

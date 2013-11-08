@@ -29,6 +29,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
@@ -38,6 +39,7 @@ import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specifications;
 
@@ -51,13 +53,17 @@ import static org.springframework.data.jpa.domain.Specifications.*;
  * Removes a user from the system. It removes the relationship to a group too.
  */
 public class Remove extends NotInReadOnlyModeService {
+	private Type type;
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception {
+	       this.type = Type.valueOf(params.getValue("type", "NORMAL"));
+	}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -68,6 +74,11 @@ public class Remove extends NotInReadOnlyModeService {
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		String id = Util.getParam(params, Params.ID);
+
+        Element rejectResult = handleSharedUser(id, params, context);
+        if(rejectResult != null) {
+            return rejectResult;
+        }
 
 		UserSession usrSess = context.getUserSession();
 		Profile myProfile = usrSess.getProfile();
@@ -112,4 +123,31 @@ public class Remove extends NotInReadOnlyModeService {
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
+
+    @SuppressWarnings("unchecked")
+    private Element handleSharedUser(String id, Element params, ServiceContext context) throws Exception {
+    	boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
+
+    	Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+        Element profileQuery = dbms.select("Select profile, validated from users where id=?",Integer.parseInt(id));
+
+
+        if(!profileQuery.getChildren().isEmpty()) {
+            final Element child = (Element) profileQuery.getChildren().get(0);
+            if( type == Type.NORMAL && Geocat.Profile.SHARED.equals(child.getChildTextTrim("profile"))) {
+                throw new IllegalArgumentException("This remove user service instance cannot remove shared objects");
 }
+
+            if(type != Type.NORMAL && !Boolean.parseBoolean(Util.getParam(params, "forceDelete", "false"))) {
+                String msg = LangUtils.loadString("reusable.rejectDefaultMsg", context.getAppPath(), context.getLanguage());
+                boolean isValidated = "y".equalsIgnoreCase(child.getChildTextTrim("validated"));
+                return new Reject().reject(context, ReusableTypes.contacts, new String[]{id}, msg, null, isValidated, testing);
+            }
+        }
+
+        return null;
+    }
+}
+
+//=============================================================================
+

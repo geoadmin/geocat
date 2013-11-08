@@ -31,7 +31,10 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.User_;
@@ -41,6 +44,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,13 +54,18 @@ import java.util.Set;
   */
 
 public class List implements Service {
+{
+    private Type type;
+
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception {
+	    this.type = Type.valueOf(params.getValue("type", "NORMAL"));
+	}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -70,19 +79,76 @@ public class List implements Service {
 
 		//--- retrieve groups for myself
 
+        // GEOCAT
+		Profile userProfile = session.getProfile();
+		Set<String> hsMyGroups = Collections.emptySet();
 
-		Set<Integer> hsMyGroups = getGroups(context, session.getUserIdAsInt(), session.getProfile());
+		if (userProfile != null) {
+		    hsMyGroups = getGroups(dbms, session.getUserId(), userProfile);
+		}
+		Set<String> profileSet = (userProfile == null) ?
+							Collections.<String>emptySet() : userProfile.getAllNames();
 
-        Set<String> profileSet = session.getProfile().getAllNames();
+        boolean sortByValidated = "true".equalsIgnoreCase(Util.getParam(params, "sortByValidated", "false"));
+        String sortBy;
+        String sortVals;
+        if(sortByValidated) {
+            sortBy = "validAsInt, lname ASC";
+            sortVals = "case when TRIM(name||surname) = '' then 'zz' else LOWER(name||surname) end as lname,case when validated = 'n' then 2 else 1 end as validAsInt,";
+        } else {
+            sortVals = "";
+            sortBy = "username";
+        }
 
+        boolean findingShared = true;
+        String profilesParam = params.getChildText(Params.PROFILE);
+        String extraWhere;
+        switch(type) {
+        case NON_VALIDATED_SHARED:
+            profileSet = Collections.singleton(Geocat.Profile.SHARED);
+            extraWhere = " not validated='y' and profile='"+Geocat.Profile.SHARED+"'";
+            break;
+        case VALIDATED_SHARED:
+            profileSet = Collections.singleton(Geocat.Profile.SHARED);
+            extraWhere = " validated='y' and profile='"+Geocat.Profile.SHARED+"'";
+            break;
+        case SHARED:
+            profileSet = Collections.singleton(Geocat.Profile.SHARED);
+            extraWhere = " profile='"+Geocat.Profile.SHARED+"'";
+            break;
+        default:
+        	findingShared = false;
+            if( profilesParam!=null && profileSet.contains(profilesParam)){
+                profileSet.retainAll(Collections.singleton(profilesParam));
+            }
+            extraWhere = " not profile='"+Geocat.Profile.SHARED+"'";
+            break;
+        }
+
+        String where = "WHERE"+extraWhere;
+        String name = params.getChildText(Params.NAME);
+		Element elUsers = null;
+        // END GEOCAT
+
+		if (name == null || name.trim().isEmpty()) {
 		//--- retrieve all users
         final java.util.List<User> all = context.getBean(UserRepository.class).findAll(SortUtils.createSort(User_.username));
-
+        } else {
+            // TODO : Add organisation
+            elUsers = dbms.select ("SELECT "+sortVals+"* FROM Users WHERE " + extraWhere
+                                   + " and (username ilike '%" + name + "%' "
+                                   + "or surname ilike '%" + name + "%' "
+                                   + "or email ilike '%" + name + "%' "
+                                   + "or organisation ilike '%" + name + "%' "
+                                   + "or orgacronym ilike '%" + name + "%' "
+                                   + "or name ilike '%" + name + "%') and publicaccess = 'y' "
+                                   + "ORDER BY "+sortBy);
+        }
 		//--- now filter them
 
 		java.util.Set<Integer> usersToRemove = new HashSet<Integer>();
 
-		if (session.getProfile() != Profile.Administrator) {
+		if (!findingShared && session.getProfile() != Profile.Administrator) {
 
 			for (User user : all) {
 				int userId = user.getId();

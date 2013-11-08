@@ -28,16 +28,22 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.springframework.data.jpa.domain.Specifications;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
@@ -76,9 +82,15 @@ public class Get implements Service {
 
         if (id == null) return new Element(Jeeves.Elem.RESPONSE);
 
+        final User user = context.getBean(UserRepository.class).findOne(Integer.valueOf(id));
         if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin || myUserId.equals(id)) {
 
-            Element elUser = context.getBean(UserRepository.class).findOne(Integer.valueOf(id)).asXml();
+            Element elUser = user.asXml();
+            // GEOCAT
+			if(user != null && user.getProfile() == Profile.Shared) {
+				return loadSharedUser(user);
+			}
+            // END GEOCAT
 
             //--- retrieve user groups
 
@@ -110,10 +122,59 @@ public class Get implements Service {
             elUser.addContent(elGroups);
             return elUser;
         } else {
-            throw new IllegalArgumentException("You don't have rights to do this");
+            // GEOCAT
+			return loadSharedUser(user);
+            // END GEOCAT
         }
 
+	}
+
+    // GEOCAT
+    private Element loadSharedUser(User user) throws SQLException, IOException, JDOMException {
+
+
+        if(user.getProfile() != Profile.Shared) {
+        	return new Element("record");
+        }
+
+        Element elGroups = new Element(Geonet.Elem.GROUPS);
+
+        @SuppressWarnings("unchecked")
+		java.util.List<Element> list = dbms.select("SELECT groupId FROM UserGroups WHERE userId=?", Integer.valueOf(id)).getChildren();
+
+        for(int i=0; i<list.size(); i++)
+        {
+            String grpId = list.get(i).getChildText("groupid");
+
+            elGroups.addContent(new Element(Geonet.Elem.ID).setText(grpId));
+        }
+
+        elUser.addContent(elGroups);
+
+		//--- get the validity of the parent if it exists
+
+		Element parentInfoId = elUser.getChild("record").getChild("parentinfo");
+        if (parentInfoId.getTextTrim().length() > 0) {
+            Integer integer = Integer.parseInt(parentInfoId.getTextTrim());
+            Element validatedResults = dbms.select("SELECT validated FROM Users where id="+integer);
+
+            Element elValidated = validatedResults.getChild("record").getChild("validated");
+
+            if (elValidated != null){
+                elValidated.detach();
+                elValidated.setName("parentValidated");
+                elUser.addContent(elValidated);
+            }
+		}
+
+        //--- return data
+
+        String[] elementsToResolve = { "organisation", "positionname", "orgacronym","onlinename","onlinedescription", "onlineresource", Geocat.Params.CONTACTINST};
+        LangUtils.resolveMultiLingualElements(elUser, elementsToResolve);
+
+        return elUser;
     }
+    // END GEOCAT
 }
 
 //=============================================================================
