@@ -90,7 +90,12 @@ public class KeywordSearchParamsBuilder {
         for (Element lang : langs) {
             parsedParams.addLang(lang.getTextTrim());
         }
-        
+        // GEOCAT
+        langs = params.getChildren(XmlParams.pLanguages);
+        for (Element lang : langs) {
+        	parsedParams.addLang(lang.getTextTrim());
+        }
+        // END GEOCAT
         return parsedParams;
     }
     /**

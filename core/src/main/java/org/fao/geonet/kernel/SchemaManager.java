@@ -705,7 +705,11 @@ public class SchemaManager {
 					schema = defaultSchemaOrDependencySchema;
 				}
 			}
-
+            // GEOCAT
+			if(schema!=null && schema.equals("iso19139.che") && md.getName().equals("MD_Metadata")) {
+				schema = "iso19139";
+			}
+            // END GEOCAT
 			// -- if the default schema failed then throw an exception
 			if (schema == null) {
 				throw new NoSchemaMatchesException("Autodetecting schema failed for metadata record with root element "+md.getName()+" in namespace "+md.getNamespace()+".");
@@ -952,7 +956,7 @@ public class SchemaManager {
                 config.setAttribute("file", fname);
                 if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                     Log.debug(Geonet.SCHEMA_MANAGER, "Adding XmlFile " + Xml.getString(config));
-                XmlFile xf = new XmlFile(config, defaultLang, true);
+				XmlFile xf = new XmlFile(config, defaultLang, true, true);
                 xfMap.put(fname, xf);
             } else {
                 Log.warning(Geonet.SCHEMA_MANAGER, "Unable to load loc file: " + filePath);

@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.mef;
 
+import jeeves.xlink.Processor;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -158,7 +159,11 @@ public class MEFLib {
 		V2
 	}
 
-    // --------------------------------------------------------------------------
+	public static List<String> doImportIndexGroup(Element params, ServiceContext context, File mefFile, String stylePath) throws Exception {
+		return Importer.doImport(params, context, mefFile, stylePath, true);
+	}
+
+	// --------------------------------------------------------------------------
 	
 	public static List<String> doImport(Element params, ServiceContext context,
 			File mefFile, String stylePath) throws Exception {
@@ -176,10 +181,11 @@ public class MEFLib {
 	// --------------------------------------------------------------------------
 
 	public static String doMEF2Export(ServiceContext context,
-			Set<String> uuids, String format, boolean skipUUID, String stylePath, boolean resolveXlink, boolean removeXlinkAttribute)
+                                      Set<String> uuids, String format, boolean skipUUID, String stylePath, boolean resolveXlink,
+                                      boolean removeXlinkAttribute, boolean skipErrors)
 			throws Exception {
 		return MEF2Exporter.doExport(context, uuids, Format.parse(format),
-				skipUUID, stylePath, resolveXlink, removeXlinkAttribute);
+				skipUUID, stylePath, resolveXlink, removeXlinkAttribute, skipErrors);
 	}
 
 	// --------------------------------------------------------------------------
@@ -240,9 +246,14 @@ public class MEFLib {
 		String id = ""+metadata.getId();
         boolean forEditing = false;
         boolean withEditorValidationErrors = false;
-        Element data = dm.getMetadata(context, id, forEditing, withEditorValidationErrors, !removeXlinkAttribute);
-        data.removeChild("info", Edit.NAMESPACE);
-        metadata.setData(Xml.getString(data));
+		boolean elementsHide = true;
+        Element record = dm.getGeocatMetadata(context, id, forEditing, withEditorValidationErrors, !removeXlinkAttribute,
+                elementsHide);
+        if(resolveXlink) {
+            Processor.detachXLink(record, context);
+        }
+        record.removeChild("info", Edit.NAMESPACE);
+        metadata.setDataAndFixCR(record);
 
         return metadata;
 	}

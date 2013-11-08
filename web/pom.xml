@@ -12,7 +12,6 @@
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <groupId>ch.geocat</groupId>
   <artifactId>geonetwork-main</artifactId>
   <packaging>war</packaging>
   <name>GeoNetwork Web module</name>
@@ -327,6 +326,12 @@
       <dependency>
           <groupId>${project.groupId}</groupId>
           <artifactId>services</artifactId>
+          <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>geocat</artifactId>
           <version>${project.version}</version>
       </dependency>
 

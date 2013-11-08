@@ -1020,6 +1020,7 @@
     <module>healthmonitor</module>
     <module>services</module>
     <module>web-client</module>
+    <module>geocat</module>
     <module>web</module>
   </modules>
 

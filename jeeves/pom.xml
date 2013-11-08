@@ -13,7 +13,6 @@
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <groupId>ch.geocat</groupId>
   <artifactId>jeeves</artifactId>
   <packaging>jar</packaging>
   <name>Jeeves modules</name>

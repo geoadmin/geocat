@@ -12,7 +12,6 @@
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <groupId>ch.geocat</groupId>
   <artifactId>dummy-api</artifactId>
   <packaging>jar</packaging>
   <name>ArcSDE module (dummy-api)</name>

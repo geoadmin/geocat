@@ -40,6 +40,7 @@ import java.util.Set;
 import java.util.zip.ZipOutputStream;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.Constants;
@@ -71,7 +72,8 @@ class MEF2Exporter {
 	 * @throws Exception
 	 */
 	public static String doExport(ServiceContext context, Set<String> uuids,
-			Format format, boolean skipUUID, String stylePath, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+			Format format, boolean skipUUID, String stylePath, boolean resolveXlink, boolean removeXlinkAttribute,
+            boolean skipError) throws Exception {
 
 		File file = File.createTempFile("mef-", ".mef");
 		FileOutputStream fos = new FileOutputStream(file);
@@ -79,8 +81,19 @@ class MEF2Exporter {
 
         for (Object uuid1 : uuids) {
             String uuid = (String) uuid1;
+            try {
             createMetadataFolder(context, uuid, zos, skipUUID, stylePath,
                     format, resolveXlink, removeXlinkAttribute);
+            } catch (Throwable t) {
+                if (skipError) {
+                    Log.error(Geonet.MEF, "Error exporting metadata to MEF file: " + uuid1, t);
+                } else {
+                    if (t instanceof RuntimeException) {
+                        throw (RuntimeException) t;
+                    }
+                    throw new RuntimeException(t);
+                }
+            }
         }
 
 		// --- cleanup and exit
@@ -141,6 +154,19 @@ class MEF2Exporter {
 			MEFLib.addFile(zos, uuid + FS + MD_DIR + FILE_METADATA_19139,
 					data19139);
 		}
+
+        /*
+		if(schema.equals("iso19139.che")) {
+            String appPath = context.getAppPath();
+            ISO19139CHEtoGM03 togm03 = new ISO19139CHEtoGM03(null, appPath +FS+"xsl"+FS+"conversion"+FS+"import"+FS+"ISO19139CHE-to-GM03.xsl");
+            final StreamSource source = new StreamSource(formatData(record));
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            togm03.convert(source, "TransformationTestSupport", out);
+            InputStream result = new ByteArrayInputStream(out.toByteArray());
+            MEFLib.addFile(zos,uuid + FS + MD_DIR + "metadata-gm03_2.xml", result);
+		}
+         */
+        exportExtensionPoint(....);
 
 		// --- save native metadata
 		ByteArrayInputStream data = formatData(record);

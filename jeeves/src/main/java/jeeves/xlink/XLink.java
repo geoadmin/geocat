@@ -1,5 +1,7 @@
 package jeeves.xlink;
 
+import org.jdom.Attribute;
+import org.jdom.Element;
 import org.jdom.Namespace;
 
 import java.net.URL;

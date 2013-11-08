@@ -47,6 +47,8 @@ public class Get implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
+
+        return new Element(Region.REGION_EL);  /*
 	    if(regions == null){
 	        regions = new List().exec(params, context);
 	        @SuppressWarnings("unchecked")
@@ -56,7 +58,7 @@ public class Get implements Service
                 element.addContent(new Element("id").setText(element.getAttributeValue("id")));
             }
 	    }
-		return (Element) regions.clone();
+		return (Element) regions.clone();      */
 	}
 
 }

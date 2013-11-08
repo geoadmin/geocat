@@ -228,8 +228,9 @@ public class Importer {
 				String localId = null;
 				String rating = null;
 				String popularity = null;
-				String groupId = null;
+				String groupId = Util.getParam(params, Params.GROUP);
 				Element categs = null;
+				final boolean skipPrivileges = Util.getParam(params, "skipPrivileges", false);
 				final Element privileges;
 				boolean validate = false;
 
@@ -263,19 +264,7 @@ public class Importer {
 					}
 
 					groupId = Util.getParam(params, Params.GROUP);
-					privileges = new Element("group");
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "view"));
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "editing"));
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "download"));
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "notify"));
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "dynamic"));
-					privileges.addContent(new Element("operation")
-							.setAttribute("name", "featured"));
+					privileges = defaultPrivileges();
 
 					// Get the Metadata uuid if it's not a template.
 					if (isTemplate.equals("n")) {
@@ -386,7 +375,7 @@ public class Importer {
 
                         addCategoriesToMetadata(metadata, finalCategs, context);
 
-                        if (finalGroupId == null) {
+                        if (finalGroupId == null || (!skipPrivileges && privileges != null && privileges.getName().equals("privileges"))) {
                             Group ownerGroup = addPrivileges(context, dm, iMetadataId, privileges);
                             if (ownerGroup != null) {
                                 metadata.getSourceInfo().setGroupOwner(ownerGroup.getId());
@@ -415,7 +404,25 @@ public class Importer {
                 dm.indexMetadata(metadataIdMap.get(index));
 			}
 
-			// --------------------------------------------------------------------
+            private Element defaultPrivileges() {
+                Element privileges;
+                privileges = new Element("group");
+                privileges.addContent(new Element("operation")
+                        .setAttribute("name", "view"));
+                privileges.addContent(new Element("operation")
+                        .setAttribute("name", "editing"));
+                privileges.addContent(new Element("operation")
+                        .setAttribute("name", "download"));
+                privileges.addContent(new Element("operation")
+                        .setAttribute("name", "notify"));
+                privileges.addContent(new Element("operation")
+                        .setAttribute("name", "dynamic"));
+                privileges.addContent(new Element("operation")
+                        .setAttribute("name", "featured"));
+                return privileges;
+            }
+
+            // --------------------------------------------------------------------
 
         public void handlePublicFile(String file, String changeDate,
 					InputStream is, int index) throws IOException {

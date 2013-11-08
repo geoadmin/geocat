@@ -28,9 +28,17 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.HarvesterSetting;
+import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.HarvesterSettingRepository;
 import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 //=============================================================================
 
@@ -53,17 +61,33 @@ public class Sources implements Service
 
 		String name   = sm.getSiteName();
 		String siteId = sm.getSiteId();
+        String url = sm.getSiteURL(context);
 
 		Element local = new Element("record");
 
 		local.addContent(new Element("name")  .setText(name));
 		local.addContent(new Element("siteid").setText(siteId));
+		local.addContent(new Element("url").setText(url));
 
 		//--- retrieve known nodes
         final Element asXml = context.getBean(SourceRepository.class).findAllAsXml();
         asXml.addContent(local);
 
-		return asXml;
+        final HarvesterSettingRepository bean = context.getBean(HarvesterSettingRepository.class);
+
+        Element harvestingNodes = bean.findAllAsXml();
+
+
+        for (Object obj : asXml.getChildren()) {
+            Element record = (Element) obj;
+            siteId = record.getChildTextTrim("siteid");
+            url = Xml.selectString(harvestingNodes, "*//site[.//uuid/value/text() = '" + siteId + "']//url/value/text()");
+            if(url != null) {
+                record.addContent(new Element("url").setText(url));
+            }
+        }
+
+        return asXml;
 	}
 }
 

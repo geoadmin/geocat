@@ -22,13 +22,17 @@
 
 package org.fao.geonet.kernel;
 
+import jeeves.server.context.ServiceContext;
 import org.eclipse.jetty.util.URIUtil;
 import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.springframework.util.StringUtils;
 
+import javax.print.URIException;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -59,6 +63,7 @@ public class KeywordBean {
 	private final Map<String, String> definitions = new LinkedHashMap<String,String>();
     private IsoLanguagesMapper isoLanguageMapper;
     private String defaultLang;
+    private String broader;
 	/**
 	 * Create keyword bean with the default IsoLanguageMapper
 	 */
@@ -526,7 +531,7 @@ public class KeywordBean {
      *
      * @return
      */
-    public Element toElement(String defaultLang, String... langs) {
+	public Element toElement(ThesaurusFinder finder, ServiceContext context, String defaultLang, String... langs) throws JDOMException, IOException {
         defaultLang = to3CharLang(defaultLang);
         List<String> prioritizedList = new ArrayList<String>();
         prioritizedList.add(defaultLang);
@@ -580,7 +585,15 @@ public class KeywordBean {
         if (thesaurusType.contains("-"))
             thesaurusType = thesaurusType.split("-")[1];
         elKeyword.setAttribute("type", thesaurusType);
-        Element elthesaurus = new Element("thesaurus").setText(this.getThesaurusKey());
+        Thesaurus thesaurus = finder.getThesaurusByName(getThesaurusKey());
+        Element elthesaurus = new Element("thesaurus");
+        if(thesaurus != null) {
+            Set<Map.Entry<String, String>> titles = thesaurus.getTitles(context).entrySet();
+            for (Map.Entry<String, String> entry : titles) {
+                elthesaurus.addContent(new Element("title").setAttribute("lang", entry.getKey()).setText(entry.getValue()));
+            }
+        }
+        elthesaurus.addContent(new Element("key").setText(this.getThesaurusKey()));
 
         // Geo attribute
         if (this.getCoordEast() != null && this.getCoordWest() != null
@@ -676,6 +689,15 @@ public class KeywordBean {
      */
     public KeywordBean removeDefinition(String lang) {
         definitions.remove(lang);
+        return this;
+    }
+
+    public String getBroaderRelationship() {
+        return broader;
+    }
+
+    public KeywordBean setBroaderRelationship(String broader) {
+        this.broader = broader;
         return this;
     }
     

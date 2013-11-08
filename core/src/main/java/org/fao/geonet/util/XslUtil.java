@@ -7,15 +7,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
+import com.google.common.collect.Multimap;
+import com.vividsolutions.jts.geom.Polygon;
 import jeeves.component.ProfileManager;
+import net.sf.saxon.Configuration;
+import net.sf.saxon.om.NodeInfo;
+import net.sf.saxon.om.UnfailingIterator;
 import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.w3c.dom.Node;
+
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
- * params are objects because it is hard to determine what is passed in from XSLT.
+ * are Objects because it is hard to determine what is passed in from XSLT. Most
  * Most are converted to string by calling tostring.
  *
  * @author jesse
@@ -171,7 +178,7 @@ public final class XslUtil
     /**
      * Get field value for metadata identified by uuid.
      * 
-     * @param appPath 	Web application name to access Lucene index from environment variable
+     * @param appName 	Web application name to access Lucene index from environment variable
      * @param uuid 		Metadata uuid
      * @param field 	Lucene field name
      * @param lang 		Language of the index to search in
@@ -215,6 +222,14 @@ public final class XslUtil
     public static String twoCharLangCode(String iso3LangCode) {
     	if(iso3LangCode==null || iso3LangCode.length() == 0) {
     		return Geonet.DEFAULT_LANGUAGE;
+    	}
+
+    	if(iso3LangCode.equalsIgnoreCase("FRA")) {
+    		return "FR";
+    	}
+
+    	if(iso3LangCode.equalsIgnoreCase("DEU")) {
+    		return "DE";
     	}
         String iso2LangCode = "";
 
@@ -289,5 +304,86 @@ public final class XslUtil
 		}
 		return src.toString().matches(pattern.toString());
 	}
+
+    public static void setNoScript() {
+        GeocatXslUtil.setNoScript();
+    }
+    public static boolean allowScripting() {
+        return GeocatXslUtil.allowScripting();
+    }
+
+    public static String expandScientific(Object src) {
+        return GeocatXslUtil.expandScientific(src);
+    }
+
+    public static String gmlToWKT(Node next) throws Exception {
+        return GeocatXslUtil.gmlToWKT(next);
+    }
+    public static Object posListToGM03Coords(Object node, Object coords, Object dim) {
+        return GeocatXslUtil.posListToGM03Coords(node, coords, dim);
+    }
+    public static String trimPosList(Object coords) {
+        return GeocatXslUtil.trimPosList(coords);
+    }
+    static String reduceDecimals(String number) {
+        return GeocatXslUtil.reduceDecimals(number);
+    }
+    public static String randomId() {
+        return GeocatXslUtil.randomId();
+    }
+    public static Object bbox(Object description, Object src) throws Exception {
+        return GeocatXslUtil.bbox(description, src);
+    }
+    public static Object multipolygon(Object description, Object src) throws Exception {
+        return GeocatXslUtil.multipolygon(description, src);
+    }
+    public static Object combineAndWriteGeom(Object description, UnfailingIterator src, GeocatXslUtil.GeomWriter writer) throws Exception {
+        return GeocatXslUtil.combineAndWriteGeom(description, src, writer);
+    }
+    static Multimap<Boolean, Polygon> geometries(NodeInfo next) throws Exception {
+        return GeocatXslUtil.geometries(next);
+    }
+
+    static Polygon geom(NodeInfo next) throws Exception {
+        return GeocatXslUtil.geom(next);
+    }
+
+    static Polygon parsePolygon(NodeInfo next) throws Exception {
+        return GeocatXslUtil.parsePolygon(next);
+    }
+
+    static Boolean inclusion(NodeInfo next) {
+        return GeocatXslUtil.inclusion(next);
+    }
+
+    public static String writeXml(Node doc) throws Exception {
+        return GeocatXslUtil.writeXml(doc);
+    }
+
+    public static String writeXml(NodeInfo doc) throws Exception {
+        return GeocatXslUtil.writeXml(doc);
+    }
+
+    /**
+     * For all text split the lines to a specified size and add hyperlinks when appropriate
+     */
+    public static Object toHyperlinks(NodeInfo text) throws Exception {
+        return GeocatXslUtil.toHyperlinks(text);
+    }
+
+    /**
+     * Sometimes nodes can have urls in their attributes (namespace declarations)
+     * So nodes themselves should not be processed.  Also if a node is a
+     * anchor node then the text within should not be processed.
+     * @param configuration
+     */
+    public static String toHyperlinksSplitNodes(String textString, Configuration configuration) throws Exception {
+        return GeocatXslUtil.toHyperlinksSplitNodes(textString, configuration);
+    }
+
+    public static UnfailingIterator parse(Configuration configuration, String string, boolean printError)
+            throws Exception {
+        return GeocatXslUtil.parse(configuration, string, printError);
+    }
 
 }

@@ -103,7 +103,8 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 		OutputSchema outSchema = OutputSchema.parse(request.getAttributeValue("outputSchema"));
 		//--------------------------------------------------------
 
-		ElementSetName setName = getElementSetName(request, ElementSetName.SUMMARY);
+        final DataManager dataManager = context.getBean(DataManager.class);
+        ElementSetName setName = getElementSetName(request, ElementSetName.SUMMARY);
 
 		Element response = new Element(getName() +"Response", Csw.NAMESPACE_CSW);
 
@@ -158,19 +159,29 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 				
 				Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null);
 
-				if (md != null)
-					response.addContent(md);
-				
-				if (_catalogConfig.isIncreasePopularity()) {
-				    gc.getBean(DataManager.class).increasePopularity(context, id);
-				}
+				if (md != null) {
+                    final Map<String, GetRecordByIdMetadataTransformer> transformers = context.getApplicationContext()
+                            .getBeansOfType(GetRecordByIdMetadataTransformer.class);
+                    for (GetRecordByIdMetadataTransformer transformer : transformers.values()) {
+                        if (transformer.isApplicable(md, outSchema)) {
+                            md = transformer.apply(md, outSchema);
+                        }
+                    }
+                    response.addContent(md);
+                    if (_catalogConfig.isIncreasePopularity()) {
+                        gc.getBean(DataManager.class).increasePopularity(context, id);
+                    }
+                }
+
 			}
 		} catch (Exception e) {
 			context.error("Raised : "+ e);
 			context.error(" (C) Stacktrace is\n"+Util.getStackTrace(e));
 			throw new NoApplicableCodeEx(e.toString());
-		}
-		return response;
+		} catch (CatalogException catalogException) {
+            catalogException.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return response;
 	}
 
 	//---------------------------------------------------------------------------

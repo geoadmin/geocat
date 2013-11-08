@@ -9,24 +9,17 @@
     </parent>
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>health-monitor</artifactId>
-    	<name>GeoNetwork health monitor</name>
+	<artifactId>geocat</artifactId>
+    <name>Geocat module</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.geonetwork-opensource</groupId>
-			<artifactId>jeeves</artifactId>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>harvesters</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
 		<dependency>
-			<groupId>org.geonetwork-opensource</groupId>
-			<artifactId>core</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.geonetwork-opensource</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>csw-server</artifactId>
 			<version>${project.version}</version>
 		</dependency>

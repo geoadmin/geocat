@@ -12,7 +12,6 @@
   <!-- =========================================================== -->
   <!--     Module Description                                      -->
   <!-- =========================================================== -->
-  <groupId>ch.geocat</groupId>
   <artifactId>oaipmh</artifactId>
   <packaging>jar</packaging>
   <name>Oaipmh modules</name>
