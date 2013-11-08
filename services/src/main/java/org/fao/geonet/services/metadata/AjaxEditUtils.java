@@ -3,6 +3,8 @@ package org.fao.geonet.services.metadata;
 import com.google.common.base.Optional;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
+import jeeves.xlink.XLink;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -15,11 +17,9 @@ import org.fao.geonet.lib.Lib;
 import org.jdom.*;
 import org.jdom.filter.ElementFilter;
 import org.jdom.filter.Filter;
+import org.jdom.input.JDOMParseException;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * // --------------------------------------------------------------------------
@@ -74,8 +74,10 @@ public class AjaxEditUtils extends EditUtils {
      * @return  The update metadata record
      * @throws Exception
      */
+    // GEOCAT
     protected Element applyChangesEmbedded(String id,
-                                        Map<String, String> changes, String currVersion) throws Exception {
+                                        Map<String, String> changes, Map<String, String> htHide, String currVersion, String lang) throws Exception {
+        //END GEOCAT
         Lib.resource.checkEditPrivilege(context, id);
         String schema = dataManager.getMetadataSchema(id);
         EditLib editLib = dataManager.getEditLib();
@@ -92,6 +94,9 @@ public class AjaxEditUtils extends EditUtils {
 
         // Store XML fragments to be handled after other elements update
         Map<String, String> xmlInputs = new HashMap<String, String>();
+        // GEOCAT
+        HashSet<Element> updatedXLinks = new HashSet<Element>();
+        // END GEOCAT
 
         // --- update elements
         for (Map.Entry<String, String> entry : changes.entrySet()) {
@@ -110,8 +115,18 @@ public class AjaxEditUtils extends EditUtils {
                 xmlInputs.put(ref, value);
                 continue;
             }
+            // GEOCAT
+            // Catch element starting with a B (stands for blackbox content)
+            // and add cdata
+            boolean blackboxContent = false;
+            if (ref.startsWith("B"))
+            {
+                ref = ref.substring(1);
+                blackboxContent = true;
+            }
 
-            if (updatedLocalizedTextElement(md, ref, value, editLib)) {
+            if (updatedLocalizedTextElement(md, ref, value, editLib, updatedXLinks) || updatedLocalizedURLElement(md, ref, value, editLib, updatedXLinks)) {
+                // END GEOCAT
                 continue;
             }
 
@@ -127,6 +142,34 @@ public class AjaxEditUtils extends EditUtils {
                 continue;
             }
             
+            // START GEOCAT CHANGE for extended topicCateogy
+            final String topicCategoryCode = "MD_TopicCategoryCode";
+            if (el.getName().equals(topicCategoryCode) && el.getNamespaceURI().equals(Geonet.Namespaces.GMD.getURI())
+                    && el.getTextTrim().contains("_")) {
+                final List<Element> topicCategories =
+                        el.getParentElement().getParentElement().getChildren("topicCategory", Geonet.Namespaces.GMD);
+
+                for (Element topicCategory : topicCategories) {
+                    if (topicCategory.getParentElement() != el) {
+                        final Element child = topicCategory.getChild(topicCategoryCode, Geonet.Namespaces.GMD);
+                        final String text = child.getText();
+                        if (el.getTextTrim().startsWith(text)) {
+                            topicCategory.detach();
+                            break;
+                        }
+                    }
+                }
+            }
+            // END GEOCAT CHANGE for extended topicCateogy
+
+            Element xlinkParent = findXlinkParent(el);
+            if( xlinkParent!=null && ReusableObjManager.isValidated(xlinkParent)){
+                continue;
+            }
+            if( xlinkParent!=null ){
+                updatedXLinks.add(xlinkParent);
+            }
+
             // Process attribute
             if (attribute != null) {
                 Pair<Namespace, String> attInfo = parseAttributeName(attribute, COLON_SEPARATOR, id, md, editLib);
@@ -135,6 +178,18 @@ public class AjaxEditUtils extends EditUtils {
                 if (el.getAttribute(localname, attrNS) != null) {
                     el.setAttribute(new Attribute(localname, value, attrNS));
                 }
+
+                // GEOCAT
+            } else if( blackboxContent ) {
+                el.removeContent();
+
+                try{
+                    el.addContent(Xml.loadString(value, false));
+                }catch (JDOMParseException ex) {
+                    // the blackbox data is can also just be a string
+                    el.setText(value);
+                }
+                // END GEOCAT
             } else {
                 // Process element value
                 @SuppressWarnings("unchecked")
@@ -170,7 +225,15 @@ public class AjaxEditUtils extends EditUtils {
                     Log.error(Geonet.EDITOR, MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
                     continue;
                 }
-                
+                // GEOCAT
+                Element xlinkParent = findXlinkParent(el);
+                if( xlinkParent!=null && ReusableObjManager.isValidated(xlinkParent)){
+                    continue;
+                }
+                if( xlinkParent!=null ){
+                    updatedXLinks.add(xlinkParent);
+                }
+                // END GEOCAT
                 if (value != null && !value.equals("")) {
                     String[] fragments = value.split(XML_FRAGMENT_SEPARATOR);
                     for (String fragment : fragments) {
@@ -203,7 +266,11 @@ public class AjaxEditUtils extends EditUtils {
                 }
             }
         }
-        
+        // GEOCAT
+        applyHiddenElements(context, dataManager, editLib, dbms, md, id, htHide);
+
+        dataManager.updateXlinkObjects(dbms, id, lang, md, updatedXLinks.toArray(new Element[updatedXLinks.size()]));
+        // END GEOCAT
         // --- remove editing info
         editLib.removeEditingInfo(md);
         editLib.contractElements(md);
@@ -268,7 +335,60 @@ public class AjaxEditUtils extends EditUtils {
 		setMetadataIntoSession(session, md, id);
 		return md;
 	}
+    // GEOCAT
+	public synchronized Element addXLink(Dbms dbms, UserSession session, String id, String ref, String name, XLink xlink)  throws Exception {
+		String  schema = dataManager.getMetadataSchema(dbms, id);
+		//--- get metadata from session
+		Element md = getMetadataFromSession(session, id);
 
+		//--- ref is parent element so find it
+		EditLib editLib = dataManager.getEditLib();
+        Element el = editLib.findElement(md, ref);
+		if (el == null)
+			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+
+		//--- locate the geonet:element and geonet:info elements and clone for
+		//--- later re-use
+		Element refEl = (Element)(el.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE)).clone();
+		Element info = (Element)(md.getChild(Edit.RootChild.INFO,Edit.NAMESPACE)).clone();
+		md.removeChild(Edit.RootChild.INFO,Edit.NAMESPACE);
+
+		Element child = null;
+		MetadataSchema mds = dataManager.getSchema(schema);
+
+		child = editLib.addElement(schema, el, name);
+
+
+		child.setAttribute(xlink.getHrefAttribute());
+		child.setAttribute(xlink.getRoleAttribute());
+		child.setAttribute(xlink.getShowAttribute());
+
+		Element resolvedElem = Processor.resolveXLink(xlink.getHref(), context);
+		child.setContent(resolvedElem);
+
+		//--- now enumerate the new child (if not a simple attribute)
+		//--- now add the geonet:element back again to keep ref number
+		el.addContent(refEl);
+
+		int iRef = editLib.findMaximumRef(md);
+		editLib.expandElements(schema, child);
+		editLib.enumerateTreeStartingAt(child, iRef+1, Integer.parseInt(ref));
+
+		//--- add editing info to everything from the parent down
+		editLib.expandTree(mds,el);
+		//--- attach the info element to the child
+		child.addContent(info);
+
+		//--- attach the info element to the metadata root)
+		md.addContent((Element)info.clone());
+
+		//--- store the metadata in the session again
+		setMetadataIntoSession(session,(Element)md.clone(), id);
+
+		// Return element added
+		return child;
+	}
+	// END GEOCAT
     /**
      * For Ajax Editing : adds an element or an attribute to a metadata element ([add] link).
      *
@@ -405,6 +525,9 @@ public class AjaxEditUtils extends EditUtils {
 		String uName = el.getName();
 		Namespace ns = el.getNamespace();
 		Element parent = el.getParentElement();
+		// GEOCAT HACK to remove "parent" topicCategories **/
+		removeParentTopicCategory(parent, el);
+        // END GEOCAT
 		Element result = null;
 		if (parent != null) {
 			int me = parent.indexOf(el);
@@ -462,6 +585,23 @@ public class AjaxEditUtils extends EditUtils {
 		return result;
 	}
 
+    // GEOCAT
+	private void removeParentTopicCategory(Element parent, Element el) throws JDOMException {
+		if (el.getName().equals("topicCategory") && el.getNamespaceURI().equals(Geonet.Namespaces.GMD.getURI())) {
+			String tag = el.getChildTextTrim("MD_TopicCategoryCode",Geonet.Namespaces.GMD);
+			if(tag!=null && tag.contains("_")) {
+				String parentCatCode = tag.split("_")[0];
+				List<?> related = Xml.selectNodes(parent, "gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode),'"+parentCatCode+"_')]", Geonet.Namespaces.iso19139Namespaces);
+				if(related.size() == 1) {
+					List<?> parentCategories = Xml.selectNodes(parent, "gmd:topicCategory[normalize-space(gmd:MD_TopicCategoryCode) = '"+parentCatCode+"']", Geonet.Namespaces.iso19139Namespaces);
+					for (Object object : parentCategories) {
+						((Content)object).detach();
+					}
+				}
+			}
+		}
+	}
+    // END GEOCAT
 	/**
 	 * Removes attribute in embedded mode.
 	 *
@@ -637,6 +777,9 @@ public class AjaxEditUtils extends EditUtils {
         editLib.contractElements(md);
         String parentUuid = null;
 		md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
+		// GEOCAT
+		md = dataManager.processSharedObjects(id, md, context.getLanguage());
+        // END GEOCAT
         String changeDate = null;
         xmlSerializer.update(id, md, changeDate, false, null, context);
 
@@ -692,7 +835,9 @@ public class AjaxEditUtils extends EditUtils {
 		editLib.contractElements(md);
         String parentUuid = null;
         md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
-
+        // GEOCAT
+        md = dataManager.processSharedObjects(id, md, context.getLanguage());
+        // END GEOCAT
         String changeDate = null;
 				xmlSerializer.update(id, md, changeDate, false, null, context);
 

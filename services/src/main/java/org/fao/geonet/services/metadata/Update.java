@@ -103,7 +103,7 @@ public class Update extends NotInReadOnlyModeService {
                 boolean index = true;
 				dataMan.updateMetadata(context, id, md, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
 			} else {
-				ajaxEditUtils.updateContent(params, false, true);
+				ajaxEditUtils.updateContent(params, true, true);
 			}
 		}
 

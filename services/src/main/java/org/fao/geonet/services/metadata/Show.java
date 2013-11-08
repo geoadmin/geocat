@@ -54,8 +54,12 @@ public class Show extends ShowViewBaseService
 	//---
 	//--------------------------------------------------------------------------
 
+    // GEOCAT
+	private boolean keepXLinks;
 	public void init(String appPath, ServiceConfig params) throws Exception{
 		super.init(appPath, params);
+		this.keepXLinks = "y".equalsIgnoreCase(params.getValue("keepXLinks", "n"));
+		     // END GEOCAT
 		cache = "y".equalsIgnoreCase(params.getValue("cache", "n"));
 	}
 
@@ -106,10 +110,12 @@ public class Show extends ShowViewBaseService
 		//--- get metadata
 		
 		Element elMd;
-		boolean addEditing = false;
+        // GEOCAT
+		boolean addEditing = "true".equalsIgnoreCase(Util.getParam(params, "addEditing","false"));
 		if (!skipInfo) {
-            boolean withValidationErrors = false, keepXlinkAttributes = false;
-            elMd = gc.getBean(DataManager.class).getMetadata(context, id, addEditing, withValidationErrors, keepXlinkAttributes);
+            boolean withValidationErrors = false, hideElements = true, allowDbmsClosing=true;
+            elMd = gc.getBean(DataManager.class).getGeocatMetadata(context, id, addEditing, withValidationErrors, , this.keepXLinks, hideElements, allowDbmsClosing);
+            // END GEOCAT
 		} else {
 			elMd = dm.getMetadataNoInfo(context, id);
 		}

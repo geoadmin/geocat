@@ -106,6 +106,10 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 			skip = true;
         }
 
+        // GEOCAT
+		final boolean published = UnpublishInvalidMetadataJob.isPublished(id, dbms);
+        boolean publishedAgain = false;
+		// END GEOCAT
 		if (!update) {
 			dm.deleteMetadataOper(context, id, skip);
 		}
@@ -125,7 +129,11 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 
 				String groupId = st.nextToken();
 				String operId  = st.nextToken();
-
+                // GEOCAT
+				if(Integer.parseInt(groupId) == 1 && Integer.parseInt(operId) == 0) {
+				    publishedAgain = true;
+				}
+				// END GEOCAT
 				if (!update) {
 					dm.setOperation(context, id, groupId, operId);
 				} else {
@@ -138,7 +146,13 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 				}
 			}
 		}
-
+        // GEOCAT
+		if(published && !publishedAgain) {
+	          new UnpublishInvalidMetadataJob.Record(info.uuid, Validity.UNKNOWN, false, context.getUserSession().getUsername(), "Manually unpublished by user", "").insertInto(dbms);
+		} else if (!published && publishedAgain) {
+            new UnpublishInvalidMetadataJob.Record(info.uuid, Validity.UNKNOWN, true, context.getUserSession().getUsername(), "Manually published by user", "").insertInto(dbms);
+		}
+		// END GEOCAT
 		//--- index metadata
         dm.indexMetadata(id);
 

@@ -101,6 +101,10 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
                     skip = true;
                 }
 
+                // GEOCAT
+                final boolean published = UnpublishInvalidMetadataJob.isPublished(id, dbms);
+                boolean publishedAgain = false;
+                // END GEOCAT
 				dm.deleteMetadataOper(context, "" + info.getId(), skip);
 
 				//--- set new ones
@@ -116,10 +120,19 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 						String groupId = st.nextToken();
 						String operId  = st.nextToken();
 
+                        if(Integer.parseInt(groupId) == 1 && Integer.parseInt(operId) == 0) {
+                            publishedAgain = true;
+                        }
+
 						dm.setOperation(context, "" + info.getId(), groupId, operId);
 					}
 				}
 				metadata.add(info.getId());
+                if(published && !publishedAgain) {
+                    new UnpublishInvalidMetadataJob.Record(uuid, Validity.UNKNOWN, false, context.getUserSession().getUsername(), "Manually unpublished by user", "").insertInto(dbms);
+                } else if (!published && publishedAgain) {
+                    new UnpublishInvalidMetadataJob.Record(uuid, Validity.UNKNOWN, true, context.getUserSession().getUsername(), "Manually published by user", "").insertInto(dbms);
+                }
 			}
 		}
 		}
