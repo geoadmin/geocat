@@ -390,7 +390,6 @@ public class Thesaurus {
     /**
      * Remove keyword from thesaurus.
      * 
-     * @param namespace
      * @param uri
      * @throws AccessDeniedException
      */

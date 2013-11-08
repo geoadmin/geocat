@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
+import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
 
 import java.util.Iterator;
@@ -54,9 +55,23 @@ public class DeleteElement implements Service {
     public Element exec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         UserSession session = context.getUserSession();
-
+        // GEOCAT
+        boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
+        // END GEOCAT
         // Retrieve thesaurus
         String sThesaurusName = Util.getParam(params, "pThesaurus");
+        // GEOCAT
+        final boolean isNonValidatedThesaurus = sThesaurusName.equals("local._none_.non_validated");
+        final boolean isValidatedThesaurus = sThesaurusName.equals("local._none_.geocat.ch");
+        if(isNonValidatedThesaurus || isValidatedThesaurus) {
+            if(!Boolean.parseBoolean(Util.getParam(params, "forceDelete", "false"))) {
+                String msg = LangUtils.loadString("reusable.rejectDefaultMsg", context.getAppPath(), context.getLanguage());
+
+                String id = Util.getParam(params, "id", "");
+                return new Reject().reject(context, ReusableTypes.keywords, new String[]{id}, msg, null, isValidatedThesaurus, testing);
+            }
+        }
+        // END GEOCAT
         ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
         Thesaurus thesaurus = thesaurusMan.getThesaurusByName(sThesaurusName);
 
