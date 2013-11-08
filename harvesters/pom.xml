@@ -14,17 +14,17 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.geonetwork-opensource</groupId>
+			<groupId>ch.geocat</groupId>
 			<artifactId>jeeves</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.geonetwork-opensource</groupId>
+			<groupId>ch.geocat</groupId>
 			<artifactId>core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.geonetwork-opensource</groupId>
+			<groupId>ch.geocat</groupId>
 			<artifactId>csw-server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -33,7 +33,7 @@
             <artifactId>sardine</artifactId>
         </dependency>
         <dependency>
-			<groupId>org.geonetwork-opensource</groupId>
+			<groupId>ch.geocat</groupId>
 			<artifactId>health-monitor</artifactId>
 			<version>${project.version}</version>
 		</dependency>

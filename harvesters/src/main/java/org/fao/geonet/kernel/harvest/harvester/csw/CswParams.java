@@ -118,6 +118,7 @@ public class CswParams extends AbstractParams {
 
 		icon     = Util.getParam(site, "icon",            icon);
 
+		outputSchema = Util.getParam(site, "outputSchema", outputSchema);
 		//--- if some search queries are given, we drop the previous ones and
 		//--- set these new ones
 
@@ -167,6 +168,7 @@ public class CswParams extends AbstractParams {
 
 		copy.capabUrl = capabUrl;
 		copy.icon     = icon;
+		copy.outputSchema = outputSchema ;
 		copy.rejectDuplicateResource = rejectDuplicateResource;
 	 	copy.queryScope = queryScope;
 	 	copy.hopCount = hopCount;
@@ -211,6 +213,7 @@ public class CswParams extends AbstractParams {
 
 	public String capabUrl;
 	public String icon;
+	public String outputSchema;
     public boolean rejectDuplicateResource;
     public String queryScope;
     public Integer hopCount;

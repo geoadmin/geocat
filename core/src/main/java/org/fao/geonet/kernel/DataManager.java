@@ -344,9 +344,10 @@ public class DataManager {
         }
     }
 
-    public void indexMetadata(final List<String> metadataIds) throws Exception {
+    public void indexMetadata(final List<String> metadataIds, final boolean processSharedObjects, final ServiceContext servContext,
+                              final boolean performValidation, final boolean fastIndex, final boolean reloadXLinks) throws Exception {
         for (String metadataId : metadataIds) {
-            indexMetadata(metadataId);
+            indexMetadata(metadataId, processSharedObjects, servContext, performValidation, fastIndex, reloadXLinks);
         }
     }
     /**
@@ -355,7 +356,8 @@ public class DataManager {
      * @param metadataId
      * @throws Exception
      */
-    public void indexMetadata(final String metadataId, boolean processSharedObjects, ServiceContext servContext, boolean performValidation, boolean fastIndex, boolean reloadXLinks) throws Exception {
+    public void indexMetadata(final String metadataId, boolean processSharedObjects, ServiceContext servContext,
+                              boolean performValidation, boolean fastIndex, boolean reloadXLinks) throws Exception {
         indexLock.lock();
         try {
             if (waitForIndexing.contains(metadataId)) {

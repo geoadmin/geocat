@@ -44,8 +44,10 @@ import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.AbstractHttpRequest;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
 
 import java.util.Collections;
@@ -349,21 +351,51 @@ public class Aligner extends BaseAligner
 			//--- maybe the metadata has been removed
 
 			if (list.size() == 0) {
+			    Log.warning(Geonet.CSW_HARVEST, "record from host: " + request.getHost() + " (uuid: " + uuid + ") did not return a metadata");
                 return null;
             }
 
 			response = list.get(0);
 			response = (Element) response.detach();
 
+			// issue #133730 : CSW getting remote MD as dc format
+			String schema = dataMan.autodetectSchema(response);
+
+			if (schema.equals("csw-record") && params.outputSchema != null &&
+					params.outputSchema.equals("http://www.opengis.net/cat/csw/2.0.2"))
+			{
+				schema = "dublin-core";
+				Element newRoot = new Element("simpledc");
+				Document newMd = new Document(newRoot);
+				newRoot.addContent(response.cloneContent());
+				newRoot.addNamespaceDeclaration(Namespace.getNamespace("dct", "http://purl.org/dc/terms/"));
+				response = newMd.getRootElement();
+
+			}
+			//removing geonet:info extra information
+			XPath xp = XPath.newInstance("geonet:info");
+			xp.addNamespace("geonet", "http://www.fao.org/geonetwork");
+			@SuppressWarnings("unchecked")
+			List<Element> lst = xp.selectNodes(response);
+			if (lst != null)
+			{
+				for (Element e : lst)
+				{
+					Element p = (Element) e.getParent();
+					p.removeContent(e);
+				}
+			}
+			// end issue #133730
+
             // validate it here if requested
-            if (params.validate) {
-                if(!dataMan.validate(response))  {
-                    log.info("Ignoring invalid metadata with uuid " + uuid);
-                    result.doesNotValidate++;
-                    return null;
-                }
+			try {
+				params.validate.validate(dataMan, context, response);
+			} catch (Exception e) {
+                log.info("Ignoring invalid metadata with uuid " + uuid);
+                result.doesNotValidate++;
+                return null;
             }
-            
+
             if(params.rejectDuplicateResource) {
                 if (foundDuplicateForResource(uuid, response)) {
                     return null;

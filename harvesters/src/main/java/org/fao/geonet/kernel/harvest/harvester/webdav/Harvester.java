@@ -32,6 +32,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
@@ -178,9 +179,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 		//--- schema handled check already done
 		String schema = dataMan.autodetectSchema(md);
 
-
         // 1.- Look for the file identifier on the metadata xml
         String uuid = dataMan.extractUUID(schema,  md);
+        // GEOCAT
+        if (uuid == null && schema.equals("iso19139.che")) {
+            return;
+        }
+        // END GEOCAT
 
         // 2.- If there is no file identifier, then use the name of the file
         if (uuid == null) {
@@ -250,11 +255,30 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 			Element md = rf.getMetadata(schemaMan);
             if(log.isDebugEnabled()) log.debug("Record got:\n"+ Xml.getString(md));
 
-			String schema = dataMan.autodetectSchema(md);
-			if (!params.validate || validates(schema, md)) {
-				return (Element) md.detach();
-			}
+            // GEOCAT
+            String schema;
+            try {
+                schema = dataMan.autodetectSchema(md);
+            } catch (NoSchemaMatchesException e) {
+                if (md.getName() == "TRANSFER") {
+                    // we need to convert to CHE
+                    String styleSheetPath = context.getAppPath() + "xsl/conversion/import/GM03-to-ISO19139CHE.xsl";
+                    Element tmp = jeeves.utils.Xml.transform(md, styleSheetPath);
+                    md = tmp;
+                }
+                schema = dataMan.autodetectSchema(md);
+            }
+            if (params.validate == HarvestValidationEnum.NOVALIDATION || validates(schema, md)) {
+                return (Element) md.detach();
+            } else {
 
+                if (params.validate == HarvestValidationEnum.NOVALIDATION || validates(schema, md)) {
+                    return (Element) md.detach();
+                }
+                log.warning("Skipping metadata that does not validate. Path is : "+ rf.getPath());
+                result.doesNotValidate++;
+            }
+            // END GEOCAT
 			log.warning("Skipping metadata that does not validate. Path is : "+ rf.getPath());
 			result.doesNotValidate++;
 		}
@@ -264,10 +288,16 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 		}
 		catch(JDOMException e) {
 			log.warning("Skipping metadata with bad XML format. Path is : "+ rf.getPath());
+			// GEOCAT: issue #21546 : warn the admin by mail
+			Util.warnAdminByMail(context, Util.SKEL_MAIL_WEBDAV_ERROR, params.url, null, rf.getPath());
+            // END GEOCAT
 			result.badFormat++;
 		}
 		catch(Exception e) {
 			log.warning("Raised exception while getting metadata file : "+ e);
+			// GEOCAT: issue #21546 : warn the admin by mail
+			Util.warnAdminByMail(context, Util.SKEL_MAIL_WEBDAV_ERROR, params.url, null, rf.getPath());
+            // END GEOCAT
 			result.unretrievable++;
 		}
 		//--- we don't raise any exception here. Just try to go on
