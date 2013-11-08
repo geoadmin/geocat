@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel.search;
 
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.fao.geonet.kernel.search.log.SearcherLogger;
@@ -46,6 +47,8 @@ public class SearchLoggerTask implements Runnable {
     }
 
     public void run() {
+	    if(!ServiceManager.searchLoggingEnabled()) return;
+
         try {
             SearcherLogger searchLogger = new SearcherLogger(srvContext, logSpatialObject, luceneTermsToExclude);
             searchLogger.logSearch(query, numHits, sort, geomWKT, value);

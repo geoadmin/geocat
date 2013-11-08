@@ -193,11 +193,21 @@ public class LuceneQueryBuilder {
                     if(field.equals("or")) {
                         // handle as 'any', add ' or ' for space-separated values
 
-                        field = "any";
-                        Set<String> values = searchCriteriaOR.get(field);
-                        if(values == null) values = new HashSet<String>();
-                        values.addAll(fieldValues);
-                        searchCriteriaOR.put(field, values);
+                        // GEOCAT
+                        for(String fieldValue : fieldValues) {
+                            field = "any";
+                            Scanner whitespaceScan = new Scanner(fieldValue).useDelimiter("\\w");
+                            while(whitespaceScan.hasNext()) {
+                                fieldValue += " or " + whitespaceScan.next();
+                            }
+                            fieldValue = fieldValue.substring(" or ".length());
+                            Set<String> values = searchCriteriaOR.get(field);
+                            if(values == null) values = new HashSet<String>();
+                            values.addAll(fieldValues);
+                            searchCriteriaOR.put(field, values);
+                        }
+
+                        // END GEOCAT
                     }
                     else {
                             Set<String> values = searchCriteriaOR.get(field);
@@ -263,7 +273,28 @@ public class LuceneQueryBuilder {
                     if (LuceneIndexField.ANY.equals(fieldName) || "all".equals(fieldName)) {
                         BooleanClause anyClause = null;
                         if (!onlyWildcard(fieldValue)) {
-                            anyClause = tokenizeSearchParam(fieldValue, similarity, tokenOccur, occur);
+                            // GEOCAT
+                            // tokenize searchParam
+                            StringTokenizer st = new StringTokenizer(fieldValue, STRING_TOKENIZER_DELIMITER);
+                            if (st.countTokens() == 1) {
+                                String token = st.nextToken();
+                                Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
+                                if (subQuery != null) {
+                                    anyClause = new BooleanClause(subQuery, tokenOccur);
+                                }
+                            } else {
+                                BooleanQuery orBooleanQuery = new BooleanQuery();
+                                while (st.hasMoreTokens()) {
+                                    String token = st.nextToken();
+                                    Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
+                                    if (subQuery != null) {
+                                        BooleanClause subClause = new BooleanClause(subQuery, occur);
+                                        orBooleanQuery.add(subClause);
+                                    }
+                                }
+                                anyClause = new BooleanClause(orBooleanQuery, tokenOccur);
+                            }
+                            // END GEOCAT
                         }
                         if (anyClause != null && StringUtils.isNotEmpty(anyClause.toString())) {
                             booleanQuery.add(anyClause);
@@ -385,7 +416,10 @@ public class LuceneQueryBuilder {
         for (String fieldValue : fieldValues) {
             if (LuceneIndexField.ANY.equals(fieldName)) {
                 addAnyTextQuery(fieldValue, similarity, (criteriaIsASet ? bq : query));
-            }
+            // GEOCAT
+            } else if (fieldName.equals("format")) {
+                addFormatQuery(fieldValue, (criteriaIsASet ? bq : query));
+            }    // END GEOCAT
             else if (LuceneIndexField.UUID.equals(fieldName) || SearchParameter.UUID.equals(fieldName)) {
                 addUUIDQuery(fieldValue, similarity, criteriaIsASet, bq, query);
             }
@@ -549,6 +583,12 @@ public class LuceneQueryBuilder {
                     templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
                 }
             } else {
+            // GEOCAT
+            if (fieldValue != null && (fieldValue.equals("y") || fieldValue.equals("s"))) {
+                templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, fieldValue));
+            }
+            else {
+                // END GEOCAT
                 templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
             }
             query.add(templateQ, templateOccur);
@@ -580,29 +620,44 @@ public class LuceneQueryBuilder {
             BooleanClause.Occur temporalRangeQueryOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
 
             TermRangeQuery temporalRangeQuery;
-
+            // GEOCAT
+            BooleanClause temporalRangeQueryClause;
+            // END GEOCAT
             // temporal extent start is within search extent
+            // GEOCAT
+            if (StringUtils.isNotBlank(extFrom) && (StringUtils.isBlank(extTo))) {
+                // END GEOCAT
             temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom, extTo, true, true);
             BooleanClause temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
 
             temporalExtentQuery.add(temporalRangeQueryClause);
-
+                // GEOCAT
+            }
+            // END GEOCAT
             // or temporal extent end is within search extent
+            // GEOCAT
+            if (StringUtils.isNotBlank(extTo) && (StringUtils.isBlank(extFrom))) {
+                // END GEOCAT
             temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, extFrom, extTo, true, true);
             temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
 
             temporalExtentQuery.add(temporalRangeQueryClause);
+            }
 
             // or temporal extent contains search extent
             if (StringUtils.isNotBlank(extTo) && StringUtils.isNotBlank(extFrom)) {
                 BooleanQuery tempQuery = new BooleanQuery();
 
-                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, extTo, null, true, true);
+                // GEOCAT
+                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, null, extTo, true, true);
+                // END GEOCAT
                 temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
 
                 tempQuery.add(temporalRangeQueryClause);
 
-                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, null, extFrom, true, true);
+                // GEOCAT
+                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom, null, true, true);
+                // END GEOCAT
                 temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
                 tempQuery.add(temporalRangeQueryClause);
 
@@ -642,8 +697,42 @@ public class LuceneQueryBuilder {
         // (this is because Lucene's StandardTokenizer would remove wildcards,
         // but that's not what we want)
         if (string.indexOf('*') >= 0 || string.indexOf('?') >= 0) {
-            WildCardStringAnalyzer wildCardStringAnalyzer = new WildCardStringAnalyzer();
-            analyzedString = wildCardStringAnalyzer.analyze(string, luceneIndexField, _analyzer, _tokenizedFieldSet);
+            // GEOCAT
+            String starsPreserved = "";
+            String[] starSeparatedList = string.split("\\*");
+            for (String starSeparatedPart : starSeparatedList) {
+                String qPreserved = "";
+                // ? present
+                if (starSeparatedPart.indexOf('?') >= 0) {
+                    String[] qSeparatedList = starSeparatedPart.split("\\?");
+                    for (String qSeparatedPart : qSeparatedList) {
+                        String analyzedPart = LuceneSearcher.analyzeQueryText(luceneIndexField, qSeparatedPart, _analyzer, _tokenizedFieldSet);
+                        qPreserved += '?' + analyzedPart;
+                    }
+                    // remove leading ?
+                    qPreserved = qPreserved.substring(1);
+                    starsPreserved += '*' + qPreserved;
+                }
+                // no ? present
+                else {
+                    starsPreserved += '*' + LuceneSearcher.analyzeQueryText(luceneIndexField, starSeparatedPart, _analyzer, _tokenizedFieldSet);
+                }
+            }
+            // remove leading *
+            if (!StringUtils.isEmpty(starsPreserved)) {
+                starsPreserved = starsPreserved.substring(1);
+            }
+
+            // restore ending wildcard
+            if (string.endsWith("*")) {
+                starsPreserved += "*";
+            }
+            else if (string.endsWith("?")) {
+                starsPreserved += "?";
+            }
+
+            analyzedString = starsPreserved;
+            // END GEOCAT
         }
         // no wildcards
         else {
@@ -861,8 +950,30 @@ public class LuceneQueryBuilder {
 		BooleanClause anyClause = null;
 		BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 		if (StringUtils.isNotBlank(any) && !onlyWildcard(any)) {
-            anyClause = tokenizeSearchParam(any, similarity, occur, occur);
-		}
+            // GEOCAT
+            // tokenize searchParam
+            StringTokenizer st = new StringTokenizer(any, STRING_TOKENIZER_DELIMITER);
+            if (st.countTokens() == 1) {
+                String token = st.nextToken();
+                Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
+                if (subQuery != null) {
+                    anyClause = new BooleanClause(subQuery, occur);
+                }
+            }
+            else {
+                BooleanQuery booleanQuery = new BooleanQuery();
+                while (st.hasMoreTokens()) {
+                    String token = st.nextToken();
+                    Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
+                    if (subQuery != null) {
+                        BooleanClause subClause = new BooleanClause(subQuery, occur);
+                        booleanQuery.add(subClause);
+                    }
+                }
+                anyClause = new BooleanClause(booleanQuery, occur);
+            }
+            // END GEOCAT
+        }
 		if (anyClause != null) {
 			query.add(anyClause);
 		}
@@ -1017,7 +1128,7 @@ public class LuceneQueryBuilder {
         if (min != null && max != null) {
             String type = _numericFieldSet.get(luceneIndexField).getType();
 
-            NumericRangeQuery<? extends Number> rangeQuery = buildNumericRangeQueryForType(luceneIndexField, min, max, minInclusive, maxExclusive, type);
+            NumericRangeQuery rangeQuery = buildNumericRangeQueryForType(luceneIndexField, min, max, minInclusive, maxExclusive, type);
 
             BooleanClause.Occur denoOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(required, false);
             BooleanClause rangeClause = new BooleanClause(rangeQuery, denoOccur);
@@ -1243,4 +1354,16 @@ public class LuceneQueryBuilder {
 
         return booleanQuery;
     }
+
+    //GEOCAT specific
+    private void addFormatQuery(String fieldValue, BooleanQuery booleanClauses) {
+        if (fieldValue != null) {
+            String[] parts = fieldValue.split("_", 2);
+            booleanClauses.add(new BooleanClause(new TermQuery(new Term("format", parts[0])), BooleanClause.Occur.MUST));
+            if (parts.length == 2) {
+                booleanClauses.add(new BooleanClause(new TermQuery(new Term("formatversion", parts[1])), BooleanClause.Occur.MUST));
+            }
+        }
+    }
+
 }
