@@ -35,11 +35,14 @@ import static org.fao.geonet.kernel.mef.MEFConstants.SCHEMA;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipOutputStream;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 
@@ -56,6 +59,8 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRelationRepository;
 import org.jdom.Element;
+
+import javax.xml.transform.stream.StreamSource;
 
 class MEF2Exporter {
 	/**
@@ -141,42 +146,22 @@ class MEF2Exporter {
 		MEFLib.createDir(zos, uuid + FS + DIR_PUBLIC);
 		MEFLib.createDir(zos, uuid + FS + DIR_PRIVATE);
 
-		// Always save metadata in iso 19139
-		if (schema.contains("iso19139") && !schema.equals("iso19139")) {
-			// ie. this is an ISO profil.
-            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-            DataManager dm = gc.getBean(DataManager.class);
-		    MetadataSchema metadataSchema = dm.getSchema(schema);
-			String path = metadataSchema.getSchemaDir() + "/convert/to19139.xsl";
-
-			ByteArrayInputStream data19139 = formatData(record, true,
-					path);
-			MEFLib.addFile(zos, uuid + FS + MD_DIR + FILE_METADATA_19139,
-					data19139);
-		}
-
-        /*
-		if(schema.equals("iso19139.che")) {
-            String appPath = context.getAppPath();
-            ISO19139CHEtoGM03 togm03 = new ISO19139CHEtoGM03(null, appPath +FS+"xsl"+FS+"conversion"+FS+"import"+FS+"ISO19139CHE-to-GM03.xsl");
-            final StreamSource source = new StreamSource(formatData(record));
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            togm03.convert(source, "TransformationTestSupport", out);
-            InputStream result = new ByteArrayInputStream(out.toByteArray());
-            MEFLib.addFile(zos,uuid + FS + MD_DIR + "metadata-gm03_2.xml", result);
-		}
-         */
-        exportExtensionPoint(....);
+        Collection<ExportFormat> formats = context.getApplicationContext().getBeansOfType(ExportFormat.class).values();
+        for (ExportFormat exportFormat : formats) {
+            for (Pair<String, String> output : exportFormat.getFormats(context, record)) {
+                MEFLib.addFile(zos,uuid + FS + MD_DIR + output.one(), output.two());
+            }
+        }
 
 		// --- save native metadata
-		ByteArrayInputStream data = formatData(record);
+		String data = ExportFormat.formatData(record, false, "");
 		MEFLib.addFile(zos, uuid + FS + MD_DIR + FILE_METADATA, data);
 
 		// --- save Feature Catalog
 		String ftUUID = getFeatureCatalogID(context, record.getId());
 		if (!ftUUID.equals("")) {
 			Metadata ft = MEFLib.retrieveMetadata(context, ftUUID, resolveXlink, removeXlinkAttribute);
-			ByteArrayInputStream ftData = formatData(ft);
+			String ftData = ExportFormat.formatData(ft, false, "");
 			MEFLib.addFile(zos, uuid + FS + SCHEMA + FILE_METADATA, ftData);
 		}
 
@@ -201,51 +186,6 @@ class MEF2Exporter {
 				// Current user could not download private data
 			}
 		}
-	}
-
-	/**
-	 * Format xml data
-	 * 
-	 * @param metadata
-	 * @return
-	 * @throws Exception
-	 */
-	private static ByteArrayInputStream formatData(Metadata metadata)
-			throws Exception {
-		return formatData(metadata, false, "");
-	}
-
-	/**
-	 * Format xml data
-	 * 
-	 * @param metadata
-	 * @param transform
-	 * @return ByteArrayInputStream
-	 * @throws Exception
-	 */
-	private static ByteArrayInputStream formatData(Metadata metadata,
-			boolean transform, String stylePath) throws Exception {
-		String xmlData = metadata.getData();
-
-		Element md = Xml.loadString(xmlData, false);
-
-		// Resolving Xlinks before export
-		// md = Processor.processXLink(md);
-
-		// Apply a stylesheet transformation when schema is ISO profil
-		if (transform) {
-			md = Xml.transform(md, stylePath);
-		}
-
-		String data = Xml.getString(md);
-
-		if (!data.startsWith("<?xml")) {
-			data = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" + data;
-        }
-
-		byte[] binData = data.getBytes(Constants.ENCODING);
-
-		return new ByteArrayInputStream(binData);
 	}
 
 	/**
