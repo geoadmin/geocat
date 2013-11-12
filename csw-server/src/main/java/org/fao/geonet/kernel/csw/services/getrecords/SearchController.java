@@ -24,9 +24,9 @@
 package org.fao.geonet.kernel.csw.services.getrecords;
 
 import jeeves.constants.Jeeves;
-import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.constants.Params;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
@@ -219,11 +219,13 @@ public class SearchController {
         }
 		Element info = res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
 		String schema = info.getChildText(Edit.Info.Elem.SCHEMA);
+
+        // GEOCAT
 		String fullSchema = schema;
 
 		boolean isCHE = schema.equals("iso19139.che") && OutputSchema.CHE_PROFILE == outSchema;
-		// PMT GeoCat c2c : Backported from old geocat
 		if (schema.contains("iso19139")) schema = "iso19139";
+        //END GEOCAT
 
 		// --- transform iso19115 record to iso19139
 		// --- If this occur user should probably migrate the catalogue from iso19115 to iso19139.
@@ -239,21 +241,25 @@ public class SearchController {
 		if (schema.equals("fgdc-std") || schema.equals("dublin-core"))
 		    if(outSchema != OutputSchema.OGC_CORE)
 		    	return null;
+
+        // GEOCAT
 		if (outSchema != OutputSchema.OWN && !isCHE) {
 		    res = geocatConversions(context, schema, res, outSchema, fullSchema, resultType, id, gc, isCHE);
 
-        //
-		// apply stylesheet according to setName and schema
-        //
-        // OGC 07-045 :
-        // Because for this application profile it is not possible that a query includes more than one
-        // typename, any value(s) of the typeNames attribute of the elementSetName element are ignored.
-        res = applyElementSetName(context, scm, schema, res, outSchema, setName, resultType, id);
-		//
-	    // apply elementnames
-        //
-        res = applyElementNames(context, elemNames, typeName, scm, schema, res, resultType, info, strategy);
+            // END GEOCAT
+
+            // apply stylesheet according to setName and schema
+            //
+            // OGC 07-045 :
+            // Because for this application profile it is not possible that a query includes more than one
+            // typename, any value(s) of the typeNames attribute of the elementSetName element are ignored.
+            res = applyElementSetName(context, scm, schema, res, outSchema, setName, resultType, id);
+            //
+            // apply elementnames
+            //
+            res = applyElementNames(context, elemNames, typeName, scm, schema, res, resultType, info, strategy);
 		}
+
         if(res != null) {
             if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
                 Log.debug(Geonet.CSW_SEARCH, "SearchController returns\n" + Xml.getString(res));

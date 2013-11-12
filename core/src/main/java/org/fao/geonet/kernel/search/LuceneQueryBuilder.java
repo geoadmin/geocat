@@ -645,7 +645,7 @@ public class LuceneQueryBuilder {
             if (StringUtils.isNotBlank(extTo) && StringUtils.isNotBlank(extFrom)) {
                 BooleanQuery tempQuery = new BooleanQuery();
 
-                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, null, extTo, true, true);
+                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, extTo, null, true, true);
                 temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
 
                 tempQuery.add(temporalRangeQueryClause);
@@ -727,6 +727,8 @@ public class LuceneQueryBuilder {
 
             analyzedString = starsPreserved;
             // END GEOCAT
+//            WildCardStringAnalyzer wildCardStringAnalyzer = new WildCardStringAnalyzer();
+//            analyzedString = wildCardStringAnalyzer.analyze(string, luceneIndexField, _analyzer, _tokenizedFieldSet);
         }
         // no wildcards
         else {
@@ -1122,7 +1124,7 @@ public class LuceneQueryBuilder {
         if (min != null && max != null) {
             String type = _numericFieldSet.get(luceneIndexField).getType();
 
-            NumericRangeQuery rangeQuery = buildNumericRangeQueryForType(luceneIndexField, min, max, minInclusive, maxExclusive, type);
+            NumericRangeQuery<? extends Number> rangeQuery = buildNumericRangeQueryForType(luceneIndexField, min, max, minInclusive, maxExclusive, type);
 
             BooleanClause.Occur denoOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(required, false);
             BooleanClause rangeClause = new BooleanClause(rangeQuery, denoOccur);

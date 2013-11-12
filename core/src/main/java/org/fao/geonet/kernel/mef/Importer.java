@@ -231,6 +231,7 @@ public class Importer {
 				String groupId = Util.getParam(params, Params.GROUP);
 				Element categs = null;
 				final boolean skipPrivileges = Util.getParam(params, "skipPrivileges", false);
+
 				final Element privileges;
 				boolean validate = false;
 
@@ -422,7 +423,7 @@ public class Importer {
                 return privileges;
             }
 
-            // --------------------------------------------------------------------
+			// --------------------------------------------------------------------
 
         public void handlePublicFile(String file, String changeDate,
 					InputStream is, int index) throws IOException {

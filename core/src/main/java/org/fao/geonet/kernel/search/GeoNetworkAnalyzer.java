@@ -47,10 +47,8 @@ import java.util.Set;
  * @author heikki doeleman
  */
 public final class GeoNetworkAnalyzer extends Analyzer {
- 
-    private CharArraySet stopwords;
-    private boolean ignoreCase = true;
-    private char[] charsToIgnore;
+    private final char[] charsToIgnore;
+    private final CharArraySet stopwords;
 
     /**
      * Creates this analyzer using no stopwords.
@@ -60,57 +58,45 @@ public final class GeoNetworkAnalyzer extends Analyzer {
     }
 
     /**
-     * 
+     *
      */
-    public GeoNetworkAnalyzer(Set<String> stopwords, char[] charsToIgnore) {
-        if(stopwords == null || stopwords.isEmpty()) {
+    public GeoNetworkAnalyzer(final Set<String> stopwords, char[] charsToIgnore) {
+        if (stopwords == null || stopwords.isEmpty()) {
             this.stopwords = CharArraySet.EMPTY_SET;
         } else {
-            this.stopwords = new CharArraySet(Geonet.LUCENE_VERSION, stopwords, ignoreCase);
-        }        this.charsToIgnore = charsToIgnore;
-        if(charsToIgnore != null) {
-        	for(char s : charsToIgnore) {
-        		Log.debug("GeoNetworkAnalyzer", "character to ignore: " + s);
-        	}
+            this.stopwords = new CharArraySet(Geonet.LUCENE_VERSION, stopwords, true);
+        }
+        this.charsToIgnore = charsToIgnore;
+        if (charsToIgnore != null) {
+            for (char s : charsToIgnore) {
+                Log.debug(getClass().getName(), "character to ignore: " + s);
+            }
         }
     }
-    private Reader wrapReader(Reader reader) {
-        if(charsToIgnore!=null && charsToIgnore.length > 0) {
-            return new CharToSpaceReader(reader, charsToIgnore);
-        } else {
-            return reader;
-        }
-    }
+
     /**
      * Creates a new {@link TokenStreamComponents} instance for this analyzer.
      *
      * @param fieldName the name of the fields content passed to the
      *                  {@link TokenStreamComponents} sink as a reader
-     * @param reader   the reader passed to the {@link Tokenizer} constructor
+     * @param reader    the reader passed to the {@link Tokenizer} constructor
      * @return the {@link TokenStreamComponents} for this analyzer.
      */
-    @SuppressWarnings("resource")
-	@Override
+    @Override
     protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
-		/*
         final Tokenizer source = new StandardTokenizer(Geonet.LUCENE_VERSION, reader);
-        ASCIIFoldingFilter asciiFoldingFilter = new ASCIIFoldingFilter(new LowerCaseFilter(Geonet.LUCENE_VERSION, new StandardFilter(Geonet.LUCENE_VERSION, source)));
-        if(CollectionUtils.isNotEmpty(this.stopwords)) {
-            return new TokenStreamComponents(source, new StopFilter(Geonet.LUCENE_VERSION, asciiFoldingFilter, this.stopwords));
-*/
-        final Tokenizer source = new StandardTokenizer(Geonet.LUCENE_VERSION, reader);
-        ASCIIFoldingFilter asciiFoldingFilter = new ASCIIFoldingFilter(new LowerCaseFilter(Geonet.LUCENE_VERSION, new StandardFilter(Geonet.LUCENE_VERSION, source)));
+        ASCIIFoldingFilter asciiFoldingFilter = new ASCIIFoldingFilter(new LowerCaseFilter(Geonet.LUCENE_VERSION,
+                new StandardFilter(Geonet.LUCENE_VERSION, source)));
 
-        if(this.stopwords!=null && !this.stopwords.isEmpty()) {
+        if (this.stopwords != null && !this.stopwords.isEmpty()) {
             return new TokenStreamComponents(source, new StopFilter(Geonet.LUCENE_VERSION, asciiFoldingFilter, this.stopwords)) {
                 @Override
                 protected void setReader(final Reader reader) throws IOException {
                     super.setReader(wrapReader(reader));
                 }
             };
-        }
-        else {
-            return new TokenStreamComponents(source, asciiFoldingFilter){
+        } else {
+            return new TokenStreamComponents(source, asciiFoldingFilter) {
                 @Override
                 protected void setReader(final Reader reader) throws IOException {
                     super.setReader(wrapReader(reader));
@@ -119,4 +105,11 @@ public final class GeoNetworkAnalyzer extends Analyzer {
         }
     }
 
+    private Reader wrapReader(final Reader reader) {
+        if (charsToIgnore != null && charsToIgnore.length > 0) {
+            return new CharToSpaceReader(reader, charsToIgnore);
+        } else {
+            return reader;
+        }
+    }
 }

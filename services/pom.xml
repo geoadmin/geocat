@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-    <parent>
-        <groupId>ch.geocat</groupId>
-        <artifactId>geonetwork</artifactId>
-        <version>1.2.0-SNAPSHOT</version>
-    </parent>
+	<parent>
+		<artifactId>geonetwork</artifactId>
+		<groupId>ch.geocat</groupId>
+		<version>1.2.0-SNAPSHOT</version>
+	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>services</artifactId>
-    <name>GeoNetwork services</name>
+    	<name>GeoNetwork services</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>ch.geocat</groupId>
 			<artifactId>jeeves</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>ch.geocat</groupId>
 			<artifactId>core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>ch.geocat</groupId>
 			<artifactId>harvesters</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>ch.geocat</groupId>
 			<artifactId>csw-server</artifactId>
 			<version>${project.version}</version>
 		</dependency>

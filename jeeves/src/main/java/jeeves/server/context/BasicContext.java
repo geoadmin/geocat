@@ -30,6 +30,7 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import javax.persistence.EntityManager;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
@@ -48,17 +49,18 @@ public class BasicContext implements Logger {
 
     protected Map<String, Object> htContexts;
     private final ConfigurableApplicationContext jeevesApplicationContext;
+    private EntityManager entityManager;
 
     //--------------------------------------------------------------------------
     //---
     //--- Constructor
     //---
     //--------------------------------------------------------------------------
-
-    public BasicContext(ConfigurableApplicationContext jeevesApplicationContext, Map<String, Object> contexts) {
+    public BasicContext(ConfigurableApplicationContext jeevesApplicationContext, Map<String, Object> contexts, EntityManager entityManager) {
 
         this.jeevesApplicationContext = jeevesApplicationContext;
         htContexts = Collections.unmodifiableMap(contexts);
+        this.entityManager = entityManager;
     }
 
     //--------------------------------------------------------------------------
@@ -97,7 +99,6 @@ public class BasicContext implements Logger {
         return htContexts.get(contextName);
     }
 
-
     //--------------------------------------------------------------------------
 
     public MonitorManager getMonitorManager() {
@@ -113,6 +114,12 @@ public class BasicContext implements Logger {
 
     public final <T> T getBean(Class<T> beanType) {
         return jeevesApplicationContext.getBean(beanType);
+    }
+
+    //--------------------------------------------------------------------------
+
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 
     //--------------------------------------------------------------------------

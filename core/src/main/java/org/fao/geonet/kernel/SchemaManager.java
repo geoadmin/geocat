@@ -710,6 +710,7 @@ public class SchemaManager {
 				schema = "iso19139";
 			}
             // END GEOCAT
+
 			// -- if the default schema failed then throw an exception
 			if (schema == null) {
 				throw new NoSchemaMatchesException("Autodetecting schema failed for metadata record with root element "+md.getName()+" in namespace "+md.getNamespace()+".");
@@ -935,6 +936,7 @@ public class SchemaManager {
 
         SchematronRepository schemaRepo = _applicationContext.getBean(SchematronRepository.class);
         MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile, xmlSubstitutionsFile, schemaRepo);
+
         mds.setName(name);
         mds.setSchemaDir(path);
         mds.loadSchematronRules(basePath);

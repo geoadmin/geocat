@@ -34,6 +34,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.geocat.kernel.UnpublishInvalidMetadataJob;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
@@ -110,6 +111,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 		final boolean published = UnpublishInvalidMetadataJob.isPublished(id, dbms);
         boolean publishedAgain = false;
 		// END GEOCAT
+
 		if (!update) {
 			dm.deleteMetadataOper(context, id, skip);
 		}
@@ -134,6 +136,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 				    publishedAgain = true;
 				}
 				// END GEOCAT
+
 				if (!update) {
 					dm.setOperation(context, id, groupId, operId);
 				} else {
@@ -146,6 +149,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 				}
 			}
 		}
+
         // GEOCAT
 		if(published && !publishedAgain) {
 	          new UnpublishInvalidMetadataJob.Record(info.uuid, Validity.UNKNOWN, false, context.getUserSession().getUsername(), "Manually unpublished by user", "").insertInto(dbms);
@@ -153,6 +157,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
             new UnpublishInvalidMetadataJob.Record(info.uuid, Validity.UNKNOWN, true, context.getUserSession().getUsername(), "Manually published by user", "").insertInto(dbms);
 		}
 		// END GEOCAT
+
 		//--- index metadata
         dm.indexMetadata(id);
 

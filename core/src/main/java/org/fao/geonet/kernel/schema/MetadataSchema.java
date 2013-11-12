@@ -36,14 +36,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.SchematronDes;
 import org.fao.geonet.repository.SchematronRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+
+import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.springframework.beans.factory.annotation.Autowired;
 
 //==============================================================================
 

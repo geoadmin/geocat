@@ -180,34 +180,34 @@ public class SummaryComparator implements Comparator<SummaryComparator.SummaryEl
     }
 
     public int compare(SummaryElement me1, SummaryElement me2)
-	{
+    {
         String key1 = me1.name;
         String key2 = me2.name;
         int count1 = me1.count;
         int count2 = me2.count;
-	    switch (_option)
-	    {
-	    case NAME:
-	    {
-	
-	        int cmp = compareKeys(key1, key2);
-	        if (cmp != 0)
-	            return cmp;
-	        else
-	            return compareCount(count1, count2);
-	    }
-	    case FREQUENCY:
-	    {
-	        return compareCount(count1, count2);
-	    }
-	    default:
-	        throw new AssertionError(_option + "is not handled by this method");
-	    }
-	}
+        switch (_option)
+        {
+        case NAME:
+        {
 
-    private int compareCount(int count1, int count2)
+            int cmp = compareKeys(key1, key2);
+            if (cmp != 0)
+                return cmp;
+            else
+                return compareCount(count1, count2);
+        }
+        case FREQUENCY:
+        {
+            return compareCount(count1, count2);
+        }
+        default:
+            throw new AssertionError(_option + "is not handled by this method");
+        }
+    }
+
+    private int compareCount(Integer count1, Integer count2)
     {
-    	int cmp = (count1 < count2) ? -1 : ((count1 == count2) ? 0 : 1);
+        int cmp = count2.compareTo(count1);
         if (cmp != 0)
             return cmp;
         else

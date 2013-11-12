@@ -2,6 +2,7 @@ package org.fao.geonet.kernel.search;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.fao.geonet.kernel.search.log.SearcherLogger;

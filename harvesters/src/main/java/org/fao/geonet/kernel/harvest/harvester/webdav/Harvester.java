@@ -279,6 +279,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 result.doesNotValidate++;
             }
             // END GEOCAT
+
 			log.warning("Skipping metadata that does not validate. Path is : "+ rf.getPath());
 			result.doesNotValidate++;
 		}
@@ -295,6 +296,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 		}
 		catch(Exception e) {
 			log.warning("Raised exception while getting metadata file : "+ e);
+
 			// GEOCAT: issue #21546 : warn the admin by mail
 			Util.warnAdminByMail(context, Util.SKEL_MAIL_WEBDAV_ERROR, params.url, null, rf.getPath());
             // END GEOCAT

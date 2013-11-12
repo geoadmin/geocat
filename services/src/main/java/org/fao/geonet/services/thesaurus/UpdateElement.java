@@ -78,6 +78,7 @@ public class UpdateElement implements Service {
 
 		ThesaurusManager manager = gc.getBean(ThesaurusManager.class);
 		Thesaurus thesaurus = manager.getThesaurusByName(ref);
+
 		Processor.uncacheXLinkUri(XLink.LOCAL_PROTOCOL + "che.keyword.get?thesaurus=" + ref + "&id=" +
                                   URLEncoder.encode(namespace + oldid, "UTF-8").toLowerCase() + "&locales=en,it,de,fr");
 		Processor.uncacheXLinkUri(XLink.LOCAL_PROTOCOL+"che.keyword.get?thesaurus=" + ref + "&id=" +

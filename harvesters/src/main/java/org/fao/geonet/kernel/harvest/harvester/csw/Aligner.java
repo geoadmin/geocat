@@ -45,9 +45,9 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.AbstractHttpRequest;
 import org.fao.geonet.utils.Log;
+import org.jdom.Namespace;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
 
 import java.util.Collections;
@@ -358,6 +358,7 @@ public class Aligner extends BaseAligner
 			response = list.get(0);
 			response = (Element) response.detach();
 
+            // GEOCAT
 			// issue #133730 : CSW getting remote MD as dc format
 			String schema = dataMan.autodetectSchema(response);
 
@@ -395,6 +396,8 @@ public class Aligner extends BaseAligner
                 result.doesNotValidate++;
                 return null;
             }
+
+            // END GEOCAT
 
             if(params.rejectDuplicateResource) {
                 if (foundDuplicateForResource(uuid, response)) {

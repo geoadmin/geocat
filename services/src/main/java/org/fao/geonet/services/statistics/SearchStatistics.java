@@ -89,6 +89,7 @@ public class SearchStatistics extends NotInReadOnlyModeService {
         int nonZeroDays = min(1, days);
         int months = Months.monthsBetween(beginDate, endDate).getMonths();
         int nonZeroMonths = min(1, months);
+
         response.addContent(new Element("activity_days").setText(days + ""));
         response.addContent(new Element("activity_months").setText(months + ""));
 

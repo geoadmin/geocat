@@ -31,6 +31,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.geocat.kernel.UnpublishInvalidMetadataJob;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
@@ -105,6 +106,7 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
                 final boolean published = UnpublishInvalidMetadataJob.isPublished(id, dbms);
                 boolean publishedAgain = false;
                 // END GEOCAT
+
 				dm.deleteMetadataOper(context, "" + info.getId(), skip);
 
 				//--- set new ones
@@ -128,6 +130,7 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 					}
 				}
 				metadata.add(info.getId());
+
                 if(published && !publishedAgain) {
                     new UnpublishInvalidMetadataJob.Record(uuid, Validity.UNKNOWN, false, context.getUserSession().getUsername(), "Manually unpublished by user", "").insertInto(dbms);
                 } else if (!published && publishedAgain) {

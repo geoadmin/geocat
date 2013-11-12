@@ -96,6 +96,7 @@ public class KeywordSearchParamsBuilder {
         	parsedParams.addLang(lang.getTextTrim());
         }
         // END GEOCAT
+
         return parsedParams;
     }
     /**

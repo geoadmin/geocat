@@ -5,6 +5,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
+import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -234,6 +235,7 @@ public class AjaxEditUtils extends EditUtils {
                     updatedXLinks.add(xlinkParent);
                 }
                 // END GEOCAT
+
                 if (value != null && !value.equals("")) {
                     String[] fragments = value.split(XML_FRAGMENT_SEPARATOR);
                     for (String fragment : fragments) {
@@ -389,6 +391,7 @@ public class AjaxEditUtils extends EditUtils {
 		return child;
 	}
 	// END GEOCAT
+
     /**
      * For Ajax Editing : adds an element or an attribute to a metadata element ([add] link).
      *
@@ -528,6 +531,7 @@ public class AjaxEditUtils extends EditUtils {
 		// GEOCAT HACK to remove "parent" topicCategories **/
 		removeParentTopicCategory(parent, el);
         // END GEOCAT
+
 		Element result = null;
 		if (parent != null) {
 			int me = parent.indexOf(el);
@@ -602,6 +606,7 @@ public class AjaxEditUtils extends EditUtils {
 		}
 	}
     // END GEOCAT
+
 	/**
 	 * Removes attribute in embedded mode.
 	 *
@@ -727,7 +732,7 @@ public class AjaxEditUtils extends EditUtils {
         md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
 
 		//--- do the validation on the metadata
-		return dataManager.doValidate(context, schema, id, md, lang, false).one();
+		return dataManager.doValidate(session, schema, id, md, lang, false).one();
 
 	}
 
@@ -777,9 +782,11 @@ public class AjaxEditUtils extends EditUtils {
         editLib.contractElements(md);
         String parentUuid = null;
 		md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
+
 		// GEOCAT
 		md = dataManager.processSharedObjects(id, md, context.getLanguage());
         // END GEOCAT
+
         String changeDate = null;
         xmlSerializer.update(id, md, changeDate, false, null, context);
 
@@ -835,9 +842,11 @@ public class AjaxEditUtils extends EditUtils {
 		editLib.contractElements(md);
         String parentUuid = null;
         md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
+
         // GEOCAT
         md = dataManager.processSharedObjects(id, md, context.getLanguage());
         // END GEOCAT
+
         String changeDate = null;
 				xmlSerializer.update(id, md, changeDate, false, null, context);
 

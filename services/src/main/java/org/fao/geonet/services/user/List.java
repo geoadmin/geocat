@@ -33,7 +33,6 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geocat;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;

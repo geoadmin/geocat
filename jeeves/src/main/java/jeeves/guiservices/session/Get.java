@@ -31,8 +31,6 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Profile;
 import org.jdom.Element;
 
-import org.springframework.security.core.GrantedAuthority;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +98,6 @@ public class Get implements Service
 		Element surname  = new Element("surname") .addContent(sSurname);
 		Element profile  = new Element("profile") .addContent(sProfile.name());
         Element profiles = context.getProfileManager().getProfilesElement(sProfile);
-
 
 		Element sEl = new Element(Jeeves.Elem.SESSION)
 			.addContent(userId)

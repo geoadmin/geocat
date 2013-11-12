@@ -29,21 +29,20 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geocat;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.util.LangUtils;
-import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.springframework.data.jpa.domain.Specifications;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import org.jdom.Element;
+
 import java.util.List;
 
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;

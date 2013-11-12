@@ -31,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -72,6 +73,7 @@ public class DeleteElement implements Service {
             }
         }
         // END GEOCAT
+
         ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
         Thesaurus thesaurus = thesaurusMan.getThesaurusByName(sThesaurusName);
 

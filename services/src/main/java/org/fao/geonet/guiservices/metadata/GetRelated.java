@@ -123,7 +123,8 @@ public class GetRelated implements Service {
 
         Element md = Show.getCached(context.getUserSession(), Integer.toString(id));
         if (type.equals("") || type.contains("children")) {
-            relatedRecords.addContent(search(uuid, "children", context, from, to, fast));
+            relatedRecords.addContent(search(uuid, "children", context, from,
+                    to, fast));
         }
         if (type.equals("") || type.contains("parent")) {
             boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
@@ -155,9 +156,7 @@ public class GetRelated implements Service {
             }
 						Element response = new Element("response");
             if (md != null) {
-                List<?> sibs = Xml.selectNodes(md, "*//gmd:aggregationInfo/*[gmd:aggregateDataSetIdentifier/*/gmd:code and " +
-                                                   "gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue!='' and " +
-                                                   "gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue!='']", nsList);
+                List<?> sibs = Xml.selectNodes(md, "*//gmd:aggregationInfo/*[gmd:aggregateDataSetIdentifier/*/gmd:code and gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue!='' and gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue!='']", nsList);
 								for (Object o : sibs) {
 									if (o instanceof Element) {
 										Element sib = (Element)o;
@@ -319,6 +318,7 @@ public class GetRelated implements Service {
             else if ("crossReference".equals(type) || "partOfSeamlessDatabase".equals(type)
             			|| "source".equals(type) || "stereoMate".equals(type))
             	parameters.addContent(new Element(type).setText(uuid));
+
             parameters.addContent(new Element("fast").addContent("index"));
             parameters.addContent(new Element("sortBy").addContent("title"));
             parameters.addContent(new Element("sortOrder").addContent("reverse"));

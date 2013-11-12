@@ -26,9 +26,9 @@ package org.fao.geonet.services.metadata.format;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.GeocatXslUtil;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.BinaryFile;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
@@ -52,7 +52,8 @@ public class PDF implements Service {
     	Element htmlDoc = metadata.getChild("html");
         XMLOutputter printer = new XMLOutputter();
         String htmlContent = printer.outputString(htmlDoc);
-        GeocatXslUtil.setNoScript();
+        XslUtil.setNoScript();
+
         File tempDir = (File) context.getServlet().getServletContext().
         	       getAttribute( "javax.servlet.context.tempdir" );
 

@@ -28,18 +28,22 @@
 package org.fao.geonet.kernel;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
-
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.constants.Geocat;
+import org.fao.geonet.domain.geocat.HiddenMetadataElement;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.geocat.kernel.reusable.ProcessParams;
+import org.fao.geonet.geocat.kernel.reusable.log.ReusableObjectLogger;
 import org.fao.geonet.kernel.metadata.TransformMetadataOnLoad;
+import org.fao.geonet.repository.geocat.HiddenMetadataElementsRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.Xml.ErrorHandler;
@@ -471,6 +475,7 @@ public class DataManager {
             }
 
             // END GEOCAT
+
             moreFields.add(SearchManager.makeField("_root",        root,        true, true));
             moreFields.add(SearchManager.makeField("_schema",      schema,      true, true));
             moreFields.add(SearchManager.makeField("_createDate",  createDate,  true, true));
@@ -500,14 +505,16 @@ public class DataManager {
                 }
             }
             // GEOCAT
-            try {
-                int groupOwnerId = Integer.valueOf(groupOwner);
-                moreFields.add(SearchManager.makeField("_groupOwner", groupOwner, true, true));
-                Element groupInfo = dbms.select("SELECT logouuid, website FROM groups where id=?", groupOwnerId ).getChild("record");
-                moreFields.add(SearchManager.makeField("groupLogoUuid", groupInfo.getChildText("logouuid"), true, false));
-                moreFields.add(SearchManager.makeField("groupWebsite", groupInfo.getChildText("website"), true, false));
-            } catch (NumberFormatException nfe) {
-                // that's ok, sometime groupOwner is blank
+            if (groupOwner != null) {
+                try {
+                    int groupOwnerId = Integer.valueOf(groupOwner);
+                    moreFields.add(SearchManager.makeField("_groupOwner", groupOwner, true, true));
+                    Element groupInfo = dbms.select("SELECT logouuid, website FROM groups where id=?", groupOwnerId ).getChild("record");
+                    moreFields.add(SearchManager.makeField("groupLogoUuid", groupInfo.getChildText("logouuid"), true, false));
+                    moreFields.add(SearchManager.makeField("groupWebsite", groupInfo.getChildText("website"), true, false));
+                } catch (NumberFormatException nfe) {
+                    // that's ok, sometime groupOwner is blank
+                }
             }
             // GEOCAT
 
@@ -842,6 +849,7 @@ public class DataManager {
                 inspireReport.detach();
             }
             // END GEOCAT
+
             Element failedAssert = Xml.selectElement(schemaTronReport, "geonet:report/svrl:schematron-output/svrl:failed-assert", theNSs);
 
             Element failedSchematronVerification = Xml.selectElement(schemaTronReport, "geonet:report/geonet:schematronVerificationError", theNSs);
@@ -1486,6 +1494,7 @@ public class DataManager {
                                     boolean index, boolean updateFixedInfo, UpdateDatestamp updateDatestamp,
                                     boolean fullRightsForGroup) throws Exception {
         final String schema = newMetadata.getDataInfo().getSchemaId();
+
         // GEOCAT
         if(newMetadata.getDataInfo().getType() == MetadataType.METADATA && !"iso19139.che".equals(schema)) {
             throw new IllegalArgumentException(schema+" is not permitted in the database as a non-harvested metadata.  Apply a import stylesheet to convert file to iso19139.che");
@@ -1583,6 +1592,7 @@ public class DataManager {
         if (metadataXml == null) return null;
 
         Collection<TransformMetadataOnLoad> transformer = _applicationContext.getBeansOfType(TransformMetadataOnLoad.class).values();
+
         String version = null;
 
         if (forEditing) { // copy in xlink'd fragments but leave xlink atts to editor
@@ -1605,9 +1615,6 @@ public class DataManager {
             }
         }
 
-        for (TransformMetadataOnLoad transformMetadataOnLoad : transformer) {
-
-        }
         // GEOCAT
 
         if( getMetadataSchema(id).equals("iso19139.che")) {
@@ -1735,6 +1742,7 @@ public class DataManager {
             metadataXml = processSharedObjects(metadataId, md, lang);
         }
         // END GEOCAT
+
         // Notifies the metadata change to metatada notifier service
         final Metadata metadata = _metadataRepository.findOne(metadataId);
 
@@ -1779,7 +1787,7 @@ public class DataManager {
         }
         return md;
     }
-    // GEOCAT
+    // END GEOCAT
     /**
      * Validates an xml document, using autodetectschema to determine how.
      *
@@ -1906,6 +1914,7 @@ public class DataManager {
             hideElements(context, md, id, false, true);
         }
         // END GEOCAT
+
         Element sessionReport = (Element)session.getProperty(Geonet.Session.VALIDATION_REPORT + id);
         if (sessionReport != null && !forEditing) {
             if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
@@ -2779,6 +2788,7 @@ public class DataManager {
 
             result.addContent(env);
             // apply update-fixed-info.xsl
+
             // GEOCAT
             String styleSheet;
             if(metadata.getDataInfo().getType() == MetadataType.TEMPLATE) {
@@ -2822,7 +2832,7 @@ public class DataManager {
 
         // --- get parent metadata in read/only mode
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-        Element parent = getGeocatMetadata(srvContext, parentId, forEditing, withValidationErrors, keepXlinkAttributes,false, false);
+        Element parent = getGeocatMetadata(srvContext, parentId, forEditing, withValidationErrors, keepXlinkAttributes, false, false);
 
         Element env = new Element("update");
         env.addContent(new Element("parentUuid").setText(parentUuid));
@@ -2935,6 +2945,7 @@ public class DataManager {
         md.detach();
     }
     // END GEOCAT
+
     /**
      * TODO : buildInfoElem contains similar portion of code with indexMetadata
      * @param context
@@ -3003,6 +3014,7 @@ public class DataManager {
         	// that's ok, sometime groupOwner is blank
         }
         // END GEOCAT
+
         // add owner name
         User user = _applicationContext.getBean(UserRepository.class).findOne(owner);
         if (user != null) {

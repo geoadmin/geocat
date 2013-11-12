@@ -35,6 +35,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Setting;
+import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
@@ -93,7 +94,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-/** This is the main class. It handles http connections and inits the system
+/**
+ * This is the main class, it handles http connections and inits the system.
  */
 public class Geonetwork implements ApplicationHandler {
     private Logger logger;
@@ -282,6 +284,17 @@ public class Geonetwork implements ApplicationHandler {
         logger.info("  - Lucene configuration is:");
         logger.info(lc.toString());
 
+        List<Element> extentConfig = handlerConfig.getChildren(Geocat.Config.EXTENT_CONFIG);
+
+        ExtentManager extentMan = new ExtentManager(dataStore, extentConfig);
+
+		//-------------------------------------------------------------------------
+		//--- ReusableObjectManager
+
+        List<Element> reusableConfig = handlerConfig.getChildren(Geocat.Config.REUSABLE_OBJECT_CONFIG);
+		ReusableObjManager reusableObjMan = new ReusableObjManager(path, reusableConfig, context.getSerialFactory());
+
+
         try {
             _applicationContext.getBean(DataStore.class);
         } catch (NoSuchBeanDefinitionException e) {
@@ -303,23 +316,14 @@ public class Geonetwork implements ApplicationHandler {
             nfe.printStackTrace();
         }
 
+        String htmlCacheDir = handlerConfig
+                .getMandatoryValue(Geonet.Config.HTMLCACHE_DIR);
+
         SettingInfo settingInfo = context.getBean(SettingInfo.class);
         searchMan = _applicationContext.getBean(SearchManager.class);
         searchMan.init(logAsynch,
                 logSpatialObject, luceneTermsToExclude,
                 maxWritesInTransaction);
-
-        List<Element> extentConfig = handlerConfig.getChildren(Geocat.Config.EXTENT_CONFIG);
-
-        ExtentManager extentMan = new ExtentManager(dataStore, extentConfig);
-
-		//-------------------------------------------------------------------------
-		//--- ReusableObjectManager
-
-        List<Element> reusableConfig = handlerConfig.getChildren(Geocat.Config.REUSABLE_OBJECT_CONFIG);
-		ReusableObjManager reusableObjMan = new ReusableObjManager(path, reusableConfig, context.getSerialFactory());
-
-		//------------------------------------------------------------------------
 
 
         // if the validator exists the proxyCallbackURL needs to have the external host and
@@ -362,7 +366,6 @@ public class Geonetwork implements ApplicationHandler {
         logger.info("  - Thesaurus...");
 
         _applicationContext.getBean(ThesaurusManager.class).init(context, appPath, thesauriDir);
-		dataMan.setThesaurusManager(thesaurusMan);
 
         //------------------------------------------------------------------------
         //--- initialize catalogue services for the web
@@ -419,6 +422,7 @@ public class Geonetwork implements ApplicationHandler {
                     "5"));
             Integer dbHeartBeatFixedDelay = Integer.parseInt(handlerConfig.getValue(Geonet.Config.DB_HEARTBEAT_FIXEDDELAYSECONDS, "60"));
             createDBHeartBeat(gnContext, dbHeartBeatInitialDelay, dbHeartBeatFixedDelay);
+
         }
         return gnContext;
     }

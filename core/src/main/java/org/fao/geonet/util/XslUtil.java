@@ -22,7 +22,7 @@ import org.w3c.dom.Node;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
- * are Objects because it is hard to determine what is passed in from XSLT. Most
+ * params are objects because it is hard to determine what is passed in from XSLT.
  * Most are converted to string by calling tostring.
  *
  * @author jesse
@@ -305,7 +305,6 @@ public final class XslUtil
 		return src.toString().matches(pattern.toString());
 	}
 
-
     private static ThreadLocal<Boolean> allowScripting = new InheritableThreadLocal<Boolean>();
     public static void setNoScript() {
         allowScripting.set(false);
@@ -313,6 +312,7 @@ public final class XslUtil
     public static boolean allowScripting() {
         return allowScripting.get() == null || allowScripting.get();
     }
+
     public static String expandScientific(Object src) {
         return GeocatXslUtil.expandScientific(src);
     }

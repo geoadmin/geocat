@@ -53,6 +53,7 @@ import org.fao.geonet.exceptions.ServiceNotMatchedEx;
 import org.fao.geonet.utils.*;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -982,8 +983,7 @@ public class ServiceManager {
 	private void warning(String message) { Log.warning(Log.SERVICE, message); }
 	static  void error  (String message) { Log.error  (Log.SERVICE, message); }
 	public ProfileManager getProfileManager() { return jeevesApplicationContext.getBean(ProfileManager.class); }
-	
-	
+
 	// GEOCAT
 	
 

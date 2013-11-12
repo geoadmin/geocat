@@ -110,6 +110,7 @@ public class Show extends ShowViewBaseService
 		//--- get metadata
 		
 		Element elMd;
+
         // GEOCAT
 		boolean addEditing = "true".equalsIgnoreCase(Util.getParam(params, "addEditing","false"));
 		if (!skipInfo) {

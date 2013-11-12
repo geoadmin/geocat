@@ -370,11 +370,11 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             metadataMassiveUpdatePrivilege: serviceUrl + 'metadata.batch.update.privileges',
             metadataMassiveUpdateCategories: serviceUrl + 'metadata.batch.update.categories',
             metadataMassiveNewOwner: serviceUrl + 'metadata.batch.newowner',
-            getMyInfo : serviceUrl + 'xml.info?type=me',
-            getGroups : serviceUrl + 'xml.info?type=groups',
-            getRegions : serviceUrl + 'xml.info?type=regions',
-            getSources : serviceUrl + 'xml.info?type=sources',
-            getUsers : serviceUrl + 'xml.info?type=users',
+            getMyInfo: serviceUrl + 'xml.info?type=me',
+            getGroups: serviceUrl + 'xml.info?type=groups',
+            getRegions: serviceUrl + 'xml.info?type=regions',
+            getSources: serviceUrl + 'xml.info?type=sources',
+            getUsers: serviceUrl + 'xml.info?type=users',
             getSiteInfo: serviceUrl + 'xml.info?type=site&type=auth&type=userGroupOnly',
             getInspireInfo: serviceUrl + 'xml.info?type=inspire',
             getIsoLanguages : serviceUrl + 'isolanguages',
@@ -534,6 +534,17 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     onAfterRating : function() {
         this.fireEvent('afterRating', this);
+    },
+    /** api: method[onAfterStatus]
+     *  :param e: ``Object``
+     *
+     *  The "onAfterStatus" listener.
+     *
+     *  Listeners will be called with the following arguments:
+     *
+     *    * ``this`` : GeoNetwork.Catalogue
+     *    
+     */
     },
     /** api: method[onAfterStatus]
      *  :param e: ``Object``
@@ -939,7 +950,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 this.kvpSearch("fast=index&_uuid=" + uuid, null, null, null, true, store, null, false);
                 record = store.getAt(store.find('uuid', uuid));
             }
-
+            
             // metadata deleted or not visible to current user
             if (record !== undefined) {
                 if (this.metadataShowFn) {
@@ -1407,7 +1418,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *
      * FIXME : Need work on GeoNetwork side to fix JS calls
      */
-    massiveOp : function(type, cb) {
+    massiveOp: function(type, cb){
         if (type === 'Privileges') {
             var url = this.services.mdBatchAdminXml + "?id=" + id;
             var privilegesPanel = new GeoNetwork.admin.PrivilegesPanel({
@@ -1424,6 +1435,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     },
     /** private: method[modalAction]
      *
+     *  
      *  Create a modal window and load the URL content or add the panel
      *  in the modal window.
      *  
@@ -1477,7 +1489,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     /** api: method[metadataAdmin]
      *  Metadata admin form for privileges
      */
-    metadataAdmin : function(id) {
+    metadataAdmin: function(id){
         var url = this.services.mdAdminXml + "?id=" + id;
         var privilegesPanel = new GeoNetwork.admin.PrivilegesPanel({
             id: id,

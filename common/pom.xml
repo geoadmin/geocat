@@ -13,6 +13,7 @@
 	<!-- =========================================================== -->
 	<!-- Module Description -->
 	<!-- =========================================================== -->
+	<groupId>ch.geocat</groupId>
 	<artifactId>common</artifactId>
 	<packaging>jar</packaging>
 	<name>common utils</name>

@@ -26,9 +26,9 @@ package jeeves.server.context;
 import jeeves.component.ProfileManager;
 import jeeves.monitor.MonitorManager;
 import org.fao.geonet.utils.Log;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import javax.persistence.EntityManager;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -40,7 +40,6 @@ import java.util.Map;
 public class ScheduleContext extends BasicContext
 {
 	private String scheduleName;
-	private ProfileManager profileManager;
 
     //--------------------------------------------------------------------------
 	//---
@@ -48,23 +47,18 @@ public class ScheduleContext extends BasicContext
 	//---
 	//--------------------------------------------------------------------------
 
-	public ScheduleContext(String name, ConfigurableApplicationContext appContext, MonitorManager mm, Hashtable<String, Object> contexts)
-	{
-		super(appContext, contexts);
+	public ScheduleContext(String name, ConfigurableApplicationContext appContext, Hashtable<String, Object> contexts,
+                           EntityManager entityManager) {
+		super(appContext, contexts, entityManager);
 
 		logger = Log.createLogger(Log.SCHEDULER +"."+ name);
 		this.scheduleName = name;
-		this.profileManager = profileManager;
 	}
 
     public String getScheduleName() {
         return scheduleName;
     }
     
-    public ProfileManager getProfileManager() {
-		return profileManager;
-	}
-
     public Map<String, Object> allContexts() {
         return htContexts;
     }

@@ -390,6 +390,10 @@ public class Thesaurus {
     /**
      * Remove keyword from thesaurus.
      * 
+<<<<<<< HEAD
+=======
+     * @param namespace
+>>>>>>> upstream/develop
      * @param uri
      * @throws AccessDeniedException
      */
@@ -894,8 +898,8 @@ public class Thesaurus {
         public String getDefaultNamespace() {
             return this.defaultNamespace;
         }
-        public Map<String, String> getTitles(ServiceContext context) throws JDOMException, IOException {
-            return LangUtils.translate(context, getKey());
-        }
 
+    public Map<String, String> getTitles(ServiceContext context) throws JDOMException, IOException {
+        return LangUtils.translate(context, getKey());
+    }
 }

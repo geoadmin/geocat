@@ -44,7 +44,6 @@ import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.springframework.context.ApplicationContext;
 
 //==============================================================================
 

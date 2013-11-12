@@ -815,6 +815,7 @@ public class EditLib {
 		if(inDisabledXlinkElem) {
 		    elem.setAttribute(new Attribute(Edit.Element.Attr.DISABLED, "true"));
 		}
+
 		elem.setAttribute(new Attribute(Edit.Element.Attr.PARENT, parent +""));
 		elem.setAttribute(new Attribute(Edit.Element.Attr.UUID, md.getQualifiedName()+"_"+UUID.randomUUID().toString()));
 		md.addContent(elem);
@@ -1554,5 +1555,4 @@ public class EditLib {
 
         return xPath;
     }
-
 }

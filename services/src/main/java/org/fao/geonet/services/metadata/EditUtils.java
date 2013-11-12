@@ -24,9 +24,11 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.xlink.XLink;
+
 import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
@@ -140,11 +142,13 @@ class EditUtils {
         // GEOCAT
 		Map<String, String> htHide = new HashMap<String, String>(100);
         // END GEOCAT
+
 		@SuppressWarnings("unchecked")
         List<Element> list = params.getChildren();
 		for (Element el : list) {
 			String sPos = el.getName();
 			String sVal = el.getText();
+
             // GEOCAT
 			if (sPos.startsWith("_") && !sPos.startsWith("_d_")) {
 				htChanges.put(sPos.substring(1), sVal);
@@ -157,6 +161,10 @@ class EditUtils {
                 htHide.put(ref, sVal);
 		    }
             // END GEOCAT
+
+			if (sPos.startsWith("_")) {
+				htChanges.put(sPos.substring(1), sVal);
+            }
 		}
 
         //
@@ -260,6 +268,7 @@ class EditUtils {
                 updatedXLinks.add(xlinkParent);
             }
             // END GEOCAT
+
 			if (attr != null) {
                 // The following work-around decodes any attribute name that has a COLON in it
                 // The : is replaced by the word COLON in the xslt so that it can be processed
@@ -306,6 +315,7 @@ class EditUtils {
         // GEOCAT
 		applyHiddenElements(context, dataManager, editLib, dbms, md, id, htHide);
         // END GEOCAT
+
 		//--- remove editing info added by previous call
 		editLib.removeEditingInfo(md);
 
@@ -435,6 +445,7 @@ class EditUtils {
                 String[] ids = ref.split("_");
                 // --- search element in current metadata record
                 Element parent = editLib.findElement(md, ids[2]);
+
                 // GEOCAT
                 Element xlinkParent = findXlinkParent(parent);
                 if( xlinkParent!=null && ReusableObjManager.isValidated(xlinkParent)){
@@ -452,6 +463,7 @@ class EditUtils {
                 Namespace gmd = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
                 Element langElem = new Element("LocalisedCharacterString", gmd);
                 langElem.setAttribute("locale", "#" + ids[1].toUpperCase());
+
                 langElem.setText(val);
 
                 Element freeText = getOrAdd(parent, "PT_FreeText", gmd);

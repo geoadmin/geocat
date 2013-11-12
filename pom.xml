@@ -63,15 +63,15 @@
   <!-- TODO developer part-->
   <developers>
     <developer>
-      <name></name>
-      <id></id>
-      <organization></organization>
-      <organizationUrl></organizationUrl>
-      <email></email>
+      <name/>
+      <id/>
+      <organization/>
+      <organizationUrl/>
+      <email/>
       <roles>
-        <role></role>
+        <role/>
       </roles>
-      <timezone></timezone>
+      <timezone/>
     </developer>
   </developers>
 
@@ -162,7 +162,7 @@
             <encoding>UTF-8</encoding>
           </configuration>
         </plugin>
-	  </plugins>
+      </plugins>
     </pluginManagement>
 
     <plugins>
@@ -201,7 +201,7 @@
             <output>${project.build.directory}/server-output</output>
             <systemProperties>
               <GEOSERVER_DATA_DIR>release/data/geoserver_data</GEOSERVER_DATA_DIR>
-	      <mime-mappings>web/target/geonetwork/WEB-INF/mime-types.properties</mime-mappings>
+              <mime-mappings>web/target/geonetwork/WEB-INF/mime-types.properties</mime-mappings>
             </systemProperties>
           </container>
           <configuration>
@@ -281,16 +281,16 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-      	<groupId>net.sf.ehcache</groupId>
-      	<artifactId>ehcache-core</artifactId>
-      	<version>2.5.3</version>
+        <groupId>net.sf.ehcache</groupId>
+        <artifactId>ehcache-core</artifactId>
+        <version>2.5.3</version>
       </dependency>
-        <!-- rewrite url servletfilter -->
-        <dependency>
-            <groupId>org.tuckey</groupId>
-            <artifactId>urlrewritefilter</artifactId>
-            <version>3.2.0</version>
-        </dependency>
+      <!-- rewrite url servletfilter -->
+      <dependency>
+        <groupId>org.tuckey</groupId>
+        <artifactId>urlrewritefilter</artifactId>
+        <version>3.2.0</version>
+      </dependency>
 
       <!-- XML -->
       <dependency>
@@ -308,7 +308,7 @@
         <artifactId>saxon</artifactId>
         <version>9.1.0.8b-patch</version>
       </dependency>
-			<dependency>
+      <dependency>
         <groupId>net.sf.saxon</groupId>
         <artifactId>saxon-dom</artifactId>
         <version>9.1.0.8b</version>
@@ -323,12 +323,12 @@
             <artifactId>sardine</artifactId>
             <version>5.0.1</version>
         </dependency>
-			<!-- universal character set detector -->
-			<dependency>
-				<groupId>com.googlecode.juniversalchardet</groupId>
-				<artifactId>juniversalchardet</artifactId>
-				<version>1.0.3</version>
-			</dependency>
+      <!-- universal character set detector -->
+      <dependency>
+        <groupId>com.googlecode.juniversalchardet</groupId>
+        <artifactId>juniversalchardet</artifactId>
+        <version>1.0.3</version>
+      </dependency>
 
       <!-- Thesaurus stuff -->
       <dependency>
@@ -394,10 +394,10 @@
         <!-- 1.0.2 in Geonetwork -->
       </dependency>
       <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
-            <version>3.0.1</version>
-        </dependency>
+        <groupId>commons-net</groupId>
+        <artifactId>commons-net</artifactId>
+        <version>3.0.1</version>
+      </dependency>
       <dependency>
         <groupId>commons-digester</groupId>
         <artifactId>commons-digester</artifactId>
@@ -456,7 +456,7 @@
       <dependency>
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
-        <version>1.2.16</version>
+        <version>1.2.13</version>
         <!-- Same as the dependency in commons-logging -->
       </dependency>
       <dependency>
@@ -485,19 +485,19 @@
         <version>${lucene.version}</version>
       </dependency>
       <dependency>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-misc</artifactId>
-          <version>${lucene.version}</version>
+        <groupId>org.apache.lucene</groupId>
+        <artifactId>lucene-misc</artifactId>
+        <version>${lucene.version}</version>
       </dependency>
       <dependency>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-queries</artifactId>
-          <version>${lucene.version}</version>
+        <groupId>org.apache.lucene</groupId>
+        <artifactId>lucene-queries</artifactId>
+        <version>${lucene.version}</version>
       </dependency>
       <dependency>
-          <groupId>org.apache.lucene</groupId>
-          <artifactId>lucene-queryparser</artifactId>
-          <version>${lucene.version}</version>
+        <groupId>org.apache.lucene</groupId>
+        <artifactId>lucene-queryparser</artifactId>
+        <version>${lucene.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.lucene</groupId>
@@ -505,9 +505,9 @@
         <version>${lucene.version}</version>
       </dependency>
       <dependency>
-          <groupId>pcj</groupId>
-          <artifactId>pcj</artifactId>
-          <version>1.2</version>
+        <groupId>pcj</groupId>
+        <artifactId>pcj</artifactId>
+        <version>1.2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.jcs</groupId>
@@ -516,8 +516,8 @@
       </dependency>
       <dependency>
         <groupId>jfree</groupId>
-	<artifactId>jfreechart</artifactId>
-	<version>1.0.0</version>
+        <artifactId>jfreechart</artifactId>
+        <version>1.0.0</version>
       </dependency>
       <dependency>
         <groupId>jfree</groupId>
@@ -551,8 +551,8 @@
       </dependency>
       <dependency>
         <groupId>jdbm</groupId>
-     	<artifactId>jdbm</artifactId>
-     	<version>1.0</version>
+        <artifactId>jdbm</artifactId>
+        <version>1.0</version>
       </dependency>
 
       <!-- Geotools and spatial search stuff -->
@@ -784,7 +784,7 @@
         <artifactId>mysql-connector-java</artifactId>
         <version>5.1.26</version>
       </dependency>
-			<!-- Not permitted under oracle licensing rules
+      <!-- Not permitted under oracle licensing rules
       <dependency>
         <groupId>ojdbc</groupId>
         <artifactId>ojdbc</artifactId>
@@ -796,18 +796,18 @@
         <artifactId>izpack-standalone-compiler</artifactId>
         <version>4.3.1</version>
       </dependency>
-        <!-- language detection -->
-       <dependency>
-          <groupId>com.cybozu.labs</groupId>
-          <artifactId>langdetect</artifactId>
-          <version>1.1-20120112</version>
+      <!-- language detection -->
+      <dependency>
+        <groupId>com.cybozu.labs</groupId>
+        <artifactId>langdetect</artifactId>
+        <version>1.1-20120112</version>
       </dependency>
-        <dependency>
-            <groupId>net.arnx.jsonic</groupId>
-            <artifactId>jsonic</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        <!-- end language detection -->
+      <dependency>
+        <groupId>net.arnx.jsonic</groupId>
+        <artifactId>jsonic</artifactId>
+        <version>1.2.0</version>
+      </dependency>
+      <!-- end language detection -->
 
       <!-- Spring dependencies -->
       <dependency>
@@ -1020,7 +1020,6 @@
     <module>healthmonitor</module>
     <module>services</module>
     <module>web-client</module>
-    <module>geocat</module>
     <module>web</module>
   </modules>
 
@@ -1036,6 +1035,17 @@
       <id>itests</id>
       <modules>
         <module>web-itest</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>geoserver</id>
+      <activation>
+        <file>
+          <exists>geoserver/pom.xml</exists>
+        </file>
+      </activation>
+      <modules>
+        <module>geoserver</module>
       </modules>
     </profile>
     <profile>

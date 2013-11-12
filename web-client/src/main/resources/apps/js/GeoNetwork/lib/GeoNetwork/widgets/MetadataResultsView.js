@@ -57,6 +57,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
     
     records: null,
     
+    
             pointRadius: 2,
             pointRadius: 2,
 
@@ -528,6 +529,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
      */
     resultsLoaded: function(view, records, options){
         this.records = records;
+    },
     refreshLinks: function () {
         this.dislayLinks(this.records);
     },
@@ -556,6 +558,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                         var linkButton = [], label = null, currentType = null, bt,
                              allowDynamic = r.get('dynamic'), allowDownload = r.get('download'),
                              hasDownloadAction = false;
+                        
                         store.each(function (record) {
                             // Filter on type
                             if (filter !== '' && filter.indexOf(record.get('type')) === -1) {
@@ -673,7 +676,6 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                                 if (l.features.length > 0) {
                                     this.features = [];
                                     l.destroyFeatures();
-                                }
                                         });
                     },
 
@@ -846,22 +848,6 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                                             href: record.get('href')
                                         });
                                     }
-                                });
-                            } else {
-                                // If link is uploaded to GeoNetwork the resources.get service is used
-                                // Check if allowDownload 
-                                var displayLink = true;
-                                if (record.get('href').indexOf('resources.get') !== -1) {
-                                    displayLink = allowDownload;
-                                } else if (currentType === 'application/vnd.google-earth.kml+xml') {
-                                    // Google earth link is provided when a WMS is provided
-                                    displayLink = allowDynamic;
-                                }
-                                if (displayLink) {
-                                    linkButton.push({
-                                        text: (record.get('title') || record.get('name')),
-                                        href: record.get('href')
-                                    });
                                 }
                                 });
                                                                     } else {
@@ -1281,7 +1267,6 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                                 uuid = records[i].get('uuid');
                                 selected[uuid] = true;
                 });
-                            }
 
                             /* Keep selected and remove others */
                             for (i = 0; i < this.mdSelectionUuids.length; i++) {
@@ -1335,7 +1320,6 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                         GeoNetwork.MetadataResultsView.superclass.onDestroy
                                 .apply(this, arguments);
                     }
-                });
 
 /** api: xtype = gn_metadataresultsview */
 Ext.reg('gn_metadataresultsview', GeoNetwork.MetadataResultsView);

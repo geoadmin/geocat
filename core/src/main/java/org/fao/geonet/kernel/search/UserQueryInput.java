@@ -90,7 +90,6 @@ public class UserQueryInput {
      */
     public static final List<String> IGNORE_FIELDS = Arrays.asList("ts", "debug");
 
-
     private String similarity;
     private String editable;
     private static Map<String, String> searchParamToLuceneField = new HashMap<String, String>();

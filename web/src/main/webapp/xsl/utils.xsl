@@ -73,8 +73,8 @@
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:variable name="e5">
-		<xsl:call-template name="replaceString">
-			<xsl:with-param name="expr"        select="$e4"/>
+			<xsl:call-template name="replaceString">
+				<xsl:with-param name="expr"        select="$e4"/>
 				<xsl:with-param name="pattern"     select="'&quot;'"/>
 				<xsl:with-param name="replacement" select="'&amp;quot;'"/>
 			</xsl:call-template>

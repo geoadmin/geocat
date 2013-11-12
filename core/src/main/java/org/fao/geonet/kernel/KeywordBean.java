@@ -33,6 +33,7 @@ import org.springframework.util.StringUtils;
 
 import javax.print.URIException;
 import java.io.IOException;
+import org.springframework.util.StringUtils;
 import java.util.*;
 
 /**
@@ -63,7 +64,9 @@ public class KeywordBean {
 	private final Map<String, String> definitions = new LinkedHashMap<String,String>();
     private IsoLanguagesMapper isoLanguageMapper;
     private String defaultLang;
+
     private String broader;
+
 	/**
 	 * Create keyword bean with the default IsoLanguageMapper
 	 */
@@ -585,6 +588,8 @@ public class KeywordBean {
         if (thesaurusType.contains("-"))
             thesaurusType = thesaurusType.split("-")[1];
         elKeyword.setAttribute("type", thesaurusType);
+
+        // GEOCAT
         Thesaurus thesaurus = finder.getThesaurusByName(getThesaurusKey());
         Element elthesaurus = new Element("thesaurus");
         if(thesaurus != null) {
@@ -594,6 +599,8 @@ public class KeywordBean {
             }
         }
         elthesaurus.addContent(new Element("key").setText(this.getThesaurusKey()));
+
+        // END GEOCAT
 
         // Geo attribute
         if (this.getCoordEast() != null && this.getCoordWest() != null
@@ -700,7 +707,7 @@ public class KeywordBean {
         this.broader = broader;
         return this;
     }
-    
+
     @Override
     public String toString() {
         return getUriCode()+" : "+getDefaultValue();

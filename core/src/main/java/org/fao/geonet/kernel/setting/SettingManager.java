@@ -59,6 +59,8 @@ public class SettingManager {
 
     public static final String SYSTEM_SITE_SITE_ID_PATH = "system/site/siteId";
     public static final String SYSTEM_SITE_NAME_PATH = "system/site/name";
+    public static final String SYSTEM_LUCENE_IGNORECHARS = "system/lucene/ignorechars";
+
     @Autowired
     private SettingRepository _repo;
 
@@ -96,12 +98,14 @@ public class SettingManager {
     private void buildXmlTree(Element env, Map<String, Element> pathElements, Setting setting) {
         String[] segments = setting.getName().split("/");
         Element parent = env;
+        String path = "";
         for (int i = 0; i < segments.length; i++) {
             String segment = segments[i];
-            Element currentElement = pathElements.get(segment);
+            path = path + "/" + segment;
+            Element currentElement = pathElements.get(path);
             if (currentElement == null) {
                 currentElement = new Element(segment);
-                currentElement.setAttribute("name", setting.getName());
+                currentElement.setAttribute("name", path.substring(1));
                 currentElement.setAttribute("position", String.valueOf(setting.getPosition()));
                 if (i == segments.length - 1) {
                     currentElement.setAttribute("datatype", String.valueOf(setting.getDataType().ordinal()));
@@ -109,7 +113,7 @@ public class SettingManager {
                     currentElement.setText(setting.getValue());
                 }
                 parent.addContent(currentElement);
-                pathElements.put(segment, currentElement);
+                pathElements.put(path, currentElement);
             }
 
             parent = currentElement;

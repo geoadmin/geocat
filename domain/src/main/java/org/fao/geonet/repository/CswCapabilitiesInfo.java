@@ -53,8 +53,8 @@ public class CswCapabilitiesInfo {
     private static final String FIELD_ACCESS_CONSTRAINTS = "accessConstraints";
     private final Map<String, CswCapabilitiesInfoField> _fields = new HashMap<String, CswCapabilitiesInfoField>();
     private String _langId;
-
-    CswCapabilitiesInfo(final List<CswCapabilitiesInfoField> allFieldsForLang) {
+    CswCapabilitiesInfo(String landId, final List<CswCapabilitiesInfoField> allFieldsForLang) {
+        this._langId = landId;
         for (CswCapabilitiesInfoField cswCapabilitiesInfoField : allFieldsForLang) {
             _fields.put(cswCapabilitiesInfoField.getFieldName(), cswCapabilitiesInfoField);
         }
@@ -144,6 +144,9 @@ public class CswCapabilitiesInfo {
      */
     void setLangId(@Nonnull final String langId) {
         this._langId = langId;
+        for (CswCapabilitiesInfoField cswCapabilitiesInfoField : _fields.values()) {
+            cswCapabilitiesInfoField.setLangId(langId);
+        }
     }
 
     private void setValue(@Nonnull final String fieldTitle, @Nonnull final String newValue) {
@@ -151,6 +154,7 @@ public class CswCapabilitiesInfo {
 
         if (field == null) {
             field = new CswCapabilitiesInfoField().setFieldName(fieldTitle).setLangId(this._langId);
+            _fields.put(fieldTitle, field);
         }
 
         field.setValue(newValue);

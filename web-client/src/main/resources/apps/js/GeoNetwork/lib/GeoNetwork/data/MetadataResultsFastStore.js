@@ -549,6 +549,9 @@ GeoNetwork.data.MetadataResultsFastStore = function() {
             name : 'category',
             convert : getCategory
         }, {
+            name: 'status',
+            convert: getStatus
+        }, {
             name : 'rating',
             convert : getRating
 		}, {

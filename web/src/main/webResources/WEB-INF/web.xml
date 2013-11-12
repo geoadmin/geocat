@@ -36,6 +36,13 @@
 	        org.springframework.web.context.request.RequestContextListener
 	    </listener-class>
     </listener>
+<<<<<<< HEAD
+=======
+    <!--<context-param>-->
+        <!--<param-name>JSON_FACTORY_ATTRIBUTE</param-name>-->
+        <!--<param-value>Joe</param-value>-->
+    <!--</context-param>-->
+>>>>>>> upstream/develop
   
     <!-- shut down java cache used for xlinks and spatial index -->
     <listener>

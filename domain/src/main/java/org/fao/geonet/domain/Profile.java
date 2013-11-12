@@ -13,10 +13,10 @@ import java.util.Set;
  */
 public enum Profile {
     Administrator, UserAdmin(Administrator), Reviewer(UserAdmin), Editor(Reviewer), RegisteredUser(Editor), Guest(RegisteredUser),
-    Monitor,
     // GEOCAT
-    Shared;
+    Shared,
     // END GEOCAT
+    Monitor;
 
     public static final String PROFILES_ELEM_NAME = "profiles";
     private final Set<Profile> children;

@@ -119,6 +119,7 @@ public class CswParams extends AbstractParams {
 		icon     = Util.getParam(site, "icon",            icon);
 
 		outputSchema = Util.getParam(site, "outputSchema", outputSchema);
+
 		//--- if some search queries are given, we drop the previous ones and
 		//--- set these new ones
 

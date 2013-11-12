@@ -2,7 +2,9 @@ package org.fao.geonet;
 
 import com.google.common.util.concurrent.Callables;
 import com.vividsolutions.jts.util.Assert;
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.server.sources.http.ServletPathFinder;
+import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.lib.DatabaseType;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 import java.io.File;
