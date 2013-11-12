@@ -305,13 +305,14 @@ public final class XslUtil
 		return src.toString().matches(pattern.toString());
 	}
 
+
+    private static ThreadLocal<Boolean> allowScripting = new InheritableThreadLocal<Boolean>();
     public static void setNoScript() {
-        GeocatXslUtil.setNoScript();
+        allowScripting.set(false);
     }
     public static boolean allowScripting() {
-        return GeocatXslUtil.allowScripting();
+        return allowScripting.get() == null || allowScripting.get();
     }
-
     public static String expandScientific(Object src) {
         return GeocatXslUtil.expandScientific(src);
     }

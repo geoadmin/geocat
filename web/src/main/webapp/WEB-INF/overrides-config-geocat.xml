@@ -23,7 +23,7 @@
         <replaceAtt xpath="appHandler/param[@name = 'useSubversion']" attName="value" value="false"/>
         <replaceAtt xpath="appHandler/param[@name = 'maxWritesInTransaction']" attName="value" value="1"/>
         <addXML xpath="default/gui">
-			<call name="geocatEnv" class="org.fao.geonet.guiservices.util.GeocatExtraEnv" />
+			<call name="geocatEnv" class="org.fao.geonet.geocat.guiservices.util.GeocatExtraEnv" />
         </addXML>
         <addXML xpath="appHandler">
             <param name="postgisConfig">
@@ -96,7 +96,7 @@
     </file>
     <file name=".*/WEB-INF/config-monitoring.xml">
         <addXml xpath="monitors[1]">
-        	<healthCheck class="org.fao.geonet.monitor.health.MetadataTypeHealthCheck"/>
+        	<healthCheck class="org.fao.geonet.geocat.health.MetadataTypeHealthCheck"/>
         </addXml>
     </file>
     <file name=".*/WEB-INF/config-db.xml">

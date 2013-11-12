@@ -586,10 +586,10 @@ public class LuceneQueryBuilder {
             // GEOCAT
             if (fieldValue != null && (fieldValue.equals("y") || fieldValue.equals("s"))) {
                 templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, fieldValue));
-            }
-            else {
+            } else {
                 // END GEOCAT
                 templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
+            }
             }
             query.add(templateQ, templateOccur);
 
@@ -619,45 +619,38 @@ public class LuceneQueryBuilder {
             BooleanClause.Occur temporalExtentOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
             BooleanClause.Occur temporalRangeQueryOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
 
+            // GEOCAT
             TermRangeQuery temporalRangeQuery;
-            // GEOCAT
             BooleanClause temporalRangeQueryClause;
-            // END GEOCAT
+
             // temporal extent start is within search extent
-            // GEOCAT
             if (StringUtils.isNotBlank(extFrom) && (StringUtils.isBlank(extTo))) {
-                // END GEOCAT
-            temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom, extTo, true, true);
-            BooleanClause temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
+                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom, extTo, true, true);
+                temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
 
-            temporalExtentQuery.add(temporalRangeQueryClause);
-                // GEOCAT
+                temporalExtentQuery.add(temporalRangeQueryClause);
             }
-            // END GEOCAT
-            // or temporal extent end is within search extent
-            // GEOCAT
-            if (StringUtils.isNotBlank(extTo) && (StringUtils.isBlank(extFrom))) {
-                // END GEOCAT
-            temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, extFrom, extTo, true, true);
-            temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
 
-            temporalExtentQuery.add(temporalRangeQueryClause);
+
+
+            // or temporal extent end is within search extent
+            if (StringUtils.isNotBlank(extTo) && (StringUtils.isBlank(extFrom))) {
+                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, extFrom, extTo, true, true);
+                temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
+
+                temporalExtentQuery.add(temporalRangeQueryClause);
             }
 
             // or temporal extent contains search extent
             if (StringUtils.isNotBlank(extTo) && StringUtils.isNotBlank(extFrom)) {
                 BooleanQuery tempQuery = new BooleanQuery();
 
-                // GEOCAT
                 temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, null, extTo, true, true);
-                // END GEOCAT
                 temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
 
                 tempQuery.add(temporalRangeQueryClause);
 
-                // GEOCAT
                 temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom, null, true, true);
-                // END GEOCAT
                 temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
                 tempQuery.add(temporalRangeQueryClause);
 
@@ -668,6 +661,7 @@ public class LuceneQueryBuilder {
                 temporalRangeQueryClause = new BooleanClause(temporalExtentQuery, temporalExtentOccur);
                 query.add(temporalRangeQueryClause);
             }
+            // END GEOCAT
         }
         return true;
     }

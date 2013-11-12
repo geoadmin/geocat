@@ -31,12 +31,11 @@ import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Set;
-
-import jeeves.utils.Log;
 
 /**
  * Default Lucene analyzer for GeoNetwork, based on a modified version of WhitespaceTokenizer and with added LowercaseFilter and

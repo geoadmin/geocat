@@ -1,6 +1,7 @@
 package org.fao.geonet.services.extent;
 
 import com.vividsolutions.jts.geom.*;
+import org.fao.geonet.geocat.services.extent.Get;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

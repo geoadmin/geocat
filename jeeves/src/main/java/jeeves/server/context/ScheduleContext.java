@@ -30,6 +30,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.Hashtable;
+import java.util.Map;
 
 //=============================================================================
 
@@ -63,6 +64,10 @@ public class ScheduleContext extends BasicContext
     public ProfileManager getProfileManager() {
 		return profileManager;
 	}
+
+    public Map<String, Object> allContexts() {
+        return htContexts;
+    }
 }
 
 //=============================================================================

@@ -28,7 +28,7 @@
 package org.fao.geonet.kernel;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
-import com.google.common.base.Function;
+
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -39,6 +39,7 @@ import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.metadata.TransformMetadataOnLoad;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.Xml.ErrorHandler;
@@ -1581,6 +1582,7 @@ public class DataManager {
         Element metadataXml = xmlSerializer.selectNoXLinkResolver(id, false);
         if (metadataXml == null) return null;
 
+        Collection<TransformMetadataOnLoad> transformer = _applicationContext.getBeansOfType(TransformMetadataOnLoad.class).values();
         String version = null;
 
         if (forEditing) { // copy in xlink'd fragments but leave xlink atts to editor
@@ -1588,7 +1590,7 @@ public class DataManager {
             String schema = getMetadataSchema(id);
 
             if (withEditorValidationErrors) {
-                version = doValidate(srvContext.getUserSession(), schema, id, metadataXml, srvContext.getLanguage(), forEditing).two();
+                version = doValidate(srvContext, schema, id, metadataXml, srvContext.getLanguage(), forEditing).two();
             } else {
                 editLib.expandElements(schema, metadataXml);
                 version = editLib.getVersionForEditing(schema, id, metadataXml);
@@ -1602,7 +1604,12 @@ public class DataManager {
                 }
             }
         }
+
+        for (TransformMetadataOnLoad transformMetadataOnLoad : transformer) {
+
+        }
         // GEOCAT
+
         if( getMetadataSchema(id).equals("iso19139.che")) {
             metadataXml = Xml.transform(metadataXml, stylePath+"add-charstring.xsl");
         }
@@ -1747,7 +1754,7 @@ public class DataManager {
         try {
             //--- do the validation last - it throws exceptions
             if (session != null && validate) {
-                doValidate(session, schema,metadataId,metadataXml,lang, false);
+                doValidate(context, schema,metadataId,metadataXml,lang, false);
             }
         } finally {
             if(index) {
@@ -1884,7 +1891,10 @@ public class DataManager {
      * @return
      * @throws Exception
      */
-    public Pair <Element, String> doValidate(UserSession session, String schema, String id, Element md, String lang, boolean forEditing) throws Exception {
+    public Pair <Element, String> doValidate(ServiceContext context, String schema, String id, Element md, String lang, boolean forEditing) throws Exception {
+
+
+        UserSession session = context.getUserSession();
         String version = null;
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "Creating validation report for record #" + id + " [schema: " + schema + "].");
@@ -1893,9 +1903,7 @@ public class DataManager {
         if (!forEditing) {
             md = (Element) md.clone();
             // always hideElements for validation
-            hideElements(session, md, id, false, true);
-        } else {
-            md = md;
+            hideElements(context, md, id, false, true);
         }
         // END GEOCAT
         Element sessionReport = (Element)session.getProperty(Geonet.Session.VALIDATION_REPORT + id);
@@ -3210,22 +3218,6 @@ public class DataManager {
 
     // GEOCAT
 
-    private void hideElements(ServiceContext context, Element elMd, String id, boolean forEditing, boolean allowDbmsClosing) throws Exception {
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        try {
-            boolean forceHideElements = false;
-            hideElements(context, dbms, elMd, id, forEditing, forceHideElements);
-        } finally {
-            try {
-                dbms.commit();
-            }finally {
-                if(allowDbmsClosing) {
-                    context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
-                }
-            }
-        }
-    }
-
     /**
      *
      * @param context Null when called from indexMetadata.
@@ -3234,11 +3226,7 @@ public class DataManager {
      * @param forEditing
      * @throws Exception
      */
-    private void hideElements(ServiceContext context, Dbms dbms, Element elMd, String id, boolean forEditing, boolean forceHide) throws Exception
-    {
-        Element xPathExpressions = dbms.select(
-                "SELECT xPathExpr, level FROM HiddenMetadataElements WHERE metadataId = ?", new Integer(id));
-
+    private void hideElements(ServiceContext context, Element elMd, String id, boolean forEditing, boolean forceHide) throws Exception {
         AccessManager am = this.getAccessManager();
 
         // Editors can always see all elements
@@ -3246,32 +3234,27 @@ public class DataManager {
             return;
         }
 
-        Set<String> groups = null;
+        List<HiddenMetadataElement> hiddenElements = context.getBean(HiddenMetadataElementsRepository.class).findAllByMetadataId(new
+                Integer(id));
 
-        if (context != null && context.getUserSession()!=null && context.getIpAddress() != null) {
-            groups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress(), true);
+
+        Set<Integer> groups = null;
+
+        if (context != null && context.getUserSession() != null && context.getIpAddress() != null) {
+            groups = am.getUserGroups(context.getUserSession(), context.getIpAddress(), true);
         }
 
-        List<?> elements = Xml.selectNodes(xPathExpressions, "*//xpathexpr");
-        xPathExpressions.detach();
-        List<?> levels = Xml.selectNodes(xPathExpressions, "*//level");
+        List<Element> removeElms = new ArrayList<Element>(hiddenElements.size());
 
-        Iterator<?> l = levels.iterator();
+        for (HiddenMetadataElement elem : hiddenElements) {
+            try {
 
-        List<Element> removeElms = new ArrayList<Element>(elements.size());
-
-        for (Iterator<?> i = elements.iterator(); i.hasNext();)
-        {
-            try
-            {
-
-                String expr = ((Element)i.next()).getText();
-                String level = ((Element)l.next()).getText();
+                String expr = elem.getxPathExpr();
+                String level = elem.getLevel();
                 Log.debug(Geonet.DATA_MANAGER, "Hide expr = " + expr + " - level = " + level);
 
                 // Intranet level for admin groups: no hiding
-                if ((groups != null && groups.contains("0") && "intranet".equals(level)))
-                {
+                if ((groups != null && groups.contains(0) && "intranet".equals(level))) {
                     continue;
                 }
 
@@ -3279,28 +3262,25 @@ public class DataManager {
 
                 // Find the element using the XPath expr
                 List<?> targetElms = Xml.selectNodes(elMd, expr);
-                if (targetElms == null || targetElms.size() == 0)
-                {
+                if (targetElms == null || targetElms.size() == 0) {
                     Log.debug(Geonet.DATA_MANAGER, "ERROR no targetElms found for " + expr);
                     continue;
                 }
 
                 // Found target
-                Element targetElm = (Element)targetElms.get(0);
+                Element targetElm = (Element) targetElms.get(0);
 
                 // We cannot remove immediately since this will break
                 // XPath expressions: like /descendant::gmd:electronicMailAddress[2]
                 // So we remember the elements to be removed.
                 removeElms.add(targetElm);
-            } catch (JDOMException e)
-            {
+            } catch (JDOMException e) {
                 e.printStackTrace();
             }
         }
 
         // Remove elements marked for removal
-        for (Iterator<Element> i = removeElms.iterator(); i.hasNext();)
-        {
+        for (Iterator<Element> i = removeElms.iterator(); i.hasNext(); ) {
             Element removeElm = i.next();
             Parent removeElmParent = removeElm.getParent();
 
@@ -3318,7 +3298,7 @@ public class DataManager {
         elMd.detach();
     }
 
-    public void updateXlinkObjects(Dbms dbms, String metadataId, String lang, Element md, Element... updatedXLinks) throws Exception {
+    public void updateXlinkObjects(String metadataId, String lang, Element md, Element... updatedXLinks) throws Exception {
         ProcessParams params = new ProcessParams(dbms, ReusableObjectLogger.THREAD_SAFE_LOGGER, metadataId, md, md, thesaurusMan,
                 extentMan, baseURL, settingMan, false, lang, servContext);
         for (Element xlink : updatedXLinks) {

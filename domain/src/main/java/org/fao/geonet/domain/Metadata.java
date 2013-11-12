@@ -103,7 +103,7 @@ public class Metadata extends GeonetEntity {
     @Column(nullable = false)
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Type(type="org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
+    @Type(type = "org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
     public String getData() {
         return _data;
     }
@@ -280,7 +280,7 @@ public class Metadata extends GeonetEntity {
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinTable(name = METADATA_CATEG_JOIN_TABLE_NAME, joinColumns = @JoinColumn(name = "metadataId"),
             inverseJoinColumns = @JoinColumn(name =
-            METADATA_CATEG_JOIN_TABLE_CATEGORY_ID))
+                    METADATA_CATEG_JOIN_TABLE_CATEGORY_ID))
     @Nonnull
     public Set<MetadataCategory> getCategories() {
         return _metadataCategories;

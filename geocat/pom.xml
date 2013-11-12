@@ -24,6 +24,13 @@
 			<version>${project.version}</version>
 		</dependency>
 
+        <dependency>
+            <groupId>ch.geocat</groupId>
+            <artifactId>domain</artifactId>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+            <version>${project.version}</version>
+        </dependency>
 		<!-- Monitoring libraries -->
 		<dependency>
 			<groupId>com.yammer.metrics</groupId>

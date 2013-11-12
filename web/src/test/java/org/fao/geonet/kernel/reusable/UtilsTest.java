@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 
 import org.fao.geonet.csw.common.util.Xml;
+import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.junit.Test;

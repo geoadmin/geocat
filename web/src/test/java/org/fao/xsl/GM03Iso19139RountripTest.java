@@ -7,7 +7,7 @@ import java.io.File;
 import javax.xml.validation.Schema;
 
 
-import org.fao.geonet.services.gm03.TranslateAndValidate;
+import org.fao.geonet.geocat.services.gm03.TranslateAndValidate;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
