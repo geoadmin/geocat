@@ -23,8 +23,6 @@
 
 package org.fao.geonet.geocat.kernel.reusable;
 
-import static org.fao.geonet.geocat.kernel.reusable.Utils.addChild;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -251,7 +249,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
         return XLink.LOCAL_PROTOCOL+"che.keyword.get?thesaurus=" + thesaurus + "&id=" + URLEncoder.encode(uri, "utf-8");
     }
 
-    public void performDelete(String[] ids, Dbms dbms, UserSession session, String thesaurusName) throws Exception
+    public void performDelete(String[] ids, UserSession session, String thesaurusName) throws Exception
     {
 
         for (String id : ids) {
@@ -294,7 +292,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
         return base + "?thesaurus=" + GEOCAT_THESAURUS_NAME + "&id=" + encoded + "&locales=en,it,de,fr";
     }
 
-    public Map<String, String> markAsValidated(String[] ids, Dbms dbms, UserSession session) throws Exception
+    public Map<String, String> markAsValidated(String[] ids, UserSession session) throws Exception
     {
         KeywordsSearcher searcher = (KeywordsSearcher) session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
 
@@ -338,7 +336,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
         return descriptiveKeywords;
     }
 
-    public Collection<Element> add(Element placeholder, Element originalElem, Dbms dbms, String metadataLang)
+    public Collection<Element> add(Element placeholder, Element originalElem, String metadataLang)
             throws Exception
     {
 
@@ -387,7 +385,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
         return uri;
     }
 
-    public Collection<Element> updateObject(Element xlink, Dbms dbms, String metadataLang) throws Exception
+    public Collection<Element> updateObject(Element xlink, String metadataLang) throws Exception
     {
         String thesaurusName = Utils.extractUrlParam(xlink, "thesaurus");
         if (!NON_VALID_THESAURUS_NAME.equals(thesaurusName)) {
@@ -412,7 +410,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
         return code;
     }
 
-    public boolean isValidated(Dbms dbms, String href) throws Exception
+    public boolean isValidated(String href) throws Exception
     {
         return !href.contains("thesaurus=local._none_.non_validated");
     }

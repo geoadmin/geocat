@@ -34,7 +34,6 @@ import javax.mail.MethodNotSupportedException;
 import javax.mail.internet.AddressException;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
 
 import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
@@ -44,6 +43,7 @@ import org.apache.log4j.xml.XMLLayout;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 
 /**
  * Logs to the records to the associated logger based on the record type and

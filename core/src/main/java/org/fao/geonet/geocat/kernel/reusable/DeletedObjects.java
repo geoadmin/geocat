@@ -23,84 +23,73 @@
 
 package org.fao.geonet.geocat.kernel.reusable;
 
-import static org.fao.geonet.geocat.kernel.reusable.Utils.addChild;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.geocat.RejectedSharedObject;
+import org.fao.geonet.domain.geocat.RejectedSharedObject_;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.geocat.RejectedSharedObjectRepository;
+import org.fao.geonet.repository.geocat.specification.RejectedSharedObjectSpecifications;
+import org.jdom.Element;
+import org.springframework.data.domain.Sort;
 
 import java.sql.SQLException;
 import java.util.List;
 
-import jeeves.resources.dbms.Dbms;
-import jeeves.utils.SerialFactory;
-
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.csw.common.util.Xml;
-import org.fao.geonet.util.ISODate;
-import org.jdom.Element;
-
 /**
  * Handles operations for interacting with the Deleted Objects database table
- * 
+ *
  * @author jeichar
  */
-public final class DeletedObjects
-{
+public final class DeletedObjects {
 
-    public static int insert(Dbms dbms, SerialFactory sf, String fragment, String desc) throws SQLException
-    {
-
-        int id = sf.getSerial(dbms, "DeletedObjects");
-
-        String date = new ISODate().toString();
-
-        dbms.execute("INSERT INTO DeletedObjects (id,description,xml,deletionDate) VALUES (?,?,?,?)", id, desc,
-                fragment, date);
-        return id;
+    public static int insert(RejectedSharedObjectRepository repo, String fragment, String desc) throws SQLException {
+        org.fao.geonet.domain.geocat.RejectedSharedObject entity = new org.fao.geonet.domain.geocat.RejectedSharedObject();
+        entity.setDeletionDate(new ISODate());
+        entity.setDescription(desc);
+        entity.setXml(fragment);
+        return repo.save(entity).getId();
     }
 
-    public static String href(int id)
-    {
+    public static String href(int id) {
         return "local://xml.reusable.deleted?id=" + id;
     }
 
-    public static Element get(Dbms dbms, String id) throws Exception
-    {
-
-        Element records = dbms.select("SELECT xml FROM DeletedObjects where id = ?", new Integer(id).intValue());
-
-        final Element obj = Xml.loadString(records.getChild("record").getChildText("xml"), false);
-        obj.removeAttribute("title", Geonet.Namespaces.XLINK);
-        obj.removeNamespaceDeclaration(Geonet.Namespaces.XLINK);
-        return obj;
+    public static Element get(RejectedSharedObjectRepository repo, String id) throws Exception {
+        return repo.findOne(Integer.parseInt(id)).getXmlElement(false);
     }
 
-    public static Element list(Dbms dbms) throws SQLException
-    {
+    public static Element list(RejectedSharedObjectRepository repo) throws SQLException {
+        final Sort sort = SortUtils.createSort(RejectedSharedObject_.deletionDate);
+        final List<RejectedSharedObject> all = repo.findAll(sort);
 
-        List<Element> records = dbms.select("SELECT id,description,deletionDate FROM DeletedObjects order by deletionDate").getChildren();
 
         Element deleted = new Element(ReplacementStrategy.REPORT_ROOT);
-        for (Element element : records) {
+
+        for (RejectedSharedObject obj : all) {
             Element delete = new Element(ReplacementStrategy.REPORT_ELEMENT);
-            String desc = element.getChildTextTrim("description");
-            String date = element.getChildTextTrim("deletiondate");
+            String desc = obj.getDescription();
+            String date = obj.getDeletionDate().getDateAndTime();
+
             if (date != null) {
                 if (desc == null) {
                     desc = date;
                 } else {
-                    desc = date + " - " + desc ;
+                    desc = date + " - " + desc;
                 }
             }
-            String id = element.getChildTextTrim("id");
+            String id = "" + obj.getId();
             Utils.addChild(delete, ReplacementStrategy.REPORT_ID, id);
             if (desc != null) {
                 Utils.addChild(delete, ReplacementStrategy.REPORT_DESC, desc);
-                delete.setAttribute("desc", desc+" - "+date);
+                delete.setAttribute("desc", desc + " - " + date);
             }
             if (date != null) {
                 Utils.addChild(delete, "date", date);
             }
 
             delete.addContent(new Element("xlink").setText(href(Integer.parseInt(id))));
-            delete.addContent(new Element("search").setText(id+desc+date));
+            delete.addContent(new Element("search").setText(id + desc + date));
             delete.addContent(new Element("type").setText("deleted"));
             deleted.addContent(delete);
         }
@@ -108,9 +97,9 @@ public final class DeletedObjects
         return deleted;
     }
 
-    public static void delete(Dbms dbms, String[] ids) throws SQLException
-    {
-        dbms.execute("DELETE FROM DeletedObjects WHERE " + Utils.constructWhereClause("id", ids));
+    public static void delete(ServiceContext context, Integer[] ids) throws SQLException {
+        final RejectedSharedObjectRepository repository = context.getBean(RejectedSharedObjectRepository.class);
+        repository.deleteAll(RejectedSharedObjectSpecifications.hasId(ids));
     }
 
     public static String[] getLuceneIndexField() {

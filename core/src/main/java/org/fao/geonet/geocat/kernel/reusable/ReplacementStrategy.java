@@ -23,17 +23,15 @@
 
 package org.fao.geonet.geocat.kernel.reusable;
 
+import com.google.common.base.Function;
+import jeeves.server.UserSession;
+import org.fao.geonet.domain.Pair;
+import org.jdom.Element;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-
-import com.google.common.base.Function;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.UserSession;
-
-import org.fao.geonet.kernel.search.spatial.Pair;
-import org.jdom.Element;
 
 public abstract class ReplacementStrategy
 {
@@ -71,7 +69,7 @@ public abstract class ReplacementStrategy
      * @param placeholder
      *            TODO
      */
-    public abstract Collection<Element> add(Element placeholder, Element originalElem, Dbms dbms, String metadataLanguage)
+    public abstract Collection<Element> add(Element placeholder, Element originalElem, String metadataLanguage)
             throws Exception;
 
     /**
@@ -87,10 +85,9 @@ public abstract class ReplacementStrategy
      * @param session
      *            TODO
      * @param strategySpecificData
-     *            indicates the source to delete from. If null then assume
-     *            non_valid source
+ *            indicates the source to delete from. If null then assume
      */
-    public abstract void performDelete(String[] ids, Dbms dbms, UserSession session, String strategySpecificData) throws Exception;
+    public abstract void performDelete(String[] ids, UserSession session, String strategySpecificData) throws Exception;
 
     /**
      * Constructs an xlink href for the id. It should be as simple as possible
@@ -110,7 +107,7 @@ public abstract class ReplacementStrategy
      *
      * @return returns a map of oldId -> newId
      */
-    public abstract Map<String, String> markAsValidated(String[] ids, Dbms dbms, UserSession session) throws Exception;
+    public abstract Map<String, String> markAsValidated(String[] ids, UserSession session) throws Exception;
 
     /**
      * Update the non_validated ref to the validated ref.
@@ -126,17 +123,18 @@ public abstract class ReplacementStrategy
     /**
      * Updates the SharedObject with the contents of the object below
      *
+     *
      * @param xlink
      *            new data
      * @return elements that were added to the xlink but are not supported by
      *         the xlink and must be added as a sibling to the xlink object.
      */
-    public abstract Collection<Element> updateObject(Element xlink, Dbms dbms, String metadataLang) throws Exception;
+    public abstract Collection<Element> updateObject(Element xlink, String metadataLang) throws Exception;
 
     /**
      * Returns true if xlink refers to a validated element
      */
-    public abstract boolean isValidated(Dbms dbms, String href) throws Exception;
+    public abstract boolean isValidated(String href) throws Exception;
 
     /**
      * Return the field that contains the xlinks references to invalid metadata

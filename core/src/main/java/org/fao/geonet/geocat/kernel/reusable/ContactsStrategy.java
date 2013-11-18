@@ -23,59 +23,72 @@
 
 package org.fao.geonet.geocat.kernel.reusable;
 
-import static org.fao.geonet.constants.Geocat.Profile.SHARED;
-import static org.fao.geonet.geocat.kernel.reusable.Utils.addChild;
-import static org.fao.geonet.util.LangUtils.FieldType.STRING;
-import static org.fao.geonet.util.LangUtils.FieldType.URL;
-
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import jeeves.resources.dbms.Dbms;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.PasswordUtil;
-import jeeves.utils.SerialFactory;
-import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
-
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.geocat.GeocatUserInfo_;
+import org.fao.geonet.domain.geocat.Phone;
+import org.fao.geonet.repository.BatchUpdateQuery;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.geocat.specification.GeocatUserSpecs;
+import org.fao.geonet.repository.specification.UserSpecs;
+import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.util.ElementFinder;
 import org.fao.geonet.util.GeocatXslUtil;
 import org.fao.geonet.util.LangUtils;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.Filter;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
+
+import javax.annotation.Nullable;
+import javax.persistence.criteria.*;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.fao.geonet.util.LangUtils.FieldType.STRING;
+import static org.fao.geonet.util.LangUtils.FieldType.URL;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 public final class ContactsStrategy extends ReplacementStrategy
 {
 
-    private final Dbms   _dbms;
-    private final String _styleSheet;
-    //private final String _baseURL;
+     private final String _styleSheet;
     private final String _appPath;
-    private SerialFactory _serialFactory;
+    private final UserRepository _userRepository;
+    private final UserGroupRepository _userGroupRepository;
 
-    public ContactsStrategy(Dbms dbms, String appPath, String baseURL, String currentLocale, SerialFactory serialFactory)
-    {
-        this._serialFactory = serialFactory;
-//        this._baseURL = baseURL;
-        this._dbms = dbms;
+    public ContactsStrategy(UserRepository userRepository, UserGroupRepository userGroupRepository, String appPath, String baseURL, String currentLocale) {
+        this._userRepository = userRepository;
+        this._userGroupRepository = userGroupRepository;
         _styleSheet = appPath + Utils.XSL_REUSABLE_OBJECT_DATA_XSL;
         this._appPath = appPath;
+    }
+
+    public static Specification<User> matchSharedUserSpecification(final String email, final String firstName, final String lastName) {
+        return new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+
+                Predicate emailExp = cb.isMember(email, root.get(User_.emailAddresses));
+                Predicate firstNameExp = cb.equal(cb.trim(cb.lower(root.get(User_.name))), cb.lower(cb.literal(firstName)));
+                Predicate lastNameExp = cb.equal(cb.trim(root.get(User_.surname)), cb.lower(cb.literal(lastName)));
+
+                return cb.or(emailExp, firstNameExp, lastNameExp);
+            }
+        };
     }
 
     public Pair<Collection<Element>, Boolean> find(Element placeholder, Element originalElem, String defaultMetadataLang)
@@ -88,40 +101,72 @@ public final class ContactsStrategy extends ReplacementStrategy
         String firstname = lookupElement(originalElem, "individualFirstName", defaultMetadataLang);
         String lastname = lookupElement(originalElem, "individualLastName", defaultMetadataLang);
 
-        String key = email + firstname + lastname;
+        final List<User> users = _userRepository.findAll(matchSharedUserSpecification(email, firstname, lastname));
 
         @SuppressWarnings("unchecked")
 		Iterator<Content> descendants = originalElem.getDescendants(new ElementFinder("CI_RoleCode",
                 Geonet.Namespaces.GMD, "role"));
 		Element roleElem = Utils.nextElement(descendants);
-        String query = "select id,validated,organisation from Users where COALESCE(TRIM(email),'')||COALESCE(TRIM(name),'')||COALESCE(TRIM(surname),'') ILIKE ? AND profile=?";
-        @SuppressWarnings("unchecked")
-		List<Element> records = _dbms.select(query, key, SHARED).getChildren();
+        String role;
+        if (roleElem == null) {
+            role = "";
+            Log.warning(Geocat.Module.REUSABLE,
+                    "A contact does not have a role associated with it: " + Xml.getString(originalElem));
+        } else {
+            role = roleElem.getAttributeValue("codeListValue");
+        }
 
-        for (Element record : records) {
-            String role;
-            if (roleElem == null) {
-                role = "";
-                Log.warning(Geocat.Module.REUSABLE,
-                        "A contact does not have a role associated with it: " + Xml.getString(originalElem));
-            } else {
-                role = roleElem.getAttributeValue("codeListValue");
-            }
-            Element recordOrg = LangUtils.loadInternalMultiLingualElem(record.getChildTextTrim("organisation"));
+        User bestFit = null;
+        int rating = 0;
+
+        for (User user: users) {
+
+            Element recordOrg = LangUtils.loadInternalMultiLingualElem(bestFit.getOrganisation());
 
             String elemOrg = lookupElement(originalElem, "organisationName", defaultMetadataLang);
 
             if (translation(recordOrg, defaultMetadataLang).equalsIgnoreCase(elemOrg)) {
-                String id = record.getChildTextTrim("id");
-                String validatedString = record.getChildTextTrim("validated");
-                boolean validated = !("n".equalsIgnoreCase(validatedString));
-                Collection<Element> xlinkIt = xlinkIt(originalElem, role, id, validated);
-                Log.debug("Reusable Objects", Xml.getString(record));
-                return Pair.read(xlinkIt, true);
+                int newRating = 0;
+
+                HashSet<String> lowerCaseEmails = new HashSet<String>();
+
+                for (String e : user.getEmailAddresses()) {
+                    lowerCaseEmails.add(e.trim().toLowerCase());
+                }
+
+                if (lowerCaseEmails.contains(email.trim().toLowerCase())) {
+                    newRating += 10;
+                }
+
+                if (firstname.trim().equals(user.getName())) {
+                    newRating += 2;
+                }
+
+                if (lastname.trim().equals(user.getSurname())) {
+                    newRating += 4;
+                }
+
+                if (newRating > rating) {
+                    rating = newRating;
+                    bestFit = user;
+                }
+
+                if (newRating == (10 + 2 + 4)) {
+                    break;
+                }
             }
         }
 
-        return NULL;
+        if (bestFit == null) {
+            return NULL;
+        } else {
+
+            int id = bestFit.getId();
+            boolean validated = bestFit.getGeocatUserInfo().getValidated();
+            Collection<Element> xlinkIt = xlinkIt(originalElem, role, "" + id, validated);
+
+            return Pair.read(xlinkIt, true);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -204,44 +249,28 @@ public final class ContactsStrategy extends ReplacementStrategy
         return Collections.singleton(originalElem);
     }
 
-    public Collection<Element> add(Element placeholder, Element originalElem, Dbms dbms, String metadataLang)
-            throws Exception
-    {
-        int id = _serialFactory.getSerial(dbms, "Users");
+    public Collection<Element> add(Element placeholder, Element originalElem, String metadataLang)
+            throws Exception {
+        UpdateResult result = processQuery(originalElem, null, false, metadataLang);
 
-        return doAdd (originalElem, id, dbms, metadataLang);
+        return xlinkIt(originalElem, result.role, String.valueOf(result.id), false);
     }
 
-    private String insertQuery(int id) {
-        return "INSERT INTO Users (id, username, password, surname, name, profile, "
-            + "address, state, zip, country, email, organisation, kind, streetnumber, "
-            + "streetname, postbox, city, phone, facsimile, positionname, onlineresource, "
-            + "hoursofservice, contactinstructions, publicaccess, orgacronym, directnumber, mobile, validated, "
-            + "email1, phone1, facsimile1, email2, phone2, facsimile2, onlinename, onlinedescription, parentInfo) "
-            + "VALUES (" + id + ", ?, ?, ?, ?, '" + SHARED
-            + "', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-            + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    private static class UpdateResult {
+        int id;
+        String role;
     }
-
-    
-    private Collection<Element> doAdd(Element originalElem, int id, Dbms dbms, String metadataLang) throws SQLException, Exception
-    {
-
-        String role = processQuery(originalElem, dbms, id, insertQuery(id), false, metadataLang, true);
-
-        return xlinkIt(originalElem, role, String.valueOf(id), false);
-    }
-
     /**
      * Executes the query using all the user data from the element. There must
      * be exactly 28 ? in the query. id is not one of them
      *
      * @param metadataLang
      */
-    private String processQuery(Element originalElem, Dbms dbms, int id, String query, boolean validated,
-            String metadataLang, boolean insert) throws Exception, SQLException
-    {
+    private UpdateResult processQuery(Element originalElem, Integer id, boolean validated,
+            String metadataLang) throws Exception {
         Element xml = Xml.transform((Element) originalElem.clone(), _styleSheet);
+
         // not all strings need to default to a space so they show up in editor.
         // If not then they will be lost
         String email1 = getTextPadEmpty(xml, "email1");
@@ -260,10 +289,8 @@ public final class ContactsStrategy extends ReplacementStrategy
         }
         username = username.replaceAll("\\s+", "_");
 
-        if (insert) {
-            while (dbms.select("SELECT username FROM Users WHERE username='" + username + "'").getChildren().size() > 0) {
-                username = UUID.randomUUID().toString();
-            }
+        if (id == null && _userRepository.count(UserSpecs.hasUserName(username)) > 0) {
+            username = UUID.randomUUID().toString();
         }
 
         String passwd = UUID.randomUUID().toString().substring(0, 12);
@@ -277,41 +304,88 @@ public final class ContactsStrategy extends ReplacementStrategy
         String street = Utils.getText(xml, "streetName");
         String postbox = Utils.getText(xml, "postBox");
         String city = Utils.getText(xml, "city");
-        String phone1 = getTextPadEmpty(xml, "voice1");
-        String fac1 = getTextPadEmpty(xml, "facsimile1");
-
-        String email2 = getTextPadEmpty(xml, "email2");
-        String phone2 = getTextPadEmpty(xml, "voice2");
-        String fac2 = getTextPadEmpty(xml, "facsimile2");
-
-        String email3 = getTextPadEmpty(xml, "email3");
-        String phone3 = getTextPadEmpty(xml, "voice3");
-        String fac3 = getTextPadEmpty(xml, "facsimile3");
 
         String position = LangUtils.toInternalMultilingual(metadataLang, _appPath, xml.getChild("position"), STRING);
-        String online = LangUtils.toInternalMultilingual(metadataLang, _appPath, xml.getChild("online"), URL);
+        String onlineResource = LangUtils.toInternalMultilingual(metadataLang, _appPath, xml.getChild("online"), URL);
         String onlinename = LangUtils.toInternalMultilingual(metadataLang, _appPath, xml.getChild("name"), STRING);
         String onlinedesc = LangUtils.toInternalMultilingual(metadataLang, _appPath, xml.getChild("desc"), STRING);
 
         String hours = Utils.getText(xml, "hoursOfService");
         String instruct = Utils.getText(xml, "contactInstructions");
         String orgacronym = LangUtils.toInternalMultilingual(metadataLang, _appPath, xml.getChild("acronym"), STRING);
-        String directnumber = Utils.getText(xml, "directNumber");
-        String mobile = Utils.getText(xml, "mobile");
         String role = Utils.getText(xml, "role");
 
-        Integer parentInfo = processParent(originalElem, xml.getChild("parentInfo"), _serialFactory.getSerial(dbms, "Users"), dbms, metadataLang);
 
-        String kind = "";
-        ServiceContext context = ServiceContext.get();
-        dbms.execute(query, username, PasswordUtil.encode(context, passwd), surname, name, address, state, zip, country, email1,
-                organ, kind, streetnb, street, postbox, city, phone1, fac1, position, online, hours, instruct, "y",
-                orgacronym, directnumber, mobile, validated ? "y" : "n", email2, phone2, fac2, email3, phone3, fac3,
-                onlinename, onlinedesc, parentInfo);
-        return role;
+        Integer parentInfo = processParent(originalElem, xml.getChild("parentInfo"), metadataLang);
+
+
+        User user = new User();
+        if (id != null) {
+            user.setId(id);
+        }
+
+        user.setKind("");
+        user.setName(name);
+        user.setOrganisation(organ);
+        user.getSecurity().setPassword(passwd);
+        user.getGeocatUserInfo()
+                .setParentInfo(parentInfo)
+                .setContactinstructions(instruct)
+                .setHoursofservice(hours)
+                .setOnlinedescription(onlinedesc)
+                .setOnlinename(onlinename)
+                .setOnlineresource(onlineResource)
+                .setOrgacronym(orgacronym)
+                .setPositionname(position)
+                .setPublicaccess("y")
+                .setValidated(validated);
+
+        List<Element> emails = xml.getChildren("email");
+
+        for (Element email : emails) {
+            user.getEmailAddresses().add(email.getTextTrim());
+        }
+
+        final List<Element> phones = xml.getChildren("phone");
+
+        for (Element phone : phones) {
+            String voice = getTextPadEmpty(phone, "voice");
+            String mobile = getTextPadEmpty(phone, "mobile");
+            String facsimile = getTextPadEmpty(phone, "facsimile");
+            String directNumber = getTextPadEmpty(phone, "directNumber");
+            user.getPhones().add(new Phone()
+                    .setPhone(voice)
+                    .setFacsimile(facsimile)
+                    .setDirectnumber(directNumber)
+                    .setMobile(mobile));
+        }
+
+        user.setProfile(Profile.Shared);
+        user.setSurname(surname);
+        user.setUsername(username);
+
+        Address addressEntity = new Address()
+                .setAddress(address)
+                .setZip(zip)
+                .setCity(city)
+                .setCountry(country)
+                .setState(state)
+                .setPostbox(postbox)
+                .setStreetname(street)
+                .setStreetnumber(streetnb);
+
+        user.getAddresses().add(addressEntity);
+
+        user = _userRepository.save(user);
+
+        UpdateResult result = new UpdateResult();
+        result.id = user.getId();
+        result.role = role;
+
+        return result;
     }
 
-    private Integer processParent(Element original, Element xml, int id, Dbms dbms, String metadataLang) throws Exception
+    private Integer processParent(Element original, Element xml, String metadataLang) throws Exception
     {
         if (xml==null || xml.getChildren().isEmpty()) return null;
 
@@ -329,7 +403,9 @@ public final class ContactsStrategy extends ReplacementStrategy
             Element placeholder = new Element("placeholder");
             Pair<Collection<Element>, Boolean> findResult = find(placeholder, parentInfo, metadataLang);
             if(!findResult.two()){
-                result = doAdd(parentInfo, id, dbms, metadataLang);
+                UpdateResult afterQuery = processQuery(xml, null, false, metadataLang);
+
+                result = xlinkIt(xml, afterQuery.role, "" + afterQuery.id, false);
             } else {
                 result = findResult.one();
             }
@@ -353,7 +429,7 @@ public final class ContactsStrategy extends ReplacementStrategy
         } else if( !ReusableObjManager.isValidated(toReplace)){
             Processor.uncacheXLinkUri(toReplace.getAttributeValue(XLink.HREF, XLink.NAMESPACE_XLINK));
 
-            updateObject((Element)toReplace.clone(), dbms, metadataLang);
+            updateObject((Element)toReplace.clone(), metadataLang);
             int parsedId = Integer.parseInt(Utils.extractUrlParam(toReplace, "id"));
             finalId = parsedId;
         }
@@ -380,24 +456,26 @@ public final class ContactsStrategy extends ReplacementStrategy
     public Element find(UserSession session, boolean validated) throws Exception
     {
 
-        final String query = "SELECT id,email,username,name,surname FROM Users WHERE profile='" + SHARED
-                + "' AND validated=?";
-        List<Element> results = _dbms.select(query, validated ? 'y' : 'n').getChildren("record");
+        final Specifications<User> spec = where(UserSpecs.hasProfile(Profile.Shared))
+                .and(GeocatUserSpecs.isValidated(validated));
+        final List<User> users = _userRepository.findAll(spec);
+
         Element category = new Element(REPORT_ROOT);
-        for (Element result : results) {
+        for (User user : users) {
             Element e = new Element(REPORT_ELEMENT);
-            String id = result.getChildTextTrim("id");
+            String id = "" + user.getId();
             String url = XLink.LOCAL_PROTOCOL+"shared.user.edit?closeOnSave&id=" + id + "&validated=n&operation=fullupdate";
 
             Utils.addChild(e, REPORT_URL, url);
             Utils.addChild(e, REPORT_ID, id);
             Utils.addChild(e, REPORT_TYPE, "contact");
             Utils.addChild(e, REPORT_XLINK, createXlinkHref(id, session, "") + "*");
-            String email = result.getChildTextTrim("email");
-            String username = result.getChildTextTrim("username");
-            String name = result.getChildTextTrim("name");
-            String surname = result.getChildTextTrim("surname");
-            String desc = "";
+            String email = user.getEmail();
+            String username = user.getUsername();
+            String name = user.getName();
+            String surname = user.getSurname();
+
+            String desc;
             if (email == null || email.length() == 0) {
                 desc = username;
             } else {
@@ -415,13 +493,29 @@ public final class ContactsStrategy extends ReplacementStrategy
         return category;
     }
 
-    public void performDelete(String[] ids, Dbms dbms, UserSession session, String ignored) throws Exception
-    {
-        dbms.execute("UPDATE Users SET parentinfo=null WHERE "+Utils.constructWhereClause("parentinfo", ids));
-        String whereClause = Utils.constructWhereClause("id", ids);
-        dbms.execute("DELETE FROM Users WHERE " + whereClause + " AND profile='" + SHARED + "'");
-        whereClause = Utils.constructWhereClause("userId", ids);
-        dbms.execute("DELETE FROM UserGroups WHERE " + whereClause);
+    public void performDelete(String[] ids, UserSession session, String ignored) throws Exception {
+
+        List<Integer> intIds = Lists.transform(Arrays.asList(ids), new Function<String, Integer>() {
+            @Nullable
+            @Override
+            public Integer apply(@Nullable String input) {
+                return Integer.parseInt(input);
+            }
+        });
+
+        final BatchUpdateQuery batchUpdateQuery = _userRepository.createBatchUpdateQuery(new PathSpec() {
+
+            @Override
+            public Path getPath(Root root) {
+                return root.get(User_.geocatUserInfo).get(GeocatUserInfo_.parentInfo);
+            }
+        }, null, GeocatUserSpecs.hasParentIdIn(intIds));
+
+        batchUpdateQuery.execute();
+
+        _userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId, intIds);
+
+        _userRepository.deleteAll(UserSpecs.hasUserIdIn(intIds));
     }
 
     public String createXlinkHref(String id, UserSession session, String notRequired)
@@ -434,10 +528,25 @@ public final class ContactsStrategy extends ReplacementStrategy
         return oldHref.replaceAll("id=\\d+","id="+id).replaceAll("/fra/|/deu/|/ita/|/___/","/eng/");
     }
 
-    public Map<String, String> markAsValidated(String[] ids, Dbms dbms, UserSession session) throws Exception
+    public Map<String, String> markAsValidated(String[] ids, UserSession session) throws Exception
     {
-        String whereClause = Utils.constructWhereClause("id", ids);
-        dbms.execute("UPDATE Users SET validated='y' WHERE profile='" + SHARED + "' AND " + whereClause);
+        List<Integer> intIds = Lists.transform(Arrays.asList(ids), new Function<String, Integer>() {
+            @Nullable
+            @Override
+            public Integer apply(@Nullable String input) {
+                return Integer.parseInt(input);
+            }
+        });
+
+        final Specification<User> spec = where(UserSpecs.hasUserIdIn(intIds))
+                .and(UserSpecs.hasProfile(Profile.Shared));
+
+        _userRepository.createBatchUpdateQuery(new PathSpec<User, Character>() {
+            @Override
+            public Path<Character> getPath(Root<User> root) {
+                return root.get(User_.geocatUserInfo).get(GeocatUserInfo_.jpaWorkaround_validated);
+            }
+        }, Constants.toYN_EnabledChar(true), spec);
 
         Map<String, String> idMap = new HashMap<String, String>();
 
@@ -447,37 +556,29 @@ public final class ContactsStrategy extends ReplacementStrategy
         return idMap;
     }
 
-    public Collection<Element> updateObject(Element xlink, Dbms dbms, String metadataLang) throws Exception
+    public Collection<Element> updateObject(Element xlink, String metadataLang) throws Exception
     {
         int id = Integer.parseInt(Utils.extractUrlParam(xlink, "id"));
 
-        String query = "UPDATE Users SET username=?, password=?, surname=?, name=?, "
-                + "address=?, state=?, zip=?, country=?, email=?, organisation=?, kind=?, streetnumber=?, "
-                + "streetname=?, postbox=?, city=?, phone=?, facsimile=?, positionname=?, onlineresource=?, "
-                + "hoursofservice=?, contactinstructions=?, publicaccess=?, orgacronym=?, directnumber=?, "
-                + "mobile=?, validated=?, email1=?, phone1=?, facsimile1=?, "
-                + "email2=?, phone2=?, facsimile2=?, onlinename=?, onlinedescription=?, parentInfo=? " + "WHERE profile='" + SHARED
-                + "' AND (id=" + id + ")";
-
-        String role = processQuery(xlink, dbms, id, query, false, metadataLang, false);
+        UpdateResult results = processQuery(xlink, id, false, metadataLang);
 
         String href = xlink.getAttributeValue(XLink.HREF, XLink.NAMESPACE_XLINK);
         int roleIndex = href.indexOf("role=");
-        href = href.substring(0, roleIndex) + "role=" + role;
+        href = href.substring(0, roleIndex) + "role=" + results.role;
         xlink.setAttribute(XLink.HREF, href, XLink.NAMESPACE_XLINK);
 
         return Collections.emptySet();
     }
 
-    public boolean isValidated(Dbms dbms, String href) throws NumberFormatException, SQLException
+    public boolean isValidated(String href) throws NumberFormatException, SQLException
     {
         String id = Utils.id(href);
         if(id==null) return false;
         try {
-            int group = Integer.parseInt(id);
-            Element record = dbms.select("SELECT validated FROM users WHERE id=?", group).getChild("record");
-    
-            return record == null || !record.getChildTextTrim("validated").equalsIgnoreCase("n");
+            Specifications<User> spec = where(UserSpecs.hasUserId(Integer.parseInt(id)))
+                    .and(UserSpecs.hasProfile(Profile.Shared))
+                    .and(GeocatUserSpecs.isValidated(true));
+            return _userRepository.count(spec) == 1;
         } catch (NumberFormatException e) {
             return false;
         }
@@ -536,15 +637,18 @@ public final class ContactsStrategy extends ReplacementStrategy
         }
         String role = matcher.group(1);
         
-        Dbms dbms = (Dbms) ServiceContext.get().getResourceManager().open(Geonet.Res.MAIN_DB);
-        int id = _serialFactory.getSerial(dbms, "Users");
         String username = UUID.randomUUID().toString();
         String email = username+"@generated.org";
-        String sql = "INSERT INTO Users (id, username, password, profile, email, validated) "
-                + "VALUES (?, ?, ?, ?, ?, ?)";
-        
-        String validated = "n";
-        dbms.execute(sql, id, username, "", SHARED, email, validated);
+        User user = new User();
+        user.setUsername(username);
+        user.getSecurity().setPassword("");
+        user.setProfile(Profile.Shared);
+        user.getEmailAddresses().add(email);
+        user.getGeocatUserInfo().setValidated(false);
+
+        final User saved = _userRepository.save(user);
+        int id = saved.getId();
+
         return XLink.LOCAL_PROTOCOL+"xml.user.get?id="+id+"&schema=iso19139.che&role="+role;
     }
 }

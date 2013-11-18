@@ -23,7 +23,7 @@
 
 package org.fao.geonet.geocat.services.extent;
 
-import static org.fao.geonet.services.extent.ExtentHelper.*;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.*;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -35,10 +35,13 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
-import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.services.extent.Source.FeatureType;
+import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
+import org.fao.geonet.geocat.kernel.extent.ExtentManager;
+import org.fao.geonet.geocat.kernel.extent.Source;
+import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
 import org.fao.geonet.util.LangUtils;
 import org.geotools.data.FeatureStore;
 import org.geotools.feature.FeatureCollection;
@@ -146,8 +149,7 @@ public class Add implements Service
 
     public Element exec(Element params, ServiceContext context) throws Exception
     {
-        final GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        final ExtentManager extentMan = gc.getExtentManager();
+        final ExtentManager extentMan = context.getBean(ExtentManager.class);
 
         String id = Util.getParamText(params, ID);
         final String wfsParam = Util.getParamText(params, SOURCE);
@@ -181,52 +183,18 @@ public class Add implements Service
         }
 
         Geometry geometry = format.parse(geomParam);
-        id = add(id, geomId, desc, requestCrsCode, featureType, store, geometry, false);
+        id = extentMan.add(id, geomId, desc, requestCrsCode, featureType, store, geometry, false);
 
         final Element responseElem = new Element("success");
         responseElem.setText("Added one new feature id= " + id);
         return responseElem;
     }
 
-    public String add(String id, final String geoId, final String desc, final String requestCrsCode,
-                      final FeatureType featureType, final FeatureStore<SimpleFeatureType, SimpleFeature> store, Geometry geometry, boolean showNative)
-            throws Exception
-    {
-        final SimpleFeatureType schema = store.getSchema();
-        geometry = ExtentHelper.prepareGeometry(requestCrsCode, featureType, geometry, schema);
-
-        id = addFeature(id, geoId, desc, geometry, featureType, store, schema, showNative);
-        return id;
-    }
-
-    static boolean idExists(FeatureStore<SimpleFeatureType, SimpleFeature> store, String id, FeatureType featureType)
+    static boolean idExists(FeatureStore<SimpleFeatureType, SimpleFeature> store, String id, Source.FeatureType featureType)
             throws IOException
     {
         return !store.getFeatures(featureType.createQuery(id, new String[] { featureType.idColumn })).isEmpty();
     }
 
-    @SuppressWarnings("deprecation")
-	private String addFeature(String id, String geoId, String desc, Geometry geometry, FeatureType featureType,
-                              FeatureStore<SimpleFeatureType, SimpleFeature> store, SimpleFeatureType schema, boolean showNative) throws Exception
-    {
-
-        if (id == null) {
-            id = ExtentHelper.findNextId(store, featureType);
-        }
-
-        final SimpleFeature feature = SimpleFeatureBuilder.template(schema, SimpleFeatureBuilder
-                .createDefaultFeatureId());
-        feature.setAttribute(featureType.idColumn, id);
-        feature.setAttribute(featureType.geoIdColumn, encodeDescription(geoId));
-        feature.setAttribute(featureType.descColumn, encodeDescription(desc));
-        feature.setAttribute(featureType.showNativeColumn, showNative?"y":"n");
-        feature.setAttribute(featureType.searchColumn, encodeDescription(reduceDesc(desc) + reduceDesc(geoId)));
-        feature.setDefaultGeometry(geometry);
-
-        final FeatureCollection<SimpleFeatureType, SimpleFeature> collection = FeatureCollections.newCollection();
-        collection.add(feature);
-        store.addFeatures(collection);
-        return id;
-    }
 
 }

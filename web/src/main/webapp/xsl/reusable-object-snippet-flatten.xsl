@@ -24,31 +24,21 @@
 			<xsl:copy-of select="." />
 		</orgName>
 	</xsl:template>
-    <xsl:template match="//gmd:voice">
-        <xsl:for-each select=".//gco:CharacterString">
-           <xsl:variable name="elemName">voice<xsl:value-of select="count(.. | ../preceding-sibling::gmd:voice)"/></xsl:variable>
-           <xsl:element name="{$elemName}">
-               <xsl:value-of select="." />
-           </xsl:element>
-        </xsl:for-each>
-    </xsl:template>
-    <xsl:template match="//gmd:facsimile">
-        <xsl:for-each select=".//gco:CharacterString">
-           <xsl:variable name="elemName">facsimile<xsl:value-of select="count(.. | ../preceding-sibling::gmd:facsimile)"/></xsl:variable>
-           <xsl:element name="{$elemName}">
-               <xsl:value-of select="." />
-           </xsl:element>
-        </xsl:for-each>
-    </xsl:template>
-    <xsl:template match="//gmd:directNumber/gco:CharacterString | //che:directNumber/gco:CharacterString">
-        <directNumber>
-            <xsl:value-of select="." />
-        </directNumber>
-    </xsl:template>   
-    <xsl:template match="//gmd:mobile/gco:CharacterString|//che:mobile/gco:CharacterString">
-        <mobile>
-            <xsl:value-of select="." />
-        </mobile>
+    <xsl:template match="//gmd:phone">
+        <phone>
+           <voice>
+               <xsl:value-of select=".//gmd:voice//gco:CharacterString" />
+           </voice>
+           <facsimile>
+               <xsl:value-of select=".//gmd:facsimile//gco:CharacterString" />
+           </facsimile>
+           <directNumber>
+               <xsl:value-of select=".//gmd:directNumber//gco:CharacterString | .//che:directNumber/gco:CharacterString" />
+           </directNumber>
+           <mobile>
+               <xsl:value-of select=".//gmd:mobile//gco:CharacterString | .//che:mobile/gco:CharacterString" />
+           </mobile>
+        </phone>
     </xsl:template>
     <xsl:template match="//gmd:CI_RoleCode">
         <role>
@@ -107,8 +97,7 @@
 
     <xsl:template match="//gmd:electronicMailAddress">
         <xsl:for-each select=".//gco:CharacterString">
-           <xsl:variable name="elemName">email<xsl:value-of select="count(.. | ../preceding-sibling::gmd:electronicMailAddress)"/></xsl:variable>
-           <xsl:element name="{$elemName}">
+           <xsl:element name="email">
                <xsl:value-of select="." />
            </xsl:element>
         </xsl:for-each>

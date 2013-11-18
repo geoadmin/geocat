@@ -33,7 +33,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.reusable.log.Record;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.ThesaurusManager;
-import org.fao.geonet.geocat.kernel.reusable.log.Record;
 import org.fao.geonet.geocat.kernel.reusable.log.ReusableObjectLogger;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.services.extent.ExtentManager;
@@ -383,7 +382,7 @@ public class ReusableObjManager
 					updatedElements.add(href);
 		            Processor.uncacheXLinkUri(XLink.getHRef(originalElem));
 		        	
-		            Collection<Element> newElements = strategy.updateObject(originalElem, dbms, defaultMetadataLang);
+		            Collection<Element> newElements = strategy.updateObject(originalElem, defaultMetadataLang);
 		            if(!newElements.isEmpty()) {
 		            	ArrayList<Element> toAdd = new ArrayList<Element>(newElements);
 		            	toAdd.add(0,originalElem);
@@ -429,7 +428,7 @@ public class ReusableObjManager
                 Log.debug(Geocat.Module.REUSABLE, "An existing match was found for " + strategy);
         }
         if (!updated) {
-            updated = updatePlaceholder(placeholder, strategy.add(placeholder, originalElem, dbms,
+            updated = updatePlaceholder(placeholder, strategy.add(placeholder, originalElem,
                     defaultMetadataLang));
             if (updated)
                 Log.debug(Geocat.Module.REUSABLE, "A new reusable element was added for "
@@ -536,7 +535,7 @@ public class ReusableObjManager
             } else {
                 metadataLang = "EN";
             }
-            Collection<Element> newElements = strategy.updateObject(xlink, params.dbms, metadataLang);
+            Collection<Element> newElements = strategy.updateObject(xlink, metadataLang);
             Log.info(Geocat.Module.REUSABLE, "New elements were created as a result of update");
             Log.info(Geocat.Module.REUSABLE, "Done updating " + strategy + " in metadata id="
                     + params.metadataId);
@@ -577,7 +576,7 @@ public class ReusableObjManager
             }
             ReusableTypes type = hrefToReusableType(href);
 
-            return Utils.strategy(type, context).isValidated((Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB),
+            return Utils.strategy(type, context).isValidated(
                     href);
         } finally {
             lock.unlock();

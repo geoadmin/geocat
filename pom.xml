@@ -1019,6 +1019,7 @@
     <module>harvesters</module>
     <module>healthmonitor</module>
     <module>services</module>
+    <module>geocat</module>
     <module>web-client</module>
     <module>web</module>
   </modules>

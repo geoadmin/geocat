@@ -143,7 +143,7 @@ public class Reject implements Service
         if (!emailInfo.isEmpty()) {
             emailNotifications(strategy, context, dbms, session, msg, emailInfo, baseURL, strategySpecificData, testing);
         }
-        strategy.performDelete(ids, dbms, session, strategySpecificData);
+        strategy.performDelete(ids, session, strategySpecificData);
 
         gc.getDataManager().indexInThreadPool(context, allAffectedMdIds, dbms, false, true);
 

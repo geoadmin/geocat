@@ -57,9 +57,10 @@ import jeeves.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
 import org.fao.geonet.kernel.search.spatial.Pair;
-import org.fao.geonet.geocat.services.extent.Get.Format;
+import org.fao.geonet.geocat.kernel.extent.ExtentFormat;
 import org.fao.geonet.services.extent.Source.FeatureType;
 import org.geotools.data.DataStore;
 import org.geotools.data.FeatureSource;
@@ -152,7 +153,7 @@ public class List implements Service
         final String wfsParam = Util.getParamText(params, SOURCE);
         final String typenameParam = Util.getParamText(params, TYPENAME);
 
-        Format format = Format.lookup(Util.getParamText(params, "format"));
+        ExtentFormat format = ExtentFormat.lookup(Util.getParamText(params, "format"));
 
         Collection<String> wfssToShow = extentMan.getSources().keySet();
         if (wfsParam != null) {
@@ -198,7 +199,7 @@ public class List implements Service
     }
 
     private final boolean listFeatureType(Element params, ServiceContext context, Source wfs, Element wfsElem,
-            DataStore ds, FeatureType featureType, Page page, Format format) throws Exception
+            DataStore ds, FeatureType featureType, Page page, ExtentFormat format) throws Exception
     {
         final FeatureSource<SimpleFeatureType, SimpleFeature> featureSource = featureType.getFeatureSource();
         final String modifiable = String.valueOf(featureType.isModifiable());
@@ -245,7 +246,7 @@ public class List implements Service
     }
 
     private void createFeatureElem(Source wfs, FeatureType featureType, final String baseURL, final String langCode,
-            final Element typeElem, final ExtentSelection selection, final SimpleFeature next, Format format)
+            final Element typeElem, final ExtentSelection selection, final SimpleFeature next, ExtentFormat format)
             throws IOException, JDOMException
     {
         final Element featureElem = new Element(FEATURE);

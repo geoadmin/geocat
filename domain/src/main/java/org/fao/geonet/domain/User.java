@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.domain.geocat.GeocatUserInfo;
+import org.fao.geonet.domain.geocat.Phone;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -426,4 +428,26 @@ public class User extends GeonetEntity implements UserDetails {
         return result;
     }
 
+    // GEOCAT
+    private GeocatUserInfo geocatUserInfo = new GeocatUserInfo();
+    private List<Phone> phones = new ArrayList<Phone>();
+
+    public GeocatUserInfo getGeocatUserInfo() {
+        return geocatUserInfo;
+    }
+    protected void setGeocatUserInfo (GeocatUserInfo info) {
+        this.geocatUserInfo = info;
+    }
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "phone")
+    @Column(name = "phone")
+    public List<Phone> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
+    }
+    // END GEOCAT
 }

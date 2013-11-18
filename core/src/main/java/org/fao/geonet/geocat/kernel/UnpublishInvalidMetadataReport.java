@@ -11,6 +11,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.geocat.PublishRecord;
 import org.jdom.Element;
 
 public class UnpublishInvalidMetadataReport implements Service {
@@ -39,7 +40,7 @@ public class UnpublishInvalidMetadataReport implements Service {
                 throw new IllegalArgumentException("The legal values for the includes parameter are: "+INCLUDE_OPTIONS);
             } 
         }
-        List<UnpublishInvalidMetadataJob.Record> records = UnpublishInvalidMetadataJob.values(context, 100, 0);
+        List<PublishRecord> records = UnpublishInvalidMetadataJob.values(context, 100, 0);
         
         Element report = new Element("report");
         
@@ -57,13 +58,13 @@ public class UnpublishInvalidMetadataReport implements Service {
             report.addContent(all);
         }
         
-        for(UnpublishInvalidMetadataJob.Record todayRecord : records) {
-            all.addContent(todayRecord.toElement());
+        for(PublishRecord todayRecord : records) {
+            all.addContent(todayRecord.asXml());
             
-            if(UnpublishInvalidMetadataJob.AUTOMATED_ENTITY.equals(todayRecord.entity)) {
-                autoUnpublishedToday.addContent(todayRecord.toElement());
+            if(UnpublishInvalidMetadataJob.AUTOMATED_ENTITY.equals(todayRecord.getEntity())) {
+                autoUnpublishedToday.addContent(todayRecord.asXml());
             } else {
-                manualUnpublishedToday.addContent(todayRecord.toElement());
+                manualUnpublishedToday.addContent(todayRecord.asXml());
             }  
         }
         

@@ -3,18 +3,23 @@ package org.fao.geonet.geocat.kernel.reusable;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 
 import org.apache.lucene.document.Document;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.XmlSerializer;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 /**
- * Result from {@link Utils#getReferencingMetadata(jeeves.resources.dbms.Dbms, String, boolean)}
+ * Result from {@link Utils#getReferencingMetadata(jeeves.server.context.ServiceContext, java.util.List, String, boolean, com.google.common.base.Function)}
  * 
  * @author jeichar
  */
@@ -28,15 +33,10 @@ public class MetadataRecord
      * Owner of metadata
      */
     public final String  ownerId;
-    /**
-     * xml data string. May be null if loadMetadata in
-     * {@link Utils#getReferencingMetadata(jeeves.resources.dbms.Dbms, String, boolean)} is false
-     */
-    public final String data;
 
     /**
      * xml. May be null if loadMetadata in
-     * {@link Utils#getReferencingMetadata(jeeves.resources.dbms.Dbms, String, boolean)} is false
+     * {@link Utils#getReferencingMetadata(jeeves.server.context.ServiceContext, java.util.List, String, boolean, com.google.common.base.Function)} is false
      */
     public final Element xml;
 
@@ -45,50 +45,50 @@ public class MetadataRecord
     private String ownerName = null;
     private XmlSerializer xmlSerializer;
 
-    public MetadataRecord(XmlSerializer xmlSerializer, Document element, Collection<String> xlinks, Dbms dbms, boolean loadMetadata) throws Exception
+    public MetadataRecord(ServiceContext context, Document element, Collection<String> xlinks, boolean loadMetadata) throws Exception
     {
-        this.xmlSerializer = xmlSerializer;
+        this.xmlSerializer = context.getBean(XmlSerializer.class);
         id = element.get("_id");
         ownerId = element.get("_owner");
         this.xlinks = Collections.unmodifiableCollection(xlinks);
         if(loadMetadata) {
-            data = ((Element) dbms.select("select data from metadata where id="+id).getChildren().get(0)).getChildTextTrim("data");
-            xml = jeeves.utils.Xml.loadString(data, false);
+            Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
+            if (metadata == null) {
+                throw new IllegalArgumentException("No metadata found with id: "+id);
+            }
+            xml = metadata.getXmlData(false);
         } else {
-            data = null;
             xml = null;
         }
     }
 
-    public void commit(Dbms dbms, ServiceContext srvContext) throws Exception
+    public void commit(ServiceContext srvContext) throws Exception
     {
-        xmlSerializer.update(dbms, id, xml, new ISODate().toString(), true, null, srvContext);
+        xmlSerializer.update(id, xml, new ISODate().toString(), true, null, srvContext);
         GeonetContext context = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
 
-        context.getDataManager().indexMetadata(dbms, id, true, srvContext, false, false, false);
+        context.getBean(DataManager.class).indexMetadata(id, true, srvContext, false, false, false);
     }
 
-    public String email(Dbms dbms) throws SQLException {
-        loadOwnerInfo(dbms);
+    public String email(UserRepository userRepository) throws SQLException {
+        loadOwnerInfo(userRepository);
         return ownerEmail;
     }
 
-    public String name(Dbms dbms) throws SQLException {
-        loadOwnerInfo(dbms);
+    public String name(UserRepository userRepository) throws SQLException {
+        loadOwnerInfo(userRepository);
         return ownerName;
     }
 
-    private void loadOwnerInfo(Dbms dbms) throws SQLException {
+    private void loadOwnerInfo(UserRepository userRepository) throws SQLException {
         if(ownerEmail == null) {
-            String query = "SELECT email,name FROM Users WHERE id=" + ownerId;
-            Element emailRecord = dbms.select(query);
-            if(emailRecord.getChildren().size() == 0) {
+            User user = userRepository.findOne(ownerId);
+            if(user == null) {
                 ownerEmail = "";
                 ownerName = "";
             } else {
-                Element owner = (Element) emailRecord.getChildren().get(0);
-                ownerEmail = owner.getChildTextNormalize("email");
-                ownerName = owner.getChildTextNormalize("name");
+                ownerEmail = user.getEmail();
+                ownerName = user.getName() + " " + user.getSurname();
             }
         }
     }

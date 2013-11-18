@@ -41,23 +41,21 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
 import jeeves.xlink.XLink;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.spatial.Pair;
-import org.fao.geonet.geocat.services.extent.Add;
-import org.fao.geonet.services.extent.ExtentHelper;
-import org.fao.geonet.services.extent.ExtentHelper.ExtentTypeCode;
-import org.fao.geonet.services.extent.ExtentManager;
-import org.fao.geonet.geocat.services.extent.Get.Format;
-import org.fao.geonet.services.extent.Source;
-import org.fao.geonet.services.extent.Source.FeatureType;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
+import org.fao.geonet.geocat.kernel.extent.ExtentHelper.ExtentTypeCode;
+import org.fao.geonet.geocat.kernel.extent.ExtentManager;
+import org.fao.geonet.geocat.kernel.extent.ExtentFormat;
+import org.fao.geonet.geocat.kernel.extent.Source;
+import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
 import org.fao.geonet.util.ElementFinder;
 import org.fao.geonet.util.LangUtils;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.FeatureStore;
 import org.geotools.data.Query;
@@ -139,7 +137,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
             for (Info geomInfo : parts.geographic) {
 
                 Geometry geometry = geomInfo.geom;
-                Format format = geomInfo.format;
+                ExtentFormat format = geomInfo.format;
 
                 if (geometry == null) {
                     continue;
@@ -148,8 +146,8 @@ public final class ExtentsStrategy extends ReplacementStrategy {
                 FilterFactory2 filterFactory = CommonFactoryFinder.getFilterFactory2(GeoTools.getDefaultHints());
                 Collection<Source> wfss = _extentMan.getSources().values();
                 SEARCH: for (Source wfs : wfss) {
-                    Collection<FeatureType> types = wfs.getFeatureTypes();
-                    for (FeatureType featureType : types) {
+                    Collection<Source.FeatureType> types = wfs.getFeatureTypes();
+                    for (Source.FeatureType featureType : types) {
                         FeatureSource<SimpleFeatureType, SimpleFeature> featureSource = featureType.getFeatureSource();
                         Name geomAtt = featureSource.getSchema().getGeometryDescriptor().getName();
                         PropertyName property = filterFactory.property(geomAtt);
@@ -186,12 +184,12 @@ public final class ExtentsStrategy extends ReplacementStrategy {
                                     transformedLoadedGeom.setSRID(4326);
                                 }
                                 if (matchingGeom(geometry, transformedLoadedGeom)
-                                        || (format == Format.GMD_BBOX && matchingGeom(geometry, transformedLoadedGeom.getEnvelope()))) {
+                                        || (format == ExtentFormat.GMD_BBOX && matchingGeom(geometry, transformedLoadedGeom.getEnvelope()))) {
                                     geomInfo.original.detach();
                                     boolean validated = !featureType.typename.equals(NON_VALIDATED_TYPE);
                                     String idString = idAttributeToIdString(featureType, next);
 
-                                    boolean extentTypeCode = geomInfo.inclusion == ExtentTypeCode.INCLUDE;
+                                    boolean extentTypeCode = geomInfo.inclusion == ExtentHelper.ExtentTypeCode.INCLUDE;
 
                                     Namespace prefix = prefix(placeholder, originalElem);
                                     results.add(xlinkIt(format, wfs, featureType, idString, validated, extentTypeCode,
@@ -276,7 +274,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
         }
     }
 
-    private String idAttributeToIdString(FeatureType featureType, SimpleFeature feature) {
+    private String idAttributeToIdString(Source.FeatureType featureType, SimpleFeature feature) {
 
         final Object attribute = feature.getAttribute(featureType.idColumn);
         if (attribute instanceof Number) {
@@ -291,7 +289,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
     }
 
     @SuppressWarnings("rawtypes")
-    public Collection<Element> add(Element placeholder, Element originalElem, Dbms dbms, String metadataLang)
+    public Collection<Element> add(Element placeholder, Element originalElem, String metadataLang)
             throws Exception {
         Result extents = split(originalElem, false);
 
@@ -307,13 +305,13 @@ public final class ExtentsStrategy extends ReplacementStrategy {
         List<Geometry> distinctGeoms = new ArrayList<Geometry>();
 
         for (Info e : extents.geographic) {
-            results.addAll(parseAndCreateReusable(extents, e, dbms, metadataLang, description, prefix, originalElem, distinctGeoms));
+            results.addAll(parseAndCreateReusable(extents, e, metadataLang, description, prefix, originalElem, distinctGeoms));
         }
 
         if (results.isEmpty()) {
             Geometry geom = new GeometryFactory().toGeometry(DEFAULT_BBOX);
             Iterator polygons = originalElem.getDescendants(POLYGON_FINDER);
-            Format format = polygons.hasNext() ? Format.GMD_COMPLETE : Format.GMD_BBOX;
+            ExtentFormat format = polygons.hasNext() ? ExtentFormat.GMD_COMPLETE : ExtentFormat.GMD_BBOX;
             if (polygons.hasNext())
                 ((Content) polygons.next()).detach();
             else {
@@ -344,10 +342,10 @@ public final class ExtentsStrategy extends ReplacementStrategy {
      *            collection that contains all geoms added before e. This method
      *            will add to this collection
      */
-    private Collection<Element> parseAndCreateReusable(Result extents, Info e, Dbms dbms, String metadataLang,
+    private Collection<Element> parseAndCreateReusable(Result extents, Info e, String metadataLang,
             String desc, Namespace prefix, Element originalElem, List<Geometry> distinctGeoms) throws Exception {
         Geometry geometries = e.geom;
-        Format format = e.format;
+        ExtentFormat format = e.format;
 
         if (geometries == null) {
             return Collections.emptySet();
@@ -365,19 +363,19 @@ public final class ExtentsStrategy extends ReplacementStrategy {
     }
 
     private Collection<Element> createReusable(Result extents, Info e, String metadataLang, String desc, Geometry geom,
-            Format format, Namespace prefix, Element originalElem) throws Exception {
+            ExtentFormat format, Namespace prefix, Element originalElem) throws Exception {
 
         e.original.detach();
         String geoId = findGeoId(extents, e, metadataLang);
 
-        boolean extentTypeCode = e.inclusion == ExtentTypeCode.INCLUDE;
+        boolean extentTypeCode = e.inclusion == ExtentHelper.ExtentTypeCode.INCLUDE;
 
         Source wfs = _extentMan.getSource();
-        FeatureType featureType = wfs.getFeatureType(NON_VALIDATED_TYPE);
+        Source.FeatureType featureType = wfs.getFeatureType(NON_VALIDATED_TYPE);
         FeatureStore<SimpleFeatureType, SimpleFeature> store = (FeatureStore<SimpleFeatureType, SimpleFeature>) featureType
                 .getFeatureSource();
 
-        String id = new Add().add(null, geoId, desc, "WGS84(DD)", featureType, store, geom, e.showNative);
+        String id = _extentMan.add(null, geoId, desc, "WGS84(DD)", featureType, store, geom, e.showNative);
 
         return Collections.singleton(xlinkIt(format, wfs, featureType, id, false, extentTypeCode, new Element(originalElem.getName(), prefix)));
     }
@@ -551,7 +549,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
 
     }
 
-    public void performDelete(String[] ids, Dbms dbms, UserSession session, String featureTypeName) throws Exception {
+    public void performDelete(String[] ids, UserSession session, String featureTypeName) throws Exception {
 
         FeatureType from;
         from = findFeatureType(featureTypeName);
@@ -585,7 +583,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
     }
 
     @SuppressWarnings("deprecation")
-	public Map<String, String> markAsValidated(String[] ids, Dbms dbms, UserSession session) throws Exception {
+	public Map<String, String> markAsValidated(String[] ids, UserSession session) throws Exception {
         FeatureType dest = _extentMan.getSource().getFeatureType(XLINK_TYPE);
 
         FeatureType from = _extentMan.getSource().getFeatureType(NON_VALIDATED_TYPE);
@@ -664,7 +662,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
     public static String baseHref(String id, String wfs, String typename) {
         return  MessageFormat.format(XLink.LOCAL_PROTOCOL+"xml.extent.get?id={0}&wfs={1}&typename={2}",id,wfs,typename);
     }
-    private Element xlinkIt(Format format, Source wfs, FeatureType featureType, String id, boolean validated,
+    private Element xlinkIt(ExtentFormat format, Source wfs, FeatureType featureType, String id, boolean validated,
             boolean include, Element xlinkElement) {
         String xlink = baseHref(id,wfs.wfsId, featureType.typename)+"&format="+format+"&extentTypeCode="+String.valueOf(include);
 
@@ -686,10 +684,10 @@ public final class ExtentsStrategy extends ReplacementStrategy {
         Multimap<Boolean, Polygon> results = ArrayListMultimap.create();
 
         GeometryFactory fac = new GeometryFactory();
-        Format format;
+        ExtentFormat format;
 
         if (polygonIter.hasNext()) {
-            format = Format.GMD_COMPLETE;
+            format = ExtentFormat.GMD_COMPLETE;
         }
          /*if (polygonIter.hasNext() && bboxIter.hasNext()) {
             format = Format.GMD_COMPLETE;
@@ -698,7 +696,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
             else if (polygonIter.hasNext()) {
             format = Format.GMD_POLYGON;
         } */else if(bboxIter.hasNext()) {
-            format = Format.GMD_BBOX;
+            format = ExtentFormat.GMD_BBOX;
         } else {
             format = null;
         }
@@ -889,7 +887,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
     }
 
     @SuppressWarnings("deprecation")
-	public Collection<Element> updateObject(Element xlink, Dbms dbms, String metadataLang) throws Exception {
+	public Collection<Element> updateObject(Element xlink, String metadataLang) throws Exception {
         Extent parseResult = parseGeometry(xlink);
 
         MultiPolygon geom = parseResult.geom;
@@ -952,7 +950,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
         return e;
     }
 
-    public boolean isValidated(Dbms dbms, String href) {
+    public boolean isValidated(String href) {
         return !href.contains("typename=" + NON_VALIDATED_TYPE);
     }
 
@@ -971,8 +969,8 @@ public final class ExtentsStrategy extends ReplacementStrategy {
         final Element copy;
 
         final Geometry geom;
-        final Format format;
-        final ExtentTypeCode inclusion;
+        final ExtentFormat format;
+        final ExtentHelper.ExtentTypeCode inclusion;
         final boolean showNative;
 
         public Info(Element original, Element copy) throws Exception {
@@ -985,7 +983,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
             } catch (NumberFormatException err) {
                 GeometryFactory fac = new GeometryFactory();
                 MultiPolygon result = fac.createMultiPolygon(new Polygon[]{(Polygon) fac.toGeometry(DEFAULT_BBOX)});
-                parseResult = new Extent(ExtentTypeCode.INCLUDE, result, Format.GMD_BBOX, false);
+                parseResult = new Extent(ExtentTypeCode.INCLUDE, result, ExtentFormat.GMD_BBOX, false);
             }
 
             geom = parseResult.geom;
@@ -1017,7 +1015,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
                     return result1 - result2;
                 }
 
-                private int assignValue(Format format) {
+                private int assignValue(ExtentFormat format) {
                     switch (format) {
                     case GMD_BBOX:
                         return 0;
@@ -1055,7 +1053,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
             final Geometry currEnv = current.geom.getEnvelope();
             currEnv.setSRID(current.geom.getSRID());
 
-            return current.format == Format.GMD_BBOX && current.geom != null && previous.geom != null
+            return current.format == ExtentFormat.GMD_BBOX && current.geom != null && previous.geom != null
                     && matchingGeom(prevEnv, currEnv);
         }
 
@@ -1069,10 +1067,10 @@ public final class ExtentsStrategy extends ReplacementStrategy {
     private static final class Extent {
         final ExtentTypeCode inclusion;
         final MultiPolygon geom;
-        final Format format;
+        final ExtentFormat format;
         final boolean showNative;
 
-        public Extent(ExtentTypeCode inclusion, MultiPolygon geom, Format format, boolean showNative) {
+        public Extent(ExtentTypeCode inclusion, MultiPolygon geom, ExtentFormat format, boolean showNative) {
             this.inclusion = inclusion;
             this.geom = geom;
             this.format = format;
@@ -1108,7 +1106,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
                     .getFeatureSource();
 
             Geometry geom = new GeometryFactory().toGeometry(DEFAULT_BBOX);
-            String id = new Add().add(null, "", "", "WGS84(DD)", featureType, store, geom, false);
+            String id = _extentMan.add(null, "", "", "WGS84(DD)", featureType, store, geom, false);
 
             return href.replaceFirst("&id=[^&]+", "&id=" + id);
         }

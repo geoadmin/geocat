@@ -24,6 +24,9 @@
 package org.fao.geonet.geocat.kernel.reusable;
 
 import static java.lang.Double.parseDouble;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -45,9 +48,7 @@ import java.util.regex.Pattern;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
 import jeeves.xlink.XLink;
 
 import org.apache.lucene.document.Document;
@@ -59,12 +60,23 @@ import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.geocat.kernel.Email;
+import org.fao.geonet.geocat.kernel.extent.ExtentManager;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.util.LangUtils;
+import org.fao.geonet.utils.Log;
 import org.geotools.gml3.GMLConfiguration;
 import org.jdom.Attribute;
 import org.jdom.Content;
@@ -73,6 +85,8 @@ import org.jdom.JDOMException;
 import org.jdom.filter.Filter;
 
 import com.google.common.base.Function;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 
 /**
  * Utility methods for this package
@@ -161,9 +175,6 @@ public final class Utils {
         return xlinks == null || xlinks.isEmpty();
     }
 
-    public static String constructWhereClause( String columnName, String[] ids ) {
-        return columnName + "=" + mkString(Arrays.asList(ids), " OR " + columnName + "=");
-    }
 
     /**
      * Get all the metadata that use the xlink. This does a sql like query so only a unique portion
@@ -176,9 +187,8 @@ public final class Utils {
 
         String concreteId = idConverter.apply(id);
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-        SearchManager searchManager = gc.getSearchmanager();
+        SearchManager searchManager = context.getBean(SearchManager.class);
 
         IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(null, -1);
 		GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
@@ -212,7 +222,7 @@ public final class Utils {
                         }
                     }
                     if (!xlinks.isEmpty()) {
-                        MetadataRecord record = new MetadataRecord(gc.getXmlSerializer(), element, xlinks, dbms, loadMetadata);
+                        MetadataRecord record = new MetadataRecord(context, element, xlinks, loadMetadata);
                         results.add(record);
                     }
 
@@ -235,10 +245,6 @@ public final class Utils {
         } catch (NumberFormatException e) {
             return id1.equals(id2);
         }
-    }
-
-    public static String mkString( Iterable< ? extends Object> iterable ) {
-        return mkString(iterable, "", ",", "");
     }
 
     public static String mkString( Iterable< ? extends Object> iterable, String separator ) {
@@ -309,39 +315,37 @@ public final class Utils {
 
     public static void unpublish( Collection<String> results, ServiceContext context ) throws Exception {
         if (results.size() > 0) {
-            Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-            StringBuilder query = new StringBuilder("DELETE FROM OperationAllowed WHERE (groupId <= 1 ) AND (metadataId=");
-            Iterator<String> iter = results.iterator();
-            query.append(iter.next());
-            while( iter.hasNext() ) {
-                query.append(" OR metadataId=");
-                query.append(iter.next());
+
+            Specifications spec = where(hasGroupId(ReservedGroup.all.getId()));
+            Iterator<String> ids = results.iterator();
+            Specifications mdIdSpec = where(hasMetadataId(ids.next()));
+
+            while (ids.hasNext()) {
+                mdIdSpec = mdIdSpec.or(hasMetadataId(ids.next()));
             }
-            query.append(")");
-            dbms.execute(query.toString());
+            context.getBean(OperationAllowedRepository.class).deleteAll(spec.and(mdIdSpec));
         }
     }
 
     public static ReplacementStrategy strategy( ReusableTypes reusableType, ServiceContext context ) throws Exception {
         ReplacementStrategy strategy = null;
         String appPath = context.getAppPath();
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        String baseUrl = mkBaseURL(context.getBaseUrl(), gc.getSettingManager());
+
+        String baseUrl = mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));
         String language = context.getLanguage();
 
         switch( reusableType ) {
         case extents:
-            strategy = new ExtentsStrategy(baseUrl, appPath, gc.getExtentManager(), language);
+            strategy = new ExtentsStrategy(baseUrl, appPath, context.getBean(ExtentManager.class), language);
             break;
         case keywords:
-            strategy = new KeywordsStrategy(gc.getThesaurusManager(), appPath, baseUrl, language);
+            strategy = new KeywordsStrategy(context.getBean(ThesaurusManager.class), appPath, baseUrl, language);
             break;
         case formats:
-            strategy = new FormatsStrategy(dbms, appPath, baseUrl, language, context.getSerialFactory());
+            strategy = new FormatsStrategy(context, appPath, baseUrl, language);
             break;
         case contacts:
-            strategy = new ContactsStrategy(dbms, appPath, baseUrl, language, context.getSerialFactory());
+            strategy = new ContactsStrategy(context, appPath, baseUrl, language);
             break;
         default:
             break;
@@ -356,17 +360,15 @@ public final class Utils {
     }
 
     public static void sendEmail( SendEmailParameter args ) throws SQLException, MessagingException, AddressException {
-        String query = "SELECT email,id FROM Users WHERE id=" + mkString(args.emailInfo.keySet(), " OR id=");
-        Element emailRecords = args.dbms.select(query);
-        GeonetContext gc = (GeonetContext) args.context.getHandlerContext(Geonet.CONTEXT_NAME);
+        final List<User> users = args.context.getBean(UserRepository.class).findAll(args.emailInfo.keySet());
 
         try {
-            Set<String> unnotifiedIds = new HashSet<String>();
-            @SuppressWarnings("unchecked")
-			List<Element> elems = emailRecords.getChildren();
-            for( Element element : elems ) {
-                final String id = element.getChildText("id");
-                String email = element.getChildText("email");
+            GeonetContext gc = (GeonetContext) args.context.getHandlerContext(Geonet.CONTEXT_NAME);
+            Set<Integer> unnotifiedIds = new HashSet<Integer>();
+            for( User user : users ) {
+                final Integer id = user.getId();
+                String email = user.getEmail();
+
                 if (!Email.isValidEmailAddress(email)) {
                     unnotifiedIds.addAll(args.emailInfo.get(id));
                 } else {

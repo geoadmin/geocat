@@ -1,16 +1,26 @@
 package org.fao.geonet.geocat.kernel.extent;
 
-import jeeves.utils.Log;
+import com.vividsolutions.jts.geom.Geometry;
 import org.apache.log4j.Logger;
 import org.fao.geonet.constants.Geocat;
+import org.fao.geonet.utils.Log;
 import org.geotools.data.DataStore;
+import org.geotools.data.FeatureStore;
+import org.geotools.feature.FeatureCollection;
+import org.geotools.feature.FeatureCollections;
+import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.util.logging.Logging;
 import org.jdom.Element;
+import org.jdom.Namespace;
+import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.feature.simple.SimpleFeatureType;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
+
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.*;
 
 /**
  * The configuration object for Extents. It allows access to the Datastore(s)
@@ -21,7 +31,9 @@ import java.util.logging.LogRecord;
 public class ExtentManager {
 
     private static final java.util.logging.Logger LOGGER = Logging.getLogger("org.geotools.data");
-	private static ExtentManager instance;
+    public static final Namespace GMD_NAMESPACE    = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
+    public static final Namespace GCO_NAMESPACE    = Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
+    private static ExtentManager instance;
     public static final String GEOTOOLS_LOG_NAME = "geotools";
 
     public static ExtentManager getInstance() {
@@ -117,4 +129,38 @@ public class ExtentManager {
         return sources.get(DEFAULT_SOURCE_ID);
     }
 
-}
+
+    public String add(String id, final String geoId, final String desc, final String requestCrsCode,
+                             final Source.FeatureType featureType, final FeatureStore<SimpleFeatureType, SimpleFeature> store, Geometry geometry, boolean showNative)
+            throws Exception
+    {
+        final SimpleFeatureType schema = store.getSchema();
+        geometry = ExtentHelper.prepareGeometry(requestCrsCode, featureType, geometry, schema);
+
+        id = addFeature(id, geoId, desc, geometry, featureType, store, schema, showNative);
+        return id;
+    }
+
+    @SuppressWarnings("deprecation")
+    private String addFeature(String id, String geoId, String desc, Geometry geometry, Source.FeatureType featureType,
+                                     FeatureStore<SimpleFeatureType, SimpleFeature> store, SimpleFeatureType schema, boolean showNative) throws Exception
+    {
+
+        if (id == null) {
+            id = ExtentHelper.findNextId(store, featureType);
+        }
+
+        final SimpleFeature feature = SimpleFeatureBuilder.template(schema, SimpleFeatureBuilder
+                .createDefaultFeatureId());
+        feature.setAttribute(featureType.idColumn, id);
+        feature.setAttribute(featureType.geoIdColumn, encodeDescription(geoId));
+        feature.setAttribute(featureType.descColumn, encodeDescription(desc));
+        feature.setAttribute(featureType.showNativeColumn, showNative?"y":"n");
+        feature.setAttribute(featureType.searchColumn, encodeDescription(reduceDesc(desc) + reduceDesc(geoId)));
+        feature.setDefaultGeometry(geometry);
+
+        final FeatureCollection<SimpleFeatureType, SimpleFeature> collection = FeatureCollections.newCollection();
+        collection.add(feature);
+        store.addFeatures(collection);
+        return id;
+    }}

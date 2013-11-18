@@ -18,7 +18,39 @@ public class Address extends GeonetEntity implements Serializable {
     private String _state;
     private String _zip;
     private String _country;
+    // GEOCAT
+    private String streetnumber;
+    private String streetname;
+    private String postbox;
 
+    public String getPostbox() {
+        return postbox;
+    }
+
+    public Address setPostbox(String postbox) {
+        this.postbox = postbox;
+        return this;
+    }
+
+    public String getStreetname() {
+        return streetname;
+    }
+
+    public Address setStreetname(String streetname) {
+        this.streetname = streetname;
+        return this;
+    }
+
+    public String getStreetnumber() {
+        return streetnumber;
+    }
+
+    public Address setStreetnumber(String streetnumber) {
+        this.streetnumber = streetnumber;
+        return this;
+    }
+
+    // END GEOCAT
     /**
      * Id of the address. This is automatically generated so when creating a new object leave this blank and allow the database or JPA set
      * the value for you on save.

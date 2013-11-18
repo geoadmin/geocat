@@ -48,9 +48,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
 import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
-import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
-import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
-import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.jdom.Element;
 
@@ -91,7 +88,7 @@ public class Validate implements Service
     private List<Element> performValidation(String[] ids, ReplacementStrategy strategy, Dbms dbms, ServiceContext context,
             String baseUrl) throws Exception
     {
-        Map<String, String> idMapping = strategy.markAsValidated(ids, dbms, context.getUserSession());
+        Map<String, String> idMapping = strategy.markAsValidated(ids, context.getUserSession());
 
         List<Element> result = new ArrayList<Element>();
         for (String id : ids) {

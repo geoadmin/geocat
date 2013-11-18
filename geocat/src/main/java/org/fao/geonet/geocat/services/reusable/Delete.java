@@ -29,17 +29,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-
-import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.reusable.*;
-import org.fao.geonet.kernel.reusable.*;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import com.google.common.collect.HashMultimap;
@@ -72,14 +71,12 @@ public class Delete implements Service
         	
         
         Log.debug(Geocat.Module.REUSABLE, "Starting to delete following rejected objects: ("
-                + Arrays.toString(ids) + ")");
+                                          + Arrays.toString(ids) + ")");
 
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        final String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), gc.getSettingManager());
+        final String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));
 
         Collection<String> metadataIds = new HashSet<String>();
-        Multimap<String/* ownerid */, String/* metadataid */> emailInfo = HashMultimap.create();
+        Multimap<Integer/* ownerid */, Integer/* metadataid */> emailInfo = HashMultimap.create();
 
         for (String id : ids) {
             Set<MetadataRecord> md = Utils.getReferencingMetadata(context, Arrays.asList(DeletedObjects.getLuceneIndexField()),id, false, ReplacementStrategy.ID_FUNC);
@@ -88,7 +85,7 @@ public class Delete implements Service
 
                 // compile a list of email addresses for notifications
                 for (MetadataRecord record : md) {
-                    emailInfo.put(record.ownerId, record.id);
+                    emailInfo.put(Integer.parseInt(record.ownerId), Integer.parseInt(record.id));
                 }
             }
         }
@@ -100,15 +97,15 @@ public class Delete implements Service
             String subject = Utils.translate(context.getAppPath(), context.getLanguage(), "unpublishMetadata/subject",
                     " / ");
 
-            SendEmailParameter args = new SendEmailParameter(context, dbms, msg, emailInfo, baseUrl, msgHeader, subject, testing);
+            SendEmailParameter args = new SendEmailParameter(context, msg, emailInfo, baseUrl, msgHeader, subject, testing);
             Utils.sendEmail(args);
         }
 
         Utils.unpublish(metadataIds, context);
         for (String metadataId : metadataIds) {
-            gc.getDataManager().indexMetadata(dbms, metadataId, true, context, false, false, true);
+            context.getBean(DataManager.class).indexMetadata(metadataId, true, context, false, false, true);
         }
-        DeletedObjects.delete(dbms, ids);
+        DeletedObjects.delete(ids);
 
         Log.debug(Geocat.Module.REUSABLE, "Successfully deleted following rejected objects: \n("
                 + Arrays.toString(ids) + ")");

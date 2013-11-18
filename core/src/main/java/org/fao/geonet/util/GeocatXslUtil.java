@@ -35,7 +35,7 @@ import net.sf.saxon.type.Type;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.JeevesException;
-import org.fao.geonet.kernel.extent.ExtentHelper;
+import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
@@ -58,7 +58,7 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.WKTWriter;
 
-import static org.fao.geonet.kernel.extent.ExtentHelper.ExtentTypeCode;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.ExtentTypeCode;
 
 public class GeocatXslUtil {
 

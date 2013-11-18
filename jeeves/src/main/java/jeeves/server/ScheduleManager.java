@@ -59,8 +59,6 @@ public class ScheduleManager
 	private String appPath;
 	private String baseUrl;
 	private String instanceId = SCHEDULER_ID+"-"+UUID.randomUUID().toString();
-    private MonitorManager monitorManager;
-    private ConfigurableApplicationContext jeevesApplicationContext;
 
 	private Hashtable<String, Object> htContexts = new Hashtable<String, Object>();
     private Scheduler scheduler;

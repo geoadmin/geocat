@@ -39,7 +39,6 @@ import jeeves.utils.Log;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.geocat.kernel.reusable.*;
 import org.fao.geonet.geocat.kernel.reusable.ContactsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
@@ -100,7 +99,7 @@ public class DeleteUnused implements Service {
         }
         Log.info(Geocat.Module.REUSABLE, "Deleting Reusable objects " + toDelete);
         if (toDelete.size() > 0)
-            strategy.performDelete(toDelete.toArray(new String[toDelete.size()]), dbms, userSession, null);
+            strategy.performDelete(toDelete.toArray(new String[toDelete.size()]), userSession, null);
     }
 
     private void processDeleted(ServiceContext context, Dbms dbms) throws Exception {
