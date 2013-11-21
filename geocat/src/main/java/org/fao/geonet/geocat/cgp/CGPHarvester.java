@@ -23,15 +23,15 @@
 
 package org.fao.geonet.geocat.cgp;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.ResourceManager;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
@@ -43,60 +43,27 @@ import java.util.UUID;
 
 public class CGPHarvester extends AbstractHarvester
 {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Static init
-	//---
-	//--------------------------------------------------------------------------
 
-	public static void init(ServiceContext context) throws Exception
-	{
-	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Harvesting type
-	//---
-	//--------------------------------------------------------------------------
-
-	public String getType()
-	{
-		return "cgp";
-	}
 
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
-
-	protected void doInit(Element node) throws BadInputEx
+    @Override
+	protected void doInit(Element node, ServiceContext context) throws BadInputEx
 	{
 		params = new CGPParams(dataMan);
 		params.create(node);
+        this.context = context;
 	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- doDestroy
-	//---
-	//---------------------------------------------------------------------------
-
-	protected void doDestroy(Dbms dbms) throws SQLException
-	{
-		File icon = new File(context.getAppPath() + "images/logos", params.uuid + ".gif");
-
-		icon.delete();
-		Lib.sources.delete(dbms, params.uuid);
-	}
-
 	//---------------------------------------------------------------------------
 	//---
 	//--- Add
 	//---
 	//---------------------------------------------------------------------------
-
-	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException
+    @Override
+	protected String doAdd(Element node) throws BadInputEx, SQLException
 	{
 		params = new CGPParams(dataMan);
 
@@ -106,10 +73,11 @@ public class CGPHarvester extends AbstractHarvester
 		//--- force the creation of a new uuid
 		params.uuid = UUID.randomUUID().toString();
 
-		String id = settingMan.add(dbms, "harvesting", "node", getType());
+		String id = settingMan.add("harvesting", "node", getType());
 
-		storeNode(dbms, params, "id:" + id);
-		Lib.sources.update(dbms, params.uuid, params.name, true);
+		storeNode(params, "id:" + id);
+        Source source = new Source(params.uuid, params.name, true);
+        context.getBean(SourceRepository.class).save(source);
 		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
 
 		return id;
@@ -120,8 +88,8 @@ public class CGPHarvester extends AbstractHarvester
 	//--- Update
 	//---
 	//---------------------------------------------------------------------------
-
-	protected void doUpdate(Dbms dbms, String id, Element node)
+    @Override
+	protected void doUpdate(String id, Element node)
 			throws BadInputEx, SQLException
 	{
 		CGPParams copy = params.copy();
@@ -131,44 +99,46 @@ public class CGPHarvester extends AbstractHarvester
 
 		String path = "harvesting/id:" + id;
 
-		settingMan.removeChildren(dbms, path);
+		settingMan.removeChildren(path);
 
 		//--- update database
-		storeNode(dbms, copy, path);
+		storeNode(copy, path);
 
 		//--- we update a copy first because if there is an exception Params
 		//--- could be half updated and so it could be in an inconsistent state
 
-		Lib.sources.update(dbms, copy.uuid, copy.name, true);
+
+        Source source = new Source(copy.uuid, copy.name, true);
+        context.getBean(SourceRepository.class).save(source);
 		Resources.copyLogo(context, "harvesting/" + copy.icon, copy.uuid);
 
 		params = copy;
 	}
 
 	//---------------------------------------------------------------------------
-
-	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path,
+    @Override
+	protected void storeNodeExtra(AbstractParams p, String path,
 	                              String siteId, String optionsId) throws SQLException
 	{
 		CGPParams params = (CGPParams) p;
 
-		settingMan.add(dbms, "id:" + siteId, "url", params.url);
-		settingMan.add(dbms, "id:" + siteId, "icon", params.icon);
-		settingMan.add(dbms, "id:" + optionsId, "validate", params.validate);
+		settingMan.add("id:" + siteId, "url", params.url);
+		settingMan.add("id:" + siteId, "icon", params.icon);
+		settingMan.add("id:" + optionsId, "validate", params.validate);
 
 		//--- store search nodes
 
 		for (Search s : params.getSearches())
 		{
-			String searchID = settingMan.add(dbms, path, "search", "");
+			String searchID = settingMan.add(path, "search", "");
 
-			settingMan.add(dbms, "id:" + searchID, "freeText", s.freeText);
-			settingMan.add(dbms, "id:" + searchID, "from", s.from);
-			settingMan.add(dbms, "id:" + searchID, "until", s.until);
-			settingMan.add(dbms, "id:" + searchID, "latNorth", s.latNorth);
-			settingMan.add(dbms, "id:" + searchID, "latSouth", s.latSouth);
-			settingMan.add(dbms, "id:" + searchID, "lonEast", s.lonEast);
-			settingMan.add(dbms, "id:" + searchID, "lonWest", s.lonWest);
+			settingMan.add("id:" + searchID, "freeText", s.freeText);
+			settingMan.add("id:" + searchID, "from", s.from);
+			settingMan.add("id:" + searchID, "until", s.until);
+			settingMan.add("id:" + searchID, "latNorth", s.latNorth);
+			settingMan.add("id:" + searchID, "latSouth", s.latSouth);
+			settingMan.add("id:" + searchID, "lonEast", s.lonEast);
+			settingMan.add("id:" + searchID, "lonWest", s.lonWest);
 		}
 	}
 
@@ -177,12 +147,10 @@ public class CGPHarvester extends AbstractHarvester
 	//--- Harvest
 	//---
 	//---------------------------------------------------------------------------
-
-	protected void doHarvest(Logger log, ResourceManager rm) throws Exception
+    @Override
+	protected void doHarvest(Logger log) throws Exception
 	{
-		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
-
-		Harvester h = new Harvester(log, context, dbms, params);
+		Harvester h = new Harvester(log, context, params);
 		result = h.harvest();
 	}
 

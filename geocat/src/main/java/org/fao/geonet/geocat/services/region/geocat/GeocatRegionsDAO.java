@@ -7,9 +7,9 @@ import java.util.WeakHashMap;
 
 import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.services.region.Region;
-import org.fao.geonet.services.region.RegionsDAO;
-import org.fao.geonet.services.region.Request;
+import org.fao.geonet.kernel.region.Region;
+import org.fao.geonet.kernel.region.RegionsDAO;
+import org.fao.geonet.kernel.region.Request;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;

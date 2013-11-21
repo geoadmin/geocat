@@ -24,11 +24,11 @@
 package org.fao.geonet.geocat.services.cgp;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Logger;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.geocat.services.gm03.ISO19139CHEtoGM03Base;
@@ -36,8 +36,6 @@ import org.fao.geonet.geocat.services.gm03.ISO19139CHEtoGM03small;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.geocat.services.gm03.ISO19139CHEtoGM03small;
-import org.fao.geonet.geocat.services.gm03.ISO19139CHEtoGM03Base;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.input.DOMBuilder;
@@ -260,11 +258,10 @@ public class CgpDispatcher implements Service
 
 		Logger logger = context.getLogger();
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dataMan = gc.getDataManager();
+		DataManager dataMan = context.getBean(DataManager.class);
 
 		// Setup Lucene search
-		SearchManager searchMan = gc.getSearchmanager();
+		SearchManager searchMan = context.getBean(SearchManager.class);
 		MetaSearcher searcher = searchMan.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
 		Element params = new Element(Jeeves.Elem.REQUEST)
 				.addContent(new Element("_schema").setText("iso19139.che"))

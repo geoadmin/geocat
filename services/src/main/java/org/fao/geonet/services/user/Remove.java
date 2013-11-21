@@ -29,11 +29,12 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroupId_;
+import org.fao.geonet.geocat.SharedObjectApi;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.UserGroupRepository;
@@ -41,7 +42,6 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
-import org.springframework.data.jpa.domain.Specifications;
 
 import java.util.*;
 import java.util.List;
@@ -124,29 +124,29 @@ public class Remove extends NotInReadOnlyModeService {
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
 
+    // GEOCAT
     @SuppressWarnings("unchecked")
     private Element handleSharedUser(String id, Element params, ServiceContext context) throws Exception {
     	boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
 
-    	Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-        Element profileQuery = dbms.select("Select profile, validated from users where id=?",Integer.parseInt(id));
+        final User user = context.getBean(UserRepository.class).findOne(Integer.parseInt(id));
 
-
-        if(!profileQuery.getChildren().isEmpty()) {
-            final Element child = (Element) profileQuery.getChildren().get(0);
-            if( type == Type.NORMAL && Geocat.Profile.SHARED.equals(child.getChildTextTrim("profile"))) {
+        if(user != null) {
+            if( type == Type.NORMAL && Profile.Shared == user.getProfile()) {
                 throw new IllegalArgumentException("This remove user service instance cannot remove shared objects");
-}
+            }
 
             if(type != Type.NORMAL && !Boolean.parseBoolean(Util.getParam(params, "forceDelete", "false"))) {
                 String msg = LangUtils.loadString("reusable.rejectDefaultMsg", context.getAppPath(), context.getLanguage());
-                boolean isValidated = "y".equalsIgnoreCase(child.getChildTextTrim("validated"));
-                return new Reject().reject(context, ReusableTypes.contacts, new String[]{id}, msg, null, isValidated, testing);
+                boolean isValidated = user.getGeocatUserInfo().isValidated();
+                final SharedObjectApi bean = context.getBean(SharedObjectApi.class);
+                return bean.reject(context, ReusableTypes.contacts, new String[]{id}, msg, null, isValidated, testing);
             }
         }
 
         return null;
     }
+    // END GEOCAT
 }
 
 //=============================================================================

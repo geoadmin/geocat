@@ -25,12 +25,11 @@ package org.fao.geonet.geocat.services.metadata;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
@@ -38,9 +37,7 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Content;
 import org.jdom.Element;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 //=============================================================================
 
@@ -66,12 +63,11 @@ public class GetValidationStatus implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dataMan = gc.getDataManager();
+		DataManager dataMan = context.getBean(DataManager.class);
 
 
         String metadataId = Utils.getIdentifierFromParameters(params, context);
-        Lib.resource.checkPrivilege(context, metadataId, AccessManager.OPER_VIEW);
+        Lib.resource.checkPrivilege(context, metadataId, ReservedOperation.view);
 
         @SuppressWarnings("unchecked")
         final List<Element> validDetails = dataMan.buildInfoElem(context, metadataId, null).getChildren("valid_details");
@@ -86,8 +82,7 @@ public class GetValidationStatus implements Service
             elRes.addContent((Content) validationEl.clone());
         }
 
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        boolean published = gc.getAccessManager().isVisibleToAll(dbms, metadataId);
+        boolean published = context.getBean(AccessManager.class).isVisibleToAll(metadataId);
 
         elRes.addContent(new Element("published").setText(Boolean.toString(published)));
 

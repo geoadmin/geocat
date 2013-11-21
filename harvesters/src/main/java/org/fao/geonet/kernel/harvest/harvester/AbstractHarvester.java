@@ -409,11 +409,11 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         Logger logger;
 
         /**
-         * @param dm
+         * @param context
          * @param logger
          */
-        public HarvestWithIndexProcessor(DataManager dm, Logger logger) {
-            super(dm);
+        public HarvestWithIndexProcessor(ServiceContext context, Logger logger) {
+            super(context);
             this.logger = logger;
         }
 
@@ -489,7 +489,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
                 //--- proper harvesting
                 logger.info("Started harvesting from node : " + nodeName);
-                HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger);
+                HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(context, logger);
                 // todo check (was: processwithfastindexing)
                 h.process();
                 logger.info("Ended harvesting from node : " + nodeName);

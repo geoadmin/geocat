@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fao.geonet.services.region.Region;
+import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.util.LangUtils;
 import org.geotools.data.Query;
 import org.geotools.data.simple.SimpleFeatureIterator;

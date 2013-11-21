@@ -37,7 +37,6 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
@@ -65,7 +64,6 @@ import org.springframework.http.client.ClientHttpResponse;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.net.URL;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -347,7 +345,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
          addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 		
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.url));
-		dataMan.setTemplate(iId, MetadataType.METADATA, null);
+		dataMan.setTemplate(iId, MetadataType.METADATA, null, context);
 
          dataMan.flush();
 
@@ -665,7 +663,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
             dataMan.flush();
 
-            dataMan.indexMetadata(reg.id);
+            dataMan.indexMetadata(reg.id, context);
 			
 			try {
     			// Load bbox info for later use (eg. WMS thumbnails creation)

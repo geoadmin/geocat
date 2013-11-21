@@ -28,18 +28,23 @@ import java.util.List;
 import java.util.Set;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
-import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
+import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.services.metadata.IndexRebuild;
 import org.jdom.Element;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  * Searches through the selected metadata and replaces all known reusable
@@ -67,7 +72,6 @@ public class Replace implements Service
 			"".equals(ignoreErrorParam.trim()));
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
         Set<String> elements;
         boolean processAllRecords = "true".equalsIgnoreCase(all);
@@ -76,33 +80,42 @@ public class Replace implements Service
 
             String query = "SELECT id FROM Metadata";
             @SuppressWarnings("unchecked")
-			List<Element> ids = dbms.select(query).getChildren("record");
-            for (Element record : ids) {
-                elements.add(record.getChildText("id"));
+			List<Integer> ids = findAllIds(context);
+            for (Integer id : ids) {
+                elements.add(""+id);
             }
 
         } else {
             elements = selectionManager.getSelection(SelectionManager.SELECTION_METADATA);
         }
 
-        int count = gc.getReusableObjMan().process(context, elements, gc.getDataManager(), email, processAllRecords, ignoreErrors);
+        int count = context.getBean(ReusableObjManager.class).process(context, elements, context.getBean(DataManager.class), email,
+                processAllRecords, ignoreErrors);
+
 
         if (publish){
+            final OperationAllowedRepository opAllowedRepo = context.getBean(OperationAllowedRepository.class);
             String sql = "INSERT INTO operationallowed VALUES (?,?,0)";
             for (String id : elements) {
                 int intId = Integer.parseInt(id);
-                dbms.execute(sql, 0, intId);
-                dbms.execute(sql, 1, intId);
+
+                final OperationAllowedId operationAllowedId = new OperationAllowedId(intId,
+                        ReservedGroup.all.getId(),
+                        ReservedOperation.view.getId());
+                opAllowedRepo.save(new OperationAllowed(operationAllowedId));
+                operationAllowedId.setGroupId(ReservedGroup.intranet.getId());
+                opAllowedRepo.save(new OperationAllowed(operationAllowedId));
             }
         }
 
-        dbms.commit();
+        final DataManager dataManager = context.getBean(DataManager.class);
         if( rebuildIndex ){
             new IndexRebuild().exec(params, context);
         } else {
             for (String uuid : elements) {
-            	String id = ReusableObjManager.uuidToId(dbms, gc.getDataManager(), uuid, processAllRecords);
-				gc.getDataManager().indexInThreadPoolIfPossible(dbms, id, false);
+                final boolean uuidIsId = processAllRecords;
+                String id = ReusableObjManager.uuidToId(dataManager, uuid, uuidIsId);
+                dataManager.indexMetadata(id, context);
             }
         	
         }
@@ -110,6 +123,14 @@ public class Replace implements Service
         Element success = new Element("success");
         success.setText(count + " metadata elements have been analyzed and updated");
         return success;
+    }
+
+    private List<Integer> findAllIds(ServiceContext context) {
+        final CriteriaBuilder cb = context.getEntityManager().getCriteriaBuilder();
+        final CriteriaQuery<Integer> query = cb.createQuery(Integer.class);
+        final Root<Metadata> from = query.from(Metadata.class);
+        query.select(from.get(Metadata_.id));
+        return context.getEntityManager().createQuery(query).getResultList();
     }
 
     public void init(String appPath, ServiceConfig params) throws Exception

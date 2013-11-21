@@ -31,9 +31,9 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.KeywordBean;
@@ -70,6 +70,7 @@ public class GeocatEditElement implements Service {
 		String modeType 	= "add";
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
+        ThesaurusManager thesaurusMan = context.getBean(ThesaurusManager.class);
 
 		if (!id.equals("") || !uri.equals("")) {
 			KeywordBean kb = null;
@@ -82,8 +83,6 @@ public class GeocatEditElement implements Service {
                 // need to get other translations
 				kb = searcher.searchById(kb.getUriCode(), ref, "eng", "fre", "ger", "ita");
 			}else{
-				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-				ThesaurusManager thesaurusMan = gc.getThesaurusManager();
 				KeywordsSearcher searcher = new KeywordsSearcher(thesaurusMan);
 
 				kb = searcher.searchById(uri, ref, lang);
@@ -120,7 +119,6 @@ public class GeocatEditElement implements Service {
             reqType.add(KeywordRelation.RELATED);
 
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-			ThesaurusManager thesaurusMan = gc.getThesaurusManager();
 			KeywordsSearcher searcherBNR = new KeywordsSearcher(thesaurusMan);
 
 			for (int i = 0; i <= reqType.size() - 1; i++) {

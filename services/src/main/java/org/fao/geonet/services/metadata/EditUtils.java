@@ -25,10 +25,12 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.xlink.XLink;
 
+import org.fao.geonet.domain.geocat.HiddenMetadataElement;
 import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
+import org.fao.geonet.repository.geocat.HiddenMetadataElementsRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
@@ -184,13 +186,13 @@ class EditUtils {
         boolean updateDateStamp = !minor.equals("true");
         String changeDate = null;
 		if (embedded) {
-            Element updatedMetada = new AjaxEditUtils(context).applyChangesEmbedded(id, htChanges, version);
+            Element updatedMetada = new AjaxEditUtils(context).applyChangesEmbedded(id, htChanges, htHide, version, context.getLanguage());
             if(updatedMetada != null) {
                 result = dataManager.updateMetadata(context, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp, processReusableObject);
             }
    		}
         else {
-            Element updatedMetada = applyChanges(id, htChanges, htHide, version);
+            Element updatedMetada = applyChanges(id, htChanges, htHide, version, context.getLanguage());
             if(updatedMetada != null) {
 			    result = dataManager.updateMetadata(context, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp, processReusableObject);
             }
@@ -209,9 +211,12 @@ class EditUtils {
      * @return
      * @throws Exception
      */
-    private Element applyChanges(String id, Map<String, String> changes, String currVersion) throws Exception {
+    // GEOCAT
+    private Element applyChanges(String id, Map<String, String> changes, Map<String, String> htHide, String currVersion,
+                                 String lang) throws Exception {
+        // END GEOCAT
         Lib.resource.checkEditPrivilege(context, id);
-        Element md = xmlSerializer.select(id);
+        Element md = xmlSerializer.select(id, context);
 
 		//--- check if the metadata has been deleted
 		if (md == null) {
@@ -313,7 +318,7 @@ class EditUtils {
 			}
 		}
         // GEOCAT
-		applyHiddenElements(context, dataManager, editLib, dbms, md, id, htHide);
+		applyHiddenElements(context, dataManager, editLib, md, id, htHide);
         // END GEOCAT
 
 		//--- remove editing info added by previous call
@@ -322,18 +327,17 @@ class EditUtils {
 		editLib.contractElements(md);
 
         // GEOCAT
-        dataManager.updateXlinkObjects(dbms, id, lang, md, updatedXLinks.toArray(new Element[updatedXLinks.size()]));
+        dataManager.updateXlinkObjects(id, lang, md, updatedXLinks.toArray(new Element[updatedXLinks.size()]));
         // END GEOCAT
         return md;
     }
     // GEOCAT
-    public static void applyHiddenElements( ServiceContext context, DataManager dataManager, EditLib editLib, Dbms dbms, Element md, String id, Map<String, String> htHide ) throws Exception {
+    public static void applyHiddenElements( ServiceContext context, DataManager dataManager, EditLib editLib, Element md, String id, Map<String, String> htHide ) throws Exception {
         // Add Hiding info to MD tree
         dataManager.addHidingInfo(context, md, id);
 
         // Generate and manage XPath/levels for Elements to be hidden
         Integer idInteger = new Integer(id);
-        String insertSQL = "INSERT INTO HiddenMetadataElements (metadataId, xPathExpr, level) VALUES (?, ?, ?)";
         for (Map.Entry<String, String> entry: htHide.entrySet())
         {
             String ref = entry.getKey();
@@ -347,6 +351,7 @@ class EditUtils {
                 //elements may have been replaced
                 continue;
             }
+            final HiddenMetadataElementsRepository hiddenMetadataElementsRepository = context.getBean(HiddenMetadataElementsRepository.class);
 
             // Find possible existing Element-hiding info
             Element hideElm = el.getChild("hide", Edit.NAMESPACE);
@@ -360,7 +365,9 @@ class EditUtils {
 
                 // Delete existing hiding info
                 // System.out.println("HIDING ref = " + ref + " DELETE = " + xPathExpr); // DEBUG
-                dbms.execute("DELETE FROM HiddenMetadataElements WHERE metadataId = " + id + " AND xPathExpr = '" + xPathExpr + "'");
+                final List<HiddenMetadataElement> elems = hiddenMetadataElementsRepository
+                        .findAllByMetadataIdAndXPathExpr(idInteger, xPathExpr);
+                hiddenMetadataElementsRepository.delete(elems);
             }
 
             if ("no".equals(level))
@@ -380,7 +387,11 @@ class EditUtils {
 
             // Save hiding info
             // System.out.println("HIDING ref = " + ref + " UPDATE = " + xPathExpr); // DEBUG
-            dbms.execute(insertSQL, idInteger, xPathExpr, level);
+            final HiddenMetadataElement element = new HiddenMetadataElement();
+            element.setLevel(level);
+            element.setMetadataId(idInteger);
+            element.setxPathExpr(xPathExpr);
+            hiddenMetadataElementsRepository.save(element);
         }
     }
     // END GEOCAT

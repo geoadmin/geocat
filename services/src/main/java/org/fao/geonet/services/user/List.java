@@ -23,7 +23,11 @@
 
 package org.fao.geonet.services.user;
 
+import static org.fao.geonet.repository.geocat.specification.GeocatUserSpecs.isValidated;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.*;
+import static org.fao.geonet.repository.specification.UserSpecs.hasProfile;
+import static org.springframework.data.jpa.domain.Specifications.not;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
@@ -32,17 +36,19 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.User_;
+import org.fao.geonet.domain.geocat.GeocatUserInfo_;
 import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.jdom.Element;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
 
-import java.util.ArrayList;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.*;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -53,7 +59,6 @@ import java.util.Set;
   */
 
 public class List implements Service {
-{
     private Type type;
 
 	//--------------------------------------------------------------------------
@@ -79,70 +84,39 @@ public class List implements Service {
 		//--- retrieve groups for myself
 
         // GEOCAT
+
 		Profile userProfile = session.getProfile();
-		Set<String> hsMyGroups = Collections.emptySet();
+		Set<Integer> hsMyGroups = Collections.emptySet();
 
 		if (userProfile != null) {
-		    hsMyGroups = getGroups(dbms, session.getUserId(), userProfile);
+		    hsMyGroups = getGroups(context, session.getUserIdAsInt(), userProfile);
 		}
-		Set<String> profileSet = (userProfile == null) ?
-							Collections.<String>emptySet() : userProfile.getAllNames();
 
         boolean sortByValidated = "true".equalsIgnoreCase(Util.getParam(params, "sortByValidated", "false"));
-        String sortBy;
-        String sortVals;
-        if(sortByValidated) {
-            sortBy = "validAsInt, lname ASC";
-            sortVals = "case when TRIM(name||surname) = '' then 'zz' else LOWER(name||surname) end as lname,case when validated = 'n' then 2 else 1 end as validAsInt,";
-        } else {
-            sortVals = "";
-            sortBy = "username";
-        }
 
-        boolean findingShared = true;
+        String name = params.getChildText(Params.NAME);
         String profilesParam = params.getChildText(Params.PROFILE);
-        String extraWhere;
-        switch(type) {
-        case NON_VALIDATED_SHARED:
-            profileSet = Collections.singleton(Geocat.Profile.SHARED);
-            extraWhere = " not validated='y' and profile='"+Geocat.Profile.SHARED+"'";
-            break;
-        case VALIDATED_SHARED:
-            profileSet = Collections.singleton(Geocat.Profile.SHARED);
-            extraWhere = " validated='y' and profile='"+Geocat.Profile.SHARED+"'";
-            break;
-        case SHARED:
-            profileSet = Collections.singleton(Geocat.Profile.SHARED);
-            extraWhere = " profile='"+Geocat.Profile.SHARED+"'";
-            break;
-        default:
-        	findingShared = false;
-            if( profilesParam!=null && profileSet.contains(profilesParam)){
+
+        boolean findingShared = type != Type.NORMAL;
+        Set<Profile> profileSet;
+        if (findingShared) {
+            profileSet = Collections.singleton(Profile.Shared);
+        } else {
+            profileSet = (userProfile == null) ? Collections.<Profile>emptySet() : userProfile.getAll();
+
+            if (profilesParam != null && profileSet.contains(profilesParam)) {
                 profileSet.retainAll(Collections.singleton(profilesParam));
             }
-            extraWhere = " not profile='"+Geocat.Profile.SHARED+"'";
-            break;
         }
 
-        String where = "WHERE"+extraWhere;
-        String name = params.getChildText(Params.NAME);
-		Element elUsers = null;
+        final java.util.List<User> all;
+        if (name == null || name.trim().isEmpty()) {
+            all = context.getBean(UserRepository.class).findAll(SortUtils.createSort(User_.username));
+        } else {
+            all = makeQuery(context.getEntityManager(), sortByValidated, type, name);
+        }
         // END GEOCAT
 
-		if (name == null || name.trim().isEmpty()) {
-		//--- retrieve all users
-        final java.util.List<User> all = context.getBean(UserRepository.class).findAll(SortUtils.createSort(User_.username));
-        } else {
-            // TODO : Add organisation
-            elUsers = dbms.select ("SELECT "+sortVals+"* FROM Users WHERE " + extraWhere
-                                   + " and (username ilike '%" + name + "%' "
-                                   + "or surname ilike '%" + name + "%' "
-                                   + "or email ilike '%" + name + "%' "
-                                   + "or organisation ilike '%" + name + "%' "
-                                   + "or orgacronym ilike '%" + name + "%' "
-                                   + "or name ilike '%" + name + "%') and publicaccess = 'y' "
-                                   + "ORDER BY "+sortBy);
-        }
 		//--- now filter them
 
 		java.util.Set<Integer> usersToRemove = new HashSet<Integer>();
@@ -188,7 +162,57 @@ public class List implements Service {
         return rootEl;
 	}
 
-	//--------------------------------------------------------------------------
+    // GEOCAT
+    static java.util.List<User> makeQuery(EntityManager entityManager, boolean sortByValidated, Type type, String name) {
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<User> cbQuery = cb.createQuery(User.class);
+        final Root<User> from = cbQuery.from(User.class);
+
+        if(sortByValidated) {
+            Expression<String> nameSurname = cb.trim(cb.concat(from.get(User_.name), from.get(User_.surname)));
+            Expression<Object> blankNameLast = cb.selectCase(nameSurname).when("", cb.literal("zz")).otherwise(cb.lower(nameSurname));
+            Expression<Object> firstValidated = cb.selectCase(from.get(User_.geocatUserInfo).get(GeocatUserInfo_
+                    .jpaWorkaround_validated)).when(Constants.YN_TRUE, cb.literal(2)).otherwise(cb.literal(1));
+            cbQuery.orderBy(cb.asc(blankNameLast), cb.asc(firstValidated));
+        } else {
+            cbQuery.orderBy(cb.asc(from.get(User_.username)));
+        }
+
+        Specifications<User> specification;
+        switch (type) {
+            case NON_VALIDATED_SHARED:
+                specification = where(hasProfile(Profile.Shared)).and(isValidated(false));
+                break;
+            case VALIDATED_SHARED:
+                specification = where(hasProfile(Profile.Shared)).and(isValidated(true));
+                break;
+            case SHARED:
+                specification = where(hasProfile(Profile.Shared));
+                break;
+            case NORMAL:
+                specification = where(not(hasProfile(Profile.Shared)));
+                break;
+            default:
+                specification = where(not(hasProfile(Profile.Shared)));
+                break;
+        }
+
+        // TODO : Add organisation
+        Predicate usernameMatch = cb.like(cb.lower(from.get(User_.username)), cb.lower(cb.literal('%'+name+'%')));
+        Predicate nameMatch = cb.like(cb.lower(from.get(User_.name)), cb.lower(cb.literal('%'+name+'%')));
+        Predicate surnameMatch = cb.like(cb.lower(from.get(User_.surname)), cb.lower(cb.literal('%'+name+'%')));
+        Predicate orgMatch = cb.like(cb.lower(from.get(User_.username)), cb.lower(cb.literal('%'+name+'%')));
+        Predicate orgAcrMatch = cb.like(cb.lower(from.get(User_.username)), cb.lower(cb.literal('%'+name+'%')));
+
+        final Predicate or = cb.or(usernameMatch, nameMatch, surnameMatch, orgMatch, orgAcrMatch);
+        Expression<Boolean> specPredicate = specification.toPredicate(from, cbQuery, cb);
+        cbQuery.where(cb.and(specPredicate, or));
+
+        return entityManager.createQuery(cbQuery).getResultList();
+    }
+    // END GEOCAT
+
+    //--------------------------------------------------------------------------
 	//---
 	//--- Private methods
 	//---
@@ -202,7 +226,7 @@ public class List implements Service {
         if (profile == Profile.Administrator) {
             hs.addAll(groupRepository.findIds());
         } else if (profile == Profile.UserAdmin) {
-            hs.addAll(userGroupRepo.findGroupIds(Specifications.where(hasProfile(profile)).and(hasUserId(id))));
+            hs.addAll(userGroupRepo.findGroupIds(where(UserGroupSpecs.hasProfile(profile)).and(hasUserId(id))));
         } else {
             hs.addAll(userGroupRepo.findGroupIds(hasUserId(id)));
         }

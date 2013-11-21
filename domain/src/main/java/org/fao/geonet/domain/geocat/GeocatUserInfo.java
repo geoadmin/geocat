@@ -15,7 +15,7 @@ import javax.persistence.Transient;
  */
 @Embeddable
 public class GeocatUserInfo {
-    private int _parentInfo;
+    private Integer _parentInfo;
     private char _jpaWorkaround_validated;
     private String positionname;
     private String onlineresource;
@@ -27,7 +27,7 @@ public class GeocatUserInfo {
     private String onlinedescription;
 
     @Transient
-    public boolean getValidated() {
+    public boolean isValidated() {
         return Constants.toBoolean_fromYNChar(getJpaWorkaround_validated());
     }
 
@@ -45,11 +45,11 @@ public class GeocatUserInfo {
         this._jpaWorkaround_validated = jpaWorkaround_validated;
     }
 
-    public int getParentInfo() {
+    public Integer getParentInfo() {
         return _parentInfo;
     }
 
-    public GeocatUserInfo setParentInfo(int parentInfo) {
+    public GeocatUserInfo setParentInfo(Integer parentInfo) {
         this._parentInfo = parentInfo;
         return this;
     }

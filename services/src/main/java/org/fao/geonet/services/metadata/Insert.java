@@ -135,7 +135,7 @@ public class Insert extends NotInReadOnlyModeService {
 		
 		
 		// Set template
-		dm.setTemplate(iId, MetadataType.lookup(isTemplate), null);
+		dm.setTemplate(iId, MetadataType.lookup(isTemplate), null, context);
 
 		
 		// Import category
@@ -151,7 +151,7 @@ public class Insert extends NotInReadOnlyModeService {
 		} 
 
 		// Index
-        dm.indexMetadata(id.get(0));
+        dm.indexMetadata(id.get(0), context);
 
         // Return response
 		Element response = new Element(Jeeves.Elem.RESPONSE);

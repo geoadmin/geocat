@@ -1,11 +1,12 @@
 package org.fao.geonet.geocat.cgp;
 
-import jeeves.exceptions.BadSoapResponseEx;
-import jeeves.exceptions.BadXmlResponseEx;
-import jeeves.interfaces.Logger;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.BadSoapResponseEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -14,6 +15,7 @@ import org.jdom.xpath.XPath;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -67,11 +69,12 @@ public class CGPRequest extends SOAPRequest
 	/**
 	 * Construct with URL of CGP SOAP messaging service.
 	 *
-	 * @param urlStr full URL to SOAP service
-	 */
-	public CGPRequest(String urlStr) throws MalformedURLException
+     * @param context
+     * @param urlStr full URL to SOAP service
+     */
+	public CGPRequest(ServiceContext context, String urlStr) throws MalformedURLException
 	{
-		super(urlStr);
+		super(context, urlStr);
 	}
 
 	/**
@@ -79,8 +82,7 @@ public class CGPRequest extends SOAPRequest
 	 *
 	 * @param cgpReqElm CG request element (gcq:catalogGatewayRequest)
 	 */
-	public Document execute(Element cgpReqElm) throws SOAPFaultEx, JDOMException, IOException, BadXmlResponseEx, BadSoapResponseEx
-	{
+	public Document execute(Element cgpReqElm) throws SOAPFaultEx, JDOMException, IOException, BadXmlResponseEx, BadSoapResponseEx, URISyntaxException {
 		// Set content of SOAP Header and Body
 		setHeaderContent(createHeaderContent());
 		setBodyContent(cgpReqElm);
@@ -94,8 +96,8 @@ public class CGPRequest extends SOAPRequest
 	 * @param objectId object id e.g. "xMetadatax2505"
 	 * @return TRANSFER Element in GM03Comprehensive format.
 	 */
-	public Element getEntry(String objectId) throws SOAPFaultEx, JDOMException, IOException, BadXmlResponseEx, BadSoapResponseEx
-	{
+	public Element getEntry(String objectId) throws SOAPFaultEx, JDOMException, IOException, BadXmlResponseEx, BadSoapResponseEx,
+            URISyntaxException {
 		if (objectId == null)
 		{
 			return null;
@@ -117,8 +119,7 @@ public class CGPRequest extends SOAPRequest
 	 * @return List of Elements in GM03Small format.
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Element> query(CGPQueryCriteria criteria) throws SOAPFaultEx, JDOMException, IOException, BadXmlResponseEx, BadSoapResponseEx
-	{
+	public List<Element> query(CGPQueryCriteria criteria) throws SOAPFaultEx, JDOMException, IOException, BadXmlResponseEx, BadSoapResponseEx, URISyntaxException {
 		String reqString = QUERY_REQ.replaceAll("CRITERIA", criteria.toString());
 		Document resultDoc = execute(Xml.loadString(reqString, false));
 		return XP_MD_GM03SMALL.selectNodes(resultDoc);

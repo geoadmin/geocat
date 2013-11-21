@@ -23,14 +23,11 @@
 
 package org.fao.geonet.geocat.cgp;
 
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.PasswordUtil;
-import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
@@ -39,6 +36,10 @@ import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.util.PasswordUtil;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import java.text.DateFormat;
@@ -68,20 +69,17 @@ class Harvester
 	 *
 	 * @param log     logger
 	 * @param context Jeeves context
-	 * @param dbms    Database
 	 * @param params  Information about harvesting configuration for the node
 	 */
-	public Harvester(Logger log, ServiceContext context, Dbms dbms, CGPParams params)
+	public Harvester(Logger log, ServiceContext context, CGPParams params)
 	{
 		this.log = log;
 		this.context = context;
-		this.dbms = dbms;
 		this.params = params;
 
 		result = new HarvestResult();
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		dataMan = gc.getDataManager();
+		dataMan = context.getBean(DataManager.class);
 	}
 
 	//---------------------------------------------------------------------------
@@ -101,10 +99,11 @@ class Harvester
 		// If harvest failed (ie. if node unreachable), metadata will be removed, and
 		// the node will not be referenced in the catalogue until next harvesting.
 		// TODO : define a rule for UUID in order to be able to do an update operation ?
-		localUuids = new UUIDMapper(dbms, params.uuid);
+        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        localUuids = new UUIDMapper(metadataRepository, params.uuid);
 
 		// Try to load capabilities document
-		CGPRequest cgpRequest = new CGPRequest(params.url);
+		CGPRequest cgpRequest = new CGPRequest(context, params.url);
 
 		// Optional proxy
 		setupProxy(context, cgpRequest);
@@ -164,8 +163,8 @@ class Harvester
 		removeOldMetadata();
 
 		// Load categories and groups
-		localCateg = new CategoryMapper(dbms);
-		localGroups = new GroupMapper(dbms);
+        localCateg = new CategoryMapper(context);
+        localGroups = new GroupMapper(context);
 
 		// Fetches each record and adds it.
 		String objectId;
@@ -187,8 +186,6 @@ class Harvester
 				log.info("CGP add, OK added record " + result.addedMetadata + " of " + recordElms.size());
 			}
 		}
-
-		dbms.commit();
 
 		return result;
 	}
@@ -264,12 +261,13 @@ class Harvester
 
 		// String mdStr = Xml.getString(md);
 		// Validate if specified
-		if (params.validate && !validates(schema, md))
-		{
-			log.warning("Skipping transformed metadata that does not validate. Remote objectid : " + anObjectId);
-			result.doesNotValidate++;
-			return;
-		}
+        try {
+            params.validate.validate(dataMan, context, md);
+        } catch (Exception e) {
+            log.info("Ignoring invalid metadata with uuid " + uuid);
+            result.doesNotValidate++;
+            return;
+        }
 
 		String id;
 		try
@@ -279,7 +277,7 @@ class Harvester
             Date date = getMetadataDate(md);
          
             // issue GC #133712
-            uuid = org.fao.geonet.services.harvesting.Util.uuid(context, dbms, params.url, md, log, null, result, schema);
+            uuid = org.fao.geonet.services.harvesting.Util.uuid(context, params.url, md, log, null, result, schema);
 
 			if (uuid == null)
 			{
@@ -292,17 +290,15 @@ class Harvester
 	        String group = null, isTemplate = null, docType = null, title = null, category = null;
 	        boolean ufo = false, indexImmediate = false;
 	        String changeDate = DATE_FORMAT.format(date); 
-	        id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, userid, group, params.uuid,
+	        id = dataMan.insertMetadata(context, schema, md, uuid, userid, group, params.uuid,
 	                         isTemplate, docType, title, category, changeDate, changeDate, ufo, indexImmediate);
 
 			addPrivileges(id);
 			addCategories(id);
 
 			int iId = Integer.parseInt(id);
-			dataMan.setTemplateExt(dbms, iId, "n", null);
-			dataMan.setHarvestedExt(dbms, iId, params.uuid);
-
-			dbms.commit();
+			dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
+			dataMan.setHarvestedExt(iId, params.uuid);
 		} catch (Throwable t)
 		{
 			// This sometimes occurs...
@@ -317,7 +313,7 @@ class Harvester
 		// Add to Lucene
 		try
 		{
-			dataMan.indexMetadata(dbms, id, false, context);
+			dataMan.indexMetadata(id, context);
 			// Add Thumbnails ??
 			result.addedMetadata++;
 		} catch (Throwable t)
@@ -346,7 +342,7 @@ class Harvester
 	private int removeOldMetadata() throws Exception
 	{
 		// Clean all before harvest : Remove/Add mechanism
-		localUuids = new UUIDMapper(dbms, params.uuid);
+		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
 
 		// -----------------------------------------------------------------------
 		// --- remove old metadata
@@ -360,14 +356,9 @@ class Harvester
 			// TODO : unsetThumbnail(id);
 
 			// Remove metadata
-			dataMan.deleteMetadata(context, dbms, id);
+			dataMan.deleteMetadata(context, id);
 
 			result.locallyRemoved++;
-		}
-
-		if (result.locallyRemoved > 0)
-		{
-			dbms.commit();
 		}
 
 		return result.locallyRemoved;
@@ -389,7 +380,7 @@ class Harvester
 				log.debug("    - Skipping removed category with id:" + catId);
 			} else
 			{
-				dataMan.setCategory(context, dbms, id, catId);
+				dataMan.setCategory(context, id, catId);
 			}
 		}
 	}
@@ -418,7 +409,7 @@ class Harvester
 					//--- allow only: view, dynamic, featured
 					if (opId == 0 || opId == 5 || opId == 6)
 					{
-						dataMan.setOperation(context, dbms, id, priv.getGroupId(), opId + "");
+						dataMan.setOperation(context, id, priv.getGroupId(), opId + "");
 					} else
 					{
 						log.debug("       --> " + name + " (skipped)");
@@ -435,8 +426,7 @@ class Harvester
 
 	public void setupProxy(ServiceContext context, SOAPRequest req)
 	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm = gc.getSettingManager();
+		SettingManager sm = context.getBean(SettingManager.class);
 
 		boolean enabled = sm.getValueAsBool("system/proxy/use", false);
 
@@ -520,7 +510,6 @@ class Harvester
 
 	private final Logger log;
 	private final ServiceContext context;
-	private final Dbms dbms;
 	private final CGPParams params;
 	private final DataManager dataMan;
 	private CategoryMapper localCateg;

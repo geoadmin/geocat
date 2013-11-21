@@ -64,10 +64,8 @@ public class GetMostPopular implements Service {
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
 		if (System.currentTimeMillis() > _lastUpdateTime + _timeBetweenUpdates) {
-			GeonetContext gc = (GeonetContext) context
-					.getHandlerContext(Geonet.CONTEXT_NAME);
-			DataManager dataMan = gc.getDataManager();
-			SearchManager searchMan = gc.getSearchmanager();
+			DataManager dataMan = context.getBean(DataManager.class);
+			SearchManager searchMan = context.getBean(SearchManager.class);
 			MetaSearcher searcher = searchMan.newSearcher(SearchManager.LUCENE,
 					Geonet.File.SEARCH_LUCENE);
 			try {

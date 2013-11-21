@@ -22,13 +22,17 @@
 package org.fao.geonet.geocat.services.format;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.geocat.Format;
+import org.fao.geonet.domain.geocat.Format_;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.geocat.FormatRepository;
+import org.fao.geonet.repository.geocat.specification.FormatSpecs;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,60 +49,37 @@ import java.util.Comparator;
  */
 
 public class List implements Service {
-    private static final Comparator<Content> COMPARATOR = new FormatsComparator();
-
     public void init(String appPath, ServiceConfig params) throws Exception {
     }
 
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
+        boolean orderByValidated = "validated".equalsIgnoreCase(params.getChildTextNormalize("order"));
+
+        final FormatRepository formatRepository = context.getBean(FormatRepository.class);
         String name = params.getChildText(Params.NAME);
         Element el = null;
 
+        final Sort sort;
+
+        if (orderByValidated) {
+            sort = new Sort(new Sort.Order(Sort.Direction.ASC, SortUtils.createPath(Format_.jpaWorkaround_validated)),
+                    new Sort.Order(SortUtils.createPath(Format_.name)),
+                    new Sort.Order(SortUtils.createPath(Format_.version)));
+        } else {
+            sort = SortUtils.createSort(Format_.name, Format_.version);
+        }
+
+
+        Element all;
         if (name == null)
-            el = dbms.select("SELECT * FROM Formats ORDER BY name, version");
+            all = formatRepository.findAllAsXml(sort);
         else {
-            el = dbms.select("SELECT * FROM Formats WHERE "
-                    + "name ilike '%" + name + "%' "
-                    + "ORDER BY name, version");
+            all = formatRepository.findAllAsXml(FormatSpecs.nameContains(name), sort);
         }
 
-        if("validated".equalsIgnoreCase(params.getChildTextNormalize("order"))) {
-			@SuppressWarnings("unchecked")
-			java.util.List<Content> c = el.getChildren();
-			java.util.List<Content> children = new ArrayList<Content>(c);
-
-            for (Content child : children) {
-                child.detach();
-            }
-
-            Collections.sort(children, COMPARATOR);
-            el.addContent(children);
-        }
         return el;
-    }
-
-    private static class FormatsComparator implements Comparator<Content> {
-
-        public int compare(Content o1, Content o2) {
-            if (!(o1 instanceof Element && o2 instanceof Element)) return 0;
-
-            Element e1 = (Element) o1;
-            Element e2 = (Element) o2;
-
-            int points1 = 0;
-            int points2 = 0;
-            if ("n".equals(e1.getChildTextNormalize("validated"))) {
-                points1 -= 10000;
-            }
-            if ("n".equals(e2.getChildTextNormalize("validated"))) {
-                points2 -= 10000;
-            }
-
-            return points2 - points1;
-        }
     }
 }
 

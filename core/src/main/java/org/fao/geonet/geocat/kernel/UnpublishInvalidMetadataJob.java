@@ -163,7 +163,7 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
                 todayRecord.setUuid(metadataRecord.getUuid());
                 todayRecord.setEntity(entity);
                 todayRecord.setPublished(published);
-                todayRecord.setValidated(validated);
+                todayRecord.setValidated(PublishRecord.Validity.fromBoolean(validated));
                 context.getBean(PublishRecordRepository.class).save(todayRecord);
                 return true;
             }
@@ -266,27 +266,6 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         final List<PublishRecord> records = context.getBean(PublishRecordRepository.class).findAll(where(daysOldOrNewer).and(daysOldOrOlder));
 
         return records;
-    }
-
-    public static enum Validity {
-        VALID('y'), INVALID('n'), UNKNOWN('?');
-
-        final char dbCode;
-
-        private Validity(char dbCode) {
-            this.dbCode = dbCode;
-        }
-
-        public static Validity fromBoolean(boolean validated) {
-            return validated ? VALID : INVALID;
-        }
-
-        public static Validity parse(char code) {
-            for (Validity v : values()) {
-                if (v.dbCode == code) return v;
-            }
-            return UNKNOWN;
-        }
     }
 
     static class ErrorFinder implements Filter {

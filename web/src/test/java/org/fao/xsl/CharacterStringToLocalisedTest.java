@@ -6,18 +6,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import jeeves.utils.Xml;
 import jeeves.xlink.XLink;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AbstractThesaurusBasedTest;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.util.GeocatXslUtil;
+import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.Xml;
 import org.fao.xsl.support.Attribute;
 import org.fao.xsl.support.Count;
 import org.fao.xsl.support.EqualAttribute;
@@ -28,8 +26,6 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import scala.actors.threadpool.Arrays;
 
 public class CharacterStringToLocalisedTest {
 
@@ -255,13 +251,13 @@ public class CharacterStringToLocalisedTest {
                                 + "</che:CHE_MD_Metadata>", false);
 
         Element transformed1 = Xml.transform(testData1, pathToXsl).getChild("contactInstructions",
-                XslUtil.GMD_NAMESPACE);
+                Geonet.Namespaces.GMD);
 
-        assertNotNull(transformed1.getAttribute("type", XslUtil.XSI_NAMESPACE));
-        assertEquals(1, transformed1.getChildren("PT_FreeText", XslUtil.GMD_NAMESPACE).size());
-        Element pt_freeText = (Element) transformed1.getChildren("PT_FreeText", XslUtil.GMD_NAMESPACE).get(0);
+        assertNotNull(transformed1.getAttribute("type", Geonet.Namespaces.XSI));
+        assertEquals(1, transformed1.getChildren("PT_FreeText", Geonet.Namespaces.GMD).size());
+        Element pt_freeText = (Element) transformed1.getChildren("PT_FreeText", Geonet.Namespaces.GMD).get(0);
 
-        assertEquals(0, pt_freeText.getChildren("PT_FreeText", XslUtil.GMD_NAMESPACE).size());
+        assertEquals(0, pt_freeText.getChildren("PT_FreeText", Geonet.Namespaces.GMD).size());
     }
 
     @Test
@@ -308,7 +304,7 @@ public class CharacterStringToLocalisedTest {
         assertEquals(0, Xml.selectNodes(data, baseXPath + "//" + single).size());
         assertFalse(Xml.selectNodes(data, baseXPath + "//" + multiple).isEmpty());
         
-        Collection<String> allowed = Arrays.asList(new String[] { "#IT", "#DE", "#FR", "#EN", "#RM" });
+        Collection<String> allowed = Arrays.asList(new String[]{"#IT", "#DE", "#FR", "#EN", "#RM"});
         List<Element> baseNodes = (List<Element>) Xml.selectNodes(data, baseXPath);
         for (Element baseNode : baseNodes) {
             Set<String> encountered = new HashSet<String>();

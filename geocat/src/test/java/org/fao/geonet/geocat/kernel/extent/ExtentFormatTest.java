@@ -1,6 +1,7 @@
-package org.fao.geonet.services.extent;
+package org.fao.geonet.geocat.kernel.extent;
 
 import com.vividsolutions.jts.geom.*;
+import org.fao.geonet.geocat.kernel.extent.ExtentFormat;
 import org.fao.geonet.geocat.services.extent.Get;
 import org.junit.Test;
 
@@ -12,12 +13,12 @@ import static org.junit.Assert.*;
  * Date: 10/29/13
  * Time: 5:06 PM
  */
-public class GetTest {
+public class ExtentFormatTest {
     GeometryFactory factory = new GeometryFactory();
 
     @Test
     public void testRemoveDuplicatePointsMultiPolygon() throws Exception {
-        Geometry geometry = Get.removeDuplicatePoints(factory.createMultiPolygon(new Polygon[0]));
+        Geometry geometry = ExtentFormat.removeDuplicatePoints(factory.createMultiPolygon(new Polygon[0]));
         assertEquals(0, geometry.getNumGeometries());
 
 
@@ -27,7 +28,7 @@ public class GetTest {
         };
         final MultiPolygon multiPolygon = factory.createMultiPolygon(polygons);
 
-        geometry = Get.removeDuplicatePoints(multiPolygon);
+        geometry = ExtentFormat.removeDuplicatePoints(multiPolygon);
 
         assertEquals(2, geometry.getNumGeometries());
         assertTrue(geometry.getGeometryN(0).toText()+" contains duplicates", noDuplicates(geometry.getGeometryN(0)));
@@ -38,14 +39,14 @@ public class GetTest {
     public void testRemoveDuplicatePointsLineString() throws Exception {
         final LineString lineString = factory.createLineString(createLinearRing(0, 10).getCoordinates());
 
-        assertTrue(lineString.toText()+" contains duplicates",noDuplicates(Get.removeDuplicatePoints(lineString)));
+        assertTrue(lineString.toText()+" contains duplicates",noDuplicates(ExtentFormat.removeDuplicatePoints(lineString)));
     }
 
     @Test
     public void testRemoveDuplicatePointsPoint() throws Exception {
         final Point point = factory.createPoint(new Coordinate(1,2));
 
-        assertTrue(point.equalsExact(Get.removeDuplicatePoints(point)));
+        assertTrue(point.equalsExact(ExtentFormat.removeDuplicatePoints(point)));
     }
 
     private boolean noDuplicates(Geometry geom) {

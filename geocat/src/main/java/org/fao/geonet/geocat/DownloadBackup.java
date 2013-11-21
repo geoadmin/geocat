@@ -2,14 +2,13 @@ package org.fao.geonet.geocat;
 
 import java.io.File;
 
-import jeeves.exceptions.JeevesException;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.Log;
-
-import org.fao.geonet.GeonetworkDataDirectory;
+import org.fao.geonet.exceptions.JeevesException;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 public class DownloadBackup implements Service {
@@ -21,7 +20,8 @@ public class DownloadBackup implements Service {
 	@Override
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
-		Log.info(ArchiveAllMetadataJob.BACKUP_LOG, "User "+context.getUserSession().getUsername()+" from IP: "+context.getIpAddress()+" has started to download backup archive");
+		Log.info(ArchiveAllMetadataJob.BACKUP_LOG, "User " + context.getUserSession().getUsername() + " from IP: " + context
+                .getIpAddress() + " has started to download backup archive");
 		String datadir = System.getProperty(GeonetworkDataDirectory.GEONETWORK_DIR_KEY);
 		File backupDir = new File(datadir, ArchiveAllMetadataJob.BACKUP_DIR);
 		if (!backupDir.exists()) {

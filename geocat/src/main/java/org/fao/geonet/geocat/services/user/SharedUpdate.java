@@ -24,32 +24,31 @@
 package org.fao.geonet.geocat.services.user;
 
 import com.google.common.base.Functions;
-import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geocat;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.PasswordUtil;
-import jeeves.utils.Util;
 import jeeves.xlink.Processor;
 
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.geocat.GeocatUserInfo;
+import org.fao.geonet.domain.geocat.Phone;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.geocat.kernel.reusable.ContactsStrategy;
-import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.LangUtils;
+import org.fao.geonet.util.PasswordUtil;
 import org.jdom.Element;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 //=============================================================================
 
@@ -77,164 +76,40 @@ public class SharedUpdate implements Service
 		String operation = Util.getParam(params, Params.OPERATION);
 		String id       = params.getChildText(Params.ID);
 		String username = Util.getParam(params, Params.USERNAME);
-		String password = UUID.randomUUID().toString();
-		String surname  = Util.getParam(params, Params.SURNAME, "");
-		String name     = Util.getParam(params, Params.NAME,    "");
-		String profile  = Geocat.Profile.SHARED;
-		String address  = Util.getParam(params, Params.ADDRESS, "");
-		String city     = Util.getParam(params, Params.CITY,    "");
-		String state    = Util.getParam(params, Params.STATE,   "");
-		String zip      = Util.getParam(params, Params.ZIP,     "");
-		String country  = Util.getParam(params, Params.COUNTRY, "");
-		String email    = Util.getParam(params, Params.EMAIL,   "");
-		String organ    = LangUtils.createDescFromParams(params, Params.ORG);
-		String kind     = Util.getParam(params, Params.KIND,    "");
-		
-        String phone    = Util.getParam(params, Geocat.Params.PHONE, "");
-        String fac      = Util.getParam(params, Geocat.Params.FAC, "");
-        String email1    = Util.getParam(params, Params.EMAIL+1,   "");
-        String phone1    = Util.getParam(params, Geocat.Params.PHONE+1, "");
-        String fac1      = Util.getParam(params, Geocat.Params.FAC+1, "");
-        String email2    = Util.getParam(params, Params.EMAIL+2,   "");
-        String phone2    = Util.getParam(params, Geocat.Params.PHONE+2, "");
-        String fac2      = Util.getParam(params, Geocat.Params.FAC+2, "");
 
-		String streetnb = Util.getParam(params, Geocat.Params.STREETNUMBER, "");
-		String street   = Util.getParam(params, Geocat.Params.STREETNAME, "");
-		String postbox  = Util.getParam(params, Geocat.Params.POSTBOX, "");
-		String position = LangUtils.createDescFromParams(params, Geocat.Params.POSITIONNAME);
+        UserSession usrSess = context.getUserSession();
+        Profile      myProfile = usrSess.getProfile();
 
-		String online      = LangUtils.createDescFromParams(params, Geocat.Params.ONLINE);
-        String onlinename  = LangUtils.createDescFromParams(params, "onlinename");
-        String onlinedesc  = LangUtils.createDescFromParams(params, "onlinedescription");
+        if (myProfile != Profile.Administrator) {
+            throw new IllegalArgumentException("Only Administrator should be able to access this service");
+        }
 
-        String hours    = Util.getParam(params, Geocat.Params.HOURSOFSERV, "");
-		String instruct = LangUtils.createDescFromParams(params, Geocat.Params.CONTACTINST);
-		String orgacronym = LangUtils.createDescFromParams(params, Geocat.Params.ORGACRONYM);
-		String directnumber = Util.getParam(params, Geocat.Params.DIRECTNUMBER, "");
-		String mobile = Util.getParam(params, Geocat.Params.MOBILE, "");
+        Processor.uncacheXLinkUri(ContactsStrategy.baseHref(id));
 
-        String validated = Util.getParam(params, Geocat.Params.VALIDATED, "y");
+        final UserGroupRepository groupRepository = context.getBean(UserGroupRepository.class);
+        final UserRepository userRepository = context.getBean(UserRepository.class);
 
+        User user = getUser(userRepository, operation, id, username);
+        updateUserEntity(user, params, context);
 
-		Processor.uncacheXLinkUri(ContactsStrategy.baseHref(id));
-		
-		UserSession usrSess = context.getUserSession();
-		String      myProfile = usrSess.getProfile();
-		String      myUserId  = usrSess.getUserId();
+        // -- For adding new user
+        if (operation.equals(Params.Operation.NEWUSER)) {
+            user = userRepository.save(user);
 
-		@SuppressWarnings("unchecked")
-		java.util.List<Element> listGroups = params.getChildren(Params.GROUPS);
+            setUserGroups(user, params, context);
+        } else if (operation.equals(Params.Operation.FULLUPDATE) || operation.equals(Params.Operation.EDITINFO)) {
+            user = userRepository.save(user);
 
+            //--- add groups
+            groupRepository.deleteAllByIdAttribute(UserGroupId_.userId, Arrays.asList(user.getId()));
 
-			Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+            setUserGroups(user, params, context);
+        } else {
+            throw new IllegalArgumentException("unknown user update operation " + operation);
+        }
 
-			// Before we do anything check (for UserAdmin) that they are not trying
-			// to add a user to any group outside of their own - if they are then
-			// raise an exception - this shouldn't happen unless someone has
-			// constructed their own malicious URL!
-			//
-			if (operation.equals("newuser") || operation.equals("editinfo")) {
-				if (!(myUserId.equals(id)) && myProfile.equals("UserAdmin")) {
-					Element bull = dbms.select("SELECT groupId from UserGroups WHERE userId="+myUserId);
-					@SuppressWarnings("unchecked")
-					java.util.List<Element> adminlist = bull.getChildren();
-					for(int i=0; i<listGroups.size(); i++) {
-						String group = ((Element) listGroups.get(i)).getText();
-						Boolean found = false;
-						for (int j=0;j<adminlist.size();j++) {
-							String testGroup = ((Element) adminlist.get(j)).getChild("groupid").getText();
-							System.out.println("Testing group "+group+" against "+testGroup);
-							if (group.equals(testGroup)) {
-								found = true;
-							}
-						}
-						if (!found) {
-							throw new IllegalArgumentException("tried to add group id "+group+" to user "+username+" - not allowed because you are not a member of that group!");	
-						}
-					}
-				}
-			}
-
-		// -- For Adding new user
-			if (operation.equals(Params.Operation.NEWUSER)) {
-				id = context.getSerialFactory().getSerial(dbms, "Users") +"";
-
-				String query = "INSERT INTO Users (id, username, password, surname, name, profile, "+
-						"address, state, zip, country, email, organisation, kind, streetnumber, "+
-						"streetname, postbox, city, phone, facsimile, positionname, onlineresource, "+
-						"hoursofservice, contactinstructions, publicaccess, orgacronym, directnumber, mobile, " +
-						"email1, phone1, facsimile1, email2, phone2, facsimile2, onlinename, onlinedescription, validated) "+
-						"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-				dbms.execute(query, new Integer(id), username, PasswordUtil.encode(context, password), surname,
-					 name, profile, address, state, zip, country, email, organ, kind,
-					 streetnb, street, postbox, city, phone, fac, position, online, hours,
-					 instruct, "y", orgacronym, directnumber, mobile, email1, phone1, fac1, email2, phone2, fac2, onlinename, onlinedesc, validated);
-
-
-			//--- add groups
-
-				for(int i=0; i<listGroups.size(); i++) {
-					String group = ((Element) listGroups.get(i)).getText();
-					addGroup(dbms, id, group);
-				}
-			}
-
-			else {
-
-			// -- full update
-				if (operation.equals(Params.Operation.FULLUPDATE)) {
-					String query = "UPDATE Users SET username=?, password=?, surname=?, name=?, "
-							+ "address=?, state=?, zip=?, country=?, email=?,"
-							+ "organisation=?, kind=?, "
-							+ "profile=?, streetnumber=?, streetname=?, postbox=?, city=?, "
-							+ "phone=?, facsimile=?, positionname=?, onlineresource=?, "
-							+ "hoursofservice=?, contactinstructions=?, publicaccess=?, "
-							+ "orgacronym=?, directnumber=?, mobile=?, email1=?, phone1=?, facsimile1=?, "
-							+ "email2=?, phone2=?, facsimile2=?, onlinename=?, onlinedescription=? "
-							+ "WHERE id=?";
-					dbms.execute(query, username, PasswordUtil.encode(context, password),
-							surname, name, address, state, zip, country, email,
-							organ, kind, profile, streetnb, street, postbox,
-							city, phone, fac, position, online, hours,
-							instruct, "y",
-							orgacronym, directnumber, mobile, email1, phone1,
-							fac1, email2, phone2, fac2, onlinename, onlinedesc,
-							new Integer(id));
-
-					// --- add groups
-
-					dbms.execute("DELETE FROM UserGroups WHERE userId=?", new Integer(id));
-
-					for(int i=0; i<listGroups.size(); i++) {
-						String group = ((Element) listGroups.get(i)).getText();
-						addGroup(dbms, id, group);
-					}
-
-			// -- edit user info
-				} else if (operation.equals(Params.Operation.EDITINFO)) {
-					String query = "UPDATE Users SET username=?, surname=?, name=?, profile=?, address=?, city=?, state=?, zip=?, country=?, email=?, organisation=?, kind=? WHERE id=?";
-					dbms.execute (query, username, surname, name, profile, address, city, state, zip, country, email, organ, kind, new Integer(id));
-					//--- add groups
-				
-					dbms.execute ("DELETE FROM UserGroups WHERE userId=" + id);
-					for(int i=0; i<listGroups.size(); i++) {
-						String group = ((Element) listGroups.get(i)).getText();
-						addGroup(dbms, id, group);
-					}
-
-			// -- reset password
-				} else if (operation.equals(Params.Operation.RESETPW)) {
-					String query = "UPDATE Users SET password=? WHERE id=?";
-					dbms.execute (query, PasswordUtil.encode(context, password),new Integer(id));
-				} else {
-					throw new IllegalArgumentException("unknown user update operation "+operation);
-				}
-			}
-
-        final ContactsStrategy strategy = new ContactsStrategy(dbms, context.getAppPath(), context.getBaseUrl(),
-                context.getLanguage(), null);
+        final ContactsStrategy strategy = new ContactsStrategy(userRepository, groupRepository, context.getAppPath(), context.getBaseUrl(),
+                context.getLanguage());
         ArrayList<String> fields = new ArrayList<String>();
 
         fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
@@ -242,29 +117,203 @@ public class SharedUpdate implements Service
         final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, fields, id, false,
                 Functions.<String>identity());
 
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dm = gc.getDataManager();
+        DataManager dm = context.getBean(DataManager.class);
         for (MetadataRecord metadataRecord : referencingMetadata) {
-            dm.indexMetadata(dbms, metadataRecord.id, true, context, false, false, true);
+            dm.indexMetadata(""+metadataRecord.id, true, context, false, false, true);
         }
 
         return new Element(Jeeves.Elem.RESPONSE);
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
+    private void updateUserEntity(User user, Element params, ServiceContext context) {
 
-	/** Adds a user to a group
-	  */
+        String username = Util.getParam(params, Params.USERNAME);
+        if (username != null) {
+            user.setUsername(username);
+        }
 
-	private void addGroup(Dbms dbms, String user, String group) throws Exception
-	{
-		dbms.execute("INSERT INTO UserGroups(userId, groupId) VALUES (?, ?)",
-						 new Integer(user), new Integer(group));
-	}
+        String name     = Util.getParam(params, Params.NAME,    "");
+        if (name != null) {
+            user.setName(name);
+        }
+        String surname  = Util.getParam(params, Params.SURNAME, "");
+        if (surname != null) {
+            user.setSurname(surname);
+        }
+
+        user.setProfile(Profile.Shared);
+
+        String kind     = Util.getParam(params, Params.KIND,    "");
+        if (kind != null) {
+            user.setKind(kind);
+        }
+
+        String organ    = LangUtils.createDescFromParams(params, Params.ORG);
+        if (organ != null) {
+            user.setOrganisation(organ);
+        }
+
+        Address addressEntity;
+        if (user.getAddresses().isEmpty()) {
+            addressEntity = new Address();
+        } else {
+            addressEntity = user.getPrimaryAddress();
+
+        }
+
+        String address  = Util.getParam(params, Params.ADDRESS, "");
+        if (address != null) {
+            addressEntity.setAddress(address);
+        }
+
+        String city     = Util.getParam(params, Params.CITY,    "");
+        if (city != null) {
+            addressEntity.setCity(city);
+        }
+
+        String state    = Util.getParam(params, Params.STATE,   "");
+        if (state != null) {
+            addressEntity.setState(state);
+        }
+        String zip      = Util.getParam(params, Params.ZIP,     "");
+        if (zip != null) {
+            addressEntity.setZip(zip);
+        }
+        String country  = Util.getParam(params, Params.COUNTRY, "");
+        if (country != null) {
+            addressEntity.setCountry(country);
+        }
+
+        String streetnb = Util.getParam(params, Geocat.Params.STREETNUMBER, "");
+        addressEntity.setStreetnumber(streetnb);
+
+        String street   = Util.getParam(params, Geocat.Params.STREETNAME, "");
+        addressEntity.setStreetname(street);
+
+        String postbox  = Util.getParam(params, Geocat.Params.POSTBOX, "");
+        addressEntity.setPostbox(postbox);
+
+        user.getAddresses().clear();
+        user.getAddresses().add(addressEntity);
+
+        String email    = Util.getParam(params, Params.EMAIL,   "");
+        String email1    = Util.getParam(params, Params.EMAIL+1,   "");
+        String email2    = Util.getParam(params, Params.EMAIL+2,   "");
+        user.getEmailAddresses().add(email);
+        user.getEmailAddresses().add(email1);
+        user.getEmailAddresses().add(email2);
+
+        user.getPhones().clear();
+        String phone    = Util.getParam(params, Geocat.Params.PHONE, "");
+        String fac      = Util.getParam(params, Geocat.Params.FAC, "");
+        String directnumber = Util.getParam(params, Geocat.Params.DIRECTNUMBER, "");
+        String mobile = Util.getParam(params, Geocat.Params.MOBILE, "");
+        user.getPhones().add(new Phone()
+                .setDirectnumber(directnumber)
+                .setFacsimile(fac)
+                .setMobile(mobile)
+                .setPhone(phone));
+        String phone1    = Util.getParam(params, Geocat.Params.PHONE+1, "");
+        String fac1      = Util.getParam(params, Geocat.Params.FAC+1, "");
+        user.getPhones().add(new Phone()
+                .setFacsimile(fac1)
+                .setPhone(phone1));
+        String phone2    = Util.getParam(params, Geocat.Params.PHONE+2, "");
+        String fac2      = Util.getParam(params, Geocat.Params.FAC+2, "");
+        user.getPhones().add(new Phone()
+                .setFacsimile(fac2)
+                .setPhone(phone2));
+
+        String validated = Util.getParam(params, Geocat.Params.VALIDATED, "y");
+        final GeocatUserInfo geocatUserInfo = user.getGeocatUserInfo();
+        geocatUserInfo.setValidated(Constants.toBoolean_fromYNChar(validated.charAt(0)));
+
+        String instruct = LangUtils.createDescFromParams(params, Geocat.Params.CONTACTINST);
+        geocatUserInfo.setContactinstructions(instruct);
+
+        String hours    = Util.getParam(params, Geocat.Params.HOURSOFSERV, "");
+        geocatUserInfo.setHoursofservice(hours);
+
+        String onlinedesc  = LangUtils.createDescFromParams(params, "onlinedescription");
+        geocatUserInfo.setOnlinedescription(onlinedesc);
+
+        String orgacronym = LangUtils.createDescFromParams(params, Geocat.Params.ORGACRONYM);
+        geocatUserInfo.setOrgacronym(orgacronym);
+
+        String onlinename  = LangUtils.createDescFromParams(params, "onlinename");
+        geocatUserInfo.setOnlinename(onlinename);
+
+        String online      = LangUtils.createDescFromParams(params, Geocat.Params.ONLINE);
+        geocatUserInfo.setOnlineresource(online);
+
+        String position = LangUtils.createDescFromParams(params, Geocat.Params.POSITIONNAME);
+        geocatUserInfo.setPositionname(position);
+
+        String publicAccess = Util.getParam(params, Geocat.Params.PUBLICACC, "n");
+        geocatUserInfo.setPublicaccess(publicAccess);
+
+        user.getSecurity().setPassword(PasswordUtil.encode(context, UUID.randomUUID().toString()));
+    }
+
+    private User getUser(final UserRepository repo, final String operation, final String id, final String username) {
+        if (Params.Operation.NEWUSER.equalsIgnoreCase(operation)) {
+            if (username == null) {
+                throw new IllegalArgumentException(Params.USERNAME + " is a required parameter for " + Params.Operation.NEWUSER + " " +
+                                                   "operation");
+            }
+            User user = repo.findOneByUsername(username);
+
+            if (user != null) {
+                throw new IllegalArgumentException("User with username " + username + " already exists");
+            }
+            return new User();
+        } else {
+            User user = repo.findOne(id);
+            if (user == null) {
+                throw new IllegalArgumentException("No user found with id: " + id);
+            }
+            return user;
+        }
+    }
+
+    private void setUserGroups(final User user, final Element params, final ServiceContext context) throws Exception {
+        String[] profiles = {Profile.UserAdmin.name(), Profile.Reviewer.name(), Profile.Editor.name(), Profile.RegisteredUser.name()};
+        Collection<UserGroup> toAdd = new ArrayList<UserGroup>();
+
+        final GroupRepository groupRepository = context.getBean(GroupRepository.class);
+        final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
+
+        for (String profile : profiles) {
+
+            @SuppressWarnings("unchecked")
+            java.util.List<Element> userGroups = params.getChildren(Params.GROUPS + '_' + profile);
+            for (Element element : userGroups) {
+                String groupEl = element.getText();
+                if (!groupEl.equals("")) {
+                    int groupId = Integer.valueOf(groupEl);
+                    Group group = groupRepository.findOne(groupId);
+
+                    // Combine all groups editor and reviewer groups
+                    if (profile.equals(Profile.Reviewer.name())) {
+                        final UserGroup userGroup = new UserGroup()
+                                .setGroup(group)
+                                .setProfile(Profile.Editor)
+                                .setUser(user);
+                        toAdd.add(userGroup);
+                    }
+
+                    final UserGroup userGroup = new UserGroup()
+                            .setGroup(group)
+                            .setProfile(Profile.findProfileIgnoreCase(profile))
+                            .setUser(user);
+                    toAdd.add(userGroup);
+                }
+            }
+        }
+
+        userGroupRepository.save(toAdd);
+
+    }
 }
 
 //=============================================================================

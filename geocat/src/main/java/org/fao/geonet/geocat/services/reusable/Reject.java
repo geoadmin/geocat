@@ -33,22 +33,23 @@ import java.util.Map;
 import java.util.Set;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.reusable.*;
-import org.fao.geonet.kernel.reusable.*;
 import org.fao.geonet.geocat.kernel.reusable.Utils.FindXLinks;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.geocat.RejectedSharedObjectRepository;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 
@@ -87,16 +88,15 @@ public class Reject implements Service
                           String strategySpecificData, boolean isValidObject, boolean testing) throws Exception
     {
         Log.debug(Geocat.Module.REUSABLE, "Starting to reject following reusable objects: \n"
-                + reusableType + " (" + Arrays.toString(ids) + ")\nRejection message is:\n" + msg);
+                                          + reusableType + " (" + Arrays.toString(ids) + ")\nRejection message is:\n" + msg);
         UserSession session = context.getUserSession();
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), gc.getSettingManager());
+        String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));
         ReplacementStrategy strategy = Utils.strategy(reusableType, context);
 
         Element results = new Element("results");
         if (strategy != null) {
-            results.addContent(performReject(ids, strategy, context, gc, dbms, session, baseUrl, msg,
+            results.addContent(performReject(ids, strategy, context, gc, session, baseUrl, msg,
                     strategySpecificData, isValidObject, testing));
         }
         Log.info(Geocat.Module.REUSABLE, "Successfully rejected following reusable objects: \n"
@@ -106,7 +106,7 @@ public class Reject implements Service
     }
 
     private List<Element> performReject(String[] ids, final ReplacementStrategy strategy, ServiceContext context,
-                                        GeonetContext gc, Dbms dbms, final UserSession session, String baseURL, String msg,
+                                        GeonetContext gc, final UserSession session, String baseURL, String msg,
                                         String strategySpecificData, boolean isValidObject, boolean testing) throws Exception
     {
 
@@ -119,9 +119,9 @@ public class Reject implements Service
             luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
         }
 
-        Multimap<String/* ownerid */, String/* metadataid */> emailInfo = HashMultimap.create();
+        Multimap<Integer/* ownerid */, Integer/* metadataid */> emailInfo = HashMultimap.create();
         List<Element> result = new ArrayList<Element>();
-        ArrayList<String> allAffectedMdIds = new ArrayList<String>();
+        List<String> allAffectedMdIds = new ArrayList<String>();
         for (String id : ids) {
             Set<MetadataRecord> results = Utils.getReferencingMetadata(context, luceneFields, id, true, idConverter);
 
@@ -130,10 +130,9 @@ public class Reject implements Service
                 emailInfo.put(record.ownerId, record.id);
             }
 
-            Element newIds = updateHrefs(strategy, context, dbms, session, id, results, baseURL, strategySpecificData);
+            Element newIds = updateHrefs(strategy, context, session, id, results, baseURL, strategySpecificData);
             for (MetadataRecord metadataRecord : results) {
-                int mdId = Integer.parseInt(metadataRecord.id);
-                allAffectedMdIds.add(Integer.toString(mdId));
+                allAffectedMdIds.add(Integer.toString(metadataRecord.id));
             }
 
             Element e = new Element("idMap").addContent(new Element("oldId").setText(id)).addContent(newIds);
@@ -141,17 +140,17 @@ public class Reject implements Service
         }
 
         if (!emailInfo.isEmpty()) {
-            emailNotifications(strategy, context, dbms, session, msg, emailInfo, baseURL, strategySpecificData, testing);
+            emailNotifications(strategy, context, session, msg, emailInfo, baseURL, strategySpecificData, testing);
         }
         strategy.performDelete(ids, session, strategySpecificData);
 
-        gc.getDataManager().indexInThreadPool(context, allAffectedMdIds, dbms, false, true);
+        context.getBean(DataManager.class).indexMetadata(allAffectedMdIds, true, context, true, false, true);
 
         return result;
 
     }
 
-    private Element updateHrefs(final ReplacementStrategy strategy, ServiceContext context, Dbms dbms,
+    private Element updateHrefs(final ReplacementStrategy strategy, ServiceContext context,
             final UserSession session, String id, Set<MetadataRecord> results, String baseURL,
             String strategySpecificData) throws Exception
     {
@@ -182,7 +181,7 @@ public class Reject implements Service
 							}
                         }
                         // update xlink service
-                        int newId = DeletedObjects.insert(dbms, context.getSerialFactory(), Xml.getString(fragment), href);
+                        int newId = DeletedObjects.insert(context.getBean(RejectedSharedObjectRepository.class), Xml.getString(fragment), href);
                         newIds.addContent(new Element("id").setText(String.valueOf(newId)));
                         newHref = DeletedObjects.href(newId);
                         updatedHrefs.put(oldHRef, newHref);
@@ -198,14 +197,14 @@ public class Reject implements Service
                 }
             }
 
-            metadataRecord.commit(dbms, context);
+            metadataRecord.commit(context);
         }
         
         return newIds;
     }
 
-    private void emailNotifications(final ReplacementStrategy strategy, ServiceContext context, Dbms dbms,
-            final UserSession session, String msg, Multimap<String, String> emailInfo, String baseURL,
+    private void emailNotifications(final ReplacementStrategy strategy, ServiceContext context,
+            final UserSession session, String msg, Multimap<Integer, Integer> emailInfo, String baseURL,
             String strategySpecificData, boolean testing) throws Exception
     {
         if (msg == null) {
@@ -216,7 +215,7 @@ public class Reject implements Service
         String subject = Utils.translate(context.getAppPath(), context.getLanguage(), "deletedSharedObject/subject",
                 " / ");
 
-        Utils.sendEmail(new SendEmailParameter(context, dbms, msg, emailInfo, baseURL, msgHeader, subject, testing));
+        Utils.sendEmail(new SendEmailParameter(context, msg, emailInfo, baseURL, msgHeader, subject, testing));
     }
 
     public void init(String appPath, ServiceConfig params) throws Exception

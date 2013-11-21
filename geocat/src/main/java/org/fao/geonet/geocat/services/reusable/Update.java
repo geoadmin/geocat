@@ -1,17 +1,15 @@
 package org.fao.geonet.geocat.services.reusable;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.reusable.ProcessParams;
+import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.geocat.kernel.reusable.log.ReusableObjectLogger;
-import org.fao.geonet.geocat.kernel.reusable.ProcessParams;
-import org.fao.geonet.geocat.kernel.reusable.log.ReusableObjectLogger;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -32,10 +30,9 @@ public class Update implements Service {
         Element xml = Xml.loadString(xmlString, false);
         Element wrapped = new Element("wrapped").addContent(xml);
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-        ProcessParams processParams = new ProcessParams(dbms, ReusableObjectLogger.THREAD_SAFE_LOGGER, null, xml, wrapped, gc.getThesaurusManager(),gc.getExtentManager(),context.getBaseUrl(),gc.getSettingManager(),false,defaultLang,context);
-        Collection<Element> newElements = gc.getReusableObjMan().updateXlink(xml, processParams);
+        ProcessParams processParams = new ProcessParams(ReusableObjectLogger.THREAD_SAFE_LOGGER, null, xml, wrapped, false,defaultLang,context);
+        Collection<Element> newElements = context.getBean(ReusableObjManager.class).updateXlink(xml, processParams);
         
         ArrayList<Element> updated = new ArrayList<Element>(newElements);
         updated.add(0,xml);

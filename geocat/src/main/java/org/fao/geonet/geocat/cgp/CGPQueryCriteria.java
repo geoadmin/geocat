@@ -1,6 +1,6 @@
 package org.fao.geonet.geocat.cgp;
 
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
 

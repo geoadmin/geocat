@@ -117,7 +117,7 @@ public class PublishRecordSpecsTest extends AbstractSpringDataTest {
         record.setFailurerule("failure.rule"+i);
         record.setPublished(i % 2 == 0);
         record.setUuid("uuid"+i);
-        record.setValidated(i % 2 == 1);
+        record.setValidated(PublishRecord.Validity.values()[i % 3]);
 
         return record;
     }

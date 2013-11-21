@@ -37,6 +37,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -135,7 +136,7 @@ public class UpdateElement implements Service {
 		elResp.addContent(new Element("selected").setText(ref));
 		elResp.addContent(new Element("mode").setText("edit"));
 
-        GeocatUpdateElement.reindex(context, gc, newid, manager);
+        DataManager.reindex(context, newid, manager);
 
 		return elResp;
 	}

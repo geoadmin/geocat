@@ -31,6 +31,7 @@ import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.MissingParameterEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.QuartzSchedulerUtils;
@@ -115,7 +116,7 @@ public abstract class AbstractParams {
 		getTrigger();
 
 		importXslt = Util.getParam(content, "importxslt", "none");
-		validate = Util.getParam(content, "validate", false);
+		validate = HarvestValidationEnum.lookup(Util.getParam(content, "validate", HarvestValidationEnum.NOVALIDATION.name()));
 
 		addPrivileges(node.getChild("privileges"));
 		addCategories(node.getChild("categories"));
@@ -165,7 +166,7 @@ public abstract class AbstractParams {
 		getTrigger();
 		
 		importXslt = Util.getParam(content, "importxslt", importXslt);
-		validate = Util.getParam(content, "validate", validate);
+        validate = HarvestValidationEnum.lookup(Util.getParam(content, "validate", HarvestValidationEnum.NOVALIDATION.name()));
 
         if(privil != null) {
 			addPrivileges(privil);
@@ -389,7 +390,7 @@ public abstract class AbstractParams {
 	String  every;
 	public boolean oneRunOnly;
 
-	public boolean validate;
+	public HarvestValidationEnum validate;
 	public String importXslt;
 
 	public Element node;

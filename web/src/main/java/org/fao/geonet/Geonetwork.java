@@ -286,13 +286,13 @@ public class Geonetwork implements ApplicationHandler {
 
         List<Element> extentConfig = handlerConfig.getChildren(Geocat.Config.EXTENT_CONFIG);
 
-        ExtentManager extentMan = new ExtentManager(dataStore, extentConfig);
+        _applicationContext.getBean(ExtentManager.class).init(extentConfig);
 
 		//-------------------------------------------------------------------------
 		//--- ReusableObjectManager
 
         List<Element> reusableConfig = handlerConfig.getChildren(Geocat.Config.REUSABLE_OBJECT_CONFIG);
-		ReusableObjManager reusableObjMan = new ReusableObjManager(path, reusableConfig, context.getSerialFactory());
+        context.getBean(ReusableObjManager.class).init(reusableConfig);
 
 
         try {

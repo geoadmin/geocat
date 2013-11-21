@@ -30,7 +30,7 @@ import java.util.Set;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
 
-class ExtentSelection
+public class ExtentSelection
 {
-    final Set<Pair<FeatureType, String>> ids = Collections.synchronizedSet(new HashSet<Pair<FeatureType, String>>());
+    public Set<Pair<FeatureType, String>> ids = Collections.synchronizedSet(new HashSet<Pair<FeatureType, String>>());
 }

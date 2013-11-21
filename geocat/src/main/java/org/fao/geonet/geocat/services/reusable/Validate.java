@@ -32,23 +32,23 @@ import java.util.Map;
 import java.util.Set;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
 
-import jeeves.utils.Util;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
 import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import com.google.common.base.Function;
@@ -67,16 +67,14 @@ public class Validate implements Service
         String[] ids = Util.getParamText(params, "id").split(",");
 
         Log.debug(Geocat.Module.REUSABLE, "Starting to validate following reusable objects: " + page
-                + " \n(" + Arrays.toString(ids) + ")");
+                                          + " \n(" + Arrays.toString(ids) + ")");
 
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), gc.getSettingManager());
+        String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));
         ReplacementStrategy strategy = Utils.strategy(ReusableTypes.valueOf(page), context);
 
         Element results = new Element("results");
         if (strategy != null) {
-            results.addContent(performValidation(ids, strategy, dbms, context, baseUrl));
+            results.addContent(performValidation(ids, strategy, context, baseUrl));
         }
 
         Log.info(Geocat.Module.REUSABLE, "Successfully validated following reusable objects: " + page
@@ -85,14 +83,14 @@ public class Validate implements Service
         return results;
     }
 
-    private List<Element> performValidation(String[] ids, ReplacementStrategy strategy, Dbms dbms, ServiceContext context,
+    private List<Element> performValidation(String[] ids, ReplacementStrategy strategy, ServiceContext context,
             String baseUrl) throws Exception
     {
         Map<String, String> idMapping = strategy.markAsValidated(ids, context.getUserSession());
 
         List<Element> result = new ArrayList<Element>();
         for (String id : ids) {
-            Element e = updateXLink(dbms, strategy, context, idMapping, id, true);
+            Element e = updateXLink(strategy, context, idMapping, id, true);
             result.add(e);
         }
 
@@ -104,7 +102,7 @@ public class Validate implements Service
     {
     }
 
-	private Element updateXLink( Dbms dbms, ReplacementStrategy strategy, ServiceContext context, Map<String, String> idMapping, String id,
+	private Element updateXLink(ReplacementStrategy strategy, ServiceContext context, Map<String, String> idMapping, String id,
 	        boolean validated ) throws Exception {
 	
 	    UserSession session = context.getUserSession();
@@ -136,7 +134,7 @@ public class Validate implements Service
 	            }
 	
 	        }
-	        metadataRecord.commit(dbms, context);
+	        metadataRecord.commit(context);
 	    }
 	    Element e = new Element("id");
 	    e.setText(id);

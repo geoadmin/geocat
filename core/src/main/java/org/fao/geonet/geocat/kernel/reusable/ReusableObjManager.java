@@ -17,11 +17,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
-import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
 
@@ -30,21 +26,31 @@ import org.apache.log4j.Level;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.geocat.kernel.reusable.log.Record;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.geocat.kernel.reusable.log.ReusableObjectLogger;
-import org.fao.geonet.kernel.search.spatial.Pair;
-import org.fao.geonet.services.extent.ExtentManager;
+import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.geocat.FormatRepository;
 import org.fao.geonet.util.ElementFinder;
-import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.LangUtils;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.Filter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ReusableObjManager
 {
     // The following constants are used in stylesheet and the log4J
@@ -63,18 +69,17 @@ public class ReusableObjManager
 
     public static final String                       NON_VALID_ROLE       = "http://www.geonetwork.org/non_valid_obj";
 
-    private final String                             _styleSheet;
-    private final String                             _appPath;
+    private String                             _styleSheet;
+    private String                             _appPath;
     private boolean                                  _processOnInsert;
 
-    private final SerialFactory _serialFactory;
+    @Autowired
+    private GeonetworkDataDirectory dataDirectory;
 
-
-    public ReusableObjManager(String appPath, List<Element> reusableConfigIter, SerialFactory serialFactory)
+    public void init(List<Element> reusableConfigIter)
     {
-        this._serialFactory = serialFactory;
-        this._appPath = appPath;
-        this._styleSheet = appPath + "/xsl/reusable-objects-extractor.xsl";
+        this._appPath = dataDirectory.getWebappDir();
+        this._styleSheet = _appPath + "/xsl/reusable-objects-extractor.xsl";
         this._processOnInsert = false;
 
         if(reusableConfigIter == null) {
@@ -83,11 +88,6 @@ public class ReusableObjManager
             Element config = reusableConfigIter.get(0);
             _processOnInsert = "true".equalsIgnoreCase(config.getAttributeValue("value"));
         }
-    }
-
-    public boolean isProcessOnInsert()
-    {
-        return _processOnInsert;
     }
 
     public int process(ServiceContext context, Set<String> elements, DataManager dm, boolean sendEmail, boolean idIsUuid, boolean ignoreErrors)
@@ -103,11 +103,10 @@ public class ReusableObjManager
             int count = 0;
             ReusableObjectLogger logger = new ReusableObjectLogger();
 
-            Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
             for (String uuid : elements) {
                 try {
-                    boolean changed = process(context, dm, dbms, uuid, logger, idIsUuid);
+                    boolean changed = process(context, dm, uuid, logger, idIsUuid);
                     if (changed) {
                         count++;
                     }
@@ -129,31 +128,29 @@ public class ReusableObjManager
         }
     }
 
-    private boolean process(ServiceContext context, DataManager dm, Dbms dbms, String uuid,
+    private boolean process(ServiceContext context, DataManager dm, String uuid,
             ReusableObjectLogger logger, boolean idIsUUID) throws Exception
     {
         // the metadata ID
-        String id = uuidToId(dbms, dm, uuid, idIsUUID);
+        String id = uuidToId(dm, uuid, idIsUUID);
 
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
         Element metadata = dm.getMetadata(context, id, false, false, false);
 
-        ProcessParams searchParams = new ProcessParams(dbms, logger, id, metadata, metadata, gc.getThesaurusManager(),
-                gc.getExtentManager(), context.getBaseUrl(), gc.getSettingManager(), false,null,context);
+        ProcessParams searchParams = new ProcessParams(logger, id, metadata, metadata, false,null,context);
         List<Element> process = process(searchParams);
         if (process != null) {
             Element changed = process.get(0);
 
             if (changed != null) {
                 Processor.processXLink(changed, context);
-                gc.getXmlSerializer().update(dbms, id, changed, new ISODate().toString(), false, null, context);
+                context.getBean(XmlSerializer.class).update(id, changed, new ISODate().toString(), false, null, context);
             }
         }
         return process != null;
     }
 
-    public static String uuidToId(Dbms dbms, DataManager dm, String uuid, boolean idIsUUID)
+    public static String uuidToId(DataManager dm, String uuid, boolean idIsUUID)
     {
         String id = uuid;
 
@@ -161,7 +158,7 @@ public class ReusableObjManager
             // does the request contain a UUID ?
             try {
                 // lookup ID by UUID
-                id = dm.getMetadataId(dbms, uuid);
+                id = dm.getMetadataId(uuid);
                 if (id == null) {
                     id = uuid;
                 }
@@ -242,45 +239,44 @@ public class ReusableObjManager
     private boolean replaceKeywords(Element xml, String defaultMetadataLang, ProcessParams params) throws Exception
     {
 
-        Dbms dbms = params.dbms;
         ReusableObjectLogger logger = params.logger;
         String baseURL = params.baseURL;
-        ThesaurusManager thesaurusMan = params.thesaurusManager;
+        ThesaurusManager thesaurusMan = params.srvContext.getBean(ThesaurusManager.class);
 
-        KeywordsStrategy strategy = new KeywordsStrategy(thesaurusMan, _appPath, baseURL, null);
-        return performReplace(dbms, xml, defaultMetadataLang, KEYWORDS_PLACEHOLDER, KEYWORDS, logger, strategy,
+        KeywordsStrategy strategy = new KeywordsStrategy(thesaurusMan, _appPath, baseURL, params.srvContext.getLanguage());
+        return performReplace(xml, defaultMetadataLang, KEYWORDS_PLACEHOLDER, KEYWORDS, logger, strategy,
                 params.addOnly,params.srvContext);
     }
 
     private boolean replaceFormats(Element xml, String defaultMetadataLang, ProcessParams params) throws Exception
     {
-        Dbms dbms = params.dbms;
         ReusableObjectLogger logger = params.logger;
         String baseURL = params.baseURL;
 
-        FormatsStrategy strategy = new FormatsStrategy(dbms, _appPath, baseURL, null, _serialFactory);
-        return performReplace(dbms, xml, defaultMetadataLang, FORMATS_PLACEHOLDER, FORMATS, logger, strategy,
+        FormatRepository formatRepo = params.srvContext.getBean(FormatRepository.class);
+        FormatsStrategy strategy = new FormatsStrategy(formatRepo, _appPath, baseURL, params.srvContext.getLanguage());
+        return performReplace(xml, defaultMetadataLang, FORMATS_PLACEHOLDER, FORMATS, logger, strategy,
                 params.addOnly,params.srvContext);
     }
 
     private boolean replaceContacts(Element xml, String defaultMetadataLang, ProcessParams params) throws Exception
     {
-        Dbms dbms = params.dbms;
         ReusableObjectLogger logger = params.logger;
         String baseURL = params.baseURL;
 
-        ContactsStrategy strategy = new ContactsStrategy(dbms, _appPath, baseURL, null, _serialFactory);
-        return performReplace(dbms, xml, defaultMetadataLang, CONTACTS_PLACEHOLDER, CONTACTS, logger, strategy,
+        UserRepository userRepo = params.srvContext.getBean(UserRepository.class);
+        UserGroupRepository userGroupRepo = params.srvContext.getBean(UserGroupRepository.class);;
+        ContactsStrategy strategy = new ContactsStrategy(userRepo, userGroupRepo, _appPath, baseURL, params.srvContext.getLanguage());
+        return performReplace(xml, defaultMetadataLang, CONTACTS_PLACEHOLDER, CONTACTS, logger, strategy,
                 params.addOnly,params.srvContext);
     }
 
     private boolean replaceExtents(Element xml, String defaultMetadataLang, ProcessParams params) throws Exception
     {
 
-        Dbms dbms = params.dbms;
         ReusableObjectLogger logger = params.logger;
         String baseURL = params.baseURL;
-        ExtentManager extentMan = params.extentManager;
+        ExtentManager extentMan = params.srvContext.getBean(ExtentManager.class);
 
         ExtentsStrategy strategy = new ExtentsStrategy(baseURL, _appPath, extentMan, null);
 
@@ -301,11 +297,11 @@ public class ReusableObjManager
         	}
 		}
         
-        return performReplace(dbms, xml, defaultMetadataLang, EXTENTS_PLACEHOLDER, EXTENTS, logger, strategy,
+        return performReplace(xml, defaultMetadataLang, EXTENTS_PLACEHOLDER, EXTENTS, logger, strategy,
                 params.addOnly,params.srvContext);
     }
 
-    private boolean performReplace(Dbms dbms, Element xml, String defaultMetadataLang, String placeholderElemName,
+    private boolean performReplace(Element xml, String defaultMetadataLang, String placeholderElemName,
             String originalElementName, ReusableObjectLogger logger, ReplacementStrategy strategy, boolean addOnly,
             ServiceContext srvContext)
             throws Exception
@@ -331,13 +327,13 @@ public class ReusableObjManager
             if (XLink.isXLink(originalElem)) {
                 originalElem.detach();
                 
-                changed = updateXLinkAsRequired(dbms, defaultMetadataLang, strategy,
+                changed = updateXLinkAsRequired(defaultMetadataLang, strategy,
 						updatedElements, currentXLinkElements, changed,
 						placeholder, originalElem, srvContext, originalElementName, logger);
                 continue;
             }
             if(originalElem != null) {
-                changed |= replaceSingleElement(placeholder, originalElem, strategy, defaultMetadataLang, addOnly, dbms,
+                changed |= replaceSingleElement(placeholder, originalElem, strategy, defaultMetadataLang, addOnly,
                         originalElementName, logger);
             }
         }
@@ -345,12 +341,11 @@ public class ReusableObjManager
         return changed;
     }
 
-	private boolean updateXLinkAsRequired(Dbms dbms, String defaultMetadataLang,
+	private boolean updateXLinkAsRequired(String defaultMetadataLang,
 			ReplacementStrategy strategy, HashSet<String> updatedElements,
 			Map<String, Element> currentXLinkElements, boolean changed,
 			Element placeholder, Element originalElem, 
-			ServiceContext srvContext, String originalElementName, ReusableObjectLogger logger) throws IOException,
-			JDOMException, CacheException, AssertionError, Exception {
+			ServiceContext srvContext, String originalElementName, ReusableObjectLogger logger) throws AssertionError, Exception {
 		
 		if(!isValidated(originalElem)) {
 			String href = XLink.getHRef(originalElem);
@@ -377,7 +372,7 @@ public class ReusableObjManager
 					originalElem.removeAttribute(XLink.SHOW, XLink.NAMESPACE_XLINK);
 					originalElem.removeAttribute(XLink.TITLE, XLink.NAMESPACE_XLINK);
 					originalElem.removeAttribute(XLink.TYPE, XLink.NAMESPACE_XLINK);
-					replaceSingleElement(placeholder, originalElem, strategy, defaultMetadataLang, false, dbms, originalElementName, logger);
+					replaceSingleElement(placeholder, originalElem, strategy, defaultMetadataLang, false, originalElementName, logger);
 				} else {
 					updatedElements.add(href);
 		            Processor.uncacheXLinkUri(XLink.getHRef(originalElem));
@@ -417,7 +412,7 @@ public class ReusableObjManager
 	}
 
     private boolean replaceSingleElement(Element placeholder, Element originalElem, ReplacementStrategy strategy,
-            String defaultMetadataLang, boolean addOnly, Dbms dbms, String originalElementName,
+            String defaultMetadataLang, boolean addOnly, String originalElementName,
             ReusableObjectLogger logger) throws Exception
     {
 
@@ -508,20 +503,26 @@ public class ReusableObjManager
             if (!lock.tryLock(5, TimeUnit.SECONDS)) {
                 throw new IllegalArgumentException("ProcessReusableObject is locked");
             }
-            Dbms dbms = params.dbms;
             String baseUrl = params.baseURL;
 
             ReplacementStrategy strategy;
 
             if (xlink.getName().equals("contact") || xlink.getName().equals("pointOfContact")
                      || xlink.getName().equals("distributorContact") || xlink.getName().equals("citedResponsibleParty") || xlink.getName().equals("parentResponsibleParty")) {
-                strategy = new ContactsStrategy(dbms, _appPath, baseUrl, "unknown", _serialFactory);
+
+
+                UserRepository userRepo = params.srvContext.getBean(UserRepository.class);
+                UserGroupRepository userGroupRepo = params.srvContext.getBean(UserGroupRepository.class);
+                strategy = new ContactsStrategy(userRepo, userGroupRepo, _appPath, baseUrl, params.srvContext.getLanguage());
             } else if (xlink.getName().equals("resourceFormat") || xlink.getName().equals("distributionFormat")) {
-                strategy = new FormatsStrategy(dbms, _appPath, baseUrl, "unknown", _serialFactory);
+                FormatRepository formatRepo = params.srvContext.getBean(FormatRepository.class);
+                strategy = new FormatsStrategy(formatRepo, _appPath, baseUrl, params.srvContext.getLanguage());
             } else if (xlink.getName().equals("descriptiveKeywords")) {
-                strategy = new KeywordsStrategy(params.thesaurusManager, _appPath, baseUrl, "unknown");
+                ThesaurusManager thesaurusManager = params.srvContext.getBean(ThesaurusManager.class);
+                strategy = new KeywordsStrategy(thesaurusManager, _appPath, baseUrl, params.srvContext.getLanguage());
             } else {
-                strategy = new ExtentsStrategy(baseUrl, _appPath, params.extentManager, "unknown");
+                ExtentManager extentManager = params.srvContext.getBean(ExtentManager.class);
+                strategy = new ExtentsStrategy(baseUrl, _appPath, extentManager, params.srvContext.getLanguage());
             }
 
             Log.info(Geocat.Module.REUSABLE, "Updating a " + strategy + " in metadata id="

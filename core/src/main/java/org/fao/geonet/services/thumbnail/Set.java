@@ -149,7 +149,7 @@ public class Set extends NotInReadOnlyModeService {
 			dataMan.setThumbnail(context, id, type.equals("small"), file, false);
 		}
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, context);
         //-----------------------------------------------------------------------
 
 		Element response = new Element("a");
@@ -209,7 +209,7 @@ public class Set extends NotInReadOnlyModeService {
         saveThumbnail(scaling, file, type, dataDir, scalingDir, scalingFactor, dataMan, id, context);
 
 		//-----------------------------------------------------------------------
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, context);
         Element response = new Element("Response");
 		response.addContent(new Element("id").setText(id));
 		// NOT NEEDEDresponse.addContent(new Element("version").setText(dataMan.getNewVersion(id)));
@@ -252,7 +252,7 @@ public class Set extends NotInReadOnlyModeService {
             removeOldThumbnail(context, id, type, false);
             saveThumbnail(scaling, file, type, dataDir, scalingDir, scalingFactor, dataMan, id, context);
 
-            dataMan.indexMetadata(id);
+            dataMan.indexMetadata(id, context);
         }
         
         public void removeHarvested(Element params, ServiceContext context) throws Exception {

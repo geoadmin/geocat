@@ -28,6 +28,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
 
 /**
@@ -40,6 +41,6 @@ public class IndexServiceMonitor implements Service {
 	public Element exec(Element params, ServiceContext context) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-	    return new Element("IndexReport").setText(""+gc.getDataManager().isIndexing());
+	    return new Element("IndexReport").setText(""+context.getBean(DataManager.class).isIndexing());
     }
 }

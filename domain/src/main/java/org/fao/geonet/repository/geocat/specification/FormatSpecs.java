@@ -39,4 +39,12 @@ public class FormatSpecs {
         };
     }
 
+    public static Specification<Format> nameContains(final String name) {
+        return new Specification<Format>() {
+            @Override
+            public Predicate toPredicate(Root<Format> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return cb.like(cb.lower(root.get(Format_.name)), cb.lower(cb.literal('%'+name+'%')));
+            }
+        };
+    }
 }

@@ -1,5 +1,30 @@
 package org.fao.geonet.geocat;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import com.vividsolutions.jts.util.Assert;
+import jeeves.interfaces.Schedule;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ScheduleContext;
+import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.FileUtils;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.repository.specification.UserSpecs;
+import org.fao.geonet.utils.Log;
+import org.jdom.Element;
+import org.springframework.context.ConfigurableApplicationContext;
+
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -7,31 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import jeeves.config.springutil.JeevesApplicationContext;
-import jeeves.guiservices.session.JeevesUser;
-import jeeves.interfaces.Schedule;
-import jeeves.interfaces.Service;
-import jeeves.monitor.MonitorManager;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.ProfileManager;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ScheduleContext;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.guiservices.XmlCacheManager;
-import jeeves.server.resources.ProviderManager;
-import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
-
-import org.apache.commons.io.FileUtils;
-import org.fao.geonet.GeonetworkDataDirectory;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Geonet.Profile;
-import org.fao.geonet.kernel.mef.MEFLib;
-import org.jdom.Element;
 
 public class ArchiveAllMetadataJob implements Schedule, Service {
 
@@ -48,12 +49,8 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
 
 	@Override
 	public void exec(ScheduleContext context) throws Exception {
-		MonitorManager monitorManager = context.getMonitorManager();
-		ProviderManager providerManager = context.getProviderManager();
-		SerialFactory serialFactory = context.getSerialFactory();
-		JeevesApplicationContext appContext = context.getApplicationContext();
-		ProfileManager profileManager = context.getProfileManager();
-		ServiceContext serviceContext = new ServiceContext("none", appContext , new XmlCacheManager() , monitorManager, providerManager, serialFactory, profileManager , context.allContexts());
+        ConfigurableApplicationContext appContext = context.getApplicationContext();
+		ServiceContext serviceContext = new ServiceContext("none", appContext , context.allContexts(), context.getEntityManager());
 		serviceContext.setAppPath(context.getAppPath());
 		serviceContext.setBaseUrl(context.getBaseUrl());
 		serviceContext.setAsThreadLocal();
@@ -73,22 +70,20 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
 	    if(!backupIsRunning.compareAndSet(false, true)) {
 	        return;
 	    }
-	    Dbms dbms = null;
 		try {
-			loginAsAdmin(serviceContext);
     		Log.info(BACKUP_LOG, "Starting backup of all metadata");
-			dbms = (Dbms) serviceContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
-    		@SuppressWarnings("unchecked")
-    		List<Element> uuidQuery = dbms.select("SELECT uuid FROM Metadata where not isharvested='y'").getChildren();
 
-            // don't keep dbms open...
-            serviceContext.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
-            dbms = null;
-
-    		Set<String> uuids = new HashSet<String>();
-    		for (Element uuidElement : uuidQuery) {
-    			uuids.add(uuidElement.getChildText("uuid"));
-    		}
+            final MetadataRepository metadataRepository = serviceContext.getBean(MetadataRepository.class);
+            
+            loginAsAdmin(serviceContext);
+            List<String> uuids = Lists.transform(metadataRepository.findAll(MetadataSpecs.isHarvested(false)), new Function<Metadata,
+                    String>() {
+                @Nullable
+                @Override
+                public String apply(@Nullable Metadata input) {
+                    return input.getUuid();
+                }
+            });
 
     		Log.info(BACKUP_LOG, "Backing up "+uuids.size()+" metadata");
 		
@@ -96,7 +91,7 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
     		boolean resolveXlink = true;
     		boolean removeXlinkAttribute = false;
             boolean skipOnError = true;
-            File srcFile = new File(MEFLib.doMEF2Export(serviceContext, uuids, format, false, stylePath, resolveXlink , removeXlinkAttribute, skipOnError));
+            File srcFile = new File(MEFLib.doMEF2Export(serviceContext, new HashSet<String>(uuids), format, false, stylePath, resolveXlink , removeXlinkAttribute, skipOnError));
 		
     		String datadir = System.getProperty(GeonetworkDataDirectory.GEONETWORK_DIR_KEY);
     		File backupDir = new File(datadir, BACKUP_DIR);
@@ -112,21 +107,15 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
 		} catch (Throwable t) {
 			Log.error(BACKUP_LOG, "Failed to create a back up of metadata", t);
 		} finally {
-			if(dbms != null) {
-				serviceContext.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
-			}
-            serviceContext.getResourceManager().close();
 		    backupIsRunning.set(false);
 		}
 	}
 
 	private void loginAsAdmin(ServiceContext serviceContext) {
-		JeevesUser user = new JeevesUser(serviceContext.getProfileManager());
-		user.setId("1");
-		user.setUsername("Admin");
-		user.setProfile(Profile.ADMINISTRATOR);
-		UserSession session = new UserSession();
-		session.loginAs(user);
+        final User adminUser = serviceContext.getBean(UserRepository.class).findOne(UserSpecs.hasProfile(Profile.Administrator));
+        Assert.isTrue(adminUser != null, "The system does not have an admin user");
+        UserSession session = new UserSession();
+        session.loginAs(adminUser);
 		serviceContext.setUserSession(session);
 	}
 

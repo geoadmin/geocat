@@ -7,17 +7,27 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
+
+import javax.annotation.Nullable;
 
 /**
  * Select a list of elements stored in session For all the MD stored in the
@@ -60,8 +70,6 @@ public class NotifyByMail implements Service {
 
         UserSession us = context.getUserSession();
 
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
         context.info("Get selected metadata");
         SelectionManager sm = SelectionManager.getManager(us);
 
@@ -72,37 +80,44 @@ public class NotifyByMail implements Service {
             selection = new LinkedList<String>(selection);
         }
 
-        for (Iterator<String> iter = selection.iterator(); iter.hasNext();) {
-            String uuid = (String) iter.next();
-            String emailAddress;
+        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        final UserRepository userRepository = context.getBean(UserRepository.class);
+        Specifications<Metadata> uuidSpec = null;
+        for (String uuid : selection) {
+            final Specification<Metadata> hasUuid = MetadataSpecs.hasMetadataUuid(uuid);
+            if (uuidSpec == null) {
+                uuidSpec = Specifications.where(hasUuid);
+            } else {
+                uuidSpec = uuidSpec.and(hasUuid);
+            }
+        }
+        final List<Metadata> metadatas = metadataRepository.findAll(uuidSpec);
+        for (Metadata metadata : metadatas) {
+            String uuid = metadata.getUuid();
+            final User user = userRepository.findOne(metadata.getSourceInfo().getOwner());
+            String emailAddress = user.getEmail();
 
-            List<Element> uuidQuery = dbms.select(
-                    "SELECT u.email FROM Metadata m, Users u where m.owner = u.id AND m.uuid ='" + uuid + "'")
-                    .getChildren();
-            for (Element uuidElement : uuidQuery) {
-                emailAddress = uuidElement.getChildText("email");
-                if (emailAddress == null || "".equals(emailAddress) || !rfc2822.matcher(emailAddress).matches()) {
-                    emailAddress = ADMIN_MAIL;
+            if (emailAddress == null || "".equals(emailAddress) || !rfc2822.matcher(emailAddress).matches()) {
+                emailAddress = ADMIN_MAIL;
+            }
+
+            context.info("Send notification email to " + emailAddress + " for MD uuid : " + uuid);
+
+            Element retchildserv = new Element("sendMail");
+            retchildserv.setAttribute("email", emailAddress);
+            retchildserv.setAttribute("uuid", uuid);
+
+            String body = MessageFormat.format(messageBody, uuid);
+
+            try {
+                gc.getEmail().send(emailAddress, messageSubject, body, false);
+            } catch (Exception e) {
+                if (!emailAddress.equals(ADMIN_MAIL)) {
+                    gc.getEmail().sendToAdmin(messageSubject, MessageFormat.format(messageBodyError, body), false);
+                    retchildserv.setText("error");
                 }
-
-                context.info("Send notification email to " + emailAddress + " for MD uuid : " + uuid);
-
-                Element retchildserv = new Element("sendMail");
-                retchildserv.setAttribute("email", emailAddress);
-                retchildserv.setAttribute("uuid", uuid);
-
-                String body = MessageFormat.format(messageBody, uuid);
-
-                try {
-                    gc.getEmail().send(emailAddress, messageSubject, body, false);
-                } catch (Exception e) {
-                    if (!emailAddress.equals(ADMIN_MAIL)) {
-                        gc.getEmail().sendToAdmin(messageSubject, MessageFormat.format(messageBodyError, body), false);
-                        retchildserv.setText("error");
-                    }
-                } finally {
-                    ret.addContent(retchildserv);
-                }
+            } finally {
+                ret.addContent(retchildserv);
             }
         }
 

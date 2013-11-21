@@ -323,7 +323,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, context);
 		result.addedMetadata++;
 	}
 
@@ -364,11 +364,16 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			}
 			else
 			{
-				if (!params.validate || validates(schema, md))
-					return (Element) md.detach();
-
-				log.warning("Skipping metadata that does not validate. Remote id : "+ ri.id);
-				result.doesNotValidate++;
+                // GEOCAT
+                // validate it here if requested
+                try {
+                    params.validate.validate(dataMan, context, md);
+                    return (Element) md.detach();
+                } catch (Exception e) {
+                    log.info("Ignoring invalid metadata with id " + ri.id);
+                    result.doesNotValidate++;
+                }
+                // END GEOCAT
 			}
 		}
 
@@ -470,7 +475,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             boolean index = false;
             String language = context.getLanguage();
             final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate.toString(),
-                    false);
+                    false, false);
 
             //--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
@@ -485,7 +490,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
             dataMan.flush();
-            dataMan.indexMetadata(id);
+            dataMan.indexMetadata(id, context);
 			result.updatedMetadata++;
 		}
 	}

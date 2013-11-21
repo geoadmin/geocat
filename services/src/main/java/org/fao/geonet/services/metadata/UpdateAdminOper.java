@@ -33,14 +33,17 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.geocat.PublishRecord;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.geocat.kernel.UnpublishInvalidMetadataJob;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.geocat.PublishRecordRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
+import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -108,7 +111,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
         }
 
         // GEOCAT
-		final boolean published = UnpublishInvalidMetadataJob.isPublished(id, dbms);
+		final boolean published = UnpublishInvalidMetadataJob.isPublished(id, context);
         boolean publishedAgain = false;
 		// END GEOCAT
 
@@ -151,15 +154,27 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 		}
 
         // GEOCAT
-		if(published && !publishedAgain) {
-	          new UnpublishInvalidMetadataJob.Record(info.uuid, Validity.UNKNOWN, false, context.getUserSession().getUsername(), "Manually unpublished by user", "").insertInto(dbms);
-		} else if (!published && publishedAgain) {
-            new UnpublishInvalidMetadataJob.Record(info.uuid, Validity.UNKNOWN, true, context.getUserSession().getUsername(), "Manually published by user", "").insertInto(dbms);
+        final PublishRecord record = new PublishRecord();
+        record.setChangedate(new Date());
+        record.setChangetime(new Date());
+        record.setEntity(context.getUserSession().getUsername());
+        record.setFailurereasons("Manually unpublished by user");
+        record.setFailurerule("");
+        record.setPublished(false);
+        record.setUuid(info.getUuid());
+        record.setValidated(PublishRecord.Validity.UNKNOWN);
+        final PublishRecordRepository publishRecordRepository = context.getBean(PublishRecordRepository.class);
+        if(published && !publishedAgain) {
+            record.setPublished(false);
+            publishRecordRepository.save(record);
+        } else if (!published && publishedAgain) {
+            record.setPublished(true);
+            publishRecordRepository.save(record);
 		}
 		// END GEOCAT
 
 		//--- index metadata
-        dm.indexMetadata(id);
+        dm.indexMetadata(id, context);
 
         //--- return id for showing
 		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));

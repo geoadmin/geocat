@@ -4,19 +4,19 @@ import java.io.File;
 
 import javax.xml.transform.TransformerConfigurationException;
 
-import jeeves.exceptions.MissingParameterEx;
-import jeeves.interfaces.Logger;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.exceptions.MissingParameterEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
@@ -64,9 +64,7 @@ public abstract class Gm03BaseService implements Service {
         //-----------------------------------------------------------------------
         //--- check access
 
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dm = gc.getDataManager();
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        DataManager dm = context.getBean(DataManager.class);
 
         // the metadata ID
         String id;
@@ -75,7 +73,7 @@ public abstract class Gm03BaseService implements Service {
         try {
             String uuid = Util.getParam(params, Params.UUID);
             // lookup ID by UUID
-            id = dm.getMetadataId(dbms, uuid);
+            id = dm.getMetadataId(uuid);
         }
         catch (MissingParameterEx x) {
             // request does not contain UUID; use ID from request
@@ -89,7 +87,7 @@ public abstract class Gm03BaseService implements Service {
             }
         }
 
-        Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
+        Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
 
         //-----------------------------------------------------------------------
         //--- get metadata

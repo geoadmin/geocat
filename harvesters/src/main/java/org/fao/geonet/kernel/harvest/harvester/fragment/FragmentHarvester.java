@@ -384,7 +384,7 @@ public class FragmentHarvester extends BaseAligner {
 	
 		dataMan.setTemplateExt(iId, MetadataType.SUB_TEMPLATE, null);
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
-		dataMan.indexMetadata(id);
+		dataMan.indexMetadata(id, context);
 
         dataMan.flush();
 
@@ -555,7 +555,7 @@ public class FragmentHarvester extends BaseAligner {
          boolean ufo = false;
          boolean index = false;
          String language = context.getLanguage();
-         dataMan.updateMetadata(context, id, template, validate, ufo, index, language, df.format(date), false);
+         dataMan.updateMetadata(context, id, template, validate, ufo, index, language, df.format(date), false, false);
 
          int iId = Integer.parseInt(id);
 
@@ -569,13 +569,13 @@ public class FragmentHarvester extends BaseAligner {
          metadataRepository.save(metadata);
          addCategories(id, params.categories, localCateg, dataMan, context, log, null);
 
-         dataMan.indexMetadata(id);
+         dataMan.indexMetadata(id, context);
          if(doExt) {
              dataMan.setTemplateExt(iId, MetadataType.SUB_TEMPLATE, title);
              dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
          }
 
-         dataMan.indexMetadata(id);
+         dataMan.indexMetadata(id, context);
 
          dataMan.flush();
      }
@@ -613,7 +613,7 @@ public class FragmentHarvester extends BaseAligner {
 		
 		dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
-		dataMan.indexMetadata(id);
+		dataMan.indexMetadata(id, context);
 
         if(log.isDebugEnabled()) {
             log.debug("	- Commit "+id);

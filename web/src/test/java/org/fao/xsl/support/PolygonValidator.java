@@ -25,7 +25,8 @@ package org.fao.xsl.support;
 
 import java.util.Iterator;
 
-import org.fao.geonet.services.extent.ExtentHelper.ExtentTypeCode;
+import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
+import org.fao.geonet.geocat.kernel.extent.ExtentHelper.ExtentTypeCode;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.filter.Filter;

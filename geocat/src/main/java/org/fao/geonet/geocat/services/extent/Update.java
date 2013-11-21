@@ -23,13 +23,7 @@
 
 package org.fao.geonet.geocat.services.extent;
 
-import static org.fao.geonet.services.extent.ExtentHelper.DESC;
-import static org.fao.geonet.services.extent.ExtentHelper.GEO_ID;
-import static org.fao.geonet.services.extent.ExtentHelper.FORMAT;
-import static org.fao.geonet.services.extent.ExtentHelper.GEOM;
-import static org.fao.geonet.services.extent.ExtentHelper.ID;
-import static org.fao.geonet.services.extent.ExtentHelper.TYPENAME;
-import static org.fao.geonet.services.extent.ExtentHelper.SOURCE;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,23 +33,20 @@ import java.util.logging.Logger;
 
 import com.google.common.base.Functions;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
 import jeeves.xlink.Processor;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
+import org.fao.geonet.geocat.kernel.extent.ExtentManager;
+import org.fao.geonet.geocat.kernel.extent.Source;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
-import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
-import org.fao.geonet.geocat.kernel.reusable.Utils;
-import org.fao.geonet.geocat.services.extent.Add.Format;
-import org.fao.geonet.services.extent.Source.FeatureType;
 import org.fao.geonet.util.LangUtils;
 import org.geotools.data.FeatureStore;
 import org.geotools.util.logging.Logging;
@@ -86,7 +77,7 @@ public class Update implements Service
     {
 
         final GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        final ExtentManager extentMan = gc.getExtentManager();
+        final ExtentManager extentMan = context.getBean(ExtentManager.class);
 
         final String id = Util.getParamText(params, ID);
         final String wfsParam = Util.getParamText(params, SOURCE);
@@ -97,7 +88,7 @@ public class Update implements Service
         final String requestCrsCode = Util.getParamText(params, ExtentHelper.CRS_PARAM);
 
         final Source wfs = extentMan.getSource(wfsParam);
-        final FeatureType featureType = wfs.getFeatureType(typename);
+        final Source.FeatureType featureType = wfs.getFeatureType(typename);
         if (featureType == null) {
             return ExtentHelper.error(typename + " does not exist, acceptable types are: " + wfs.listModifiable());
         }
@@ -185,7 +176,7 @@ public class Update implements Service
         responseElem.addContent(changes);
 
         final ExtentsStrategy strategy = new ExtentsStrategy (context.getBaseUrl(), context.getAppPath(),
-                ExtentManager.getInstance(), context.getLanguage());
+                extentMan, context.getLanguage());
         ArrayList<String> fields = new ArrayList<String>();
 
         fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
@@ -193,11 +184,10 @@ public class Update implements Service
         final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, fields, id, false,
                 Functions.<String>identity());
 
-        DataManager dm = gc.getDataManager();
+        DataManager dm = context.getBean(DataManager.class);
 
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         for (MetadataRecord metadataRecord : referencingMetadata) {
-            dm.indexMetadata(dbms, metadataRecord.id, true, context, false, false, true);
+            dm.indexMetadata(""+metadataRecord.id, true, context, false, false, true);
         }
 
 

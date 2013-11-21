@@ -23,10 +23,10 @@
 
 package org.fao.geonet.geocat.cgp;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.utils.Util;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.Util;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.jdom.Element;
 
 //=============================================================================
@@ -63,17 +63,17 @@ class Search
 		ISODate fromDate = verifyDate(from, "from");
 		if (fromDate != null)
 		{
-			from = fromDate.getDate();
+			from = fromDate.getDateAsString();
 		}
 
 		ISODate untilDate = verifyDate(until, "until");
 		if (untilDate != null)
 		{
-			until = untilDate.getDate();
+			until = untilDate.getDateAsString();
 		}
 
 		// Check from <= until if both specified
-		if (fromDate != null && untilDate != null && fromDate.sub(untilDate) > 0)
+		if (fromDate != null && untilDate != null && fromDate.timeDifferenceInSeconds(untilDate) > 0)
 		{
 			throw new BadParameterEx("from greater than until", from + ">" + until);
 		}

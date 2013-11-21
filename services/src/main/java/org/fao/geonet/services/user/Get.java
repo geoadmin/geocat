@@ -87,7 +87,7 @@ public class Get implements Service {
             Element elUser = user.asXml();
             // GEOCAT
 			if(user != null && user.getProfile() == Profile.Shared) {
-				return loadSharedUser(user);
+				return loadSharedUser(user, context);
 			}
             // END GEOCAT
 
@@ -122,47 +122,41 @@ public class Get implements Service {
             return elUser;
         } else {
             // GEOCAT
-			return loadSharedUser(user);
+			return loadSharedUser(user, context);
             // END GEOCAT
         }
 
 	}
 
     // GEOCAT
-    private Element loadSharedUser(User user) throws SQLException, IOException, JDOMException {
-
-
+    private Element loadSharedUser(User user, ServiceContext context) throws SQLException, IOException, JDOMException {
+        Element elUser = user.asXml();
         if(user.getProfile() != Profile.Shared) {
         	return new Element("record");
         }
 
         Element elGroups = new Element(Geonet.Elem.GROUPS);
+        final UserGroupRepository ugRepository = context.getBean(UserGroupRepository.class);
 
-        @SuppressWarnings("unchecked")
-		java.util.List<Element> list = dbms.select("SELECT groupId FROM UserGroups WHERE userId=?", Integer.valueOf(id)).getChildren();
+        final List<Integer> groupIds = ugRepository.findGroupIds(hasUserId(user.getId()));
 
-        for(int i=0; i<list.size(); i++)
-        {
-            String grpId = list.get(i).getChildText("groupid");
-
-            elGroups.addContent(new Element(Geonet.Elem.ID).setText(grpId));
+        for (Integer grpId : groupIds) {
+            elGroups.addContent(new Element(Geonet.Elem.ID).setText("" + grpId));
         }
 
         elUser.addContent(elGroups);
 
 		//--- get the validity of the parent if it exists
 
-		Element parentInfoId = elUser.getChild("record").getChild("parentinfo");
-        if (parentInfoId.getTextTrim().length() > 0) {
-            Integer integer = Integer.parseInt(parentInfoId.getTextTrim());
-            Element validatedResults = dbms.select("SELECT validated FROM Users where id="+integer);
+		Integer parentInfoId = user.getGeocatUserInfo().getParentInfo();
+        if (parentInfoId != null) {
+            UserRepository userRepo = context.getBean(UserRepository.class);
 
-            Element elValidated = validatedResults.getChild("record").getChild("validated");
+            final User parent = userRepo.findOne(parentInfoId);
 
-            if (elValidated != null){
-                elValidated.detach();
-                elValidated.setName("parentValidated");
-                elUser.addContent(elValidated);
+
+            if (parent != null){
+                elUser.addContent(new Element("parentValidated", ""+parent.getGeocatUserInfo().isValidated()));
             }
 		}
 

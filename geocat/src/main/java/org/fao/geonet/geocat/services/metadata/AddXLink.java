@@ -21,19 +21,18 @@
 package org.fao.geonet.geocat.services.metadata;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
 import jeeves.xlink.XLink;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.EditLib;
-import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
+import org.fao.geonet.services.metadata.AjaxEditUtils;
 import org.jdom.Element;
 
 //=============================================================================
@@ -63,9 +62,7 @@ public class AddXLink implements Service {
 
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		UserSession session = context.getUserSession();
 
 		String id    = Util.getParam(params, Params.ID);
@@ -74,15 +71,16 @@ public class AddXLink implements Service {
 		String href = Util.getParam(params, XLink.HREF);
 
 
-        String role = gc.getReusableObjMan().isValidated(href, context) ? "": ReusableObjManager.NON_VALID_ROLE;
-        href = gc.getReusableObjMan().createAsNeeded(href,context);
+        final ReusableObjManager reusableObjManager = context.getBean(ReusableObjManager.class);
+        String role = reusableObjManager.isValidated(href, context) ? "": ReusableObjManager.NON_VALID_ROLE;
+        href = reusableObjManager.createAsNeeded(href,context);
 		context.debug("Add as xlink url: " + href);
 
 		XLink xLink = new XLink (href, "", role);
 
 		// -- build the element to be added and return it
 		AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
-		Element element = ajaxEditUtils.addXLink(dbms, session, id, ref, name, xLink);
+		Element element = ajaxEditUtils.addXLink(session, id, ref, name, xLink);
 		EditLib.tagForDisplay(element);
 		Element md = (Element) findRoot(element).clone();
 		EditLib.removeDisplayTag(element);

@@ -24,16 +24,18 @@
 package org.fao.geonet.geocat.services.reusable;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.Util;
+import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.geocat.kernel.reusable.*;
-import org.fao.geonet.kernel.reusable.*;
+import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.geocat.FormatRepository;
+import org.fao.geonet.repository.geocat.RejectedSharedObjectRepository;
 import org.jdom.Element;
 
 /**
@@ -49,35 +51,33 @@ public class List implements Service
         String type = Util.getParam(params, "type", "contacts");
         boolean validated = Boolean.parseBoolean(Util.getParam(params, "validated", "false"));
 
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         UserSession session = context.getUserSession();
         String appPath = context.getAppPath();
-        String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), gc.getSettingManager());
+        String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));
         String language = context.getLanguage();
 
         if (type.equals("deleted")) {
-            return DeletedObjects.list(dbms);
+            return DeletedObjects.list(context.getBean(RejectedSharedObjectRepository.class));
         }
 
         ReplacementStrategy strategy;
-        switch (ReusableTypes.valueOf(type))
-        {
-        case contacts:
-            strategy = new ContactsStrategy(dbms, appPath, baseUrl, language, context.getSerialFactory());
-            break;
-        case extents:
-            strategy = new ExtentsStrategy(baseUrl, appPath, gc.getExtentManager(), language);
-            break;
-        case formats:
-            strategy = new FormatsStrategy(dbms, appPath, baseUrl, language, context.getSerialFactory());
-            break;
-        case keywords:
-            strategy = new KeywordsStrategy(gc.getThesaurusManager(), appPath, baseUrl, language);
-            break;
-
-        default:
-            throw new IllegalArgumentException(type + " is not a reusable object type");
+        switch( ReusableTypes.valueOf(type) ) {
+            case extents:
+                strategy = new ExtentsStrategy(baseUrl, appPath, context.getBean(ExtentManager.class), language);
+                break;
+            case keywords:
+                strategy = new KeywordsStrategy(context.getBean(ThesaurusManager.class), appPath, baseUrl, language);
+                break;
+            case formats:
+                strategy = new FormatsStrategy(context.getBean(FormatRepository.class), appPath, baseUrl, language);
+                break;
+            case contacts:
+                UserRepository userRepo = context.getBean(UserRepository.class);
+                UserGroupRepository userGroupRepo = context.getBean(UserGroupRepository.class);
+                strategy = new ContactsStrategy(userRepo, userGroupRepo, appPath, baseUrl, language);
+                break;
+            default:
+                throw new IllegalArgumentException(type + " is not a reusable object type");
         }
 
         final Element element = strategy.find(session, validated);

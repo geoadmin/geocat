@@ -171,7 +171,7 @@ public class Aligner extends BaseAligner
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, context);
 		result.addedMetadata++;
 	}
 
@@ -213,7 +213,7 @@ public class Aligner extends BaseAligner
 				boolean ufo = false;
 				boolean index = false;
 				String language = context.getLanguage();
-                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
+                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false, false);
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
                 repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
@@ -225,7 +225,7 @@ public class Aligner extends BaseAligner
 
                 dataMan.flush();
 
-                dataMan.indexMetadata(id);
+                dataMan.indexMetadata(id, context);
 				result.updatedMetadata++;
 			}
 		}
@@ -288,14 +288,16 @@ public class Aligner extends BaseAligner
                 log.debug("Record got:\n" + Xml.getString(response));
             }
 
-			// validate it here if requested
-			if (params.validate) {
-				if(!dataMan.validate(response))  {
-					log.info("Ignoring invalid metadata with uuid " + uuid);
-					result.doesNotValidate++;
-					return null;
-				}
-			}
+            // GEOCAT
+            // validate it here if requested
+            try {
+                params.validate.validate(dataMan, context, response);
+            } catch (Exception e) {
+                log.info("Ignoring invalid metadata with uuid " + uuid);
+                result.doesNotValidate++;
+                return null;
+            }
+            // END GEOCAT
 
 			// transform it here if requested
 			if (!params.importXslt.equals("none")) {

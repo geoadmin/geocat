@@ -72,7 +72,7 @@ public class Remove extends NotInReadOnlyModeService {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getBean(DataManager.class);
 
-        dm.indexMetadata(Lists.transform(affectedMd, Functions.toStringFunction()));
+        dm.indexMetadata(Lists.transform(affectedMd, Functions.toStringFunction()), context);
 
         return new Element(Jeeves.Elem.RESPONSE)
 							.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));

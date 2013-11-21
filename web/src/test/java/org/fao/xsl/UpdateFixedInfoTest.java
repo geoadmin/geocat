@@ -1,8 +1,8 @@
 package org.fao.xsl;
 
 import static org.junit.Assert.assertTrue;
-import jeeves.utils.Xml;
 
+import org.fao.geonet.utils.Xml;
 import org.fao.xsl.support.Count;
 import org.fao.xsl.support.EqualTrimText;
 import org.fao.xsl.support.Finder;

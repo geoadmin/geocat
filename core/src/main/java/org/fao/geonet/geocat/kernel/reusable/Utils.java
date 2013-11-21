@@ -73,7 +73,9 @@ import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.geocat.FormatRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.utils.Log;
@@ -313,11 +315,11 @@ public final class Utils {
         return idString;
     }
 
-    public static void unpublish( Collection<String> results, ServiceContext context ) throws Exception {
+    public static void unpublish( Collection<Integer> results, ServiceContext context ) throws Exception {
         if (results.size() > 0) {
 
             Specifications spec = where(hasGroupId(ReservedGroup.all.getId()));
-            Iterator<String> ids = results.iterator();
+            Iterator<Integer> ids = results.iterator();
             Specifications mdIdSpec = where(hasMetadataId(ids.next()));
 
             while (ids.hasNext()) {
@@ -342,10 +344,12 @@ public final class Utils {
             strategy = new KeywordsStrategy(context.getBean(ThesaurusManager.class), appPath, baseUrl, language);
             break;
         case formats:
-            strategy = new FormatsStrategy(context, appPath, baseUrl, language);
+            strategy = new FormatsStrategy(context.getBean(FormatRepository.class), appPath, baseUrl, language);
             break;
         case contacts:
-            strategy = new ContactsStrategy(context, appPath, baseUrl, language);
+            UserRepository userRepo = context.getBean(UserRepository.class);
+            UserGroupRepository userGroupRepo = context.getBean(UserGroupRepository.class);
+            strategy = new ContactsStrategy(userRepo, userGroupRepo, appPath, baseUrl, language);
             break;
         default:
             break;
@@ -443,7 +447,7 @@ public final class Utils {
     }
 
     @SuppressWarnings("unchecked")
-    static boolean equalAtts( Element originalElem, Element current ) {
+    public static boolean equalAtts( Element originalElem, Element current ) {
         List<Attribute> currAtts = filterUnimportantAtts(current.getAttributes());
 
         if (filterUnimportantAtts(originalElem.getAttributes()).size() != currAtts.size()) return false;

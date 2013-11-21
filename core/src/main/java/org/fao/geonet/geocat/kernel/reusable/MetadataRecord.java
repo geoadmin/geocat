@@ -28,11 +28,11 @@ public class MetadataRecord
     /**
      * Metadata id
      */
-    public final String  id;
+    public final Integer id;
     /**
      * Owner of metadata
      */
-    public final String  ownerId;
+    public final Integer ownerId;
 
     /**
      * xml. May be null if loadMetadata in
@@ -48,8 +48,8 @@ public class MetadataRecord
     public MetadataRecord(ServiceContext context, Document element, Collection<String> xlinks, boolean loadMetadata) throws Exception
     {
         this.xmlSerializer = context.getBean(XmlSerializer.class);
-        id = element.get("_id");
-        ownerId = element.get("_owner");
+        id = Integer.parseInt(element.get("_id"));
+        ownerId = Integer.parseInt(element.get("_owner"));
         this.xlinks = Collections.unmodifiableCollection(xlinks);
         if(loadMetadata) {
             Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
@@ -64,10 +64,10 @@ public class MetadataRecord
 
     public void commit(ServiceContext srvContext) throws Exception
     {
-        xmlSerializer.update(id, xml, new ISODate().toString(), true, null, srvContext);
+        xmlSerializer.update(""+id, xml, new ISODate().toString(), true, null, srvContext);
         GeonetContext context = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
 
-        context.getBean(DataManager.class).indexMetadata(id, true, srvContext, false, false, false);
+        context.getBean(DataManager.class).indexMetadata(""+id, true, srvContext, false, false, false);
     }
 
     public String email(UserRepository userRepository) throws SQLException {

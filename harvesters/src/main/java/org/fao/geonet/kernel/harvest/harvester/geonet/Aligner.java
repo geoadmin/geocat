@@ -316,14 +316,16 @@ public class Aligner extends BaseAligner
 
         if(log.isDebugEnabled()) log.debug("  - Adding metadata with remote uuid:"+ ri.uuid);
 
+        // GEOCAT
         // validate it here if requested
-        if (params.validate) {
-            if(!dataMan.validate(md))  {
-                log.info("Ignoring invalid metadata");
-                result.doesNotValidate++;
-                return null;
-            }
+        try {
+            params.validate.validate(dataMan, context, md);
+        } catch (Exception e) {
+            log.info("Ignoring invalid metadata with uuid " + ri.uuid);
+            result.doesNotValidate++;
+            return null;
         }
+        // END GEOCAT
 
         md = processMetadata(ri, md);
         
@@ -373,7 +375,7 @@ public class Aligner extends BaseAligner
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, context);
 		result.addedMetadata++;
 
 		return id;
@@ -584,13 +586,17 @@ public class Aligner extends BaseAligner
 		String date = localUuids.getChangeDate(ri.uuid);
 
         // validate it here if requested
-        if (params.validate) {
-            if(!dataMan.validate(md))  {
-                log.info("Ignoring invalid metadata");
-                result.doesNotValidate++;
-                return;
-            }
+        // GEOCAT
+        // validate it here if requested
+        try {
+            params.validate.validate(dataMan, context, md);
+        } catch (Exception e) {
+            log.info("Ignoring invalid metadata with uuid " + ri.uuid);
+            result.doesNotValidate++;
+            return;
         }
+        // END GEOCAT
+
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         final Metadata metadata;
         if (!ri.isMoreRecentThan(date))
@@ -613,7 +619,7 @@ public class Aligner extends BaseAligner
             boolean updateDateStamp = true;
             String language = context.getLanguage();
             metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate,
-                    updateDateStamp);
+                    updateDateStamp, false);
 
             result.updatedMetadata++;
 		}
@@ -650,7 +656,7 @@ public class Aligner extends BaseAligner
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, context);
 	}
 
 	/**

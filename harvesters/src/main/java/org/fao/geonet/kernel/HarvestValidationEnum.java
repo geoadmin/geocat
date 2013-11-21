@@ -23,7 +23,7 @@ public enum HarvestValidationEnum {
 		public void validate(DataManager dataMan, ServiceContext context, Element xml) throws Exception {
 			DataManager.setNamespacePrefix(xml);
 			
-			String schema=((GeonetContext)context.getHandlerContext(Geonet.CONTEXT_NAME)).getSchemamanager().autodetectSchema(xml);
+			String schema = context.getBean(SchemaManager.class).autodetectSchema(xml);
 			dataMan.validate(schema, xml);
 			
 		}
@@ -36,7 +36,7 @@ public enum HarvestValidationEnum {
 	SCHEMATRONVALIDATION {
 
 		public void validate(DataManager dataMan, ServiceContext context, Element xml) throws Exception {
-			String schema=((GeonetContext)context.getHandlerContext(Geonet.CONTEXT_NAME)).getSchemamanager().autodetectSchema(xml);
+			String schema = context.getBean(SchemaManager.class).autodetectSchema(xml);
 			DataManager.validateMetadata(schema, xml, context);			
 		}
 		

@@ -23,8 +23,7 @@
 
 package org.fao.geonet.geocat.services.extent;
 
-import static org.fao.geonet.services.extent.ExtentHelper.CLEAR_SELECTION;
-import static org.fao.geonet.services.extent.ExtentHelper.getSelection;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.*;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -32,8 +31,9 @@ import java.util.ArrayList;
 
 import jeeves.server.context.ServiceContext;
 
-import jeeves.utils.Util;
-import org.fao.geonet.services.extent.Source.FeatureType;
+import org.fao.geonet.Util;
+import org.fao.geonet.geocat.kernel.extent.Source;
+import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
 import org.fao.geonet.util.LangUtils;
 import org.geotools.data.Query;
 import org.geotools.factory.CommonFactoryFinder;
@@ -123,7 +123,7 @@ public class Search extends List
     }
 
     @Override
-    protected Query createQuery(Element params, FeatureType featureType, String[] properties, int maxFeatures)
+    protected Query createQuery(Element params, Source.FeatureType featureType, String[] properties, int maxFeatures)
             throws Exception
     {
         final String xml = Util.getParamText(params, "xml");

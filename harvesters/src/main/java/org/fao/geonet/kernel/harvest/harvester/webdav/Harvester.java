@@ -38,6 +38,7 @@ import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.services.harvesting.Util;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -243,7 +244,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, context);
 		result.addedMetadata++;
 	}
 	
@@ -263,7 +264,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 if (md.getName() == "TRANSFER") {
                     // we need to convert to CHE
                     String styleSheetPath = context.getAppPath() + "xsl/conversion/import/GM03-to-ISO19139CHE.xsl";
-                    Element tmp = jeeves.utils.Xml.transform(md, styleSheetPath);
+                    Element tmp = Xml.transform(md, styleSheetPath);
                     md = tmp;
                 }
                 schema = dataMan.autodetectSchema(md);
@@ -359,7 +360,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             boolean index = false;
             String language = context.getLanguage();
             final Metadata metadata = dataMan.updateMetadata(context, record.id, md, validate, ufo, index, language,
-                    rf.getChangeDate(), false);
+                    rf.getChangeDate(), false, false);
 
             //--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
@@ -373,7 +374,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
             dataMan.flush();
 
-            dataMan.indexMetadata(record.id);
+            dataMan.indexMetadata(record.id, context);
 			result.updatedMetadata++;
 		}
 	}

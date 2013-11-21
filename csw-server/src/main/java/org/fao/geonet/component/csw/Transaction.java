@@ -161,7 +161,12 @@ public class Transaction extends AbstractOperation implements CatalogService {
             throw new NoApplicableCodeEx("Cannot process transaction: " + e.getMessage());
         } finally {
             try {
-                dataMan.indexMetadata(new ArrayList<String>(toIndex));
+                boolean processSharedObjects = true;
+                boolean performValidation = true;
+                boolean fastIndex = false;
+                boolean reloadXLinks = true;
+
+                dataMan.indexMetadata(new ArrayList<String>(toIndex), processSharedObjects, context, performValidation, fastIndex, reloadXLinks);
             } catch (Exception e) {
                 Log.error(Geonet.CSW, "cannot index");
                 Log.error(Geonet.CSW, " (C) StackTrace\n" + Util.getStackTrace(e));
@@ -263,7 +268,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
             }
         }
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, context);
 
         fileIds.add(uuid);
 
@@ -326,7 +331,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
             boolean ufo = false;
             boolean index = false;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate, false);
+            dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate, false, true);
 
             toIndex.add(id);
 
@@ -423,7 +428,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
                     boolean ufo = false;
                     boolean index = false;
                     String language = context.getLanguage();
-                    dataMan.updateMetadata(context, id, metadata, validate, ufo, index, language, changeDate, false);
+                    dataMan.updateMetadata(context, id, metadata, validate, ufo, index, language, changeDate, false, true);
 
                     updatedMd.add(id);
 

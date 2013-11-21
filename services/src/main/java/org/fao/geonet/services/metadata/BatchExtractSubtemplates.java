@@ -129,7 +129,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 		Set<Integer> indexers = new HashSet<Integer>();
 		indexers.addAll(metadata);
 		indexers.addAll(subtemplates);
-		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, indexers);
+		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(context, indexers);
 		r.process();
 
 		// -- for the moment just return the sizes - we could return the ids
@@ -307,7 +307,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 
 		if (doChanges) {
 			boolean validate = false, ufo = false, indexImmediate = false;
-			dataMan.updateMetadata(context, "" + metadataEntity.getId(), md, validate, ufo, indexImmediate, context.getLanguage(), new ISODate().toString(), true);
+			dataMan.updateMetadata(context, "" + metadataEntity.getId(), md, validate, ufo, indexImmediate, context.getLanguage(), new ISODate().toString(), true, false);
 
 			metadata.add(metadataEntity.getId());
 		}

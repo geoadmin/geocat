@@ -249,8 +249,8 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 		ArrayList<Exception> exceptions = new ArrayList<Exception>();
 
 
-		public ImportMetadataReindexer(DataManager dm, Element params, ServiceContext context, List<File> fileList, String stylePath, boolean failOnError) {
-			super (dm);
+		public ImportMetadataReindexer(Element params, ServiceContext context, List<File> fileList, String stylePath, boolean failOnError) {
+			super (context);
 			this.params = params;
 			this.context = context;
 			this.files = fileList.toArray(new File[fileList.size()]);
@@ -314,7 +314,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 		if (files.size() == 0)
 			throw new Exception("No XML or MEF file found in " + dir);
 
-		ImportMetadataReindexer r = new ImportMetadataReindexer(dm, params, context, files, stylePath, failOnError);
+		ImportMetadataReindexer r = new ImportMetadataReindexer(params, context, files, stylePath, failOnError);
 		r.process();
 		exceptions = r.getExceptions();
 		

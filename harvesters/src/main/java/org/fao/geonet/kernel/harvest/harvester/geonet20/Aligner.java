@@ -132,7 +132,7 @@ public class Aligner
                 //--- maybe the metadata was unretrievable
 
                 if (id != null) {
-                    dataMan.indexMetadata(id);
+                    dataMan.indexMetadata(id, context);
                 }
             }
         }
@@ -177,8 +177,8 @@ public class Aligner
 
 		int iId = Integer.parseInt(id);
 
-		dataMan.setTemplate(iId, MetadataType.METADATA, null);
-		dataMan.setHarvested(iId, params.uuid);
+		dataMan.setTemplate(iId, MetadataType.METADATA, null, context);
+		dataMan.setHarvested(iId, params.uuid, context);
 
 		result.addedMetadata++;
 
@@ -272,7 +272,7 @@ public class Aligner
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                dataMan.updateMetadata(context, id, md, validate, ufo, index, language, changeDate, false);
+                dataMan.updateMetadata(context, id, md, validate, ufo, index, language, changeDate, false, false);
 
 				result.updatedMetadata++;
 			}
@@ -365,14 +365,16 @@ public class Aligner
 			if (info != null)
 				info.detach();
 
+            // GEOCAT
             // validate it here if requested
-            if (params.validate) {
-                if(!dataMan.validate(md))  {
-                    log.info("Ignoring invalid metadata");
-                    result.doesNotValidate++;
-                    return null;
-                }
+            try {
+                params.validate.validate(dataMan, context, md);
+            } catch (Exception e) {
+                log.info("Ignoring invalid metadata with id " + id);
+                result.doesNotValidate++;
+                return null;
             }
+            // END GEOCAT
 			return md;
 		}
 		catch(Exception e)

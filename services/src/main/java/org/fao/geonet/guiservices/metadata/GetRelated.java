@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.geocat.kernel.RelatedMetadata;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
@@ -71,7 +72,7 @@ import java.util.List;
  * </ul>
  *
  */
-public class GetRelated implements Service {
+public class GetRelated implements Service, RelatedMetadata {
 
     private ServiceConfig _config;
     private static Namespace gmd = Namespace.getNamespace("gmd",
@@ -90,9 +91,9 @@ public class GetRelated implements Service {
             throws Exception {
         // Check for one of service|children|related|null (ie. all)
         String type = Util.getParam(params, "type", "");
-        String fast = Util.getParam(params, "fast", "true");
-        String from = Util.getParam(params, "from", "1");
-        String to = Util.getParam(params, "to", "1000");
+        boolean fast = Boolean.parseBoolean(Util.getParam(params, "fast", "true"));
+        int from = Integer.parseInt(Util.getParam(params, "from", "1"));
+        int to = Integer.parseInt(Util.getParam(params, "to", "1000"));
 
         Log.info(Geonet.SEARCH_ENGINE,
                 "GuiService param is " + _config.getValue("guiService"));
@@ -118,18 +119,28 @@ public class GetRelated implements Service {
             uuid = info.getChildText(Params.UUID);
             id = Integer.parseInt(info.getChildText(Params.ID));
         }
+        // GEOCAT
+        return getRelated(context, id, uuid, type, from, to, fast);
+    }
 
+    @Override
+    public Element getRelated(ServiceContext context, int id, String uuid, String type, int ifrom, int ito, boolean ifast) throws Exception {
+        final DataManager dataManager = context.getBean(DataManager.class);
+        String from = ""+ifrom;
+        String to = ""+ito;
+        String fast = ""+ifast;
         Element relatedRecords = new Element("relations");
+        // END GEOCAT
 
         Element md = Show.getCached(context.getUserSession(), Integer.toString(id));
         if (type.equals("") || type.contains("children")) {
-            relatedRecords.addContent(search(uuid, "children", context, from,
-                    to, fast));
+            relatedRecords.addContent(search(uuid, "children", context, ""+from,
+                    ""+to, ""+fast));
         }
         if (type.equals("") || type.contains("parent")) {
             boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
             if(md == null) {
-                md = gc.getBean(DataManager.class).getMetadata(context,
+                md = dataManager.getMetadata(context,
                         String.valueOf(id), forEditing, withValidationErrors,
                         keepXlinkAttributes);
             }
@@ -138,7 +149,7 @@ public class GetRelated implements Service {
                 if (parent != null) {
                     String parentUuid = parent.getChildText("CharacterString", gco);
 
-                    Element parentContent = getRecord(parentUuid, context, dm);
+                    Element parentContent = getRecord(parentUuid, context, dataManager);
                     if (parentContent != null) {
                         relatedRecords.addContent(new Element("parent")
                                 .addContent(new Element("response")
@@ -150,7 +161,7 @@ public class GetRelated implements Service {
         if (type.equals("") || type.contains("siblings")) {
             boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
             if(md == null) {
-                md = gc.getBean(DataManager.class).getMetadata(context,
+                md = dataManager.getMetadata(context,
                         String.valueOf(id), forEditing, withValidationErrors,
                         keepXlinkAttributes);
             }
@@ -169,7 +180,7 @@ public class GetRelated implements Service {
 										String initType = sib.getChild("initiativeType", gmd) 
 																 .getChild("DS_InitiativeTypeCode", gmd).getAttributeValue("codeListValue");
 
-										Element sibContent = getRecord(sibUuid, context, dm);
+										Element sibContent = getRecord(sibUuid, context, dataManager);
 										if (sibContent != null) {
 											Element sibling = new Element("sibling");
 											sibling.setAttribute("initiative",initType);
@@ -190,8 +201,7 @@ public class GetRelated implements Service {
                 || type.contains("fcat") || type.contains("source")) {
             boolean forEditing = false, withValidationErrors = false;
             if(md == null) {
-                md = gc.getBean(DataManager.class)
-                    .getMetadata(context, String.valueOf(id), forEditing,
+                md = dataManager.getMetadata(context, String.valueOf(id), forEditing,
                             withValidationErrors, false);
             }
 

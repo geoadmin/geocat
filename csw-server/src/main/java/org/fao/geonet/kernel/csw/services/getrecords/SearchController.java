@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.constants.Params;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.geocat.kernel.RelatedMetadata;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
@@ -623,16 +624,10 @@ public class SearchController {
             // Process related service to retrieve coupledResources.
         	try {
         		ServiceManager.disableSearchLoggingForThisThread();
-	            GetRelated serviceSearcher = new GetRelated();
-	            serviceSearcher.init(context.getAppPath(), gc.getHandlerConfig());
-	            Element idElem = new Element(Params.ID).setText(id);
-	            Element uuidElem = new Element(Params.UUID)
-	                    .setText(res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE).getChildText(Params.UUID));
-	            Element typeElem = new Element("type").setText("service");
-	            Element relatedServices = serviceSearcher.exec(
-	                    new Element(Jeeves.Elem.REQUEST).addContent(
-	                            new Element(Edit.RootChild.INFO, Edit.NAMESPACE).addContent(idElem).addContent(uuidElem)).addContent(typeElem),
-	                    context);
+
+                final String uuid = res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE).getChildText(Params.UUID);
+                Element relatedServices = context.getBean(RelatedMetadata.class).getRelated(context, Integer.parseInt(id),
+                        uuid, "service", 1, 1000, true);
 
 	            res.addContent(relatedServices);
         	} finally {

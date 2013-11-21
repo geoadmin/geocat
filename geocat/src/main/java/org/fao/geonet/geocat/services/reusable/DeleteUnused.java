@@ -30,15 +30,14 @@ import java.util.List;
 import java.util.Set;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.geocat.kernel.reusable.ContactsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
@@ -47,6 +46,13 @@ import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
 import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
+import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.geocat.FormatRepository;
+import org.fao.geonet.repository.geocat.RejectedSharedObjectRepository;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import com.google.common.base.Function;
@@ -60,18 +66,18 @@ import com.google.common.base.Function;
 public class DeleteUnused implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         String appPath = context.getAppPath();
-        String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), gc.getSettingManager());
+        String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));
         String language = context.getLanguage();
         try {
+            UserRepository userRepo = context.getBean(UserRepository.class);
+            UserGroupRepository userGroupRepo = context.getBean(UserGroupRepository.class);
 
-            process(new ContactsStrategy(dbms, appPath, baseUrl, language, context.getSerialFactory()), context, dbms);
-            process(new ExtentsStrategy(baseUrl, appPath, gc.getExtentManager(), language), context, dbms);
-            process(new FormatsStrategy(dbms, appPath, baseUrl, language, context.getSerialFactory()), context, dbms);
-            process(new KeywordsStrategy(gc.getThesaurusManager(), appPath, baseUrl, language), context, dbms);
-            processDeleted(context, dbms);
+            process(new ContactsStrategy(userRepo, userGroupRepo, appPath, baseUrl, language), context);
+            process(new ExtentsStrategy(baseUrl, appPath, context.getBean(ExtentManager.class), language), context);
+            process(new FormatsStrategy(context.getBean(FormatRepository.class), appPath, baseUrl, language), context);
+            process(new KeywordsStrategy(context.getBean(ThesaurusManager.class), appPath, baseUrl, language), context);
+            processDeleted(context);
 
             return new Element("status").setText("true");
         } catch (Throwable e) {
@@ -79,7 +85,7 @@ public class DeleteUnused implements Service {
         }
     }
 
-    private void process(ReplacementStrategy strategy, ServiceContext context, Dbms dbms) throws Exception {
+    private void process(ReplacementStrategy strategy, ServiceContext context) throws Exception {
         UserSession userSession = context.getUserSession();
         @SuppressWarnings("unchecked")
         List<Element> nonValidated = strategy.find(userSession, false).getChildren();
@@ -102,10 +108,10 @@ public class DeleteUnused implements Service {
             strategy.performDelete(toDelete.toArray(new String[toDelete.size()]), userSession, null);
     }
 
-    private void processDeleted(ServiceContext context, Dbms dbms) throws Exception {
+    private void processDeleted(ServiceContext context) throws Exception {
         @SuppressWarnings("unchecked")
-        List<Element> nonValidated = DeletedObjects.list(dbms).getChildren();
-        List<String> toDelete = new ArrayList<String>();
+        List<Element> nonValidated = DeletedObjects.list(context.getBean(RejectedSharedObjectRepository.class)).getChildren();
+        List<Integer> toDelete = new ArrayList<Integer>();
         final Function<String, String> idConverter = ReplacementStrategy.ID_FUNC;
 
         List<String> fields = Arrays.asList(DeletedObjects.getLuceneIndexField());
@@ -115,11 +121,11 @@ public class DeleteUnused implements Service {
 
 			Set<MetadataRecord> md = Utils.getReferencingMetadata(context, fields, objId, false, idConverter);
             if (md.isEmpty()) {
-                toDelete.add(objId);
+                toDelete.add(Integer.parseInt(objId));
             }
         }
         if (toDelete.size() > 0)
-            DeletedObjects.delete(dbms, toDelete.toArray(new String[toDelete.size()]));
+            DeletedObjects.delete(context, toDelete.toArray(new Integer[toDelete.size()]));
     }
 
     public void init(String appPath, ServiceConfig params) throws Exception {

@@ -162,7 +162,7 @@ public final class ContactsStrategy extends ReplacementStrategy
         } else {
 
             int id = bestFit.getId();
-            boolean validated = bestFit.getGeocatUserInfo().getValidated();
+            boolean validated = bestFit.getGeocatUserInfo().isValidated();
             Collection<Element> xlinkIt = xlinkIt(originalElem, role, "" + id, validated);
 
             return Pair.read(xlinkIt, true);

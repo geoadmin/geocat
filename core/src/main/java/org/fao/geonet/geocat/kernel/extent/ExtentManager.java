@@ -14,6 +14,8 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.*;
@@ -28,17 +30,17 @@ import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.*;
  *
  * @author jeichar
  */
+@Component
 public class ExtentManager {
 
     private static final java.util.logging.Logger LOGGER = Logging.getLogger("org.geotools.data");
     public static final Namespace GMD_NAMESPACE    = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
     public static final Namespace GCO_NAMESPACE    = Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
-    private static ExtentManager instance;
     public static final String GEOTOOLS_LOG_NAME = "geotools";
 
-    public static ExtentManager getInstance() {
-        return instance;
-    }
+    @Autowired
+    private DataStore datastore;
+
 
     private final class SourcesLogHandler extends Handler {
 
@@ -61,8 +63,8 @@ public class ExtentManager {
 
     private final Map<String, Source> sources = new HashMap<String, Source>();
 
-    public ExtentManager(DataStore dataStore, java.util.List<Element> extentConfig) throws Exception {
-        instance = this;
+
+    public void init(java.util.List<Element> extentConfig) throws Exception {
         if (Logger.getLogger(GEOTOOLS_LOG_NAME).isDebugEnabled()) {
             LOGGER.setLevel(java.util.logging.Level.FINE);
             LOGGER.addHandler(new SourcesLogHandler());
@@ -81,7 +83,7 @@ public class ExtentManager {
 
                 sources.put(id, source);
 
-                source.datastore = dataStore;
+                source.datastore = this.datastore;
 
                 for (final Object obj : sourceElem.getChildren(TYPENAME)) {
                     final Element elem = (Element) obj;

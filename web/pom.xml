@@ -314,6 +314,12 @@
 
       <dependency>
           <groupId>${project.groupId}</groupId>
+          <artifactId>geocat</artifactId>
+          <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+          <groupId>${project.groupId}</groupId>
           <artifactId>harvesters</artifactId>
           <version>${project.version}</version>
       </dependency>

@@ -24,11 +24,11 @@
 package org.fao.geonet.geocat.services.selection;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.jdom.Element;
 
@@ -69,9 +69,7 @@ public class Index implements Service {
             if (selection.size() > maxToIndex) {
                 return new Element("error").setText("Attempted to index " + selection.size() + ".  The maximum allowed elements: " + maxToIndex);
             }
-            final GeonetContext geonet = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-            Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-            geonet.getDataManager().indexInThreadPool(context, new ArrayList<String>(selection), dbms, true, true);
+            context.getBean(DataManager.class).indexMetadata(new ArrayList<String>(selection), context);
         }
 
         return new Element("results").setAttribute("numberIndexed", "" + index);

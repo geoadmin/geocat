@@ -73,7 +73,6 @@ public class Get implements Service
     public Element exec(Element params, ServiceContext context) throws Exception
     {
         Util.toLowerCase(params);
-        final GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         final ExtentManager extentMan = context.getBean(ExtentManager.class);
 
         final String id = Util.getParamText(params, ExtentHelper.ID);

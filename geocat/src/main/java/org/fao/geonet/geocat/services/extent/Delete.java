@@ -23,11 +23,7 @@
 
 package org.fao.geonet.geocat.services.extent;
 
-import static org.fao.geonet.services.extent.ExtentHelper.ID;
-import static org.fao.geonet.services.extent.ExtentHelper.SELECTION;
-import static org.fao.geonet.services.extent.ExtentHelper.SOURCE;
-import static org.fao.geonet.services.extent.ExtentHelper.TYPENAME;
-import static org.fao.geonet.services.extent.ExtentHelper.getSelection;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.*;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -37,15 +33,15 @@ import java.util.Set;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
 
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.Util;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
+import org.fao.geonet.geocat.kernel.extent.ExtentManager;
+import org.fao.geonet.geocat.kernel.extent.ExtentSelection;
+import org.fao.geonet.geocat.kernel.extent.Source;
+import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
-import org.fao.geonet.geocat.services.reusable.Reject;
-import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
-import org.fao.geonet.kernel.search.spatial.Pair;
-import org.fao.geonet.services.extent.Source.FeatureType;
 import org.fao.geonet.geocat.services.reusable.Reject;
 import org.fao.geonet.util.LangUtils;
 import org.geotools.data.FeatureStore;
@@ -70,8 +66,7 @@ public class Delete implements Service
 
     public Element exec(Element params, ServiceContext context) throws Exception
     {
-        final GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        final ExtentManager extentMan = gc.getExtentManager();
+        final ExtentManager extentMan = context.getBean(ExtentManager.class);
         boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
         final String selection = Util.getParamText(params, SELECTION);
 

@@ -98,7 +98,7 @@ public class BatchXslProcessing extends NotInReadOnlyModeService {
 		
 		synchronized(sm.getSelection("metadata")) {
 			xslProcessingReport.setTotalRecords(sm.getSelection("metadata").size());
-			BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(dataMan, sm.getSelection("metadata").iterator(),
+			BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(sm.getSelection("metadata").iterator(),
 					process, _appPath, params, context, xslProcessingReport);
 			m.process();
 		}
@@ -120,10 +120,10 @@ public class BatchXslProcessing extends NotInReadOnlyModeService {
 		ServiceContext context;
         XslProcessingReport xslProcessingReport;
 
-        public BatchXslMetadataReindexer(DataManager dm, Iterator<String> iter, String process,
-        		String appPath, Element params, ServiceContext context, 
-        		XslProcessingReport xslProcessingReport) {
-            super(dm);
+        public BatchXslMetadataReindexer(Iterator<String> iter, String process,
+                                         String appPath, Element params, ServiceContext context,
+                                         XslProcessingReport xslProcessingReport) {
+            super(context);
             this.iter = iter;
             this.process = process;
             this.appPath = appPath;

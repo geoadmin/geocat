@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
@@ -14,7 +15,6 @@ import org.jdom.Element;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
 
 public class Duplicate implements Service {
 
@@ -29,8 +29,8 @@ public class Duplicate implements Service {
         String uuid = Util.getParam(params, "uuid");
         String thesaurusName = Util.getParam(params, "thesaurus");
 
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        ThesaurusManager thesaurusManager = gc.getThesaurusManager();
+        ThesaurusManager thesaurusManager = context.getBean(ThesaurusManager.class);
+
         Thesaurus thesaurus = thesaurusManager.getThesaurusByName(thesaurusName);
         KeywordsSearcher ks = new KeywordsSearcher(thesaurusManager);
         

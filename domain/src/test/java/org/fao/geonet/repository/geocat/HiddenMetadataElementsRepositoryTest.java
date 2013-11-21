@@ -29,7 +29,7 @@ public class HiddenMetadataElementsRepositoryTest extends AbstractSpringDataTest
         elem.setMetadataId(1);
         repo.save(elem);
 
-        HiddenMetadataElement found = repo.findOne(elem.getxPathExpr());
+        HiddenMetadataElement found = repo.findOne(elem.getId());
         SpringDataTestSupport.assertSameContents(elem, found);
     }
 
@@ -54,5 +54,36 @@ public class HiddenMetadataElementsRepositoryTest extends AbstractSpringDataTest
         found = repo.findAllByMetadataId(1);
         assertEquals(1, found.size());
         SpringDataTestSupport.assertSameContents(elem, found.get(0));
+    }
+
+    @Test
+    public void testFindAllByMetadataIdAndXPathExpr() throws Exception {
+        HiddenMetadataElement elem = new HiddenMetadataElement();
+        elem.setLevel("all");
+        elem.setxPathExpr("someXPath");
+        elem.setMetadataId(1);
+        repo.save(elem);
+
+        HiddenMetadataElement elem2 = new HiddenMetadataElement();
+        elem2.setLevel("intranet");
+        elem2.setxPathExpr(elem.getxPathExpr());
+        elem2.setMetadataId(1);
+        repo.save(elem2);
+
+        HiddenMetadataElement elem3 = new HiddenMetadataElement();
+        elem3.setLevel("intranet");
+        elem3.setxPathExpr("someXPath2");
+        elem3.setMetadataId(2);
+        repo.save(elem3);
+
+        List<HiddenMetadataElement> found = repo.findAllByMetadataIdAndXPathExpr(elem.getMetadataId(), elem.getxPathExpr());
+        assertEquals(2, found.size());
+
+        found = repo.findAllByMetadataIdAndXPathExpr(elem.getMetadataId(), "noExistingPath");
+        assertEquals(0, found.size());
+
+        found = repo.findAllByMetadataIdAndXPathExpr(elem3.getMetadataId(), elem3.getxPathExpr());
+        assertEquals(1, found.size());
+        SpringDataTestSupport.assertSameContents(elem3, found.get(0));
     }
 }

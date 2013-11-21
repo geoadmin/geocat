@@ -125,7 +125,7 @@ public class BatchNewOwner extends NotInReadOnlyModeService {
 
         // -- reindex metadata
         context.info("Re-indexing metadata");
-        BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, metadata);
+        BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(context, metadata);
         r.process();
 
         // -- for the moment just return the sizes - we could return the ids

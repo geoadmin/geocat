@@ -56,17 +56,17 @@ public class Delete implements Service
     public Element exec(Element params, ServiceContext context) throws Exception
     {
     	boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
-    	String[] ids = Util.getParamText(params, "id").split(",");
+    	String[] sIds = Util.getParamText(params, "id").split(",");
 
         // PMT c2c : fixing potential security flaw by
         // sanitazing user inputs : every entries here should
         // be cast correctly as integer (or else the service will
         // throw an exception but avoid malicious SQL queries to be
         // passed to the DB server).
-        
+        Integer[] ids = new Integer[sIds.length];
         // TODO : check if it was possible before to pass UUIDs
         for (int i = 0 ; i < ids.length ; i++) {
-        	ids[i] = Integer.toString(Integer.parseInt(ids[i]));
+        	ids[i] = Integer.parseInt(sIds[i]);
         }
         	
         
@@ -75,17 +75,17 @@ public class Delete implements Service
 
         final String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));
 
-        Collection<String> metadataIds = new HashSet<String>();
+        Collection<Integer> metadataIds = new HashSet<Integer>();
         Multimap<Integer/* ownerid */, Integer/* metadataid */> emailInfo = HashMultimap.create();
 
-        for (String id : ids) {
+        for (String id : sIds) {
             Set<MetadataRecord> md = Utils.getReferencingMetadata(context, Arrays.asList(DeletedObjects.getLuceneIndexField()),id, false, ReplacementStrategy.ID_FUNC);
             for (MetadataRecord metadataRecord : md) {
                 metadataIds.add(metadataRecord.id);
 
                 // compile a list of email addresses for notifications
                 for (MetadataRecord record : md) {
-                    emailInfo.put(Integer.parseInt(record.ownerId), Integer.parseInt(record.id));
+                    emailInfo.put(record.ownerId, record.id);
                 }
             }
         }
@@ -102,10 +102,10 @@ public class Delete implements Service
         }
 
         Utils.unpublish(metadataIds, context);
-        for (String metadataId : metadataIds) {
-            context.getBean(DataManager.class).indexMetadata(metadataId, true, context, false, false, true);
+        for (Integer metadataId : metadataIds) {
+            context.getBean(DataManager.class).indexMetadata(""+metadataId, true, context, false, false, true);
         }
-        DeletedObjects.delete(ids);
+        DeletedObjects.delete(context, ids);
 
         Log.debug(Geocat.Module.REUSABLE, "Successfully deleted following rejected objects: \n("
                 + Arrays.toString(ids) + ")");

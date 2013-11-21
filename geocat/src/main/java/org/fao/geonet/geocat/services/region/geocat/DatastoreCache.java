@@ -25,7 +25,7 @@ public class DatastoreCache {
 		String sourceTypeName = mapper.getBackingDatastoreName(simplified, inLatLong);
 		String cacheTypeName = mapper.getBackingDatastoreName(simplified, inLatLong);
 
-		DataStore postgis = (DataStore) context.getApplicationContext().getBean(Geonet.BeanId.DATASTORE);
+		DataStore postgis = context.getApplicationContext().getBean(DataStore.class);
 		SimpleFeatureSource cachedSchema = postgis.getFeatureSource(sourceTypeName);
 		SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
 		for (String att : propNames) {

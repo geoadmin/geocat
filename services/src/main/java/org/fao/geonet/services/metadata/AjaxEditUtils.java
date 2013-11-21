@@ -76,8 +76,8 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
     // GEOCAT
-    protected Element applyChangesEmbedded(String id,
-                                        Map<String, String> changes, Map<String, String> htHide, String currVersion, String lang) throws Exception {
+    protected Element applyChangesEmbedded(String id, Map<String, String> changes, Map<String, String> htHide, String currVersion,
+                                           String lang) throws Exception {
         //END GEOCAT
         Lib.resource.checkEditPrivilege(context, id);
         String schema = dataManager.getMetadataSchema(id);
@@ -269,9 +269,9 @@ public class AjaxEditUtils extends EditUtils {
             }
         }
         // GEOCAT
-        applyHiddenElements(context, dataManager, editLib, dbms, md, id, htHide);
+        applyHiddenElements(context, dataManager, editLib, md, id, htHide);
 
-        dataManager.updateXlinkObjects(dbms, id, lang, md, updatedXLinks.toArray(new Element[updatedXLinks.size()]));
+        dataManager.updateXlinkObjects(id, lang, md, updatedXLinks.toArray(new Element[updatedXLinks.size()]));
         // END GEOCAT
         // --- remove editing info
         editLib.removeEditingInfo(md);
@@ -338,8 +338,8 @@ public class AjaxEditUtils extends EditUtils {
 		return md;
 	}
     // GEOCAT
-	public synchronized Element addXLink(Dbms dbms, UserSession session, String id, String ref, String name, XLink xlink)  throws Exception {
-		String  schema = dataManager.getMetadataSchema(dbms, id);
+	public synchronized Element addXLink(UserSession session, String id, String ref, String name, XLink xlink)  throws Exception {
+		String  schema = dataManager.getMetadataSchema(id);
 		//--- get metadata from session
 		Element md = getMetadataFromSession(session, id);
 
@@ -732,7 +732,7 @@ public class AjaxEditUtils extends EditUtils {
         md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
 
 		//--- do the validation on the metadata
-		return dataManager.doValidate(session, schema, id, md, lang, false).one();
+		return dataManager.doValidate(context, schema, id, md, lang, false).one();
 
 	}
 
@@ -750,7 +750,7 @@ public class AjaxEditUtils extends EditUtils {
 	public synchronized boolean addAttribute(String id, String ref, String name, String currVersion) throws Exception {
 	    Lib.resource.checkEditPrivilege(context, id);
 
-		Element md = xmlSerializer.select(id);
+		Element md = xmlSerializer.select(id, context);
 
 		//--- check if the metadata has been deleted
 		if (md == null)
@@ -794,7 +794,7 @@ public class AjaxEditUtils extends EditUtils {
         dataManager.notifyMetadataChange(md, id);
 
 		//--- update search criteria
-        dataManager.indexMetadata(id);
+        dataManager.indexMetadata(id, context);
 
         return true;
 	}
@@ -813,7 +813,7 @@ public class AjaxEditUtils extends EditUtils {
 	public synchronized boolean deleteAttribute(String id, String ref, String name, String currVersion) throws Exception {
 	    Lib.resource.checkEditPrivilege(context, id);
 
-		Element md = xmlSerializer.select(id);
+		Element md = xmlSerializer.select(id, context);
 
 		//--- check if the metadata has been deleted
 		if (md == null)
@@ -854,7 +854,7 @@ public class AjaxEditUtils extends EditUtils {
         dataManager.notifyMetadataChange(md, id);
 
 		//--- update search criteria
-        dataManager.indexMetadata(id);
+        dataManager.indexMetadata(id, context);
 
         return true;
 	}

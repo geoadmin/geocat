@@ -24,14 +24,13 @@
 package org.fao.geonet.geocat.services.reusable;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
-import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
+import org.fao.geonet.repository.geocat.RejectedSharedObjectRepository;
 import org.jdom.Element;
 
 /**
@@ -58,10 +57,7 @@ public class Deleted implements Service
         
         id = Integer.toString(Integer.parseInt(id));
         
-        
-        
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        return DeletedObjects.get(dbms, id);
+        return DeletedObjects.get(context.getBean(RejectedSharedObjectRepository.class), id);
     }
 
     public void init(String appPath, ServiceConfig params) throws Exception

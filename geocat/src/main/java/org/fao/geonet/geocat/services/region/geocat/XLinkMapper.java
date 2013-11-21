@@ -3,7 +3,7 @@ package org.fao.geonet.geocat.services.region.geocat;
 import java.io.IOException;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.services.region.Region;
+import org.fao.geonet.kernel.region.Region;
 import org.geotools.data.DataStore;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.jdom.JDOMException;
@@ -66,7 +66,7 @@ public class XLinkMapper extends DatastoreMapper {
 
 	@Override
 	protected SimpleFeatureSource getFeatureSource(MapperState state, boolean simplified, boolean inLatLong) throws IOException {
-		DataStore ds = state.context.getApplicationContext().getBean(Geonet.BeanId.DATASTORE, DataStore.class);
+		DataStore ds = state.context.getApplicationContext().getBean(DataStore.class);
 		return ds.getFeatureSource(typeName);
 
 	}

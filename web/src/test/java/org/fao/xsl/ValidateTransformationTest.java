@@ -1,8 +1,6 @@
 package org.fao.xsl;
 
-import static org.fao.geonet.services.extent.ExtentHelper.ExtentTypeCode.EXCLUDE;
-import static org.fao.geonet.services.extent.ExtentHelper.ExtentTypeCode.INCLUDE;
-import static org.fao.geonet.services.extent.ExtentHelper.ExtentTypeCode.NA;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.ExtentTypeCode.*;
 import static org.junit.Assert.*;
 
 import java.io.File;
@@ -10,8 +8,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import jeeves.utils.Xml;
-
+import org.fao.geonet.utils.Xml;
 import org.fao.xsl.support.*;
 import org.jdom.Element;
 import org.jdom.filter.Filter;

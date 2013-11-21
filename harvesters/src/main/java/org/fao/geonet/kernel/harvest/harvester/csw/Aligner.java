@@ -45,6 +45,7 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.AbstractHttpRequest;
 import org.fao.geonet.utils.Log;
+import org.jdom.Document;
 import org.jdom.Namespace;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -240,7 +241,7 @@ public class Aligner extends BaseAligner
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, context);
 		result.addedMetadata++;
 	}
 
@@ -281,7 +282,7 @@ public class Aligner extends BaseAligner
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
+                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false, false);
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
 				repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
@@ -293,7 +294,7 @@ public class Aligner extends BaseAligner
 
                 dataMan.flush();
 
-                dataMan.indexMetadata(id);
+                dataMan.indexMetadata(id, context);
 				result.updatedMetadata++;
 			}
 		}

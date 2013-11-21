@@ -31,11 +31,13 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.geocat.PublishRecord;
 import org.fao.geonet.geocat.kernel.UnpublishInvalidMetadataJob;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.geocat.PublishRecordRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -103,7 +105,7 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
                 }
 
                 // GEOCAT
-                final boolean published = UnpublishInvalidMetadataJob.isPublished(id, dbms);
+                final boolean published = UnpublishInvalidMetadataJob.isPublished(""+info.getId(), context);
                 boolean publishedAgain = false;
                 // END GEOCAT
 
@@ -131,10 +133,18 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 				}
 				metadata.add(info.getId());
 
+                final PublishRecord record = new PublishRecord();
+                record.setEntity(context.getUserSession().getUsername());
+                record.setFailurereasons("Manually unpublished by user");
+                record.setFailurerule("");
+                record.setUuid(uuid);
+                record.setValidated(PublishRecord.Validity.UNKNOWN);
                 if(published && !publishedAgain) {
-                    new UnpublishInvalidMetadataJob.Record(uuid, Validity.UNKNOWN, false, context.getUserSession().getUsername(), "Manually unpublished by user", "").insertInto(dbms);
+                    record.setPublished(false);
+                    context.getBean(PublishRecordRepository.class).save(record);
                 } else if (!published && publishedAgain) {
-                    new UnpublishInvalidMetadataJob.Record(uuid, Validity.UNKNOWN, true, context.getUserSession().getUsername(), "Manually published by user", "").insertInto(dbms);
+                    record.setPublished(true);
+                    context.getBean(PublishRecordRepository.class).save(record);
                 }
 			}
 		}
@@ -142,7 +152,7 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 
 		//--- reindex metadata
 		context.info("Re-indexing metadata");
-		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, metadata);
+		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(context, metadata);
 		r.process();
 
 		// -- for the moment just return the sizes - we could return the ids

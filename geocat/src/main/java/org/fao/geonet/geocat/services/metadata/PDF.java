@@ -8,18 +8,21 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.local.LocalServiceRequest;
-import jeeves.utils.BinaryFile;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.format.ImageReplacedElementFactory;
 import org.fao.geonet.util.GeocatXslUtil;
+import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.BinaryFile;
 import org.jdom.Element;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
@@ -41,8 +44,8 @@ public class PDF implements Service {
             throw new MetadataNotFoundEx("Metadata not found.");
         }
 
-        Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
-        GeocatXslUtil.setNoScript();
+        Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
+        XslUtil.setNoScript();
         LocalServiceRequest request = LocalServiceRequest.create("metadata.show.xml", params);
         request.setLanguage(context.getLanguage());
         request.setDebug(false);
@@ -58,7 +61,7 @@ public class PDF implements Service {
         
         try {
                 ITextRenderer renderer = new ITextRenderer();
-                String siteUrl = new SettingInfo(context).getSiteUrl();
+                String siteUrl = context.getBean(SettingManager.class).getSiteURL(context);
                 renderer.getSharedContext().setDotsPerPixel(13);
                 renderer.getSharedContext().setReplacedElementFactory(new ImageReplacedElementFactory(siteUrl, renderer.getSharedContext().getReplacedElementFactory()));
                 renderer.setDocumentFromString(htmlContent, siteUrl);
@@ -68,8 +71,7 @@ public class PDF implements Service {
         finally {
                 os.close();
         }
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getDataManager();
+		DataManager   dm = context.getBean(DataManager.class);
 		dm.increasePopularity(context, id);
 
         Element res = BinaryFile.encode(200, tempFile.getAbsolutePath(), true);

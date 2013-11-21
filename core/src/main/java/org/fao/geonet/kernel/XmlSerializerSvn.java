@@ -31,7 +31,6 @@ import jeeves.xlink.Processor;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -64,13 +63,15 @@ public class XmlSerializerSvn extends XmlSerializer {
      *  is converted into xml, XLinks are resolved when config'd on.
      *
      *
+     *
      * @param id
+     * @param context
      * @return
      * @throws Exception
      */
-	public Element select(String id) throws Exception {
+	public Element select(String id, ServiceContext context) throws Exception {
 		Element rec = internalSelect(id, false);
-		if (resolveXLinks()) Processor.detachXLink(rec);
+		if (resolveXLinks()) Processor.detachXLink(rec, context);
 		return rec;
 	}
 

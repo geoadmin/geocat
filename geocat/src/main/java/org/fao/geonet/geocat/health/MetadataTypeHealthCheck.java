@@ -30,9 +30,8 @@ public class MetadataTypeHealthCheck implements HealthCheckFactory {
         return new HealthCheck("iso19139.che only Metadata") {
             @Override
             protected Result check() throws Exception {
-                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-                SearchManager searchMan = gc.getSearchmanager();
+                SearchManager searchMan = context.getBean(SearchManager.class);
 
                 IndexAndTaxonomy indexAndTaxonomy = searchMan.getIndexReader(null, -1);
 				GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;

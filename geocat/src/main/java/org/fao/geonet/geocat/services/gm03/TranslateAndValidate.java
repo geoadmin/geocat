@@ -32,14 +32,15 @@ import javax.xml.validation.Validator;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.TransformerFactoryFactory;
 import net.sf.saxon.om.Axis;
 import net.sf.saxon.om.AxisIterator;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.pattern.NodeKindTest;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.fao.geonet.Constants;
 import org.fao.geonet.util.GeocatXslUtil;
+import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -113,7 +114,6 @@ public class TranslateAndValidate {
      * @param xslFilename
      * @param schemaFilename
      *            if null, does not validate transformed document.
-     * @param xmlFilenames
      * @throws SAXException
      * @throws TransformerConfigurationException
      * @throws IOException
@@ -183,11 +183,11 @@ public class TranslateAndValidate {
 			if (errorHandler.hasErrors()) {
 				errorHandler.printError(System.out);
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				errorHandler.printError(new PrintStream(out, true, Jeeves.ENCODING));
+				errorHandler.printError(new PrintStream(out, true, Constants.ENCODING));
 				if(xmlFilename != null) {
 					generateTempFiles(doc, xslt, xmlFilename);
 				}
-				throw new AssertionError(out.toString(Jeeves.ENCODING));
+				throw new AssertionError(out.toString(Constants.ENCODING));
 			} else {
 				// System.out.println(xmlFilename + " is valid.");
 			}
@@ -202,7 +202,7 @@ public class TranslateAndValidate {
 	public void validate(Schema schema, final String xmlFilename)
 			throws IOException {
 
-		Source source = new StreamSource(new InputStreamReader(new FileInputStream(xmlFilename), Jeeves.ENCODING));
+		Source source = new StreamSource(new InputStreamReader(new FileInputStream(xmlFilename), Constants.ENCODING));
 
 		// 3. Get a validator from the schema.
 		Validator validator = schema.newValidator();
@@ -214,16 +214,16 @@ public class TranslateAndValidate {
 			if (errorHandler.hasErrors()) {
 				errorHandler.printError(System.out);
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				errorHandler.printError(new PrintStream(out, true, Jeeves.ENCODING));
-				throw new AssertionError(out.toString(Jeeves.ENCODING));
+				errorHandler.printError(new PrintStream(out, true, Constants.ENCODING));
+				throw new AssertionError(out.toString(Constants.ENCODING));
 			} else {
 				// System.out.println(xmlFilename + " is valid.");
 			}
 		} catch (SAXException ex) {
 			errorHandler.printError(System.out);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			errorHandler.printError(new PrintStream(out, true, Jeeves.ENCODING));
-			throw new AssertionError(out.toString(Jeeves.ENCODING));
+			errorHandler.printError(new PrintStream(out, true, Constants.ENCODING));
+			throw new AssertionError(out.toString(Constants.ENCODING));
 		}
 	}
 
@@ -283,9 +283,9 @@ public class TranslateAndValidate {
 		public void throwErrors() throws UnsupportedEncodingException {
 			if (hasErrors()) {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				PrintStream stream = new PrintStream(out, true, Jeeves.ENCODING);
+				PrintStream stream = new PrintStream(out, true, Constants.ENCODING);
 				printError(stream);
-				String msg = out.toString(Jeeves.ENCODING);
+				String msg = out.toString(Constants.ENCODING);
 
 				throw new RuntimeException(msg, exceptions.get(0));
 			}

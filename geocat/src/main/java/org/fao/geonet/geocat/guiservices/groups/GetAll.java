@@ -24,12 +24,12 @@
 package org.fao.geonet.geocat.guiservices.groups;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.specification.GroupSpecs;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specifications;
 
 //=============================================================================
 
@@ -49,8 +49,7 @@ public class GetAll implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 		//--- retrieve all groups
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-		return Lib.local.retrieveWhere(dbms, "Groups", "id > 1");
+		return context.getBean(GroupRepository.class).findAllAsXml(Specifications.not(GroupSpecs.isReserved()));
 	}
 }
 

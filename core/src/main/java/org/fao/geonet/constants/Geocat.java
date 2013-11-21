@@ -55,10 +55,6 @@ public class Geocat {
 
     }
 
-    public class Profile {
-        public static final String SHARED = "Shared";
-    }
-
     public class Config {
         public static final String EXTENT_CONFIG = "extent";
         public static final String REUSABLE_OBJECT_CONFIG = "reusable";

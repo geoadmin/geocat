@@ -174,14 +174,16 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 					result.badFormat++;
 				} else {
 
+                    // GEOCAT
                     // validate it here if requested
-                    if (params.validate) {
-                        if(!dataMan.validate(iso19139))  {
-                            Log.info(ARCSDE_LOG_MODULE_NAME, "Ignoring invalid metadata with uuid " + uuid);
-                            result.doesNotValidate++;
-                            continue;
-                        }
+                    try {
+                        params.validate.validate(dataMan, context, iso19139);
+                    } catch (Exception e) {
+                        Log.info(ARCSDE_LOG_MODULE_NAME, "Ignoring invalid metadata with uuid " + uuid);
+                        result.doesNotValidate++;
+                        continue;
                     }
+                    // END GEOCAT
 
 					//
 					// add / update the metadata from this harvesting result
@@ -224,7 +226,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         boolean index = false;
         String language = context.getLanguage();
         final Metadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, new ISODate().toString(),
-                false);
+                false, false);
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
         operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
@@ -237,7 +239,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, context);
 	}
 	/**
 	 * Inserts a metadata into the database. Lucene index is updated after insertion.
@@ -272,7 +274,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, context);
 		return id;
 	}
 	

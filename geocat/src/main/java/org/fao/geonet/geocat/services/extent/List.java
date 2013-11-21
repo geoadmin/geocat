@@ -23,22 +23,8 @@
 
 package org.fao.geonet.geocat.services.extent;
 
-import static org.fao.geonet.services.extent.ExtentHelper.DESC;
-import static org.fao.geonet.services.extent.ExtentHelper.DESC_COLUMN;
-import static org.fao.geonet.services.extent.ExtentHelper.FEATURE;
-import static org.fao.geonet.services.extent.ExtentHelper.FEATURE_TYPE;
-import static org.fao.geonet.services.extent.ExtentHelper.GEO_ID;
-import static org.fao.geonet.services.extent.ExtentHelper.GEO_ID_COLUMN;
-import static org.fao.geonet.services.extent.ExtentHelper.ID;
-import static org.fao.geonet.services.extent.ExtentHelper.ID_COLUMN;
-import static org.fao.geonet.services.extent.ExtentHelper.MODIFIABLE_FEATURE_TYPE;
-import static org.fao.geonet.services.extent.ExtentHelper.NUM_RESULTS;
-import static org.fao.geonet.services.extent.ExtentHelper.RESPONSE;
-import static org.fao.geonet.services.extent.ExtentHelper.SELECTED;
-import static org.fao.geonet.services.extent.ExtentHelper.TYPENAME;
-import static org.fao.geonet.services.extent.ExtentHelper.SOURCE;
-import static org.fao.geonet.services.extent.ExtentHelper.error;
-import static org.fao.geonet.services.extent.ExtentHelper.getSelection;
+
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.*;
 
 import java.io.IOException;
 import java.util.AbstractCollection;
@@ -52,16 +38,13 @@ import java.util.Map;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
 
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.geocat.kernel.extent.ExtentManager;
+import org.fao.geonet.geocat.kernel.extent.*;
+import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
+import org.fao.geonet.Util;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
-import org.fao.geonet.kernel.search.spatial.Pair;
-import org.fao.geonet.geocat.kernel.extent.ExtentFormat;
-import org.fao.geonet.services.extent.Source.FeatureType;
+import org.fao.geonet.utils.Xml;
 import org.geotools.data.DataStore;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Query;
@@ -147,8 +130,7 @@ public class List implements Service
         if (paramError != null) {
             return error(paramError);
         }
-        final GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        final ExtentManager extentMan = gc.getExtentManager();
+        final ExtentManager extentMan = context.getBean(ExtentManager.class);
 
         final String wfsParam = Util.getParamText(params, SOURCE);
         final String typenameParam = Util.getParamText(params, TYPENAME);

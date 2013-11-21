@@ -21,11 +21,11 @@
 
 package org.fao.geonet.geocat.services.format;
 
+import org.fao.geonet.repository.geocat.FormatRepository;
 import org.jdom.*;
 
 import jeeves.constants.*;
 import jeeves.interfaces.*;
-import jeeves.resources.dbms.*;
 import jeeves.server.*;
 import jeeves.server.context.*;
 
@@ -57,11 +57,7 @@ public class Get implements Service
 		if (id == null)
 			return new Element(Jeeves.Elem.RESPONSE);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
-		Element el = dbms.select ("SELECT * FROM Formats WHERE id=" + id);
-
-		return el;
+        return context.getBean(FormatRepository.class).findOne(Integer.parseInt(id)).asXml();
 	}
 }
 

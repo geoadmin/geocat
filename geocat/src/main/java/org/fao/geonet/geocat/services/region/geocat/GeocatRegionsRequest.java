@@ -8,8 +8,8 @@ import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.fao.geonet.services.region.Region;
-import org.fao.geonet.services.region.Request;
+import org.fao.geonet.kernel.region.Region;
+import org.fao.geonet.kernel.region.Request;
 import org.opengis.filter.Filter;
 import org.opengis.filter.MultiValuedFilter.MatchAction;
 import org.opengis.filter.Or;

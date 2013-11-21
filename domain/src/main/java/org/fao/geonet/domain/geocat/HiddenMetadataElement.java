@@ -13,16 +13,21 @@ import javax.persistence.*;
 @Access(AccessType.PROPERTY)
 @Table (name="HiddenMetadataElements")
 public class HiddenMetadataElement {
+    int id;
     String _xPathExpr;
     String _level;
     int _metadataId;
 
-    /**
-     * The xpath of the hidden element.
-     *
-     * @return xpath of the hidden element.
-     */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getxPathExpr() {
         return _xPathExpr;
     }

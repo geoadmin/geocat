@@ -23,28 +23,25 @@
 
 package org.fao.geonet.geocat.services.reusable;
 
-import static org.fao.geonet.geocat.kernel.reusable.Utils.addChild;
 import static org.fao.geonet.util.LangUtils.iso19139DefaultLang;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import com.google.common.base.Function;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
 
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.reusable.*;
-import org.fao.geonet.kernel.reusable.*;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.GeocatXslUtil;
 import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
-
-import scala.actors.threadpool.Arrays;
 
 /**
  * Return the metadata that references the reusable object
@@ -61,7 +58,6 @@ public class ReferencingMetadata implements Service
         String id = Util.getParam(params, "id");
         String type = Util.getParam(params, "type");
         boolean validated = Util.getParam(params, "validated", false);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
         List<String> fields = new LinkedList<String>();
         Function<String,String> idConverter;
@@ -79,13 +75,14 @@ public class ReferencingMetadata implements Service
         }
 
         Set<MetadataRecord> md = Utils.getReferencingMetadata(context, fields, id, true, idConverter);
+        UserRepository userRepository = context.getBean(UserRepository.class);
         Element response = new Element("response");
         for (MetadataRecord metadataRecord : md) {
             
             Element record = new Element("record");
             response.addContent(record);
 
-            Utils.addChild(record, "id", metadataRecord.id);
+            Utils.addChild(record, "id", ""+metadataRecord.id);
 
             try {
                 Element titleElement = metadataRecord.xml.getChild("identificationInfo", Geonet.Namespaces.GMD).getChild(
@@ -102,8 +99,8 @@ public class ReferencingMetadata implements Service
 
                 Utils.addChild(record, "title", "n/a");
             }
-            Utils.addChild(record, "name", metadataRecord.name(dbms));
-            Utils.addChild(record, "email", metadataRecord.email(dbms));
+            Utils.addChild(record, "name", metadataRecord.name(userRepository));
+            Utils.addChild(record, "email", metadataRecord.email(userRepository));
         }
 
         return response;

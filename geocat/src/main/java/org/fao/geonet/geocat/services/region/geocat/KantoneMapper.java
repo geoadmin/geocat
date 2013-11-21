@@ -2,7 +2,7 @@ package org.fao.geonet.geocat.services.region.geocat;
 
 import java.io.IOException;
 
-import org.fao.geonet.services.region.Region;
+import org.fao.geonet.kernel.region.Region;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.jdom.JDOMException;
 import org.opengis.feature.simple.SimpleFeature;

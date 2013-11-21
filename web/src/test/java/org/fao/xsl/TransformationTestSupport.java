@@ -40,19 +40,19 @@ import java.util.UUID;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import jeeves.utils.Xml;
 
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.Validator;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.geocat.services.gm03.ISO19139CHEtoGM03;
+import org.fao.geonet.geocat.services.gm03.ISO19139CHEtoGM03Base;
+import org.fao.geonet.geocat.services.gm03.TranslateAndValidate;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaLoader;
-import org.fao.geonet.geocat.services.gm03.ISO19139CHEtoGM03;
-import org.fao.geonet.geocat.services.gm03.TranslateAndValidate;
-import org.fao.geonet.geocat.services.gm03.ISO19139CHEtoGM03Base.FlattenerException;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Text;
@@ -93,12 +93,12 @@ public final class TransformationTestSupport {
         return new File(outputDir, "result_" + src.getName());
     }
 
-    static File transformIsoToGM03( File src, File outputDir ) throws SAXException, TransformerConfigurationException, FlattenerException,
+    static File transformIsoToGM03( File src, File outputDir ) throws SAXException, TransformerConfigurationException, ISO19139CHEtoGM03Base.FlattenerException,
             IOException, TransformerException {
         return transformIsoToGM03(src, outputDir, true);
     }
     static File transformIsoToGM03( File src, File outputDir, boolean testValidity ) throws SAXException,
-            TransformerConfigurationException, FlattenerException, IOException, TransformerException {
+            TransformerConfigurationException, ISO19139CHEtoGM03Base.FlattenerException, IOException, TransformerException {
         try {
             ISO19139CHEtoGM03 otherway = new ISO19139CHEtoGM03(TransformationTestSupport.gm03Xsd,
                     TransformationTestSupport.toGm03StyleSheet.getAbsolutePath());
@@ -166,8 +166,6 @@ public final class TransformationTestSupport {
         return Xml.loadStream(xmlsource);
     }
 
-    static Validator VALIDATOR = new Validator(outputDir + "/htmlCache");
-
     public static void schematronValidation( File metadataFile ) throws Exception {
 
         Element metadata = Xml.loadFile(metadataFile);
@@ -191,15 +189,15 @@ public final class TransformationTestSupport {
         String path = geonetworkWebapp + chePath;
 
         String name = "iso19139.che";
-        String xmlSchemaFile = geonetworkWebapp + chePath + Geonet.File.SCHEMA;
-        String xmlSubstitutionsFile = geonetworkWebapp + chePath + Geonet.File.SCHEMA_SUBSTITUTES;;
+//        String xmlSchemaFile = geonetworkWebapp + chePath + Geonet.File.SCHEMA;
+//        String xmlSubstitutionsFile = geonetworkWebapp + chePath + Geonet.File.SCHEMA_SUBSTITUTES;;
+//
+//        MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile, xmlSubstitutionsFile);
+//        mds.setName(name);
+//        mds.setSchemaDir(path);
+//        mds.loadSchematronRules(geonetworkWebapp.getAbsolutePath());
 
-        MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile, xmlSubstitutionsFile);
-        mds.setName(name);
-        mds.setSchemaDir(path);
-        mds.loadSchematronRules(geonetworkWebapp.getAbsolutePath());
-
-        Element schemaTronXml = VALIDATOR.getSchemaTronXmlReport(mds, root, Geonet.DEFAULT_LANGUAGE);
+        Element schemaTronXml = new DataManager().doSchemaTronForEditor(name, root, Geonet.DEFAULT_LANGUAGE);
 
         @SuppressWarnings("unchecked")
 		List<Element> schematronReport = schemaTronXml.getChildren("report", Edit.NAMESPACE);

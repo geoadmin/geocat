@@ -23,15 +23,17 @@
 
 package org.fao.geonet.geocat.services.extent;
 
-import static org.fao.geonet.services.extent.ExtentHelper.getSelection;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.getSelection;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.spatial.Pair;
-import org.fao.geonet.services.extent.Source.FeatureType;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.geocat.kernel.extent.ExtentManager;
+import org.fao.geonet.geocat.kernel.extent.ExtentSelection;
+import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
 import org.jdom.Content;
 import org.jdom.Element;
 
@@ -45,8 +47,7 @@ public class Select implements Service
 
     public Element exec(Element params, ServiceContext context) throws Exception
     {
-        final GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        final ExtentManager extentMan = gc.getExtentManager();
+        final ExtentManager extentMan = context.getBean(ExtentManager.class);
 
         final ExtentSelection selection = getSelection(context);
 

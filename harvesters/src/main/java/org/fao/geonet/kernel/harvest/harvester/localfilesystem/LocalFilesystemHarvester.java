@@ -141,17 +141,17 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 				continue; // skip this one
 			}
 
-			// validate it here if requested
-			if (params.validate) {
-				try {
-					Xml.validate(xml);
-				} catch (Exception e) {
-					log.debug("Cannot validate XML from file " + filePath +", ignoring. Error was: "+e.getMessage());
-					result.doesNotValidate++;
-					continue; // skip this one
-				}
-			}
-			
+            // GEOCAT
+            // validate it here if requested
+            try {
+                params.validate.validate(dataMan, context, xml);
+            } catch (Exception e) {
+                log.debug("Cannot validate XML from file " + filePath +", ignoring. Error was: "+e.getMessage());
+                result.doesNotValidate++;
+                continue;
+            }
+            // END GEOCAT
+
 			// transform using importxslt if not none
 			if (transformIt) {
 				try {
@@ -247,7 +247,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         boolean index = false;
         String language = context.getLanguage();
         final Metadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, new ISODate().toString(),
-                false);
+                false, false);
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
@@ -261,7 +261,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, context);
 	}
 
 	
@@ -297,7 +297,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, context);
 		return id;
     }
 

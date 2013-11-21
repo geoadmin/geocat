@@ -30,6 +30,9 @@ import jeeves.constants.Jeeves;
 import org.apache.lucene.util.Version;
 import org.jdom.Namespace;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * TODO javadoc.
  */
@@ -84,7 +87,10 @@ public final class Geonet {
 		public static final String METADATA_BASEBLANK  = "blanks/metadata-schema00";
 		public static final String METADATA_BLANK			 = "blanks/metadata-schema";
 		public static final int METADATA_MAX_BLANKS 	 = 20;
-	}
+        // GEOCAT
+        public static final String UPDATE_TEMPLATE_FIXED_INFO = "update-template-fixed-info.xsl";
+        // END GEOCAT
+    }
 
 	public static final class SchemaPath {
 		public static final String OAI_PMH = "xml/validation/oai/OAI-PMH.xsd";
@@ -596,5 +602,10 @@ public final class Geonet {
 		public static final Namespace XSD = Namespace.getNamespace("xsd", XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		public static final Namespace XSI = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
         public static final Namespace OWS = Namespace.getNamespace("ows", "http://www.opengis.net/ows");
-	}
+        // GEOCAT
+        @SuppressWarnings("unchecked")
+        public static List<Namespace> iso19139Namespaces = Arrays.asList(new Namespace[]{GCO, GEONET, GMX, GMD, SRV, XSD, XSI, XLINK});
+        // END GEOCAT
+
+    }
 }

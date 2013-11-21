@@ -23,28 +23,30 @@ package org.fao.geonet.geocat.services.format;
 
 import com.google.common.base.Functions;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
+import org.fao.geonet.domain.Constants;
+import org.fao.geonet.domain.geocat.Format;
 import org.fao.geonet.geocat.kernel.reusable.FormatsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.geocat.services.reusable.Reject;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.reusable.*;
+import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.geocat.FormatRepository;
 import org.jdom.*;
 
 import jeeves.constants.*;
 import jeeves.interfaces.*;
-import jeeves.resources.dbms.*;
 import jeeves.server.*;
 import jeeves.server.context.*;
-import jeeves.utils.Util;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
 
 import org.fao.geonet.constants.*;
-import org.fao.geonet.geocat.services.reusable.Reject;
 import org.fao.geonet.util.LangUtils;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 //=============================================================================
@@ -74,48 +76,50 @@ public class Manager implements Service {
 			throws Exception {
 		String action = params.getChildText(Geocat.Params.ACTION);
 		String id = params.getChildText(Params.ID);
-		String name = params.getChildText(Params.NAME);
-		String version = params.getChildText(Params.VERSION);
-		char validated = Util.getParam(params, "validated", "y").charAt(0);
-		boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
-		
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
+        final String name = params.getChildText(Params.NAME);
+        final String version = params.getChildText(Params.VERSION);
+        final boolean isValidated = Constants.toBoolean_fromYNChar(Util.getParam(params, "validated", "y").charAt(0));
+        boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
 
-		
-		Element elRes = new Element(Jeeves.Elem.RESPONSE);
+        final FormatRepository formatRepository = context.getBean(FormatRepository.class);
 
-		if (action.equals("DELETE")) {
-	        if(!Boolean.parseBoolean(Util.getParam(params, "forceDelete", "false"))) {
-                java.util.List<Element> validatedEl = dbms.select("Select validated from Formats where id=?",Integer.parseInt(id)).getChildren();
-                if (validatedEl.isEmpty()) {
+        Element elRes = new Element(Jeeves.Elem.RESPONSE);
+
+        if (action.equals("DELETE")) {
+            if(!Boolean.parseBoolean(Util.getParam(params, "forceDelete", "false"))) {
+                Format format = formatRepository.findOne(Integer.parseInt(id));
+                if (format == null) {
                     return elRes;
                 }
-	            String msg = LangUtils.loadString("reusable.rejectDefaultMsg", context.getAppPath(), context.getLanguage());
-                boolean isValidated = "y".equalsIgnoreCase(validatedEl.get(0).getChildTextTrim("validated"));
-	            return new Reject().reject(context, ReusableTypes.formats, new String[]{id}, msg, null, isValidated, testing);
-	        } else {
-    			dbms.execute("DELETE FROM Formats WHERE id=" + id);
-    			elRes.addContent(new Element(Jeeves.Elem.OPERATION)
+                String msg = LangUtils.loadString("reusable.rejectDefaultMsg", context.getAppPath(), context.getLanguage());
+                return new Reject().reject(context, ReusableTypes.formats, new String[]{id}, msg, null, format.isValidated(), testing);
+            } else {
+                formatRepository.delete(Integer.parseInt(id));
+                elRes.addContent(new Element(Jeeves.Elem.OPERATION)
     					.setText(Jeeves.Text.REMOVED));
-	        }
-		} else {
-			if (id == null) {
-				int newId = context.getSerialFactory().getSerial(dbms,
-						"Formats");
-				String query = "INSERT INTO Formats(id, name, version, validated) VALUES (?, ?, ?, ?)";
-				dbms.execute(query, newId, name, version, validated);
+            }
+        } else {
+            if (id == null) {
+                formatRepository.save(new Format().setName(name).setValidated(isValidated).setVersion
+                        (version));
 				elRes.addContent(new Element(Jeeves.Elem.OPERATION)
 						.setText(Jeeves.Text.ADDED));
 			} else {
-				String query = "UPDATE Formats SET name=?, version=?, validated=? WHERE id=?";
-				dbms.execute(query, name, version, validated, new Integer(id));
+                formatRepository.update(Integer.parseInt(id), new Updater<Format>() {
+                    @Override
+                    public void apply(@Nonnull Format entity) {
+                        entity.setName(name)
+                            .setVersion(version)
+                            .setValidated(isValidated);
+                    }
+                });
+
 				elRes.addContent(new Element(Jeeves.Elem.OPERATION)
 						.setText(Jeeves.Text.UPDATED));
 
 				Processor.uncacheXLinkUri(XLink.LOCAL_PROTOCOL+"xml.format.get?id=" + id);
-                final FormatsStrategy strategy = new FormatsStrategy(dbms, context.getAppPath(), context.getBaseUrl(),
-                        context.getLanguage(), null);
+                final FormatsStrategy strategy = new FormatsStrategy(formatRepository, context.getAppPath(), context.getBaseUrl(),
+                        context.getLanguage());
                 ArrayList<String> fields = new ArrayList<String>();
 
                 fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
@@ -123,10 +127,9 @@ public class Manager implements Service {
                 final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, fields, id, false,
                         Functions.<String>identity());
 
-                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-                DataManager dm = gc.getDataManager();
+                DataManager dm = context.getBean(DataManager.class);
                 for (MetadataRecord metadataRecord : referencingMetadata) {
-                    dm.indexMetadata(dbms, metadataRecord.id, true, context, false, false, true);
+                    dm.indexMetadata(""+metadataRecord.id, true, context, false, false, true);
                 }
             }
 		}

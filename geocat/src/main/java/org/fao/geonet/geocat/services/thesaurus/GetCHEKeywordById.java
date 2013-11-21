@@ -27,9 +27,9 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -69,9 +69,7 @@ public class GetCHEKeywordById implements Service {
 		KeywordsSearcher searcher = null;
 
 		// perform the search and save search result into session
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		ThesaurusManager thesaurusMan = gc.getThesaurusManager();
+		ThesaurusManager thesaurusMan = context.getBean(ThesaurusManager.class);
 		
 		searcher = new KeywordsSearcher(thesaurusMan);
 

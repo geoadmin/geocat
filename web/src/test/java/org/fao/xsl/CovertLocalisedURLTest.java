@@ -8,8 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import jeeves.utils.Xml;
-
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
 import org.junit.Test;

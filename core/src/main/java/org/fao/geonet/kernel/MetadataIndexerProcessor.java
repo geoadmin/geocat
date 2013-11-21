@@ -18,6 +18,8 @@
 
 package org.fao.geonet.kernel;
 
+import jeeves.server.context.ServiceContext;
+
 /**
  * Template Method abstract class to handle faster indexing of many metadata
  * documents.
@@ -25,15 +27,20 @@ package org.fao.geonet.kernel;
  * with all parameters required to exec the process method
  */
 public abstract class MetadataIndexerProcessor {
-    private DataManager dm;
+    private ServiceContext _context;
 
-    public MetadataIndexerProcessor(DataManager dm) {
-        this.dm = dm;
+    public MetadataIndexerProcessor(ServiceContext context) {
+        this._context = context;
     }
 
     public abstract void process() throws Exception;
 
     protected DataManager getDataManager() {
-        return dm;
+        return _context.getBean(DataManager.class);
     }
+
+    public ServiceContext getServiceContext() {
+        return _context;
+    }
+
 }

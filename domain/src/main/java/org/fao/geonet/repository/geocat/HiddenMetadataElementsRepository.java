@@ -10,6 +10,8 @@ import java.util.List;
  *
  * @author Jesse
  */
-public interface HiddenMetadataElementsRepository extends GeonetRepository<HiddenMetadataElement, String> {
+public interface HiddenMetadataElementsRepository extends GeonetRepository<HiddenMetadataElement, Integer> {
     public List<HiddenMetadataElement> findAllByMetadataId(int metadataId);
+    public List<HiddenMetadataElement> findAllByMetadataIdAndXPathExpr(int metadataId, String xpathExpr);
+
 }

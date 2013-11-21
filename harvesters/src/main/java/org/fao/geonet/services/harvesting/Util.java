@@ -26,13 +26,17 @@ package org.fao.geonet.services.harvesting;
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.HarvestManager;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
 import java.util.List;
+import java.util.UUID;
 
 //=============================================================================
 
@@ -80,6 +84,7 @@ public class Util
 		return response;
 	}
 
+    // GEOCAT
     public static void warnAdminByMail(ServiceContext context, String mailBody, String server, String UUID, String filePath) {
         String fServer = (server == null ? "" : String.format("\n\t- Server : %s", server));
         String fUUID = (UUID == null ? "" : String.format("\n\t- UUID : %s", UUID));
@@ -111,6 +116,31 @@ public class Util
                                                         "Sincerely yours,\n" +
                                                         "-- \nGeoCatalogue automatic mail system";
 
+    public static String uuid(ServiceContext context, String url, Element md, Logger log,
+                              String resource, HarvestResult tracker, String schema) throws Exception {
+        DataManager dataMan = context.getBean(DataManager.class);
+
+        String tempUuid = dataMan.extractUUID(schema, md);
+
+        if (tempUuid != null) {
+            // check if the UUID is not already in database
+            if (dataMan.getMetadataId(tempUuid) != null) {
+                tracker.uuidSkipped++;
+                Util.warnAdminByMail(context, Util.SKEL_MAIL_UUID_CLASH, url, tempUuid, resource);
+                log.debug(" - UUID clash : record already in database ; mailing the GC admins");
+                return null;
+            }
+        } else {
+            log.debug(" - No UUID found in the remote MD ; generating a new one");
+            tempUuid = UUID.randomUUID().toString();
+        }
+        return tempUuid;
+    }
+
+    public interface ErrorTracker {
+        void incrementError();
+    }
+    // END GEOCAT
 }
 
 //=============================================================================

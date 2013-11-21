@@ -1,22 +1,38 @@
 package org.fao.geonet.geocat.cgp;
 
+import com.google.common.base.Function;
+import com.google.common.cache.AbstractLoadingCache;
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadSoapResponseEx;
-import jeeves.exceptions.BadXmlResponseEx;
-import jeeves.utils.Xml;
-import org.apache.commons.httpclient.*;
-import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
+import jeeves.server.context.ServiceContext;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequestFactory;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.AuthenticationStrategy;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.ProxyAuthenticationStrategy;
+import org.fao.geonet.Constants;
+import org.fao.geonet.exceptions.BadSoapResponseEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
+import org.springframework.http.client.ClientHttpResponse;
 
+import javax.annotation.Nullable;
 import java.io.*;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 /**
  * SOAP request wrapper.
@@ -25,33 +41,37 @@ import java.net.URL;
 public class SOAPRequest
 {
 	public static final Namespace NAMESPACE_ENV = Namespace.getNamespace("env", "http://schemas.xmlsoap.org/soap/envelope/");
+    private final ServiceContext context;
+    private UsernamePasswordCredentials proxyCredentials;
 
-	public SOAPRequest(String urlStr) throws MalformedURLException
+    public SOAPRequest(ServiceContext context, String urlStr) throws MalformedURLException
 	{
-		url = new URL(urlStr);
+		this.context = context;
+        url = new URL(urlStr);
 	}
 
 	/**
 	 * Sends a request and obtains an xml response.
 	 */
-	public Document execute() throws SOAPFaultEx, JDOMException, IOException, BadXmlResponseEx, BadSoapResponseEx
-	{
-		HttpMethodBase httpMethod = createHttpMethod();
+	public Document execute() throws SOAPFaultEx, JDOMException, IOException, BadXmlResponseEx, BadSoapResponseEx, URISyntaxException {
+        HttpPost httpMethod = createHttpMethod();
 
-		config.setHost(url.getHost(), url.getPort());
-
-		if (useProxy)
-		{
-			config.setProxy(proxyHost, proxyPort);
-		}
-
-		client.setHostConfiguration(config);
 
 		// byte[] data = null;
 		Document responseDoc = null;
 		try
 		{
-			client.executeMethod(httpMethod);
+            final ClientHttpResponse response = context.getBean(GeonetHttpRequestFactory.class).execute(httpMethod,
+                    new Function<HttpClientBuilder, Void>() {
+                        @Override
+                        public Void apply(HttpClientBuilder key) {
+                            if (useProxy) {
+                                HttpHost proxy = new HttpHost(proxyHost, proxyPort, url.getProtocol());
+                                key.setProxy(proxy);
+                            }
+                            return null;
+                        }
+                    });
 
 			// Better not with large queries
 			// data = httpMethod.getResponseBody();
@@ -62,9 +82,9 @@ public class SOAPRequest
 			// the standard SAX parser fails upon. For now we convert
 			// the byte input to a char stream.
 			if (url.getHost().indexOf("geoportal.ch") != -1)  {
-				responseDoc = builder.build(new InputStreamReader(httpMethod.getResponseBodyAsStream(), Jeeves.ENCODING));
+				responseDoc = builder.build(new InputStreamReader(response.getBody(), Constants.ENCODING));
 			} else {
-				responseDoc = builder.build(httpMethod.getResponseBodyAsStream());
+				responseDoc = builder.build(response.getBody());
 			}
 		}
 		catch (JDOMException e)
@@ -116,14 +136,12 @@ public class SOAPRequest
 
 	//---------------------------------------------------------------------------
 
-	private HttpMethodBase createHttpMethod() throws UnsupportedEncodingException
-	{
-		PostMethod postMethod = new PostMethod();
+	private HttpPost createHttpMethod() throws UnsupportedEncodingException, URISyntaxException {
+		HttpPost postMethod = new HttpPost();
 		String postData = Xml.getString(getSOAPDocument());
 
-		postMethod.setRequestEntity(new StringRequestEntity(postData, "application/soap+xml", "UTF8"));
-		postMethod.setPath(url.getPath());
-		postMethod.setDoAuthentication(false);
+		postMethod.setEntity(new StringEntity(postData, "application/soap+xml; UTF8"));
+		postMethod.setURI(url.toURI());
 
 		return postMethod;
 	}
@@ -179,19 +197,14 @@ public class SOAPRequest
 			return;
 		}
 
-		Credentials cred = new UsernamePasswordCredentials(username, password);
-		AuthScope scope = new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM);
 
-		client.getState().setProxyCredentials(scope, cred);
+		this.proxyCredentials = new UsernamePasswordCredentials(username, password);
 	}
 
 	//---------------------------------------------------------------------------
 	//---
 	//--- Variables
-	//---
 	//---------------------------------------------------------------------------
-	private HttpClient client = new HttpClient();
-	private HostConfiguration config = new HostConfiguration();
 	private URL url;
 	private Element bodyContentElm;
 	private Element headerContentElm;

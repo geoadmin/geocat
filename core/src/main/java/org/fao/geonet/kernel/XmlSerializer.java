@@ -336,8 +336,9 @@ public abstract class XmlSerializer {
     /**
      * Return metadata xml.
      * @param id the metadata id.
+     * @param context
      */
-	public abstract Element select(String id) throws Exception;
+	public abstract Element select(String id, ServiceContext context) throws Exception;
 	public abstract Element selectNoXLinkResolver(String id, boolean isIndexingTask)
 			 throws Exception;
 } 

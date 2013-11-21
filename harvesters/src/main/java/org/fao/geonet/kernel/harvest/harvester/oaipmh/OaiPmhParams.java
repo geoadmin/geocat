@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
 
@@ -64,7 +65,8 @@ public class OaiPmhParams extends AbstractParams
 		url      = Util.getParam(site, "url",  "");
 		icon     = Util.getParam(site, "icon", "");
 
-		validate = Util.getParam(options, "validate", false);
+
+        validate = HarvestValidationEnum.lookup(Util.getParam(options, "validate", HarvestValidationEnum.NOVALIDATION.name()));
 
 		addSearches(searches);
 	}
@@ -86,7 +88,7 @@ public class OaiPmhParams extends AbstractParams
 		url      = Util.getParam(site,  "url",  url);
 		icon     = Util.getParam(site,  "icon", icon);
 
-		validate = Util.getParam(options, "validate", validate);
+        validate = HarvestValidationEnum.lookup(Util.getParam(options, "validate", HarvestValidationEnum.NOVALIDATION.name()));
 
 		//--- if some search queries are given, we drop the previous ones and
 		//--- set these new ones

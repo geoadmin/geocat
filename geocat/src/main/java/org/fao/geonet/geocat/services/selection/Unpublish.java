@@ -4,15 +4,22 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.geocat.PublishRecord;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.geocat.PublishRecordRepository;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 
 /**
  * Select a list of elements stored in session For all the MD stored in the
@@ -42,10 +49,8 @@ public class Unpublish implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
 
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dm = gc.getDataManager();
+        DataManager dm = context.getBean(DataManager.class);
         UserSession us = context.getUserSession();
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
         context.info("Get selected metadata");
         SelectionManager sm = SelectionManager.getManager(us);
@@ -56,17 +61,26 @@ public class Unpublish implements Service {
         synchronized (selection) {
             selection = new LinkedList<String>(selection);
         }
+        OperationAllowedRepository operationAllowedRepo = context.getBean(OperationAllowedRepository.class);
         for (Iterator<String> iter = selection.iterator(); iter.hasNext();) {
 
-            String uuid = (String) iter.next();
-            String id = dm.getMetadataId(dbms, uuid);
+            String uuid = iter.next();
+            String id = dm.getMetadataId(uuid);
 
-            dbms.execute("DELETE FROM operationallowed WHERE metadataid = ? and (groupid = 1 or groupid = -1)",
-                    Integer.valueOf(id));
+            final Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasMetadataId(id);
+            final Specification<OperationAllowed> isAllGroup = OperationAllowedSpecs.hasGroupId(ReservedGroup.all.getId());
+            final Specification<OperationAllowed> isGuestGroup = OperationAllowedSpecs.hasGroupId(ReservedGroup.guest.getId());
+            operationAllowedRepo.deleteAll(Specifications.where(hasMetadataId).and(isAllGroup).and(isGuestGroup));
 
-            dbms.execute(
-                    "INSERT INTO publish_tracking (uuid, entity, validated, published, failurerule) VALUES (?,?,?,?,?)",
-                    uuid, "Administrator", 'y', 'n', "manual unpublish by administrator");
+            final PublishRecord record = new PublishRecord();
+            record.setEntity(context.getUserSession().getUsername());
+            record.setFailurereasons("");
+            record.setFailurerule("manual unpublish by administrator");
+            record.setPublished(false);
+            record.setUuid(uuid);
+            record.setValidated(PublishRecord.Validity.VALID);
+            final PublishRecordRepository publishRecordRepository = context.getBean(PublishRecordRepository.class);
+            publishRecordRepository.save(record);
 
             Element retchildserv = new Element("unpublished");
             retchildserv.setAttribute("uuid", uuid);

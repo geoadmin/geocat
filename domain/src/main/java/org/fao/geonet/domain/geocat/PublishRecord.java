@@ -27,8 +27,8 @@ public class PublishRecord extends GeonetEntity {
     private char jpaWorkaround_Published;
     private String failurerule;
     private String failurereasons;
-    private Date changetime;
-    private Date changedate;
+    private Date changetime = new Date();
+    private Date changedate = new Date();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,12 +60,12 @@ public class PublishRecord extends GeonetEntity {
     }
 
     @Transient
-    public boolean isValidated() {
-        return Constants.toBoolean_fromYNChar(getJpaWorkaround_Validated());
+    public Validity isValidated() {
+        return Validity.parse(getJpaWorkaround_Validated());
     }
 
-    public PublishRecord setValidated(boolean validated) {
-        setJpaWorkaround_Validated(Constants.toYN_EnabledChar(validated));
+    public PublishRecord setValidated(Validity validated) {
+        setJpaWorkaround_Validated(validated.dbCode);
         return this;
     }
     protected char getJpaWorkaround_Validated() {
@@ -145,4 +145,24 @@ public class PublishRecord extends GeonetEntity {
                 .addContent(new Element("failurerule").setText(failurerule))
                 .addContent(new Element("failurereasons").setText(failurereasons));
     }
-}
+
+    public static enum Validity {
+        VALID('y'), INVALID('n'), UNKNOWN('?');
+
+        final char dbCode;
+
+        private Validity(char dbCode) {
+            this.dbCode = dbCode;
+        }
+
+        public static Validity fromBoolean(boolean validated) {
+            return validated ? VALID : INVALID;
+        }
+
+        public static Validity parse(char code) {
+            for (Validity v : values()) {
+                if(v.dbCode == code) return v;
+            }
+            return UNKNOWN;
+        }
+    }}
