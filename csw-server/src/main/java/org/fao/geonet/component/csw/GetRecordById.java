@@ -104,7 +104,6 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 		OutputSchema outSchema = OutputSchema.parse(request.getAttributeValue("outputSchema"));
 		//--------------------------------------------------------
 
-        final DataManager dataManager = context.getBean(DataManager.class);
         ElementSetName setName = getElementSetName(request, ElementSetName.SUMMARY);
 
 		Element response = new Element(getName() +"Response", Csw.NAMESPACE_CSW);

@@ -1,6 +1,7 @@
 package org.fao.geonet.domain.geocat;
 
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  * Represents the phone numbers.
@@ -10,7 +11,7 @@ import javax.persistence.Embeddable;
  * Time: 11:12 AM
  */
 @Embeddable
-public class Phone {
+public class Phone implements Serializable {
     private String phone;
     private String facsimile;
     private String mobile;

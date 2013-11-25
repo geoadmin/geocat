@@ -114,7 +114,7 @@ public class IsoLanguagesMapper {
      * @return
      */
     public String iso639_1_to_iso639_2(String iso639_1) {
-        if(iso639_2_to_iso639_1IsoLanguagesMap.containsValue(iso639_1.toLowerCase())) {
+        if(iso639_2_to_iso639_1IsoLanguagesMap.containsKey(iso639_1.toLowerCase())) {
             return iso639_1.toLowerCase();
         } else {
             return iso639_1_to_iso639_2IsoLanguagesMap.get(iso639_1.toLowerCase());

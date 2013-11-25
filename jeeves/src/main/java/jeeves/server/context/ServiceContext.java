@@ -84,7 +84,6 @@ public class ServiceContext extends BasicContext
 	private JeevesServlet servlet;
 	private boolean startupError = false;
 	Map<String,String> startupErrors;
-    private EntityManager entityManager;
 
     /**
      * Property to be able to add custom response headers depending on the code
@@ -206,7 +205,7 @@ public class ServiceContext extends BasicContext
     }
 
     public void executeOnly(LocalServiceRequest request) throws Exception {
-        ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), htContexts, entityManager);
+        ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), htContexts, getEntityManager());
 
         UserSession session = userSession;
         if (userSession == null) {
@@ -252,10 +251,6 @@ public class ServiceContext extends BasicContext
 
     public Integer getStatusCode() {
         return statusCode;
-    }
-
-    public EntityManager getEntityManager() {
-        return entityManager;
     }
 }
 

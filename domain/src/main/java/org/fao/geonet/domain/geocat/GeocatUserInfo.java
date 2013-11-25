@@ -5,6 +5,7 @@ import org.fao.geonet.domain.Constants;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
+import java.io.Serializable;
 
 /**
  * Geocat specific information associated with the user.
@@ -14,7 +15,7 @@ import javax.persistence.Transient;
  * Time: 11:04 AM
  */
 @Embeddable
-public class GeocatUserInfo {
+public class GeocatUserInfo implements Serializable {
     private Integer _parentInfo;
     private char _jpaWorkaround_validated;
     private String positionname;
