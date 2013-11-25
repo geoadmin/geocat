@@ -206,13 +206,14 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     identifiedUser : undefined,
 
-    metadataEditFn: undefined,
     /** api: property[adminUser]
      *  ``Boolean`` True if user is admin
      *
      * FIXME : How to handle login/logout the best way ?
      */
     adminUser : false,
+
+    metadataEditFn : undefined,
     /** api: config[adminAppUrl]
      *  ``String`` URL to the administration interface
      *  TODO : should we go to admin service by default ?
@@ -283,13 +284,10 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         this.services = {
             rootUrl : serviceUrl,
             csw : serviceUrl + 'csw',
-            feedback: serviceUrl + 'feedback.send',
             xmlSearch : serviceUrl + 'xml.search',
             mdSelect : serviceUrl + 'metadata.select',
             mdView : serviceUrl + 'view',
             mdXMLInsert : serviceUrl + 'xml.metadata.insert',
-            mdInsertPaste: serviceUrl + 'xml.metadata.insert.paste',
-            mdInsertUpload: serviceUrl + 'xml.mef.import.ui',
             mdShow : serviceUrl + 'metadata.show.embedded',
             mdMEF : serviceUrl + 'mef.export',
             mdXMLGet : serviceUrl + 'xml.metadata.get',
@@ -311,29 +309,22 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdProcessingXml: serviceUrl + 'xml.metadata.processing',
             mdProcessing: serviceUrl + 'metadata.processing.new',
             mdMassiveChildrenForm: serviceUrl + 'metadata.batch.children.form',
-            mdAdmin: serviceUrl + 'metadata.admin.form',
-            mdAdminSave: serviceUrl + 'metadata.admin',
-            mdAdminXml: serviceUrl + 'xml.metadata.admin.form',
-            mdBatchAdminXml: serviceUrl + 'xml.metadata.batch.admin.form',
-            mdBatchSaveXml: serviceUrl + 'xml.metadata.batch.update.privileges',
-            mdValidate: serviceUrl + 'xml.metadata.validate',
-            mdSuggestion: serviceUrl + 'metadata.suggestion',
-            mdCategory: serviceUrl + 'metadata.category.form',
+            mdAdmin : serviceUrl + 'metadata.admin.form',
+            mdValidate : serviceUrl + 'xml.metadata.validate',
+            mdSuggestion : serviceUrl + 'metadata.suggestion',
+            mdCategory : serviceUrl + 'metadata.category.form',
             mdRelationInsert: serviceUrl + 'xml.relation.insert',
             mdRelationDelete: serviceUrl + 'xml.relation.delete',
             mdRelation : serviceUrl + 'xml.relation',
             mdGetThumbnail : serviceUrl + 'metadata.thumbnail',
             mdSetThumbnail: serviceUrl + 'metadata.thumbnail.set.new',
             mdUnsetThumbnail: serviceUrl + 'metadata.thumbnail.unset.new',
-            mdImport: serviceUrl + 'metadata.xmlinsert.form',
-            mdStatus: serviceUrl + 'metadata.status.form',
-            mdStatusSet: serviceUrl + 'metadata.status',
-            mdVersioning: serviceUrl + 'metadata.version',
-            subTemplateType: serviceUrl + 'subtemplate.types',
-            subTemplate: serviceUrl + 'subtemplate',
-            upload: serviceUrl + 'resources.upload.new',
-            uploadResource: serviceUrl + 'resource.upload.and.link',
-            delResource: serviceUrl + 'resource.del.and.detach',
+            mdImport : serviceUrl + 'metadata.xmlinsert.form',
+            mdStatus : serviceUrl + 'metadata.status.form',
+            mdVersioning : serviceUrl + 'metadata.version',
+            subTemplateType : serviceUrl + 'subtemplate.types',
+            subTemplate : serviceUrl + 'subtemplate',
+            upload : serviceUrl + 'resources.upload.new',
             prepareDownload: serviceUrl + 'prepare.file.download',
             fileDisclaimer : serviceUrl + 'file.disclaimer',
             fileDownload : serviceUrl + 'file.download',
@@ -370,12 +361,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             metadataMassiveUpdatePrivilege: serviceUrl + 'metadata.batch.update.privileges',
             metadataMassiveUpdateCategories: serviceUrl + 'metadata.batch.update.categories',
             metadataMassiveNewOwner: serviceUrl + 'metadata.batch.newowner',
-            getMyInfo: serviceUrl + 'xml.info?type=me',
-            getGroups: serviceUrl + 'xml.info?type=groups',
-            getRegions: serviceUrl + 'xml.info?type=regions',
-            getSources: serviceUrl + 'xml.info?type=sources',
-            getUsers: serviceUrl + 'xml.info?type=users',
-            getSiteInfo: serviceUrl + 'xml.info?type=site&type=auth&type=userGroupOnly',
+            getMyInfo : serviceUrl + 'xml.info?type=me',
+            getGroups : serviceUrl + 'xml.info?type=groups',
+            getRegions : serviceUrl + 'xml.info?type=regions',
+            getSources : serviceUrl + 'xml.info?type=sources',
+            getUsers : serviceUrl + 'xml.info?type=users',
+            getSiteInfo: serviceUrl + 'xml.info?type=site&type=auth',
             getInspireInfo: serviceUrl + 'xml.info?type=inspire',
             getIsoLanguages : serviceUrl + 'isolanguages',
             schemaInfo : serviceUrl + 'xml.schema.info',
@@ -383,25 +374,19 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             getCategories: serviceUrl + 'xml.info?type=categories',
             getHarvesters : serviceUrl + 'xml.harvesting.get',
             rate : serviceUrl + 'xml.metadata.rate',
-            readOnly: serviceUrl + 'xml.info?type=readonly',
             xmlConfig : serviceUrl + 'xml.config.get',
             admin : serviceUrl + 'admin',
             xmlError : serviceUrl + 'xml.main.error',
             searchKeyword : serviceUrl + 'xml.search.keywords',
             getThesaurus : serviceUrl + 'xml.thesaurus.getList',
-            getStatus: serviceUrl + 'xml.info?type=status',
-            getKeyword: serviceUrl + 'xml.keyword.get',
-            searchCRS: serviceUrl + 'crs.search',
-            getCRSTypes: serviceUrl + 'crs.types',
-            logoAdd: serviceUrl + 'logo.add',
-            updatePassword: serviceUrl + 'change.password#/',
-            updateUserInfo: serviceUrl + 'admin.console#/organization/users/',
-            harvestingAdmin: serviceUrl + 'admin.console#/harvest',
-            logoUrl: this.URL + '/images/logos/',
-            imgUrl: this.URL + '/images/',
-            harvesterLogoUrl: this.URL + '/images/harvesting/',
-            getImportXSL: serviceUrl + 'get.conversions.xsl',
-            proxy: this.URL + '/proxy',
+            getStatus: serviceUrl + 'xml.metadata.status.values.list',
+            getKeyword : serviceUrl + 'xml.keyword.get',
+            searchCRS : serviceUrl + 'crs.search',
+            getCRSTypes : serviceUrl + 'crs.types',
+            logoAdd : serviceUrl + 'logo.add',
+            logoUrl : this.URL + '/images/logos/',
+            imgUrl : this.URL + '/images/',
+            harvesterLogoUrl : this.URL + '/images/harvesting/',
             unpublishSelection : serviceUrl + 'metadata.select.unpublish',
             notifyByMail : serviceUrl + 'metadata.select.notifybymail',
             metadataSelectionInfo : serviceUrl + 'metadata.select.info'
@@ -443,31 +428,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Return true if current user is an admin
      */
     isAdmin : function() {
-        return this.identifiedUser.role === "Administrator";
-    },
-    /** api: method[canSetInternalPrivileges]
-     *  Return true if current user can set privileges to internal groups (ie. internet, intranet)
-     */
-    canSetInternalPrivileges: function(){
-        return this.identifiedUser.role === "Administrator" || this.identifiedUser.role === "Reviewer";
-    },
-    /** api: method[isReadOnly]
-     *  Return true if GN is is read-only mode
-     */
-    isReadOnly: function(){
-        var request = OpenLayers.Request.GET({
-            url: this.services.readOnly,
-            async: false
-        }), ro, result = false;
-
-        if (request.responseXML) {
-            var xml = request.responseXML.documentElement;
-            ro = xml.getElementsByTagName('readonly')[0];
-            if(ro) {
-                result = ro.childNodes[0].nodeValue === "true";
-            }
-        }
-        return result;
+        return this.adminUser;
     },
     /** api: method[onAfterLogin]
      *  :param e: ``Object``
@@ -525,7 +486,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     /** api: method[onAfterRating]
      *  :param e: ``Object``
      *
-     *  The "onAfterRating" listener.
+     * The "onAfterDelete" listener.
      *
      *  Listeners will be called with the following arguments:
      *
@@ -534,30 +495,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     onAfterRating : function() {
         this.fireEvent('afterRating', this);
-    },
-    /** api: method[onAfterStatus]
-     *  :param e: ``Object``
-     *
-     *  The "onAfterStatus" listener.
-     *
-     *  Listeners will be called with the following arguments:
-     *
-     *    * ``this`` : GeoNetwork.Catalogue
-     *    
-     */
-    },
-    /** api: method[onAfterStatus]
-     *  :param e: ``Object``
-     *
-     *  The "onAfterStatus" listener.
-     *
-     *  Listeners will be called with the following arguments:
-     *
-     *    * ``this`` : GeoNetwork.Catalogue
-     *    
-     */
-    onAfterStatus: function(){
-        this.fireEvent('afterStatus', this);
     },
     /** private: method[setSelectedRecords]
      *  :param nb: ``Number``
@@ -582,7 +519,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     getInfo : function(refresh) {
         if (refresh || this.info === null) {
             this.info = {};
-            var properties = ['name', 'organization', 'siteId', 'casEnabled', 'userGroupOnly'];
+            var properties = ['name', 'organization', 'siteId', 'casEnabled'];
             var request = OpenLayers.Request.GET({
                 url : this.services.getSiteInfo,
                 async : false
@@ -950,37 +887,24 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 this.kvpSearch("fast=index&_uuid=" + uuid, null, null, null, true, store, null, false);
                 record = store.getAt(store.find('uuid', uuid));
             }
-            
-            // metadata deleted or not visible to current user
-            if (record !== undefined) {
-                if (this.metadataShowFn) {
-                    this.metadataShowFn(uuid, record, url, maximized, width, height);
-                } else {
-                    var win = new GeoNetwork.view.ViewWindow({
-                        serviceUrl: url,
-                        lang: this.lang,
-                        currTab: GeoNetwork.defaultViewMode || 'simple',
-                        printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
-                        printUrl: GeoNetwork.printUrl || 'print.html',
-                        catalogue: this,
-                        maximized: maximized || false,
-                        metadataUuid: uuid,
-                        record: record,
-                        resultsView: this.resultsView
-                        });
-                    win.show(this.resultsView);
-                    win.alignTo(bd, 'tr-tr');
-                }
+
+            if (this.metadataShowFn) {
+                this.metadataShowFn(uuid, record, url, maximized, width, height);
             } else {
-                GeoNetwork.Message().msg({
-                    title: OpenLayers.i18n('error'), 
-                    msg: OpenLayers.i18n('metadata-not-found'), 
-                    tokens: {
-                        uuid: uuid
-                    }, 
-                    status: 'warning',
-                    target: Ext.getBody()
-                });
+                var win = new GeoNetwork.view.ViewWindow({
+                            serviceUrl : url,
+                            lang : this.lang,
+                    currTab: GeoNetwork.defaultViewMode || 'simple',
+                            printDefaultForTabs : GeoNetwork.printDefaultForTabs || false,
+                    printUrl: GeoNetwork.printUrl || 'print.html',
+                            catalogue : this,
+                            maximized : maximized || false,
+                            metadataUuid : uuid,
+                            record : record,
+                            resultsView : this.resultsView
+                        });
+                win.show(this.resultsView);
+                win.alignTo(bd, 'tr-tr');
             }
         }
     },
@@ -1076,12 +1000,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *
      * FIXME : metadata.edit service does not support uuid param
      */
-    metadataEdit: function(id, create, group, child, isTemplate, schema){
+    metadataEdit: function(id, create, group, child, isTemplate){
         
         switch (this.editMode) {
         case this.EDITOR_MODE.IN_EDITOR_POPUP:
             if (this.metadataEditFn) {
-                this.metadataEditFn(id, create, group, child, isTemplate, schema);
+                this.metadataEditFn(id, create, group, child, isTemplate);
             }
             break;
         default:
@@ -1092,7 +1016,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                     '&template=' + isTemplate + '&child=' + child;
             } else {
                 url = this.services.mdEdit + '?id=' + id;
-        }
+            }
             window.open(url, this.windowName, this.windowOption);
         }
     },
@@ -1174,12 +1098,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             params : params,
             success : function(response) {
                 if (msgSuccess) {
-                    GeoNetwork.Message().msg({
-                        title: OpenLayers.i18n(msgSuccess),
-                        msg: response.responseText,
-                        status: '',
-                        target: Ext.getBody()
-                    });
+                    Ext.Msg.alert(msgSuccess, response.responseText);
                 }
 
                 if (onSuccess) {
@@ -1195,13 +1114,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 }
             }
         });
-    },
-    getNodeText: function(node){
-        if (node) {
-            return node.innerText || node.textContent || node.text;
-        } else {
-            return '';
-        }
     },
     /** api: method[isLoggedIn]
      *
@@ -1232,13 +1144,15 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             var role = me.getElementsByTagName('profile')[0];
 
             this.identifiedUser = {
-                id: this.getNodeText(me.getElementsByTagName('id')[0]),
-                username: this.getNodeText(me.getElementsByTagName('username')[0]),
-                name: this.getNodeText(me.getElementsByTagName('name')[0]),
-                surname: this.getNodeText(me.getElementsByTagName('surname')[0]),
-                email: this.getNodeText(me.getElementsByTagName('email')[0]), 
-                hash: this.getNodeText(me.getElementsByTagName('hash')[0]),
-                role: this.getNodeText(me.getElementsByTagName('profile')[0])
+                username : username.innerText
+                        || username.textContent
+                        || username.text,
+                name : name.innerText || name.textContent
+                        || name.text,
+                surname : surname.innerText
+                        || surname.textContent || surname.text,
+                role : role.innerText || role.textContent
+                        || role.text
             };
             this.onAfterLogin();
             return true;
@@ -1394,17 +1308,10 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Open the administration interface according to adminAppUrl properties.
      */
     admin : function() {
-        location.href = this.adminAppUrl;
+        location.replace(this.adminAppUrl);
     },
-    /** api: method[admin]
-    *
-    *  Open the administration interface according to adminAppUrl properties.
-    */
-    moveToURL: function(url){
-        location.href = url;
-    },
-    metadataImport: function(){
-        location.href = this.services.mdImport;
+    metadataImport : function() {
+        location.replace(this.services.mdImport);
     },
     /**	api: method[massiveOp]
      *  :param type: Type of massive operation. One of ``NewOwner``,
@@ -1418,68 +1325,46 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *
      * FIXME : Need work on GeoNetwork side to fix JS calls
      */
-    massiveOp: function(type, cb){
-        if (type === 'Privileges') {
-            var url = this.services.mdBatchAdminXml + "?id=" + id;
-            var privilegesPanel = new GeoNetwork.admin.PrivilegesPanel({
-                id: id,
-                url: url,
-                batch: true,
-                onlyUserGroup: this.info.userGroupOnly.toLowerCase() === 'true' || false
-            });
-            this.modalAction(OpenLayers.i18n('setBatchPrivileges'), privilegesPanel, cb);
-        } else {
-            var url = this.services.massiveOp[type];
-            this.modalAction(OpenLayers.i18n('massiveOp') + " - " + type, url, cb);
-        }
+    massiveOp : function(type, cb) {
+        var url = this.services.massiveOp[type];
+        this.modalAction(OpenLayers.i18n('massiveOp') + " - " + type, url, cb);
     },
     /** private: method[modalAction]
      *
-     *  
-     *  Create a modal window and load the URL content or add the panel
-     *  in the modal window.
-     *  
+     *  Create a modal window and load the URL content.
      *  If no callback provided, default callback on error, close the window.
      *
      *  TODO : retrieve error message on error (currently HTML services are
      *  called with HTML response not easy to parse)
      */
-    modalAction: function(title, urlOrPanel, cb){
-        if (urlOrPanel) {
+    modalAction : function(title, url, cb) {
+        if (url) {
             var app = this, win, defaultCb = function(el, success, response, options) {
                 if (!success) {
                     app.showError('Catalogue error', title);
                     win.close();
                 }
             };
-            
-            var item;
-            if(typeof(urlOrPanel) == 'string') {
-                item = new Ext.Panel({
-                    autoLoad: {
-                        url: urlOrPanel,
-                        callback: cb || defaultCb,
-                        scope: win
-                    },
-                    border: false,
-                    frame: false,
-                    autoScroll: true
-                })
-            }
-            else {
-                item =urlOrPanel;
-            }
             win = new Ext.Window({
-                id: 'modalWindow',
-                layout: 'fit',
-                width: 900,
-                height: 500,
-                closeAction: 'destroy',
-                plain: true,
-                modal: true,
-                draggable: false,
-                title: title,
-                items: item
+                id : 'modalWindow',
+                layout : 'fit',
+                width : 700,
+                height : 400,
+                closeAction : 'destroy',
+                plain : true,
+                modal : true,
+                draggable : false,
+                title : title,
+                items : new Ext.Panel({
+                    autoLoad : {
+                        url : url,
+                        callback : cb || defaultCb,
+                        scope : win
+                    },
+                    border : false,
+                    frame : false,
+                    autoScroll : true
+                })
             });
             win.show(this);
             win.alignTo(Ext.getBody(), 't-t');
@@ -1489,44 +1374,16 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     /** api: method[metadataAdmin]
      *  Metadata admin form for privileges
      */
-    metadataAdmin: function(id){
-        var url = this.services.mdAdminXml + "?id=" + id;
-        var privilegesPanel = new GeoNetwork.admin.PrivilegesPanel({
-            id: id,
-            url: url,
-            onlyUserGroup: this.info.userGroupOnly.toLowerCase() === 'true' || false
-        });
-        this.modalAction(OpenLayers.i18n('setPrivileges'), privilegesPanel);
+    metadataAdmin : function(id) {
+        var url = this.services.mdAdmin + "?id=" + id;
+        this.modalAction(OpenLayers.i18n('setPrivileges'), url);
     },
     /** api: method[metadataStatus]
-     *  Open status form to update metadata status
+     *  Change status for this metadata
      */
     metadataStatus : function(id) {
         var url = this.services.mdStatus + "?id=" + id;
         this.modalAction(OpenLayers.i18n('setStatus'), url);
-    },
-    /** api: method[metadataSetStatus]
-     *  Change status for this metadata
-     */
-    metadataSetStatus: function(id, status, msg){
-        var url = this.services.mdStatusSet + "?id=" + id + "&status=" + status + "&changeMessage=" + msg;
-
-        catalogue.doAction(catalogue.services.mdStatusSet, {
-                                    id: id,
-                                    status: status,
-                                    changeMessage: msg
-                                }, 
-                                undefined, 
-                                OpenLayers.i18n('error'), 
-                                function () {
-                                    GeoNetwork.Message().msg({
-                                        title: OpenLayers.i18n('enableWorkflow'),
-                                        msg: OpenLayers.i18n('enableWorkflowStart'),
-                                        status: '',
-                                        target: Ext.getBody()
-                                    });
-                                    catalogue.onAfterStatus();
-                                });
     },
     /** api: method[metadataVersioning]
      *  Active versioning for this metadata

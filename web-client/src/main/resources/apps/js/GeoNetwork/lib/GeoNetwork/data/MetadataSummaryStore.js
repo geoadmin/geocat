@@ -31,6 +31,7 @@ Ext.namespace('GeoNetwork.data');
  *   return a pre-configured `Ext.data.JsonStore *      <http://extjs.com/deploy/dev/docs/?class=Ext.data.JsonStore>`_
  *   for GeoNetwork summary.
  *
+ *   TODO : summary on any possible type only keywords.keyword are supported.
  *   
  *   .. code-block:: xml
  *   
@@ -56,13 +57,14 @@ Ext.namespace('GeoNetwork.data');
  *         <organizationName 
  *   
  */
-GeoNetwork.data.MetadataSummaryStore = function(root){
-    
+GeoNetwork.data.MetadataSummaryStore = function(){
+
     return new Ext.data.JsonStore({
         totalProperty: 'count',
-        root: root || 'keywords.keyword',
+        root: 'keywords.keyword',
         listeners: {
             load: function(store, records, opt){
+            
                 var valueField = 'count';
                 var normalizedField = 'class';
                 var typeField = 'type';

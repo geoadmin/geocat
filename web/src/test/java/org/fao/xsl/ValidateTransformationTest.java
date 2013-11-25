@@ -763,7 +763,6 @@ public class ValidateTransformationTest
     {
         File file = new File(data, "gm03V2/3-different-types-of-polygons.gm03.xml");
         Multimap<String, Requirement> rules = ArrayListMultimap.create();
-        rules = ArrayListMultimap.create();
         rules.put("identificationInfo", new Exists(new PolygonValidator("EX_1", INCLUDE, 1, 1, 0)));
         rules.put("identificationInfo", new Exists(new PolygonValidator("EX_2", INCLUDE, 0, 1, 0)));
         rules.put("identificationInfo", new Exists(new PolygonValidator("EX_3", INCLUDE, 1, 0, 0)));

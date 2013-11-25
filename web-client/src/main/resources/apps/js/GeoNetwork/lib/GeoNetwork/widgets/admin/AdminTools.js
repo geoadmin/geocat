@@ -28,10 +28,11 @@ GeoNetwork.admin.AdminTools = {
      * Show and create a new import metadata window
      *
      */
-    showImportMetadataWindow: function(isTemplate, windowTitle) {
+    showImportMetadataWindow: function(metadataType, windowTitle) {
     
         var metadataPanel = new GeoNetwork.admin.MetadataInsertPanel({
-            isTemplate: isTemplate
+            metadataType: metadataType
+            //            catalogue: scope.catalogue
         });
         
         var newMetadataWindow = new Ext.Window({

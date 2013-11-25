@@ -12,6 +12,7 @@ import org.apache.lucene.util.AttributeImpl;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.search.GeoNetworkAnalyzer;
 import org.fao.geonet.utils.Log;
 import org.jdom.Content;
@@ -339,9 +340,9 @@ public class LangUtils {
     {
         boolean removeTranslation = (elUser.getChild("record")!=null &&
                                      elUser.getChild("record").getChild("profile") !=null &&
-                                     !elUser.getChild("record").getChild("profile").getTextTrim().equals(Geocat.Profile.SHARED)) ||
+                                     !elUser.getChild("record").getChild("profile").getTextTrim().equals(Profile.Shared.name())) ||
                                     (elUser.getChild("profile") != null &&
-                                     !elUser.getChild("profile").getTextTrim().equals(Geocat.Profile.SHARED));
+                                     !elUser.getChild("profile").getTextTrim().equals(Profile.Shared.name()));
 
         Filter findMultilingualElements = new Filter()
         {

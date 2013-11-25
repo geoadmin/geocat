@@ -101,10 +101,10 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
         this.searchCb();
         this.fireEvent('onsearch');
     },
-    reset: function (args) {
+    reset: function () {
         this.searchTriggered = false;
-        this.resetCb(args);
-        this.fireEvent('onreset', args);
+        this.resetCb();
+        this.fireEvent('onreset');
     },
     /** private: method[initComponent] 
      *  Initializes the search form panel.
@@ -115,7 +115,6 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
             searchBt: new Ext.Button({
                 text: OpenLayers.i18n('search'),
                 iconCls : 'md-mn-find',
-                ctCls: 'gn-bt-main',
                 iconAlign: 'right'
             }),
             resetBt: new Ext.Button({

@@ -36,8 +36,10 @@ Ext.namespace('GeoNetwork.admin');
  *
  */
 GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
+    border: false,
     frame: false,
     record: undefined,
+    layout: 'border',
     catalogue: undefined,
     toolbar: undefined,
     /**
@@ -62,11 +64,10 @@ GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
     defaultConfig: {
         //title: OpenLayers.i18n('manageDirectories'),
         defaultViewMode: 'simple',
-        border: false,
         height: 800,
         autoWidth : true,
-        iconCls: 'subtemplateIcon',
-        hitsPerPage: 200
+        layout : 'border',
+        iconCls: 'subtemplateIcon'
     },
     /**
      * Create a combo box with the list of root element possible.
@@ -169,7 +170,6 @@ GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
         // Search form
         this.searchField = new GeoNetwork.form.SearchField({
             name: 'E_any',
-            anchor: '100%',
             store: this.catalogue.metadataStore,
             triggerAction: function(scope){
                 scope.record = undefined;
@@ -178,16 +178,11 @@ GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
             },
             scope: panel
         });
-        
-        this.catalogue.metadataStore.on('load', function () {
-            this.sort('title');
-        });
-        
         this.searchForm = new Ext.FormPanel({
             id: 'searchForm',
             border: false,
             defaults: {
-                anchor: '100%',
+                width: 240,
                 hideLabel: true
             },
             items: [
@@ -197,11 +192,6 @@ GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
                     name: 'E__isTemplate',
                     hidden: true,
                     value: 's'
-                }, {
-                    xtype: 'textfield',
-                    name: 'E_hitsperpage',
-                    hidden: true,
-                    value: this.hitsPerPage
                 },
                 this.searchField
             ]
@@ -215,20 +205,20 @@ GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
         
         // Results grid
         this.searchResultGrid = new Ext.grid.GridPanel({
-            anchor: '100%',
-            height: 625,
+            layout: 'fit',
+            autoHeight: true,
+            height: 500,
+            border: false,
             store: this.catalogue.metadataStore,
             // TODO : it could be nice to be able to sort by mode information according to the type
             // of sub-template. For example, sort by organisation, name or email for contacts
             columns: [{
                 id: 'title',
                 header: OpenLayers.i18n('title'),
-                sortable: true,
                 dataIndex: 'title'
             }, {
                 id: 'uuid',
                 header: 'Uuid',
-                sortable: true,
                 dataIndex: 'uuid',
                 hidden: true
             }],
@@ -248,7 +238,8 @@ GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
                     tooltip: OpenLayers.i18n('addTplElTT'),
                     iconCls: 'addIcon',
                     handler: function(){
-                        GeoNetwork.admin.AdminTools.showImportMetadataWindow('s', OpenLayers.i18n('subTemplateImport'));
+                        var metadataType = 's';
+                        GeoNetwork.admin.AdminTools.showImportMetadataWindow(metadataType, OpenLayers.i18n('subTemplateImport'));
                     },
                     scope: this
                 },{

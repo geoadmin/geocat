@@ -74,7 +74,6 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         collapsible: true,
         constrain : true,
         constrainHeader : true,
-        showFeedBackButton: false,
         collapsed: false,
         /** api: config[permalink]
          *  Define if permalink button should be displayed or not. Default is true.
@@ -153,7 +152,6 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
             metadataUuid: this.metadataUuid,
             record: this.record,
             resultsView: this.resultsView,
-            showFeedBackButton: this.showFeedBackButton,
             border: false,
             frame: false,
             autoScroll: true,

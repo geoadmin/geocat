@@ -96,7 +96,7 @@ GeoNetwork.GeoCatCh.Lang.de = {
 	'denominators' : 'Räumliche Auflösung',
 	'denominator' : 'räumliche auflösung',
     'country': 'Staat',
-    'city': 'Stadt',
+    'city': 'Statd',
     'body': 'Body',
     'bodyError': 'Error',
     'subject': 'Subject',

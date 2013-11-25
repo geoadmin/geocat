@@ -37,16 +37,6 @@ Ext.namespace('GeoNetwork');
  *
  */
 GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
-    defaultConfig: {
-        /** api: config[withPaging] 
-         * ``boolean`` Add paging button. Default is false.
-         */
-        withPaging: false,
-        /** api: config[searchCb] 
-         * ``Function`` The search callback to call while paging
-         */
-        searchCb: null
-    },
     /** api: config[catalogue] 
      * ``GeoNetwork.Catalogue`` Catalogue to use
      */
@@ -124,8 +114,6 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     
     newMetadataWindow: undefined,
     
-    insertMetadataWindow: undefined,
-    
     mdImportAction: undefined,
     
     adminAction: undefined,
@@ -145,27 +133,68 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      *  Initializes the toolbar results view.
      */
     initComponent: function(){
-        Ext.applyIf(this, this.defaultConfig);
-        
         var cmp = [];
         cmp.push(this.createSelectionToolBar());
         cmp.push(OpenLayers.i18n('hitsPerPage'), this.getHitsPerPage());
-        if (this.withPaging) {
-            cmp.push(this.createPaging());
-        }
+        
         cmp.push(['->']);
 
+        var previousAction = new Ext.Action(
+            {
+                id : 'previousBt_up',
+                text : '&lt;&lt;',
+                handler : function() {
+                    var from = catalogue.startRecord - parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
+                    if(from < 0)
+                        from = 0;
+                    if (from > 0) {
+                        catalogue.startRecord = from;
+                        //Swisstopo specific
+                        catalogue.search(
+                                app.searchApp.getSearchForm().id,
+                                app.searchApp.loadResults,
+                                null,
+                                catalogue.startRecord,
+                                true);
+                    }
+                },
+                scope : this
+            });
+
+        cmp.push(previousAction, '|');
+
+
+        var nextAction = new Ext.Action({
+            id : 'nextBt_up',
+            text : '&gt;&gt;',
+            handler : function() {
+                catalogue.startRecord += parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
+                //Swisstopo specific
+                catalogue.search(
+                    app.searchApp.getSearchForm().id,
+                    app.searchApp.loadResults, null,
+                    catalogue.startRecord, true);
+            },
+            scope : this
+        });
+
+        cmp.push(nextAction, '|');
+
+        cmp.push({
+            xtype : 'tbtext',
+            text : '',
+            id : 'info_up'
+        }, '|');
+
         var sortOption = this.getSortByCombo();
-        cmp.push(OpenLayers.i18n('sortBy'), sortOption);
-        cmp.push(['|']);
+        cmp.push(OpenLayers.i18n('sortBy'), sortOption, '|');
+        
         cmp.push(this.createTemplateMenu());
-        cmp.push(this.createSelectionToolBar());
         cmp.push(this.createOtherActionMenu());
         
         // Permalink
         if(this.permalinkProvider) {
             var l = this.permalinkProvider.getLink;
-            cmp.push(['|']);
             cmp.push(GeoNetwork.Util.buildPermalinkMenu(l, this.permalinkProvider));
         }
         
@@ -180,7 +209,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
  		   url: this.catalogue.services.mdSelect,
  		   success: function(response, opts) {
  			  var numSelected = response.responseXML.getElementsByTagName('Selected')[0].firstChild.nodeValue;
- 			  this.updateSelectionInfo(this.catalogue, parseInt(numSelected));
+ 			  this.updateSelectionInfo(this.catalogue, numSelected);
  		  },
  		  scope:this
  		});
@@ -207,9 +236,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                         /* Adapt sort order according to sort field */
                         var tokens = cb.getValue().split('#');
                         Ext.getCmp('E_sortBy').setValue(tokens[0]);
-                        if(Ext.getCmp('sortOrder')) {
-                            Ext.getCmp('sortOrder').setValue(tokens[1]);
-                        }
+                        Ext.getCmp('sortOrder').setValue(tokens[1]);
                     }
                    app.searchApp.fireSearch();
                 },
@@ -254,7 +281,6 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     clickTemplateMenu: function(item, pressed){
         if (pressed) {
             this.applyTemplate(item.getId());
-            this.refreshLinks();
         }
         this.initRatingWidget();
     },
@@ -275,7 +301,6 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         this.ownerAction = new Ext.menu.Item({
             text: OpenLayers.i18n('newOwner'),
             id: 'ownerAction',
-            iconCls: 'newOwnerIcon',
             handler: function(){
                 this.catalogue.massiveOp('NewOwner');
             },
@@ -316,7 +341,6 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         this.updateCategoriesAction = new Ext.menu.Item({
             text: OpenLayers.i18n('updateCategories'),
             id: 'updateCategoriesAction',
-            iconCls: 'categoryIcon',
             handler: function(){
                 this.catalogue.massiveOp('Categories');
             },
@@ -355,58 +379,17 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         });*/
         
         this.selectionActions.push(this.deleteAction,this.notifyByMailAction, this.unpublishSelectionAction, this.ownerAction, this.updateCategoriesAction, 
-                this.updatePrivilegesAction, this.indexSelectionActio); //, this.updateStatusAction, this.updateVersionAction);
-
-        if(!this.catalogue.isReadOnly()) {
-            this.actionMenu.addItem(this.notifyByMailAction);
-            this.actionMenu.addItem(this.unpublishSelectionAction);
-            this.actionMenu.addItem(this.ownerAction);
-            this.actionMenu.addItem(this.updateCategoriesAction);
-            this.actionMenu.addItem(this.updatePrivilegesAction);
-            //this.actionMenu.addItem(this.updateStatusAction);
-            //this.actionMenu.addItem(this.updateVersionAction);
-            this.actionMenu.addItem(this.deleteAction);
-        	this.actionMenu.addItem(this.indexSelectionAction);
-        }
-    },
-    createPaging: function () {
-        var self = this;
-        var previousAction = new Ext.Action({
-            id: 'previousBt',
-            text: '&lt;&lt;',
-            handler: function () {
-                var from = catalogue.startRecord - parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
-                if (from > 0) {
-                    catalogue.startRecord = from;
-                    //Swisstopo specific
-                    catalogue.search(
-                            app.searchApp.getSearchForm().id,
-                            app.searchApp.loadResults,
-                            null,
-                            catalogue.startRecord,
-                            true);
-                }
-            }
-        });
+                this.updatePrivilegesAction, this.indexSelectionAction); //, this.updateStatusAction, this.updateVersionAction);
         
-        var nextAction = new Ext.Action({
-            id: 'nextBt',
-            text: '&gt;&gt;',
-            handler: function () {
-                catalogue.startRecord += parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
-              //Swisstopo specific
-                catalogue.search(
-                    app.searchApp.getSearchForm().id,
-                    app.searchApp.loadResults, null,
-                    catalogue.startRecord, true);
-            }
-        });
-        
-        return [previousAction, {
-                xtype: 'tbtext',
-                text: '',
-                id: 'info'
-            }, nextAction];
+        this.actionMenu.addItem(this.notifyByMailAction);
+        this.actionMenu.addItem(this.unpublishSelectionAction);
+        this.actionMenu.addItem(this.ownerAction);
+        this.actionMenu.addItem(this.updateCategoriesAction);
+        this.actionMenu.addItem(this.updatePrivilegesAction);
+        //this.actionMenu.addItem(this.updateStatusAction);
+        //this.actionMenu.addItem(this.updateVersionAction);
+        this.actionMenu.addItem(this.deleteAction);
+        this.actionMenu.addItem(this.indexSelectionAction);
     },
     /** private: method[createAdminMenu] 
      *  Create quick admin action menu to not require to go to
@@ -421,7 +404,6 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         this.actionMenu.addItem(this.otherItem);
         this.createMetadataAction = new Ext.menu.Item({
             text: OpenLayers.i18n('newMetadata'),
-            ctCls: 'gn-bt-main',
             iconCls: 'addIcon',
             handler: function(){
                 // FIXME : could be improved. Here we clean the window
@@ -455,48 +437,21 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this,
             hidden: hide
         });
-        if(!this.catalogue.isReadOnly()) {
-            this.actionMenu.addItem(this.createMetadataAction);
-        }
-
+        
+        this.actionMenu.addItem(this.createMetadataAction);
+        
         this.mdImportAction = new Ext.menu.Item({
             text: OpenLayers.i18n('importMetadata'),
-            iconCls: 'importIcon',
             handler: function(){
-                if (this.insertMetadataWindow) {
-                    this.insertMetadataWindow.close();
-                    this.insertMetadataWindow = undefined;
-                }
-                
-                // Create a window to choose the template and the group
-                if (!this.insertMetadataWindow) {
-                    var insertMetadataPanel = new GeoNetwork.editor.InsertMetadataPanel({
-                    });
-                    
-                    this.insertMetadataWindow = new Ext.Window({
-                        title: OpenLayers.i18n('importMetadata'),
-                        width: 660,
-                        height: 650,
-                        layout: 'fit',
-                        modal: true,
-                        items: insertMetadataPanel,
-                        closeAction: 'hide',
-                        constrain: true,
-                        iconCls: 'addIcon'
-                    });
-                }
-                this.insertMetadataWindow.show();
+                this.catalogue.metadataImport();
             },
             scope: this,
             hidden: hide
             });
-        if(!this.catalogue.isReadOnly()) {
-            this.actionMenu.addItem(this.mdImportAction);
-        }
-
+        this.actionMenu.addItem(this.mdImportAction);
+        
         this.adminAction = new Ext.menu.Item({
             text: OpenLayers.i18n('administration'),
-            iconCls: 'adminIcon',
             handler: function(){
                 this.catalogue.admin();
             },
@@ -544,7 +499,6 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
          */
         /*var csvExportAction = new Ext.Action({
             text: OpenLayers.i18n('exportCsv'),
-            iconCls: 'csvIcon',
             handler: function(){
                 this.catalogue.csvExport();
             },
@@ -721,7 +675,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      *  Update privileges after user login
      */
     updatePrivileges: function(catalogue, user){
-        var editingActions = [this.deleteAction, this.updateCategoriesAction, 
+        var editingActions = [this.deleteAction, this.updateCategoriesAction,
                         this.updatePrivilegesAction, this.createMetadataAction,
                         this.mdImportAction],
             adminActions = [this.ownerAction],

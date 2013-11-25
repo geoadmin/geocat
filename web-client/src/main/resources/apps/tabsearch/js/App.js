@@ -830,7 +830,7 @@ GeoNetwork.app = function () {
                 lang : lang,
                 hostUrl : geonetworkUrl,
                 mdOverlayedCmpId : 'resultsPanel',
-                adminAppUrl : geonetworkUrl + '/srv/' + lang + '/admin.console',
+                adminAppUrl : geonetworkUrl + '/srv/' + lang + '/admin',
                 // Declare default store to be used for records and
                 // summary
                 metadataStore : GeoNetwork.Settings.mdStore ? GeoNetwork.Settings
@@ -1037,13 +1037,6 @@ GeoNetwork.app = function () {
                 catalogue.metadataShowById(urlParameters.id, true);
             }
 
-            if (urlParameters.insert !== undefined) {
-                setTimeout(function () {
-                    var actionCtn = Ext.getCmp('resultsPanel').getTopToolbar();
-                    actionCtn.mdImportAction.handler.apply(actionCtn);
-                }, 500);
-            }
-            
             // FIXME : should be in Search field configuration
             Ext.get('E_any').setWidth(285);
             Ext.get('E_any').setHeight(28);
@@ -1202,7 +1195,7 @@ Ext.onReady(function () {
             catalogue.kvpSearch("fast=index&uuid=" + uuid, null, null, null,
                     true, store, null, false);
             var record = store.getAt(store.find('uuid', uuid));
-            var showFeedBackButton = record.get('email');
+
             var RowTitle = uuid;
 
             try {
@@ -1227,7 +1220,6 @@ Ext.onReady(function () {
                 catalogue : catalogue,
                 // maximized: true,
                 metadataUuid : uuid,
-                showFeedBackButton: showFeedBackButton,
                 record : record
             });
 

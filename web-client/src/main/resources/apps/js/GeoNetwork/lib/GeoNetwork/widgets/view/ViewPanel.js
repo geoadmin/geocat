@@ -39,7 +39,6 @@ Ext.namespace('GeoNetwork.view');
  *      * a metadata menu (:class:`GeoNetwork.MetadataMenu`)
  *      * a print mode menu (for pretty HTML printing)
  *      * a menu to turn off tooltips (on metadata descriptors)
- *      * an option to give metadata-specific feedback
  *
  */
 GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
@@ -81,7 +80,6 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
     catalogue: undefined,
     metadataUuid: undefined,
     record: undefined,
-    showFeedBackButton: undefined,
     resultsView: undefined,
     actionMenu: undefined,
     permalinkMenu: undefined,
@@ -89,8 +87,6 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
     metadataSchema: undefined,
     cache: {},
     tooltips: [],
-    buttonWidth : undefined,
-    buttonHeight : undefined,
     /** api: method[getLinkedData]
      *  Get related metadata records for current metadata using xml.relation service.
      */
@@ -415,10 +411,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
     },
     createPrintMenu: function(){
         return new Ext.Button({
-            width: this.buttonWidth,
-            height: this.buttonHeight,
             iconCls: 'print',
-            id : 'viewpanel-print',
             tooltip: OpenLayers.i18n('printTT'),
             listeners: {
                 click: function(c, pressed){
@@ -428,38 +421,11 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
             }
         });
     },
-    createFeedbackMenu: function() {
-        var disabledButton;
-        if(this.showFeedBackButton) {
-            disabledButton = false;
-        }
-        else {
-            disabledButton = true;
-        }
-        return new Ext.Button({
-            width: this.buttonWidth,
-            height: this.buttonHeight,
-            iconCls: 'feedback',
-            id : 'viewpanel-feedback',
-            tooltip: OpenLayers.i18n('Feedback'),
-            disabled: disabledButton,
-            listeners: {
-                click: function(c, pressed) {
-                    var feedbackWindow = new GeoNetwork.FeedbackForm(null, this.record);
-                    feedbackWindow.show();
-                },
-                scope: this
-            }
-        });
-    },
     createTooltipMenu: function(){
         return new Ext.Button({
-            width: this.buttonWidth,
-            height: this.buttonHeight,
             enableToggle: true,
             pressed: this.displayTooltip,
             iconCls: 'book',
-            id : 'viewpanel-tooltip',
             tooltip: OpenLayers.i18n('enableTooltip'),
             listeners: {
                 toggle: function(c, pressed){

@@ -39,7 +39,6 @@ GeoNetwork.editor.SuggestionsPanel = Ext.extend(Ext.Panel, {
         border: false,
         frame: false,
         iconCls: 'suggestionIcon',
-        cls: 'suggestionPanel',
         title: undefined,
         collapsible: true,
         collapsed: true
@@ -129,7 +128,6 @@ GeoNetwork.editor.SuggestionsPanel = Ext.extend(Ext.Panel, {
                 buttons: [{
                     text: OpenLayers.i18n('process'),
                     iconCls: 'suggestionRunIcon',
-                    ctCls: 'gn-bt-main',
                     handler: function(){
                         if (processParametersPanel.getForm().isValid()) {
                             var action = this.catalogue.services.mdProcessing + 

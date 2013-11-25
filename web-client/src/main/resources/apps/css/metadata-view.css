@@ -2,14 +2,13 @@
   background-color : #FFFFFF;
 }
 .md-view {
-  /*background-color : #FFFFFF;*/
+  background-color : #FFFFFF;
   text-shadow : 0 1px 0 #FFFFFF;
 }
 .md-view ul {
   display : block;
   height : auto;
   position : relative;
-  padding: 5px 0px 5px 7px;;
 }
 /*.md-view ul li img {
   margin-bottom : 1px;
@@ -59,10 +58,6 @@ table.related * li {
   padding: 2px;
 }
 
-div.linkPanel div#add-menu-content{
-  float: right !important;
-}
-
 .md-view * a {
   text-decoration : none;
   color : #0076A1;
@@ -80,11 +75,11 @@ div.linkPanel div#add-menu-content{
 }
 .md-view td.icon {
   width : 16px;
-  border-left : 1px solid #ececec;
+  border-left : 1px dashed #e1e1e1;
   text-align : center;
 }
 .md-view ul li * .md-logo img {
-  width : 30px;
+  max-width : 30px;
 }
 .md-view ul li {
   border-top : 1px solid transparent;
@@ -110,7 +105,6 @@ div.linkPanel div#add-menu-content{
 }
 .md-thumbnail * h1 {
   font-size : smaller !important;
-  height: 35px;
 }
 
 
@@ -139,15 +133,14 @@ div.linkPanel div#add-menu-content{
 .md-view * div.rating,
 .md-view * div.thumbnail {
   clear : both;
-  width : 158px;
-  text-align: center;
+  width : 182px;
 }
 
 .md-view * div.thumbnail img {
   border : 1px solid #e7e5e5;
   padding : 1px;
-  max-width : 152px;
-  max-height : 152px;
+  max-width : 180px;
+  max-height : 140px;
   min-height : 40px;
   height: auto;
 }
@@ -184,14 +177,13 @@ span.md-action-menu {
   background-color:rgba(100, 100, 100, 0.15);
   border-top:1px solid rgba(0, 0, 0, 0.15);
  */
-  background-color : rgba(217, 210, 123, 0.25);
+  background-color : rgba(217, 210, 123, 0.85);
   border : 1px solid rgba(0, 51, 102, 0.25);
 }
 .md-view ul li.md-over {
   -moz-border-radius : 4px 4px 4px 4px;
-  background-color : rgba(10, 10, 10, 0.10);
-  border-top : 1px solid rgba(0, 0, 0, 0.10);
-  box-shadow: 2px 2px 14px -2px;
+  background-color : rgba(10, 10, 10, 0.15);
+  border-top : 1px solid rgba(0, 0, 0, 0.15);
 }
 .md-view li strong {
   color : #000000;
@@ -240,7 +232,7 @@ Display hyperlink as text next to element
 
 .md-view * p.abstract {
 }
-.md-view * .subject {
+.md-view * p.subject {
   font-size : 80%;
   text-transform : uppercase;
 }
@@ -320,53 +312,52 @@ Display hyperlink as text next to element
 .mn-clear {
   background-image : url(../images/default/cross.png) !important;
 }
-
 .search-item {
-  padding-left: 2px;
-}
-.search-item h3 {
   font-weight : normal !important;
-  line-height : 1.6em;
+  line-height : 1.5em;
 }
 .search-item span {
-  font-weight: bolder;
+  text-decoration : underline;
 }
-
 /* TagCloud styles */
 ul li.tag-cloud {
+  border-top : 1px solid transparent;
   text-align : center;
   padding : 1px;
   margin : 2px;
+  /*
+  height:200px;
+  width:200px;
+ */
 }
 ul li.tag-cloud-hover {
-  text-decoration: none;
-}
-ul li.tag-cloud a {
-    line-height: 26px;
+  -moz-border-radius : 4px 4px 4px 4px;
+  background-color : rgba(10, 10, 10, 0.15);
+  border-top : 1px solid rgba(0, 0, 0, 0.15);
 }
 li.tag-cloud-0 {
-  font-size : 60% !important;
+  font-size : xx-small !important
 }
 li.tag-cloud-1 {
-  font-size : 70% !important;
+  font-size : x-small !important
 }
 li.tag-cloud-2 {
-  font-size : 80% !important;
+  font-size : smaller !important
 }
 li.tag-cloud-3 {
-  font-size : 90% !important;
+  font-size : small !important
 }
 li.tag-cloud-4 {
-  font-size : 100% !important;
+  font-size : medium !important
 }
 li.tag-cloud-5 {
-  font-size : 120% !important;
+  font-size : larger !important
 }
 li.tag-cloud-6 {
-  font-size : 140% !important;
+  font-size : x-large !important
 }
 li.tag-cloud-7 {
-  font-size : 160% !important;
+  font-size : xx-large !important
 }
 /* Image in combo box */
 .x-combo-list-item img {

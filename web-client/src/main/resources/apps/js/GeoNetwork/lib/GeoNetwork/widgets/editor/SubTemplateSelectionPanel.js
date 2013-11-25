@@ -47,15 +47,13 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
     }, {
         name: 'name'
     }]),
+    subTemplateStore: undefined,
+    codeListStore: undefined,
+    subTplTypeField: undefined,
     /**
      * relative imagePath for ItemSelector
      */
     imagePath: undefined,
-    
-    subTemplateStore: undefined,
-    codeListStore: undefined,
-    metadataSchema: undefined,
-    subTplTypeField: undefined,
     
     /**
      * Property: itemSelector
@@ -130,9 +128,31 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
     SubTemplateSelected: [],
     initComponent: function(){
         this.subTemplateStore = GeoNetwork.data.MetadataResultsStore();
+
+        this.items = [{
+            xtype: 'panel',
+            layout: 'fit',
+            bodyStyle: 'padding: 5px;',
+            border: false,
+            items: [this.getSearchField(), this.getSubTemplateItemSelector()]
+        }];
         
-        this.items = [this.getSearchField(), this.getSubTemplateItemSelector()];
-        
+        this.subTemplateStore.on({
+            'loadexception': function(){
+            },
+            'beforeload': function(store, options){
+                if (!this.loadingMask) {
+                    this.loadingMask = new Ext.LoadMask(this.itemSelector.fromMultiselect.getEl(), {
+                        msg: OpenLayers.i18n('searching')
+                    });
+                }
+                this.loadingMask.show();
+            },
+            'load': function(){
+                this.loadingMask.hide();
+            },
+            scope: this
+        });
         
         /**
          * triggered when the user has selected a Contact
@@ -174,21 +194,12 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
             });
         return [new GeoNetwork.form.SearchField({
             name: 'E_any',
-            width: 240,
-            hideLabel: true,
             store: this.catalogue.metadataStore,
             triggerAction: function(scope){
                  scope.doSearch();
             },
             scope: this
-        }), {
-            xtype: 'textfield',
-            name: 'E_hitsperpage',
-            id: 'maxResults',
-            fieldLabel: OpenLayers.i18n('maxResults'),
-            value: 50,
-            width: 40
-        }, this.subTplTypeField
+        }),this.subTplTypeField
             , {
                 xtype: 'textfield',
                 name: 'E__isTemplate',
@@ -244,7 +255,6 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
          */
         this.codeListStore = GeoNetwork.data.CodeListStore({
             url: this.catalogue.services.schemaInfo,
-            schema: this.metadataSchema || 'iso19139',
             codeListName: 'gmd:CI_RoleCode'// FIXME this.codeListConfig[name].code
         });
 
@@ -260,11 +270,10 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
         
         this.codeListStore.on({
             'load': function(){
-                this.defaultRole && this.codeListCombo.setValue(this.defaultRole);
+                Ext.getCmp('codeList').setValue(this.defaultRole);
             },
             scope: this
         });
-        
         return this.codeListCombo;
     },
     
@@ -281,7 +290,7 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
         
         this.itemSelector = new Ext.ux.ItemSelector({
             name: "itemselector",
-            hideLabel: true,
+            fieldLabel: "ItemSelector",
             dataFields: ["uuid", "title"],
             toData: [],
             msWidth: 320,
@@ -408,8 +417,6 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
     },
     
     doSearch: function(){
-        this.subTemplateStore.removeAll();
-        
         if (!this.loadingMask) {
             this.loadingMask = new Ext.LoadMask(this.getEl(), {
                 msg: OpenLayers.i18n('searching')
@@ -422,12 +429,10 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
 //            GeoNetwork.editor.nbResultPerPage = Ext.getCmp('nbResultPerPage').getValue();
 //        }
         GeoNetwork.util.SearchTools.doQueryFromForm(this.id, this.catalogue, 
-            1, this.showResults.bind(this), this.searchError.bind(this), 
+            1, this.showResults.bind(this), null, 
             false, this.subTemplateStore);
     },
-    searchError: function(response){
-        this.loadingMask.hide();
-    },
+    
     showResults: function(response){
         var getRecordsFormat = new OpenLayers.Format.GeoNetworkRecords();
         var r = getRecordsFormat.read(response.responseText);
@@ -435,7 +440,6 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
         if (values.length > 0) {
             this.subTemplateStore.loadData(r);
         }
-        this.loadingMask.hide();
     }
 });
 

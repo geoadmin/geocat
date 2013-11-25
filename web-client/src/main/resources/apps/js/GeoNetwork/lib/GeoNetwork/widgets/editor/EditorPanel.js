@@ -44,17 +44,18 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     tbarConfig: undefined,
     id: 'editorPanel', // Only one Editor panel allowed by Document
     
+    /**
+     * image path for selectionPanel (default /ext-ux/MultiselectItemSelector-3.0/icons)
+     */
+    selectionPanelImgPath: undefined,
+
     defaultConfig: {
-        /**
-         * image path for selectionPanel (default /ext-ux/MultiselectItemSelector-3.0/icons)
-         */
-        selectionPanelImgPath: '../../apps/js/ext-ux/images',
-        /** api: config[defaultEditMode] 
-         *  Default edit mode to open the editor. Default to 'simple'.
+    	/** api: config[defaultViewMode] 
+         *  Default view mode to open the editor. Default to 'simple'.
          *  View mode is keep in user session (on the server).
          */
-        defaultEditMode: 'simple',
-        editMode: null,
+        defaultViewMode: 'simple',
+        selectionPanelImgPath: '../js/ext-ux/images',
         /** api: config[thesaurusButton] 
          *  Use thesaurus selector and inline keyword selection 
          *  instead of keyword selection popup.
@@ -76,11 +77,17 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
          *  Utility panel properties
          */
         utilityPanelConfig: {
+            /** api: config[utilityPanelConfig.thumbnailPanel] 
+             *  Collapsed thumbnail panel on startup. Default is false.
+             */
+            thumbnailPanel: {
+                collapsed: false
+            },
             /** api: config[utilityPanelConfig.relationPanel] 
              *  Collapsed relation panel on startup. Default is true.
              */
             relationPanel: {
-                collapsed: false
+                collapsed: true
             },
             /** api: config[utilityPanelConfig.validationPanel] 
              *  Collapsed validation panel on startup. Default is true.
@@ -108,6 +115,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     relationPanel: undefined,
     helpPanel: undefined,
     suggestionPanel: undefined,
+    thumbnailPanel: undefined,
     editorMainPanel: undefined,
     metadataId: undefined,
     versionId: undefined,
@@ -290,7 +298,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  :param  extent: ``String`` Initial map extent.
      *
      */
-    showGeoPublisherPanel: function(id, uuid, title, mdabstract, name, accessStatus, nodeName, insertNodeRef, extent){
+    showGeoPublisherPanel: function(id, uuid, title, name, accessStatus, nodeName, insertNodeRef, extent){
         //Ext.QuickTips.init();
         var editorPanel = this;
         
@@ -354,7 +362,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 iconCls: 'repository'
             });
         }
-        this.geoPublisherWindow.items.get(0).setRef(id, uuid, title, mdabstract, name, accessStatus);
+        this.geoPublisherWindow.items.get(0).setRef(id, uuid, title, name, accessStatus);
         this.geoPublisherWindow.setTitle(OpenLayers.i18n('geoPublisherWindowTitle') + " " + name);
         this.geoPublisherWindow.show();
         
@@ -802,9 +810,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  Use for XslProcessing task
      */
     process: function(action) {
-        this.loadUrl('metadata.update.new', undefined, function () {
-            this.loadUrl(action, undefined,  this.loadCallback, true);
-        });
+        this.loadUrl(action, undefined,  this.loadCallback, true);
     },
     /** api: method[init]
      * 
@@ -818,7 +824,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  Initialized the metadata editor. The method could be used to create a metadata record
      *  from a template or from a parent metadata record.
      */
-    init: function(metadataId, create, group, child, isTemplate, fullPrivileges, schema){
+    init: function(metadataId, create, group, child, isTemplate, fullPrivileges){
         var url;
         
         this.metadataId = metadataId;
@@ -837,15 +843,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         } else {
             url = this.editUrl + '?id=' + this.metadataId;
         }
-        
-        var mode = this.defaultEditMode;
-        if (this.editMode && this.editMode.hasOwnProperty(schema)) {
-            mode = this.editMode[schema];
-        } else if (document.mainForm) {
-            mode = document.mainForm.currTab.value;
-        }
-        url += '&currTab=' + mode;
-        
+        url += '&currTab=' + (document.mainForm ? document.mainForm.currTab.value : this.defaultViewMode);
         
         this.loadUrl(url, undefined, this.loadCallback);
         
@@ -900,8 +898,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         if (!this.managerInitialized) {
             this.initManager();
         }
+        
         if (success) {
-            this.metadataLoaded(true);
+            this.metadataLoaded();
         } else {
             this.getError(response);
         }
@@ -950,28 +949,17 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  Update editor content
      */
     updateEditor: function(html){
-        var panel = this;
-        this.editorMainPanel.update(html, false, function () {
-            panel.metadataLoaded(true);
-        });
+        this.editorMainPanel.update(html, false, this.metadataLoaded.bind(this));
     },
     /** private: method[metadataLoaded]
      * 
      *  Init editor after metadata loaded.
      */
-    metadataLoaded: function(restoreScroll){
+    metadataLoaded: function(){
         this.metadataSchema = document.mainForm.schema.value;
         this.metadataType = Ext.getDom('template');
         this.metadataId = document.mainForm.id.value;
         this.versionId = document.mainForm.version.value;
-        
-        // Make height = 100%  for textarea in XML mode
-        var currTab = document.mainForm.currTab.value;
-        if (currTab === 'xml') {
-            var area = Ext.DomQuery.selectNode('textarea.xml', this.body.dom);
-            Ext.get(area).setStyle('min-height', this.editorMainPanel.ownerCt.getInnerHeight() - 5 + 'px');
-        }
-        
         
         this.toolbar.setIsMinor(document.mainForm.minor.value);
         this.toolbar.setIsTemplate(this.metadataType.value);
@@ -980,6 +968,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             this.setDisabled(false);
         }
         
+        this.onMetadataUpdated();
         
         //console.log("metadata schema: " + this.metadataSchema.value + " type:" + this.metadataType.value + " tab:" + this.metadataCurrTab.value);
         
@@ -1033,12 +1022,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         }, this);
         
         this.updateViewMenu();
-        
-        if (restoreScroll) {
-            this.editorMainPanel.getEl().parent().dom.scrollTop = this.position;
-        }
-        
-        this.onMetadataUpdated();
     },
     /** private: method[validateMetadataField]
      * 
@@ -1142,7 +1125,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 var valueEl = Ext.getDom(id + '_cal', this.editorMainPanel.dom);
                 var value = (valueEl ? valueEl.value : '');
                 var showTime = format.indexOf('T') === -1 ? false : true;
-                var disabledEl = Ext.getDom(id + '_disabled', this.editorMainPanel.dom);
                 
                 if (showTime) {
                     var dtCal = new Ext.ux.form.DateTime({
@@ -1150,8 +1132,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                         name: id,
                         id: id,
                         value: value,
-                        width: 250, 
-                        disabled: disabledEl.value === 'true',
                         dateFormat: 'Y-m-d',
                         timeFormat: 'H:i',
                         hiddenFormat: 'Y-m-d\\TH:i:s',
@@ -1164,7 +1144,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                         id: id,
                         width: 160,
                         value: value,
-                        disabled: disabledEl.value === 'true',
                         format: 'Y-m-d'
                     });
                 }
@@ -1223,9 +1202,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 
                 // Remove mode and children tabs if not in current mode
                 if (!activeMode) {
-                    var p = Ext.get(modes[i]).parent();
-                    p.setVisibilityMode(Ext.Element.DISPLAY);
-                    p.setVisible(false);
+                    Ext.get(modes[i]).parent().remove();
                 } else {
                     // Remove tab if only one tab in that mode
                     if (next && tabs.length === 1) {
@@ -1269,9 +1246,12 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
     initManager: function(){
         var mgr = this.editorMainPanel.getUpdater();
         
-        // Save editor scroll top before updating the editor
         mgr.on('beforeupdate', function(el, url, params){
             this.position = this.editorMainPanel.getEl().parent().dom.scrollTop;
+        }, this);
+        
+        mgr.on('update', function(el, response){
+            this.editorMainPanel.getEl().parent().dom.scrollTop = this.position;
         }, this);
         
         this.managerInitialized = true;
@@ -1338,7 +1318,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             split: true,
             autoScroll: true,
             tbar: this.toolbar,
-//            minHeigth: 400,
+            minHeigth: 400,
             items: [this.editorMainPanel]
         };
         this.add(editorPanel);
@@ -1362,10 +1342,16 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             editor: this,
             metadataId: this.metadataId,
             metadataSchema: this.metadataSchema,
-            catalogue: this.catalogue,
-            serviceUrl: this.catalogue.services.mdRelation,
-            imagePath: this.selectionPanelImgPath
+            serviceUrl: this.catalogue.services.mdRelation
         }, this.utilityPanelConfig.relationPanel));
+        
+        this.thumbnailPanel = new GeoNetwork.editor.ThumbnailPanel(Ext.applyIf({
+            metadataId: this.metadataId,
+            editor: this,
+            getThumbnail: this.catalogue.services.mdGetThumbnail,
+            setThumbnail: this.catalogue.services.mdSetThumbnail,
+            unsetThumbnail: this.catalogue.services.mdUnsetThumbnail
+        }, this.utilityPanelConfig.thumbnailPanel));
         
         this.suggestionPanel = new GeoNetwork.editor.SuggestionsPanel(Ext.applyIf({
             metadataId : this.metadataId,
@@ -1385,6 +1371,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             minWidth: 280,
             width: 280,
             items: [
+                this.thumbnailPanel, 
                 this.relationPanel, 
                 this.suggestionPanel,
                 this.validationPanel, 
@@ -1392,8 +1379,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         };
         this.add(optionsPanel);
         /** private: event[metadataUpdated] 
-         *  Fires after the metadata form is loaded (save, reset, change view mode)
-         *  and the form is initialized (eg. calendar, map widget).
+         *  Fires after the metadata is refreshed (save, reset, change view mode).
          */
         /** private: event[editorClosed] 
          *  Fires before the editor is closed.
@@ -1406,8 +1392,6 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
             }
             this.initPanelLayout();
         }, this);
-        
-//        this.on('hidden', this.onEditorClosed, this);
     }
 });
 

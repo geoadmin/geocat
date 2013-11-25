@@ -95,16 +95,7 @@ GeoNetwork.Control.ExtentBox = OpenLayers.Class(OpenLayers.Control, {
         OpenLayers.Control.prototype.initialize.apply(this, arguments);
         this.handler = new OpenLayers.Handler.RegularPolygon(this,
             {create: this.startBox, done: this.endBox},
-            {
-                irregular: true,
-                // fix for misplaced drawn feature:
-                down: function(evt) {
-                      this.map.events.clearMouseCache();
-                      evt.xy = this.map.events.getMousePosition(evt); 
-                      return OpenLayers.Handler.RegularPolygon.prototype.down.call(this, evt);
-                }
-            }
-        );
+            {irregular: true});
     },
     
     /**

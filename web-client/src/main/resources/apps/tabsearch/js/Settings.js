@@ -22,11 +22,9 @@ OpenLayers.ProxyHost = function(url){
 
 GeoNetwork.Util.defaultLocale = 'eng';
 // Restrict locales to a subset of languages
-//Restrict locales to a subset of languages
 //GeoNetwork.Util.locales = [
-//      ['en', 'English', 'eng'], 
-//      ['fr', 'Français', 'fre']
-//  ];
+//            ['fr', 'Français']
+//    ];
 GeoNetwork.searchDefault = {
     activeMapControlExtent: false
 };

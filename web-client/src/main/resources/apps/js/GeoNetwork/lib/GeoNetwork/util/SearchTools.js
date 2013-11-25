@@ -89,7 +89,7 @@ GeoNetwork.util.SearchTools = {
                             // change event TODO
                             var isCatalogueMdStore = cat.metadataStore === metadataStore, isCatalogueSStore = cat.summaryStore === summaryStore;
 
-                    if (values && values.length > 0) {
+                            if (values.length > 0) {
                                 metadataStore.loadData(currentRecords);
                             }
 
@@ -123,35 +123,7 @@ GeoNetwork.util.SearchTools = {
                             onFailure(response);
                         }
                     }
-                    
-                    if (isCatalogueSStore) {
-                        var summary = currentRecords.summary;
-                        var type = summaryStore.root.split('.');
-                        var root = (type !== undefined ? type[0] : 'keywords');
-                        var subroot = (type !== undefined  ? type[1] : 'keyword');
-                        // added check for summary.keywords.keyword otherwise if result has no keywords the loadData on store fails
-                        if (summary && summary.count > 0 && summary[root] && summary[root][subroot] && summaryStore) {
-                            summaryStore.loadData(summary);
-                        }
-                    }
-                    
-                    if (cat && isCatalogueMdStore) {
-                        cat.updateStatus(currentRecords.from + '-' + currentRecords.to +
-                                            OpenLayers.i18n('resultBy') +
-                                            summary.count);
-                    }
-                }
-                
-                if (onSuccess) {
-                    onSuccess(result, query);
-                }
-            },
-            failure: function(response){
-                if (onFailure) {
-                    onFailure(response);
-                }
-            }
-        });
+                });
     },
     /**
      * api:method[doQueryFromForm]
@@ -265,8 +237,7 @@ GeoNetwork.util.SearchTools = {
                                 var idx = cb.getStore().find('id',
                                         new RegExp(value + '*'));
                                 if (idx !== -1) {
-                                    cb.setValue(cb.getStore().getAt(idx).get('id'));
-                                    cb.fireEvent('change', cb, cb.getValue());
+                                    cb.setValue(cb.getStore().getAt(idx).id);
                                 }
                             }
                         } else {
@@ -294,8 +265,8 @@ GeoNetwork.util.SearchTools = {
                         fieldLabel : OpenLayers.i18n(searchCriteria
                                 .substring(searchCriteria.indexOf('_') + 1)),
                         value : map[searchCriteria],
-                        inputType: 'text',
-                        extraCriteria: true
+                        // Switch to text for debugging
+                        inputType : 'text'
                     }));
                 }
             }
