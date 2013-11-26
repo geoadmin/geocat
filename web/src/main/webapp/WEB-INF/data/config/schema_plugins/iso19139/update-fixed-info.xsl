@@ -28,17 +28,17 @@
 			<xsl:apply-templates select="gmd:characterSet"/>
 			
 			<xsl:choose>
-				<xsl:when test="/root/env/parentUuid!=''">
-					<gmd:parentIdentifier>
-						<gco:CharacterString>
-							<xsl:value-of select="/root/env/parentUuid"/>
-						</gco:CharacterString>
-					</gmd:parentIdentifier>
-				</xsl:when>
-				<xsl:when test="gmd:parentIdentifier">
-					<xsl:copy-of select="gmd:parentIdentifier"/>
-				</xsl:when>
-			</xsl:choose>
+            <xsl:when test="/root/env/parentUuid!=''">
+                <gmd:parentIdentifier>
+                    <gco:CharacterString>
+                        <xsl:value-of select="/root/env/parentUuid"/>
+                    </gco:CharacterString>
+                </gmd:parentIdentifier>
+            </xsl:when>
+            <xsl:when test="gmd:parentIdentifier">
+                <xsl:copy-of select="gmd:parentIdentifier"/>
+            </xsl:when>
+        </xsl:choose>
 			<xsl:apply-templates select="node()[not(self::gmd:language) and not(self::gmd:characterSet)]"/>
 		</xsl:copy>
 	</xsl:template>
@@ -164,7 +164,7 @@
 		<xsl:copy>
 			<xsl:apply-templates select="@*"/>
 			<xsl:attribute name="codeList">
-			  <xsl:value-of select="concat('http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#',local-name(.))"/>
+			  <xsl:value-of select="concat('http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#',local-name(.))"/>
 			</xsl:attribute>
 		</xsl:copy>
 	</xsl:template>

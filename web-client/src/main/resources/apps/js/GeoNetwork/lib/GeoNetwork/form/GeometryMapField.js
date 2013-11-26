@@ -299,7 +299,16 @@ GeoNetwork.form.GeometryMapField = Ext.extend(GeoExt.MapPanel, {
             options.controls = [];
         }
         
+<<<<<<< HEAD
         if (GeoNetwork.map.CONTEXT) {
+=======
+        if(this.layers && this.layers.length > 0) {
+        	for(i=0;i<this.layers.length;i++){
+        		this.map = new OpenLayers.Map('search_map', options);
+        		this.map.addLayer(this.layers[i]);
+        	}
+        }else if (GeoNetwork.map.CONTEXT) {
+>>>>>>> upstream/develop
             // Load map context
             var request = OpenLayers.Request.GET({
                 url: GeoNetwork.map.CONTEXT,

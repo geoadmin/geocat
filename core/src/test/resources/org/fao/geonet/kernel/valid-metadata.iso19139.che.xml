@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<che:CHE_MD_Metadata xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:che="http://www.geocat.ch/2008/che" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd" gco:isoType="gmd:MD_Metadata">
+    <gmd:fileIdentifier xmlns:xalan="http://xml.apache.org/xalan">
+        <gco:CharacterString>df0ed230-0d78-468e-beab-b5cc33cb3c49</gco:CharacterString>
+    </gmd:fileIdentifier>
+    <gmd:language xmlns:xalan="http://xml.apache.org/xalan">
+        <gco:CharacterString>fre</gco:CharacterString>
+    </gmd:language>
+    <gmd:characterSet xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+    </gmd:characterSet>
+    <gmd:hierarchyLevel xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:MD_ScopeCode codeListValue="dataset" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+    </gmd:hierarchyLevel>
+    <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed" xlink:href="local://xml.user.get?id=12316&amp;schema=iso19139.che&amp;role=pointOfContact" xlink:role="http://www.geonetwork.org/non_valid_obj">
+        <che:CHE_CI_ResponsibleParty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gco:isoType="gmd:CI_ResponsibleParty">
+            <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+                <gmd:PT_FreeText>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#FR">tutututu</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                </gmd:PT_FreeText>
+            </gmd:organisationName>
+            <gmd:contactInfo>
+                <gmd:CI_Contact>
+                    <gmd:address>
+                        <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+                            <gmd:electronicMailAddress>
+                                <gco:CharacterString>9f287351-d7e3-49e0-bebf-fb53aaf5c99e@generated.org</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                        </che:CHE_CI_Address>
+                    </gmd:address>
+                </gmd:CI_Contact>
+            </gmd:contactInfo>
+            <gmd:role>
+                <gmd:CI_RoleCode codeListValue="pointOfContact" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode"/>
+            </gmd:role>
+            <che:individualFirstName>
+                <gco:CharacterString>titi</gco:CharacterString>
+            </che:individualFirstName>
+            <che:individualLastName>
+                <gco:CharacterString>titito</gco:CharacterString>
+            </che:individualLastName>
+        </che:CHE_CI_ResponsibleParty>
+    </gmd:contact>
+    <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed" xlink:href="local://xml.user.get?id=12263&amp;schema=iso19139.che&amp;role=pointOfContact">
+        <che:CHE_CI_ResponsibleParty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gco:isoType="gmd:CI_ResponsibleParty">
+            <gmd:contactInfo>
+                <gmd:CI_Contact/>
+            </gmd:contactInfo>
+            <gmd:role>
+                <gmd:CI_RoleCode codeListValue="pointOfContact" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode"/>
+            </gmd:role>
+            <che:individualFirstName>
+                <gco:CharacterString>michel</gco:CharacterString>
+            </che:individualFirstName>
+            <che:individualLastName>
+                <gco:CharacterString>quinquis</gco:CharacterString>
+            </che:individualLastName>
+        </che:CHE_CI_ResponsibleParty>
+    </gmd:contact>
+    <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed" xlink:href="local://xml.user.get?id=12314&amp;schema=iso19139.che&amp;role=pointOfContact">
+        <che:CHE_CI_ResponsibleParty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gco:isoType="gmd:CI_ResponsibleParty">
+            <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+                <gmd:PT_FreeText>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#DE">popopopo</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#FR">popopopo</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#IT">popopopo</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#EN">popopopo</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#RM">popopopo</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                </gmd:PT_FreeText>
+            </gmd:organisationName>
+            <gmd:contactInfo>
+                <gmd:CI_Contact>
+                    <gmd:address>
+                        <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+                            <gmd:electronicMailAddress>
+                                <gco:CharacterString>popo.popo@popo.ch</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                            <che:streetName>
+                                <gco:CharacterString>popo</gco:CharacterString>
+                            </che:streetName>
+                            <che:streetNumber>
+                                <gco:CharacterString>5</gco:CharacterString>
+                            </che:streetNumber>
+                        </che:CHE_CI_Address>
+                    </gmd:address>
+                </gmd:CI_Contact>
+            </gmd:contactInfo>
+            <gmd:role>
+                <gmd:CI_RoleCode codeListValue="pointOfContact" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode"/>
+            </gmd:role>
+            <che:individualFirstName>
+                <gco:CharacterString>po</gco:CharacterString>
+            </che:individualFirstName>
+            <che:individualLastName>
+                <gco:CharacterString>popo</gco:CharacterString>
+            </che:individualLastName>
+        </che:CHE_CI_ResponsibleParty>
+    </gmd:contact>
+    <gmd:dateStamp xmlns:xalan="http://xml.apache.org/xalan">
+        <gco:DateTime>2013-11-25T15:48:53</gco:DateTime>
+    </gmd:dateStamp>
+    <gmd:metadataStandardName xmlns:xalan="http://xml.apache.org/xalan">
+        <gco:CharacterString>GM03_2</gco:CharacterString>
+    </gmd:metadataStandardName>
+    <gmd:locale xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:PT_Locale id="FR">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="fre"/>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:locale xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:PT_Locale id="DE">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="ger"/>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:locale xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:PT_Locale id="IT">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="ita"/>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:locale xmlns:xalan="http://xml.apache.org/xalan">
+        <gmd:PT_Locale id="EN">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="eng"/>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:identificationInfo xmlns:xalan="http://xml.apache.org/xalan">
+        <che:CHE_MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
+            <gmd:citation>
+                <gmd:CI_Citation>
+                    <gmd:title xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">testOR-19-11-2013</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:title>
+                    <gmd:date>
+                        <gmd:CI_Date>
+                            <gmd:date>
+                                <gco:Date>2013-11-19</gco:Date>
+                            </gmd:date>
+                            <gmd:dateType>
+                                <gmd:CI_DateTypeCode codeListValue="creation" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"/>
+                            </gmd:dateType>
+                        </gmd:CI_Date>
+                    </gmd:date>
+                </gmd:CI_Citation>
+            </gmd:citation>
+            <gmd:abstract xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                <gmd:PT_FreeText>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#FR">résumé</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                </gmd:PT_FreeText>
+            </gmd:abstract>
+            <gmd:language>
+                <gco:CharacterString>ger</gco:CharacterString>
+            </gmd:language>
+            <gmd:characterSet>
+                <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+            </gmd:characterSet>
+            <gmd:topicCategory>
+                <gmd:MD_TopicCategoryCode>location</gmd:MD_TopicCategoryCode>
+            </gmd:topicCategory>
+            <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://xml.extent.get?id=713&amp;wfs=default&amp;typename=gn:gemeindenBB&amp;format=GMD_COMPLETE&amp;extentTypeCode=true" xlink:show="embed">
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">Tavannes</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">Tavannes</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">Tavannes</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#IT">Tavannes</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#RM">Tavannes</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">Tavannes</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#DE">Tavannes</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#FR">Tavannes</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#IT">Tavannes</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#RM">Tavannes</gmd:LocalisedCharacterString>
+                                            </gmd:textGroup>
+                                        </gmd:PT_FreeText>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>1</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="Na4e69fc306a840c98ba8bb1140a16107">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="Na4e69fc306a840c98ba8bb1140a16107.1">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                    <gml:posList>7.154 47.216 7.14 47.218 7.148 47.234 7.153 47.237 7.171 47.235 7.178 47.237 7.214 47.225 7.227 47.208 7.217 47.208 7.207 47.201 7.174 47.213 7.154 47.216</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>1</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>7.14</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>7.227</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>47.201</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>47.237</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+        </che:CHE_MD_DataIdentification>
+    </gmd:identificationInfo>
+</che:CHE_MD_Metadata>

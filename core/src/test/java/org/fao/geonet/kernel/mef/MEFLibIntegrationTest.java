@@ -2,6 +2,7 @@ package org.fao.geonet.kernel.mef;
 
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.MetadataRepository;
@@ -35,6 +36,7 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
         final User admin = loginAsAdmin(context);
 
         Element params = new Element("request");
+        params.addContent(new Element(Params.GROUP).setText("" + admin.getId()));
         final List<String> metadataIds = MEFLib.doImport(params, context, resource, getStyleSheets());
 
         assertEquals(1, metadataIds.size());
@@ -54,6 +56,7 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
         final User admin = loginAsAdmin(context);
 
         Element params = new Element("request");
+        params.addContent(new Element(Params.GROUP).setText("" + admin.getId()));
         final List<String> metadataIds = MEFLib.doImport(params, context, resource, getStyleSheets());
         assertEquals(2, metadataIds.size());
 

@@ -71,8 +71,8 @@ INSERT INTO Settings (name, value, datatype, position) VALUES ('system/platform/
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/platform/subVersion', 'SNAPSHOT', 0, 160);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/site/svnUuid', '', 0, 170);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/server/host', 'localhost', 0, 210);
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/server/port', '8190', 1, 220);
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/server/protocol', 'http', 0, 230);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/server/protocol', 'http', 0, 220);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/server/port', '8190', 1, 230);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/server/securePort', '8493', 1, 240);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/intranet/network', '127.0.0.1', 0, 310);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/intranet/netmask', '255.0.0.0', 0, 320);
@@ -144,34 +144,7 @@ INSERT INTO Settings (name, value, datatype, position) VALUES ('system/requested
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/requestedLanguage/sorted', 'false', 2, 9540);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/hidewithheldelements/enable', 'false', 2, 9570);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/hidewithheldelements/keepMarkedElement', 'true', 2, 9580);
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/lucene/ignorechars',E'-/\\_,.\'"', 0, 9999);
-
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES  (1,NULL,'harvesting',NULL);
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  (1002,        1, 'node'                , 'webdav')
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1003,     1002, 'site'                , NULL)
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1004,     1002, 'options'             , NULL)
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1005,     1002, 'info'                , NULL)
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1006,     1002, 'content'             , NULL)
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1007,     1003, 'name'                , 'Kanton Zürich')
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1008,     1003, 'uuid'                , '84be1273-ba53-469a-8a86-8b7e6107128e')
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1009,     1003, 'useAccount'          , 'true')
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1010,     1009, 'username'            , 'geocat_ZH')
-INSERT INTO HarvesterSettings (id, parentid, name, value)  (id, parentid, name, value) sers VALUES  ( 1011,     1009, 'password'            , 'ZhfFsHoA')
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1012,     1004, 'every'               , '90')
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1013,     1004, 'oneRunOnly'          , 'false')
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1014,     1004, 'status'              , 'inactive')
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1015,     1006, 'importxslt'          , 'none')
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1016,     1006, 'validate'            , 'false')
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1017,     1005, 'lastRun'             , NULL)
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1018,     1002, 'privileges'          , NULL)
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1019,     1018, 'group'               , '1')
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1020,     1019, 'operation'           , '0')
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1021,     1002, 'categories'          , NULL)
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1022,     1003, 'url'                 , 'https://dav0.bgdi.admin.ch/geocat_ZH')
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1023,     1003, 'icon'                , 'KtZH.gif')
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1024,     1004, 'validate'            , 'false')
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1025,     1004, 'recurse'             , 'false')
-INSERT INTO HarvesterSettings (id, parentid, name, value)  VALUES  ( 1026,     1004, 'subtype', 'webdav')
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/lucene/ignorechars','-/\\_,.\"''', 0, 9999);
 
 -- ======================================================================
 -- === Table: Users

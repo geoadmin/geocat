@@ -1555,7 +1555,11 @@ public class DataManager {
         final Metadata savedMetadata = xmlSerializer.insert(newMetadata, metadataXml, context);
 
         final String stringId = String.valueOf(savedMetadata.getId());
-        final String groupId = String.valueOf(newMetadata.getSourceInfo().getGroupOwner());
+        String groupId = null;
+        final Integer groupIdI = newMetadata.getSourceInfo().getGroupOwner();
+        if (groupIdI != null) {
+            groupId = String.valueOf(groupIdI);
+        }
         copyDefaultPrivForGroup(context, stringId, groupId, fullRightsForGroup);
 
         if (index) {
@@ -2834,7 +2838,7 @@ public class DataManager {
 
             // GEOCAT
             String styleSheet;
-            if(metadata.getDataInfo().getType() == MetadataType.TEMPLATE) {
+            if(metadata != null && metadata.getDataInfo().getType() == MetadataType.TEMPLATE) {
                 styleSheet = getSchemaDir(schema) + Geonet.File.UPDATE_TEMPLATE_FIXED_INFO;
             } else {
                 styleSheet = getSchemaDir(schema) + Geonet.File.UPDATE_FIXED_INFO;

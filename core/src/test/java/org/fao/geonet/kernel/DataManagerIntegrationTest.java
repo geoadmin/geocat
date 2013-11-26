@@ -33,7 +33,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
         final UserSession userSession = serviceContext.getUserSession();
-        final String mdId = _dataManager.insertMetadata(serviceContext, "iso19193", new Element("MD_Metadata"), "uuid",
+        final String mdId = _dataManager.insertMetadata(serviceContext, "iso19139.che", new Element("CHE_MD_Metadata"), "uuid",
                 userSession.getUserIdAsInt(),
                 "" + ReservedGroup.all.getId(), "sourceid", "n", "doctype", "Title", null, new ISODate().getDateAndTime(),
                 new ISODate().getDateAndTime(), false, false);
@@ -65,7 +65,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         metadata.setDataAndFixCR(sampleMetadataXml)
             .setUuid(UUID.randomUUID().toString());
         metadata.getCategories().add(category);
-        metadata.getDataInfo().setSchemaId("iso19139");
+        metadata.getDataInfo().setSchemaId("iso19139.che");
         metadata.getSourceInfo().setSourceId(source.getUuid());
 
         final Metadata templateMd = _metadataRepository.save(metadata);

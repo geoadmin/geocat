@@ -29,7 +29,22 @@
 					<gco:CharacterString><xsl:value-of select="/root/env/uuid"/></gco:CharacterString>
 				</gmd:fileIdentifier>
 			</xsl:if>
-			<xsl:apply-templates select="node()"/>
+            <xsl:apply-templates select="gmd:language"/>
+            <xsl:apply-templates select="gmd:characterSet"/>
+
+            <xsl:choose>
+                <xsl:when test="/root/env/parentUuid!=''">
+                    <gmd:parentIdentifier>
+                        <gco:CharacterString>
+                            <xsl:value-of select="/root/env/parentUuid"/>
+                        </gco:CharacterString>
+                    </gmd:parentIdentifier>
+                </xsl:when>
+                <xsl:when test="gmd:parentIdentifier">
+                    <xsl:copy-of select="gmd:parentIdentifier"/>
+                </xsl:when>
+            </xsl:choose>
+            <xsl:apply-templates select="node()[not(self::gmd:language) and not(self::gmd:characterSet)]"/>
 		</che:CHE_MD_Metadata>
 	</xsl:template>
 

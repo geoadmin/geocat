@@ -1,11 +1,13 @@
 package org.fao.geonet.util;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jeeves.component.ProfileManager;
 
 import com.google.common.collect.Multimap;
 import com.vividsolutions.jts.geom.Polygon;
@@ -14,7 +16,7 @@ import net.sf.saxon.Configuration;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.UnfailingIterator;
 import org.fao.geonet.utils.Log;
-
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -105,6 +107,21 @@ public final class XslUtil
             return src2;
         }
         return src2.substring(0,index);
+    }
+
+    /**
+     * Convert a serialized XML node in JSON
+     * 
+     * @param xml
+     * @return
+     */
+    public static String xmlToJson(Object xml) {
+        try {
+            return Xml.getJSON(xml.toString());
+        } catch (IOException e) {
+            Log.error(Geonet.GEONETWORK, "XMLtoJSON conversion I/O error. Error is " + e.getMessage() + ". XML is " + xml.toString());
+        }
+        return "";
     }
 
     /**

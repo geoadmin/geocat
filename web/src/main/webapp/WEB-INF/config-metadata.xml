@@ -885,10 +885,15 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 			<class name=".services.metadata.schema.Validation" />
 			<output sheet="metadata-schema-validation.xsl" />
 		</service>
-
-         <service name="metadata.validation.status">
+        <service name="metadata.validation.status">
            <class name=".services.metadata.GetValidationStatus"/>
+        </service>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Versioning log                                                -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	   <service name="versioning.log">
+		   <output sheet="versioning/log.xsl">
+		   </output>
        </service>
-        
     </services>
 </geonet>

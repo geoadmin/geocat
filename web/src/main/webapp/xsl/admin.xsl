@@ -264,6 +264,14 @@
 								select="/root/gui/strings/metadata-template-order-desc"/>
 						</xsl:call-template>
 					</xsl:variable>
+                  <!-- Metadata versioning log-->
+                    <xsl:variable name="mdVersionLog">
+                        <xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'versioning.log'"/>
+                            <xsl:with-param name="title"
+                                            select="/root/gui/strings/metadata-versioning-log"/>
+                        </xsl:call-template>
+                    </xsl:variable>
 
 					<xsl:call-template name="addTitle">
 						<xsl:with-param name="icon">xml.png</xsl:with-param>
@@ -328,9 +336,9 @@
 								</xsl:with-param>
 							</xsl:call-template>
                             </xsl:if>
--->
-						</xsl:with-param>
-					</xsl:call-template>
+							<xsl:copy-of select="$mdVersionLog"/>
+                        </xsl:with-param>
+                    </xsl:call-template>
 
 					<xsl:variable name="io">
 
