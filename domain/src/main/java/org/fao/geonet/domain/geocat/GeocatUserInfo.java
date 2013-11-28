@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Embeddable
 public class GeocatUserInfo implements Serializable {
     private Integer _parentInfo;
-    private char _jpaWorkaround_validated;
+    private Character _jpaWorkaround_validated = Constants.YN_FALSE;
     private String positionname;
     private String onlineresource;
     private String hoursofservice;
