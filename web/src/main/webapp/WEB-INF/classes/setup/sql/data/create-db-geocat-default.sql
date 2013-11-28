@@ -1,79 +1,3 @@
--- ======================================================================
--- === Extra SQL required for geocat service
--- ======================================================================
-
-CREATE TABLE deletedobjects (
-    id integer NOT NULL,
-    description text NOT NULL,
-    xml text NOT NULL,
-    deletiondate text NOT NULL
-);
-
-
-ALTER TABLE public.deletedobjects OWNER TO "www-data";
-
-
-CREATE TABLE Formats
-  (
-    id          int,
-    name        varchar(200),
-    version     varchar(200),
-    validated   varchar(1),
-    primary key(id)
-  );
-
--- ======================================================================
-
-
-ALTER TABLE Users
-    ALTER username      TYPE text,
-    ALTER surname       TYPE text,
-    ALTER name          TYPE text,
-    ALTER address       TYPE text,
-    ALTER city          TYPE text,
-    ALTER state         TYPE text,
-    ALTER zip           TYPE text,
-    ALTER country       TYPE text,
-    ALTER email         TYPE text,
-    ALTER organisation  TYPE text,
-    ADD streetnumber         text,
-    ADD streetname           text,
-    ADD postbox              text,
-    ADD positionname         text,
-    ADD onlineresource       text,
-    ADD onlinename           text,
-    ADD onlinedescription    text,
-    ADD hoursofservice       text,
-    ADD contactinstructions  text,
-    ADD publicaccess         character(1)           default 'y',
-    ADD orgacronym           text,
-    ADD directnumber         text,
-    ADD mobile               text,
-    ADD phone                text,
-    ADD facsimile            text,
-    ADD email1               text,
-    ADD phone1               text,
-    ADD facsimile1           text,
-    ADD email2               text,
-    ADD phone2               text,
-    ADD facsimile2           text,
-    ADD parentinfo           integer,
-    ADD validated            character(1)           default 'n'
-    ;
--- ======================================================================
-
-CREATE TABLE hiddenmetadataelements (
-    metadataid integer NOT NULL,
-    xpathexpr character varying(255) NOT NULL,
-    level character varying(8) NOT NULL
-);
-
-
-ALTER TABLE public.hiddenmetadataelements OWNER TO "www-data";
-
-ALTER TABLE ONLY hiddenmetadataelements ADD CONSTRAINT hiddenmetadataelements_pkey PRIMARY KEY (metadataid, xpathexpr);
-
-
 --
 -- Name: countries; Type: TABLE; Schema: public; Owner: www-data; Tablespace: 
 --
@@ -87,7 +11,7 @@ CREATE TABLE countries (
     "ID" integer,
     "DESC" text,
     CONSTRAINT enforce_dims_the_geom CHECK ((ndims(the_geom) = 2)),
-    CONSTRAINT enforce_geotype_the_geom CHECK (((geometrytype(the_geom) = 'MULTIPOLYGON'::text) OR (the_geom IS NULL))),
+    CONSTRAINT enforce_geotype_the_geom CHECK (((geometrytype(the_geom) = 'MULTIPOLYGON') OR (the_geom IS NULL))),
     CONSTRAINT enforce_srid_the_geom CHECK ((srid(the_geom) = 21781))
 );
 
@@ -121,14 +45,14 @@ ALTER SEQUENCE countries_gid_seq OWNED BY countries.gid;
 -- Name: countries_gid_seq; Type: SEQUENCE SET; Schema: public; Owner: www-data
 --
 
-SELECT pg_catalog.setval('countries_gid_seq', 4, true);
+-- SELECT pg_catalog.setval('countries_gid_seq', 4, true);
 
 
 --
 -- Name: gid; Type: DEFAULT; Schema: public; Owner: www-data
 --
 
-ALTER TABLE ONLY countries ALTER COLUMN gid SET DEFAULT nextval('countries_gid_seq'::regclass);
+-- ALTER TABLE ONLY countries ALTER COLUMN gid SET DEFAULT nextval('countries_gid_seq'::regclass);
 
 --
 -- Name: gemeindenBB; Type: TABLE; Schema: public; Owner: www-data; Tablespace: 
@@ -148,7 +72,7 @@ CREATE TABLE "gemeindenBB" (
 );
 
 alter table "gemeindenBB" add CONSTRAINT enforce_dims_the_geom CHECK ((ndims(the_geom) = 2));
-alter table "gemeindenBB" add CONSTRAINT enforce_geotype_the_geom CHECK (((geometrytype(the_geom) = 'MULTIPOLYGON'::text) OR (the_geom IS NULL)));
+alter table "gemeindenBB" add CONSTRAINT enforce_geotype_the_geom CHECK (((geometrytype(the_geom) = 'MULTIPOLYGON') OR (the_geom IS NULL)));
 alter table "gemeindenBB" add CONSTRAINT enforce_srid_the_geom CHECK ((srid(the_geom) = 21781));
 
 
@@ -180,14 +104,14 @@ ALTER SEQUENCE gemeinden_gid_seq OWNED BY "gemeindenBB".gid;
 -- Name: gemeinden_gid_seq; Type: SEQUENCE SET; Schema: public; Owner: www-data
 --
 
-SELECT pg_catalog.setval('gemeinden_gid_seq', 5272, true);
+-- SELECT pg_catalog.setval('gemeinden_gid_seq', 5272, true);
 
 
 --
 -- Name: gid; Type: DEFAULT; Schema: public; Owner: www-data
 --
 
-ALTER TABLE ONLY "gemeindenBB" ALTER COLUMN gid SET DEFAULT nextval('gemeinden_gid_seq'::regclass);
+-- ALTER TABLE ONLY "gemeindenBB" ALTER COLUMN gid SET DEFAULT nextval('gemeinden_gid_seq'::regclass);
 
 
 --
@@ -203,7 +127,7 @@ CREATE TABLE "kantoneBB" (
     "SEARCH" character varying(254),
     the_geom geometry,
     CONSTRAINT enforce_dims_the_geom CHECK ((ndims(the_geom) = 2)),
-    CONSTRAINT enforce_geotype_the_geom CHECK (((geometrytype(the_geom) = 'MULTIPOLYGON'::text) OR (the_geom IS NULL))),
+    CONSTRAINT enforce_geotype_the_geom CHECK (((geometrytype(the_geom) = 'MULTIPOLYGON') OR (the_geom IS NULL))),
     CONSTRAINT enforce_srid_the_geom CHECK ((srid(the_geom) = 21781))
 );
 
@@ -237,14 +161,14 @@ ALTER SEQUENCE kantone_gid_seq OWNED BY "kantoneBB".gid;
 -- Name: kantone_gid_seq; Type: SEQUENCE SET; Schema: public; Owner: www-data
 --
 
-SELECT pg_catalog.setval('kantone_gid_seq', 5272, true);
+-- SELECT pg_catalog.setval('kantone_gid_seq', 5272, true);
 
 
 --
 -- Name: gid; Type: DEFAULT; Schema: public; Owner: www-data
 --
 
-ALTER TABLE ONLY "kantoneBB" ALTER COLUMN gid SET DEFAULT nextval('kantone_gid_seq'::regclass);
+-- ALTER TABLE ONLY "kantoneBB" ALTER COLUMN gid SET DEFAULT nextval('kantone_gid_seq'::regclass);
 
 
 --
@@ -260,7 +184,7 @@ CREATE TABLE non_validated (
     the_geom geometry,
     "SHOW_NATIVE" character(1),
     CONSTRAINT enforce_dims_the_geom CHECK ((ndims(the_geom) = 2)),
-    CONSTRAINT enforce_geotype_the_geom CHECK (((geometrytype(the_geom) = 'MULTIPOLYGON'::text) OR (the_geom IS NULL))),
+    CONSTRAINT enforce_geotype_the_geom CHECK (((geometrytype(the_geom) = 'MULTIPOLYGON') OR (the_geom IS NULL))),
     CONSTRAINT enforce_srid_the_geom CHECK ((srid(the_geom) = 21781))
 );
 
@@ -294,14 +218,14 @@ ALTER SEQUENCE non_validated_gid_seq OWNED BY non_validated.gid;
 -- Name: non_validated_gid_seq; Type: SEQUENCE SET; Schema: public; Owner: www-data
 --
 
-SELECT pg_catalog.setval('non_validated_gid_seq', 1552, true);
+-- SELECT pg_catalog.setval('non_validated_gid_seq', 1552, true);
 
 
 --
 -- Name: gid; Type: DEFAULT; Schema: public; Owner: www-data
 --
 
-ALTER TABLE ONLY non_validated ALTER COLUMN gid SET DEFAULT nextval('non_validated_gid_seq'::regclass);
+-- ALTER TABLE ONLY non_validated ALTER COLUMN gid SET DEFAULT nextval('non_validated_gid_seq'::regclass);
 
 
 --
@@ -320,25 +244,6 @@ ADD CONSTRAINT non_validated_pkey PRIMARY KEY (gid);
 
 
 --
--- Name: publish_tracking; Type: TABLE; Schema: public; Owner: www-data; Tablespace: 
---
-
-CREATE TABLE publish_tracking (
-    uuid character varying(60),
-    entity character varying(60) NOT NULL,
-    validated character(1) NOT NULL,
-    published character(1) NOT NULL,
-    failurerule character varying(200),
-    failurereasons text,
-    changetime timestamp without time zone DEFAULT now() NOT NULL,
-    changedate date DEFAULT ('now'::text)::date NOT NULL
-);
-
-
-ALTER TABLE public.publish_tracking OWNER TO "www-data";
-
-
---
 -- Name: xlinks; Type: TABLE; Schema: public; Owner: www-data; Tablespace: 
 --
 
@@ -351,7 +256,7 @@ CREATE TABLE xlinks (
     the_geom geometry,
     "SHOW_NATIVE" character(1),
     CONSTRAINT enforce_dims_the_geom CHECK ((ndims(the_geom) = 2)),
-    CONSTRAINT enforce_geotype_the_geom CHECK (((geometrytype(the_geom) = 'MULTIPOLYGON'::text) OR (the_geom IS NULL))),
+    CONSTRAINT enforce_geotype_the_geom CHECK (((geometrytype(the_geom) = 'MULTIPOLYGON') OR (the_geom IS NULL))),
     CONSTRAINT enforce_srid_the_geom CHECK ((srid(the_geom) = 21781))
 );
 
@@ -385,14 +290,14 @@ ALTER SEQUENCE xlinks_gid_seq OWNED BY xlinks.gid;
 -- Name: xlinks_gid_seq; Type: SEQUENCE SET; Schema: public; Owner: www-data
 --
 
-SELECT pg_catalog.setval('xlinks_gid_seq', 296, true);
+-- SELECT pg_catalog.setval('xlinks_gid_seq', 296, true);
 
 
 --
 -- Name: gid; Type: DEFAULT; Schema: public; Owner: www-data
 --
 
-ALTER TABLE ONLY xlinks ALTER COLUMN gid SET DEFAULT nextval('xlinks_gid_seq'::regclass);
+-- ALTER TABLE ONLY xlinks ALTER COLUMN gid SET DEFAULT nextval('xlinks_gid_seq'::regclass);
 
 
 --

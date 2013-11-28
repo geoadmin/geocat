@@ -1,4 +1,5 @@
-<overrides>
+<overrides xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="overrides/config-overrides.xsd">
     <import file="/WEB-INF/overrides-config-geocat.xml"/>
 
 	  <!-- properties allow some properties to be defined that will be substituted -->

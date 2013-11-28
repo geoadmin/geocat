@@ -14,6 +14,10 @@
         </bean>
         <bean class="org.fao.geonet.domain.Pair" factory-method="read">
             <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="geocat-data-db-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
             <constructor-arg value="loc-eng-"/>
         </bean>
         <bean class="org.fao.geonet.domain.Pair" factory-method="read">
@@ -26,55 +30,43 @@
         </bean>
         <bean class="org.fao.geonet.domain.Pair" factory-method="read">
             <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
-            <constructor-arg value="loc-spa-"/>
-        </bean>
-        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
-            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
-            <constructor-arg value="loc-cat-"/>
-        </bean>
-        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
-            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
-            <constructor-arg value="loc-rus-"/>
-        </bean>
-        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
-            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
-            <constructor-arg value="loc-por-"/>
-        </bean>
-        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
-            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
-            <constructor-arg value="loc-chi-"/>
-        </bean>
-        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
-            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
-            <constructor-arg value="loc-dut-"/>
-        </bean>
-        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
-            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
-            <constructor-arg value="loc-nor-"/>
-        </bean>
-        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
-            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
-            <constructor-arg value="loc-fin-"/>
-        </bean>
-        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
-            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
-            <constructor-arg value="loc-ara-"/>
-        </bean>
-        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
-            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
             <constructor-arg value="loc-ita-"/>
         </bean>
         <bean class="org.fao.geonet.domain.Pair" factory-method="read">
             <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
-            <constructor-arg value="loc-tur-"/>
+            <constructor-arg value="loc-roh-"/>
         </bean>
         <bean class="org.fao.geonet.domain.Pair" factory-method="read">
             <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
-            <constructor-arg value="loc-vie-"/>
+            <constructor-arg value="create-db-geocat-"/>
         </bean>
         <bean class="org.fao.geonet.domain.Pair" factory-method="read">
             <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
-            <constructor-arg value="loc-pol-"/>
+            <constructor-arg value="postgis-countries-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="postgis-gemeindenBB-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="postgis-kantoneBB-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="postgis-non_validated-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="postgis-xlinks-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="postgis-search-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="geometry_columns-"/>
         </bean>
     </util:list>
 

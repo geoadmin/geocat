@@ -6,8 +6,8 @@
 
         <service name="geocat">
             <output sheet="geocat_widgetui.xsl">
-                <call name="groups" class=".guiservices.groups.GetAll" />
-                                <call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
+                <call name="groups" class=".geocat.guiservices.groups.GetAll" />
+                <call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
                     <param name="maxItems" value="10" />
                     <param name="timeBetweenUpdates" value="10" />
                 </call>
@@ -15,7 +15,7 @@
                     <param name="maxItems" value="1" />
                     <param name="timeBetweenUpdates" value="10" />
                 </call>
-                <call name="mostPopular" class=".guiservices.metadata.GetMostPopular">
+                <call name="mostPopular" class=".geocat.guiservices.metadata.GetMostPopular">
                     <param name="maxItems" value="5" />
                     <param name="timeBetweenUpdates" value="10" />
                 </call>
@@ -34,7 +34,7 @@
 
         <service name="oldgeocat">
             <output sheet="geocat.xsl">
-            	<call name="groups" class=".guiservices.groups.GetAll" />
+            	<call name="groups" class=".geocat.guiservices.groups.GetAll" />
 				<call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
                     <param name="maxItems" value="10" />
                     <param name="timeBetweenUpdates" value="10" />
@@ -43,7 +43,7 @@
                     <param name="maxItems" value="1" />
                     <param name="timeBetweenUpdates" value="10" />
                 </call>
-                <call name="mostPopular" class=".guiservices.metadata.GetMostPopular">
+                <call name="mostPopular" class=".geocat.guiservices.metadata.GetMostPopular">
                     <param name="maxItems" value="5" />
                     <param name="timeBetweenUpdates" value="10" />
                 </call>
@@ -99,7 +99,7 @@
         </service>
 
         <service name="validated.shared.user.update">
-            <class name=".services.user.SharedUpdate" />
+            <class name=".geocat.services.user.SharedUpdate" />
             <output forward="validated.shared.user.admin" />
         </service>
 
@@ -111,11 +111,11 @@
         </service>
 
         <service name="shared.user.update">
-            <class name=".services.user.SharedUpdate" />
+            <class name=".geocat.services.user.SharedUpdate" />
         </service>
 
         <service name="nonvalidated.shared.user.update">
-            <class name=".services.user.SharedUpdate" />
+            <class name=".geocat.services.user.SharedUpdate" />
             <output forward="nonvalidated.shared.user.admin" />
         </service>
 
@@ -134,15 +134,25 @@
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="reusable.object.process">
-            <class name=".services.reusable.Process"/>
+            <class name=".geocat.services.reusable.Process"/>
         </service>
         
         <service name="reusable.object.deleteUnused">
-            <class name=".services.reusable.DeleteUnused"/>
+            <class name=".geocat.services.reusable.DeleteUnused"/>
         </service>
 
         <service name="reusable.object.update">
-            <class name=".services.reusable.Update"/>
+            <class name=".geocat.services.reusable.Update"/>
+        </service>
+
+        <service name="metadata.selection.index">
+            <class name=".geocat.services.selection.Index">
+                <param name="maxToIndex" value="500" />
+            </class>
+        </service>
+
+        <service name="metadata.validation.status">
+            <class name=".geocat.services.metadata.GetValidationStatus"/>
         </service>
 
         <service name="shared.user.list">
@@ -156,45 +166,45 @@
         </service>
 
         <service name="xml.extent.get">
-            <class name=".services.extent.Get" />
+            <class name=".geocat.services.extent.Get" />
             <output sheet="trim-coords.xsl" contentType="text/xml; charset=UTF-8"/>
         </service>
 
         <service name="xml.extent.search">
-            <class name=".services.extent.Search" />
+            <class name=".geocat.services.extent.Search" />
             <output sheet="trim-coords.xsl" contentType="text/xml; charset=UTF-8"/>
         </service>
 
         <!-- returns the results as one <ul> long list -->
         <service name="extent.search.list">
-            <class name=".services.extent.Search" />
+            <class name=".geocat.services.extent.Search" />
             <output sheet="extent-list.xsl" contentType="text/xml; charset=UTF-8"/>
         </service>
 
         <!-- returns the results paginated and nice.  Has edit and view modes -->
         <service name="extent.search.paging">
-            <class name=".services.extent.Search" />
+            <class name=".geocat.services.extent.Search" />
             <output sheet="extent-paging.xsl" />
         </service>
          <service name="extent.select">
-            <class name=".services.extent.Select" />
+            <class name=".geocat.services.extent.Select" />
         </service>
 
         <service name="xml.extent.add">
-            <class name=".services.extent.Add" />
+            <class name=".geocat.services.extent.Add" />
         </service>
 
         <service name="xml.extent.delete">
-            <class name=".services.extent.Delete" />
+            <class name=".geocat.services.extent.Delete" />
             <call name="importStyleSheets" class=".guiservices.util.GetImportXSLs" />
         </service>
 
         <service name="xml.extent.update">
-            <class name=".services.extent.Update" />
+            <class name=".geocat.services.extent.Update" />
         </service>
 
         <service name="extent.admin">
-            <class name=".services.extent.List">
+            <class name=".geocat.services.extent.List">
                 <param name="typename">
                     <typename>gn:xlinks</typename>
                     <typename>gn:non_validated</typename>
@@ -205,7 +215,7 @@
         </service>
 
         <service name="extent.edit">
-            <class name=".services.extent.Get">
+            <class name=".geocat.services.extent.Get">
                 <param name="typename"/>
                 <param name="modal" />
             </class>
@@ -213,26 +223,26 @@
         </service>
 
         <service name="xml.extent.list">
-            <class name=".services.extent.List" />
+            <class name=".geocat.services.extent.List" />
         </service>
 
 
         <service name="gm03.xml" type="xml">
-          <class name=".services.gm03.Gm03Service">
+          <class name=".geocat.services.gm03.Gm03Service">
             <param name="xsl" value="xsl/conversion/import/ISO19139CHE-to-GM03.xsl" />
             <param name="xsd" value="WEB-INF/data/config/schema_plugins/iso19139.che/GM03_2_1.xsd" />
           </class>
         </service>
 
         <service name="gm03small.xml" type="xml">
-          <class name=".services.gm03.Gm03smallService">
+          <class name=".geocat.services.gm03.Gm03smallService">
             <param name="xsl" value="xsl/conversion/import/ISO19139CHE-to-GM03small.xsl" />
             <param name="xsd" value="xml/validation/cgp-wsdl/xsd/gm03small.xsd" />
           </class>
         </service>
 
         <service name="cgp" type="xml">
-          <class name=".services.cgp.CgpDispatcher">
+          <class name=".geocat.services.cgp.CgpDispatcher">
             <param name="xsl19139CHEtoGM03" value="xsl/conversion/import/ISO19139CHE-to-GM03small.xsl" />
             <param name="xsdGM03" value="xml/validation/cgp-wsdl/xsd/gm03small.xsd" />
             <param name="xsd19139CHE" value="WEB-INF/data/config/schema_plugins/iso19139.che/schema.xsd" />
@@ -244,7 +254,7 @@
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="metadata.xlink.add">
-            <class name=".services.metadata.AddXLink"/>
+            <class name=".geocat.services.metadata.AddXLink"/>
 
 			<output sheet="metadata-edit-embedded.xsl">
 				<call name="currTab"       class =".guiservices.util.GetCurrentMDTab"/>
@@ -261,7 +271,7 @@
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="metadata.reusable.replace">
-            <class name=".services.reusable.Replace" />
+            <class name=".geocat.services.reusable.Replace" />
         </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -273,31 +283,31 @@
         </service>
 
         <service name="reusable.non_validated.list">
-            <class name=".services.reusable.List" />
+            <class name=".geocat.services.reusable.List" />
         </service>
         <service name="reusable.list.js">
-            <class name=".services.reusable.List" />
+            <class name=".geocat.services.reusable.List" />
             <output sheet="shared-list-json.xsl" contentType="application/json"/>
         </service>
 
         <service name="xml.reusable.deleted">
-            <class name=".services.reusable.Deleted" />
+            <class name=".geocat.services.reusable.Deleted" />
         </service>
 
         <service name="reusable.validate">
-            <class name=".services.reusable.Validate" />
+            <class name=".geocat.services.reusable.Validate" />
         </service>
 
         <service name="reusable.reject">
-            <class name=".services.reusable.Reject" />
+            <class name=".geocat.services.reusable.Reject" />
         </service>
 
         <service name="reusable.delete">
-            <class name=".services.reusable.Delete" />
+            <class name=".geocat.services.reusable.Delete" />
         </service>
 
         <service name="reusable.references">
-            <class name=".services.reusable.ReferencingMetadata" />
+            <class name=".geocat.services.reusable.ReferencingMetadata" />
             <output sheet="shared-list-json.xsl" contentType="application/json"/>
         </service>
 
@@ -395,7 +405,7 @@
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="xml.format.list">
-            <class name=".services.format.List">
+            <class name=".geocat.services.format.List">
                 <param name="xml" />
             </class>
 
@@ -406,7 +416,7 @@
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="xml.format.get">
-            <class name=".services.format.Get">
+            <class name=".geocat.services.format.Get">
                 <param name="xml" />
             </class>
 
@@ -417,7 +427,7 @@
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="json.format.get">
-            <class name=".services.format.Get">
+            <class name=".geocat.services.format.Get">
                 <param name="xml" />
             </class>
             <output sheet="format-json.xsl" contentType="application/json; charset=UTF-8" />
@@ -426,7 +436,7 @@
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="json.format.get">
-            <class name=".services.format.Get">
+            <class name=".geocat.services.format.Get">
                 <param name="xml" />
             </class>
             <output sheet="format-json.xsl" contentType="application/json; charset=UTF-8" />
@@ -460,29 +470,29 @@
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="format">
-            <class name=".services.format.Manager" />
+            <class name=".geocat.services.format.Manager" />
         </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="che.keyword.get" type="xml">
-            <class name=".services.thesaurus.GetCHEKeywordById" />
+            <class name=".geocat.services.thesaurus.GetCHEKeywordById" />
             <output sheet="skos-to-iso.xsl" contentType="text/xml; charset=UTF-8"/>
         </service>
 
 	    <service name="geocat.thesaurus.updateelement">
-	      <class name=".services.thesaurus.GeocatUpdateElement"/>
+	      <class name=".geocat.services.thesaurus.GeocatUpdateElement"/>
 	    </service>
 	    
 	    <service name="geocat.thesaurus.editelement">
-	      <class name=".services.thesaurus.GeocatEditElement"/>
+	      <class name=".geocat.services.thesaurus.GeocatEditElement"/>
 	        <output sheet="thesaurus-edit-element.xsl">
 	            <call name="languages" class=".guiservices.languages.Get" />
 	        </output>
 	    </service>
 	    
 	    <service name="metadata.print">
-			<class name=".services.metadata.PDF"/>
+			<class name=".geocat.services.metadata.PDF"/>
 
 			<output sheet="" file="true" contentType="application/pdf" />
 
@@ -543,25 +553,25 @@
 
 		<!-- Unpublishing control and monitor services -->        
         <service name="unpublish.invalid.metadata">
-            <class name=".kernel.UnpublishInvalidMetadataJob" />
+            <class name=".geocat.kernel.UnpublishInvalidMetadataJob" />
         </service>
 
         <service name="unpublish.report.xml"  contentType="text/xml; charset=UTF-8">
-            <class name=".kernel.UnpublishInvalidMetadataReport"/>
+            <class name=".geocat.kernel.UnpublishInvalidMetadataReport"/>
         </service>
         <service name="unpublish.report.csv">
-            <class name=".kernel.UnpublishInvalidMetadataReport"/>
+            <class name=".geocat.kernel.UnpublishInvalidMetadataReport"/>
 			<output sheet="unpublish-report.xsl" contentType="text/csv; charset=UTF-8"/>
         </service>
 
         <service name="keywords.duplicate">
-            <class name=".services.thesaurus.Duplicate"/>
+            <class name=".geocat.services.thesaurus.Duplicate"/>
 
             <output sheet="shared-user/user-xml.xsl" contentType="text/xml; charset=UTF-8" />
         </service>
 
         <service name="monitoring.indexing">
-            <class name=".services.metadata.IndexServiceMonitor"/>
+            <class name=".geocat.services.metadata.IndexServiceMonitor"/>
         </service>
         <service name="trigger.backup">
             <class name=".geocat.ArchiveAllMetadataJob"/>
@@ -574,17 +584,17 @@
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="metadata.select.notifybymail">
-			<class name=".services.selection.NotifyByMail"/>
+			<class name=".geocat.services.selection.NotifyByMail"/>
 		</service>
 		
 		<service name="metadata.select.info">
-			<class name=".services.selection.Info"/>
+			<class name=".geocat.services.selection.Info"/>
 		</service>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<service name="metadata.select.unpublish">
-			<class name=".services.selection.Unpublish">
+			<class name=".geocat.services.selection.Unpublish">
 			</class>
 		</service>
 

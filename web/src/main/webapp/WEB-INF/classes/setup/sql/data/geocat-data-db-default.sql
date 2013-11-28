@@ -21,3 +21,4 @@ INSERT INTO isolanguages (id, code, shortcode) VALUES (150,	'ger',	'de');
 
 INSERT INTO Languages (id, name, isinspire, isdefault) VALUES  ('roh', 'Rumantsch', 'y', 'n');
 INSERT INTO isolanguages (id, code, shortcode) VALUES (358,	'roh',	'rm');
+

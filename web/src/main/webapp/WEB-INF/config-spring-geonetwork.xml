@@ -27,7 +27,8 @@
  	<!--<import resource="config-db/sqlserver.xml"/> -->
 
     <!-- Uncomment if you want to use a non-shapefile datastore -->
-    <import resource="config-db/postgis-shared-datasource.xml"/>
+    <!--<import resource="config-db/postgis-shared-datasource.xml"/>-->
+    <import resource="config-db/postgis-alternate-datasource.xml"/>
 
     <!--
         Choose the XmlSerializer to use.

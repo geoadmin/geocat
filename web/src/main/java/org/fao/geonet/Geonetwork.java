@@ -216,41 +216,41 @@ public class Geonetwork implements ApplicationHandler {
         //------------------------------------------------------------------------
         //--- initialize Z39.50
 
-        logger.info("  - Z39.50...");
-
-        boolean z3950Enable = settingMan.getValueAsBool("system/z3950/enable", false);
-        String z3950port = settingMan.getValue("system/z3950/port");
-
-        // build Z3950 repositories file first from template
-        URL url = getClass().getClassLoader().getResource(Geonet.File.JZKITCONFIG_TEMPLATE);
-
-        if (Repositories.build(url, context)) {
-            logger.info("     Repositories file built from template.");
-
-            try {
-                ConfigurableApplicationContext appContext = context.getApplicationContext();
-
-                // to have access to the GN context in spring-managed objects
-                ContextContainer cc = (ContextContainer) appContext.getBean("ContextGateway");
-                cc.setSrvctx(context);
-
-                if (!z3950Enable) {
-                    logger.info("     Server is Disabled.");
-                } else {
-                    logger.info("     Server is Enabled.");
-
-                    Server.init(z3950port, appContext);
-                }
-            } catch (Exception e) {
-                logger.error("     Repositories file init FAILED - Z3950 server disabled and Z3950 client services (remote search, " +
-                             "harvesting) may not work. Error is:" + e.getMessage());
-                e.printStackTrace();
-            }
-
-        } else {
-            logger.error("     Repositories file builder FAILED - Z3950 server disabled and Z3950 client services (remote search, " +
-                         "harvesting) may not work.");
-        }
+//        logger.info("  - Z39.50...");
+//
+//        boolean z3950Enable = settingMan.getValueAsBool("system/z3950/enable", false);
+//        String z3950port = settingMan.getValue("system/z3950/port");
+//
+//        // build Z3950 repositories file first from template
+//        URL url = getClass().getClassLoader().getResource(Geonet.File.JZKITCONFIG_TEMPLATE);
+//
+//        if (Repositories.build(url, context)) {
+//            logger.info("     Repositories file built from template.");
+//
+//            try {
+//                ConfigurableApplicationContext appContext = context.getApplicationContext();
+//
+//                // to have access to the GN context in spring-managed objects
+//                ContextContainer cc = (ContextContainer) appContext.getBean("ContextGateway");
+//                cc.setSrvctx(context);
+//
+//                if (!z3950Enable) {
+//                    logger.info("     Server is Disabled.");
+//                } else {
+//                    logger.info("     Server is Enabled.");
+//
+//                    Server.init(z3950port, appContext);
+//                }
+//            } catch (Exception e) {
+//                logger.error("     Repositories file init FAILED - Z3950 server disabled and Z3950 client services (remote search, " +
+//                             "harvesting) may not work. Error is:" + e.getMessage());
+//                e.printStackTrace();
+//            }
+//
+//        } else {
+//            logger.error("     Repositories file builder FAILED - Z3950 server disabled and Z3950 client services (remote search, " +
+//                         "harvesting) may not work.");
+//        }
 
         //------------------------------------------------------------------------
         //--- initialize SchemaManager

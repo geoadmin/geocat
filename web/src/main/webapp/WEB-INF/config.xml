@@ -852,18 +852,6 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Localization                                                  -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="localization" deprecated="true">
-			<class name=".services.UpdateAllLocalizationTables" />
-			<output sheet="localization/localization.xsl">
-				<call name="languages" class=".guiservices.languages.Get" />
-				<xml name="localiz" file="xml/localization.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.operation.update">
 			<class name=".services.operation.Update" />
@@ -1149,14 +1137,8 @@
                 <call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
                 <call name="isoLang" class=".guiservices.isolanguages.Get" />
             </output>
-
-        <service name="metadata.selection.index">
-            <class name=".services.selection.Index">
-                <param name="maxToIndex" value="500" />
-            </class>
         </service>
-	  
-	  
+
 	  <service name="csw.config.get" deprecated="true">
 	    <class name=".guiservices.csw.Get"/>
 	    

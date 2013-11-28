@@ -1,7 +1,11 @@
-<overrides>
+<overrides xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="overrides/config-overrides.xsd">
     <import file="/WEB-INF/server-props-overrides.xml"/>
     <import file="/WEB-INF/overrides-config-csw-geocat.xml"/>
-    
+    <import file="/WEB-INF/overrides-config-security-geocat.xml"/>
+
+
+
     <properties>
         <postgis.user>www-data</postgis.user>
         <postgis.pass>www-data</postgis.pass>
@@ -26,25 +30,13 @@
 			<call name="geocatEnv" class="org.fao.geonet.geocat.guiservices.util.GeocatExtraEnv" />
         </addXML>
         <addXML xpath="appHandler">
-            <param name="postgisConfig">
-                <database>${postgis.db}</database>
-                <user>${postgis.user}</user>
-                <password>${postgis.pass}</password>
-                <host>${postgis.host}</host>
-                <port>${postgis.port}</port>
-            </param>
             <param name="reusable">
                 <param name="processOnInsert" value="true" />
             </param>
             <param name="extent">
                 <!--  If there is no id then the server is the default server and can be accessed with ExtentManager.DEFAULT_SOURCE_ID id -->
                 <!--  columns are case sensitive -->
-                <source database="${postgis.db}"
-                        user="${postgis.user}"
-                        password="${postgis.pass}"
-                        host="${postgis.host}"
-                        port="${postgis.port}"
-                        schema="public">
+                <source>
                     <typename typename="gn:countries" idColumn="ID" descColumn="LAND" searchColumn="SEARCH"
                                         geoIdColumn="LAND" CRS="EPSG:21781" />
                     <typename typename="gn:gemeindenBB" idColumn="OBJECTVAL" descColumn="DESC" searchColumn="SEARCH"
@@ -58,76 +50,29 @@
                 </source>
             </param>
         </addXML>
-        <replaceXML xpath="resources">
-            <resource enabled="true">
-                <name>main-db</name>
-                <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
-                <config>
-                    <user>${postgis.user}</user>
-                    <password>${postgis.pass}</password>
-                    <driver>org.postgis.DriverWrapper</driver>
-                    <url>jdbc:postgresql_postGIS://${postgis.host}:${postgis.port}/${postgis.db}</url>
-	                <maxActive>${postgis.max.active}</maxActive>
-			        <maxIdle>${postgis.max.idle}</maxIdle>
-        			<minIdle>${postgis.min.idle}</minIdle>
-        			<maxWait>2000</maxWait>
-	        		<validationQuery>SELECT 1</validationQuery> 
-                </config>
-            </resource>
-        </replaceXML>
         <addXML xpath="">
             <include>config-geocat.xml</include>
         </addXML>
-        <addXml xpath="schedules">
+        <addXML xpath="schedules">
         	<schedule name="unpublish-invalid-metadata" when="0 0 1 ? * MON-FRI" class=".kernel.UnpublishInvalidMetadataJob" />
         	<schedule name="archive-all-metadata" when="0 0 3 ? * MON-FRI *" class=".geocat.ArchiveAllMetadataJob" />
-        </addXml>
-        <addXml xpath="services/service/class[name='.services.metadata.Show']">
+        </addXML>
+        <addXML xpath="services/service/class[name='.services.metadata.Show']">
         	<param name="keepXLinks" value="y"/>
-        </addXml>
-        <addXml xpath="services/service/class[@name='.services.region.GetMap']/param[@name='namedBackgrounds']">
+        </addXML>
+        <addXML xpath="services/service/class[@name='.services.region.GetMap']/param[@name='namedBackgrounds']">
         	<geocat>http://wms.geo.admin.ch/?SERVICE=WMS&amp;REQUEST=GetMap&amp;VERSION=1.1.0&amp;LAYERS=ch.swisstopo.pixelkarte-farbe-pk1000.noscale&amp;STYLES=default&amp;SRS={srs}&amp;BBOX={minx},{miny},{maxx},{maxy}&amp;WIDTH={width}&amp;HEIGHT={height}&amp;FORMAT=image/png</geocat>
-        </addXml>
+        </addXML>
     </file>
     <file name=".*/WEB-INF/config-metadata.xml">
-        <addXml xpath="services//class[@name='.services.metadata.Show']">
+        <addXML xpath="services//class[@name='.services.metadata.Show']">
         	<param name="keepXLinks" value="y"/>
-        </addXml>
+        </addXML>
     </file>
     <file name=".*/WEB-INF/config-monitoring.xml">
-        <addXml xpath="monitors[1]">
+        <addXML xpath="monitors[1]">
         	<healthCheck class="org.fao.geonet.geocat.health.MetadataTypeHealthCheck"/>
-        </addXml>
-    </file>
-    <file name=".*/WEB-INF/config-db.xml">
-        <removeXML xpath="data/file" />
-        <removeXML xpath="migrate" />
-        
-        <addXml xpath="data">
-        	<file path="WEB-INF/classes/setup/sql/data" filePrefix="data-db-"/>
-            <file path="WEB-INF/classes/setup/sql/data" filePrefix="geocat-data-db-"/>
-		    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-eng-"/>
-		    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-fre-"/>
-		    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-ger-"/>
-		    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-ita-"/>
-		    <file path="WEB-INF/classes/setup/sql/data" filePrefix="loc-roh-"/>
-    		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-countries-"/>
-    		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-gemeindenBB-"/>
-    		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-kantoneBB-"/>
-    		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-non_validated-"/>
-    		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-xlinks-"/>
-    		<file path="WEB-INF/classes/setup/sql/data" filePrefix="postgis-search-"/>		    
-    		<file path="WEB-INF/classes/setup/sql/data" filePrefix="geometry_columns-"/>
-        </addXml>
-		<addXml xpath="">
-			<migrate>
-				<version id="110">
-					<file path="WEB-INF/classes/setup/sql/migrate/v110" filePrefix="migrate-" />
-			        <java class="v110.UpdateRDF"/>		    
-			        <java class="v110.AddGroupsToHarvester"/>		    
-				</version>
-			</migrate>		    
-        </addXml>
+        </addXML>
     </file>
     <file name=".*/WEB-INF/user-profiles.xml">
         <replaceAtt xpath="profile[@name = 'Guest']" attName="extends" value="Shared"/>
@@ -137,43 +82,43 @@
     </file>
 
     <file name=".*/WEB-INF/config-csw.xml">
-    	<addXml xpath="*//operation[@name = 'GetRecords']/parameters">
+    	<addXML xpath="*//operation[@name = 'GetRecords']/parameters">
     		<parameter name="geonetworkId" field="_id" type="AdditionalQueryables" />
-    	</addXml>
+    	</addXML>
     </file>
     
     
    <file name=".*/WEB-INF/config-metadata.xml">
-    	<addXml xpath="*//service[@name='metadata.show.embedded']/output">
+    	<addXML xpath="*//service[@name='metadata.show.embedded']/output">
 			<preSheet sheet="metadata-order-complex-elements.xsl"/>
-    	</addXml>
-    	<replaceXml xpath="*//service[@name = 'pdf']">
+    	</addXML>
+    	<replaceXML xpath="*//service[@name = 'pdf']">
 			<output forward="metadata.print" />
-    	</replaceXml>
+    	</replaceXML>
     </file>
     <file name=".*WEB-INF/config-lucene.xml">
-    	<addXml xpath="search/dumpFields">
+    	<addXML xpath="search/dumpFields">
 	      <field name="wms_uri" tagName="wmsuri"/>
 	      <field name="statusProgressCode" tagName="statusProgressCode"/>
 	      <field name="historicalArchive" tagName="historicalArchive"/>
-	    </addXml>
-    	<addXml xpath="tokenized">
+	    </addXML>
+    	<addXML xpath="tokenized">
     		<Field name="orgName"/>
-    	</addXml>
+    	</addXML>
     </file>
     <file name=".*/WEB-INF/config-gui.xml">
         <replaceAtt xpath="client" attName="url" value="geocat"/>
-        <replaceAtt xpath="client" attName="parameters"/>
+        <replaceAtt xpath="client" attName="parameters" value=""/>
         <removeXML xpath="editor-geopublisher"/>
         <removeXML xpath="compute-extent-from-keyword"/>
         <removeXML xpath="editor-google-translate"/>
         <removeXML xpath="metadata-tab/simple"/>
-        <addXml xpath="">
+        <addXML xpath="">
             <serverStage>${serverStage}</serverStage>
-        </addXml>
-        <addXml xpath="">
+        </addXML>
+        <addXML xpath="">
             <geoserver.url>http://${wfs.host}:${wfs.port}/geoserver/</geoserver.url>
-        </addXml>
+        </addXML>
         <replaceAtt xpath="mapSearch" attName="options" value="{projection: 'EPSG:4326', maxExtent: new OpenLayers.Bounds(5,45,10,55), units: 'degrees', restrictedExtent: new OpenLayers.Bounds(5,45,10,55)}"/>
         <replaceAtt xpath="mapViewer" attName="options" value="{projection: 'EPSG:4326', maxExtent: new OpenLayers.Bounds(5,45,10,55), units: 'degrees', restrictedExtent: new OpenLayers.Bounds(5,45,10,55)}"/>
         <replaceXML xpath="mapSearch/layers">

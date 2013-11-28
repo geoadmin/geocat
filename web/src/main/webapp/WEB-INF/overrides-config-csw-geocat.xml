@@ -1,4 +1,5 @@
-<overrides>
+<overrides xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="overrides/config-overrides.xsd">
     <file name=".*/WEB-INF/config-csw.xml">
 		<replaceXML xpath="operations/operation[@name = 'GetRecords']/parameters">
 				<!-- - - - - - - - - - - - - - -->
