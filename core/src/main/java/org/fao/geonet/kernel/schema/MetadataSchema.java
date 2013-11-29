@@ -36,7 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.fao.geonet.domain.SchematronDes;
 import org.fao.geonet.repository.SchematronRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -391,9 +390,7 @@ public class MetadataSchema
                     schematron.setIsoschema(schemaName);
                     schematron.setRequired(true);
                     schematron.setFile(file);
-                    SchematronDes des = new SchematronDes();
-                    des.setDescription("");
-                    schematron.setDescription(des);
+                    schematron.getLabelTranslations().put(Geonet.DEFAULT_LANGUAGE, new File(file).getName());
                     schemarepo.saveAndFlush(schematron);
                 }
             }
