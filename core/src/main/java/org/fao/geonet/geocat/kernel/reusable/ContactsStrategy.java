@@ -121,7 +121,7 @@ public final class ContactsStrategy extends ReplacementStrategy
 
         for (User user: users) {
 
-            Element recordOrg = LangUtils.loadInternalMultiLingualElem(bestFit.getOrganisation());
+            Element recordOrg = LangUtils.loadInternalMultiLingualElem(user.getOrganisation());
 
             String elemOrg = lookupElement(originalElem, "organisationName", defaultMetadataLang);
 
