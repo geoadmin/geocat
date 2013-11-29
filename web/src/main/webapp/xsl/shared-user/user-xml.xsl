@@ -14,7 +14,7 @@
 	stored in the metadata catalogue.
 	-->
 	<xsl:template match="/">
-     <xsl:apply-templates mode="iso19139.che" select="root/response/record"/>
+     <xsl:apply-templates mode="iso19139.che" select="root/record"/>
 <!--
         See comment by the commented out iso19139 for why this is commented out.
 <xsl:choose>

@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import org.jdom.Element;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
@@ -73,24 +74,24 @@ public class Get implements Service {
     public Element exec(Element params, ServiceContext context) throws Exception {
         String id = params.getChildText(Params.ID);
 
+        // GEOCAT
+        if (id == null) return new Element(Jeeves.Elem.RESPONSE);
+
+        final User user = context.getBean(UserRepository.class).findOne(Integer.valueOf(id));
+        if(user != null && user.getProfile() == Profile.Shared) {
+            return loadSharedUser(user, context);
+        }
         UserSession usrSess = context.getUserSession();
-        if (!usrSess.isAuthenticated()) return new Element(Jeeves.Elem.RESPONSE);
+        if (!usrSess.isAuthenticated() || user == null) return new Element(Jeeves.Elem.RESPONSE);
 
         Profile myProfile = usrSess.getProfile();
         String myUserId = usrSess.getUserId();
 
-        if (id == null) return new Element(Jeeves.Elem.RESPONSE);
+        // END GEOCAT
 
-        final User user = context.getBean(UserRepository.class).findOne(Integer.valueOf(id));
         if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin || myUserId.equals(id)) {
 
             Element elUser = user.asXml();
-            // GEOCAT
-			if(user != null && user.getProfile() == Profile.Shared) {
-				return loadSharedUser(user, context);
-			}
-            // END GEOCAT
-
             //--- retrieve user groups
 
             Element elGroups = new Element(Geonet.Elem.GROUPS);
@@ -164,6 +165,23 @@ public class Get implements Service {
 
         String[] elementsToResolve = { "organisation", "positionname", "orgacronym","onlinename","onlinedescription", "onlineresource", Geocat.Params.CONTACTINST};
         LangUtils.resolveMultiLingualElements(elUser, elementsToResolve);
+
+        Element phones = elUser.getChild("phones");
+        if (phones != null) {
+            final List<Element> children = new ArrayList<Element>(phones.getChildren());
+            for (Element child : children) {
+                child.detach();
+
+                elUser.addContent(child.cloneContent());
+            }
+        }
+
+        Element geocatInfo = elUser.getChild("geocatuserinfo");
+        if (geocatInfo != null) {
+            geocatInfo.detach();
+
+            elUser.addContent(geocatInfo.cloneContent());
+        }
 
         return elUser;
     }

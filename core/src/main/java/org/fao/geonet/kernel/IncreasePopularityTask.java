@@ -44,7 +44,12 @@ public class IncreasePopularityTask implements Runnable {
             }
         });
         try {
-            dataManager.indexMetadata(String.valueOf(metadataId), context);
+            boolean processSharedObjects = true;
+            boolean performValidation = true;
+            boolean fastIndex = true;
+            boolean reloadXLinks = true;
+
+            dataManager.indexMetadata(String.valueOf(metadataId), processSharedObjects, context, performValidation, fastIndex, reloadXLinks);
         } catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, "There may have been an error updating the popularity of the metadata "
                                            + metadataId + ". Error: " + e.getMessage(), e);
