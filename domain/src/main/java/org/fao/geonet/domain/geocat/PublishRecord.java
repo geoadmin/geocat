@@ -19,7 +19,9 @@ import java.util.Date;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name="publish_tracking")
+@SequenceGenerator(name=PublishRecord.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class PublishRecord extends GeonetEntity {
+    static final String ID_SEQ_NAME = "publish_record_id_seq";
     private int id;
     private String uuid;
     private String entity;
@@ -31,7 +33,7 @@ public class PublishRecord extends GeonetEntity {
     private Date changedate = new Date();
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return id;
     }

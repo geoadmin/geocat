@@ -1,18 +1,6 @@
 package org.fao.geonet.domain;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * An entity representing a schematron criteria. This is for the extended
@@ -24,7 +12,9 @@ import javax.persistence.Table;
 @Table(name = "schematroncriteria")
 @Cacheable
 @Access(AccessType.PROPERTY)
+@SequenceGenerator(name=SchematronCriteria.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class SchematronCriteria extends GeonetEntity {
+    static final String ID_SEQ_NAME = "schematron_criteria_id_seq";
 
 	private int id;
 	@Enumerated(EnumType.STRING)
@@ -33,7 +23,7 @@ public class SchematronCriteria extends GeonetEntity {
 	private Schematron schematron;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
 	@Column(nullable = false)
 	public int getId() {
 		return id;

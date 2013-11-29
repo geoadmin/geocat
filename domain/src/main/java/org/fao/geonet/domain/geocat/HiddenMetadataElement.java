@@ -12,14 +12,16 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table (name="HiddenMetadataElements")
+@SequenceGenerator(name=HiddenMetadataElement.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class HiddenMetadataElement {
+    static final String ID_SEQ_NAME = "hidden_metadata_element_id_seq";
     int id;
     String _xPathExpr;
     String _level;
     int _metadataId;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return id;
     }

@@ -1,18 +1,6 @@
 package org.fao.geonet.domain;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * An entity representing a schematron. It contains the file to the schematron
@@ -25,16 +13,17 @@ import javax.persistence.Table;
 @Table(name = "schematron")
 @Cacheable
 @Access(AccessType.PROPERTY)
-public class Schematron extends GeonetEntity {
+@SequenceGenerator(name=Schematron.ID_SEQ_NAME, initialValue=100, allocationSize=1)
+public class Schematron extends Localized {
+    static final String ID_SEQ_NAME = "schematron_id_seq";
 
 	private int id;
 	private String isoschema;
 	private String file;
 	private Boolean required;
-	private SchematronDes description;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
 	@Column(nullable = false)
 	public int getId() {
 		return id;
@@ -49,7 +38,7 @@ public class Schematron extends GeonetEntity {
 	public String toString() {
 		return "Schematron [_id=" + id + ", isoschema=" + isoschema + ", file="
 				+ file + ", required=" + required + ", description"
-				+ description + "]";
+				+ getLabelTranslations() + "]";
 	}
 
 	@Override
@@ -122,20 +111,4 @@ public class Schematron extends GeonetEntity {
 		this.required = required;
 	}
 
-	/**
-	 * @return the description
-	 */
-	@OneToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "description", updatable = true, insertable = true)
-	public SchematronDes getDescription() {
-		return description;
-	}
-
-	/**
-	 * @param description
-	 *            the description to set
-	 */
-	public void setDescription(SchematronDes description) {
-		this.description = description;
-	}
 }

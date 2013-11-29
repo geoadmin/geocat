@@ -14,14 +14,17 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name="Formats")
+@SequenceGenerator(name=Format.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class Format extends GeonetEntity {
+    static final String ID_SEQ_NAME = "format_id_seq";
+
     private int id;
     private String name;
     private String version;
     private char _jpaWorkaround_validated;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return id;
     }

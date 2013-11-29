@@ -2,6 +2,8 @@
            xsi:noNamespaceSchemaLocation="overrides/config-overrides.xsd">
 
     <spring>
+        <addInterceptUrl pattern="/srv/.*/strings.js!?" access="permitAll"/>
+
         <addInterceptUrl  pattern="/srv/.*/metadata.xlink.add!?.*" access="hasRole('Editor')"/>
         <addInterceptUrl  pattern="/srv/.*/csw-publication!?.*" access="hasRole('Editor')"/>
 
