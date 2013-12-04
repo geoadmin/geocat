@@ -31,6 +31,22 @@
 
         <dependency>
             <groupId>ch.geocat</groupId>
+            <artifactId>services</artifactId>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.geocat</groupId>
+            <artifactId>core</artifactId>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.geocat</groupId>
             <artifactId>domain</artifactId>
             <classifier>tests</classifier>
             <scope>test</scope>

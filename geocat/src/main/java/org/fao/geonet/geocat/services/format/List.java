@@ -21,6 +21,7 @@
 
 package org.fao.geonet.geocat.services.format;
 
+import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -59,7 +60,6 @@ public class List implements Service {
 
         final FormatRepository formatRepository = context.getBean(FormatRepository.class);
         String name = params.getChildText(Params.NAME);
-        Element el = null;
 
         final Sort sort;
 
@@ -68,18 +68,20 @@ public class List implements Service {
                     new Sort.Order(SortUtils.createPath(Format_.name)),
                     new Sort.Order(SortUtils.createPath(Format_.version)));
         } else {
-            sort = SortUtils.createSort(Format_.name, Format_.version);
+            sort = new Sort(SortUtils.createPath(Format_.name), SortUtils.createPath(Format_.version));
         }
 
 
         Element all;
-        if (name == null)
+        if (name == null || name.trim().isEmpty()) {
             all = formatRepository.findAllAsXml(sort);
-        else {
+        } else {
             all = formatRepository.findAllAsXml(FormatSpecs.nameContains(name), sort);
         }
 
-        return el;
+        all.setName(Jeeves.Elem.RESPONSE);
+
+        return all;
     }
 }
 

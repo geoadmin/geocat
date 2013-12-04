@@ -56,7 +56,7 @@ public class FormatSpecsTest extends AbstractSpringDataTest {
         assertNull(found);
     }
 
-    private Format createFormat(int id, boolean validated) {
+    public static Format createFormat(int id, boolean validated) {
         final Format format = new Format();
         format.setName("name"+id);
         format.setVersion("version" + id);

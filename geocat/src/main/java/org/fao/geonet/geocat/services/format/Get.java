@@ -21,6 +21,7 @@
 
 package org.fao.geonet.geocat.services.format;
 
+import org.fao.geonet.domain.geocat.Format;
 import org.fao.geonet.repository.geocat.FormatRepository;
 import org.jdom.*;
 
@@ -57,7 +58,11 @@ public class Get implements Service
 		if (id == null)
 			return new Element(Jeeves.Elem.RESPONSE);
 
-        return context.getBean(FormatRepository.class).findOne(Integer.parseInt(id)).asXml();
+        final Format one = context.getBean(FormatRepository.class).findOne(Integer.parseInt(id));
+        if (one == null) {
+            return new Element(Jeeves.Elem.RESPONSE);
+        }
+        return new Element(Jeeves.Elem.RESPONSE).addContent(one.asXml());
 	}
 }
 
