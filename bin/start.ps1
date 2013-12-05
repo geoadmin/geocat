@@ -21,7 +21,7 @@ if (!(test-path Env:\JREBEL_HOME)) {
 if ($mode -eq "build") {
 	$Env:MAVEN_OPTS=""
 
-	cmd /c "cd $scriptPath\.. && mvn install $args"
+	cmd /c "cd $scriptPath\.. && mvn install -fn $args"
 }
 
 $Env:MAVEN_OPTS="$JREBEL_OPTS $DEBUG $OVERRIDES $MEMORY -Dgeonetwork.dir=$DATA_DIR -Dfile.encoding=UTF8"

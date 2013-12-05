@@ -385,7 +385,7 @@ public class MetadataSchema
             for(String s : saSchemas) {
                 String file = schemaDir + File.separator + "schematron" + File.separator + s;
                 //if schematron not already exists
-                if(schemarepo.findAllByFile(file).size() == 0) {
+                if(schemarepo.findAllByFile(file).isEmpty()) {
                     org.fao.geonet.domain.Schematron schematron = new org.fao.geonet.domain.Schematron();
                     schematron.setIsoschema(schemaName);
                     schematron.setRequired(true);

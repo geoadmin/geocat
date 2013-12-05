@@ -1,6 +1,7 @@
 package org.fao.geonet.domain;
 
 import javax.persistence.*;
+import java.util.Map;
 
 /**
  * An entity representing a schematron. It contains the file to the schematron
@@ -66,7 +67,7 @@ public class Schematron extends Localized {
 	/**
 	 * @return the schema
 	 */
-	@Column(nullable = false, name = "isoschema")
+	@Column(nullable = false, name = "isoSchema")
 	public String getIsoschema() {
 		return isoschema;
 	}
@@ -110,5 +111,14 @@ public class Schematron extends Localized {
 	public void setRequired(Boolean required) {
 		this.required = required;
 	}
+
+    @Override
+    @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
+    @CollectionTable(joinColumns = @JoinColumn(name = "idDes"), name = "SchematronDes")
+    @MapKeyColumn(name = "langId", length = 5)
+    @Column(name = "label", nullable = false, length = 96)
+    public Map<String, String> getLabelTranslations() {
+        return super.getLabelTranslations();
+    }
 
 }

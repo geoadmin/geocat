@@ -9,7 +9,7 @@ import javax.persistence.*;
  * @author delawen
  */
 @Entity
-@Table(name = "schematroncriteria")
+@Table(name = "SchematronCriteria")
 @Cacheable
 @Access(AccessType.PROPERTY)
 @SequenceGenerator(name=SchematronCriteria.ID_SEQ_NAME, initialValue=100, allocationSize=1)

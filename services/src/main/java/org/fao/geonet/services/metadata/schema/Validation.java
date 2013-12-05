@@ -83,35 +83,15 @@ public class Validation implements Service {
 
 		// Return the current lists
 		for (SchematronCriteria s : schcrrep.findAll()) {
-			res.addContent(getElement(s));
+			res.addContent(s.asXml().setName("criteria"));
 		}
 
 		for (Schematron s : schrep.findAll()) {
-			res.addContent(getElement(s));
+			res.addContent(s.asXml().setName("schematron"));
 		}
 
 		return res;
 	}
-
-	private Element getElement(SchematronCriteria s) {
-		Element schematron = new Element("criteria");
-		schematron.setAttribute("id", String.valueOf(s.getId()));
-		schematron.setAttribute("value", s.getValue());
-		schematron.setAttribute("type", s.getType().toString());
-		schematron.addContent(getElement(s.getSchematron()));
-		
-		return schematron;
-	}
-
-	private Element getElement(Schematron s) {
-		Element schematron = new Element("schematron");
-		schematron.setAttribute("id", String.valueOf(s.getId()));
-		schematron.setAttribute("file", s.getFile());
-		schematron.setAttribute("isoschema", s.getIsoschema());
-		schematron.setAttribute("required", s.getRequired().toString());
-		return schematron;
-	}
-
 	public void init(String appPath, ServiceConfig params) throws Exception {
 	}
 
