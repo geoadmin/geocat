@@ -314,6 +314,20 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
     <deu>Deutsch</deu> <!-- Do not translate! -->
 	
 	<!-- END GEOCAT Strings -->
+	<statusTitle> / Modification de l'état d'une fiche</statusTitle>
+	<statusUserEdit>L'utilisateur %s (%s) a modifié la métadonnée #%s</statusUserEdit>
+	<statusInform>%s / Métadonnée - État : %s par %s (%s) le %s</statusInform>
+	<!--
+        legacy UI 
+        <statusSendEmail>%s\n\nRecords are available from the following URL:\n %s/main.search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
+        -->
+	<statusSendEmail>
+Commentaire de l'utilisateur lors du changement d'état :
+%s
+
+La liste des changements d'état sont accessibles ici :
+%s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search
+	</statusSendEmail>	
 
 
     <ara>عربي</ara> <!-- Do not translate! -->
@@ -332,6 +346,9 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
     <tur>Türkçe</tur> <!-- Do not translate! -->
     <pol>Polski</pol> <!-- Do not translate! -->
     
+La liste des changements d'état sont accessibles ici :
+%s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search
+	</statusSendEmail>	
 	<otherValue>Autre :</otherValue>
 	<warning>Attention</warning>
 	<isAdmin>Est administrateur ?</isAdmin>
@@ -1764,4 +1781,5 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<welcome.text></welcome.text>
 	<tag_label>Tags</tag_label>
 	<map_label>Carte</map_label>
+    <unknown>Unknown</unknown>
 </strings>

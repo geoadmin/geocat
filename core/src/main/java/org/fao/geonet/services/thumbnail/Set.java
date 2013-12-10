@@ -89,7 +89,15 @@ public class Set extends NotInReadOnlyModeService {
 		if (version != null && !dataMan.getVersion(id).equals(version))
 			throw new ConcurrentUpdateEx(id);
 
-		//-----------------------------------------------------------------------
+        boolean imageExists = testValidImage(new File(getFileName(file, true)), false);
+        imageExists |= testValidImage(new File(getFileName(file, false)), false);
+        imageExists |= testValidImage(new File(context.getUploadDir(), file), false);
+
+        if (!imageExists) {
+            throw new IllegalArgumentException("No image file uploaded");
+        }
+
+        //-----------------------------------------------------------------------
 		//--- create destination directory
 
 		String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
@@ -159,6 +167,21 @@ public class Set extends NotInReadOnlyModeService {
 		return response;
 	}
 
+    private boolean testValidImage(File inFile, boolean mustExistAndBeValid) throws IOException {
+        if (inFile != null && inFile.exists()) {
+            // Test that file is an image before removing old files.
+            BufferedImage image = getImage(inFile.getAbsolutePath());
+            if (image == null) {
+                throw new IllegalArgumentException("Unable to create an image from: "+inFile);
+            }
+            return true;
+        } else {
+            if (mustExistAndBeValid) {
+                throw new IllegalArgumentException(inFile + ": expected but does not exist");
+            }
+            return false;
+        }
+    }
     /**
      * TODO javadoc.
      *
@@ -191,6 +214,14 @@ public class Set extends NotInReadOnlyModeService {
         int     scalingFactor = Util.getParam     (params, Params.SCALING_FACTOR, 1);
         String  type          = Util.getParam     (params, Params.TYPE);
 //        String  version       = Util.getParam     (params, Params.VERSION);
+
+        boolean imageExists = testValidImage(new File(getFileName(file, true)), false);
+        imageExists |= testValidImage(new File(getFileName(file, false)), false);
+        imageExists |= testValidImage(new File(context.getUploadDir(), file), false);
+
+        if (!imageExists) {
+            throw new IllegalArgumentException("No image file uploaded");
+        }
 
         if (createSmall) {
 			String smallFile = getFileName(file, true);

@@ -106,8 +106,6 @@ public class Geonetwork implements ApplicationHandler {
     private ThreadPool threadPool;
     private String FS = File.separator;
     private ConfigurableApplicationContext _applicationContext;
-    private static final String SPATIAL_INDEX_FILENAME = "spatialindex";
-    private static final String IDS_ATTRIBUTE_NAME = "id";
 
     //---------------------------------------------------------------------------
     //---
@@ -158,7 +156,8 @@ public class Geonetwork implements ApplicationHandler {
         ServiceConfig handlerConfig = new ServiceConfig(serviceConfigElems);
 
         // Init configuration directory
-        _applicationContext.getBean(GeonetworkDataDirectory.class).init(webappName, appPath, handlerConfig, context.getServlet());
+        final GeonetworkDataDirectory dataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
+        dataDirectory.init(webappName, appPath, handlerConfig, context.getServlet());
 
         // Get config handler properties
         String systemDataDir = handlerConfig.getMandatoryValue(Geonet.Config.SYSTEM_DATA_DIR);
@@ -257,8 +256,8 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Schema manager...");
 
-        String schemaPluginsDir = handlerConfig.getMandatoryValue(Geonet.Config.SCHEMAPLUGINS_DIR);
-        String schemaCatalogueFile = systemDataDir + "config" + File.separator + Geonet.File.SCHEMA_PLUGINS_CATALOG;
+        String schemaPluginsDir = dataDirectory.getSchemaPluginsDir().getAbsolutePath();
+        String schemaCatalogueFile = dataDirectory.getConfigDir()+File.separator+Geonet.File.SCHEMA_PLUGINS_CATALOG;
         boolean createOrUpdateSchemaCatalog = handlerConfig.getMandatoryValue(Geonet.Config.SCHEMA_PLUGINS_CATALOG_UPDATE).equals("true");
         logger.info("			- Schema plugins directory: " + schemaPluginsDir);
         logger.info("			- Schema Catalog File     : " + schemaCatalogueFile);
@@ -608,7 +607,7 @@ public class Geonetwork implements ApplicationHandler {
 
     private DataStore createShapefileDatastore(String indexDir) throws Exception {
 
-        File file = new File(indexDir + "/" + SPATIAL_INDEX_FILENAME + ".shp");
+        File file = new File(indexDir + "/" + SpatialIndexWriter._SPATIAL_INDEX_TYPENAME + ".shp");
         if (!file.getParentFile().mkdirs() && !file.getParentFile().exists()) {
             throw new RuntimeException("Unable to create the spatial index (shapefile) directory: " + file.getParentFile());
         }
@@ -627,9 +626,9 @@ public class Geonetwork implements ApplicationHandler {
         if (!file.exists()) {
             SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
             AttributeDescriptor geomDescriptor = new AttributeTypeBuilder().crs(DefaultGeographicCRS.WGS84).binding(MultiPolygon.class).buildDescriptor("the_geom");
-            builder.setName(SPATIAL_INDEX_FILENAME);
+            builder.setName(SpatialIndexWriter._SPATIAL_INDEX_TYPENAME);
             builder.add(geomDescriptor);
-            builder.add(IDS_ATTRIBUTE_NAME, String.class);
+            builder.add(SpatialIndexWriter._IDS_ATTRIBUTE_NAME, String.class);
             ids.createSchema(builder.buildFeatureType());
         }
 

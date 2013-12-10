@@ -1417,4 +1417,5 @@
 	<welcome.text>Bienvenido a GeoNetwork</welcome.text>
 	<tag_label>TAGS</tag_label>
 	<map_label>Mapa</map_label>
+    <unknown>Unknown</unknown>
 </strings>
