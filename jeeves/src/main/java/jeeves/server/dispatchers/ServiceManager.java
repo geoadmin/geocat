@@ -64,6 +64,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yammer.metrics.core.TimerContext;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 //=============================================================================
 @Transactional
 public class ServiceManager {
@@ -419,7 +430,7 @@ public class ServiceManager {
                 }
 
                 // Did we change some header on the service?
-                for (Entry<String, String> entry : context.getResponseHeaders()
+                for (Map.Entry<String, String> entry : context.getResponseHeaders()
                         .entrySet()) {
                     ((HttpServiceRequest) req).getHttpServletResponse()
                             .setHeader(entry.getKey(), entry.getValue());

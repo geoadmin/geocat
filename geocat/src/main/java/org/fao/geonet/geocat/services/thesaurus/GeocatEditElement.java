@@ -83,7 +83,7 @@ public class GeocatEditElement implements Service {
                 // need to get other translations
 				kb = searcher.searchById(kb.getUriCode(), ref, "eng", "fre", "ger", "ita");
 			}else{
-				KeywordsSearcher searcher = new KeywordsSearcher(thesaurusMan);
+				KeywordsSearcher searcher = new KeywordsSearcher(context, thesaurusMan);
 
 				kb = searcher.searchById(uri, ref, lang);
 
@@ -118,8 +118,7 @@ public class GeocatEditElement implements Service {
             reqType.add(KeywordRelation.NARROWER);
             reqType.add(KeywordRelation.RELATED);
 
-			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-			KeywordsSearcher searcherBNR = new KeywordsSearcher(thesaurusMan);
+			KeywordsSearcher searcherBNR = new KeywordsSearcher(context, thesaurusMan);
 
 			for (int i = 0; i <= reqType.size() - 1; i++) {
 			    searcherBNR.searchForRelated(uri, ref, reqType.get(i), lang);

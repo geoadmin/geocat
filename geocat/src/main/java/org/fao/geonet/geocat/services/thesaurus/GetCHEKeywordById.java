@@ -71,7 +71,7 @@ public class GetCHEKeywordById implements Service {
 		// perform the search and save search result into session
 		ThesaurusManager thesaurusMan = context.getBean(ThesaurusManager.class);
 		
-		searcher = new KeywordsSearcher(thesaurusMan);
+		searcher = new KeywordsSearcher(context, thesaurusMan);
 
 		String[] langs = locales.split(",");
 		for (int i = 0; i < langs.length; i++) {

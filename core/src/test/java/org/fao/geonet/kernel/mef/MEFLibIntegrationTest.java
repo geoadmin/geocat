@@ -105,6 +105,7 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
             stream.close();
 
             Element params = new Element("request");
+            params.addContent(new Element(Params.GROUP).setText(context.getUserSession().getUserId()));
             metadataIds = MEFLib.doImport(params, context, mefTestFile, testClass.getStyleSheets());
             return this;
         }

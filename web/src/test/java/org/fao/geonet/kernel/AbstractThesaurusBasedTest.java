@@ -18,6 +18,8 @@ import org.openrdf.sesame.config.RepositoryConfig;
 import org.openrdf.sesame.config.SailConfig;
 import org.openrdf.sesame.constants.RDFFormat;
 import org.openrdf.sesame.repository.local.LocalRepository;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
 
 public abstract class AbstractThesaurusBasedTest {
 	protected static final String THESAURUS_KEYWORD_NS = "http://abstract.thesaurus.test#";
@@ -36,6 +38,11 @@ public abstract class AbstractThesaurusBasedTest {
 			iso639_1_to_iso639_2IsoLanguagesMap.put("it", "ita");
 		}
 	};
+
+    GenericApplicationContext context = new GenericApplicationContext();
+    {
+        context.getBeanFactory().registerSingleton("isolangModifier", isoLangMapper);
+    }
     protected File thesaurusFile;
     protected Thesaurus thesaurus;
     
@@ -54,7 +61,7 @@ public abstract class AbstractThesaurusBasedTest {
         if(!readonly) {
             File directory = new File(getClass().getResource(getClass().getSimpleName()+".class").getFile()).getParentFile();
             File template = thesaurusFile;
-            
+
             // Now make copy for this test
             this.thesaurusFile = new File(directory, getClass().getSimpleName()+"TestThesaurus.rdf");
             this.thesaurusFile.deleteOnExit();
@@ -69,7 +76,7 @@ public abstract class AbstractThesaurusBasedTest {
             	IOUtils.closeQuietly(to);
             }
             FileUtils.copyFile(template, thesaurusFile);
-            this.thesaurus = new Thesaurus(isoLangMapper, thesaurusFile.getName(), "test", "test", thesaurusFile, "http://concept");
+            this.thesaurus = new Thesaurus(context, thesaurusFile.getName(), "test", "test", thesaurusFile, "http://concept");
         }
         setRepository(this.thesaurus);
     }
@@ -86,7 +93,7 @@ public abstract class AbstractThesaurusBasedTest {
         File directory = new File(AbstractThesaurusBasedTest.class.getResource(AbstractThesaurusBasedTest.class.getSimpleName()+".class").getFile()).getParentFile();
 
         this.thesaurusFile = new File(directory, "testThesaurus.rdf");
-        this.thesaurus = new Thesaurus(isoLangMapper, thesaurusFile.getName(), null, null, "test", "test", thesaurusFile, "http://concept", true);
+        this.thesaurus = new Thesaurus(context, thesaurusFile.getName(), null, null, "test", "test", thesaurusFile, "http://concept", true);
         setRepository(this.thesaurus);
         
         if (thesaurusFile.exists() && thesaurusFile.length() > 0) {

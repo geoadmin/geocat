@@ -358,7 +358,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element child = null;
 		MetadataSchema mds = dataManager.getSchema(schema);
 
-		child = editLib.addElement(schema, el, name);
+		child = editLib.addElement(mds, el, name);
 
 
 		child.setAttribute(xlink.getHrefAttribute());

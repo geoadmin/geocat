@@ -206,8 +206,8 @@ public class ServiceContext extends BasicContext {
 
     public void executeOnly(LocalServiceRequest request) throws Exception {
         ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), htContexts, getEntityManager());
-        UserSession session = userSession;
-        if (userSession == null) {
+        UserSession session = this._userSession;
+        if (session == null) {
             session = new UserSession();
         }
 

@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.csw;
 
 import jeeves.constants.ConfigFile;
+import jeeves.server.overrides.ConfigurationOverrides;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -36,6 +37,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -73,8 +75,10 @@ public class CatalogConfiguration {
 
     @Autowired
     private GeonetworkDataDirectory _dataDir;
-    private volatile boolean initialized = false;
+    @Autowired(required = false)
+    private ServletContext _servletContext;
 
+    private volatile boolean initialized = false;
 
     public synchronized void init() {
         if (!initialized) {
@@ -95,6 +99,7 @@ public class CatalogConfiguration {
 		Log.info(Geonet.CSW, "Loading : " + configFile);
 
 		Element configRoot = Xml.loadFile(configFile);
+        ConfigurationOverrides.DEFAULT.updateWithOverrides(configFile, _servletContext, _dataDir.getWebappDir(), configRoot);
 
 		@SuppressWarnings("unchecked")
         List<Element> operationsList = configRoot.getChildren(Csw.ConfigFile.Child.OPERATIONS);

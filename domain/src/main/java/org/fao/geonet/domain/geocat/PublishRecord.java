@@ -116,22 +116,30 @@ public class PublishRecord extends GeonetEntity {
 
     @Temporal(TemporalType.DATE)
     public Date getChangetime() {
-        return changetime;
+        return cloneDate(changetime);
     }
 
     public PublishRecord setChangetime(Date changetime) {
-        this.changetime = changetime;
+        this.changetime = cloneDate(changetime);
         return this;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
     public Date getChangedate() {
-        return changedate;
+        return cloneDate(changedate);
     }
 
     public PublishRecord setChangedate(Date changedate) {
-        this.changedate = changedate;
+        this.changedate = cloneDate(changedate);
         return this;
+    }
+
+    private Date cloneDate(Date changedate) {
+        if (changedate == null) {
+            return null;
+        } else {
+            return (Date) changedate.clone();
+        }
     }
 
     @Nonnull

@@ -187,7 +187,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
         
         builder.addThesaurus(NON_VALID_THESAURUS_NAME);
 
-        KeywordsSearcher searcher = new KeywordsSearcher(_thesaurusMan);
+        KeywordsSearcher searcher = new KeywordsSearcher(IsoLanguagesMapper.getInstance(), _thesaurusMan);
 
         searcher.search(builder.build());
         searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
@@ -204,7 +204,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
         } else {
             thesaurusName = NON_VALID_THESAURUS_NAME;
         }
-        KeywordsSearcher searcher = new KeywordsSearcher(_thesaurusMan);
+        KeywordsSearcher searcher = new KeywordsSearcher(IsoLanguagesMapper.getInstance(), _thesaurusMan);
 
         KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(IsoLanguagesMapper.getInstance());
         builder.addLang(_currentLocale)

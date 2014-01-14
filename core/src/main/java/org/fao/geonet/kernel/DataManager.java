@@ -1535,7 +1535,7 @@ public class DataManager {
         final String schema = newMetadata.getDataInfo().getSchemaId();
 
         // GEOCAT
-        if(newMetadata.getDataInfo().getType() == MetadataType.METADATA && !"iso19139.che".equals(schema)) {
+        if(!newMetadata.getHarvestInfo().isHarvested() && newMetadata.getDataInfo().getType() == MetadataType.METADATA && !"iso19139.che".equals(schema)) {
             throw new IllegalArgumentException(schema+" is not permitted in the database as a non-harvested metadata.  Apply a import stylesheet to convert file to iso19139.che");
         }
         // END GEOCAT
@@ -3037,14 +3037,12 @@ public class DataManager {
             addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "false");
         }
         // GEOCAT
-        try {
-        	String groupOwner = ""+metadata.getSourceInfo().getGroupOwner();
-        	addElement(info, "groupOwner", groupOwner);
-			Group groupInfo = context.getBean(GroupRepository.class).findOne(metadata.getSourceInfo().getGroupOwner());
+        String groupOwner = ""+metadata.getSourceInfo().getGroupOwner();
+        addElement(info, "groupOwner", groupOwner);
+        if (metadata.getSourceInfo().getGroupOwner() != null) {
+        Group groupInfo = context.getBean(GroupRepository.class).findOne(metadata.getSourceInfo().getGroupOwner());
             addElement(info, "groupLogoUuid", groupInfo.getLogo());
             addElement(info, "groupWebsite", groupInfo.getWebsite());
-        } catch (NumberFormatException nfe) {
-        	// that's ok, sometime groupOwner is blank
         }
         // END GEOCAT
 

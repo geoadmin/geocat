@@ -16,12 +16,12 @@
                 <property name="interpolatedScripts">
                     <list>
                         <value>classpath:cleanoutdatabase.sql</value>
-                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/data-db-default.sql"/>
-                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/geocat-data-db-default.sql"/>
-                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-eng-default.sql"/>
-                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-fre-default.sql"/>
-                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-ger-default.sql"/>
-                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-ita-default.sql"/>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/data-db-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/geocat-data-db-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-eng-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-fre-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-ger-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-ita-default.sql</value>
                     </list>
                 </property>
             </bean>
@@ -30,5 +30,7 @@
 
     <!--<bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true"/>-->
     <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.MemoryDirectoryFactory" lazy-init="true"/>
+    <bean id="relatedMetadata" class="org.fao.geonet.RelatedMetadataTestImpl" lazy-init="true"/>
+    <bean id="reusableObjManagerTestImpl" class="org.fao.geonet.ReusableObjManagerTestImpl" lazy-init="true"/>
 
 </beans>

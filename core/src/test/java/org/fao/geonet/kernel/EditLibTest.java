@@ -5,15 +5,16 @@ import jeeves.server.ServiceConfig;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TemporaryFolder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import java.io.File;
 import java.util.Arrays;
@@ -29,40 +30,40 @@ import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
  *
  * Created by Jesse on 12/6/13.
  */
-public class EditLibTest {
+public class EditLibTest extends AbstractCoreIntegrationTest {
 
-    public static TemporaryFolder _schemaCatalogContainer = new TemporaryFolder();
-    private static SchemaManager _schemaManager;
-
-    @BeforeClass
-    public static void initSchemaManager() throws Exception {
-        _schemaCatalogContainer.create();
-        final GeonetworkDataDirectory gdd = new GeonetworkDataDirectory();
-
-        final ServiceConfig serviceConfig = new ServiceConfig(Lists.<Element>newArrayList());
-        gdd.init("geonetwork", AbstractCoreIntegrationTest.getWebappDir(EditLibTest.class), serviceConfig, null);
-
-        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
-
-        SchemaManager manager = new SchemaManager();
-        final String resourcePath = gdd.getResourcesDir().getAbsolutePath();
-        final String basePath = gdd.getWebappDir();
-        final String schemaPluginsCat = _schemaCatalogContainer.getRoot() + "/" + Geonet.File.SCHEMA_PLUGINS_CATALOG;
-        final String schemaPluginsDir = gdd.getSchemaPluginsDir().getAbsolutePath();
-
-        SchemaManager.registerXmlCatalogFiles(gdd.getWebappDir(), schemaPluginsCat);
-
-        new File(schemaPluginsDir).mkdirs();
-
-        manager.configure(basePath, resourcePath, schemaPluginsCat, schemaPluginsDir, "eng", "iso19139", false);
-        _schemaManager = manager;
-    }
-
-    @AfterClass
-    public static void cleanUpSchemaCatalogFile() {
-        _schemaCatalogContainer.delete();
-        _schemaManager = null;
-    }
+    @Autowired
+    private SchemaManager _schemaManager;
+//
+//    @Before
+//    public void initSchemaManager() throws Exception {
+//        _schemaCatalogContainer.create();
+//        final GeonetworkDataDirectory gdd = new GeonetworkDataDirectory();
+//
+//        final ServiceConfig serviceConfig = new ServiceConfig(Lists.<Element>newArrayList());
+//        gdd.init("geonetwork", AbstractCoreIntegrationTest.getWebappDir(EditLibTest.class), serviceConfig, null);
+//
+//        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
+//
+//        SchemaManager manager = new SchemaManager();
+//        final String resourcePath = gdd.getResourcesDir().getAbsolutePath();
+//        final String basePath = gdd.getWebappDir();
+//        final String schemaPluginsCat = _schemaCatalogContainer.getRoot() + "/" + Geonet.File.SCHEMA_PLUGINS_CATALOG;
+//        final String schemaPluginsDir = gdd.getSchemaPluginsDir().getAbsolutePath();
+//
+//        SchemaManager.registerXmlCatalogFiles(gdd.getWebappDir(), schemaPluginsCat);
+//
+//        new File(schemaPluginsDir).mkdirs();
+//
+//        manager.configure(basePath, resourcePath, schemaPluginsCat, schemaPluginsDir, "eng", "iso19139", false);
+//        _schemaManager = manager;
+//    }
+//
+//    @After
+//    public void cleanUpSchemaCatalogFile() {
+//        _schemaCatalogContainer.delete();
+//        _schemaManager = null;
+//    }
 
     @Test
     public void testAddElementFromXpath_NoAttributes() throws Exception {
