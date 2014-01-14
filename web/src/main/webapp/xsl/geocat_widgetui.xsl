@@ -11,6 +11,12 @@
     <xsl:output omit-xml-declaration="yes" method="html"
                 doctype-public="html" indent="yes" encoding="UTF-8" />
 
+    <xsl:variable name="minimizedParam">
+        <xsl:choose>
+            <xsl:when test="/root/request/debug">?minimize=false</xsl:when>
+            <xsl:otherwise></xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
 
     <xsl:variable name="baseUrl">
         <xsl:value-of select="/root/gui/env/server/protocol" />://<xsl:value-of select="/root/gui/env/server/host" />:<xsl:value-of select="/root/gui/env/server/port" /><xsl:value-of select="/root/gui/url" />
@@ -69,24 +75,8 @@
             </link>-->
 
             <link rel="stylesheet" type="text/css">
-                <xsl:attribute name="href"><xsl:value-of
-                        select="$baseUrl" />/apps/js/ext-ux/Rating/rating.css</xsl:attribute>
-            </link>
-            <link rel="stylesheet" type="text/css">
-                <xsl:attribute name="href"><xsl:value-of
-                        select="$baseUrl" />/apps/js/ext-ux/SuperBoxSelect/superboxselect.css</xsl:attribute>
-            </link>
-            <link rel="stylesheet" type="text/css">
-                <xsl:attribute name="href"><xsl:value-of
-                        select="$baseUrl" />/apps/js/ext-ux/LightBox/lightbox.css</xsl:attribute>
-            </link>
-            <link rel="stylesheet" type="text/css">
-                <xsl:attribute name="href"><xsl:value-of
-                        select="$baseUrl" />/apps/js/ext-ux/FileUploadField/file-upload.css</xsl:attribute>
-            </link>
-            <link rel="stylesheet" type="text/css">
-                <xsl:attribute name="href"><xsl:value-of
-                        select="$baseUrl" />/apps/js/ext-ux/MultiselectItemSelector-3.0/Multiselect.css</xsl:attribute>
+                <xsl:attribute name="href"><xsl:value-of select="$baseUrl" />/static/geonetwork-client-ext-ux_css.css<xsl:value-of
+                        select="$minimizedParam"/></xsl:attribute>
             </link>
 
 
@@ -94,29 +84,14 @@
                 <xsl:attribute name="href"><xsl:value-of
                         select="$appBaseUrl" />/css/normalize.min.css</xsl:attribute>
             </link>
-            <!--<link rel="stylesheet">
-                <xsl:attribute name="href"><xsl:value-of
-                        select="$appBaseUrl" />/css/gndefault.css</xsl:attribute>
-            </link>-->
             <link rel="stylesheet">
                 <xsl:attribute name="href"><xsl:value-of
-                        select="$appBaseUrl" />/css/gnmetadatadefault.css</xsl:attribute>
-            </link>
-            <link rel="stylesheet">
-                <xsl:attribute name="href"><xsl:value-of
-                        select="$appBaseUrl" />/css/gnmapdefault.css</xsl:attribute>
+                        select="$appBaseUrl" />/static/geonetwork-client_css.css<xsl:value-of
+                        select="$minimizedParam"/></xsl:attribute>
             </link>
 
-            <!--<link rel="stylesheet">
-                <xsl:attribute name="href"><xsl:value-of
-                        select="$appBaseUrl" />/css/geonetwork.css</xsl:attribute>
-            </link>-->
 
             <link rel="stylesheet">
-                <xsl:attribute name="href"><xsl:value-of
-                        select="$appBaseUrl" />/css/metadata-view.css</xsl:attribute>
-            </link>
-                 <link rel="stylesheet">
                 <xsl:attribute name="href"><xsl:value-of
                         select="$appBaseUrl" />/css/main.css</xsl:attribute>
             </link>
@@ -125,22 +100,10 @@
             <!--[if lt IE 7]> <link rel="stylesheet"> <xsl:attribute name="href"><xsl:value-of
                           select="$baseUrl" />/apps/ngr2/css/ltie7.css"/></xsl:attribute> </link> <![endif] -->
 
-            <script type="text/javascript">
-                <xsl:attribute name="src"><xsl:value-of
-                        select="$baseUrl" />/apps/js/ext/adapter/ext/ext-base.js</xsl:attribute>
-            </script>
+            <script type="text/javascript" src="{concat($baseUrl,'/apps/js/ext/adapter/ext/ext-base.js')}"></script>
+            <script type="text/javascript" src="{concat($baseUrl,'/apps/js/ext/ext-all.js')}"></script>
+            <script type="text/javascript" src="{concat($appBaseUrl,'/js/vendor/modernizr-2.6.1-respond-1.1.0.min.js')}"></script>
 
-            <script type="text/javascript">
-                <xsl:attribute name="src"><xsl:value-of
-                        select="$baseUrl" />/apps/js/ext/ext-all.js</xsl:attribute>
-            </script>
-
-            <script type="text/javascript">
-                <xsl:attribute name="src"><xsl:value-of
-                        select="$appBaseUrl" />/js/vendor/modernizr-2.6.1-respond-1.1.0.min.js</xsl:attribute>
-            </script>
-
-            
             <script>
                 /**
                 * Geocat specific stuff
@@ -363,159 +326,10 @@
                 GeoNetwork_URL = '<xsl:value-of select="$baseUrl" />';
             </script>
 
-            <xsl:choose>
-                <xsl:when test="/root/request/debug">
 
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/js/ext-ux/Rating/RatingItem.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/js/ext-ux/FileUploadField/FileUploadField.js</xsl:attribute>
-                    </script>
-
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/js/ext-ux/TwinTriggerComboBox/TwinTriggerComboBox.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/js/ext-ux/DateTime/DateTime.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/js/ext-ux/RowExpander/RowExpander.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/js/ext-ux/MultiselectItemSelector-3.0/DDView.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/js/ext-ux/MultiselectItemSelector-3.0/Multiselect.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/js/ext-ux/SuperBoxSelect/SuperBoxSelect.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/js/ext-ux/LightBox/lightbox.js</xsl:attribute>
-                    </script>
-
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/js/proj4js-compressed.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/js/OpenLayers/lib/OpenLayers.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/js/GeoExt/lib/overrides/override-ext-ajax.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/js/GeoExt/lib/GeoExt.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/js/GeoExt-ux/LayerOpacitySliderPlugin/LayerOpacitySliderPlugin.js</xsl:attribute>
-                    </script>
-
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/js/GeoNetwork/lib/GeoNetwork.js</xsl:attribute>
-                    </script>
-                    
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/js/GeoNetwork/lib/GeoNetwork/widgets/FacetsPanel.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$baseUrl" />/apps/js/GeoNetwork/lib/GeoNetwork/Message.js</xsl:attribute>
-                    </script>
-
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$appBaseUrl" />/js/lang/en.js</xsl:attribute>
-                    </script>
-
-                     <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$appBaseUrl" />/js/lang/de.js</xsl:attribute>
-                    </script>
-
-                     <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$appBaseUrl" />/js/lang/fr.js</xsl:attribute>
-                    </script>
-
-                                         <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$appBaseUrl" />/js/lang/it.js</xsl:attribute>
-                    </script>
-
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$appBaseUrl" />/js/GlobalFunctions.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$appBaseUrl" />/js/Settings.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$appBaseUrl" />/js/Shortcuts.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$appBaseUrl" />/js/map/Settings.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$appBaseUrl" />/js/map/MapApp.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$appBaseUrl" />/js/BreadCrumb.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$appBaseUrl" />/js/Templates.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$appBaseUrl" />/js/search/SearchApp.js</xsl:attribute>
-                    </script>
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$appBaseUrl" />/js/user/LoginApp.js</xsl:attribute>
-                    </script>
-
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$appBaseUrl" />/js/App.js</xsl:attribute>
-                    </script>
-                    
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$appBaseUrl" />/js/MetadataTooltip.js</xsl:attribute>
-                    </script>
-
-                    <script type="text/javascript">
-                        <xsl:attribute name="src"><xsl:value-of
-                                select="$appBaseUrl" />/js/NotifyByEmail.js</xsl:attribute>
-                    </script>
-                    
-                </xsl:when>
-                <xsl:otherwise>
-                    <script type="text/javascript" src="{concat($appBaseUrl, '/js/App-mini.js')}"></script>
-                </xsl:otherwise>
-            </xsl:choose>
+            <script type="text/javascript" src="{concat($appBaseUrl, '/static/geonetwork-client-mini-nomap.js')}"></script>
+            <script type="text/javascript" src="{concat($appBaseUrl, '/static/geonetwork-client-mini.js')}"></script>
+            <script type="text/javascript" src="{concat($appBaseUrl, '/static/geonetwork-client-geocat-app.js')}"></script>
         </body>
     </html>
     </xsl:template>
