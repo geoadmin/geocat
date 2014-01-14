@@ -15,6 +15,7 @@ import jeeves.component.ProfileManager;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.UnfailingIterator;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
@@ -254,7 +255,10 @@ public final class XslUtil
             if (iso3LangCode.length() == 2){
                 iso2LangCode = iso3LangCode;
             } else {
-                iso2LangCode = IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(iso3LangCode);
+                if (ServiceContext.get() != null) {
+                    final IsoLanguagesMapper mapper = ServiceContext.get().getBean(IsoLanguagesMapper.class);
+                    iso2LangCode = mapper.iso639_2_to_iso639_1(iso3LangCode);
+                }
             }
         } catch (Exception ex) {
             Log.error(Geonet.GEONETWORK, "Failed to get iso 2 language code for " + iso3LangCode + " caused by " + ex.getMessage());
@@ -308,12 +312,24 @@ public final class XslUtil
     }
     
 	public static String threeCharLangCode(String langCode) {
-	    if(langCode == null || langCode.length() < 2) return Geonet.DEFAULT_LANGUAGE;
+	    if (langCode == null || langCode.length() < 2) {
+            return Geonet.DEFAULT_LANGUAGE;
+        }
 
-		if(langCode.length() == 3) return langCode;
+		if (langCode.length() == 3) {
+            return langCode;
+        }
 
-		return IsoLanguagesMapper.getInstance().iso639_1_to_iso639_2(langCode);
-	}
+        final ServiceContext serviceContext = ServiceContext.get();
+        if (serviceContext != null) {
+            final IsoLanguagesMapper mapper;
+            mapper = serviceContext.getBean(IsoLanguagesMapper.class);
+            return mapper.iso639_1_to_iso639_2(langCode);
+        } else {
+            return langCode;
+        }
+
+    }
 
 	public static boolean match(Object src, Object pattern) {
 		if (src == null || src.toString().trim().isEmpty()) {

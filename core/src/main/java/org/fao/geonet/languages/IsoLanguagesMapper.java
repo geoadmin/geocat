@@ -28,10 +28,12 @@ import org.fao.geonet.repository.IsoLanguageRepository;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 
 /**
  * TODO javadoc.
@@ -48,6 +50,7 @@ public class IsoLanguagesMapper {
     protected final Map<String, String> iso639_1_to_iso639_2IsoLanguagesMap =  new HashMap<String, String>();
     protected final Map<String, String> iso639_2_to_iso639_1IsoLanguagesMap =  new HashMap<String, String>();
 
+    @Autowired
     private IsoLanguageRepository _langRepo;
 
 
@@ -81,11 +84,9 @@ public class IsoLanguagesMapper {
 
     /**
      * Creates mapping to of ISO 639-1 to ISO 639-2 for all languages defined in IsoLanguages table
-     *
-     * @param applicationContext appContext
      */
-    public void init(ApplicationContext applicationContext) {
-        this._langRepo = applicationContext.getBean(IsoLanguageRepository.class);
+    @PostConstruct
+    public void init() {
         for (IsoLanguage record : _langRepo.findAll()) {
             final String shortCode = toLowerCase(record.getShortCode());
             final String code = toLowerCase(record.getCode());

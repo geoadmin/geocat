@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
 public class XmlCacheManager {
     private static final String XML_FILE_CACHE_KEY = "XmlFile";
 	Map<String, Map<String, XmlFileCacher>> eternalCaches = new HashMap<String, Map<String, XmlFileCacher>>();

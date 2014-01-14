@@ -30,22 +30,18 @@
         <xsl:call-template name="mapfish_script_includes"/>
         
         <xsl:choose>
-            <xsl:when test="/root/request/debug">
                 <script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"></script>
 		        <xsl:call-template name="geocat-js"/> 
                 <script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"></script>
             </xsl:when>
-            <xsl:otherwise>
                 <script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"></script>
-            </xsl:otherwise>
-        </xsl:choose>
     	<xsl:call-template name="geocat-js"/>
 
 		<!-- GEOCAT --> <xsl:call-template name="edit-header"/>
 
         <xsl:variable name="twoCharLangCode" select="java:twoCharLangCode(/root/gui/language)" />
 		<script type="text/javascript" src="{/root/gui/url}/scripts/ext/locale/ext-lang-{$twoCharLangCode}.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/static/kernel.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/webtoolkit.aim.js"/>
 		<script type="text/javascript">
 			<xsl:if test="/root/gui/position!='-1'">

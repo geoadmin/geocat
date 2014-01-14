@@ -550,7 +550,13 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
         if(newDateVal && newDateVal instanceof Date) {
             this.setDate(newDateVal);
             this.setTime(newDateVal);
+<<<<<<< HEAD
             this.dateValue = new Date(Ext.isIE ? val.getTime() : val);
+=======
+            // Fix for IE, line code was wrong, for IE should use newDateVal
+            //this.dateValue = new Date(Ext.isIE && val.getTime ? val.getTime() : val);
+            this.dateValue = new Date(Ext.isIE && newDateVal.getTime ? newDateVal.getTime() : val);
+>>>>>>> 1666b699c30d3464467cb473910c1a5fdc10b90b
         }
         else {
             //Try to split the date into date/time if they can be parsed based on the supplied format then we will use it.

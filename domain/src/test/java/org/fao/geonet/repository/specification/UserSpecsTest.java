@@ -18,6 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fao.geonet.repository.UserRepositoryTest.newUser;
 import static org.fao.geonet.repository.specification.UserSpecs.*;
+import static org.fao.geonet.repository.specification.UserSpecs.hasUserIdIn;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

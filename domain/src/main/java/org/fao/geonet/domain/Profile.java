@@ -16,19 +16,19 @@ public enum Profile {
     // GEOCAT
     Shared,
     // END GEOCAT
-    Monitor;
+    Monitor(Administrator);
 
     public static final String PROFILES_ELEM_NAME = "profiles";
-    private final Set<Profile> children;
+    private final Set<Profile> parents;
 
-    private Profile(Profile... children) {
-        this.children = new HashSet<Profile>(Arrays.asList(children));
+    private Profile(Profile... parents) {
+        this.parents = new HashSet<Profile>(Arrays.asList(parents));
     }
 
     public Set<Profile> getParents() {
         HashSet<Profile> parents = new HashSet<Profile>();
         for (Profile profile : values()) {
-            if (profile.children.contains(this)) {
+            if (profile.parents.contains(this)) {
                 parents.add(profile);
             }
         }

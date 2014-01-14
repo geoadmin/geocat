@@ -7,27 +7,6 @@
           metadata-complete="true">
 
     <display-name>geonetwork</display-name>
-	<context-param>
-		<param-name>contextClass</param-name>
- 		<param-value>
-	          jeeves.config.springutil.JeevesApplicationContext
-	      </param-value>
-	</context-param>
-	<!-- comma separated list of classes that implement 
-		 org.springframework.beans.factory.config.BeanFactoryPostProcessor
-
-		 This is an additional method of overriding the spring configuration
-		 besides multiple bean configuration files with overriding beans by using
-		 same id in multiple files. 
-		  -->
-	<context-param>
-		<param-name>applicationContextPostProcessors</param-name>
-		<param-value></param-value>
-	</context-param>
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/config-spring-geonetwork.xml</param-value>
-	</context-param>
     <listener>
         <listener-class>jeeves.config.springutil.JeevesContextLoaderListener</listener-class>
     </listener>
@@ -62,7 +41,15 @@
     <!-- Spring security -->
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
-        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <filter-class>jeeves.config.springutil.JeevesDelegatingFilterProxy</filter-class>
+        <init-param>
+            <param-name>loginService</param-name>
+            <param-value>j_spring_security_check</param-value>
+        </init-param>
+        <init-param>
+            <param-name>trustedHost</param-name>
+            <param-value>localhost</param-value>
+        </init-param>
     </filter>
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
@@ -102,13 +89,13 @@
             <param-value>/status</param-value>
         </init-param>
     </filter>
-	<filter-mapping>
-		<filter-name>UrlRewriteFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
-	
+    <filter-mapping>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+
     <!-- Resources servlet -->
     <filter>
         <filter-name>resources</filter-name>
@@ -122,6 +109,28 @@
             <param-value>${system.specific.overrides},${web.xml.main.config.overrides}${web.xml.widget.config.overrides}</param-value>
         </init-param>
     </filter>
+    <filter>
+        <!--
+            WebResourceOptimizer is a WRO4J Filter (https://code.google.com/p/wro4j/wiki/Introduction)
+            which runs css and javascript linting, compiling, minification and compression.  We use it in two ways.
+
+            * Runtime as a Servlet Filter - at runtime WRO4J compiles, lints, minifies and compresses all javascript and css files.
+                                            This allows a developer to be able to get instant feed back when he/she changes a file.
+                                            By Default the javascript and css is minimized.  To not have it minized use ?minimize=false
+            * Maven build - The same configuration is run on all javascript files during build time.  The artifacts are ignored
+                            because they are generated at runtime but it a check to verify that when deployed all artifacts can be
+                            correctly built when the .
+        -->
+
+        <filter-name>WebResourceOptimizer</filter-name>
+        <filter-class>
+            ro.isdc.wro.http.WroFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>WebResourceOptimizer</filter-name>
+        <url-pattern>/static/*</url-pattern>
+    </filter-mapping>
 
     <!-- Only allow administrators or localhost access to the monitoring metrics -->
     <filter>
@@ -291,6 +300,13 @@
         <url-pattern>/srv/*</url-pattern>
     </servlet-mapping>
 
+    <!--
+    Multinode configuration: Add servlet mapping for each nodes
+    <servlet-mapping>
+        <servlet-name>gn-servlet</servlet-name>
+        <url-pattern>/node1/*</url-pattern>
+    </servlet-mapping>
+     -->
     <!-- Servlet proxy -->
     <servlet>
         <servlet-name>HttpProxy</servlet-name>
@@ -348,6 +364,7 @@
 
     <welcome-file-list>
         <welcome-file>home</welcome-file>
+        <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
     <session-config>
