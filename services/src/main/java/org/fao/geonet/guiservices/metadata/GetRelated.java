@@ -230,6 +230,8 @@ public class GetRelated implements Service, RelatedMetadata {
         // Get aggregates from this record
         if (type.equals("") || type.contains("siblings")) {
             Element response = new Element("response");
+
+            // TODO this should use lucene index instead of xsl transforms
             List<?> sibs = Xml
                     .selectNodes(
                             md,
@@ -346,6 +348,13 @@ public class GetRelated implements Service, RelatedMetadata {
                 to, fast));
         relatedRecords.addContent(search(uuid, "stereoMate", context, from,
                 to, fast));
+        relatedRecords.addContent(search(uuid, "isDescriptionOf", context,
+                from, to, fast));
+        relatedRecords.addContent(search(uuid, "isTemporalStatOf", context, from,
+                to, fast));
+        relatedRecords.addContent(search(uuid, "largerWorkCitation", context, from,
+                to, fast));
+
         // XSL transformation is used on the metadata record to extract
         // distribution information or thumbnails
         if (md != null && (type.equals("") || type.contains("online") || type.contains("thumbnail"))) {
@@ -413,7 +422,8 @@ public class GetRelated implements Service, RelatedMetadata {
             else if ("datasets".equals(type) || "fcats".equals(type) || "sources".equals(type) || "siblings".equals(type))
                 parameters.addContent(new Element("uuid").setText(uuid));
             else if ("crossReference".equals(type) || "partOfSeamlessDatabase".equals(type)
-            			|| "source".equals(type) || "stereoMate".equals(type))
+            			|| "source".equals(type) || "stereoMate".equals(type) || "isDescriptionOf".equals(type)
+                        || "isTemporalStatOf".equals(type) || "largerWorkCitation".equals(type))
             	parameters.addContent(new Element(type).setText(uuid));
 
             parameters.addContent(new Element("fast").addContent("index"));
