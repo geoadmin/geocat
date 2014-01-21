@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.repository.SchematronRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -69,6 +70,8 @@ public class MetadataSchema
 	private static final String SCHEMATRON_RULE_FILE_PREFIX = "schematron-rules";
 
 	private List<Element> rootAppInfoElements;
+
+    private SchematronRepository schemarepo;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -456,8 +459,6 @@ public class MetadataSchema
 	/**
 	 * true if schema requires to synch the uuid column schema info
 	 * with the uuid in the metadata record (updated on editing or in UFO).
-	 * 
-	 * @return
 	 */
 	public boolean isReadwriteUUID() {
 		return readwriteUUID;
@@ -475,9 +476,5 @@ public class MetadataSchema
         this.schemarepo = schemarepo;
     }
 
-    @Autowired // autowire does not work, but maybe in the future...
-    private SchematronRepository schemarepo;
+
 }
-
-//==============================================================================
-

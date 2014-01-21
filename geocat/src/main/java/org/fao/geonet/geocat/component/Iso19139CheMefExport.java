@@ -32,7 +32,7 @@ public class Iso19139CheMefExport extends ExportFormat {
             final StreamSource source = new StreamSource(formatData(metadata, false, ""));
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             togm03.convert(source, "TransformationTestSupport", out);
-            return Collections.singleton(Pair.read("metadata-gm03_2.xml", new String(out.toByteArray(), Constants.ENCODING)));
+            return Collections.singleton(Pair.read("metadata-gm03_2_1.xml", new String(out.toByteArray(), Constants.ENCODING)));
         }
 
         return Collections.emptySet();

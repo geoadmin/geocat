@@ -18,6 +18,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.geocat.PublishRecordRepository;
 import org.fao.geonet.repository.geocat.specification.PublishRecordSpecs;
@@ -148,7 +149,7 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         if (published) {
             Element report = dataManager.doValidate(null, schema, id, md, "eng", false).one();
 
-            Pair<String, String> failureReport = failureReason(report);
+            Pair<String, String> failureReport = failureReason(context, report);
             String failureRule = failureReport.one();
             String failureReasons = failureReport.two();
             if (!failureRule.isEmpty()) {
@@ -180,7 +181,7 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         return allowedRepository.count(idAndPublishedSpec) > 0;
     }
 
-    private Pair<String, String> failureReason(Element report) {
+    private Pair<String, String> failureReason(ServiceContext context, Element report) {
 
         @SuppressWarnings("unchecked")
         Iterator<Element> reports = report.getDescendants(new ReportFinder());
@@ -192,7 +193,7 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
             if (report.getName().equals("xsderrors")) {
                 processXsdError(report, rules, failures);
             } else {
-                processSchematronError(report, rules, failures);
+                processSchematronError(context, report, rules, failures);
             }
         }
 
@@ -221,11 +222,14 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         }
     }
 
-    private void processSchematronError(Element report, StringBuilder rules, StringBuilder failures) {
+    private void processSchematronError(ServiceContext context, Element report, StringBuilder rules, StringBuilder failures) {
         String reportType = report.getAttributeValue("rule", Edit.NAMESPACE);
         reportType = reportType == null ? "No name for rule" : reportType;
         StringBuilder failure = new StringBuilder();
-        if (!reportType.equals(Geocat.INSPIRE_SCHEMATRON_ID)) {
+
+        boolean isMandatory = checkMandatory(context, report.getAttributeValue("dbident", Edit.NAMESPACE));
+
+        if (isMandatory) {
             @SuppressWarnings("unchecked")
             Iterator<Element> errors = report.getDescendants(new ErrorFinder());
 
@@ -250,6 +254,10 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
                 rules.append(reportType);
             }
         }
+    }
+    private boolean checkMandatory(ServiceContext context, String id) {
+        final Schematron one = context.getBean(SchematronRepository.class).findOne(Integer.valueOf(id));
+        return one != null && one.getRequired();
     }
 
     @SuppressWarnings("unchecked")
