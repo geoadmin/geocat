@@ -22,6 +22,9 @@ public class SchematronCriteria extends GeonetEntity {
 	private String value;
 	private Schematron schematron;
 
+    /**
+     * Get the unique id for the schematron criteria object
+     */
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
 	@Column(nullable = false)
@@ -29,6 +32,9 @@ public class SchematronCriteria extends GeonetEntity {
 		return id;
 	}
 
+    /**
+     * Set the unique id for the schematron criteria object
+     */
 	public SchematronCriteria setId(int id) {
 		this.id = id;
 		return this;

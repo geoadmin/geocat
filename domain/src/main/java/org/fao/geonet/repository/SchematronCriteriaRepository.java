@@ -2,7 +2,9 @@ package org.fao.geonet.repository;
 
 import java.util.List;
 
+import org.fao.geonet.domain.Schematron;
 import org.fao.geonet.domain.SchematronCriteria;
+import org.jdom.Element;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
@@ -13,12 +15,13 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface SchematronCriteriaRepository extends
 		GeonetRepository<SchematronCriteria, Integer>,
 		JpaSpecificationExecutor<SchematronCriteria>, SchematronCriteriaRepositoryCustom {
-	/**
-	 * Look up a schematrons by its schema
-	 * 
-	 * @param name
-	 *            the name of the schematron
-	 */
-	public List<SchematronCriteria> findAll();
 
+    /**
+     * Get the list of all {@link org.fao.geonet.domain.SchematronCriteria} that are related to the given schematron.
+     *
+     * @param schematron the schematron in question
+     *
+     * @return the list of related schematron
+     */
+    List<SchematronCriteria> findAllBySchematron(Schematron schematron);
 }

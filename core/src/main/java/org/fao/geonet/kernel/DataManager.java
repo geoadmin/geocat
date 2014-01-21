@@ -1894,7 +1894,7 @@ public class DataManager {
         }
 
         //Apply custom schematron rules
-        Element errors = applyCustomSchematronRules(dbms, schema, doc.getRootElement(), lang, valTypeAndStatus);
+        Element errors = applyCustomSchematronRules(schema, doc.getRootElement(), lang, valTypeAndStatus);
         valid = valid && errors == null;
 
 
@@ -1915,7 +1915,6 @@ public class DataManager {
     /**
      * Used by the validate embedded service. The validation report is stored in the session.
      *
-     * @param session
      * @param schema
      * @param id
      * @param md
@@ -1986,7 +1985,7 @@ public class DataManager {
         }
 
         //Apply custom schematron rules
-        Element error = applyCustomSchematronRules(dbms, schema, md, lang, valTypeAndStatus);
+        Element error = applyCustomSchematronRules(schema, md, lang, valTypeAndStatus);
         if(error != null) {
             errorReport.addContent(error);
         }
@@ -2030,46 +2029,47 @@ public class DataManager {
      * @param valTypeAndStatus
      * @return errors
      */
-    public Element applyCustomSchematronRules(Dbms dbms, String schema, Element md,
+    public Element applyCustomSchematronRules(String schema, Element md,
                                               String lang, Map<String, Integer[]> valTypeAndStatus) {
         MetadataSchema metadataSchema = getSchema(schema);
 
-        Element schemaTronXmlOut = new Element("schematronerrors",
-                Edit.NAMESPACE);
+        Element schemaTronXmlOut = new Element("schematronerrors", Edit.NAMESPACE);
+
         try {
-            String schemaname = metadataSchema.getName();
-            final List<Element> schematroncriteria = SchemaDao.selectSchema(dbms,
-                    schemaname);
+            final SchematronRepository schematronRepository = _applicationContext.getBean(SchematronRepository.class);
+            final SchematronCriteriaRepository criteriaRepository = _applicationContext.getBean(SchematronCriteriaRepository.class);
+            final GroupRepository groupRepository = _applicationContext.getBean(GroupRepository.class);
+
+            final List<Schematron> schematroncriteria = schematronRepository.findAllByIsoschema(metadataSchema.getName());
 
             //Loop through all xsl files
-            for (Element schematron : schematroncriteria) {
+            for (Schematron schematron : schematroncriteria) {
 
-                Boolean required = "t".equalsIgnoreCase(schematron.getChildText("required"));
-                Integer id = Integer.parseInt(schematron.getChildText("id"));
+                Boolean required = schematron.getRequired();
+                int id = schematron.getId();
                 //it contains absolute path to the xsl file
-                String rule = schematron.getChildText("file");
-                String dbident = id.toString();
+                String rule = schematron.getFile();
+                String dbident = ""+id;
                 Integer ifNotValid = (required? 0 : 2);
 
-                final List<Element> criterias = SchemaDao.selectCriteriaBySchema(dbms, id);
+                final List<SchematronCriteria> criterias = criteriaRepository.findAllBySchematron(schematron);
 
                 //Loop through all criteria to see if apply schematron
                 //if any criteria does not apply, do not apply at all (AND)
                 boolean apply = true;
-                for(Element criteria : criterias) {
+                for(SchematronCriteria criteria : criterias) {
 
-                    Integer type = Integer.valueOf(criteria.getChildText("type"));
-                    String value = criteria.getChildText("value");
+                    SchematronCriteriaType type = criteria.getType();
+                    String value = criteria.getValue();
                     boolean tmpApply = false;
 
                     switch(type) {
-                        case 0: //group
-                            tmpApply = dbms.select(
-                                    "SELECT * FROM metadata "
-                                    + "WHERE groupowner = ? ",
-                                    Integer.valueOf(value)).getChildren().size() > 0;
+                        case GROUP:
+                            Integer groupId = Integer.valueOf(value);
+                            final Specification<Metadata> spec = MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(groupId));
+                            tmpApply = _metadataRepository.count(spec) > 0;
                             break;
-                        case 1: //keyword
+                        case KEYWORD:
                         default:
                             tmpApply = checkKeyword(md, value);
                             break;
@@ -2141,13 +2141,11 @@ public class DataManager {
                 }
 
             }
-        } catch (SQLException sqle) {
+        } catch (Throwable sqle) {
             sqle.printStackTrace();
             Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
             errorReport.addContent("Schematron error ocurred, rules could not be verified: " + sqle.getMessage());
             schemaTronXmlOut.addContent(errorReport);
-        } catch (Throwable e) {
-            e.printStackTrace();
         }
 
         if(schemaTronXmlOut.getChildren().isEmpty()) {

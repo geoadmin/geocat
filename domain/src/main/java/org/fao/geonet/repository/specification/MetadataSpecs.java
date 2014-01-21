@@ -5,6 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -115,7 +116,7 @@ public final class MetadataSpecs {
         };
     }
 
-    public static Specification<Metadata> isOwnedByOneOfFollowingGroups(final List<Integer> groups) {
+    public static Specification<Metadata> isOwnedByOneOfFollowingGroups(final Collection<Integer> groups) {
         return new Specification<Metadata>() {
             @Override
             public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
