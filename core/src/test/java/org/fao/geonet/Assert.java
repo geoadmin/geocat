@@ -5,6 +5,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -56,6 +57,25 @@ public final class Assert extends junit.framework.TestCase {
         }
         assertNotNull("No element found at: " + xpath + " in \n" + Xml.getString(xml), element);
         assertEquals(expected, element.getText());
+    }
+    /**
+     * Look up the webapp directory.
+     *
+     * @return
+     */
+    public static String getWebappDir(Class<?> cl) {
+        File here = getClassFile(cl);
+        while (!new File(here, "pom.xml").exists() && !new File(here.getParentFile(), "web/src/main/webapp/").exists()) {
+//            System.out.println("Did not find pom file in: "+here);
+            here = here.getParentFile();
+        }
+
+        return new File(here.getParentFile(), "web/src/main/webapp/").getAbsolutePath()+"/";
+    }
+
+    private static File getClassFile(Class<?> cl) {
+        final String testClassName = cl.getSimpleName();
+        return new File(cl.getResource(testClassName + ".class").getFile());
     }
 
 }

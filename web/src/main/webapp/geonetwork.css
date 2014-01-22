@@ -1443,6 +1443,12 @@ div.metadataValidation form {
 }
 
 div.metadataValidation form div {
+	display: inline;
+	padding: 2px;
+}
+
+div.metadataValidation form input[type="submit"] {
+	float: right;
 }
 
 div.metadataValidation form div label {
@@ -1452,6 +1458,32 @@ div.metadataValidation form div label {
 }
 div.metadataValidation form div select, div.metadataValidation form div input {
 	width: 70%;
+}
+
+div#content_container.angularapp {
+    margin: 15px;
+}
+
+#resultTable {
+    margin-left: 2%;
+    width: 96%;
+}
+
+#resultTable a.removeItem {
+    color: #C22424;
+    width: 22px;
+    height: 22px;
+}
+
+#resultTable a.removeItem:hover {
+    color: red;
+    text-decoration: none;
+    font-size: 120%;
+}
+
+#resultTable span.glyphicon-check {
+    color: #005700;
+    padding: 4px;
 }
 
 div.metadataValidation div.xpath.list {

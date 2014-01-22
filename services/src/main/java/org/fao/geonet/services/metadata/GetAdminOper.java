@@ -31,14 +31,12 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.Operation;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.services.Utils;
@@ -87,6 +85,8 @@ public class GetAdminOper implements Service
 
         Element ownerId = new Element("ownerid").setText(info.getSourceInfo().getOwner() + "");
         Element groupOwner = new Element("groupOwner").setText(info.getSourceInfo().getGroupOwner() + "");
+        Element schema = new Element("schema").setText(info.getDataInfo().getSchemaId());
+        Element isMetadata = new Element("isMetadata").setText(Boolean.toString(info.getDataInfo().getType() == MetadataType.METADATA));
         Element hasOwner = new Element("owner");
         if (am.isOwner(context, metadataId))
             hasOwner.setText("true");
@@ -163,6 +163,8 @@ public class GetAdminOper implements Service
 			}
 		}
 
+        final Specification<MetadataValidation> spec = MetadataValidationSpecs.hasMetadataId(Integer.parseInt(metadataId));
+        Element validationEl = context.getBean(MetadataValidationRepository.class).findAllAsXml(spec);
 		//-----------------------------------------------------------------------
 		//--- put all together
 
@@ -172,6 +174,9 @@ public class GetAdminOper implements Service
 										.addContent(elGroup)
 										.addContent(ownerId)
 										.addContent(hasOwner)
+										.addContent(schema)
+										.addContent(isMetadata)
+										.addContent(validationEl)
 										.addContent(groupOwner);
 
 		return elRes;

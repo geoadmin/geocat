@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:util="xalan://org.fao.geonet.util.XslUtil">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	
 	<xsl:include href="modal.xsl"/>
 
@@ -20,52 +20,15 @@
 				<xsl:variable name="disabled" select="(/root/response/owner='false')"/>
 				<xsl:variable name="path" select="string(/root/response/luceneIndexPath)"/>
 				<xsl:variable name="id" select="string(/root/response/id)"/>
-				
-				<xsl:variable name="valid-xsd" select="normalize-space(/root/response/validation/record[valtype = 'xsd']/status)"/>
-				<xsl:variable name="validSch-iso" select="normalize-space(/root/response/validation/record[valtype = 'schematron-rules-iso']/status)"/>
-				<xsl:variable name="validSch-iso-che" select="normalize-space(/root/response/validation/record[valtype = 'schematron-rules-iso-che']/status)"/>
-				<xsl:variable name="validSch-inspire" select="normalize-space(/root/response/validation/record[valtype = 'schematron-rules-inspire']/status)"/>
-				<xsl:variable name="validSch-geonetwork" select="normalize-space(/root/response/validation/record[valtype = 'schematron-rules-geonetwork']/status)"/>
 				<xsl:variable name="schema" select="/root/response/schema"/>
 				
-				<xsl:variable name="validXsd">
-					<xsl:choose>
-						<!-- only apply restriction to iso19139 metadata records -->
-						<xsl:when test="$valid-xsd='1'"><xsl:text>y</xsl:text></xsl:when>
-						<xsl:otherwise><xsl:text>n</xsl:text></xsl:otherwise>
-					</xsl:choose>                                   
-				</xsl:variable>
-				<xsl:variable name="validIso">
-					<xsl:choose>
-						<!-- only apply restriction to iso19139 metadata records -->
-						<xsl:when test="not(starts-with($schema, 'iso19139'))">y</xsl:when>
-						<xsl:when test="$validSch-iso='1' and $validSch-geonetwork='1'"><xsl:text>y</xsl:text></xsl:when>
-						<xsl:otherwise><xsl:text>n</xsl:text></xsl:otherwise>
-					</xsl:choose>                                   
-				</xsl:variable>
-				<xsl:variable name="validInspire">
-					<xsl:choose>
-						<!-- only apply restriction to iso19139 metadata records -->
-						<xsl:when test="not(starts-with($schema, 'iso19139'))">y</xsl:when>
-						<xsl:when test="$validSch-inspire='1'"><xsl:text>y</xsl:text></xsl:when>
-						<xsl:otherwise><xsl:text>n</xsl:text></xsl:otherwise>
-					</xsl:choose>                                   
-				</xsl:variable>
-				<xsl:variable name="validGM03">
-					<xsl:choose>
-						<!-- only apply restriction to iso19139 metadata records -->
-						<xsl:when test="not(starts-with($schema, 'iso19139'))">y</xsl:when>
-						<xsl:when test="$validSch-iso-che='1'"><xsl:text>y</xsl:text></xsl:when>
-						<xsl:otherwise><xsl:text>n</xsl:text></xsl:otherwise>
-					</xsl:choose>                                   
-				</xsl:variable>
 				<xsl:variable name="valid">
 					<xsl:choose>
-						<!-- only apply restriction to iso19139 metadata records -->
 						<xsl:when test="contains(/root/gui/reqService,'metadata.batch')">y</xsl:when>
-						<xsl:when test="not(starts-with($schema, 'iso19139')) and $valid-xsd='1'">y</xsl:when>
-						<xsl:when test="starts-with($schema, 'iso19139') and $valid-xsd='1' and $validSch-iso-che='1' and $validSch-iso='1' and $validSch-geonetwork='1'"><xsl:text>y</xsl:text></xsl:when>
-						<xsl:otherwise><xsl:text>n</xsl:text></xsl:otherwise>
+                        <!-- only apply restriction to iso19139 metadata records that are not templates -->
+                        <xsl:when test="/root/response/isMetadata = 'false'">y</xsl:when>
+                        <xsl:when test="/root/response/validation/record[status='2']">n</xsl:when>
+						<xsl:otherwise><xsl:text>y</xsl:text></xsl:otherwise>
 					</xsl:choose>                                   
 				</xsl:variable>
 				<div id="privileges">
@@ -94,19 +57,30 @@
 							Disabled if user is not an administrator
 							or if user is not a reviewer of the metadata group.
 						-->
-						<xsl:apply-templates select="/root/response/group/group[id='1']" mode="group">
+						<xsl:variable name="isTemplate" select="/root/response/isMetadata = 'false'"/>
+						<xsl:variable name="isAdministrator" select="$profile = 'Administrator'"/>
+						<xsl:variable name="isReviewer" select="not($isNotReviewer)"/>
+						<xsl:variable name="isValid" select="$valid='y'"/>
+
+						<!-- Metadata can only be published by administrator or reviewer
+						if it is valid or (sub)template -->
+						<xsl:variable name="cannotPublic" select="
+									not(($isAdministrator or $isReviewer) and
+									($isTemplate or $isValid))"/>
+
+						<xsl:apply-templates select="/root/response/groups/group[id='1']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
-							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer or ($valid='n')"/>
+							<xsl:with-param name="disabled" select="$cannotPublic"/>
 						</xsl:apply-templates>
 
 						<xsl:apply-templates select="/root/response/group/group[id='0']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
-							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer or ($valid='n')"/>
+							<xsl:with-param name="disabled" select="$cannotPublic"/>
 						</xsl:apply-templates>
 
 						<xsl:apply-templates select="/root/response/group/group[id='-1']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
-							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer or ($valid='n')"/>
+							<xsl:with-param name="disabled" select="$cannotPublic"/>
 						</xsl:apply-templates>
 
 						<tr>
@@ -226,45 +200,35 @@
 					<xsl:if test="not(contains(/root/gui/reqService,'metadata.batch'))">
 					<td class="padded-center">
 					<h1><xsl:value-of select="/root/gui/strings/displayValidationReport"/></h1>
+
 					<table>
-						<tr>
+						<xsl:for-each select="/root/response/validation/record">
+							<xsl:variable name="valid" select="normalize-space(status)"/>
+							<xsl:variable name="name"><xsl:value-of select="normalize-space(valtype)"/></xsl:variable>
+							<tr class="{$name}">
 							<td style="width:60px">
 								<xsl:choose>
-									<xsl:when test="$validXsd='y'"><img src="../../images/button_ok.png" alt="valid" title="valid"/></xsl:when>
-									<xsl:otherwise><img src="../../images/schematron.gif" alt="{/root/gui/strings/publishOnlyIfAdminOrValid}" title="{/root/gui/strings/publishOnlyIfAdminOrValid}"/></xsl:otherwise>
+										<xsl:when test="$valid='1'"><!-- valid -->
+											<img class="icon16" src="../../images/button_ok.png" alt="valid" title="valid"/>
+										</xsl:when>
+										<xsl:when test="$valid='0'"><!-- error -->
+											<img class="icon18" src="../../images/validationError.png" alt="{/root/gui/strings/publishOnlyIfAdminOrValid}" title="{/root/gui/strings/publishOnlyIfAdminOrValid}"/>
+										</xsl:when>
+										<xsl:otherwise><!-- warning -->
+											<img class="icon18" src="../../images/validationWarning.png" alt="{/root/gui/strings/publishOnlyIfAdminOrValid}" title="{/root/gui/strings/publishOnlyIfAdminOrValid}"/>
+										</xsl:otherwise>
 								</xsl:choose>
 							</td>
-							<td class="padded"><xsl:value-of select="/root/gui/strings/xsdValid"/></td>
-						</tr>
-						<xsl:if test="starts-with($schema, 'iso19139')">
-						<tr>
-							<td style="width:60px">
+								<td class="padded">
+									<xsl:variable name="name_"><xsl:value-of
+										select="/root/gui/strings/validmd/*[name()=$name]"/></xsl:variable>
 								<xsl:choose>
-									<xsl:when test="$validGM03='y'"><img src="../../images/button_ok.png" alt="valid" title="valid"/></xsl:when>
-									<xsl:otherwise><img src="../../images/schematron.gif" alt="{/root/gui/strings/publishOnlyIfAdminOrValid}" title="{/root/gui/strings/publishOnlyIfAdminOrValid}"/></xsl:otherwise>
+										<xsl:when test="$name_ != ''"><xsl:value-of select="$name_"/></xsl:when>
+										<xsl:otherwise><xsl:value-of select="$name"/></xsl:otherwise>
 								</xsl:choose>
 							</td>
-							<td class="padded"><xsl:value-of select="/root/gui/strings/gm03Valid"/><br/></td>
 						</tr>
-						<tr>
-							<td style="width:60px">
-									<xsl:choose>
-										<xsl:when test="$validIso='y'"><img src="../../images/button_ok.png" alt="valid" title="valid"/></xsl:when>
-										<xsl:otherwise><img src="../../images/schematron.gif" alt="{/root/gui/strings/publishOnlyIfAdminOrValid}" title="{/root/gui/strings/publishOnlyIfAdminOrValid}"/></xsl:otherwise>
-									</xsl:choose>
-							</td>
-							<td class="padded"><xsl:value-of select="/root/gui/strings/isoValid"/><br/></td>
-						</tr>
-						<tr>
-							<td style="width:60px">
-								<xsl:choose>
-									<xsl:when test="$validInspire='y'"><img src="../../images/button_ok.png" alt="valid" title="valid"/></xsl:when>
-									<xsl:otherwise><img src="../../images/validationError.gif" alt="{/root/gui/strings/publishOnlyIfAdminOrValid}" title="{/root/gui/strings/publishOnlyIfAdminOrValid}"/></xsl:otherwise>
-								</xsl:choose>
-							</td>
-							<td class="padded"><xsl:value-of select="/root/gui/strings/inspireValid"/><br/></td>
-						</tr>
-						</xsl:if>
+						</xsl:for-each>
 					</table>
 					</td>
 					</xsl:if>

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
+    <metadataValidationConfiguration>Metadata Validation</metadataValidationConfiguration>
+    <metadataValidationConfigurationDesc>Configure Metadata Validation</metadataValidationConfigurationDesc>
+    <noTitle>No Title</noTitle>
+    <isDescriptionOf js="true">Description</isDescriptionOf>
+    <largerWorkCitation js="true">Larger Work Citation</largerWorkCitation>
+    <isTemporalStatOf js="true">Temporal State</isTemporalStatOf>
     <createNewSharedObject js="true">Edit %objtype%</createNewSharedObject>
     <format_name js="true">Enter format name</format_name>
     <format_version js="true">Enter format version</format_version>
@@ -236,6 +242,12 @@
 	<isoValid>ISO valid</isoValid>
 	<gm03Valid>GM03 valid</gm03Valid>
 	<inspireValid>INSPIRE valid</inspireValid>
+	<validmd>
+		<xsd>XSD valid</xsd>
+		<schematron-rules-iso>ISO valid</schematron-rules-iso>
+		<schematron-rules-iso-che>GM03 valid</schematron-rules-iso-che>
+		<schematron-rules-inspire>INSPIRE valid</schematron-rules-inspire>
+	</validmd>
 
     <xsl.admin>Metadata displaying Stylesheets</xsl.admin>
     <xsl.admin.des>Stylesheets (XSL) for displaying metadata in HTML in custom layouts</xsl.admin.des>
@@ -1744,6 +1756,7 @@ Records are available from the following URL:\r\n
 	<addremove>Add/Remove</addremove>
 	<enabled>Enabled</enabled>
 	<notifications>Notification to remote targets</notifications>
+    <url>URL</url>
 
     <uuid>Unique identifier</uuid>
     <quickSearch>Quick search links</quickSearch>
@@ -1825,4 +1838,6 @@ Records are available from the following URL:\r\n
 	<tag_label>Tags</tag_label>
 	<map_label>Map</map_label>
     <unknown>Unknown</unknown>
+
+    <deleteRow>Delete row</deleteRow>
 </strings>
