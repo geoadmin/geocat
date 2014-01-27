@@ -2038,7 +2038,6 @@ public class DataManager {
         try {
             final SchematronRepository schematronRepository = _applicationContext.getBean(SchematronRepository.class);
             final SchematronCriteriaRepository criteriaRepository = _applicationContext.getBean(SchematronCriteriaRepository.class);
-            final GroupRepository groupRepository = _applicationContext.getBean(GroupRepository.class);
 
             final List<Schematron> schematroncriteria = schematronRepository.findAllByIsoschema(metadataSchema.getName());
 
@@ -2048,7 +2047,7 @@ public class DataManager {
                 Boolean required = schematron.getRequired();
                 int id = schematron.getId();
                 //it contains absolute path to the xsl file
-                String rule = schematron.getFile();
+                String rule = schematron.getRuleName();
                 String dbident = ""+id;
                 Integer ifNotValid = (required? 0 : 2);
 

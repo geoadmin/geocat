@@ -1,6 +1,9 @@
 package org.fao.geonet.domain;
 
+import com.google.common.io.Files;
+
 import javax.persistence.*;
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -120,5 +123,36 @@ public class Schematron extends Localized {
     public Map<String, String> getLabelTranslations() {
         return super.getLabelTranslations();
     }
+    private final static int EXTENSION_LENGTH = ".xsl".length();
+    private final static String SEPARATOR = File.separator;
+    private final static String ALT_SEPARATOR;
 
+    static {
+        if (SEPARATOR.equals("\\")) {
+            ALT_SEPARATOR = "/";
+        } else {
+            ALT_SEPARATOR = "\\";
+        }
+    }
+
+    @Transient
+    public String getRuleName() {
+        if (file == null) {
+            return "unnamed rule";
+        }
+        int lastSegmentIndex = file.lastIndexOf(SEPARATOR);
+        if (lastSegmentIndex < 0) {
+            lastSegmentIndex = file.lastIndexOf(ALT_SEPARATOR);
+        }
+
+        if (lastSegmentIndex < 0) {
+            lastSegmentIndex = 0;
+        } else {
+            // drop the separator character
+            lastSegmentIndex += 1;
+        }
+
+        String rule = file.substring(lastSegmentIndex, file.length() - EXTENSION_LENGTH);
+        return rule ;
+    }
 }
