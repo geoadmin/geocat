@@ -145,7 +145,11 @@ public abstract class AbstractParams {
 		Element opt     = node.getChild("options");
 		Element content = node.getChild("content");
 
-		Element account = (site == null) ? null : site.getChild("account");
+        final String ACCOUNT_EL_NAME = "account";
+        Element account = (site == null) ? null : site.getChild(ACCOUNT_EL_NAME);
+        if (account == null) {
+            account = node.getChild(ACCOUNT_EL_NAME);
+        }
 		Element privil  = node.getChild("privileges");
 		Element categ   = node.getChild("categories");
 
@@ -233,11 +237,11 @@ public abstract class AbstractParams {
 		copy.validate   = validate;
 
         for(Privileges p : alPrivileges) {
-			copy.alPrivileges.add(p.copy());
+            copy.addPrivilege(p.copy());
         }
 
         for(String s : alCategories) {
-			copy.alCategories.add(s);
+            copy.addCategory(s);
         }
 
 		copy.node = node;
@@ -317,9 +321,13 @@ public abstract class AbstractParams {
                 p.add(op);
             }
 
-            alPrivileges.add(p);
+            addPrivilege(p);
         }
 	}
+
+    public void addPrivilege(Privileges p) {
+        alPrivileges.add(p);
+    }
 
     /**
      *
@@ -371,19 +379,23 @@ public abstract class AbstractParams {
             Element categElem = (Element) o;
             String categId = categElem.getAttributeValue("id");
 
-            if (categId == null) {
-                throw new MissingParameterEx("attribute:id", categElem);
+            if (categId == null || categId.trim().isEmpty()) {
+                // categoryId is not mandatory.
+                continue;
             }
-
             if (!Lib.type.isInteger(categId)) {
                 throw new BadParameterEx("attribute:id", categElem);
             }
 
-            alCategories.add(categId);
+            addCategory(categId);
         }
 	}
 
-	//---------------------------------------------------------------------------
+    public void addCategory(String categId) {
+        alCategories.add(categId);
+    }
+
+    //---------------------------------------------------------------------------
 	//---
 	//--- Variables
 	//---

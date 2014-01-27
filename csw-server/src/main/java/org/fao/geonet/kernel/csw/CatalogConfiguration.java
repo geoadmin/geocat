@@ -90,6 +90,7 @@ public class CatalogConfiguration {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+            initialized = true;
         }
     }
 	private void loadCatalogConfig(String path, String configFile)
@@ -101,7 +102,7 @@ public class CatalogConfiguration {
 		Element configRoot = Xml.loadFile(configFile);
         ConfigurationOverrides.DEFAULT.updateWithOverrides(configFile, _servletContext, _dataDir.getWebappDir(), configRoot);
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> operationsList = configRoot.getChildren(Csw.ConfigFile.Child.OPERATIONS);
 
         for (Element element : operationsList) {
@@ -420,7 +421,4 @@ public class CatalogConfiguration {
 
     public boolean isIncreasePopularity() {
         init();
-        return _increasePopularity;
-    }
-
-}
+        return _increasePopularit

@@ -60,6 +60,7 @@ import org.jdom.filter.Filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yammer.metrics.core.TimerContext;
@@ -76,7 +77,7 @@ import java.util.List;
 import java.util.Map;
 
 //=============================================================================
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED)
 public class ServiceManager {
 	private Map<String, ArrayList<ServiceInfo>> htServices = new HashMap<String, ArrayList<ServiceInfo>>(100);
 	private Map<String, Object> htContexts = new HashMap<String, Object>();
