@@ -23,16 +23,18 @@
 
 package org.fao.geonet.services.metadata.schema;
 
-import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
 
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.schema.SchemaDao;
+import org.fao.geonet.Util;
+import org.fao.geonet.domain.Schematron;
+import org.fao.geonet.exceptions.MissingParameterEx;
+import org.fao.geonet.repository.SchematronRepository;
+import org.fao.geonet.repository.Updater;
 import org.jdom.Element;
+
+import javax.annotation.Nonnull;
 
 /**
  * This class returns if a schema is mandatory or not
@@ -40,26 +42,40 @@ import org.jdom.Element;
  * @author delawen
  */
 public class IsRequired implements Service {
+    public static final String PARAM_SCHEMATRON = "schematron";
 
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
 
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
-		
 		String action = null;
 		try {
 			action = Util.getParam(params, "action");
 		} catch (MissingParameterEx ex) {
 		}
-		String schema = Util.getParam(params, SchemaDao.TABLE_SCHEMATRON);
-		final Integer schematronId = Integer.valueOf(schema);
-		
-		if ("toggle".equalsIgnoreCase(action)) {
-			SchemaDao.toggleRequired(dbms, schematronId);
-		} 
 
-		return SchemaDao.isRequired(dbms, schematronId);
+        SchematronRepository repo = context.getBean(SchematronRepository.class);
+
+		String schema = Util.getParam(params, PARAM_SCHEMATRON);
+		final Integer schematronId = Integer.valueOf(schema);
+
+		if ("toggle".equalsIgnoreCase(action)) {
+            repo.update(schematronId, new Updater<Schematron>() {
+                @Override
+                public void apply(@Nonnull Schematron entity) {
+                    Boolean updatedRequired = entity.getRequired();
+
+                    entity.setRequired(updatedRequired == null || !updatedRequired);
+                }
+            });
+		}
+
+        final Schematron schematron = repo.findOne(schematronId);
+
+        Element result = new Element("record").addContent(
+                new Element("required").setText(schematron.getRequiredAsString())
+        );
+
+		return result;
 
 	}
 

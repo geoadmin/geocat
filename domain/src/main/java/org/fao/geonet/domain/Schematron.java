@@ -155,4 +155,9 @@ public class Schematron extends Localized {
         String rule = file.substring(lastSegmentIndex, file.length() - EXTENSION_LENGTH);
         return rule ;
     }
+
+    @Transient
+    public String getRequiredAsString() {
+        return required == null || !required ? "f" : "t";
+    }
 }

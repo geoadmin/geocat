@@ -1938,7 +1938,7 @@ public class DataManager {
      *
      * @param schema
      * @param id
-     * @param md
+     * @param metadata
      * @param lang
      * @param forEditing TODO
      * @return
@@ -2062,39 +2062,39 @@ public class DataManager {
         Element schemaTronXmlOut = new Element("schematronerrors",
                 Edit.NAMESPACE);
         try {
-            String schemaname = metadataSchema.getName();
-            final List<Element> schematroncriteria = SchemaDao.selectSchema(dbms,
-                    schemaname);
+            final SchematronRepository schematronRepository = _applicationContext.getBean(SchematronRepository.class);
+            final SchematronCriteriaRepository criteriaRepository = _applicationContext.getBean(SchematronCriteriaRepository.class);
+
+            final List<Schematron> schematroncriteria = schematronRepository.findAllByIsoschema(metadataSchema.getName());
 
             //Loop through all xsl files
-            for (Element schematron : schematroncriteria) {
+            for (Schematron schematron : schematroncriteria) {
 
-                Boolean required = "t".equalsIgnoreCase(schematron.getChildText("required"));
-                Integer id = Integer.parseInt(schematron.getChildText("id"));
+                Boolean required = schematron.getRequired();
+                int id = schematron.getId();
                 //it contains absolute path to the xsl file
-                String rule = schematron.getChildText("file");
-                String dbident = id.toString();
+                String rule = schematron.getRuleName();
+                String dbident = ""+id;
                 Integer ifNotValid = (required? 0 : 2);
 
-                final List<Element> criterias = SchemaDao.selectCriteriaBySchema(dbms, id);
+                final List<SchematronCriteria> criterias = criteriaRepository.findAllBySchematron(schematron);
 
                 //Loop through all criteria to see if apply schematron
                 //if any criteria does not apply, do not apply at all (AND)
                 boolean apply = true;
-                for(Element criteria : criterias) {
+                for(SchematronCriteria criteria : criterias) {
 
-                    Integer type = Integer.valueOf(criteria.getChildText("type"));
-                    String value = criteria.getChildText("value");
+                    SchematronCriteriaType type = criteria.getType();
+                    String value = criteria.getValue();
                     boolean tmpApply = false;
 
                     switch(type) {
-                        case 0: //group
-                            tmpApply = dbms.select(
-                                    "SELECT * FROM metadata "
-                                    + "WHERE groupowner = ? ",
-                                    Integer.valueOf(value)).getChildren().size() > 0;
+                        case GROUP:
+                            Integer groupId = Integer.valueOf(value);
+                            final Specification<Metadata> spec = MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(groupId));
+                            tmpApply = _metadataRepository.count(spec) > 0;
                             break;
-                        case 1: //keyword
+                        case KEYWORD:
                         default:
                             tmpApply = checkKeyword(md, value);
                             break;
@@ -2113,7 +2113,7 @@ public class DataManager {
                         Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
                     }
 
-                    String ruleId = SchemaDao.toRuleName(rule);
+                    String ruleId = schematron.getRuleName();
 
                     Element report = new Element("report", Edit.NAMESPACE);
                     report.setAttribute("rule", ruleId,
@@ -2133,6 +2133,7 @@ public class DataManager {
                         }
                         // add results to persistent validation information
                         int firedRules = 0;
+                        @SuppressWarnings("unchecked")
                         Iterator<Element> i = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
                         while (i.hasNext()) {
                             i.next();
@@ -2166,13 +2167,10 @@ public class DataManager {
                 }
 
             }
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
-            Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
-            errorReport.addContent("Schematron error ocurred, rules could not be verified: " + sqle.getMessage());
-            schemaTronXmlOut.addContent(errorReport);
         } catch (Throwable e) {
-            e.printStackTrace();
+            Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
+            errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
+            schemaTronXmlOut.addContent(errorReport);
         }
 
         if(schemaTronXmlOut.getChildren().isEmpty()) {

@@ -1,9 +1,9 @@
 package org.fao.geonet.kernel.schema;
 
 import com.google.common.collect.Lists;
-import jeeves.utils.Xml;
 import org.apache.commons.io.FileUtils;
-import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
