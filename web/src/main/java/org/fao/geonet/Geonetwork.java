@@ -32,12 +32,10 @@ import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.kernel.*;
-import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.metadata.StatusActions;
@@ -49,7 +47,6 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.lib.DbLib;
 import org.fao.geonet.lib.ServerLib;
@@ -79,7 +76,6 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.persistence.EntityManager;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 import java.io.File;
@@ -88,7 +84,6 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.sql.Connection;
-import java.sql.Statement;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -175,9 +170,6 @@ public class Geonetwork implements ApplicationHandler {
         String statusActionsClassName = handlerConfig.getMandatoryValue(Geonet.Config.STATUS_ACTIONS_CLASS);
         @SuppressWarnings("unchecked")
         Class<StatusActions> statusActionsClass = (Class<StatusActions>) Class.forName(statusActionsClassName);
-
-        String languageProfilesDir = handlerConfig
-                .getMandatoryValue(Geonet.Config.LANGUAGE_PROFILES_DIR);
 
         JeevesJCS.setConfigFilename(appPath + "WEB-INF/classes/cache.ccf");
 
@@ -350,7 +342,7 @@ public class Geonetwork implements ApplicationHandler {
         /**
          * Initialize language detector
          */
-        LanguageDetector.init(appPath + languageProfilesDir);
+        LanguageDetector.init(appPath + _applicationContext.getBean(Geonet.Config.LANGUAGE_PROFILES_DIR, String.class));
 
         //------------------------------------------------------------------------
         //--- Initialize thesaurus
@@ -390,7 +382,7 @@ public class Geonetwork implements ApplicationHandler {
         // Notify unregistered metadata at startup. Needed, for example, when the user enables the notifier config
         // to notify the existing metadata in database
         // TODO: Fix DataManager.getUnregisteredMetadata and uncomment next lines
-        metadataNotifierControl = new MetadataNotifierControl(context, gnContext);
+        metadataNotifierControl = new MetadataNotifierControl(context);
         metadataNotifierControl.runOnce();
 
         //--- load proxy information from settings into Jeeves for observers such
@@ -433,7 +425,7 @@ public class Geonetwork implements ApplicationHandler {
                         final String appPath = context.getAppPath();
                         final String filePath = pair.one();
                         final String filePrefix = pair.two();
-                        Log.warning(Geonet.DB, "Executing SQL from: "+filePath+" "+filePrefix);
+                        Log.warning(Geonet.DB, "Executing SQL from: " + filePath + " " + filePrefix);
                         dbLib.insertData(servletContext, context, appPath, filePath, filePrefix);
                     }
                 String siteUuid = UUID.randomUUID().toString();

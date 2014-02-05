@@ -97,10 +97,10 @@ public final class Processor {
 
 	//--------------------------------------------------------------------------
   /**
-    * Detach all XLinks child of the input XML document.
+     * Resolve XLinks in document and remove the xlink attributes.
     */
-	public static Element detachXLink(Element xml,ServiceContext srvContext) {
-		searchXLink(xml, ACTION_DETACH,srvContext);
+    public static Element detachXLink(Element xml, ServiceContext context) {
+        searchXLink(xml, ACTION_DETACH, context);
 		searchLocalXLink(xml, ACTION_DETACH);
 		return xml;
 	}

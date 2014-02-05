@@ -216,7 +216,7 @@ class EditUtils {
                                  String lang) throws Exception {
         // END GEOCAT
         Lib.resource.checkEditPrivilege(context, id);
-        Element md = xmlSerializer.select(id, context);
+        Element md = xmlSerializer.select(context, id);
 
 		//--- check if the metadata has been deleted
 		if (md == null) {

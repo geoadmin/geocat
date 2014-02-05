@@ -65,7 +65,7 @@ INSERT INTO Operations (id, name) VALUES  (6,'featured');
 -- ======================================================================
 
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/site/name', 'My GeoNetwork catalogue', 0, 110);
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/site/siteId', 'Dummy', 0, 120);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/site/siteId', '', 0, 120);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/site/organization', 'My organization', 0, 130);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/platform/version', '2.11.0', 0, 150);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/platform/subVersion', 'SNAPSHOT', 0, 160);
@@ -145,7 +145,10 @@ INSERT INTO Settings (name, value, datatype, position) VALUES ('system/requested
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/requestedLanguage/sorted', 'false', 2, 9540);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/hidewithheldelements/enable', 'false', 2, 9570);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/hidewithheldelements/keepMarkedElement', 'true', 2, 9580);
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/lucene/ignorechars','-/\\_,.\"''', 0, 9999);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/requestedLanguage/ignorechars', '-/\\_,.\"''', 0, 9590);
+
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES  (1,NULL,'harvesting',NULL);
+
 
 -- ======================================================================
 -- === Table: Users
