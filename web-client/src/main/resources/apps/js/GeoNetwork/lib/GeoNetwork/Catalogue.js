@@ -264,7 +264,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         } else {
             this.URL = this.SERVERURL + 'geonetwork';
         }
-<<<<<<< HEAD
 
         // Swisstopo lang
         this.LANG = /srv\/([a-z]{3})/.exec(location.href);
@@ -280,17 +279,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             }
         }
 
-=======
-        
-        if (!this.node) {
-        	this.node = 'srv';
-        }
-        
-        this.LANG = (this.lang ? this.lang : this.DEFAULT_LANG);
-        
->>>>>>> 1666b699c30d3464467cb473910c1a5fdc10b90b
         // Register GeoNetwork services URL
-        var serviceUrl = this.URL + '/' + this.node + '/' + this.LANG + "/";
+        var serviceUrl = this.URL + '/srv/' + this.LANG + "/";
         this.services = {
             rootUrl : serviceUrl,
             csw : serviceUrl + 'csw',
@@ -1185,33 +1175,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             return false;
         }
     },
-<<<<<<< HEAD
 
-=======
-    postToUrl: function (path, params, method) {
-        method = method || "post"; // Set method to post by default if not specified.
-
-        // The rest of this code assumes you are not using a library.
-        // It can be made less wordy if you use one.
-        var form = document.createElement("form");
-        form.setAttribute("method", method);
-        form.setAttribute("action", path);
-
-        for(var key in params) {
-            if(params.hasOwnProperty(key)) {
-                var hiddenField = document.createElement("input");
-                hiddenField.setAttribute("type", "hidden");
-                hiddenField.setAttribute("name", key);
-                hiddenField.setAttribute("value", params[key]);
-
-                form.appendChild(hiddenField);
-             }
-        }
-
-        document.body.appendChild(form);
-        form.submit();
-    },
->>>>>>> 1666b699c30d3464467cb473910c1a5fdc10b90b
     /**	api: method[login]
      *	:param username: ``String`` The user name
      *	:param password: ``String`` The password for the user
@@ -1245,7 +1209,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 }
             }, 500);
         } else {
-<<<<<<< HEAD
             Ext.Ajax
                     .request({
                         url : this.services.login,
@@ -1260,29 +1223,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                         failure : this.isLoggedIn,
                         scope : this
                     });
-=======
-        	var params = {username: username, password: password};
-        	if (this.node) {
-            	params.node = this.node;
-            }
-        	params.redirectUrl = '/..' + location.pathname;
-        	this.postToUrl(this.services.login, params, 'POST');
-//			OpenLayers.Request.POST({
-//			    url: this.services.login,
-//			    data: OpenLayers.Util.getParameterString(params),
-//			    headers: {
-//			        "Content-Type": "application/x-www-form-urlencoded"
-//			    },
-//	            success: function(response){
-//	            	app.isLoggedIn();  // will get the user information and trigger after login event
-//	            },
-//	            failure: function(response){
-//	                app.identifiedUser = undefined;
-//	                app.onAfterBadLogin();
-//	                // TODO : Get Exception from GeoNetwork
-//	            }
-//	        });
->>>>>>> 1666b699c30d3464467cb473910c1a5fdc10b90b
         }
     },
     /**	api: method[logout]
@@ -1294,7 +1234,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         if (this.casEnabled) {
             window.location = this.services.logout;
         } else {
-<<<<<<< HEAD
             var app = this;
             OpenLayers.Request.GET({
                 url : this.services.logout,
@@ -1308,25 +1247,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                     app.onAfterBadLogout();
                 }
             });
-=======
-            var params = {};
-            params.redirectUrl = '/..' + location.pathname;
-            this.postToUrl(this.services.logout, params, 'POST');
-            
-//	        var app = this;
-//	        OpenLayers.Request.GET({
-//	            url: this.services.logout,
-//	            async: false,  // logout does not seem to work when it is asynchronous request
-//	            success: function(response){
-//	                app.identifiedUser = undefined;
-//	                app.onAfterLogout();
-//	            },
-//	            failure: function(response){
-//	                app.identifiedUser = undefined;
-//	                app.onAfterBadLogout();
-//	            }
-//	        });
->>>>>>> 1666b699c30d3464467cb473910c1a5fdc10b90b
         }
     },
     /** api: method[checkError]

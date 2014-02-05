@@ -30,9 +30,14 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
+
+import java.io.File;
+import java.util.List;
 
 /**
  *  For editing : update leaves information. Access is restricted
@@ -65,6 +70,7 @@ public class Validate extends NotInReadOnlyModeService {
 		UserSession session = context.getUserSession();
 
 		String id = Utils.getIdentifierFromParameters(params, context);
+		String schemaname = dataMan.getMetadataSchema(id);
 
 		//--- validate metadata from session
 		Element errorReport = new AjaxEditUtils(context).validateMetadataEmbedded(session, id, context.getLanguage());
@@ -72,8 +78,37 @@ public class Validate extends NotInReadOnlyModeService {
 		//--- update element and return status
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
-		elResp.addContent(new Element("schema").setText(dataMan.getMetadataSchema(id)));
+		elResp.addContent(new Element("schema").setText(schemaname));
 		elResp.addContent(errorReport);
+
+		Element schematronTranslations = new Element("schematronTranslations");
+
+		// --- add translations for schematrons
+		final List<Element> schematrons = SchemaDao.selectSchema(dbms,
+				schemaname);
+
+		DataManager dm = gc.getDataManager();
+		MetadataSchema metadataSchema = dm.getSchema(schemaname);
+		String schemaDir = metadataSchema.getSchemaDir();
+		SAXBuilder builder = new SAXBuilder();
+		for (Element schematron : schematrons) {
+			// it contains absolute path to the xsl file
+			String rule = schematron.getChildText("file");
+			String ident = SchemaDao.toRuleName(rule);
+
+			String file = schemaDir + File.separator + "loc" + File.separator
+					+ context.getLanguage() + "/" + ident + ".xml";
+
+			Document document = (Document) builder.build(file);
+			Element element = document.getRootElement();
+
+			Element s = new Element(ident);
+			element.detach();
+			s.addContent(element);
+			schematronTranslations.addContent(s);
+
+		}
+		elResp.addContent(schematronTranslations);
 
 		return elResp;
 	}

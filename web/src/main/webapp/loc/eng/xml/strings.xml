@@ -30,9 +30,15 @@
     <archived>Archived</archived>
     <performingOperation js="true">Performing Operation.  Please wait...</performingOperation>
     <description js="true">Description</description>
+    <metadataschemaValidate>Validation</metadataschemaValidate>
+    <metadataschemaValidateDes>Configure what rules are applied for each schema metadata. If no rule defined for a schema, it will be applied always.</metadataschemaValidateDes>
+    <xpathlabel>xPath</xpathlabel>
+    <xpathvalue>Value</xpathvalue>
+    <xpathrequired>Required</xpathrequired>
+    <xpathschematron>Schematron</xpathschematron>
+    <xpathconfirm>Are you sure you want to remove this criteria?</xpathconfirm>
 
-
-	<local._none_.non_validated>geocat.ch Thesaurus (non validated)</local._none_.non_validated>
+    <local._none_.non_validated>geocat.ch Thesaurus (non validated)</local._none_.non_validated>
 	<local._none_.geocat.ch>geocat.ch Thesaurus</local._none_.geocat.ch>
 	<external.theme.gemet-theme>GEMET themes</external.theme.gemet-theme>
 	<external.theme.inspire-theme>GEMET - INSPIRE themes, version 1.0</external.theme.inspire-theme>
@@ -1246,6 +1252,13 @@ Records are available from the following URL:\r\n
 	<toDateSelector>Select TO date</toDateSelector>
 	<tools>Tools</tools>
 	<topic>Topic</topic>
+    <metadataschemaValidate>Validation</metadataschemaValidate>
+    <metadataschemaValidateDes>Configure what rules are applied for each schema metadata. If no rule defined for a schema, it will be applied always.</metadataschemaValidateDes>
+    <xpathlabel>xPath</xpathlabel>
+    <xpathvalue>Value</xpathvalue>
+    <xpathrequired>Required</xpathrequired>
+    <xpathschematron>Schematron</xpathschematron>
+    <xpathconfirm>Are you sure you want to remove this criteria?</xpathconfirm>
 
 	<metadataschemaValidate>Validation</metadataschemaValidate>
 	<metadataschemaValidateDes>Configure what rules are applied for each schema metadata. If no rule defined for a schema, it will be applied always.</metadataschemaValidateDes>
