@@ -1,7 +1,7 @@
 package org.fao.geonet.kernel.schema;
 
-import jeeves.utils.Xml;
-import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.junit.Test;

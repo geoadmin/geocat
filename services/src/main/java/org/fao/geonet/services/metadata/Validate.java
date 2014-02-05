@@ -29,10 +29,13 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Schematron;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
+import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
@@ -84,22 +87,21 @@ public class Validate extends NotInReadOnlyModeService {
 		Element schematronTranslations = new Element("schematronTranslations");
 
 		// --- add translations for schematrons
-		final List<Element> schematrons = SchemaDao.selectSchema(dbms,
-				schemaname);
+        List<Schematron> schematrons = context.getBean(SchematronRepository.class).findAllByIsoschema(schemaname);
 
-		DataManager dm = gc.getDataManager();
+		DataManager dm = context.getBean(DataManager.class);
 		MetadataSchema metadataSchema = dm.getSchema(schemaname);
 		String schemaDir = metadataSchema.getSchemaDir();
 		SAXBuilder builder = new SAXBuilder();
-		for (Element schematron : schematrons) {
+		for (Schematron schematron : schematrons) {
 			// it contains absolute path to the xsl file
-			String rule = schematron.getChildText("file");
-			String ident = SchemaDao.toRuleName(rule);
+			String rule = schematron.getFile();
+			String ident = schematron.getRuleName();
 
 			String file = schemaDir + File.separator + "loc" + File.separator
 					+ context.getLanguage() + "/" + ident + ".xml";
 
-			Document document = (Document) builder.build(file);
+			Document document = builder.build(file);
 			Element element = document.getRootElement();
 
 			Element s = new Element(ident);

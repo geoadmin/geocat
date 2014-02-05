@@ -421,4 +421,6 @@ public class CatalogConfiguration {
 
     public boolean isIncreasePopularity() {
         init();
-        return _increasePopularit
+        return _increasePopularity;
+    }
+}

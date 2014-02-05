@@ -654,4 +654,7 @@ public class SearchController {
             }
             return res;
         }
+        return res;
+    }
+}
        
