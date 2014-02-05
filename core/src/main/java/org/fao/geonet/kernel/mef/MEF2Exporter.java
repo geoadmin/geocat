@@ -36,6 +36,7 @@ import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRelationRepository;
+import org.fao.geonet.utils.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
