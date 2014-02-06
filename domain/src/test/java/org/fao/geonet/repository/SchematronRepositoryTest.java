@@ -33,10 +33,10 @@ public class SchematronRepositoryTest extends AbstractSpringDataTest {
         final Schematron schematron1 = _repo.save(newSchematron(_inc));
         final Schematron schematron2 = _repo.save(newSchematron(_inc));
         final Schematron entity = newSchematron(_inc);
-        entity.setIsoschema(schematron1.getIsoschema());
+        entity.setSchemaName(schematron1.getSchemaName());
         final Schematron schematron3 = _repo.save(entity);
 
-        final List<Schematron> allByIsoschema = _repo.findAllByIsoschema(schematron1.getIsoschema());
+        final List<Schematron> allByIsoschema = _repo.findAllBySchemaName(schematron1.getSchemaName());
 
         assertEquals(2, allByIsoschema.size());
 
@@ -76,8 +76,7 @@ public class SchematronRepositoryTest extends AbstractSpringDataTest {
 
         final Schematron schematron = new Schematron();
         schematron.setFile("file"+id);
-        schematron.setIsoschema("schema"+id);
-        schematron.setRequired(id % 2 == 0);
+        schematron.setSchemaName("schema" + id);
 
         return schematron;
     }

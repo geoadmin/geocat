@@ -12,14 +12,14 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface SchematronRepository extends
 		GeonetRepository<Schematron, Integer>,
-		JpaSpecificationExecutor<Schematron>, SchematronRepositoryCustom {
+		JpaSpecificationExecutor<Schematron> {
     /**
      * Look up a schematrons by its schema
      *
-     * @param schema
+     * @param schemaName
      *            the name of the schema
      */
-    public List<Schematron> findAllByIsoschema(String schema);
+    public List<Schematron> findAllBySchemaName(String schemaName);
     /**
      * Look up a schematrons by its file
      *

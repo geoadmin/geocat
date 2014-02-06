@@ -14,14 +14,15 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface SchematronCriteriaRepository extends
 		GeonetRepository<SchematronCriteria, Integer>,
-		JpaSpecificationExecutor<SchematronCriteria>, SchematronCriteriaRepositoryCustom {
+		JpaSpecificationExecutor<SchematronCriteria> {
 
     /**
-     * Get the list of all {@link org.fao.geonet.domain.SchematronCriteria} that are related to the given schematron.
+     * Get the list of all {@link org.fao.geonet.domain.SchematronCriteria} that are contained in the
+     * {@link org.fao.geonet.domain.SchematronCriteriaGroup}
      *
-     * @param schematron the schematron in question
+     * @param schematronCriteriaGroupName the name of the in question {@link org.fao.geonet.domain.SchematronCriteriaGroup}
      *
-     * @return the list of related schematron
+     * @return the list of related schematron criteria
      */
-    List<SchematronCriteria> findAllBySchematron(Schematron schematron);
+    List<SchematronCriteria> findAllByGroup_Name(String schematronCriteriaGroupName);
 }

@@ -36,9 +36,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.SchematronCriteria;
+import org.fao.geonet.domain.SchematronCriteriaGroup;
+import org.fao.geonet.domain.SchematronCriteriaType;
+import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -71,7 +73,8 @@ public class MetadataSchema
 
 	private List<Element> rootAppInfoElements;
 
-    private SchematronRepository schemarepo;
+    private SchematronRepository schemaRepo;
+    private SchematronCriteriaGroupRepository criteriaGroupRepository;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -79,9 +82,10 @@ public class MetadataSchema
 	//---
 	//---------------------------------------------------------------------------
 
-	MetadataSchema(SchematronRepository schemarepo) {
+	MetadataSchema(SchematronRepository schemaRepo, SchematronCriteriaGroupRepository criteriaGroupRepository) {
 		schemaName = "UNKNOWN";
-        this.schemarepo = schemarepo;
+        this.schemaRepo = schemaRepo;
+        this.criteriaGroupRepository = criteriaGroupRepository;
 	}
 
 	//---------------------------------------------------------------------------
@@ -398,13 +402,25 @@ public class MetadataSchema
             for(String s : saSchemas) {
                 String file = schemaDir + File.separator + "schematron" + File.separator + s;
                 //if schematron not already exists
-                if(schemarepo.findAllByFile(file).isEmpty()) {
+                if(schemaRepo.findAllByFile(file).isEmpty()) {
                     org.fao.geonet.domain.Schematron schematron = new org.fao.geonet.domain.Schematron();
-                    schematron.setIsoschema(schemaName);
-                    schematron.setRequired(true);
+                    schematron.setSchemaName(schemaName);
                     schematron.setFile(file);
-                    schematron.getLabelTranslations().put(Geonet.DEFAULT_LANGUAGE, new File(file).getName());
-                    schemarepo.saveAndFlush(schematron);
+                    schematron.getLabelTranslations().put(Geonet.DEFAULT_LANGUAGE, schematron.getRuleName());
+                    schemaRepo.saveAndFlush(schematron);
+
+                    final SchematronCriteriaGroup schematronCriteriaGroup = new SchematronCriteriaGroup();
+                    schematronCriteriaGroup.setName("Generated_" + schematron.getRuleName());
+                    schematronCriteriaGroup.setRequirement(schematron.getDefaultRequirement());
+                    schematronCriteriaGroup.setSchematron(schematron);
+
+                    SchematronCriteria criteria = new SchematronCriteria();
+                    criteria.setValue("");
+                    criteria.setType(SchematronCriteriaType.ALWAYS_ACCEPT);
+
+                    schematronCriteriaGroup.addCriteria(criteria);
+
+                    criteriaGroupRepository.saveAndFlush(schematronCriteriaGroup);
                 }
             }
         }
@@ -467,14 +483,4 @@ public class MetadataSchema
 	public void setReadwriteUUID(boolean readwriteUUID) {
 		this.readwriteUUID = readwriteUUID;
 	}
-
-    public SchematronRepository getSchemarepo() {
-        return schemarepo;
-    }
-
-    public void setSchemarepo(SchematronRepository schemarepo) {
-        this.schemarepo = schemarepo;
-    }
-
-
 }

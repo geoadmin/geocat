@@ -2063,55 +2063,56 @@ public class DataManager {
                 Edit.NAMESPACE);
         try {
             final SchematronRepository schematronRepository = _applicationContext.getBean(SchematronRepository.class);
-            final SchematronCriteriaRepository criteriaRepository = _applicationContext.getBean(SchematronCriteriaRepository.class);
+            final SchematronCriteriaGroupRepository criteriaGroupRepository = _applicationContext.getBean(SchematronCriteriaGroupRepository.class);
 
-            final List<Schematron> schematroncriteria = schematronRepository.findAllByIsoschema(metadataSchema.getName());
+            final List<Schematron> schematronList = schematronRepository.findAllBySchemaName(metadataSchema.getName());
 
             //Loop through all xsl files
-            for (Schematron schematron : schematroncriteria) {
+            for (Schematron schematron : schematronList) {
 
-                Boolean required = schematron.getRequired();
                 int id = schematron.getId();
                 //it contains absolute path to the xsl file
                 String rule = schematron.getRuleName();
                 String dbident = ""+id;
-                Integer ifNotValid = (required? 0 : 2);
 
-                final List<SchematronCriteria> criterias = criteriaRepository.findAllBySchematron(schematron);
+                List<SchematronCriteriaGroup> criteriaGroups = criteriaGroupRepository.findAllBySchematron_schemaName(schematron
+                        .getSchemaName());
 
                 //Loop through all criteria to see if apply schematron
                 //if any criteria does not apply, do not apply at all (AND)
-                boolean apply = true;
-                for(SchematronCriteria criteria : criterias) {
+                SchematronRequirement requirement = SchematronRequirement.DISABLED;
+                for (SchematronCriteriaGroup criteriaGroup : criteriaGroups) {
+                    List<SchematronCriteria> criterias = criteriaGroup.getCriteriaList();
+                    boolean apply = false;
+                    for(SchematronCriteria criteria : criterias) {
+                        boolean tmpApply = criteria.accepts(_applicationContext, md, metadataSchema.getSchemaNS());
 
-                    SchematronCriteriaType type = criteria.getType();
-                    String value = criteria.getValue();
-                    boolean tmpApply = false;
+                        if(!tmpApply) {
+                            apply = false;
+                            break;
+                        } else {
+                            apply = true;
+                        }
 
-                    switch(type) {
-                        case GROUP:
-                            Integer groupId = Integer.valueOf(value);
-                            final Specification<Metadata> spec = MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(groupId));
-                            tmpApply = _metadataRepository.count(spec) > 0;
-                            break;
-                        case KEYWORD:
-                        default:
-                            tmpApply = checkKeyword(md, value);
-                            break;
                     }
 
-                    apply = apply && tmpApply;
-
-                    if(!apply) {
-                        break;
+                    if (apply) {
+                        if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                            Log.debug(Geonet.DATA_MANAGER, " - Schematron group is accepted:" + criteriaGroup.getName() + " for schematron: "+schematron.getRuleName());
+                        }
+                        requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
+                    } else {
+                        requirement = SchematronRequirement.DISABLED;
                     }
-
                 }
 
-                if(apply) {
+                if(requirement != SchematronRequirement.DISABLED) {
                     if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                         Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
                     }
+
+
+                    Integer ifNotValid = (requirement == SchematronRequirement.REQUIRED ? 0 : 2);
 
                     String ruleId = schematron.getRuleName();
 
@@ -2119,6 +2120,8 @@ public class DataManager {
                     report.setAttribute("rule", ruleId,
                             Edit.NAMESPACE);
                     report.setAttribute("dbident", dbident,
+                            Edit.NAMESPACE);
+                    report.setAttribute("required", Boolean.toString(requirement == SchematronRequirement.REQUIRED),
                             Edit.NAMESPACE);
 
                     try {
@@ -2178,59 +2181,6 @@ public class DataManager {
         }
 
         return schemaTronXmlOut;
-    }
-
-    private boolean checkKeyword(Element element, String value) {
-
-        try {
-            return ((Boolean)Xml.selectNodes(element, "//gmd:keyword/gco:CharacterString/text() = '" + value + "' ")
-                    .get(0)) ||
-                   ((Boolean) Xml.selectNodes(element, "//gmd:keyword/gmd:PT_FreeText/gmd:textGroup/"
-                                                       + "gmd:LocalisedCharacterString/text() = '" + value + "'").get(0));
-        } catch (JDOMException e) {
-            e.printStackTrace();
-        }
-
-        //if xpath fails:
-        List<Element> children = element.getChildren();
-        boolean res = false;
-
-        for(Element child : children) {
-            if(child.getName().equalsIgnoreCase("keyword")) {
-                List<Element> freeTexts = child.getChildren();
-                for(Element freeText : freeTexts) {
-                    if("CharacterString".equals(freeText.getName())) {
-                        res = res || value.equals(freeText.getText());
-                    }
-                    else if("PT_FreeText".equals(freeText.getName())) {
-                        List<Element> textGroups = freeText.getChildren();
-                        for(Element textGroup : textGroups) {
-                            if("textGroup".equals(textGroup.getName())) {
-                                List<Element> localiseds = textGroup.getChildren();
-                                for(Element localised : localiseds) {
-                                    res = res || value.equals(localised.getText());
-                                }
-                                if(res) {
-                                    break;
-                                }
-                            }
-                            if(res) {
-                                break;
-                            }
-                        }
-                    }
-                }
-
-            } else {
-                res = res || checkKeyword(child, value);
-            }
-
-            if(res) {
-                break;
-            }
-        }
-
-        return res;
     }
 
     /**

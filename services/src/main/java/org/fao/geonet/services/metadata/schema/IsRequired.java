@@ -29,8 +29,9 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Schematron;
-import org.fao.geonet.exceptions.MissingParameterEx;
-import org.fao.geonet.repository.SchematronRepository;
+import org.fao.geonet.domain.SchematronCriteriaGroup;
+import org.fao.geonet.domain.SchematronRequirement;
+import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.Updater;
 import org.jdom.Element;
 
@@ -42,40 +43,41 @@ import javax.annotation.Nonnull;
  * @author delawen
  */
 public class IsRequired implements Service {
-    public static final String PARAM_SCHEMATRON = "schematron";
+    public static final String PARAM_SCHEMATRON_CRITERIA_GROUP = "schematronCriteriaGroup";
 
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
 
-		String action = null;
-		try {
-			action = Util.getParam(params, "action");
-		} catch (MissingParameterEx ex) {
-		}
+		String action = Util.getParam(params, "action", null);
 
-        SchematronRepository repo = context.getBean(SchematronRepository.class);
+        SchematronCriteriaGroupRepository repo = context.getBean(SchematronCriteriaGroupRepository.class);
 
-		String schema = Util.getParam(params, PARAM_SCHEMATRON);
-		final Integer schematronId = Integer.valueOf(schema);
+		String schema = Util.getParam(params, PARAM_SCHEMATRON_CRITERIA_GROUP);
+		final String schematronGroupName = schema;
 
 		if ("toggle".equalsIgnoreCase(action)) {
-            repo.update(schematronId, new Updater<Schematron>() {
+            repo.update(schematronGroupName, new Updater<SchematronCriteriaGroup>() {
                 @Override
-                public void apply(@Nonnull Schematron entity) {
-                    Boolean updatedRequired = entity.getRequired();
+                public void apply(@Nonnull SchematronCriteriaGroup entity) {
 
-                    entity.setRequired(updatedRequired == null || !updatedRequired);
+                    SchematronRequirement requirement = entity.getRequirement();
+
+                    SchematronRequirement[] values = SchematronRequirement.values();
+                    int ordinal = 0;
+                    if (requirement != null) {
+                        ordinal = (requirement.ordinal() + 1) % values.length;
+                    }
+
+                    entity.setRequirement(values[ordinal]);
                 }
             });
 		}
 
-        final Schematron schematron = repo.findOne(schematronId);
+        final SchematronCriteriaGroup schematron = repo.findOne(schematronGroupName);
 
-        Element result = new Element("record").addContent(
-                new Element("required").setText(schematron.getRequiredAsString())
+        return new Element("record").addContent(
+                new Element("required").setText(schematron.getRequirement().name())
         );
-
-		return result;
 
 	}
 

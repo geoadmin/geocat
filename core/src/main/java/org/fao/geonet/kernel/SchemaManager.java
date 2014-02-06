@@ -35,6 +35,7 @@ import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.overrides.ConfigurationOverrides;
+import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
@@ -936,7 +937,8 @@ public class SchemaManager {
         String path = new File(xmlSchemaFile).getParent();
 
         SchematronRepository schemaRepo = _applicationContext.getBean(SchematronRepository.class);
-        MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile, xmlSubstitutionsFile, schemaRepo);
+        SchematronCriteriaGroupRepository criteriaGroupRepository = _applicationContext.getBean(SchematronCriteriaGroupRepository.class);
+        MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile, xmlSubstitutionsFile, schemaRepo, criteriaGroupRepository);
 
         mds.setName(name);
         mds.setSchemaDir(path);

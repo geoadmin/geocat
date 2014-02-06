@@ -1,6 +1,11 @@
 package org.fao.geonet.domain;
 
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.springframework.context.ApplicationContext;
+
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * An entity representing a schematron criteria. This is for the extended
@@ -20,7 +25,7 @@ public class SchematronCriteria extends GeonetEntity {
 	@Enumerated(EnumType.STRING)
 	private SchematronCriteriaType type;
 	private String value;
-	private Schematron schematron;
+    private SchematronCriteriaGroup group;
 
     /**
      * Get the unique id for the schematron criteria object
@@ -43,7 +48,7 @@ public class SchematronCriteria extends GeonetEntity {
 	@Override
 	public String toString() {
 		return "SchematronCriteria [id=" + id + ", type=" + type
-				+ ", value=" + value + ", schematron=" + schematron + "]";
+				+ ", value=" + value + "]";
 	}
 
 	@Override
@@ -100,20 +105,27 @@ public class SchematronCriteria extends GeonetEntity {
 		this.value = value;
 	}
 
-	/**
-	 * @return the schematron
-	 */
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "schematron", nullable = false, updatable = false)
-	public Schematron getSchematron() {
-		return schematron;
-	}
+    /**
+     * Get the group this schematron criteria is part of.
+     *
+     * @return the containing group
+     */
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(referencedColumnName = "name")
+    public SchematronCriteriaGroup getGroup() {
+        return group;
+    }
 
-	/**
-	 * @param schematron
-	 *            the schematron to set
-	 */
-	public void setSchematron(Schematron schematron) {
-		this.schematron = schematron;
-	}
+    /**
+     * Set the group for this criteria.
+     *
+     * @param group the group to contain this criteria
+     */
+    public void setGroup(SchematronCriteriaGroup group) {
+        this.group = group;
+    }
+
+    public boolean accepts(ApplicationContext applicationContext, Element metadata, List<Namespace> metadataNamespaces) {
+        return getType().accepts(applicationContext, getValue(), metadata, metadataNamespaces);
+    }
 }

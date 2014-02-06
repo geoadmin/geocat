@@ -8,7 +8,6 @@ import jeeves.server.context.ScheduleContext;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.geocat.PublishRecord;
@@ -18,7 +17,6 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.geocat.PublishRecordRepository;
 import org.fao.geonet.repository.geocat.specification.PublishRecordSpecs;
@@ -193,7 +191,7 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
             if (report.getName().equals("xsderrors")) {
                 processXsdError(report, rules, failures);
             } else {
-                processSchematronError(context, report, rules, failures);
+                processSchematronError(report, rules, failures);
             }
         }
 
@@ -222,12 +220,12 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         }
     }
 
-    private void processSchematronError(ServiceContext context, Element report, StringBuilder rules, StringBuilder failures) {
+    private void processSchematronError(Element report, StringBuilder rules, StringBuilder failures) {
         String reportType = report.getAttributeValue("rule", Edit.NAMESPACE);
         reportType = reportType == null ? "No name for rule" : reportType;
         StringBuilder failure = new StringBuilder();
 
-        boolean isMandatory = checkMandatory(context, report.getAttributeValue("dbident", Edit.NAMESPACE));
+        boolean isMandatory = Boolean.parseBoolean(report.getAttributeValue("required", Edit.NAMESPACE));
 
         if (isMandatory) {
             @SuppressWarnings("unchecked")
@@ -255,11 +253,6 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
             }
         }
     }
-    private boolean checkMandatory(ServiceContext context, String id) {
-        final Schematron one = context.getBean(SchematronRepository.class).findOne(Integer.valueOf(id));
-        return one != null && one.getRequired();
-    }
-
     @SuppressWarnings("unchecked")
     private List<Metadata> lookUpMetadataIds(MetadataRepository repo) throws SQLException {
         final Specification<Metadata> notHarvested = MetadataSpecs.isHarvested(false);

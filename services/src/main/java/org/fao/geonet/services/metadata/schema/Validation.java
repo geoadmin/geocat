@@ -30,8 +30,10 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Schematron;
 import org.fao.geonet.domain.SchematronCriteria;
+import org.fao.geonet.domain.SchematronCriteriaGroup;
 import org.fao.geonet.domain.SchematronCriteriaType;
 import org.fao.geonet.exceptions.MissingParameterEx;
+import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronCriteriaRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.jdom.Element;
@@ -56,37 +58,51 @@ public class Validation implements Service {
 		} catch (MissingParameterEx ex) {
 		}
 
-		final SchematronCriteriaRepository schcrrep = context
-				.getBean(SchematronCriteriaRepository.class);
-		final SchematronRepository schrep = context
-				.getBean(SchematronRepository.class);
+		final SchematronCriteriaRepository criteriaRepository = context.getBean(SchematronCriteriaRepository.class);
+		final SchematronCriteriaGroupRepository criteriaGroupRepository = context.getBean(SchematronCriteriaGroupRepository.class);
+		final SchematronRepository schematronRepository = context.getBean(SchematronRepository.class);
 
 		// Do action
 		if ("delete".equalsIgnoreCase(action)) {
-			SchematronCriteria sc = schcrrep.findOne(Integer.valueOf(Util
-					.getParam(params, "id")));
+			SchematronCriteria sc = criteriaRepository.findOne(Integer.valueOf(Util.getParam(params, "id")));
 			if (sc != null) {
-				schcrrep.delete(sc);
-				schcrrep.flush();
+				criteriaRepository.delete(sc);
+				criteriaRepository.flush();
 			}
 		} else if ("add".equalsIgnoreCase(action)) {
-			String schema = Util.getParam(params, "schematron");
-			Schematron schematron = schrep.findOne(Integer.valueOf(schema));
+			String groupName = Util.getParam(params, "group");
+			String schematronId = Util.getParam(params, "schematron");
+			Schematron schematron = schematronRepository.findOne(Integer.valueOf(schematronId));
+
+            if (schematron == null) {
+                throw new IllegalArgumentException(schematronId + " is not the id of a schematron");
+            }
+
+            SchematronCriteriaGroup group = criteriaGroupRepository.findOne(groupName);
+            if (group == null) {
+                group = new SchematronCriteriaGroup();
+                group.setName(groupName);
+                group.setSchematron(schematron);
+            }
 
 			SchematronCriteria sc = new SchematronCriteria();
-			sc.setSchematron(schematron);
-			sc.setType(SchematronCriteriaType.valueOf(Util.getParam(params,
-					"type")));
+			sc.setType(SchematronCriteriaType.valueOf(Util.getParam(params, "type")));
 			sc.setValue(Util.getParam(params, "value"));
-			schcrrep.saveAndFlush(sc);
+            group.addCriteria(sc);
+
+            criteriaGroupRepository.save(group);
 		}
 
 		// Return the current lists
-		for (SchematronCriteria s : schcrrep.findAll()) {
+		for (SchematronCriteriaGroup s : criteriaGroupRepository.findAll()) {
+			res.addContent(s.asXml().setName("criteriaGroup"));
+		}
+
+		for (SchematronCriteria s : criteriaRepository.findAll()) {
 			res.addContent(s.asXml().setName("criteria"));
 		}
 
-		for (Schematron s : schrep.findAll()) {
+		for (Schematron s : schematronRepository.findAll()) {
 			res.addContent(s.asXml().setName("schematron"));
 		}
 

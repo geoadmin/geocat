@@ -73,7 +73,7 @@ public class Validate extends NotInReadOnlyModeService {
 		UserSession session = context.getUserSession();
 
 		String id = Utils.getIdentifierFromParameters(params, context);
-		String schemaname = dataMan.getMetadataSchema(id);
+		String schemaName = dataMan.getMetadataSchema(id);
 
 		//--- validate metadata from session
 		Element errorReport = new AjaxEditUtils(context).validateMetadataEmbedded(session, id, context.getLanguage());
@@ -81,16 +81,16 @@ public class Validate extends NotInReadOnlyModeService {
 		//--- update element and return status
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
-		elResp.addContent(new Element("schema").setText(schemaname));
+		elResp.addContent(new Element("schema").setText(schemaName));
 		elResp.addContent(errorReport);
 
 		Element schematronTranslations = new Element("schematronTranslations");
 
 		// --- add translations for schematrons
-        List<Schematron> schematrons = context.getBean(SchematronRepository.class).findAllByIsoschema(schemaname);
+        List<Schematron> schematrons = context.getBean(SchematronRepository.class).findAllBySchemaName(schemaName);
 
 		DataManager dm = context.getBean(DataManager.class);
-		MetadataSchema metadataSchema = dm.getSchema(schemaname);
+		MetadataSchema metadataSchema = dm.getSchema(schemaName);
 		String schemaDir = metadataSchema.getSchemaDir();
 		SAXBuilder builder = new SAXBuilder();
 		for (Schematron schematron : schematrons) {

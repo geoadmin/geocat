@@ -1,7 +1,5 @@
 package org.fao.geonet.domain;
 
-import com.google.common.io.Files;
-
 import javax.persistence.*;
 import java.io.File;
 import java.util.Map;
@@ -22,9 +20,8 @@ public class Schematron extends Localized {
     static final String ID_SEQ_NAME = "schematron_id_seq";
 
 	private int id;
-	private String isoschema;
+	private String schemaName;
 	private String file;
-	private Boolean required;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
@@ -40,8 +37,8 @@ public class Schematron extends Localized {
 
 	@Override
 	public String toString() {
-		return "Schematron [_id=" + id + ", isoschema=" + isoschema + ", file="
-				+ file + ", required=" + required + ", description"
+		return "Schematron [_id=" + id + ", isoschema=" + schemaName + ", file="
+				+ file + ", description"
 				+ getLabelTranslations() + "]";
 	}
 
@@ -70,17 +67,17 @@ public class Schematron extends Localized {
 	/**
 	 * @return the schema
 	 */
-	@Column(nullable = false, name = "isoSchema")
-	public String getIsoschema() {
-		return isoschema;
+	@Column(nullable = false, name = "schemaName")
+	public String getSchemaName() {
+		return schemaName;
 	}
 
 	/**
-	 * @param schema
+	 * @param schemaName
 	 *            the schema to set
 	 */
-	public void setIsoschema(String schema) {
-		this.isoschema = schema;
+	public void setSchemaName(String schemaName) {
+		this.schemaName = schemaName;
 	}
 
 	/**
@@ -97,22 +94,6 @@ public class Schematron extends Localized {
 	 */
 	public void setFile(String file) {
 		this.file = file;
-	}
-
-	/**
-	 * @return the required
-	 */
-	@Column(nullable = false, name = "required")
-	public Boolean getRequired() {
-		return required;
-	}
-
-	/**
-	 * @param required
-	 *            the required to set
-	 */
-	public void setRequired(Boolean required) {
-		this.required = required;
 	}
 
     @Override
@@ -153,11 +134,23 @@ public class Schematron extends Localized {
         }
 
         String rule = file.substring(lastSegmentIndex, file.length() - EXTENSION_LENGTH);
-        return rule ;
+        String lowerCaseRuleName = rule.toLowerCase();
+        for (SchematronRequirement requirement : SchematronRequirement.values()) {
+            if (lowerCaseRuleName.endsWith("."+requirement.name().toLowerCase())) {
+                return rule.substring(0, rule.length() - requirement.name().length() - 1);
+            }
+        }
+        return rule;
     }
 
     @Transient
-    public String getRequiredAsString() {
-        return required == null || !required ? "f" : "t";
+    public SchematronRequirement getDefaultRequirement() {
+        final String lowerCaseFile = getFile().toLowerCase();
+        for (SchematronRequirement requirement : SchematronRequirement.values()) {
+            if (lowerCaseFile.endsWith("."+requirement.name().toLowerCase() + ".xsl")) {
+                return requirement;
+            }
+        }
+        return SchematronRequirement.REQUIRED;
     }
 }
