@@ -28,10 +28,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Util;
-import org.fao.geonet.domain.Schematron;
-import org.fao.geonet.domain.SchematronCriteria;
-import org.fao.geonet.domain.SchematronCriteriaGroup;
-import org.fao.geonet.domain.SchematronCriteriaType;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.MissingParameterEx;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronCriteriaRepository;
@@ -83,6 +80,7 @@ public class Validation implements Service {
                 group = new SchematronCriteriaGroup();
                 group.setName(groupName);
                 group.setSchematron(schematron);
+                group.setRequirement(SchematronRequirement.REQUIRED);
             }
 
 			SchematronCriteria sc = new SchematronCriteria();
@@ -95,11 +93,9 @@ public class Validation implements Service {
 
 		// Return the current lists
 		for (SchematronCriteriaGroup s : criteriaGroupRepository.findAll()) {
-			res.addContent(s.asXml().setName("criteriaGroup"));
-		}
-
-		for (SchematronCriteria s : criteriaRepository.findAll()) {
-			res.addContent(s.asXml().setName("criteria"));
+            Element criteriaGroup = s.asXml().setName("criteriaGroup");
+            criteriaGroup.getChild("schematron").detach();
+            res.addContent(criteriaGroup);
 		}
 
 		for (Schematron s : schematronRepository.findAll()) {

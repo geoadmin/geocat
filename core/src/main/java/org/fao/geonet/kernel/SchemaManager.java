@@ -57,7 +57,10 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedOutputStream;
@@ -111,9 +114,6 @@ public class SchemaManager {
 	private String resourcePath;
 	private int numberOfCoreSchemasAdded = 0;
 
-    @Autowired
-    private org.springframework.context.ApplicationContext _applicationContext;
-
 	/** Active readers count */
 	private static int activeReaders = 0;
 	/** Active writers count */
@@ -157,7 +157,7 @@ public class SchemaManager {
 		* @param defaultLang the default language (taken from context)
 		* @param defaultSchema the default schema (taken from config.xml)
 	  */
-    public void configure(String basePath, String resourcePath, String schemaPluginsCat, String sPDir, String defaultLang,
+    public void configure(ApplicationContext applicationContext, String basePath, String resourcePath, String schemaPluginsCat, String sPDir, String defaultLang,
                           String defaultSchema, boolean createOrUpdateSchemaCatalog) throws Exception {
 
 		hmSchemas .clear();
@@ -181,7 +181,7 @@ public class SchemaManager {
                 if (!saSchemas[i].equals("CVS") && !saSchemas[i].startsWith(".")) {
                     File schemaDir = new File(this.schemaPluginsDir + FS + saSchemas[i]);
                     if (schemaDir.isDirectory()) {
-                        processSchema(schemaPluginsDir + FS, saSchemas[i], schemaPluginCatRoot);
+                        processSchema(applicationContext, schemaPluginsDir + FS, saSchemas[i], schemaPluginCatRoot);
                     }
                 }
             }
@@ -259,11 +259,11 @@ public class SchemaManager {
 	 * @param in stream containing a zip archive of the schema to add
      * @throws Exception
 	 */
-	public void addPluginSchema(String name, InputStream in) throws Exception {
+	public void addPluginSchema(ApplicationContext applicationContext, String name, InputStream in) throws Exception {
 
 		beforeWrite();
 		try {
-			realAddPluginSchema(name, in);
+			realAddPluginSchema(applicationContext, name, in);
 		} finally {
 			afterWrite();
 		}
@@ -276,7 +276,7 @@ public class SchemaManager {
 	 * @param in stream containing a zip archive of the schema to update
      * @throws Exception
 	 */
-	public void updatePluginSchema(String name, InputStream in) throws Exception {
+	public void updatePluginSchema(ApplicationContext applicationContext, String name, InputStream in) throws Exception {
 
 		beforeWrite();
 		try {
@@ -293,7 +293,7 @@ public class SchemaManager {
 			}
 
 			// -- add the new one
-			realAddPluginSchema(name, in);
+			realAddPluginSchema(applicationContext, name, in);
 		} finally {
 			afterWrite();
 		}
@@ -841,7 +841,7 @@ public class SchemaManager {
 	 * @param in stream containing a zip archive of the schema to add
      * @throws Exception
 	  */
-	private void realAddPluginSchema(String name, InputStream in) throws Exception {
+	private void realAddPluginSchema(ApplicationContext applicationContext, String name, InputStream in) throws Exception {
 		Element schemaPluginCatRoot = getSchemaPluginCatalog();
 
 		// -- create schema directory 
@@ -852,7 +852,7 @@ public class SchemaManager {
 			unpackSchemaZipArchive(dir, in);
 	
 			// -- add schema using the addSchema method
-			processSchema(schemaPluginsDir + FS, name, schemaPluginCatRoot); 
+			processSchema(applicationContext, schemaPluginsDir + FS, name, schemaPluginCatRoot);
 
 			// -- check that dependent schemas are already loaded 
 			Schema schema = hmSchemas.get(name);
@@ -932,12 +932,12 @@ public class SchemaManager {
 	 * @param conversionsFile name of XML conversions file
      * @throws Exception
 	 */
-    private void addSchema(String fromAppPath, String name, Element schemaPluginCatRoot, String xmlSchemaFile, String xmlSuggestFile,
+    private void addSchema(ApplicationContext applicationContext, String fromAppPath, String name, Element schemaPluginCatRoot, String xmlSchemaFile, String xmlSuggestFile,
             String xmlSubstitutionsFile, String xmlIdFile, String oasisCatFile, String conversionsFile) throws Exception {
         String path = new File(xmlSchemaFile).getParent();
 
-        SchematronRepository schemaRepo = _applicationContext.getBean(SchematronRepository.class);
-        SchematronCriteriaGroupRepository criteriaGroupRepository = _applicationContext.getBean(SchematronCriteriaGroupRepository.class);
+        SchematronRepository schemaRepo = applicationContext.getBean(SchematronRepository.class);
+        SchematronCriteriaGroupRepository criteriaGroupRepository = applicationContext.getBean(SchematronCriteriaGroupRepository.class);
         MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile, xmlSubstitutionsFile, schemaRepo, criteriaGroupRepository);
 
         mds.setName(name);
@@ -1267,7 +1267,7 @@ public class SchemaManager {
      * @param schemaPluginCatRoot 
      * @return
 	 */
-    private void processSchema(String schemasDir, String saSchema, Element schemaPluginCatRoot) throws OperationAbortedEx {
+    private void processSchema(ApplicationContext applicationContext, String schemasDir, String saSchema, Element schemaPluginCatRoot) throws OperationAbortedEx {
 
         String schemaFile = schemasDir + saSchema + "/" + Geonet.File.SCHEMA;
         String suggestFile = schemasDir + saSchema + "/" + Geonet.File.SCHEMA_SUGGESTIONS;
@@ -1295,7 +1295,7 @@ public class SchemaManager {
                 Log.error(Geonet.SCHEMA_MANAGER, "Schema " + saSchema + " already exists - cannot add!");
             } else {
                 stage = "adding the schema information";
-                addSchema(schemasDir, saSchema, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile, idFile, oasisCatFile,
+                addSchema(applicationContext, schemasDir, saSchema, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile, idFile, oasisCatFile,
                         conversionsFile);
             }
         } catch (Exception e) {
@@ -1798,6 +1798,5 @@ public class SchemaManager {
 		}
 
 	}
-
 
 }

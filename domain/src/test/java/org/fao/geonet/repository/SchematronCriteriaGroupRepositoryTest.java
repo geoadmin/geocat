@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -71,7 +70,7 @@ public class SchematronCriteriaGroupRepositoryTest extends AbstractSpringDataTes
 
     private void assertCorrectNumberOfCriteria(SchematronCriteriaGroup g1) {
         String id = g1.getName().substring(GROUP_NAME_PREFIX.length());
-        assertEquals(Integer.parseInt(id), g1.getCriteriaList().size());
+        assertEquals(Integer.parseInt(id), g1.getCriteria().size());
     }
 
     public static SchematronCriteriaGroup newGroup(AtomicInteger inc, SchematronRepository schematronRepository) {

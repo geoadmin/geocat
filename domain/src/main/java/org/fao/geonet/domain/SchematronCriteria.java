@@ -4,6 +4,7 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.context.ApplicationContext;
 
+import javax.annotation.Nonnull;
 import javax.persistence.*;
 import java.util.List;
 
@@ -22,7 +23,6 @@ public class SchematronCriteria extends GeonetEntity {
     static final String ID_SEQ_NAME = "schematron_criteria_id_seq";
 
 	private int id;
-	@Enumerated(EnumType.STRING)
 	private SchematronCriteriaType type;
 	private String value;
     private SchematronCriteriaGroup group;
@@ -77,6 +77,7 @@ public class SchematronCriteria extends GeonetEntity {
 	 * @return the type
 	 */
 	@Column(nullable = false, name = "type")
+    @Enumerated(EnumType.STRING)
 	public SchematronCriteriaType getType() {
 		return type;
 	}
@@ -127,5 +128,11 @@ public class SchematronCriteria extends GeonetEntity {
 
     public boolean accepts(ApplicationContext applicationContext, Element metadata, List<Namespace> metadataNamespaces) {
         return getType().accepts(applicationContext, getValue(), metadata, metadataNamespaces);
+    }
+
+    @Nonnull
+    @Override
+    public Element asXml() {
+        return super.asXml();
     }
 }

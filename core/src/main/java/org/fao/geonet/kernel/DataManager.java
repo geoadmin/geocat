@@ -96,7 +96,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -2082,7 +2081,7 @@ public class DataManager {
                 //if any criteria does not apply, do not apply at all (AND)
                 SchematronRequirement requirement = SchematronRequirement.DISABLED;
                 for (SchematronCriteriaGroup criteriaGroup : criteriaGroups) {
-                    List<SchematronCriteria> criterias = criteriaGroup.getCriteriaList();
+                    List<SchematronCriteria> criterias = criteriaGroup.getCriteria();
                     boolean apply = false;
                     for(SchematronCriteria criteria : criterias) {
                         boolean tmpApply = criteria.accepts(_applicationContext, md, metadataSchema.getSchemaNS());

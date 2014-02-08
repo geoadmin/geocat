@@ -13,8 +13,7 @@ import java.util.List;
 @Access(AccessType.PROPERTY)
 public class SchematronCriteriaGroup extends GeonetEntity {
     private String name;
-    private List<SchematronCriteria> criteriaList = new ArrayList<SchematronCriteria>();
-    @Enumerated(EnumType.STRING)
+    private List<SchematronCriteria> criteria = new ArrayList<SchematronCriteria>();
     private SchematronRequirement requirement;
     private Schematron schematron;
 
@@ -44,8 +43,8 @@ public class SchematronCriteriaGroup extends GeonetEntity {
      * @return the schematron criteria that of this group.
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "group", orphanRemoval = true)
-    public List<SchematronCriteria> getCriteriaList() {
-        return criteriaList;
+    public List<SchematronCriteria> getCriteria() {
+        return criteria;
     }
 
     /**
@@ -53,10 +52,10 @@ public class SchematronCriteriaGroup extends GeonetEntity {
      * <p/>
      * Use {@link #addCriteria(SchematronCriteria)} for adding criteria to this group rather than adding
      * the criteria to this list.
-     * @param criteriaList the schematron criteria that of this group.
+     * @param criteria the schematron criteria that of this group.
      */
-    public void setCriteriaList(List<SchematronCriteria> criteriaList) {
-        this.criteriaList = criteriaList;
+    public void setCriteria(List<SchematronCriteria> criteria) {
+        this.criteria = criteria;
     }
 
     /**
@@ -65,6 +64,7 @@ public class SchematronCriteriaGroup extends GeonetEntity {
      * @return the requirement.
      */
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     public SchematronRequirement getRequirement() {
         return requirement;
     }
@@ -115,7 +115,7 @@ public class SchematronCriteriaGroup extends GeonetEntity {
      */
     public SchematronCriteriaGroup addCriteria(SchematronCriteria schematronCriteria) {
         schematronCriteria.setGroup(this);
-        getCriteriaList().add(schematronCriteria);
+        getCriteria().add(schematronCriteria);
         return this;
     }
 }

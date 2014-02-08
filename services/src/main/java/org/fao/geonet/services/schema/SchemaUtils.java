@@ -34,6 +34,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
+import org.springframework.context.ApplicationContext;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -122,14 +123,14 @@ public class SchemaUtils {
 			zipArchive = new File(fname);
 		}
 
-		Element response = doSchema(scm, schema, zipArchive, add);
+		Element response = doSchema(context.getApplicationContext(), scm, schema, zipArchive, add);
 		if (deleteTempZip) IO.delete(zipArchive, false, Geonet.SCHEMA_MANAGER);
 		return response;
 	}
 
 	// --------------------------------------------------------------------------
 
-	private Element doSchema(SchemaManager scm, String schema, File zipArchive, boolean add) throws Exception { 
+	private Element doSchema(ApplicationContext applicationContext, SchemaManager scm, String schema, File zipArchive, boolean add) throws Exception {
 
 		Element response = new Element("response");
 
@@ -151,9 +152,9 @@ public class SchemaUtils {
 		// -- manager
 		try {
 			if (add) {
-				scm.addPluginSchema(schema, inputStream);
+				scm.addPluginSchema(applicationContext, schema, inputStream);
 			} else {
-				scm.updatePluginSchema(schema, inputStream);
+				scm.updatePluginSchema(applicationContext, schema, inputStream);
 			}
      	response.setAttribute("status", "ok");
      	response.setAttribute("message", "Schema "+schema+" has been added/updated");

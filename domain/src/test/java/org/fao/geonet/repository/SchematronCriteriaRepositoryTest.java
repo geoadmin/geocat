@@ -1,13 +1,10 @@
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.Schematron;
 import org.fao.geonet.domain.SchematronCriteria;
 import org.fao.geonet.domain.SchematronCriteriaGroup;
-import org.fao.geonet.domain.SchematronCriteriaType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fao.geonet.repository.SchematronCriteriaGroupRepositoryTest.*;
@@ -32,7 +29,7 @@ public class SchematronCriteriaRepositoryTest extends AbstractSpringDataTest {
     public void testFindOne() throws Exception {
         final SchematronCriteriaGroup criteriaGroup = criteriaGroupRepository.save(newGroup(_inc,_schematronRepo));
 
-        final SchematronCriteria criteria = criteriaGroup.getCriteriaList().get(0);
+        final SchematronCriteria criteria = criteriaGroup.getCriteria().get(0);
         final SchematronCriteria found = _repo.findOne(criteria.getId());
 
         SpringDataTestSupport.assertSameContents(criteria, found);

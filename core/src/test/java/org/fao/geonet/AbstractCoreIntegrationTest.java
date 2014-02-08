@@ -138,7 +138,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCatalogFile);
 
         final SchemaManager schemaManager = _applicationContext.getBean(SchemaManager.class);
-        schemaManager.configure(webappDir, resourcePath,
+        schemaManager.configure(_applicationContext, webappDir, resourcePath,
                 schemaPluginsCatalogFile, schemaPluginsDir, "eng", "iso19139", true);
 
         _applicationContext.getBean(SearchManager.class).init(false, false, "", 100);

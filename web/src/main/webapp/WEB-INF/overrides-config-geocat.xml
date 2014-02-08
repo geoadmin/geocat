@@ -4,23 +4,16 @@
     <import file="/WEB-INF/overrides-config-csw-geocat.xml"/>
     <import file="/WEB-INF/overrides-config-security-geocat.xml"/>
 
-
-
     <properties>
-        <postgis.user>www-data</postgis.user>
-        <postgis.pass>www-data</postgis.pass>
-        <postgis.host>localhost</postgis.host>
-        <postgis.port>5432</postgis.port>
-        <postgis.db>geocat</postgis.db>
-        <postgis.max.active>50</postgis.max.active>
-        <postgis.max.idle>20</postgis.max.idle>
-        <postgis.min.idle>0</postgis.min.idle>
         <wfs.host>localhost</wfs.host>
         <wfs.port>8700</wfs.port>
         <host>localhost</host>
         <port>8080</port>
         <serverStage>production</serverStage>
     </properties>
+    <spring>
+        <import file="/WEB-INF/config-db/postgres.xml"/>
+    </spring>
     <file name=".*/WEB-INF/config.xml">
         <replaceText xpath="default/language">eng</replaceText>
         <replaceAtt xpath="appHandler/param[@name = 'preferredSchema']" attName="value" value="iso19139.che"/>
