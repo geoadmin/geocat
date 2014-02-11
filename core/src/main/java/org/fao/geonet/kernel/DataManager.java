@@ -2097,7 +2097,7 @@ public class DataManager {
 
                     if (apply) {
                         if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                            Log.debug(Geonet.DATA_MANAGER, " - Schematron group is accepted:" + criteriaGroup.getName() + " for schematron: "+schematron.getRuleName());
+                            Log.debug(Geonet.DATA_MANAGER, " - Schematron group is accepted:" + criteriaGroup.getId().getName() + " for schematron: "+schematron.getRuleName());
                         }
                         requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
                     } else {

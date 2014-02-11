@@ -26,9 +26,8 @@ public class SchematronCriteriaGroupTest {
         criteria.setId(2);
 
         SchematronCriteriaGroup group = new SchematronCriteriaGroup();
-        group.setName("Name")
+        group.setId(new SchematronCriteriaGroupId("Name", schematron))
                 .setRequirement(SchematronRequirement.REQUIRED)
-                .setSchematron(schematron)
                 .addCriteria(criteria);
 
         Element xml = group.asXml();
@@ -43,7 +42,7 @@ public class SchematronCriteriaGroupTest {
         assertEquals(criteria.getType().name(), criteriaEl.getChildText("type"));
         assertEquals(criteria.getValue(), criteriaEl.getChildText("value"));
 
-        assertEquals(group.getName(), xml.getChildText("name"));
+        assertEquals(group.getId().getName(), xml.getChildText("name"));
         assertEquals(group.getRequirement().name(), xml.getChildText("requirement"));
 
         Element schematronEl = xml.getChild("schematron");

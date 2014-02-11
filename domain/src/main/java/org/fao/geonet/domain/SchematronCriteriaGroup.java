@@ -12,28 +12,30 @@ import java.util.List;
 @Cacheable
 @Access(AccessType.PROPERTY)
 public class SchematronCriteriaGroup extends GeonetEntity {
-    private String name;
+    private SchematronCriteriaGroupId id;
     private List<SchematronCriteria> criteria = new ArrayList<SchematronCriteria>();
     private SchematronRequirement requirement;
     private Schematron schematron;
 
+
     /**
-     * Get the name/id of this group. This is only shown to the administrator
+     * Id object.
+     *
+     * @return id object
      */
-    @Id
-    public String getName() {
-        return name;
+    @EmbeddedId
+    public SchematronCriteriaGroupId getId() {
+        return id;
     }
 
     /**
-     * Set the name/id of this group.
+     * Set the id object.
      *
-     * @param name the group name/id
-     *
-     * @return this entity
+     * @param id the id.
+     * @return
      */
-    public SchematronCriteriaGroup setName(String name) {
-        this.name = name;
+    public SchematronCriteriaGroup setId(SchematronCriteriaGroupId id) {
+        this.id = id;
         return this;
     }
 
@@ -87,7 +89,7 @@ public class SchematronCriteriaGroup extends GeonetEntity {
      * @return the schematron
      */
     @ManyToOne(optional = false)
-    @JoinColumn(name = "schematron", nullable = false, updatable = false)
+    @JoinColumn(name = "schematronId", nullable = false, updatable = false, insertable = false)
     public Schematron getSchematron() {
         return schematron;
     }
@@ -103,6 +105,12 @@ public class SchematronCriteriaGroup extends GeonetEntity {
      */
     public SchematronCriteriaGroup setSchematron(Schematron schematron) {
         this.schematron = schematron;
+        SchematronCriteriaGroupId id = getId();
+        if (id == null) {
+            id = new SchematronCriteriaGroupId();
+            setId(id);
+        }
+        id.setSchematronId(schematron.getId());
         return this;
     }
 

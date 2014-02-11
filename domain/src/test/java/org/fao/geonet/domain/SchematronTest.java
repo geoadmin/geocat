@@ -67,9 +67,9 @@ public class SchematronTest {
         final Schematron schematron = new Schematron();
 
         schematron.setFile("xyz/bcd/abc.report.xsl");
-        assertEquals(SchematronRequirement.REPORT, schematron.getDefaultRequirement());
+        assertEquals(SchematronRequirement.REPORT_ONLY, schematron.getDefaultRequirement());
         schematron.setFile("xyz/bcd/abc.REPORT.xsl");
-        assertEquals(SchematronRequirement.REPORT, schematron.getDefaultRequirement());
+        assertEquals(SchematronRequirement.REPORT_ONLY, schematron.getDefaultRequirement());
 
         schematron.setFile("xyz/bcd/abc.xsl");
         assertEquals(SchematronRequirement.REQUIRED, schematron.getDefaultRequirement());

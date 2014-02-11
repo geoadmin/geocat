@@ -112,7 +112,10 @@ public class SchematronCriteria extends GeonetEntity {
      * @return the containing group
      */
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(referencedColumnName = "name")
+    @PrimaryKeyJoinColumns(value = {
+            @PrimaryKeyJoinColumn(referencedColumnName = "name"),
+            @PrimaryKeyJoinColumn(referencedColumnName = "schematronId")
+    })
     public SchematronCriteriaGroup getGroup() {
         return group;
     }

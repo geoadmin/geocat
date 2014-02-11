@@ -410,7 +410,7 @@ public class MetadataSchema
                     schemaRepo.saveAndFlush(schematron);
 
                     final SchematronCriteriaGroup schematronCriteriaGroup = new SchematronCriteriaGroup();
-                    schematronCriteriaGroup.setName("Generated_" + getName() + "_" + schematron.getRuleName());
+                    schematronCriteriaGroup.getId().setName("Generated_" + getName() + "_" + schematron.getRuleName());
                     schematronCriteriaGroup.setRequirement(schematron.getDefaultRequirement());
                     schematronCriteriaGroup.setSchematron(schematron);
 

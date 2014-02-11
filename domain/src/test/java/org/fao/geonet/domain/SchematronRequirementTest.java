@@ -11,15 +11,15 @@ public class SchematronRequirementTest {
     @Test
     public void testHighestRequirement() throws Exception {
         Assert.assertEquals(REQUIRED, REQUIRED.highestRequirement(DISABLED));
-        Assert.assertEquals(REQUIRED, REQUIRED.highestRequirement(REPORT));
+        Assert.assertEquals(REQUIRED, REQUIRED.highestRequirement(REPORT_ONLY));
         Assert.assertEquals(REQUIRED, REQUIRED.highestRequirement(REQUIRED));
 
-        Assert.assertEquals(REQUIRED, REPORT.highestRequirement(REQUIRED));
-        Assert.assertEquals(REPORT, REPORT.highestRequirement(DISABLED));
-        Assert.assertEquals(REPORT, REPORT.highestRequirement(REPORT));
+        Assert.assertEquals(REQUIRED, REPORT_ONLY.highestRequirement(REQUIRED));
+        Assert.assertEquals(REPORT_ONLY, REPORT_ONLY.highestRequirement(DISABLED));
+        Assert.assertEquals(REPORT_ONLY, REPORT_ONLY.highestRequirement(REPORT_ONLY));
 
         Assert.assertEquals(DISABLED, DISABLED.highestRequirement(DISABLED));
-        Assert.assertEquals(REPORT, DISABLED.highestRequirement(REPORT));
+        Assert.assertEquals(REPORT_ONLY, DISABLED.highestRequirement(REPORT_ONLY));
         Assert.assertEquals(REQUIRED, DISABLED.highestRequirement(REQUIRED));
     }
 }

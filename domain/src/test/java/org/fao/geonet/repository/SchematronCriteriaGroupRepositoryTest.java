@@ -41,15 +41,15 @@ public class SchematronCriteriaGroupRepositoryTest extends AbstractSpringDataTes
         List<String> foundIds = Lists.transform(found, new SchematronCriteriaGroupStringFunction());
 
         assertEquals(2, found.size());
-        assertTrue(foundIds.contains(g1.getName()));
-        assertTrue(foundIds.contains(g3.getName()));
+        assertTrue(foundIds.contains(g1.getId().getName()));
+        assertTrue(foundIds.contains(g3.getId().getName()));
 
         found = criteriaGroupRepository.findAllBySchematron_schemaName(g2.getSchematron().getSchemaName());
 
         foundIds = Lists.transform(found, new SchematronCriteriaGroupStringFunction());
 
         assertEquals(1, found.size());
-        assertTrue(foundIds.contains(g2.getName()));
+        assertTrue(foundIds.contains(g2.getId().getName()));
 
 
     }
@@ -59,17 +59,17 @@ public class SchematronCriteriaGroupRepositoryTest extends AbstractSpringDataTes
         final SchematronCriteriaGroup g1 = criteriaGroupRepository.save(newGroup(_inc, schematronRepository));
         final SchematronCriteriaGroup g2 = criteriaGroupRepository.save(newGroup(_inc, schematronRepository));
 
-        final SchematronCriteriaGroup found1 = criteriaGroupRepository.findOne(g1.getName());
+        final SchematronCriteriaGroup found1 = criteriaGroupRepository.findOne(g1.getId());
         assertSameContents(g1, found1);
         assertCorrectNumberOfCriteria(found1);
-        final SchematronCriteriaGroup found2 = criteriaGroupRepository.findOne(g2.getName());
+        final SchematronCriteriaGroup found2 = criteriaGroupRepository.findOne(g2.getId());
         assertSameContents(g2, found2);
         assertCorrectNumberOfCriteria(found2);
 
     }
 
     private void assertCorrectNumberOfCriteria(SchematronCriteriaGroup g1) {
-        String id = g1.getName().substring(GROUP_NAME_PREFIX.length());
+        String id = g1.getId().getName().substring(GROUP_NAME_PREFIX.length());
         assertEquals(Integer.parseInt(id), g1.getCriteria().size());
     }
 
@@ -78,7 +78,7 @@ public class SchematronCriteriaGroupRepositoryTest extends AbstractSpringDataTes
         int id = inc.incrementAndGet();
 
         SchematronCriteriaGroup group = new SchematronCriteriaGroup();
-        group.setName(GROUP_NAME_PREFIX + id);
+        group.setId(new SchematronCriteriaGroupId(GROUP_NAME_PREFIX + id, schematron));
         group.setSchematron(schematron);
         final SchematronRequirement[] requirements = SchematronRequirement.values();
         group.setRequirement(requirements[id % requirements.length]);
@@ -105,7 +105,7 @@ public class SchematronCriteriaGroupRepositoryTest extends AbstractSpringDataTes
         @Nullable
         @Override
         public String apply(@Nullable SchematronCriteriaGroup input) {
-            return input.getName();
+            return input.getId().getName();
         }
     }
 }

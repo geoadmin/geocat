@@ -1,6 +1,7 @@
 package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.SchematronCriteriaGroup;
+import org.fao.geonet.domain.SchematronCriteriaGroupId;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import javax.annotation.Nonnull;
@@ -12,7 +13,7 @@ import java.util.List;
  * @author delawen
  */
 public interface SchematronCriteriaGroupRepository extends
-		GeonetRepository<SchematronCriteriaGroup, String>,
+		GeonetRepository<SchematronCriteriaGroup, SchematronCriteriaGroupId>,
 		JpaSpecificationExecutor<SchematronCriteriaGroup> {
     /**
      * Look up a schematrons by its schema
