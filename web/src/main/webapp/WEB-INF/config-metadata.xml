@@ -879,8 +879,13 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
            <output file="true"/>
            <error id="illegal-params" sheet="metadata-error.xsl"/>
        </service>
-    
-	   	<!-- Validation framework extended -->
+
+        <service name="metadata.summary.zip">
+            <class name=".services.metadata.ExportMetadataSummary"/>
+            <output file="true" contentType="application/zip" />
+        </service>
+
+        <!-- Validation framework extended -->
 		<service name="metadata.schema.validation">
 			<class name=".services.metadata.schema.Validation" />
 			<output sheet="metadata-schema-validation.xsl" />

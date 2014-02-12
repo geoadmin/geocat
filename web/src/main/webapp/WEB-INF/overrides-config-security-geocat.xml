@@ -124,5 +124,7 @@
         <addInterceptUrl  pattern="/srv/.*/header-template.xml!?.*" access="permitAll"/>
         <addInterceptUrl  pattern="/srv/.*/reusable.list.js!?.*" access="hasRole('Administrator')"/>
         <addInterceptUrl  pattern="/apps/shared-objects/app/.*" access="hasRole('Administrator')"/>
+
+        <addInterceptUrl  pattern="/srv/.*/metadata.summary.zip!?.*" access="hasRole('Administrator')"/>
     </spring>
 </overrides>
