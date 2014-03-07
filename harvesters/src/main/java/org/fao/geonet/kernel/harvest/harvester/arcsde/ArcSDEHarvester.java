@@ -239,7 +239,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, context);
+        dataMan.indexMetadata(id, false, context);
 	}
 	/**
 	 * Inserts a metadata into the database. Lucene index is updated after insertion.
@@ -261,12 +261,12 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         String docType = null, title = null, isTemplate = null, group = null, category = null;
         boolean ufo = false, indexImmediate = false;
         String id = dataMan.insertMetadata(context, schema, xml, uuid, Integer.parseInt(params.ownerId), group, source,
-                         isTemplate, docType, title, category, createDate, createDate, ufo, indexImmediate);
+                         isTemplate, docType, category, createDate, createDate, ufo, indexImmediate);
 
 
 
 		int iId = Integer.parseInt(id);
-		dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
+		dataMan.setTemplateExt(iId, MetadataType.METADATA);
 		dataMan.setHarvestedExt(iId, source);
 
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
@@ -274,7 +274,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, context);
+        dataMan.indexMetadata(id, false, context);
 		return id;
 	}
 	

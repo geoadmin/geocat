@@ -171,6 +171,7 @@ public final class Geonet {
 		public static final String SEARCH_REQUEST_ID 		= "search_request_id";
 		public static final String METADATA_SHOW			= "metadata.show";
 		public static final String METADATA_EDITING		= "metadata.editing";
+		public static final String METADATA_BEFORE_ANY_CHANGES = "metadata.before.any.changes";
         public static final String METADATA_EDITING_TAB   = "metadata.editing.tab";
 		public static final String METADATA_POSITION  = "metadata.position";
 		public static final String SEARCH_KEYWORDS_RESULT	= "search.keywords.result";
@@ -417,6 +418,7 @@ public final class Geonet {
         public static final String BUILD_SUMMARY = "buildSummary";
         public static final String SUMMARY_ONLY = "summaryOnly";
         public static final String REQUESTED_LANGUAGE = "requestedLanguage";
+        public static final String SUMMARY_ITEMS = "summaryItems";
 
         /**
          * TODO javadoc.
@@ -430,6 +432,7 @@ public final class Geonet {
              * of the current search.
              */
             public static final String RESULTS_WITH_SUMMARY     = "results_with_summary";
+            public static final String SUGGESTIONS = "suggestions";
         }
 
         /**
@@ -579,6 +582,7 @@ public final class Geonet {
     public static final String FEEDBACK = GEONETWORK + ".feedback";
     public static final String GEOPUBLISH = GEONETWORK + ".geopublisher";
     public static final String FORMATTER = GEONETWORK + ".formatter";
+    public static final String EDITOR_SESSION = GEONETWORK + ".editor.session";
     /**
      * Services.
      */

@@ -27,24 +27,25 @@
 
 package org.fao.geonet.kernel;
 
-import com.google.common.base.Joiner;
+import java.io.IOException;
 import jeeves.xlink.Processor;
-import jeeves.xlink.XLink; 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import org.apache.commons.jxpath.ri.parser.XPathParserConstants;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
+import jeeves.xlink.XLink;import java.io.StringReader;
+import java.util.*;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.jxpath.ri.parser.Token;
 import org.apache.commons.jxpath.ri.parser.XPathParser;
+import org.apache.commons.jxpath.ri.parser.XPathParserConstants;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.schema.MetadataAttribute;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataType;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jaxen.JaxenException;
 import org.jaxen.SimpleNamespaceContext;
 import org.jaxen.jdom.JDOMXPath;
@@ -55,8 +56,10 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 
-import java.io.StringReader;
-import java.util.*;
+import com.google.common.base.Joiner;
+ 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * TODO javadoc.
@@ -66,6 +69,10 @@ public class EditLib {
     private Hashtable<String, Integer> htVersions   = new Hashtable<String, Integer>(1000);
 	private SchemaManager scm;
 
+    public static final String XML_FRAGMENT_SEPARATOR = "&&&";
+    public static final String COLON_SEPARATOR = "COLON";
+    public static final String MSG_ELEMENT_NOT_FOUND_AT_REF = "Element not found at ref = ";
+    
 	//--------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -376,20 +383,96 @@ public class EditLib {
         }
     }
 
+    public void addXMLFragments(String schema, Element md, Map<String, String> xmlInputs) throws Exception, IOException,
+        JDOMException {
+      // Loop over each XML fragments to insert or replace
+      for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
+          String nodeRef = entry.getKey();
+          String xmlSnippetAsString = entry.getValue();
+          String nodeName = null;
+          boolean replaceExisting = false;
+          
+          String[] nodeConfig = nodeRef.split("_");
+          // Possibilities:
+          // * X125
+          // * X125_replace
+          // * X125_gmdCOLONkeywords
+          // * X125_gmdCOLONkeywords_replace
+          nodeRef = nodeConfig[0];
+          
+          if (nodeConfig.length > 1 && nodeConfig[1] != null) {
+              if (nodeConfig[1].equals("replace")) {
+                  replaceExisting = true;
+              } else {
+                  nodeName = nodeConfig[1].replace(COLON_SEPARATOR, ":");
+              }
+          }
+          
+          if (nodeConfig.length > 2 && nodeConfig[2] != null) {
+              if (nodeConfig[2].equals("replace")) {
+                  replaceExisting = true;
+              }
+          }
+          
+          
+          // Get element to fill
+          Element el = findElement(md, nodeRef);
+          if (el == null) {
+              Log.error(Geonet.EDITOR, MSG_ELEMENT_NOT_FOUND_AT_REF + nodeRef);
+              continue;
+          }
+          
+          
+          if (xmlSnippetAsString != null && !xmlSnippetAsString.equals("")) {
+              String[] fragments = xmlSnippetAsString.split(XML_FRAGMENT_SEPARATOR);
+              for (String fragment : fragments) {
+                  if (nodeName != null) {
+                      if(Log.isDebugEnabled(Geonet.EDITOR))
+                          Log.debug(Geonet.EDITOR, "Add XML fragment; " + fragment + " to element with ref: " + nodeRef);
+                      
+                      addFragment(schema, el, nodeName, fragment, replaceExisting);
+                  } else {
+                      if(Log.isDebugEnabled(Geonet.EDITOR))
+                          Log.debug(Geonet.EDITOR, "Add XML fragment; " + fragment
+                              + " to element with ref: " + nodeRef + " replacing content.");
+                      
+                      // clean before update
+                      el.removeContent();
+                      fragment = addNamespaceToFragment(fragment);
+                      
+                      // Add content
+                      Element node = Xml.loadString(fragment, false);
+                      if (replaceExisting) {
+                          @SuppressWarnings("unchecked")
+                          List<Element> children = node.getChildren();
+                          for (int i = 0; i < children.size(); i++) {
+                              el.addContent(children.get(i).detach());
+                          }
+                      } else {
+                          el.addContent(node);
+                      }
+                  }
+              }
+          }
+      }
+    }
+
     /**
      * This does exactly the same thing as
      * {@link #addElementOrFragmentFromXpath(org.jdom.Element, org.fao.geonet.kernel.schema.MetadataSchema, String, AddElemValue, boolean)}
      * except that it is done multiple times, once for each element in the map
+     *
      *
      * @param metadataRecord the record to update
      * @param xmlAndXpathInputs the xpaths and new values
      * @param metadataSchema the schema of the metadata record
      * @param createXpathNodeIfNotExist if true then xpaths will be created if they don't indentify an existing element or attribute.
      *                                  Otherwise only existing xpaths will be updated.
+     * @param updatedXLinks
      * @return the number of updates.
      */
     public int addElementOrFragmentFromXpaths(Element metadataRecord, Map<String, AddElemValue> xmlAndXpathInputs,
-                                              MetadataSchema metadataSchema, boolean createXpathNodeIfNotExist) {
+                                              MetadataSchema metadataSchema, boolean createXpathNodeIfNotExist, HashSet<Element> updatedXLinks) {
 
 
         int numUpdated = 0;
@@ -532,17 +615,26 @@ public class EditLib {
             } else {
                 if (createXpathNodeIfNotExist) {
                     int indexOfRequiredPortion = -1;
-
+                    // Extract the XPath for the element to match. For:
+                    //  * Relative XPath (*//gmd:RS_Identifier)[2]/gmd:code/gco:CharacterString
+                    // xpath should be (*//gmd:RS_Identifier)[2]
+                    // * Absolute XPath with condition 
+                    // gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'revision']
+                    // xpath should be gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date
+                    boolean relativeXpath = xpathProperty.startsWith("(");
+                    
                     for (int i = 0; i < xpathProperty.length(); i++) {
                         final char c = xpathProperty.charAt(i);
-                        if (c == ')' || c == ']') {
-                            indexOfRequiredPortion = i + 1;
-                }
-            }
+                        if ((relativeXpath && (c == ')' ||  c == ']')) || (!relativeXpath && c == '[')) {
+                            indexOfRequiredPortion = i + (relativeXpath ? 1 : 0);
+                        }
+                    }
                     if(indexOfRequiredPortion > 0) {
                         final String requiredXPath = xpathProperty.substring(0, indexOfRequiredPortion);
                         Object elem = trySelectNode(metadataRecord, metadataSchema, requiredXPath).result;
-                        if (elem instanceof Element) {
+                        if (elem == null) {
+                            return createAndAddFromXPath(metadataRecord, metadataSchema, requiredXPath, value);
+                        } else if (elem instanceof Element) {
                             Element element = (Element) elem;
 
                             return createAndAddFromXPath(element, metadataSchema, xpathProperty.substring(indexOfRequiredPortion), value);
@@ -771,11 +863,11 @@ public class EditLib {
         }
     }
 
-    private static class SelectResult {
+    public static class SelectResult {
         private static final SelectResult ERROR = new SelectResult(null, true);
 
-        final Object result;
-        final boolean error;
+        public final Object result;
+        public final boolean error;
 
         private SelectResult(Object result, boolean error) {
             this.result = result;
@@ -786,7 +878,7 @@ public class EditLib {
         }
     }
 
-    private SelectResult trySelectNode(Element metadataRecord, MetadataSchema metadataSchema, String xpathProperty)  {
+    public SelectResult trySelectNode(Element metadataRecord, MetadataSchema metadataSchema, String xpathProperty)  {
         if (xpathProperty.trim().isEmpty()) {
             return SelectResult.of(metadataRecord);
         }
@@ -1909,19 +2001,31 @@ public class EditLib {
 		}
 	}
 
-	// -- The following methods are used by services that use metadata-edit-embedded so the
+	/**
+     * Adds missing namespace (ie. GML) to XML inputs. It should be done by the client side
+     * but add a check in here.
+     *
+     * @param fragment 		The fragment to be checked and processed.
+     *
+     * @return 				The updated fragment.
+     */
+    public static String addNamespaceToFragment(String fragment) {
+        //add the gml namespace if its missing
+        if (fragment.contains("<gml:") && !fragment.contains("xmlns:gml=\"")) {
+            if(Log.isDebugEnabled(Geonet.EDITOR))
+                Log.debug(Geonet.EDITOR, "  Add missing GML namespace.");
+        	fragment = fragment.replaceFirst("<gml:([^ >]+)", "<gml:$1 xmlns:gml=\"http://www.opengis.net/gml\"");
+        }
+    	return fragment;
+    }
+
+  // -- The following methods are used by services that use metadata-edit-embedded so the
 	// -- classes know which element to transform
 	/**
 	 * Tag the element so the metaata-edit-embedded.xsl know which element is the element for display
 	 */
     public static void tagForDisplay(Element elem) {
         elem.setAttribute("addedObj","true", Edit.NAMESPACE);
-    }
-    /**
-     * Remove the tag element so the tag does not stay in the actual metadata.
-     */
-    public static void removeDisplayTag(Element elem) {
-        elem.removeAttribute("addedObj", Edit.NAMESPACE);
     }
 
     /**
@@ -1995,5 +2099,11 @@ public class EditLib {
         }
 
         return xPath;
+    }
+    /**
+     * Remove the tag element so the tag does not stay in the actual metadata.
+     */
+    public static void removeDisplayTag(Element elem) {
+        elem.removeAttribute("addedObj", Edit.NAMESPACE);
     }
 }

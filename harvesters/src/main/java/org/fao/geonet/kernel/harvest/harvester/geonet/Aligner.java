@@ -335,7 +335,7 @@ public class Aligner extends BaseAligner
         boolean ufo = params.mefFormatFull;
         boolean indexImmediate = false;
         String id = dataMan.insertMetadata(context, ri.schema, md, ri.uuid, Integer.parseInt(params.ownerId), group, siteId,
-                         isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+                         isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 
@@ -356,7 +356,7 @@ public class Aligner extends BaseAligner
 
         metadataRepository.save(metadata);
 
-        dataMan.setTemplateExt(iId, MetadataType.lookup(isTemplate), null);
+        dataMan.setTemplateExt(iId, MetadataType.lookup(isTemplate));
         dataMan.setHarvestedExt(iId, params.uuid);
 
 		String pubDir = Lib.resource.getDir(context, "public",  id);
@@ -376,7 +376,7 @@ public class Aligner extends BaseAligner
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, context);
+        dataMan.indexMetadata(id, false, context);
 		result.addedMetadata++;
 
 		return id;
@@ -657,7 +657,7 @@ public class Aligner extends BaseAligner
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, context);
+        dataMan.indexMetadata(id, false, context);
 	}
 
 	/**

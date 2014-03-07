@@ -323,7 +323,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
                     String category = null, createDate = new ISODate().toString(), changeDate = createDate;
                     boolean ufo = false, indexImmediate = false;
                     id = dataMan.insertMetadata(context, schema, md, uuid, owner, groupOwner, params.uuid,
-                            isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+                            isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
 
                 }
                 catch (Exception e) {
@@ -340,7 +340,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 
 
                 final Integer iId = Integer.valueOf(id);
-                dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
+                dataMan.setTemplateExt(iId, MetadataType.METADATA);
 				dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.name));
 
                 // GEOCAT
@@ -356,7 +356,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 
                 dataMan.flush();
 
-                dataMan.indexMetadata(id, context);
+                dataMan.indexMetadata(id, false, context);
 
                 result.addedMetadata++;
             }

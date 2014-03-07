@@ -31,8 +31,8 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.HarvesterDataRepository;
-import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.repository.MetadataRepository;
@@ -231,12 +231,12 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
         String id = dataMan.insertMetadata(context, schema, md, uuid, Integer.parseInt(params.ownerId), group, params.uuid,
-                     isTemplate, docType, title, category, rf.getChangeDate().getDateAndTime(), rf.getChangeDate().getDateAndTime(), ufo, indexImmediate);
+                     isTemplate, docType, category, rf.getChangeDate().getDateAndTime(), rf.getChangeDate().getDateAndTime(), ufo, indexImmediate);
 
 
 		int iId = Integer.parseInt(id);
 
-		dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
+		dataMan.setTemplateExt(iId, MetadataType.METADATA);
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(rf.getPath()));
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
@@ -244,7 +244,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, context);
+        dataMan.indexMetadata(id, false, context);
 		result.addedMetadata++;
 	}
 	
@@ -374,7 +374,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
             dataMan.flush();
 
-            dataMan.indexMetadata(record.id, context);
+            dataMan.indexMetadata(record.id, false, context);
 			result.updatedMetadata++;
 		}
 	}

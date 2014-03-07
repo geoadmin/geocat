@@ -332,7 +332,7 @@ public class Importer {
                     String group = null, docType = null, title = null, category = null;
                     boolean ufo = false, indexImmediate = false;
                     String fcId = dm.insertMetadata(context, "iso19110", fc.get(index), uuid,
-                            userid, group, source, isTemplate.codeString, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+                            userid, group, source, isTemplate.codeString, docType, category, createDate, changeDate, ufo, indexImmediate);
 
                     if(Log.isDebugEnabled(Geonet.MEF))
                         Log.debug(Geonet.MEF, "Adding Feature catalog with uuid: " + uuid);
@@ -398,7 +398,7 @@ public class Importer {
                 IO.mkdirs(new File(pubDir), "MEF Importer public resources directory for metadata "+metadataIdMap);
                 IO.mkdirs(new File(priDir), "MEF Importer private resources directory for metadata "+metadataIdMap);
 
-                dm.indexMetadata(metadataIdMap.get(index), context);
+                dm.indexMetadata(metadataIdMap.get(index), false, context);
 			}
 
             private Element defaultPrivileges() {
@@ -535,7 +535,7 @@ public class Importer {
         boolean ufo = false, indexImmediate = false;
         id.add(index,
                 dm.insertMetadata(context, schema, md.get(index), uuid,
-                userid, groupId, source, isTemplate.codeString, docType, title, category, createDate, changeDate, ufo, indexImmediate));
+                userid, groupId, source, isTemplate.codeString, docType, category, createDate, changeDate, ufo, indexImmediate));
 
 	}
 

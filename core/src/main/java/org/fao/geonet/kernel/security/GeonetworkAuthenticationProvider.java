@@ -44,6 +44,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider 
 	implements UserDetailsService {
 
+    public boolean isCheckUserNameOrEmail() {
+        return checkUserNameOrEmail;
+    }
+
+    public void setCheckUserNameOrEmail(boolean checkUserNameOrEmail) {
+        this.checkUserNameOrEmail = checkUserNameOrEmail;
+    }
+
+    private boolean checkUserNameOrEmail = false;
+
     @Autowired
     private PasswordEncoder encoder;
 
@@ -74,12 +84,15 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 	    try {
 			// Only check user with local db user (ie. authtype is '')
 	        User user = _userRepository.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(username);
+            if (user == null && checkUserNameOrEmail) {
+                user = _userRepository.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(username);
+            }
 			if (user != null) {
 				if (authentication != null && authentication.getCredentials() != null) {
 					if(PasswordUtil.hasOldHash(user)) {
 						String oldPassword = user.getPassword();
 						String newPassword = authentication.getCredentials().toString();
-                        user = PasswordUtil.updatePasswordWithNew(true, oldPassword, newPassword, user.getId(), encoder, _userRepository);
+                        user = PasswordUtil.updatePasswordWithNew(true, oldPassword, newPassword, user, encoder, _userRepository);
 					}
 				}
 

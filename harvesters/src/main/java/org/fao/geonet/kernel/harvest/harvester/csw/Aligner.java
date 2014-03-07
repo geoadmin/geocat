@@ -228,11 +228,11 @@ public class Aligner extends BaseAligner
         }
         String id = dataMan.insertMetadata(context, schema, md, ri.uuid,
                 ownerId, group, params.uuid,
-                         isTemplate, docType, title, category, ri.changeDate, ri.changeDate, ufo, indexImmediate);
+                         isTemplate, docType, category, ri.changeDate, ri.changeDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 
-		dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
+		dataMan.setTemplateExt(iId, MetadataType.METADATA);
 		dataMan.setHarvestedExt(iId, params.uuid);
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
@@ -241,7 +241,7 @@ public class Aligner extends BaseAligner
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, context);
+        dataMan.indexMetadata(id, false, context);
 		result.addedMetadata++;
 	}
 
@@ -294,7 +294,7 @@ public class Aligner extends BaseAligner
 
                 dataMan.flush();
 
-                dataMan.indexMetadata(id, context);
+                dataMan.indexMetadata(id, false, context);
 				result.updatedMetadata++;
 			}
 		}

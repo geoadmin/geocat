@@ -46,6 +46,7 @@ import jeeves.server.sources.http.JeevesServlet;
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
+import org.jdom.filter.Filter;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NotAllowedEx;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
@@ -55,26 +56,26 @@ import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.SOAPUtil;
 import org.fao.geonet.utils.Xml;
+
+import java.io.ByteArrayOutputStream;
 import org.jdom.Element;
-import org.jdom.filter.Filter;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.yammer.metrics.core.TimerContext;
+import java.io.File;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.OutputStream;
+import javax.persistence.PersistenceContext;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import org.springframework.context.ConfigurableApplicationContext;
 import java.util.HashMap;
+import org.springframework.transaction.annotation.Propagation;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
+
+import com.yammer.metrics.core.TimerContext;
 
 //=============================================================================
 @Transactional(propagation = Propagation.REQUIRED)
@@ -786,36 +787,42 @@ public class ServiceManager {
 					error("     -> stylesheet not found on disk, aborting : " +styleSheet);
 				else
 				{
-
-                                    req.beginStream(outPage.getContentType(), cache);
-				    
-					OutputStream baos;
-					if(preSheets.isEmpty()) {
-					    baos = req.getOutputStream();
-					} else {
-					    baos = new ByteArrayOutputStream();
-					}
-
 					try
 					{
-					    Element transformedElem = rootElem;
-					    for (String preSheet : preSheets) {
-							info("     -> transforming with pre-stylesheet : " +preSheet);
-                            transformedElem = Xml.transform(transformedElem, toStyleSheetFile(preSheet));
-                        }
-					    
-                        TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class).time();
-                        try {
-                            //--- first we do the transformation
-                            Xml.transform(transformedElem, styleSheet, baos);
-                        } finally {
-                            timerContext.stop();
-                        }
 						//--- then we set the content-type and output the result
-                                            if(!preSheets.isEmpty()) {
-                                                req.getOutputStream().write(((ByteArrayOutputStream) baos).toByteArray());
-                                            }
-						req.endStream();
+					    // If JSON output requested, run the XSLT transformation and the JSON
+                        if (req.hasJSONOutput()) {
+                            Element xsltResponse = null;
+                            TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class).time();
+                            try {
+                                //--- first we do the transformation
+                                xsltResponse = Xml.transform(rootElem, styleSheet);
+                            } finally {
+                                timerContext.stop();
+                            }
+                            req.beginStream("application/json; charset=UTF-8", cache);
+                            req.getOutputStream().write(Xml.getJSON(xsltResponse).getBytes(Constants.ENCODING));
+                            req.endStream();
+                        } else {
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+// GEOCAT
+                            Element transformedElem = rootElem;
+                            for (String preSheet : preSheets) {
+                                info("     -> transforming with pre-stylesheet : " +preSheet);
+                                transformedElem = Xml.transform(transformedElem, toStyleSheetFile(preSheet));
+                            }
+// END GEOCAT                                        
+                            TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class).time();
+                            try {
+                                //--- first we do the transformation
+                                Xml.transform(rootElem, styleSheet, baos);
+                            } finally {
+                                timerContext.stop();
+                            }
+                            req.beginStream(outPage.getContentType(), cache);
+                            req.getOutputStream().write(baos.toByteArray());
+                            req.endStream();
+                        }
 					}
 					catch(Exception e)
 					{

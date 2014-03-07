@@ -1,20 +1,23 @@
 package org.fao.geonet.services.metadata;
 
 import com.google.common.base.Optional;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
 import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
+
+import org.fao.geonet.kernel.AddElemValue;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.Xml;
 import org.jdom.*;
 import org.jdom.filter.ElementFilter;
 import org.jdom.filter.Filter;
@@ -31,10 +34,6 @@ import java.util.*;
  */
 public class AjaxEditUtils extends EditUtils {
 
-    private static final String XML_FRAGMENT_SEPARATOR = "&&&";
-    private static final String MSG_ELEMENT_NOT_FOUND_AT_REF = "Element not found at ref = ";
-    private static final String COLON_SEPARATOR = "COLON";
-    
     public AjaxEditUtils(ServiceContext context) {
         super(context);
     }
@@ -53,11 +52,13 @@ public class AjaxEditUtils extends EditUtils {
      * <li>ElementId_AttributeName=AttributeValue</li>
      * <li>ElementId_AttributeNamespacePrefixCOLONAttributeName=AttributeValue</li>
      * <li>XElementId=ElementValue</li>
+     * <li>XElementId_replace=ElementValue</li>
      * <li>XElementId_ElementName=ElementValue</li>
      * <li>XElementId_ElementName_replace=ElementValue</li>
+     * <li>P{key}=xpath with P{key}_xml=XML snippet</li>
      * </ul>
      * 
-     * ElementName MUST contain "{@value #COLON_SEPARATOR}" instead of ":" for prefixed elements.
+     * ElementName MUST contain "{@value #EditLib.COLON_SEPARATOR}" instead of ":" for prefixed elements.
      * 
      * <p>
      * When using X key ElementValue could contains many XML fragments (eg. 
@@ -67,7 +68,17 @@ public class AjaxEditUtils extends EditUtils {
      * If not, the element with ElementId is replaced.
      * If _replace suffix is used, then all elements having the same type than elementId are removed before insertion.
      * 
+     * </p>
+     * 
      * <p>
+     * <pre>
+     *  _Pd2295e223:/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+     *              gmd:citation/gmd:CI_Citation/
+     *              gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'creation']
+     *              
+     *  _Pd2295e223_xml:&lt;gmd:date/&gt; ... &lt;/gmd:date&gt;
+     * </pre>
+     * </p>
      * 
      * @param id        Metadata internal identifier.
      * @param changes   List of changes to apply.
@@ -80,7 +91,9 @@ public class AjaxEditUtils extends EditUtils {
                                            String lang) throws Exception {
         //END GEOCAT
         Lib.resource.checkEditPrivilege(context, id);
+
         String schema = dataManager.getMetadataSchema(id);
+        MetadataSchema metadataSchema = dataManager.getSchema(schema);
         EditLib editLib = dataManager.getEditLib();
 
         // --- check if the metadata has been modified from last time
@@ -98,6 +111,7 @@ public class AjaxEditUtils extends EditUtils {
         // GEOCAT
         HashSet<Element> updatedXLinks = new HashSet<Element>();
         // END GEOCAT
+        Map<String, AddElemValue> xmlAndXpathInputs = new HashMap<String, AddElemValue>();
 
         // --- update elements
         for (Map.Entry<String, String> entry : changes.entrySet()) {
@@ -114,6 +128,23 @@ public class AjaxEditUtils extends EditUtils {
             if (ref.startsWith("X")) {
                 ref = ref.substring(1);
                 xmlInputs.put(ref, value);
+                continue;
+            } else if (ref.startsWith("P") && ref.endsWith("_xml")) {
+                continue;
+            } else if (ref.startsWith("P") && !ref.endsWith("_xml")) {
+                // Catch element starting with a P for xpath update mode
+                String snippet = changes.get(ref + "_xml");
+
+                if(Log.isDebugEnabled(Geonet.EDITOR)) {
+                  Log.debug(Geonet.EDITOR, "Add element by XPath: " + value);
+                  Log.debug(Geonet.EDITOR, "  Snippet is : " + snippet);
+                }
+
+                if (snippet != null && !"".equals(snippet)) {
+                    xmlAndXpathInputs.put(value, new AddElemValue(snippet));
+                } else {
+                    Log.warning(Geonet.EDITOR, "No XML snippet or value found for xpath " + value + " and element ref " + ref);
+                }
                 continue;
             }
             // GEOCAT
@@ -139,7 +170,7 @@ public class AjaxEditUtils extends EditUtils {
             
             Element el = editLib.findElement(md, ref);
             if (el == null) {
-                Log.error(Geonet.EDITOR, MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+                Log.error(Geonet.EDITOR, EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
                 continue;
             }
             
@@ -173,7 +204,7 @@ public class AjaxEditUtils extends EditUtils {
 
             // Process attribute
             if (attribute != null) {
-                Pair<Namespace, String> attInfo = parseAttributeName(attribute, COLON_SEPARATOR, id, md, editLib);
+                Pair<Namespace, String> attInfo = parseAttributeName(attribute, EditLib.COLON_SEPARATOR, id, md, editLib);
                 String localname = attInfo.two();
                 Namespace attrNS = attInfo.one();
                 if (el.getAttribute(localname, attrNS) != null) {
@@ -208,78 +239,40 @@ public class AjaxEditUtils extends EditUtils {
         
         // Deals with XML fragments to insert or update
         if (!xmlInputs.isEmpty()) {
-            
-            // Loop over each XML fragments to insert or replace
-            for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
-                String ref = entry.getKey();
-                String value = entry.getValue();
-                String name = null;
-                int addIndex = ref.indexOf('_');
-                if (addIndex != -1) {
-                    name = ref.substring(addIndex + 1);
-                    ref = ref.substring(0, addIndex);
-                }
-                
-                // Get element to fill
-                Element el = editLib.findElement(md, ref);
-                if (el == null) {
-                    Log.error(Geonet.EDITOR, MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
-                    continue;
-                }
-                // GEOCAT
-                Element xlinkParent = findXlinkParent(el);
-                if( xlinkParent!=null && ReusableObjManager.isValidated(xlinkParent)){
-                    continue;
-                }
-                if( xlinkParent!=null ){
-                    updatedXLinks.add(xlinkParent);
-                }
-                // END GEOCAT
+            editLib.addXMLFragments(schema, md, xmlInputs);
+        }
 
-                if (value != null && !value.equals("")) {
-                    String[] fragments = value.split(XML_FRAGMENT_SEPARATOR);
-                    for (String fragment : fragments) {
-                        if (name != null) {
-                            if(Log.isDebugEnabled(Geonet.EDITOR))
-                                Log.debug(Geonet.EDITOR, "Add XML fragment; " + fragment + " to element with ref: " + ref);
-                            
-                            int unIndex = name.indexOf('_');
-                            boolean replaceExisting = false;
-                            if (unIndex != -1) {
-                                replaceExisting = true;
-                                name = name.substring(0, unIndex);
-                            }
-                            
-                            name = name.replace(COLON_SEPARATOR, ":");
-                            editLib.addFragment(schema, el, name, fragment, replaceExisting);
-                        } else {
-                            if(Log.isDebugEnabled(Geonet.EDITOR))
-                                Log.debug(Geonet.EDITOR, "Add XML fragment; " + fragment
-                                    + " to element with ref: " + ref + " replacing content.");
-                            
-                            // clean before update
-                            el.removeContent();
-                            fragment = addNamespaceToFragment(fragment);
-                            
-                            // Add content
-                            el.addContent(Xml.loadString(fragment, false));
-                        }
+        // Deals with XML fragments and XPath to insert or update
+        if (!xmlAndXpathInputs.isEmpty()) {
+            editLib.addElementOrFragmentFromXpaths(md, xmlAndXpathInputs, metadataSchema, true, updatedXLinks);
+            // GEOCAT
+            for (String xpath : xmlAndXpathInputs.keySet()) {
+                EditLib.SelectResult selectResult = editLib.trySelectNode(md, metadataSchema, xpath);
+                if (!selectResult.error && selectResult.result instanceof Element) {
+                    Element xlinkParent = EditUtils.findXlinkParent((Element) selectResult.result);
+                    if( xlinkParent!=null && ReusableObjManager.isValidated(xlinkParent)){
+                        continue;
+                    }
+                    if( xlinkParent!=null ){
+                        updatedXLinks.add(xlinkParent);
                     }
                 }
             }
+            // END GEOCAT
         }
         // GEOCAT
-        applyHiddenElements(context, dataManager, editLib, md, id, htHide);
-
         dataManager.updateXlinkObjects(id, lang, md, updatedXLinks.toArray(new Element[updatedXLinks.size()]));
         // END GEOCAT
+        
+        
+        setMetadataIntoSession(session,(Element)md.clone(), id);
+        
         // --- remove editing info
         editLib.removeEditingInfo(md);
         editLib.contractElements(md);
         
         return (Element) md.detach();
     }
-
     /**
      * TODO javadoc.
      *
@@ -337,60 +330,6 @@ public class AjaxEditUtils extends EditUtils {
 		setMetadataIntoSession(session, md, id);
 		return md;
 	}
-    // GEOCAT
-	public synchronized Element addXLink(UserSession session, String id, String ref, String name, XLink xlink)  throws Exception {
-		String  schema = dataManager.getMetadataSchema(id);
-		//--- get metadata from session
-		Element md = getMetadataFromSession(session, id);
-
-		//--- ref is parent element so find it
-		EditLib editLib = dataManager.getEditLib();
-        Element el = editLib.findElement(md, ref);
-		if (el == null)
-			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
-
-		//--- locate the geonet:element and geonet:info elements and clone for
-		//--- later re-use
-		Element refEl = (Element)(el.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE)).clone();
-		Element info = (Element)(md.getChild(Edit.RootChild.INFO,Edit.NAMESPACE)).clone();
-		md.removeChild(Edit.RootChild.INFO,Edit.NAMESPACE);
-
-		Element child = null;
-		MetadataSchema mds = dataManager.getSchema(schema);
-
-		child = editLib.addElement(mds, el, name);
-
-
-		child.setAttribute(xlink.getHrefAttribute());
-		child.setAttribute(xlink.getRoleAttribute());
-		child.setAttribute(xlink.getShowAttribute());
-
-		Element resolvedElem = Processor.resolveXLink(xlink.getHref(), context);
-		child.setContent(resolvedElem);
-
-		//--- now enumerate the new child (if not a simple attribute)
-		//--- now add the geonet:element back again to keep ref number
-		el.addContent(refEl);
-
-		int iRef = editLib.findMaximumRef(md);
-		editLib.expandElements(schema, child);
-		editLib.enumerateTreeStartingAt(child, iRef+1, Integer.parseInt(ref));
-
-		//--- add editing info to everything from the parent down
-		editLib.expandTree(mds,el);
-		//--- attach the info element to the child
-		child.addContent(info);
-
-		//--- attach the info element to the metadata root)
-		md.addContent((Element)info.clone());
-
-		//--- store the metadata in the session again
-		setMetadataIntoSession(session,(Element)md.clone(), id);
-
-		// Return element added
-		return child;
-	}
-	// END GEOCAT
 
     /**
      * For Ajax Editing : adds an element or an attribute to a metadata element ([add] link).
@@ -413,7 +352,7 @@ public class AjaxEditUtils extends EditUtils {
 		EditLib editLib = dataManager.getEditLib();
         Element el = editLib.findElement(md, ref);
 		if (el == null)
-			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+			throw new IllegalStateException(EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 
 		//--- locate the geonet:element and geonet:info elements and clone for
 		//--- later re-use
@@ -521,7 +460,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element el = editLib.findElement(md, ref);
 
 		if (el == null)
-			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+			throw new IllegalStateException(EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 
 
 		String uName = el.getName();
@@ -588,24 +527,6 @@ public class AjaxEditUtils extends EditUtils {
 		return result;
 	}
 
-    // GEOCAT
-	private void removeParentTopicCategory(Element parent, Element el) throws JDOMException {
-		if (el.getName().equals("topicCategory") && el.getNamespaceURI().equals(Geonet.Namespaces.GMD.getURI())) {
-			String tag = el.getChildTextTrim("MD_TopicCategoryCode",Geonet.Namespaces.GMD);
-			if(tag!=null && tag.contains("_")) {
-				String parentCatCode = tag.split("_")[0];
-				List<?> related = Xml.selectNodes(parent, "gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode),'"+parentCatCode+"_')]", Geonet.Namespaces.iso19139Namespaces);
-				if(related.size() == 1) {
-					List<?> parentCategories = Xml.selectNodes(parent, "gmd:topicCategory[normalize-space(gmd:MD_TopicCategoryCode) = '"+parentCatCode+"']", Geonet.Namespaces.iso19139Namespaces);
-					for (Object object : parentCategories) {
-						((Content)object).detach();
-					}
-				}
-			}
-		}
-	}
-    // END GEOCAT
-
 	/**
 	 * Removes attribute in embedded mode.
 	 *
@@ -640,6 +561,60 @@ public class AjaxEditUtils extends EditUtils {
 
 		return result;
 	}
+    // GEOCAT
+	public synchronized Element addXLink(UserSession session, String id, String ref, String name, XLink xlink)  throws Exception {
+		String  schema = dataManager.getMetadataSchema(id);
+		//--- get metadata from session
+		Element md = getMetadataFromSession(session, id);
+
+		//--- ref is parent element so find it
+		EditLib editLib = dataManager.getEditLib();
+        Element el = editLib.findElement(md, ref);
+		if (el == null)
+			throw new IllegalStateException(EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+
+		//--- locate the geonet:element and geonet:info elements and clone for
+		//--- later re-use
+		Element refEl = (Element)(el.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE)).clone();
+		Element info = (Element)(md.getChild(Edit.RootChild.INFO,Edit.NAMESPACE)).clone();
+		md.removeChild(Edit.RootChild.INFO,Edit.NAMESPACE);
+
+		Element child = null;
+		MetadataSchema mds = dataManager.getSchema(schema);
+
+		child = editLib.addElement(mds, el, name);
+
+
+		child.setAttribute(xlink.getHrefAttribute());
+		child.setAttribute(xlink.getRoleAttribute());
+		child.setAttribute(xlink.getShowAttribute());
+
+		Element resolvedElem = Processor.resolveXLink(xlink.getHref(), context);
+		child.setContent(resolvedElem);
+
+		//--- now enumerate the new child (if not a simple attribute)
+		//--- now add the geonet:element back again to keep ref number
+		el.addContent(refEl);
+
+		int iRef = editLib.findMaximumRef(md);
+		editLib.expandElements(schema, child);
+		editLib.enumerateTreeStartingAt(child, iRef+1, Integer.parseInt(ref));
+
+		//--- add editing info to everything from the parent down
+		editLib.expandTree(mds,el);
+		//--- attach the info element to the child
+		child.addContent(info);
+
+		//--- attach the info element to the metadata root)
+		md.addContent((Element)info.clone());
+
+		//--- store the metadata in the session again
+		setMetadataIntoSession(session,(Element)md.clone(), id);
+
+		// Return element added
+		return child;
+	}
+	// END GEOCAT
 
     private Pair<Namespace, String> parseAttributeName(String attributeName, String separator,
             String id, Element md, EditLib editLib) throws Exception {
@@ -679,7 +654,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element elSwap = editLib.findElement(md, ref);
 
 		if (elSwap == null)
-			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+			throw new IllegalStateException(EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 
 		//--- swap the elements
 		int iSwapIndex = -1;
@@ -706,6 +681,25 @@ public class AjaxEditUtils extends EditUtils {
 		setMetadataIntoSession(session,(Element)md.clone(), id);
 
     }
+
+    // GEOCAT
+	private void removeParentTopicCategory(Element parent, Element el) throws JDOMException {
+		if (el.getName().equals("topicCategory") && el.getNamespaceURI().equals(Geonet.Namespaces.GMD.getURI())) {
+			String tag = el.getChildTextTrim("MD_TopicCategoryCode",Geonet.Namespaces.GMD);
+			if(tag!=null && tag.contains("_")) {
+				String parentCatCode = tag.split("_")[0];
+				List<?> related = Xml.selectNodes(parent, "gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode)," +
+                                                          "'" + parentCatCode + "_')]", Geonet.Namespaces.iso19139Namespaces);
+				if(related.size() == 1) {
+					List<?> parentCategories = Xml.selectNodes(parent, "gmd:topicCategory[normalize-space(gmd:MD_TopicCategoryCode) = '"+parentCatCode+"']", Geonet.Namespaces.iso19139Namespaces);
+					for (Object object : parentCategories) {
+						((Content)object).detach();
+					}
+				}
+			}
+		}
+	}
+    // END GEOCAT
 
     /**
      * For Ajax Editing : retrieves metadata from session and validates it.
@@ -768,7 +762,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element el = editLib.findElement(md, ref);
 
 		if (el == null)
-			Log.error(Geonet.DATA_MANAGER, MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+			Log.error(Geonet.DATA_MANAGER, EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 			//throw new IllegalStateException("Element not found at ref = " + ref);
 
 		//--- remove editing info added by previous call
@@ -793,7 +787,7 @@ public class AjaxEditUtils extends EditUtils {
         dataManager.notifyMetadataChange(md, id);
 
 		//--- update search criteria
-        dataManager.indexMetadata(id, context);
+        dataManager.indexMetadata(id, false, context);
 
         return true;
 	}
@@ -831,7 +825,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element el = editLib.findElement(md, ref);
 
 		if (el == null)
-			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+			throw new IllegalStateException(EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 
 		//--- remove editing info added by previous call
 		editLib.removeEditingInfo(md);
@@ -853,7 +847,7 @@ public class AjaxEditUtils extends EditUtils {
         dataManager.notifyMetadataChange(md, id);
 
 		//--- update search criteria
-        dataManager.indexMetadata(id, context);
+        dataManager.indexMetadata(id, false, context);
 
         return true;
 	}

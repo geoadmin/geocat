@@ -132,9 +132,6 @@
       <field name="geoBox" tagName="geoBox"/>
       <field name="_indexingError" tagName="idxError"/>
       <field name="_indexingErrorMsg" tagName="idxMsg"/>
-      <field name="groupLogoUuid" tagName="groupLogoUuid"/>
-      <field name="wmsuri" tagName="wms_uri"/>
-      <field name="revisionDate" tagName="revisionDate"/>
       <field name="_op0" tagName="publishedForGroup"/>
     </dumpFields>
   </search>

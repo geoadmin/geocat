@@ -251,7 +251,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
         String docType = null, title = null, isTemplate = null;
         boolean ufo = true, indexImmediate = false;
         String id = dataMan.insertMetadata(context, schema, xml, uuid, userId, group, source,
-                isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+                isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
 
 		if( id == null )
 			return false;
@@ -272,7 +272,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
             }
         }
 
-        dataMan.indexMetadata(id, context);
+        dataMan.indexMetadata(id, false, context);
 
         fileIds.add(uuid);
 

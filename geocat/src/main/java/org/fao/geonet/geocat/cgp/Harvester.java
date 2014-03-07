@@ -291,13 +291,13 @@ class Harvester
 	        boolean ufo = false, indexImmediate = false;
 	        String changeDate = DATE_FORMAT.format(date); 
 	        id = dataMan.insertMetadata(context, schema, md, uuid, userid, group, params.uuid,
-	                         isTemplate, docType, title, category, changeDate, changeDate, ufo, indexImmediate);
+	                         isTemplate, docType, category, changeDate, changeDate, ufo, indexImmediate);
 
 			addPrivileges(id);
 			addCategories(id);
 
 			int iId = Integer.parseInt(id);
-			dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
+			dataMan.setTemplateExt(iId, MetadataType.METADATA);
 			dataMan.setHarvestedExt(iId, params.uuid);
 		} catch (Throwable t)
 		{
@@ -313,7 +313,7 @@ class Harvester
 		// Add to Lucene
 		try
 		{
-			dataMan.indexMetadata(id, context);
+			dataMan.indexMetadata(id, false, context);
 			// Add Thumbnails ??
 			result.addedMetadata++;
 		} catch (Throwable t)

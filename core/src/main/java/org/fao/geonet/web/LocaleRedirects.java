@@ -45,6 +45,8 @@ public class LocaleRedirects {
     private static final String LANG_PARAMETER = "hl";
     private static final String ACCEPT_LANGUAGE_HEADER = "Accept-Language";
     private static final String REFERER_PARAMETER = "referer";
+    private static final String NODE_PARAMETER = "node";
+
     private static final Set<String> SPECIAL_HEADERS;
 
     static {
@@ -53,8 +55,6 @@ public class LocaleRedirects {
         headers.add(REFERER_PARAMETER);
         SPECIAL_HEADERS = Collections.unmodifiableSet(headers);
     }
-
-    private static final String NODE_PARAMETER = "node";
 
     @Autowired
     private ApplicationContext _appContext;
@@ -80,7 +80,7 @@ public class LocaleRedirects {
                               @CookieValue(value = Jeeves.LANG_COOKIE, required = false) String langCookie,
                               @RequestHeader(value = ACCEPT_LANGUAGE_HEADER, required = false) final String langHeader) {
         String lang = lang(langParam, langCookie, langHeader);
-        return redirectURL(createServiceUrl(request, "login.form", lang, node));
+        return redirectURL(createServiceUrl(request, "catalog.signin", lang, node));
     }
 
     @RequestMapping(value = "/accessDenied.jsp")

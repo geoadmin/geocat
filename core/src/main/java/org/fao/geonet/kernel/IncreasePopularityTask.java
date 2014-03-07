@@ -48,7 +48,7 @@ public class IncreasePopularityTask implements Runnable {
             boolean fastIndex = true;
             boolean reloadXLinks = true;
 
-            dataManager.indexMetadata(String.valueOf(metadataId), processSharedObjects, context, performValidation, fastIndex, reloadXLinks);
+            dataManager.indexMetadata(String.valueOf(metadataId), false, processSharedObjects, context, performValidation, fastIndex, reloadXLinks);
         } catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, "There may have been an error updating the popularity of the metadata "
                                            + metadataId + ". Error: " + e.getMessage(), e);
