@@ -49,7 +49,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
     @BeforeClass
     public static synchronized void bareMetadataXml() throws IOException, JDOMException {
         if (METADATA_TO_IMPORT.isEmpty()) {
-            final URL url = AbstractLanguageSearchOrderIntegrationTest.class.getResource("templated-name-lang.iso19139.xml");
+            final URL url = AbstractLanguageSearchOrderIntegrationTest.class.getResource("templated-name-lang.iso19139.che.xml");
             final String xmlString = IOUtils.toString(url,
                     "UTF-8");
 

@@ -159,7 +159,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
             SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCatalogFile);
 
-            schemaManager.configure(_applicationContext, webappDir, resourcePath,
+            schemaManager.configure(webappDir, resourcePath,
                     schemaPluginsCatalogFile, schemaPluginsDir, "eng", "iso19139", true);
         }
 

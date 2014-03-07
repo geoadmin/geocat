@@ -35,8 +35,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
-import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 
@@ -90,12 +88,11 @@ public class SchemaLoader
 	//---
 	//---------------------------------------------------------------------------
 
-	public MetadataSchema load(String xmlSchemaFile, String xmlSubstitutionsFile, SchematronRepository schemaRepo,
-                               SchematronCriteriaGroupRepository criteriaGroupRepository) throws Exception
+	public MetadataSchema load(String xmlSchemaFile, String xmlSubstitutionsFile) throws Exception
 	{
 		ssOverRides = new SchemaSubstitutions(xmlSubstitutionsFile);
 
-		if (!new File(xmlSchemaFile).exists()) return new MetadataSchema(schemaRepo, criteriaGroupRepository);
+		if (!new File(xmlSchemaFile).exists()) return new MetadataSchema();
 
 		//--- PHASE 1 : pre-processing
 		//---
@@ -131,7 +128,7 @@ public class SchemaLoader
 
 		//--- PHASE 3 : get appinfo, add namespaces and elements
 
-		MetadataSchema mds = new MetadataSchema(schemaRepo,criteriaGroupRepository);
+		MetadataSchema mds = new MetadataSchema();
 		mds.setPrimeNS(elFirst.getAttributeValue("targetNamespace"));
 
 

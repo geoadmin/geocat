@@ -205,45 +205,6 @@ public class Geonetwork implements ApplicationHandler {
 
 
         //------------------------------------------------------------------------
-        //--- initialize Z39.50
-
-//        logger.info("  - Z39.50...");
-//
-//        boolean z3950Enable = settingMan.getValueAsBool("system/z3950/enable", false);
-//        String z3950port = settingMan.getValue("system/z3950/port");
-//
-//        // build Z3950 repositories file first from template
-//        URL url = getClass().getClassLoader().getResource(Geonet.File.JZKITCONFIG_TEMPLATE);
-//
-//        if (Repositories.build(url, context)) {
-//            logger.info("     Repositories file built from template.");
-//
-//            try {
-//                ConfigurableApplicationContext appContext = context.getApplicationContext();
-//
-//                // to have access to the GN context in spring-managed objects
-//                ContextContainer cc = (ContextContainer) appContext.getBean("ContextGateway");
-//                cc.setSrvctx(context);
-//
-//                if (!z3950Enable) {
-//                    logger.info("     Server is Disabled.");
-//                } else {
-//                    logger.info("     Server is Enabled.");
-//
-//                    Server.init(z3950port, appContext);
-//                }
-//            } catch (Exception e) {
-//                logger.error("     Repositories file init FAILED - Z3950 server disabled and Z3950 client services (remote search, " +
-//                             "harvesting) may not work. Error is:" + e.getMessage());
-//                e.printStackTrace();
-//            }
-//
-//        } else {
-//            logger.error("     Repositories file builder FAILED - Z3950 server disabled and Z3950 client services (remote search, " +
-//                         "harvesting) may not work.");
-//        }
-
-        //------------------------------------------------------------------------
         //--- initialize SchemaManager
 
         logger.info("  - Schema manager...");
@@ -254,7 +215,7 @@ public class Geonetwork implements ApplicationHandler {
         logger.info("			- Schema plugins directory: " + schemaPluginsDir);
         logger.info("			- Schema Catalog File     : " + schemaCatalogueFile);
         SchemaManager schemaMan = _applicationContext.getBean(SchemaManager.class);
-        schemaMan.configure(_applicationContext, appPath, Resources.locateResourcesDir(context), schemaCatalogueFile,
+        schemaMan.configure(appPath, Resources.locateResourcesDir(context), schemaCatalogueFile,
                 schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA),
                 createOrUpdateSchemaCatalog);
 
@@ -351,6 +312,7 @@ public class Geonetwork implements ApplicationHandler {
 
         _applicationContext.getBean(ThesaurusManager.class).init(context, appPath, thesauriDir);
 
+
         //------------------------------------------------------------------------
         //--- initialize catalogue services for the web
 
@@ -406,7 +368,6 @@ public class Geonetwork implements ApplicationHandler {
                     "5"));
             Integer dbHeartBeatFixedDelay = Integer.parseInt(handlerConfig.getValue(Geonet.Config.DB_HEARTBEAT_FIXEDDELAYSECONDS, "60"));
             createDBHeartBeat(gnContext, dbHeartBeatInitialDelay, dbHeartBeatFixedDelay);
-
         }
         return gnContext;
     }

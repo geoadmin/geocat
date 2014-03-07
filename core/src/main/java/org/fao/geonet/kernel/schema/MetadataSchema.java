@@ -36,12 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.fao.geonet.domain.SchematronCriteria;
-import org.fao.geonet.domain.SchematronCriteriaGroup;
-import org.fao.geonet.domain.SchematronCriteriaType;
-import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
-import org.fao.geonet.repository.SchematronRepository;
-
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 
@@ -73,19 +67,14 @@ public class MetadataSchema
 
 	private List<Element> rootAppInfoElements;
 
-    private SchematronRepository schemaRepo;
-    private SchematronCriteriaGroupRepository criteriaGroupRepository;
-
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
 
-	MetadataSchema(SchematronRepository schemaRepo, SchematronCriteriaGroupRepository criteriaGroupRepository) {
+	MetadataSchema() {
 		schemaName = "UNKNOWN";
-        this.schemaRepo = schemaRepo;
-        this.criteriaGroupRepository = criteriaGroupRepository;
 	}
 
 	//---------------------------------------------------------------------------
@@ -397,34 +386,6 @@ public class MetadataSchema
 	    buildchematronRules(basePath);
 	    
 		String saSchemas[] = new File(schemaDir + File.separator + "schematron").list(new SchematronReportRulesFilter());
-
-        if(saSchemas != null) {
-            for(String s : saSchemas) {
-                String file = schemaDir + File.separator + "schematron" + File.separator + s;
-                //if schematron not already exists
-                if(schemaRepo.findAllByFile(file).isEmpty()) {
-                    org.fao.geonet.domain.Schematron schematron = new org.fao.geonet.domain.Schematron();
-                    schematron.setSchemaName(schemaName);
-                    schematron.setFile(file);
-                    schematron.getLabelTranslations().put(Geonet.DEFAULT_LANGUAGE, schematron.getRuleName());
-                    schemaRepo.saveAndFlush(schematron);
-
-                    final SchematronCriteriaGroup schematronCriteriaGroup = new SchematronCriteriaGroup();
-                    schematronCriteriaGroup.getId().setName("Generated_" + getName() + "_" + schematron.getRuleName());
-                    schematronCriteriaGroup.setRequirement(schematron.getDefaultRequirement());
-                    schematronCriteriaGroup.setSchematron(schematron);
-
-                    SchematronCriteria criteria = new SchematronCriteria();
-                    criteria.setValue("");
-                    criteria.setType(SchematronCriteriaType.ALWAYS_ACCEPT);
-
-                    schematronCriteriaGroup.addCriteria(criteria);
-
-                    criteriaGroupRepository.saveAndFlush(schematronCriteriaGroup);
-                }
-            }
-        }
-
 		setSchematronRules(saSchemas);
 	}
 
@@ -475,6 +436,8 @@ public class MetadataSchema
 	/**
 	 * true if schema requires to synch the uuid column schema info
 	 * with the uuid in the metadata record (updated on editing or in UFO).
+	 *
+	 * @return
 	 */
 	public boolean isReadwriteUUID() {
 		return readwriteUUID;
@@ -484,3 +447,6 @@ public class MetadataSchema
 		this.readwriteUUID = readwriteUUID;
 	}
 }
+
+//==============================================================================
+

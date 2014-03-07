@@ -478,7 +478,7 @@ public class DataManager {
             if (groupOwner != null) {
                 try {
                     int groupOwnerId = Integer.valueOf(groupOwner);
-                    moreFields.add(SearchManager.makeField("_groupOwner", groupOwner, true, true));
+                moreFields.add(SearchManager.makeField("_groupOwner", groupOwner, true, true));
                     final Group group = _applicationContext.getBean(GroupRepository.class).findOne(groupOwnerId);
                     moreFields.add(SearchManager.makeField("groupLogoUuid", group.getLogo(), true, false));
                     moreFields.add(SearchManager.makeField("groupWebsite", group.getWebsite(), true, false));
@@ -1274,11 +1274,9 @@ public class DataManager {
     /**
      * TODO javadoc.
      *
-     *
      * @param id
      * @param type
      * @param title
-     * @param context
      * @throws Exception
      */
     public void setTemplate(final int id, final MetadataType type, final String title, ServiceContext context) throws Exception {
@@ -1305,10 +1303,8 @@ public class DataManager {
     /**
      * TODO javadoc.
      *
-     *
      * @param id
      * @param harvestUuid
-     * @param context
      * @throws Exception
      */
     public void setHarvested(int id, String harvestUuid, ServiceContext context) throws Exception {
@@ -1651,6 +1647,57 @@ public class DataManager {
         }
         return savedMetadata;
     }
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Metadata Get API
+    //---
+    //--------------------------------------------------------------------------
+
+    /**
+     * Retrieves a metadata (in xml) given its id with no geonet:info.
+     * @param srvContext
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public Element getMetadataNoInfo(ServiceContext srvContext, String id) throws Exception {
+        Element md = getMetadata(srvContext, id, false, false, false);
+        md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+        return md;
+    }
+
+    /**
+     * Retrieves a metadata (in xml) given its id. Use this method when you must retrieve a metadata in the same
+     * transaction.
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public Element getMetadata(String id) throws Exception {
+        ServiceContext context = ServiceContext.get();
+        if(context == null) {
+            throw new IllegalStateException("This method is not supported by Geocat because hiding is not currently supported.  We can add it later");
+        } else {
+            Element md = getMetadata(context, id, false, false, false);
+            if (md == null) return null;
+            md.detach();
+            return md;
+        }
+    }
+
+    /**
+     * Retrieves a metadata (in xml) given its id; adds editing information if requested and validation errors if
+     * requested.
+     *
+     * @param srvContext
+     * @param id
+     * @param forEditing        Add extra element to build metadocument {@link EditLib#expandElements(String, Element)}
+     * @param withEditorValidationErrors
+     * @param keepXlinkAttributes When XLinks are resolved in non edit mode, do not remove XLink attributes.
+     * @return
+     * @throws Exception
+     */
     public Element getGeocatMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes, boolean elementsHide) throws Exception {
         boolean doXLinks = xmlSerializer.resolveXLinks();
         Element metadataXml = xmlSerializer.selectNoXLinkResolver(id, false);
@@ -1699,61 +1746,6 @@ public class DataManager {
         return metadataXml;
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Metadata Get API
-    //---
-    //--------------------------------------------------------------------------
-
-    /**
-     * Retrieves a metadata (in xml) given its id with no geonet:info.
-     * @param srvContext
-     * @param id
-     * @return
-     * @throws Exception
-     */
-    public Element getMetadataNoInfo(ServiceContext srvContext, String id) throws Exception {
-        Element md = getMetadata(srvContext, id, false, false, false);
-        md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
-        return md;
-    }
-
-    /**
-     * Retrieves a metadata (in xml) given its id. Use this method when you must retrieve a metadata in the same
-     * transaction.
-     * @param id
-     * @return
-     * @throws Exception
-     */
-    public Element getMetadata(String id) throws Exception {
-        ServiceContext context = ServiceContext.get();
-        if(context == null) {
-            throw new IllegalStateException("This method is not supported by Geocat because hiding is not currently supported.  We can add it later");
-        } else {
-            Element md = getMetadata(context, id, false, false, false);
-            if (md == null) return null;
-            md.detach();
-            return md;
-        }
-		/*boolean doXLinks = xmlSerializer.resolveXLinks();
-		Element md = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, getServiceContext());
-		if (md == null) return null;
-		md.detach();
-		return md;*/
-    }
-
-    /**
-     * Retrieves a metadata (in xml) given its id; adds editing information if requested and validation errors if
-     * requested.
-     *
-     * @param srvContext
-     * @param id
-     * @param forEditing        Add extra element to build metadocument {@link EditLib#expandElements(String, Element)}
-     * @param withEditorValidationErrors
-     * @param keepXlinkAttributes When XLinks are resolved in non edit mode, do not remove XLink attributes.
-     * @return
-     * @throws Exception
-     */
     public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
         return getGeocatMetadata(srvContext,id,forEditing,withEditorValidationErrors,keepXlinkAttributes, true);
     }
@@ -1917,149 +1909,6 @@ public class DataManager {
         return metadata;
     }
 
-
-    /**
-     *
-     * Creates XML schematron report for each set of rules defined in schema
-     * directory. This method assumes that you've run enumerateTree on the
-     * metadata
-     *
-     * Returns null if no error on validation.
-     *
-     * @param schema
-     * @param md
-     * @param lang
-     * @param valTypeAndStatus
-     * @return errors
-     */
-    public Element applyCustomSchematronRules(String schema, Element md,
-                                              String lang, Map<String, Integer[]> valTypeAndStatus) {
-        MetadataSchema metadataSchema = getSchema(schema);
-
-        Element schemaTronXmlOut = new Element("schematronerrors",
-                Edit.NAMESPACE);
-        try {
-            final SchematronRepository schematronRepository = _applicationContext.getBean(SchematronRepository.class);
-            final SchematronCriteriaGroupRepository criteriaGroupRepository = _applicationContext.getBean(SchematronCriteriaGroupRepository.class);
-
-            final List<Schematron> schematronList = schematronRepository.findAllBySchemaName(metadataSchema.getName());
-
-            //Loop through all xsl files
-            for (Schematron schematron : schematronList) {
-
-                int id = schematron.getId();
-                //it contains absolute path to the xsl file
-                String rule = schematron.getRuleName();
-                String dbident = ""+id;
-
-                List<SchematronCriteriaGroup> criteriaGroups = criteriaGroupRepository.findAllBySchematron_schemaName(schematron
-                        .getSchemaName());
-
-                //Loop through all criteria to see if apply schematron
-                //if any criteria does not apply, do not apply at all (AND)
-                SchematronRequirement requirement = SchematronRequirement.DISABLED;
-                for (SchematronCriteriaGroup criteriaGroup : criteriaGroups) {
-                    List<SchematronCriteria> criterias = criteriaGroup.getCriteria();
-                    boolean apply = false;
-                    for(SchematronCriteria criteria : criterias) {
-                        boolean tmpApply = criteria.accepts(_applicationContext, md, metadataSchema.getSchemaNS());
-
-                        if(!tmpApply) {
-                            apply = false;
-                            break;
-                        } else {
-                            apply = true;
-                        }
-
-                    }
-
-                    if (apply) {
-                        if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                            Log.debug(Geonet.DATA_MANAGER, " - Schematron group is accepted:" + criteriaGroup.getId().getName() + " for schematron: "+schematron.getRuleName());
-                        }
-                        requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
-                    } else {
-                        requirement = SchematronRequirement.DISABLED;
-                    }
-                }
-
-                if(requirement != SchematronRequirement.DISABLED) {
-                    if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                        Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
-                    }
-
-
-                    Integer ifNotValid = (requirement == SchematronRequirement.REQUIRED ? 0 : 2);
-
-                    String ruleId = schematron.getRuleName();
-
-                    Element report = new Element("report", Edit.NAMESPACE);
-                    report.setAttribute("rule", ruleId,
-                            Edit.NAMESPACE);
-                    report.setAttribute("dbident", dbident,
-                            Edit.NAMESPACE);
-                    report.setAttribute("required", Boolean.toString(requirement == SchematronRequirement.REQUIRED),
-                            Edit.NAMESPACE);
-
-                    try {
-                        Map<String,String> params = new HashMap<String,String>();
-                        params.put("lang", lang);
-                        params.put("rule", ruleId);
-                        params.put("thesaurusDir", this.thesaurusDir);
-
-                        Element xmlReport = Xml.transform(md, rule, params);
-                        if (xmlReport != null) {
-                            report.addContent(xmlReport);
-                        }
-                        // add results to persistent validation information
-                        int firedRules = 0;
-                        @SuppressWarnings("unchecked")
-                        Iterator<Element> i = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
-                        while (i.hasNext()) {
-                            i.next();
-                            firedRules ++;
-                        }
-                        int invalidRules = 0;
-                        i = xmlReport.getDescendants(new ElementFilter ("failed-assert", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
-                        while (i.hasNext()) {
-                            i.next();
-                            invalidRules ++;
-                        }
-                        Integer[] results = {invalidRules!=0?ifNotValid:1, firedRules, invalidRules};
-                        if (valTypeAndStatus != null) {
-                            valTypeAndStatus.put(ruleId, results);
-                        }
-                    } catch (Exception e) {
-                        Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+rule+" failed");
-
-                        // If an error occurs that prevents to verify schematron rules, add to show in report
-                        Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
-                        errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
-                        report.addContent(errorReport);
-
-                        e.printStackTrace();
-                    }
-
-                    // -- append report to main XML report.
-                    schemaTronXmlOut.addContent(report);
-
-
-                }
-
-            }
-        } catch (Throwable e) {
-            Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
-            errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
-            schemaTronXmlOut.addContent(errorReport);
-        }
-
-        if(schemaTronXmlOut.getChildren().isEmpty()) {
-            schemaTronXmlOut = null;
-        }
-
-        return schemaTronXmlOut;
-    }
-
     /**
      * Validates an xml document, using autodetectschema to determine how.
      *
@@ -2115,9 +1964,8 @@ public class DataManager {
                 valid = false;
             }
         } else {
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+            if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
                 Log.debug(Geonet.DATA_MANAGER, "Validating against XSD " + schema);
-            }
             // do XSD validation
             Element md = doc.getRootElement();
             Element xsdErrors = getXSDXmlReport(schema, md);
@@ -2133,17 +1981,20 @@ public class DataManager {
                 if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
                     Log.debug(Geonet.DATA_MANAGER, "Valid.");
             }
+            // then do schematron validation
+            Element schematronError = null;
             try {
                 editLib.enumerateTree(md);
-                //Apply custom schematron rules
-                Element errors = applyCustomSchematronRules(schema, doc.getRootElement(), lang, valTypeAndStatus);
-                valid = valid && errors == null;
+                schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
                 editLib.removeEditingInfo(md);
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata " + metadataId + ": " + e.getMessage());
                 valid = false;
             }
+            if (schematronError != null && schematronError.getContent().size() > 0) {
+                valid = false;
+        }
         }
 
         // now save the validation status
@@ -2160,9 +2011,10 @@ public class DataManager {
     /**
      * Used by the validate embedded service. The validation report is stored in the session.
      *
+     * @param session
      * @param schema
      * @param id
-     * @param metadata
+     * @param md
      * @param lang
      * @param forEditing TODO
      * @return
@@ -2205,61 +2057,57 @@ public class DataManager {
             errorReport.addContent(xsdErrors);
             Integer[] results = {0, 0, 0};
             valTypeAndStatus.put("xsd", results);
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+            if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
                 Log.debug(Geonet.DATA_MANAGER, "  - XSD error: " + Xml.getString(xsdErrors));
-            }
         } else {
             Integer[] results = {1, 0, 0};
             valTypeAndStatus.put("xsd", results);
-
-            if (Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
-                Log.trace(Geonet.DATA_MANAGER, "Valid.");
-            }
         }
 
         // ...then schematrons
-        Element schematronError = null;
+        Element schematronError;
 
         // edit mode
-        Element error = null;
         if (forEditing) {
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
                 Log.debug(Geonet.DATA_MANAGER, "  - Schematron in editing mode.");
             //-- now expand the elements and add the geonet: elements
             editLib.expandElements(schema, md);
             version = editLib.getVersionForEditing(schema, id, md);
 
-            //Apply custom schematron rules
-            error = applyCustomSchematronRules(schema, md, lang, valTypeAndStatus);
-        } else {
-            try {
-                // enumerate the metadata xml so that we can report any problems found
-                // by the schematron_xml script to the geonetwork editor
-                editLib.enumerateTree(md);
-
-                //Apply custom schematron rules
-                error = applyCustomSchematronRules(schema, md, lang, valTypeAndStatus);
-
-                // remove editing info added by enumerateTree
-                editLib.removeEditingInfo(md);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata " + id + ": " + e.getMessage());
+            //-- get a schematron error report if no xsd errors and add results
+            //-- to the metadata as a geonet:schematronerrors element with
+            //-- links to the ref id of the affected element
+            schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
+            if (schematronError != null) {
+                md.addContent((Element)schematronError.clone());
+                if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                    Log.debug(Geonet.DATA_MANAGER, "  - Schematron error: " + Xml.getString(schematronError));
             }
+        } else {
+            // enumerate the metadata xml so that we can report any problems found
+            // by the schematron_xml script to the geonetwork editor
+            editLib.enumerateTree(md);
+
+            // get an xml version of the schematron errors and return for error display
+            schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
+
+            // remove editing info added by enumerateTree
+            editLib.removeEditingInfo(md);
         }
 
-        if (error != null) {
-            errorReport.addContent(error);
+        if (schematronError != null && schematronError.getContent().size() > 0) {
+            Element schematron = new Element("schematronerrors", Edit.NAMESPACE);
+            Element idElem = new Element("id", Edit.NAMESPACE);
+            idElem.setText(id);
+            schematron.addContent(idElem);
+            errorReport.addContent(schematronError);
+            //throw new SchematronValidationErrorEx("Schematron errors detected - see schemaTron report for "+id+" in htmlCache for more details",schematron);
         }
 
         // Save report in session (invalidate by next update) and db
-        try {
-            saveValidationStatus(id, valTypeAndStatus, new ISODate().toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.error(Geonet.DATA_MANAGER, "Could not save validation status on metadata " + id + ": " + e.getMessage());
-        }
+        session.setProperty(Geonet.Session.VALIDATION_REPORT + id, errorReport);
+        saveValidationStatus(id, valTypeAndStatus, new ISODate().toString());
 
         return Pair.read(errorReport, version);
     }
