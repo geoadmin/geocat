@@ -1,4 +1,4 @@
-<span data-ng-controller="GnSearchFormController">
+<span data-ng-search-form="">
   <div class="input-group">
     <div class="input-group-btn">
       <button class="btn btn-default" type="button" title="{{'add' | translate}}"
@@ -10,8 +10,7 @@
 
     <!-- TODO: could be nice to filter by organisation -->
     <input type="text" class="form-control" placeholder="{{'searchAContact' | translate}}"
-           data-ng-model="params.any" data-ng-change="triggerSearch('qi@json')"/>
-
+           data-ng-model="subtemplateFilter.any" data-ng-change="getEntries()"/>
 
     <!-- The autocomplete list -->
     <div class="list-group tt-dropdown-menu gn-autocomplete-list"
@@ -26,7 +25,7 @@
                 <i class="fa fa-plus"></i><span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
-                <li data-ng-repeat="role in roles">
+                <li data-ng-repeat="role in roles" data-ng-hide="role['@hideInEditMode']">
                   <a href="" data-ng-click="addContact(r, role.code)" title="{{role.description}}">
                     {{role.label}}
                   </a>
@@ -40,7 +39,7 @@
                 <i class="fa fa-link"></i><span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
-                <li data-ng-repeat="role in roles">
+                <li data-ng-repeat="role in roles" data-ng-hide="role['@hideInEditMode']">
                   <a href="" data-ng-click="addContact(r, role.code, true)" title="{{role.description}}">
                     {{role.label}}
                   </a>

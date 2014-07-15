@@ -98,7 +98,7 @@
   <xsl:template mode="mode-iso19110" priority="100"
     match="*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|
 		gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|
-		gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL]">
+		gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName]">
 
     <xsl:variable name="elementSchema"
       select="if(namespace-uri() = 'http://www.isotc211.org/2005/gfc') 
@@ -106,6 +106,7 @@
     <xsl:variable name="elementSchemaIdentifier"
       select="if(namespace-uri() = 'http://www.isotc211.org/2005/gfc') 
       then $schema else 'iso19139'"/>
+    <xsl:variable name="elementName" select="name()"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
@@ -156,6 +157,7 @@
       <xsl:with-param name="parentEditInfo" select="gn:element"/>
       <!-- TODO: Handle conditional helper -->
       <xsl:with-param name="listOfValues" select="$helper"/>
+      <xsl:with-param name="isFirst" select="count(preceding-sibling::*[name() = $elementName]) = 0"/>
     </xsl:call-template>
 
   </xsl:template>
@@ -213,5 +215,8 @@
 
   <xsl:template name="get-iso19110-other-languages-as-json"/>
   
-  <xsl:template name="get-iso19110-geopublisher-config"/>
+  <xsl:template name="get-iso19110-online-source-config"/>
+
+  <xsl:template name="get-iso19110-extents-as-json">[]</xsl:template>
+
 </xsl:stylesheet>

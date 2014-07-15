@@ -602,3 +602,16 @@ div.facets * .facet-less-bt {
 .debug {
     display: none;
 }
+
+.close-button {
+	top: 6px;
+	right: 6px;
+	position: absolute;
+}
+
+.close-button.x-btn-text-icon .x-btn-icon-small-left .x-btn-text {
+	background:none;
+	padding: 2px;
+	height: 16px;
+	width: 14px;
+}

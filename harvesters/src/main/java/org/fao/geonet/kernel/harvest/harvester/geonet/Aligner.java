@@ -28,10 +28,7 @@ import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
@@ -48,12 +45,14 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.util.*;
 
@@ -81,9 +80,16 @@ public class Aligner extends BaseAligner
 
 		//--- save remote categories and groups into hashmaps for a fast access
 
-		@SuppressWarnings("unchecked")
-        List<Element> list = remoteInfo.getChild("groups").getChildren("group");
-		setupLocEntity(list, hmRemoteGroups);
+        // Before 2.11 response contains groups. Now group is used.
+        Element groups = remoteInfo.getChild("groups");
+        if (groups == null) {
+            groups = remoteInfo.getChild("group");
+        }
+        if (groups != null) {
+            @SuppressWarnings("unchecked")
+            List<Element> list = groups.getChildren("group");
+            setupLocEntity(list, hmRemoteGroups);
+        }
 	}
 
 	//--------------------------------------------------------------------------
@@ -126,7 +132,10 @@ public class Aligner extends BaseAligner
 
         dataMan.flush();
 
-        parseXSLFilter();
+        Pair<String, Map<String, Object>> filter =
+                HarvesterUtil.parseXSLFilter(params.xslfilter, log);
+        processName = filter.one();
+        processParams = filter.two();
 		
 		//-----------------------------------------------------------------------
 		//--- remove old metadata
@@ -181,28 +190,6 @@ public class Aligner extends BaseAligner
 		return result;
 	}
 
-	private void parseXSLFilter() {
-		processName = params.xslfilter;
-		
-		// Parse complex xslfilter process_name?process_param1=value&process_param2=value...
-		if (params.xslfilter.contains("?")) {
-			String[] filterInfo = params.xslfilter.split("\\?");
-			processName = filterInfo[0];
-            if(log.isDebugEnabled()) log.debug("      - XSL Filter name:" + processName);
-			if (filterInfo[1] != null) {
-				String[] filterKVP = filterInfo[1].split("&");
-				for (String kvp : filterKVP) {
-					String[] param = kvp.split("=");
-					if (param.length == 2) {
-                        if(log.isDebugEnabled()) log.debug("        with param:" + param[0] + " = " + param[1]);
-						processParams.put(param[0], param[1]);
-					} else {
-                        if(log.isDebugEnabled()) log.debug("        no value for param: " + param[0]);
-					}
-				}
-			}
-		}
-	}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -327,8 +314,11 @@ public class Aligner extends BaseAligner
         }
         // END GEOCAT
 
-        md = processMetadata(ri, md);
-        
+
+        if (!params.xslfilter.equals("")) {
+            md = HarvesterUtil.processMetadata(dataMan.getSchema(ri.schema),
+                    md, processName, processParams, log);
+        }
         // insert metadata
         String group = null, docType = null, title = null, category = null;
         // If MEF format is full, private file links needs to be updated
@@ -354,7 +344,7 @@ public class Aligner extends BaseAligner
             metadata.getDataInfo().setPopularity(Integer.valueOf(popularity));
         }
 
-        metadataRepository.save(metadata);
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null);
 
         dataMan.setTemplateExt(iId, MetadataType.lookup(isTemplate));
         dataMan.setHarvestedExt(iId, params.uuid);
@@ -365,14 +355,17 @@ public class Aligner extends BaseAligner
 		IO.mkdirs(new File(pubDir), "Geonet Aligner public resources directory for metadata " + id);
 		IO.mkdirs(new File(priDir), "Geonet Aligner private resources directory for metadata " + id);
 
-        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
-		if (params.createRemoteCategory) {
+        if (params.createRemoteCategory) {
     		Element categs = info.getChild("categories");
     		if (categs != null) {
     		    Importer.addCategoriesToMetadata(metadata, categs, context);
     		}
 		}
-		addPrivileges(id, info.getChild("privileges"));
+        if (((ArrayList<Group>)params.getGroupCopyPolicy()).size() == 0) {
+            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        } else {
+            addPrivilegesFromGroupPolicy(id, info.getChild("privileges"));
+        }
 
         dataMan.flush();
 
@@ -386,7 +379,7 @@ public class Aligner extends BaseAligner
 	//--- Privileges
 	//--------------------------------------------------------------------------
 
-	private void addPrivileges(String id, Element privil) throws Exception
+	private void addPrivilegesFromGroupPolicy(String id, Element privil) throws Exception
 	{
 		Map<String, Set<String>> groupOper = buildPrivileges(privil);
 
@@ -606,10 +599,14 @@ public class Aligner extends BaseAligner
                 log.debug("  - XML not changed for local metadata with uuid:"+ ri.uuid);
 			result.unchangedMetadata++;
             metadata = metadataRepository.findOne(id);
-		}
-		else {
-			md = processMetadata(ri, md);
-	        
+            if (metadata == null) {
+                throw new NoSuchElementException("Unable to find a metadata with ID: "+id);
+            }
+		} else {
+            if (!params.xslfilter.equals("")) {
+                md = HarvesterUtil.processMetadata(dataMan.getSchema(ri.schema),
+                        md, processName, processParams, log);
+            }
             // update metadata
             if(log.isDebugEnabled())
                 log.debug("  - Updating local metadata with id="+ id);
@@ -641,9 +638,8 @@ public class Aligner extends BaseAligner
         }
 
         metadata.getCategories().clear();
-        metadataRepository.save(metadata);
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null);
 
-        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 		if (params.createRemoteCategory) {
             Element categs = info.getChild("categories");
             if (categs != null) {
@@ -653,42 +649,16 @@ public class Aligner extends BaseAligner
 		
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-		addPrivileges(id, info.getChild("privileges"));
-
+        if (((ArrayList<Group>)params.getGroupCopyPolicy()).size() == 0) {
+            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        } else {
+            addPrivilegesFromGroupPolicy(id, info.getChild("privileges"));
+        }
         dataMan.flush();
 
         dataMan.indexMetadata(id, false, context);
 	}
 
-	/**
-	 * Filter the metadata if process parameter is set and
-	 * corresponding XSL transformation exists.
-	 * @param ri
-	 * @param md
-	 * @return
-	 */
-	private Element processMetadata(RecordInfo ri, Element md) {
-		// process metadata
-		if (!params.xslfilter.equals("")) {
-			MetadataSchema metadataSchema = dataMan.getSchema(ri.schema);
-			
-			String filePath = metadataSchema.getSchemaDir() + "/process/" + processName + ".xsl";
-			File xslProcessing = new File(filePath);
-			if (!xslProcessing.exists()) {
-				log.info("     processing instruction not found for " + ri.schema + " schema. metadata not filtered.");
-			} else {
-				Element processedMetadata = null;
-				try {
-					processedMetadata = Xml.transform(md, filePath, processParams);
-                    if(log.isDebugEnabled()) log.debug("     metadata filtered.");
-					md = processedMetadata;
-				} catch (Exception e) {
-					log.warning("     processing error (" + params.xslfilter + "): " + e.getMessage());
-				}
-			}
-		}
-		return md;
-	}
 
 	//--------------------------------------------------------------------------
 	//--- Public file update methods
@@ -830,7 +800,7 @@ public class Aligner extends BaseAligner
 	private UUIDMapper     localUuids;
 	
 	private String processName;
-	private HashMap<String, String> processParams = new HashMap<String, String>();
-	
-	private HashMap<String, HashMap<String, String>> hmRemoteGroups = new HashMap<String, HashMap<String, String>>();
+    private Map<String, Object> processParams = new HashMap<String, Object>();
+
+    private HashMap<String, HashMap<String, String>> hmRemoteGroups = new HashMap<String, HashMap<String, String>>();
 }

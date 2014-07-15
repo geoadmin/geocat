@@ -25,6 +25,8 @@ package org.fao.geonet.services.publisher;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.auth.AuthenticationException;
+import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
@@ -238,7 +240,7 @@ public class GeoServerRest {
 					+ "<metadataType>ISO19115:2003</metadataType>"
 					+ "<content>"
 						+ this.baseCatalogueUrl
-						+ "csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
+						+ "/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
 						+ "&amp;outputSchema=http://www.isotc211.org/2005/gmd"
 						+ "&amp;ID=" + metadataUuid
 					+ "</content>"
@@ -248,7 +250,7 @@ public class GeoServerRest {
 					+ "<metadataType>TC211</metadataType>"
 					+ "<content>"
 						+ this.baseCatalogueUrl
-						+ "csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
+						+ "/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
 						+ "&amp;outputSchema=http://www.isotc211.org/2005/gmd"
 						+ "&amp;ID=" + metadataUuid
 					+ "</content>"
@@ -257,13 +259,13 @@ public class GeoServerRest {
 					+ "<type>text/html</type>"
 					+ "<metadataType>TC211</metadataType>"
 					+ "<content>"
-						+ this.baseCatalogueUrl + "home?uuid=" + metadataUuid
+						+ this.baseCatalogueUrl + "/home?uuid=" + metadataUuid
 					+ "</content>"
 				+ "</metadataLink>"
 			+ "</metadataLinks>"
 		+ "</coverage>";
 
-		int statusCoverage = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
+		int statusCoverage = sendREST(GeoServerRest.METHOD_POST, "/workspaces/" + ws
 				+ "/coveragestores/" + cs + "/coverages.xml", xml,
 				null, "text/xml", false);
 
@@ -523,8 +525,8 @@ public class GeoServerRest {
             checkResponseCode(status);
 
 		} catch (Exception e) {
-            if(Log.isDebugEnabled("GeoServerRest"))
-                Log.debug("GeoServerRest", "Failed to create style for layer: "
+			if(Log.isDebugEnabled(LOGGER_NAME))
+				Log.debug(LOGGER_NAME, "Failed to create style for layer: "
 					+ layer + ", error is: " + e.getMessage());
 		}
 
@@ -589,7 +591,7 @@ public class GeoServerRest {
 						+ "<metadataType>ISO19115:2003</metadataType>"
 						+ "<content>"
 							+ this.baseCatalogueUrl
-							+ "csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
+							+ "/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
 							+ "&amp;outputSchema=http://www.isotc211.org/2005/gmd"
 							+ "&amp;ID=" + metadataUuid
 						+ "</content>"
@@ -599,7 +601,7 @@ public class GeoServerRest {
 						+ "<metadataType>TC211</metadataType>"
 						+ "<content>"
 							+ this.baseCatalogueUrl
-							+ "csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
+							+ "/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
 							+ "&amp;outputSchema=http://www.isotc211.org/2005/gmd"
 							+ "&amp;ID=" + metadataUuid
 						+ "</content>"
@@ -608,7 +610,7 @@ public class GeoServerRest {
 						+ "<type>text/html</type>"
 						+ "<metadataType>TC211</metadataType>"
 						+ "<content>"
-							+ this.baseCatalogueUrl + "home?uuid=" + metadataUuid
+							+ this.baseCatalogueUrl + "/home?uuid=" + metadataUuid
 						+ "</content>"
 					+ "</metadataLink>"
 				+ "</metadataLinks>"
@@ -687,6 +689,14 @@ public class GeoServerRest {
 
 
 		m.setConfig(RequestConfig.custom().setAuthenticationEnabled(true).build());
+
+		// apparently this is needed to preemptively send the auth, for servers that dont require it but
+		// dont send the same data if you're authenticated or not.
+		try {
+			m.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(username, password), m));
+		} catch (AuthenticationException a) {
+			Log.warning(LOGGER_NAME, "Failed to add the authentication Header, error is: " + a.getMessage());
+		};
 
         final ClientHttpResponse httpResponse = factory.execute(m, new UsernamePasswordCredentials(username, password), AuthScope.ANY);
 

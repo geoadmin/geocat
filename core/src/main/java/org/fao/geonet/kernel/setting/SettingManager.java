@@ -295,6 +295,13 @@ public class SettingManager {
        setValue(SYSTEM_SITE_SITE_ID_PATH, siteUuid);
     }
 
+    /**
+     * Return complete site URL including language
+     * eg. http://localhost:8080/geonetwork/srv/eng
+     *
+     * @param context
+     * @return
+     */
     public @Nonnull String getSiteURL(@Nonnull ServiceContext context) {
         String lang = context.getLanguage();
         if(lang == null) {
@@ -304,16 +311,8 @@ public class SettingManager {
         String protocol = getValue(Geonet.Settings.SERVER_PROTOCOL);
         String host    = getValue(Geonet.Settings.SERVER_HOST);
         String port    = getValue(Geonet.Settings.SERVER_PORT);
-        String locServ = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/" + lang;
+        String locServ = baseURL +"/"+ context.getNodeId() +"/" + lang;
 
         return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;
-    }
-
-    public boolean getHideWitheldElements() {
-        return getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", false);
-    }
-
-    public boolean setHideWitheldElements(boolean value) {
-        return setValue("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", value);
     }
 }

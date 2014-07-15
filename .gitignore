@@ -25,6 +25,7 @@ web/src/main/webapp/WEB-INF/metadata_subversion/
 .project
 schematrons/.build
 docs/*/users/build
+docs/schema-loc-*.rst
 .props/
 *.iml
 .idea/
@@ -54,3 +55,5 @@ datadir_node1/
 web/src/main/webapp/WEB-INF/data_*
 e2e-tests/node
 e2e-tests/node_modules
+web-ui-docs/node
+web-ui-docs/node_modules

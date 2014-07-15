@@ -570,6 +570,8 @@ public class Importer {
                                        final Element privil) {
 
         final GroupRepository groupRepository = context.getBean(GroupRepository.class);
+        final OperationAllowedRepository allowedRepository = context.getBean(OperationAllowedRepository.class);
+
         @SuppressWarnings("unchecked")
         List<Element> list = privil.getChildren("group");
 
@@ -602,7 +604,7 @@ public class Importer {
 				}
 			}
 		}
-
+        allowedRepository.save(opAllowedToAdd);
         return owner;
 	}
 

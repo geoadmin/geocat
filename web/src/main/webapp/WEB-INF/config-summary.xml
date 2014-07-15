@@ -10,6 +10,16 @@
 	* (optional) sortBy: the ordering for the facet. Defaults is by count.
 	* (optional) sortOrder: asc or desc. Defaults is descendant.
 	* (optional) max: the number of values to be returned for the facet. Defaults is 10.
+  * (optional) translator: Define a DB translator to retrieve label from description
+  tables (eg. categoriesdes) or codelist translator to retrieve label from schema
+  codelists files.
+
+  eg. for category
+  <item name="category" plural="categories" indexKey="_cat" max="45"
+            translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
+  or for group
+  <item name="groupOwner" plural="groupOwners" indexKey="_groupOwner"
+        max="99" sortBy="value" translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
 
 	When an item is modified or added, the index MUST be rebuild.
 -->
@@ -29,6 +39,12 @@
 			<item name="group" plural="groups"
             	indexKey="_groupOwnerName" sortBy="count" type="string" max="100" translator="db:Groups"/>
 		</hits>
+    <subtemplates>
+      <item name="subTemplateType" plural="subTemplateTypes"
+            indexKey="_root"/>
+      <item name="groupOwner" plural="groupOwners" indexKey="_groupOwner"
+            max="99" sortBy="value" translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+    </subtemplates>
 		<titles>
 			<item name="title" plural="titles" indexKey="title" sortBy="freq" sortOrder="desc" max="100"
 			/>

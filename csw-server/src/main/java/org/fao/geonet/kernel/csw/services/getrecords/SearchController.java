@@ -26,9 +26,10 @@ package org.fao.geonet.kernel.csw.services.getrecords;
 import jeeves.constants.Jeeves;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.setting.SettingInfo;
 import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.setting.SettingInfo;
+
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.geocat.kernel.RelatedMetadata;
 import org.fao.geonet.utils.Log;
@@ -313,15 +314,16 @@ public class SearchController {
                     outputSchema == OutputSchema.GM03_PROFILE ||
                     outputSchema == OutputSchema.OWN) {
             prefix = "iso";
-        }
-        else {
+        } else if (outputSchema == OutputSchema.OWN) {
+            prefix = "own";
+        } else {
             throw new InvalidParameterValueEx("outputSchema not supported for metadata " + id + " schema.", schema);
         }
 
 		String schemaDir  = schemaManager.getSchemaCSWPresentDir(schema)+ File.separator;
 		String styleSheet = schemaDir + prefix +"-"+ elementSetName +".xsl";
 
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("lang", displayLanguage);
 		params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
 
@@ -331,7 +333,7 @@ public class SearchController {
             // we add a check to ensure that no extra xsl transformation
             // would not be applied.
 		    if (!result.getName().equals("simpledc"))
-		        result = Xml.transform(result, styleSheet, params);
+		    result = Xml.transform(result, styleSheet, params);
             else {
                 // we still need to do some transformation
                 // in order to ensure csw response compliance
@@ -339,7 +341,7 @@ public class SearchController {
                 Element tempElem = new Element("Record", "csw", "http://www.opengis.net/cat/csw/2.0.2");
                 tempElem.setContent(result.cloneContent());
                 result = tempElem;
-            }
+		}
 		}
         catch (Exception e) {
 		    context.error("Error while transforming metadata with id : " + id + " using " + styleSheet);
@@ -654,7 +656,4 @@ public class SearchController {
             }
             return res;
         }
-        return res;
-    }
-}
-       
+  

@@ -12,6 +12,7 @@
     <import resource="classpath:JZkitApplicationContext.xml"/>
 
     <import resource="config-db/initial_data.xml"/>
+    <import resource="config-print/config-spring-print.xml"/>
 
     <!-- Uncomment the database configuration you need to use -->
     <!--<import resource="config-db/h2.xml"/>-->

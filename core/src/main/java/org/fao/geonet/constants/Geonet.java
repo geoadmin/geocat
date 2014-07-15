@@ -41,7 +41,7 @@ public final class Geonet {
 	public static final String CONTEXT_NAME = "contextName";
     // TODO make this configurable
 	public static final String DEFAULT_LANGUAGE = "eng";
-
+	
 	public static final String CC_API_REST_URL = "http://api.creativecommons.org/rest/1.5/simple/chooser";
     public static final String LUCENE_LOCALE_KEY = "_locale";
 
@@ -76,7 +76,7 @@ public final class Geonet {
 		public static final String SORT_HARVESTERS     = "sort-harvesters.xsl";
 		public static final String JZKITCONFIG_TEMPLATE= "JZKitConfig.xml.tem";
 		public static final String JZKITAPPLICATIONCONTEXT= "JZkitApplicationContext.xml";
-
+		
 		/**
 		 * Stylesheet to convert a CQL parameter to a filter.
 		 */
@@ -91,7 +91,7 @@ public final class Geonet {
         // GEOCAT
         public static final String UPDATE_TEMPLATE_FIXED_INFO = "update-template-fixed-info.xsl";
         // END GEOCAT
-    }
+	}
 
 	public static final class SchemaPath {
 		public static final String OAI_PMH = "xml/validation/oai/OAI-PMH.xsd";
@@ -120,6 +120,7 @@ public final class Geonet {
 		public static final String OPERATIONS = "operations";
 		public static final String OPER       = "oper";
 		public static final String SHOWVALIDATIONERRORS   = "showvalidationerrors";
+        public static final String TOC_INDEX = "tocIndex";
 		public static final String SUMMARY    = "summary";
 		public static final String SITE_URL   = "siteURL";
 		public static final String APP_PATH   = "path";
@@ -168,7 +169,7 @@ public final class Geonet {
 		public static final String SEARCH_RESULT			= "search.result";
 		public static final String SEARCH_REQUEST = "search.request";
 		public static final String LAST_SEARCH_RESULT = "last.search.result";
-		public static final String SEARCH_REQUEST_ID 		= "search_request_id";
+		public static final String SEARCH_REQUEST_ID 		= "search_request_id";		
 		public static final String METADATA_SHOW			= "metadata.show";
 		public static final String METADATA_EDITING		= "metadata.editing";
 		public static final String METADATA_BEFORE_ANY_CHANGES = "metadata.before.any.changes";
@@ -181,14 +182,14 @@ public final class Geonet {
 		public static final String FC_ISO19110		        = "fc.iso19110";
 		public static final String FILE_DISCLAIMER    = "file.disclaimer";
 		public static final String BATCH_PROCESSING_REPORT = "BATCH_PROCESSING_REPORT";
-
+		
         /**
          * Contains the uuids of metadatas that have to be shown
          */
         public static final String METADATA_UUIDS    = "metadata.uuids";
 
 	}
-
+    
     public static final class Settings {
         public static final String SERVER_HOST = "system/server/host";
         public static final String SERVER_PORT = "system/server/port";
@@ -215,11 +216,11 @@ public final class Geonet {
         /** Parameter name: {@value #TITLE} - Free text field that searches
          * in the title */
 		public static final String TITLE         = "title";
-
+		
 		/** Parameter name: {@value #ABSTRACT} - Free text field that searches
 		 * in the abstract */
 		public static final String ABSTRACT      = "abstract";
-
+        
 		/** Parameter name: {@value #ANY} - Free text field that searches
          * in all the text fields of a metadata record */
 		public static final String ANY           = "any";
@@ -328,7 +329,7 @@ public final class Geonet {
 		 * that are administered by the selected group. The group ID should be
 		 * used as value */
         public static final String GROUP         = "group";
-
+        
         public static final String PROFILE       = "profile";
         public static final String SERVER        = "server";
         public static final String SERVERS       = "servers";
@@ -350,7 +351,7 @@ public final class Geonet {
          * {@value org.fao.geonet.constants.Geonet.Text#ON} or
          * {@value org.fao.geonet.constants.Geonet.Text#OFF} (default) */
         public static final String REMOTE        = "remote";
-
+        
         /** Parameter name: {@value #TIMEOUT} - Time in seconds the Z39.50
          * search waits for responses from remote servers before timing out.
          * Default is 20 seconds */
@@ -365,7 +366,7 @@ public final class Geonet {
 	    /** Parameter name: {@value #HITS_PER_PAGE} - Number of results
 	     * returned by the search engine. Default is 10 results */
 		public static final String HITS_PER_PAGE = "hitsPerPage";
-
+		
 		/** Parameter name: {@value #SIMILARITY} - Use the Lucene FuzzyQuery.
 		 * Values range from 0.0 to 1.0 and defaults to 0.8 */
         public static final String SIMILARITY    = "similarity";
@@ -610,6 +611,7 @@ public final class Geonet {
         public static final Namespace OWS = Namespace.getNamespace("ows", "http://www.opengis.net/ows");
         public static final Namespace OGC = Namespace.getNamespace("ogc", "http://www.opengis.net/ogc");
         public static final Namespace GML = Namespace.getNamespace("gml", "http://www.opengis.net/gml");
+        public static final Namespace SVRL = Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
         // GEOCAT
         @SuppressWarnings("unchecked")
         public static List<Namespace> iso19139Namespaces = Arrays.asList(new Namespace[]{GCO, GEONET, GMX, GMD, SRV, XSD, XSI, XLINK});

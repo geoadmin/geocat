@@ -22,20 +22,21 @@
 //==============================================================================
 
 package org.fao.geonet.utils;
-import static org.fao.geonet.Constants.ENCODING;
-import org.fao.geonet.exceptions.XSDValidationErrorEx;
-import net.sf.saxon.Configuration;
-import net.sf.saxon.FeatureKeys;
 import net.sf.json.JSON;
 import net.sf.json.xml.XMLSerializer;
-
+import net.sf.saxon.Configuration;
+import net.sf.saxon.FeatureKeys;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.SystemUtils;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.xml.resolver.tools.CatalogResolver;
+import org.eclipse.core.runtime.URIUtil;
+import org.fao.geonet.exceptions.XSDValidationErrorEx;
+import org.jdom.Attribute;
 import org.jdom.*;
+import org.jdom.Content;
+import org.jdom.Text;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.SAXOutputter;
@@ -48,19 +49,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.xml.XMLConstants;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.URIResolver;
-import javax.xml.transform.sax.SAXResult;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.ValidatorHandler;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -72,20 +60,33 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
+import javax.xml.XMLConstants;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import java.util.*;
+import javax.xml.transform.URIResolver;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.ValidatorHandler;
+
+import static org.fao.geonet.Constants.ENCODING;
 
 //=============================================================================
 
@@ -382,19 +383,19 @@ public final class Xml
     /**
      * Transforms an xml tree into another using a stylesheet on disk and pass parameters.
      *
+     *
      * @param xml
      * @param styleSheetPath
      * @param params
      * @return
      * @throws Exception
      */
-	public static Element transform(Element xml, String styleSheetPath, Map<String,String> params) throws Exception
+	public static Element transform(Element xml, String styleSheetPath, Map<String, Object> params) throws Exception
 	{
 		JDOMResult resXml = new JDOMResult();
 		transform(xml, styleSheetPath, resXml, params);
 		return (Element)resXml.getDocument().getRootElement().detach();
 	}
-
 	//--------------------------------------------------------------------------
 
     /**
@@ -426,6 +427,56 @@ public final class Xml
 		transform(xml, styleSheetPath, result, null);
 	}
 
+
+    public static Element transformWithXmlParam(Element xml, String styleSheetPath, String xmlParamName, String xmlParam) throws Exception
+    {
+        JDOMResult resXml = new JDOMResult();
+
+        File styleSheet = new File(styleSheetPath);
+        Source srcSheet = new StreamSource(styleSheet);
+        transformWithXmlParam(xml, srcSheet, resXml, xmlParamName, xmlParam);
+
+        return (Element)resXml.getDocument().getRootElement().detach();
+    }
+
+    /**
+     * Transforms an xml tree putting the result to a stream. Sends xml snippet as parameter.
+     * @param xml
+     * @param xslt
+     * @param result
+     * @param xmlParamName
+     * @param xmlParam
+     * @throws Exception
+     */
+    public static void transformWithXmlParam(Element xml, Source xslt, Result result,
+                                             String xmlParamName, String xmlParam) throws Exception {
+        Source srcXml   = new JDOMSource(new Document((Element)xml.detach()));
+
+        // Dear old saxon likes to yell loudly about each and every XSLT 1.0
+        // stylesheet so switch it off but trap any exceptions because this
+        // code is run on transformers other than saxon
+        TransformerFactory transFact;
+        transFact = TransformerFactoryFactory.getTransformerFactory();
+
+        try {
+            transFact.setAttribute(FeatureKeys.VERSION_WARNING,false);
+            transFact.setAttribute(FeatureKeys.LINE_NUMBERING,true);
+            transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION,true);
+            transFact.setAttribute(FeatureKeys.RECOVERY_POLICY,Configuration.RECOVER_SILENTLY);
+            // Add the following to get timing info on xslt transformations
+            //transFact.setAttribute(FeatureKeys.TIMING,true);
+        } catch (IllegalArgumentException e) {
+            System.out.println("WARNING: transformerfactory doesnt like saxon attributes!");
+            //e.printStackTrace();
+        } finally {
+            Transformer t = transFact.newTransformer(xslt);
+            if (xmlParam != null) {
+                t.setParameter(xmlParamName, new StreamSource(new StringReader(xmlParam)));
+            }
+            t.transform(srcXml, result);
+        }
+    }
+
 	//--------------------------------------------------------------------------
 
 	private static class JeevesURIResolver implements URIResolver {
@@ -443,41 +494,30 @@ public final class Xml
         if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
             Log.debug(Log.XML_RESOLVER, "Trying to resolve "+href+":"+base);
         }
-        String decodedBase;
-        try {
-            decodedBase = URLDecoder.decode(base, ENCODING);
-        } catch (UnsupportedEncodingException e1) {
-            decodedBase = base;
-        }
-        String decodedHref;
-        try {
-            decodedHref = URLDecoder.decode(href, ENCODING);
-        } catch (UnsupportedEncodingException e1) {
-            decodedHref = href;
-        }
-        Source s = catResolver.resolve(decodedHref, decodedBase);
-        // If resolver has a blank XSL file to replace non existing resolved file ...
+        Source s = catResolver.resolve(href, base);
+
+         boolean isFile = false;
+         try {
+             final File file = new File(s.getSystemId());
+             isFile = file.isFile();
+         } catch (Exception e) {
+             isFile = false;
+         }
+
+        // If resolver has a blank XSL file use it to replace
+        // resolved file that doesn't exist...
         String blankXSLFile = resolver.getBlankXSLFile();
-        if (blankXSLFile != null && s.getSystemId().endsWith(".xsl")) {
-            // The resolved resource does not exist, set it to blank file path to not trigger FileNotFound Exception
+        if (blankXSLFile != null && s.getSystemId().endsWith(".xsl") && !isFile) {
             try {
                 if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
                     Log.debug(Log.XML_RESOLVER, "  Check if exist " + s.getSystemId());
                 }
-                File f;
-                if (SystemUtils.IS_OS_WINDOWS) {
-                    String path = s.getSystemId();
-                    // fxp
-                    path = path.replaceAll("file:\\/", "");
-                    // heikki
-                    path = path.replaceAll("file:", "");
+                File f = URIUtil.toFile(new URI(s.getSystemId()));
+                if(Log.isDebugEnabled(Log.XML_RESOLVER))
+                    Log.debug(Log.XML_RESOLVER, "Check on "+f.getPath()+" exists returned: "+f.exists());
+                // If the resolved resource does not exist, set it to blank file path to not trigger FileNotFound Exception
 
-                    f = new File(path);
-                }
-                else {
-                    f = new File(new URI(s.getSystemId()));
-                }
-                if (!(f.exists())) {
+                if (f == null || !(f.exists())) {
                     if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
                         Log.debug(Log.XML_RESOLVER, "  Resolved resource " + s.getSystemId() + " does not exist. blankXSLFile returned instead.");
                     }
@@ -485,6 +525,7 @@ public final class Xml
                 }
             }
             catch (URISyntaxException e) {
+                Log.warning(Log.XML_RESOLVER, "URI syntax problem: "+e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -501,13 +542,14 @@ public final class Xml
     /**
      * Transforms an xml tree putting the result to a stream with optional parameters.
      *
+     *
      * @param xml
      * @param styleSheetPath
      * @param result
      * @param params
      * @throws Exception
      */
-	public static void transform(Element xml, String styleSheetPath, Result result, Map<String,String> params) throws Exception
+	public static void transform(Element xml, String styleSheetPath, Result result, Map<String, Object> params) throws Exception
 	{
 		File styleSheet = new File(styleSheetPath);
 		Source srcXml   = new JDOMSource(new Document((Element)xml.detach()));
@@ -531,14 +573,13 @@ public final class Xml
 		} finally {
 			Transformer t = transFact.newTransformer(srcSheet);
 			if (params != null) {
-				for (Map.Entry<String,String> param : params.entrySet()) {
+				for (Map.Entry<String,Object> param : params.entrySet()) {
 					t.setParameter(param.getKey(),param.getValue());
 				}
 			}
 			t.transform(srcXml, result);
 		}
 	}
-
 	//--------------------------------------------------------------------------
 
     /**
@@ -659,8 +700,6 @@ public final class Xml
      * @param xml the XML element
      * @return the JSON response
      * 
-     * @throws JsonParseException
-     * @throws JsonMappingException
      * @throws IOException
      */
     public static String getJSON (Element xml) throws IOException {
@@ -672,8 +711,6 @@ public final class Xml
      * @param xml the XML element
      * @return the JSON response
      * 
-     * @throws JsonParseException
-     * @throws JsonMappingException
      * @throws IOException
      */
     public static String getJSON (String xml) throws IOException {
@@ -1316,6 +1353,4 @@ public final class Xml
 
             builder.insert(0, attBuilder);
         }
-    }
-
-}
+    

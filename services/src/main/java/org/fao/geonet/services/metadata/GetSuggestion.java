@@ -28,6 +28,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
@@ -59,7 +60,7 @@ import java.util.Map;
  *   </suggestions>
  * }
  * </pre>
- * 
+ * A
  * The process attribute contains the process identifier.
  * </li>
  * <li>
@@ -88,12 +89,14 @@ public class GetSuggestion implements Service {
         GeonetContext gc = (GeonetContext) context
                 .getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
+        SettingManager sm = gc.getBean(SettingManager.class);
 
         String action = Util.getParam(params, "action", "list");
         @SuppressWarnings("unchecked")
         List<Element> children = params.getChildren();
-        Map<String, String> xslParameter = new HashMap<String, String>();
+        Map<String, Object> xslParameter = new HashMap<String, Object>();
         xslParameter.put("guiLang", context.getLanguage());
+        xslParameter.put("siteUrl", sm.getSiteURL(context));
         xslParameter.put("baseUrl", context.getBaseUrl());
         for (Element param : children) {
             xslParameter.put(param.getName(), param.getTextTrim());

@@ -20,7 +20,8 @@
   
   <xsl:variable name="i18n" select="/root/gui/i18n"/>
   <xsl:variable name="lang" select="/root/gui/language"/>
-  
+  <xsl:variable name="requestParameters" select="/root/request"/>
+
   <!-- XSL using this variable should be refactored to not rely on the
   old i18n files. FIXME eg. metadata-fop.xsl -->
   <xsl:variable name="oldGuiStrings" select="/root/gui/strings"/>
@@ -35,10 +36,12 @@
     else if ($service = 'catalog.signin' or 
               $service = 'new.account' or 
               $service = 'new.password' or 
-              $service = 'error' or 
+              $service = 'error' or
+              $service = 'service-not-allowed' or
               $service = 'node-change-warning') then 'gn_login'
     else if ($service = 'contact.us') then 'gn_contact_us'
     else if ($service = 'catalog.edit') then 'gn_editor'
+    else if ($service = 'catalog.search') then 'gn_search'
     else 'gn'"/>
   
   <!-- Catalog settings -->
@@ -72,4 +75,6 @@
   <!-- TODO: retrieve from settings -->
   <xsl:variable name="geopublishMatchingPattern"
     select="'^WWW:DOWNLOAD.*|^FILE:GEO|FILE:RASTER|^DB:POSTGIS'"/>
+  <xsl:variable name="layerMatchingPattern"
+                select="'^OGC:WMS.*'"/>
 </xsl:stylesheet>

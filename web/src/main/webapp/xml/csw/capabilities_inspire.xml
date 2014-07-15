@@ -70,10 +70,6 @@
                     <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT"/>
                 </ows:HTTP>
             </ows:DCP>
-            <ows:Parameter name="typeName">
-                <ows:Value>csw:Record</ows:Value>
-                <ows:Value>gmd:MD_Metadata</ows:Value>
-            </ows:Parameter>
             <ows:Parameter name="outputFormat">
                 <ows:Value>application/xml</ows:Value>
             </ows:Parameter>
@@ -241,7 +237,7 @@
             <inspire_com:SpatialDataServiceType>discovery</inspire_com:SpatialDataServiceType>
 
             <inspire_com:MandatoryKeyword xsi:type="inspire_com:classificationOfSpatialDataService">
-                <inspire_com:KeywordValue>humanCatalogueViewer</inspire_com:KeywordValue>
+                <inspire_com:KeywordValue>infoCatalogueService</inspire_com:KeywordValue>
             </inspire_com:MandatoryKeyword>
 
             <inspire_com:Keyword xsi:type="inspire_com:inspireTheme_eng">

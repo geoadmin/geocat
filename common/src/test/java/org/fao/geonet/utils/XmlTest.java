@@ -1,17 +1,20 @@
 package org.fao.geonet.utils;
 
-import static org.junit.Assert.*;
-
 import org.jdom.Attribute;
+
+import static org.junit.Assert.*;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.Text;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import org.junit.Before;
 
 /**
  * Test methods in the {@link org.fao.geonet.utils.Xml} utility class

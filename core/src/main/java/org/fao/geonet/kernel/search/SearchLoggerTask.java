@@ -10,7 +10,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Task to launch a new thread for search logging.
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author francois
  */
-@Transactional(propagation = Propagation.REQUIRED)
 public class SearchLoggerTask implements Runnable {
     private ServiceContext srvContext;
     boolean logSpatialObject;

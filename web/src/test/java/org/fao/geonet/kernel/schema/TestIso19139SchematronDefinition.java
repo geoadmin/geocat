@@ -4,6 +4,8 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Namespace;
+import org.jdom.xpath.XPath;
 import org.junit.Test;
 
 import java.io.File;
@@ -25,14 +27,18 @@ public class TestIso19139SchematronDefinition extends AbstractSchematronTest {
     @Test
     public void testAllSchematrons() throws Exception {
         for (File file : new File(SCHEMA_PLUGINS, "iso19139/schematron").listFiles()) {
+            if (!file.getName().endsWith(".sch")) {
+                continue;
+            }
+
             final Pair<Element, File> compiledSchematron = compileSchematron(file);
             Element schematronDefinition = compiledSchematron.one();
             File schematronXsl = compiledSchematron.two();
 
             final Element validMetadata = loadValidMetadata();
 
-            Element results = Xml.transform(validMetadata, schematronXsl.getPath(), PARAMS);
-            assertEquals(0, countFailures(results));
+            Element results = Xml.transform(validMetadata, schematronXsl.getPath(), params);
+            assertEquals(file.getName(), 0, countFailures(results));
 
             final List<Element> declaredPattern = schematronDefinition.getChildren("pattern", SCH_NAMESPACE);
             final List<Element> xsltPattern = (List<Element>) Xml.selectNodes(results, "svrl:active-pattern", NAMESPACES);
@@ -51,8 +57,15 @@ public class TestIso19139SchematronDefinition extends AbstractSchematronTest {
         Map<Element, List<Element>> xml = new IdentityHashMap<Element, List<Element>>();
 
         for (Element declaredRule : declaredRules) {
-            List<Element> nodes = (List<Element>) Xml.selectNodes(validMetadata, declaredRule.getAttributeValue("context"),
-                    NAMESPACES);
+            String context = declaredRule.getAttributeValue("context");
+
+            final XPath xPath = XPath.newInstance(context);
+            for (Namespace namespace : NAMESPACES) {
+                xPath.addNamespace(namespace);
+            }
+
+
+            List<Element> nodes = (List<Element>) xPath.selectNodes(validMetadata);
             String titleOfRule = createRuleTitle(declaredRule);
 
             for (Map.Entry<Element, List<Element>> previouslyLoadedNodes : xml.entrySet()) {

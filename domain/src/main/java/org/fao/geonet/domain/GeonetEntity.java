@@ -33,8 +33,12 @@ public class GeonetEntity {
      * @return XML representing the entity.
      */
     @Nonnull
-    public Element asXml() {
-        return asXml(this);
+    public final Element asXml() {
+        IdentityHashMap<Object, Void> alreadyEncoded = new IdentityHashMap<Object, Void>();
+
+        Element record = asXml(alreadyEncoded);
+
+        return record;
     }
 
     private static Element asXml(Object obj) {
@@ -43,6 +47,10 @@ public class GeonetEntity {
         Element record = asXml(obj, alreadyEncoded);
 
         return record;
+    }
+
+    protected Element asXml(IdentityHashMap<Object, Void> alreadyEncoded) {
+        return asXml(this, alreadyEncoded);
     }
 
     private static Element asXml(Object obj, IdentityHashMap<Object, Void> alreadyEncoded) {
@@ -86,14 +94,14 @@ public class GeonetEntity {
         final Element element = new Element(descName.toLowerCase());
         if (rawData instanceof GeonetEntity) {
             if (!alreadyEncoded.containsKey(rawData)) {
-                final Element element1 = asXml(rawData, alreadyEncoded);
-                final List list = element1.removeContent();
-                element.addContent(list);
+                final Element element1 = ((GeonetEntity)rawData).asXml(alreadyEncoded);
+            final List list = element1.removeContent();
+            element.addContent(list);
             }
         } else if (rawData instanceof XmlEmbeddable) {
             ((XmlEmbeddable) rawData).addToXml(element);
         } else if (hasEmbeddableAnnotation(rawData)) {
-            final Element element1 = asXml(rawData);
+            final Element element1 = asXml(rawData, alreadyEncoded);
             final List list = element1.removeContent();
             element.addContent(list);
         } else if (rawData instanceof Iterable) {
@@ -119,6 +127,5 @@ public class GeonetEntity {
         }
         return descName;
     }
-
 
 }

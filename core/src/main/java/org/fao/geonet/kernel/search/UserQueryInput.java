@@ -53,9 +53,6 @@ public class UserQueryInput {
             SearchParameter.ISADMIN, 
             SearchParameter.ISREVIEWER, 
             SearchParameter.ISUSERADMIN);
-            // Removed for Swisstopo: LuceneQueryBuilder class manages about filtering by user permissions
-            // this field is fine to use in queries
-            //LuceneIndexField.GROUP_OWNER
 
     /**
      * Don't take into account those field in search (those field are not 
@@ -100,15 +97,55 @@ public class UserQueryInput {
         searchParamToLuceneField.put(SearchParameter.THEMEKEY, LuceneIndexField.KEYWORD);
         searchParamToLuceneField.put(SearchParameter.TOPICCATEGORY, LuceneIndexField.TOPIC_CATEGORY);
         searchParamToLuceneField.put(SearchParameter.CATEGORY, LuceneIndexField.CAT);
+        searchParamToLuceneField.put(SearchParameter.OP_VIEW,     LuceneIndexField._OP0);
+        searchParamToLuceneField.put(SearchParameter.OP_DOWNLOAD, LuceneIndexField._OP1);
+        searchParamToLuceneField.put(SearchParameter.OP_EDITING,  LuceneIndexField._OP2);
+        searchParamToLuceneField.put(SearchParameter.OP_NOTIFY,   LuceneIndexField._OP3);
+        searchParamToLuceneField.put(SearchParameter.OP_DYNAMIC,  LuceneIndexField._OP5);
+        searchParamToLuceneField.put(SearchParameter.OP_FEATURED, LuceneIndexField._OP6);
     }
     private Map<String, Set<String>> searchCriteria = new HashMap<String, Set<String>>();
     private Map<String, Set<String>> searchPrivilegeCriteria = new HashMap<String, Set<String>>();
     private Map<String, String> searchOption = new HashMap<String, String>();
 
+    /**
+     * Return all search criteria.
+     *
+     * @return
+     */
     public Map<String, Set<String>> getSearchCriteria() {
         return searchCriteria;
     }
 
+    public static final List<String> NO_TEXT_FIELDS = Arrays.asList(
+            SearchParameter.UUID,
+            SearchParameter.PARENTUUID,
+            SearchParameter.OPERATESON,
+            SearchParameter._SCHEMA,
+            SearchParameter.RELATION,
+            SearchParameter.SITEID,
+            SearchParameter.HASFEATURECAT
+            );
+
+    /**
+     * Return all search criteria except those which
+     * does not contains textual information like
+     * identifiers or codelists (eg. UUID, PARENTUUID).
+     *
+     *
+     * Those fields may be used for language detection.
+     *
+     * @return
+     */
+    public Map<String, Set<String>> getTextCriteria() {
+        Map<String, Set<String>> textCriteria = new HashMap<String, Set<String>>();
+        for (String criteria : searchCriteria.keySet()) {
+            if (!NO_TEXT_FIELDS.contains(criteria)) {
+                textCriteria.put(criteria, searchCriteria.get(criteria));
+            }
+        }
+        return textCriteria;
+    }
     public Map<String, Set<String>> getSearchPrivilegeCriteria() {
         return searchPrivilegeCriteria;
     }
@@ -137,9 +174,11 @@ public class UserQueryInput {
                     setSimilarity(jdom.getChildText(SearchParameter.SIMILARITY));
                 } else {
                     if (StringUtils.isNotBlank(nodeValue)) {
-
-                        if (SECURITY_FIELDS.contains(nodeName)
-                                || nodeName.contains("_op")) {
+                    	// Handles operation parameters. These parameters are safe, because
+                    	// the fields have been sanitized before (in LuceneSearcher.java:713)
+                    	if (nodeName.startsWith("_operation")) {
+                    		addValues(searchCriteria, searchParamToLuceneField.get(nodeName), nodeValue);
+                    	} else if (SECURITY_FIELDS.contains(nodeName) || nodeName.contains("_op")) {
                             addValues(searchPrivilegeCriteria, nodeName, nodeValue);
                         } else if (RESERVED_FIELDS.contains(nodeName)) {
                             searchOption.put(nodeName, nodeValue);
@@ -287,4 +326,6 @@ public class UserQueryInput {
     public String getEditable() {
         return editable;
     }
+
+
 }

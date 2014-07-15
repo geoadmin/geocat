@@ -29,7 +29,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,9 +40,6 @@ import javax.annotation.PostConstruct;
  * @author jose garcía
  */
 public class IsoLanguagesMapper {
-
-    private static IsoLanguagesMapper instance;
-
     /*
      * Stores mapping of ISO 639-1 to ISO 639-2 for all languages defined in IsoLanguages table
      */
@@ -53,22 +49,13 @@ public class IsoLanguagesMapper {
     @Autowired
     private IsoLanguageRepository _langRepo;
 
-
-    protected IsoLanguagesMapper() {
-
-    }
-
     /**
      * TODO javadoc.
      *
      * @return instance
      * @throws Exception hmm
      */
-    public static synchronized IsoLanguagesMapper getInstance() {
-        if(instance == null) {
-            instance = new IsoLanguagesMapper();
-        }
-        return instance;
+    public IsoLanguagesMapper() {
     }
 
     /**

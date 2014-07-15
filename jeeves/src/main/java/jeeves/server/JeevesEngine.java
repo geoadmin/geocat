@@ -53,8 +53,6 @@ import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PreDestroy;
 import javax.servlet.ServletContext;
@@ -109,7 +107,6 @@ public class JeevesEngine {
 
 	/** Inits the engine, loading all needed data.
 	  */
-    @Transactional(propagation = Propagation.REQUIRED)
     public void init(final String appPath, final String configPath, final String baseUrl, final JeevesServlet servlet) throws ServletException
 	{
         ServletContext servletContext = null;
@@ -165,6 +162,7 @@ public class JeevesEngine {
             _scheduleMan.setBaseUrl(baseUrl);
 
             loadConfigFile(servletContext, configPath, Jeeves.CONFIG_FILE, _serviceMan);
+            loadConfigDB(_applicationContext, -1);
 
             //--- handlers must be started here because they may need the context
             //--- with the ProfileManager already loaded

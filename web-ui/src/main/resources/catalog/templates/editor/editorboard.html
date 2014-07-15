@@ -8,7 +8,7 @@
           <span data-translate="">yourMetadata</span>
         </div>
         <div class="panel-body">
-          <form data-ng-controller="GnSearchFormController">
+          <form data-ng-search-form="">
             <div class="form-group">
               <input class="form-control" type="text" 
                 data-ng-change="triggerSearch()"
@@ -32,7 +32,10 @@
       <a href="#/create" class="btn btn-primary btn-lg btn-block">
         <i class="fa fa-plus"/>&nbsp;<span data-translate="">addRecord</span>
       </a>
-      <a href="#/directory" class="btn btn-primary btn-lg btn-block"
+      <a href="#/import" class="btn btn-default btn-lg btn-block">
+        <i class="fa fa-plus"/>&nbsp;<span data-translate="">ImportRecord</span>
+      </a>
+      <a href="#/directory" class="btn btn-default btn-lg btn-block"
         ng-if="user.profile === 'Administrator' || user.profile === 'Reviewer'">
         <i class="fa fa-list-ul"/>&nbsp;<span data-translate="">directoryManager</span>
       </a>

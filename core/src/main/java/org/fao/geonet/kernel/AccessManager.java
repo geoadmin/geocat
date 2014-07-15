@@ -141,8 +141,12 @@ public class AccessManager {
      */
 	public Set<Operation> getAllOperations(ServiceContext context, String mdId, String ip) throws Exception {
 	    HashSet<Operation> operations = new HashSet<Operation>();
-	    for (OperationAllowed opAllow: _opAllowedRepository.findByMetadataId(mdId)) {
-	        operations.add(_opRepository.findOne(opAllow.getId().getOperationId()));
+        Set<Integer> groups = getUserGroups(context.getUserSession(),
+                ip, false);
+        for (OperationAllowed opAllow: _opAllowedRepository.findByMetadataId(mdId)) {
+            if (groups.contains(opAllow.getId().getGroupId())) {
+                operations.add(_opRepository.findOne(opAllow.getId().getOperationId()));
+            }
 	    }
 		return operations;
 	}
@@ -334,11 +338,12 @@ public class AccessManager {
 
         Element resultEl = new Element("results");
         for (Pair<Integer, User> integerUserPair : results) {
+            User user = integerUserPair.two();
             resultEl.addContent(new Element("record").
-                    addContent(new Element("userid")).
-                    addContent(new Element("name")).
-                    addContent(new Element("surname")).
-                    addContent(new Element("email"))
+                    addContent(new Element("userid").setText(user.getId() + "")).
+                    addContent(new Element("name").setText(user.getName())).
+                    addContent(new Element("surname").setText(user.getSurname())).
+                    addContent(new Element("email").setText(user.getEmail()))
             );
         }
         return resultEl;
@@ -362,6 +367,41 @@ public class AccessManager {
         }
     }
 
+    /**
+     * Returns whether a particular metadata is downloadable.
+     *
+     * @param context
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public boolean canDownload(final ServiceContext context, final String id) throws Exception {
+        if (isOwner(context, id)) {
+            return true;
+        }
+        int downloadId = ReservedOperation.download.getId();
+        Set<Operation> ops = getOperations(context, id, null);
+        for (Operation op : ops) {
+            if (op.getId() == downloadId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean canDynamic(final ServiceContext context, final String id) throws Exception {
+        if (isOwner(context, id)) {
+            return true;
+        }
+        int dynamicId = ReservedOperation.dynamic.getId();
+        Set<Operation> ops = getOperations(context, id, null);
+        for (Operation op : ops) {
+            if (op.getId() == dynamicId) {
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * Check if the group has the permission.
      *

@@ -33,6 +33,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
@@ -46,6 +47,7 @@ import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.util.Sha1Encoder;
@@ -61,6 +63,7 @@ import org.jdom.xpath.XPath;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.net.URL;
@@ -277,7 +280,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
          if(log.isDebugEnabled()) log.debug ("  - XSLT transformation using " + styleSheet);
 		
-		Map<String, String> param = new HashMap<String, String>();
+		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("lang", params.lang);
 		param.put("topic", params.topic);
 		param.put("uuid", uuid);
@@ -342,7 +345,12 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		int iId = Integer.parseInt(id);
 
          addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
+         context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
+             @Override
+             public void apply(@Nonnull Metadata entity) {
+                 addCategories(entity, params.getCategories(), localCateg, context, log, null);
+             }
+         });
 		
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.url));
 		dataMan.setTemplate(iId, MetadataType.METADATA, null, context);
@@ -619,7 +627,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		if (!loaded && params.useLayer){
 			try {
 				//--- set XSL param to filter on layer and set uuid
-				Map<String, String> param = new HashMap<String, String>();
+				Map<String, Object> param = new HashMap<String, Object>();
 				param.put("uuid", reg.uuid);
 				param.put("Name", reg.name);
 				param.put("lang", params.lang);

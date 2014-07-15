@@ -1,26 +1,28 @@
 package org.fao.geonet.kernel.search;
 
-import jeeves.server.ServiceConfig;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.core.KeywordAnalyzer;
-import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
-import org.apache.lucene.search.Query;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
-import org.jdom.DefaultJDOMFactory;
-import org.jdom.Element;
-import org.jdom.JDOMFactory;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+import jeeves.server.ServiceConfig;
+
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
+import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
+import org.apache.lucene.search.Query;
+import org.junit.Ignore;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
+import org.jdom.DefaultJDOMFactory;
+import org.jdom.Element;
+import org.jdom.JDOMFactory;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Unit test for building Lucene queries.
@@ -1197,6 +1199,28 @@ public class LuceneQueryTest {
     }
 
     /**
+     * 'altTitle' parameter.	
+     */
+    @Test
+    public void testAltTitle() {	
+        // create request object
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element altTitle = factory.element("altTitle");	
+        altTitle.addContent("humph");	
+        request.addContent(altTitle);	
+        // build lucene query input
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+        // build lucene query
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, 
+                _analyzer, null).build(lQI);	
+        // verify query
+        // GEOCAT allow groupOwner queries
+        assertEquals("unexpected Lucene query", "+_groupOwner:JanMetDeKorteNaam +_isTemplate:n", query.toString());
+        // END GEOCAT
+    }
+
+    /**
      * 'protocol' parameter.
      */
     @Test
@@ -1586,50 +1610,6 @@ public class LuceneQueryTest {
         assertEquals("unexpected Lucene query", "+(_cat:hoeperdepoep _cat:\"zat op de stoep\") +_isTemplate:n", query.toString());
     }
 
-    /**
-     * 'groupOwner' parameter with a single value (it should be ignored and not go into the query).
-     */
-    @Test
-    public void testSingleGroupOwner() {
-        // create request object
-        JDOMFactory factory = new DefaultJDOMFactory();
-        Element request = factory.element("request");
-        Element any = factory.element("_groupOwner");
-        any.addContent("JanMetDeKorteNaam");
-        request.addContent(any);
-        // build lucene query input
-        LuceneQueryInput lQI = new LuceneQueryInput(request);
-        // build lucene query
-        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
-        // verify query
-        // GEOCAT allow groupOwner queries
-        assertEquals("unexpected Lucene query", "+_groupOwner:JanMetDeKorteNaam +_isTemplate:n", query.toString());
-        // END GEOCAT
-    }
-
-    /**
-     * 'groupOwner' parameter with multiple values (it should be ignored and not go into the query).
-     */
-    @Test
-    public void testMultipleGroupOwner() {
-        // create request object
-        JDOMFactory factory = new DefaultJDOMFactory();
-        Element request = factory.element("request");
-        Element any = factory.element("_groupOwner");
-        any.addContent("JanMetDeKorteNaam");
-        request.addContent(any);
-        Element any2 = factory.element("_groupOwner");
-        any2.addContent("GregoriusMetDeLangeNaam");
-        request.addContent(any2);
-        // build lucene query input
-        LuceneQueryInput lQI = new LuceneQueryInput(request);
-        // build lucene query
-        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
-        // verify query
-        // GEOCAT allow groupOwner queries
-        assertEquals("unexpected Lucene query", "+(+_groupOwner:JanMetDeKorteNaam +_groupOwner:GregoriusMetDeLangeNaam) +_isTemplate:n", query.toString());
-        // END GEOCAT
-    }
 
     /**
      * 'editable' parameter true.
@@ -2269,5 +2249,72 @@ public class LuceneQueryTest {
         query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQIa);
         // verify query
         assertEquals("unexpected Lucene query", "+paper:true +_isTemplate:n", query.toString());
+    }
+
+    /**
+     * Tests passing operations (download and/or dynamic for instance) parameters criterias.
+     *
+     */
+    @Test
+    public void testDownloadDynamicParameter() {
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element download = factory.element("_operation5").addContent("1 or 2 or 3");
+        Element dynamic  = factory.element("_operation1").addContent("1 or 2 or 3");
+        request.addContent(download).addContent(dynamic);
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
+        assertTrue(query.toString().contains("+(_op5:1 _op5:2 _op5:3) +(_op1:1 _op1:2 _op1:3)"));
+    }
+    /**
+     * Same test as above, but only download.
+     */
+    @Test
+    public void testDownloadParameter() {
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element download = factory.element("_operation1").addContent("1 or 2 or 3");
+        request.addContent(download);
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
+        assertTrue(query.toString().contains("+(_op1:1 _op1:2 _op1:3)"));
+    }
+    /**
+     * Only dynamic operation parameter.
+     */
+    @Test
+    public void testDynamicParameter() {
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element dynamic = factory.element("_operation5").addContent("1 or 2 or 3");
+        request.addContent(dynamic);
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
+        assertTrue(query.toString().contains("+(_op5:1 _op5:2 _op5:3)"));
+    }
+    /**
+     * Only editing operation parameter.
+     */
+    @Test
+    public void testEditingParameter() {
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element editing = factory.element("_operation2").addContent("1 or 2 or 3");
+        request.addContent(editing);
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
+        assertTrue(query.toString().contains("+(_op2:1 _op2:2 _op2:3)"));
+    }    
+    
+    /**
+     * No operation parameter.
+     */
+    @Test
+    public void testWithoutOperationParameter() {
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
+        assertTrue(query.toString().equals("+_isTemplate:n"));
     }
 }

@@ -41,7 +41,7 @@
         $http.get('statistics-search@json?service=q')
         .success(function(data) {
               $scope.statistics.search.mainSearchStatistics.q =
-                (data === 'null' ? null : data);
+                  (data === 'null' ? null : data);
             }).error(function(data) {
               // TODO
             });
@@ -50,7 +50,7 @@
         $http.get('statistics-search@json?service=csw')
         .success(function(data) {
               $scope.statistics.search.mainSearchStatistics.csw =
-                (data === 'null' ? null : data);
+                  (data === 'null' ? null : data);
             }).error(function(data) {
               // TODO
             });
@@ -249,13 +249,13 @@
       }
 
       $scope.searchStatisticExport = function() {
-        $http.get('stat.tableExport?tableToExport=requests')
+        $http.get('statistics-search-export?tableToExport=requests')
         .success(function(data) {
               $scope.requestsExport = $sce.trustAsHtml(data);
             }).error(function(data) {
               // TODO
             });
-        $http.get('stat.tableExport?tableToExport=params')
+        $http.get('statistics-search-export?tableToExport=params')
         .success(function(data) {
               $scope.paramsExport = $sce.trustAsHtml(data);
             }).error(function(data) {
