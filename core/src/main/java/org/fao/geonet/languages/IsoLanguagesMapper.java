@@ -24,9 +24,6 @@ package org.fao.geonet.languages;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.repository.IsoLanguageRepository;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -85,6 +82,7 @@ public class IsoLanguagesMapper {
                 Log.warning(Geonet.GEONETWORK, "Unable to add IsoLanguage mapping for "+record);
             }
         }
+        iso639_1_to_iso639_2IsoLanguagesMap.put("ge", "ger");
     }
 
     private String toLowerCase(String code) {

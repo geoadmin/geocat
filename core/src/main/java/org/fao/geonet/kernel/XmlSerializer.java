@@ -121,6 +121,9 @@ public abstract class XmlSerializer {
 			return null;
 
 		String xmlData = metadata.getData();
+        // GEOCAT HACK
+        xmlData = xmlData.replace("locale=\"#GE\"", "locale=\"#DE\"");
+        // GEOCAT END HACK
 		Element metadataXml = Xml.loadString(xmlData, false);
 
 		if (!isIndexingTask) {

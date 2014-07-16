@@ -115,8 +115,6 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
 
             metadataToTest = lookUpMetadataIds(serviceContext.getBean(MetadataRepository.class));
 
-
-
             DataManager dataManager = serviceContext.getBean(DataManager.class);
             for (Metadata metadataRecord : metadataToTest) {
                 final String id = "" + metadataRecord.getId();

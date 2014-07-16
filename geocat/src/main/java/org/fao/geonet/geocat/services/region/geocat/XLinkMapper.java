@@ -1,13 +1,13 @@
 package org.fao.geonet.geocat.services.region.geocat;
 
-import java.io.IOException;
-
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.kernel.region.Region;
 import org.geotools.data.DataStore;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.jdom.JDOMException;
 import org.opengis.feature.simple.SimpleFeature;
+
+import java.io.IOException;
 
 public class XLinkMapper extends DatastoreMapper {
 	private static final String DESC_COLUMN = "DESC";
@@ -38,7 +38,7 @@ public class XLinkMapper extends DatastoreMapper {
 	}
 	
 	@Override
-	public String[] propNames(boolean simplified, boolean includeGeom) {
+	public String[] propNames(boolean simplified, boolean includeGeom, boolean inLatLong) {
 		if(simplified) {
 			if(includeGeom) {
 				return new String[]{ID_COLUMN, NAME_COLUMN, DESC_COLUMN, THE_GEOM};
@@ -66,7 +66,7 @@ public class XLinkMapper extends DatastoreMapper {
 
 	@Override
 	protected SimpleFeatureSource getFeatureSource(MapperState state, boolean simplified, boolean inLatLong) throws IOException {
-		DataStore ds = state.context.getApplicationContext().getBean(DataStore.class);
+		DataStore ds = state.context.getApplicationContext().getBean(Geocat.BeanId.DATASTORE, DataStore.class);
 		return ds.getFeatureSource(typeName);
 
 	}

@@ -1,10 +1,7 @@
 package org.fao.geonet.geocat.services.region.geocat;
 
-import java.io.IOException;
-
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geocat;
 import org.geotools.data.DataStore;
 import org.geotools.data.Query;
 import org.geotools.data.SchemaNotFoundException;
@@ -16,16 +13,18 @@ import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.filter.Filter;
 
+import java.io.IOException;
+
 public class DatastoreCache {
 	private MemoryDataStore cache = new MemoryDataStore(); 
 
 	private SimpleFeatureSource loadIntoMemory(ServiceContext context, DatastoreMapper mapper, boolean simplified, boolean inLatLong)
 			throws IOException {
-		String[] propNames = mapper.propNames(simplified, true);
+		String[] propNames = mapper.propNames(simplified, true, inLatLong);
 		String sourceTypeName = mapper.getBackingDatastoreName(simplified, inLatLong);
 		String cacheTypeName = mapper.getBackingDatastoreName(simplified, inLatLong);
 
-		DataStore postgis = context.getApplicationContext().getBean(DataStore.class);
+		DataStore postgis = (DataStore) context.getApplicationContext().getBean(Geocat.BeanId.DATASTORE);
 		SimpleFeatureSource cachedSchema = postgis.getFeatureSource(sourceTypeName);
 		SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
 		for (String att : propNames) {
@@ -41,7 +40,7 @@ public class DatastoreCache {
 		return featureStore;
 	}
 
-	public SimpleFeatureSource getCached(ServiceContext context, DatastoreMapper mapper, boolean simplified, boolean inLatLong) throws IOException {
+	public synchronized SimpleFeatureSource getCached(ServiceContext context, DatastoreMapper mapper, boolean simplified, boolean inLatLong) throws IOException {
 		SimpleFeatureSource featureSource;
 		String cacheTypeName = mapper.getBackingDatastoreName(simplified, inLatLong);
 		try {

@@ -375,6 +375,11 @@ public class LangUtils {
         for (Element elem : toResolve) {
             String text = elem.getText();
             elem.setText(null);
+            // GEOCAT HACK.
+            if (text != null) {
+                text = text.replace("<GE>", "<DE>").replace("</GE>", "</DE>");
+            }
+            // GEOCAT END HACK
             List<Content> translationsAsSimpleXML = loadInternalMultiLingualElemCollection(text);
             if(removeTranslation) elem.setText(getSingleTranslation(translationsAsSimpleXML));
             else elem.addContent(translationsAsSimpleXML);

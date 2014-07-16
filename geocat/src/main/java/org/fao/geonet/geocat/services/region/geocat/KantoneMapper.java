@@ -1,11 +1,11 @@
 package org.fao.geonet.geocat.services.region.geocat;
 
-import java.io.IOException;
-
 import org.fao.geonet.kernel.region.Region;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.jdom.JDOMException;
 import org.opengis.feature.simple.SimpleFeature;
+
+import java.io.IOException;
 
 public class KantoneMapper extends DatastoreMapper {
 	private static final String KANTONE_NAME = "NAME";
@@ -34,7 +34,7 @@ public class KantoneMapper extends DatastoreMapper {
 	}
 
 	@Override
-	public String[] propNames(boolean simplified, boolean includeGeom) {
+	public String[] propNames(boolean simplified, boolean includeGeom, boolean inLatLong) {
 		if (includeGeom) {
 			return PROPS_WITH_GEOM;
 		} else {

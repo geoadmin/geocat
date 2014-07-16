@@ -26,14 +26,12 @@ package org.fao.geonet.services.metadata;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.services.Utils;
-import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 //=============================================================================
@@ -73,7 +71,12 @@ public class GetEditableData implements Service
         if (elCurrTab != null) {
             context.getUserSession().setProperty(sessionTabProperty, elCurrTab.getText());
         }
-		
+
+        final Object currtab = context.getUserSession().getProperty(Geonet.Session.METADATA_SHOW);
+        if ( currtab != null && currtab.toString().equalsIgnoreCase("inspire")) {
+            context.getUserSession().setProperty(Geonet.Session.METADATA_SHOW, "complete");
+        }
+
         //-----------------------------------------------------------------------
 		//--- get metadata
         boolean starteditingsession = Util.getParam(params, Params.START_EDITING_SESSION, "no").equals("yes");

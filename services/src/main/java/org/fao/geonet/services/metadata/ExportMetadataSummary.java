@@ -129,7 +129,11 @@ public class ExportMetadataSummary implements Service {
                     if (builder.length() > 0) {
                         builder.append(',');
                     }
-                    builder.append("\"").append(fieldExporter.getFieldValue().replace('"', '\'')).append("\"");
+                    String fieldValue = fieldExporter.getFieldValue();
+                    if (fieldExporter.isSingleValue()) {
+                        fieldValue = fieldValue.replace('"', '\'');
+                    }
+                    builder.append("\"").append(fieldValue).append("\"");
                     fieldExporter.clear();
                 }
                 builder.append('\n');
@@ -157,7 +161,9 @@ public class ExportMetadataSummary implements Service {
         public String getFieldName() {
             return fieldName;
         }
-
+        public boolean isSingleValue() {
+            return true;
+        }
         public String getFieldValue() {
             return fieldValue;
         }
@@ -177,7 +183,7 @@ public class ExportMetadataSummary implements Service {
         }
     }
 
-    private class GroupOwnerFieldExporter extends FieldExporter {
+    private static class GroupOwnerFieldExporter extends FieldExporter {
         Map<String, String> idToName = new HashMap<String, String>();
 
         public GroupOwnerFieldExporter(ServiceContext context) throws Exception {
@@ -216,7 +222,7 @@ public class ExportMetadataSummary implements Service {
         }
     }
 
-    private class ValidFieldExporter extends FieldExporter {
+    private static class ValidFieldExporter extends FieldExporter {
         public ValidFieldExporter() {
             super("_valid", "Validity");
         }
@@ -235,7 +241,7 @@ public class ExportMetadataSummary implements Service {
         }
     }
 
-    private class PublishedFieldExporter extends FieldExporter {
+    private static class PublishedFieldExporter extends FieldExporter {
         public PublishedFieldExporter() {
             super("_groupPublished", "Is Published");
         }
@@ -250,7 +256,7 @@ public class ExportMetadataSummary implements Service {
         }
     }
 
-    private class TypeFieldExporter extends FieldExporter {
+    private static class TypeFieldExporter extends FieldExporter {
         public TypeFieldExporter() {
             super("_isTemplate", "Type (Metadata/Sub-template/Template");
         }
@@ -271,7 +277,7 @@ public class ExportMetadataSummary implements Service {
     }
 
 
-    private class HarvestedFieldExporter extends FieldExporter {
+    private static class HarvestedFieldExporter extends FieldExporter {
         public HarvestedFieldExporter() {
             super("_isHarvested", "Is Harvested");
         }
@@ -286,7 +292,7 @@ public class ExportMetadataSummary implements Service {
         }
     }
 
-    private class NullWarningFieldExporter extends FieldExporter {
+    private static class NullWarningFieldExporter extends FieldExporter {
         public NullWarningFieldExporter(String fieldName, String fieldLabel) {
             super(fieldName, fieldLabel);
         }

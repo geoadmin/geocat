@@ -280,7 +280,7 @@ public class AjaxEditUtils extends EditUtils {
      * @param id
      * @return
      */
-	protected static Element getMetadataFromSession(UserSession session, String id) {
+	public static Element getMetadataFromSession(UserSession session, String id) {
         if(Log.isDebugEnabled(Geonet.EDITOR))
             Log.debug(Geonet.EDITOR, "Retrieving metadata from session " + session.getUserId());
 		Element md = (Element) session.getProperty(Geonet.Session.METADATA_EDITING + id);
@@ -725,6 +725,7 @@ public class AjaxEditUtils extends EditUtils {
         md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
 
 		//--- do the validation on the metadata
+        md = Processor.processXLink(md, context);
 		return dataManager.doValidate(context, schema, id, md, lang, false).one();
 
 	}

@@ -1,18 +1,17 @@
 package jeeves.server.dispatchers.guiservices;
 
-import jeeves.XmlFileCacher;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.XmlFileCacher;
 import org.fao.geonet.JeevesJCS;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.ServletContext;
 
 public class XmlCacheManager {
     private static final String XML_FILE_CACHE_KEY = "XmlFile";
@@ -44,16 +43,9 @@ public class XmlCacheManager {
     	}
     	
     }
-    public synchronized Element get(ServiceContext context, boolean localized, String base, String file, String preferedLanguage, String defaultLang, boolean isExternal) throws JDOMException, IOException {
+    public Element get(ServiceContext context, boolean localized, String base, String file, String preferedLanguage, String defaultLang, boolean isExternal) throws JDOMException, IOException {
 
-        Map<String, XmlFileCacher> cacheMap;
-        
-        if(isExternal) {
-        	cacheMap = getExternalCacheMap(localized, base, file);
-        } else {
-        	cacheMap = getVolatileCacheMap(localized, base, file);
-        }
-        
+
         String appPath = context.getAppPath();
         String xmlFilePath;
 
@@ -73,31 +65,54 @@ public class XmlCacheManager {
         if(context.getServlet() != null) {
             servletContext = context.getServlet().getServletContext();
         }
-        
-        XmlFileCacher xmlCache = cacheMap.get(preferedLanguage);
         File xmlFile = new File(xmlFilePath);
-        if (xmlCache == null){
-            xmlCache = new XmlFileCacher(xmlFile,servletContext,appPath);
-            cacheMap.put(preferedLanguage, xmlCache);
-        }
+
 
         Element result;
-        try {
-            result = (Element)xmlCache.get().clone();
-        } catch (Exception e) {
-            Log.error(Log.RESOURCES, "Error cloning the cached data.  Attempted to get: "+xmlFilePath+"but failed so falling back to default language");
-            Log.debug(Log.RESOURCES, "Error cloning the cached data.  Attempted to get: "+xmlFilePath+"but failed so falling back to default language", e);
-            String xmlDefaultLangFilePath = rootPath + File.separator + defaultLang + File.separator + file;
-            xmlCache = new XmlFileCacher(new File(xmlDefaultLangFilePath),servletContext, appPath);
-            cacheMap.put(preferedLanguage, xmlCache);
-            result = (Element)xmlCache.get().clone();
-        }
+
+        result = getFromCache(localized, base, file, preferedLanguage, defaultLang, isExternal, appPath, xmlFilePath, rootPath,
+                servletContext, xmlFile);
+        result = (Element) result.clone();
         String name = xmlFile.getName();
         int lastIndexOfDot = name.lastIndexOf('.');
         if (lastIndexOfDot > 0) {
             name = name.substring(0,lastIndexOfDot);
         }
         return result.setName(name);
+    }
+
+    private Element getFromCache(boolean localized, String base, String file, String preferedLanguage, String defaultLang,
+                                 boolean isExternal, String appPath, String xmlFilePath, String rootPath, ServletContext servletContext, File xmlFile) throws JDOMException, IOException {
+        Element result;
+        synchronized (this) {
+            Map<String, XmlFileCacher> cacheMap;
+
+            if (isExternal) {
+                cacheMap = getExternalCacheMap(localized, base, file);
+            } else {
+                cacheMap = getVolatileCacheMap(localized, base, file);
+            }
+
+        XmlFileCacher xmlCache = cacheMap.get(preferedLanguage);
+        if (xmlCache == null){
+            xmlCache = new XmlFileCacher(xmlFile,servletContext,appPath);
+            cacheMap.put(preferedLanguage, xmlCache);
+        }
+
+        try {
+                result = xmlCache.get();
+        } catch (Exception e) {
+                Log.error(Log.RESOURCES, "Error cloning the cached data.  Attempted to get: " + xmlFilePath + "but failed so falling " +
+                                         "back to default language");
+
+            Log.debug(Log.RESOURCES, "Error cloning the cached data.  Attempted to get: "+xmlFilePath+"but failed so falling back to default language", e);
+            String xmlDefaultLangFilePath = rootPath + File.separator + defaultLang + File.separator + file;
+            xmlCache = new XmlFileCacher(new File(xmlDefaultLangFilePath),servletContext, appPath);
+            cacheMap.put(preferedLanguage, xmlCache);
+                result = xmlCache.get();
+        }
+        }
+        return result;
     }
 
 }

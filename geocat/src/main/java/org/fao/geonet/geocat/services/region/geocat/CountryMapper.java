@@ -32,8 +32,8 @@ public class CountryMapper extends DatastoreMapper {
 	}
 	
 	@Override
-	public String[] propNames(boolean simplified, boolean includeGeom) {
-		if(simplified) {
+	public String[] propNames(boolean simplified, boolean includeGeom, boolean inLatLong) {
+		if(inLatLong) {
 			if(includeGeom) {
 				return new String[]{COUNTRY_ID, COUNTRY_NAME, COUNTRY_DESC, SEARCH, THE_GEOM};
 			} else {
