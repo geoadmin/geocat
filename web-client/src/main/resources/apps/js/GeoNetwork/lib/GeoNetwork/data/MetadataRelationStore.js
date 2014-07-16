@@ -63,7 +63,7 @@ GeoNetwork.data.MetadataRelationStore = function(url, params, grouping){
         return new Ext.data.GroupingStore({
             autoDestroy: true,
             proxy: new Ext.data.HttpProxy({
-                method: 'GET',
+                method: 'POST',
                 url: url,
                 params: params,
                 disableCaching: false

@@ -274,9 +274,7 @@ GeoNetwork.mapApp = function() {
             },
             autoLoad: true
         });
-        printProvider.on('printexception', function (provider, response) {
-          alert(response.responseText);
-        });
+        
         printPage = new GeoExt.data.PrintPage({
             printProvider: printProvider
         });

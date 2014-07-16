@@ -306,13 +306,13 @@ GeoNetwork.app = function () {
             Ext.each(adminFields, function (item) {
                 item.setVisible(true);
             });
-            groupField.getStore().reload();
+            GeoNetwork.util.SearchFormTools.refreshGroupFieldValues();
         });
         catalogue.on('afterLogout', function () {
             Ext.each(adminFields, function (item) {
                 item.setVisible(false);
             });
-            groupField.getStore().reload();
+            GeoNetwork.util.SearchFormTools.refreshGroupFieldValues();
         });
 
         var hideInspirePanel = catalogue.getInspireInfo().enable === "false";

@@ -51,7 +51,7 @@ GeoNetwork.view.ViewWindow = Ext.extend(Ext.Window, {
         /** api: config[currTab] 
          *  The default view mode to use. Default is 'simple'.
          */
-        currTab: GeoNetwork.defaultViewMode || 'simple',
+        currTab: 'simple',
         /** api: config[displayTooltip] 
          *  Display tooltips or not. Default is true.
          */

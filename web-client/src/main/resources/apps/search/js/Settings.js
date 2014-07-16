@@ -1,7 +1,4 @@
-GeoNetwork.Settings = {
-//  hideAngularEditor: true,
-//  hideExtEditor: false
-};
+GeoNetwork.Settings = {};
 
 // Default to absolute path without apps/search
 // GeoNetwork.URL = '../..';
@@ -53,13 +50,12 @@ GeoNetwork.hideLoginLabels = true;
 GeoNetwork.Settings.mdStore = GeoNetwork.data.MetadataResultsFastStore;
 
 // List of facet to display. If none, the server configuration is use.
-GeoNetwork.Settings.facetListConfig = [{name: 'orgNames'},
-                                       {name: 'types'},
-                                       {name: 'serviceTypes'},
-                                       {name: 'denominators'},
-                                       {name: 'keywords'},
-                                       {name: 'createDateYears'},
-                                       {name: 'formats'}];
+GeoNetwork.Settings.facetListConfig = [{name: 'orgNames'}, 
+                                       {name: 'types'},  
+                                       {name: 'serviceTypes'}, 
+                                       {name: 'denominators'}, 
+                                       {name: 'keywords'}, 
+                                       {name: 'createDateYears'}];
 GeoNetwork.Settings.facetMaxItems = 7;
 
 // Latest update info query
