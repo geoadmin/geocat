@@ -458,17 +458,19 @@ public class DataManager {
 
     private Element indexMetadataProcessSharedObjects(String metadataId, boolean processSharedObjects, ServiceContext servContext, boolean performValidation, boolean fastIndex, Vector<Element> moreFields, Element md, String schema, String uuid, String harvested) throws Exception {
         if(schema.trim().equals("iso19139.che") && !fastIndex) {
-            /*
-             * Geocat doesn't permit multilingual elements to have characterString elements only LocalizedString elements.
-             * This transformation ensures this property
-             */
-            md = Xml.transform(md, stylePath + "characterstring-to-localisedcharacterstring.xsl");
-            String parentUuid = null;
-            md = updateFixedInfo(schema, Optional.of(Integer.parseInt(metadataId)), uuid, md, parentUuid, UpdateDatestamp.NO,
-                    servContext);
+            try {
+                    /*
+                     * Geocat doesn't permit multilingual elements to have characterString elements only LocalizedString elements.
+                     * This transformation ensures this property
+                     */
+                md = Xml.transform(md, stylePath+"characterstring-to-localisedcharacterstring.xsl");
+                String parentUuid = null;
+                md = updateFixedInfo(schema, Optional.of(Integer.parseInt(metadataId)), uuid, md, parentUuid , UpdateDatestamp.NO, servContext);
 
-            xmlSerializer.update(metadataId, md, new ISODate().toString(), false, uuid, servContext);
-
+                xmlSerializer.update(metadataId, md, new ISODate().toString(), false, uuid, servContext);
+            } catch (Throwable t) {
+                Log.error(Geonet.DATA_MANAGER, "Error converting Characterstring to PTFreeText elements. For metadata "+metadataId, t);
+            }
         }
         if("n".equalsIgnoreCase(harvested) && processSharedObjects && schema.trim().equals("iso19139.che")) {
             try {
@@ -509,7 +511,10 @@ public class DataManager {
 
         if(performValidation) {
             try {
-                doValidate(servContext, schema, metadataId, md, servContext.getLanguage(), false);
+                // GEOCAT
+                Element xlinkResolved = Processor.processXLink((Element) md.clone(), servContext);
+                doValidate(servContext, schema, metadataId, xlinkResolved, servContext.getLanguage(), false);
+                // END GEOCAT
             } catch (Exception e) {
                 Element stackTrace = JeevesException.toElement(e);
                 Log.error(Geonet.DATA_MANAGER, "error while trying to validating metadata (during indexing), "+metadataId+":\n "+Xml.getString(stackTrace)); //DEBUG
@@ -843,18 +848,32 @@ public class DataManager {
      * @return
      * @throws Exception
      */
-    public Element doSchemaTronForEditor(String schema,Element md,String lang) throws Exception {
+    // GEOCAT
+    public Element doSchemaTronForEditor(ServiceContext context, String schema,Element md,String lang) throws Exception {
         // enumerate the metadata xml so that we can report any problems found
         // by the schematron_xml script to the geonetwork editor
         editLib.enumerateTree(md);
 
-        // get an xml version of the schematron errors and return for error display
-        Element schemaTronXmlReport = getSchemaTronXmlReport(schema, md, lang, null);
+        // NOTE: this method assumes that you've run enumerateTree on the
+        // metadata
+
+        MetadataSchema metadataSchema = getSchema(schema);
+
+        final String mdIdString = getMetadataId(extractUUID(metadataSchema.getName(), md));
+        int metadataId = -1;
+        if (mdIdString != null) {
+            metadataId = Integer.parseInt(mdIdString);
+        }
+
+        // Schematron report is composed of one or more report(s)
+        // for each set of rules.
+        Element schemaTronXmlOut = applyCustomSchematronRules(metadataSchema.getName(), metadataId, md, lang, null);
 
         // remove editing info added by enumerateTree
         editLib.removeEditingInfo(md);
 
-        return schemaTronXmlReport;
+        return schemaTronXmlOut;
+        // END GEOCAT
     }
 
     /**
@@ -1027,111 +1046,32 @@ public class DataManager {
         //--- then we say what they are!
         //--- Note we have to use uuid here instead of id because we don't have
         //--- an id...
-
-        Element schemaTronXml = dataMan.doSchemaTronForEditor(schema,xml,context.getLanguage());
+        // GEOCAT
+        Element schemaTronXml = dataMan.doSchemaTronForEditor(context, schema,xml,context.getLanguage());
         xml.detach();
         if (schemaTronXml != null && schemaTronXml.getContent().size() > 0) {
-            Element schemaTronReport = dataMan.doSchemaTronForEditor(schema,xml,context.getLanguage());
+			Element schemaTronReport = dataMan.doSchemaTronForEditor(context, schema,xml,context.getLanguage());
 
             List<Namespace> theNSs = new ArrayList<Namespace>();
             theNSs.add(Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork"));
             theNSs.add(Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl"));
 
-            // GEOCAT
-            Element inspireReport = Xml.selectElement(schemaTronReport, "geonet:report[@geonet:rule = '"+Geocat.INSPIRE_SCHEMATRON_ID+"']", theNSs);
-            if(inspireReport != null) {
-                inspireReport.detach();
+            ArrayList informationalReports = new ArrayList(Xml.selectNodes(schemaTronReport, "geonet:report[@geonet:required != 'true']", theNSs));
+            for (Object informationalReport : informationalReports) {
+                ((Element)informationalReport).detach();
             }
+            Element failedAssert = Xml.selectElement(schemaTronReport, "geonet:report[@geonet:required = 'true']/svrl:schematron-output/svrl:failed-assert", theNSs);
+
+            Element failedSchematronVerification = Xml.selectElement(schemaTronReport, "geonet:report[@geonet:required = 'true']/geonet:schematronVerificationError", theNSs);
             // END GEOCAT
 
-            Element failedAssert = Xml.selectElement(schemaTronReport, "geonet:report/svrl:schematron-output/svrl:failed-assert", theNSs);
-
-            Element failedSchematronVerification = Xml.selectElement(schemaTronReport, "geonet:report/geonet:schematronVerificationError", theNSs);
-
             if ((failedAssert != null) || (failedSchematronVerification != null)) {
+
                 throw new SchematronValidationErrorEx("Schematron errors detected for file "+fileName+" - "
                         + Xml.getString(schemaTronReport) + " for more details",schemaTronReport);
             }
         }
 
-    }
-
-    /**
-     * Creates XML schematron report for each set of rules defined in schema directory.
-     * @param schema
-     * @param md
-     * @param lang
-     * @param valTypeAndStatus
-     * @return
-     * @throws Exception
-     */
-    private Element getSchemaTronXmlReport(String schema, Element md, String lang, Map<String, Integer[]> valTypeAndStatus) throws Exception {
-        // NOTE: this method assumes that you've run enumerateTree on the
-        // metadata
-
-        MetadataSchema metadataSchema = getSchema(schema);
-        String[] rules = metadataSchema.getSchematronRules();
-
-        // Schematron report is composed of one or more report(s)
-        // for each set of rules.
-        Element schemaTronXmlOut = new Element("schematronerrors",
-                Edit.NAMESPACE);
-        if (rules != null) {
-            for (String rule : rules) {
-                // -- create a report for current rules.
-                // Identified by a rule attribute set to shematron file name
-                if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                    Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
-                String ruleId = rule.substring(0, rule.indexOf(".xsl"));
-                Element report = new Element("report", Edit.NAMESPACE);
-                report.setAttribute("rule", ruleId,
-                        Edit.NAMESPACE);
-
-                String schemaTronXmlXslt = metadataSchema.getSchemaDir() + File.separator
-                        + "schematron" + File.separator + rule;
-                try {
-                    Map<String,Object> params = new HashMap<String,Object>();
-                    params.put("lang", lang);
-                    params.put("rule", rule);
-                    params.put("thesaurusDir", this.thesaurusDir);
-                    Element xmlReport = Xml.transform(md, schemaTronXmlXslt, params);
-                    if (xmlReport != null) {
-                        report.addContent(xmlReport);
-                        // add results to persitent validation information
-                        int firedRules = 0;
-                        Iterator<?> firedRulesElems = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespaces.SVRL));
-                        while (firedRulesElems.hasNext()) {
-                            firedRulesElems.next();
-                            firedRules ++;
-                        }
-                        int invalidRules = 0;
-                        Iterator<?> faileAssertElements = xmlReport.getDescendants(new ElementFilter ("failed-assert",
-                                Namespaces.SVRL));
-                        while (faileAssertElements.hasNext()) {
-                            faileAssertElements.next();
-                            invalidRules ++;
-                        }
-                        Integer[] results = {invalidRules!=0?0:1, firedRules, invalidRules};
-                        if (valTypeAndStatus != null) {
-                            valTypeAndStatus.put(ruleId, results);
-                        }
-                    }
-                } catch (Exception e) {
-                    Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+schemaTronXmlXslt+" failed");
-
-                    // If an error occurs that prevents to verify schematron rules, add to show in report
-                    Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
-                    errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
-                    report.addContent(errorReport);
-
-                    e.printStackTrace();
-                }
-
-                // -- append report to main XML report.
-                schemaTronXmlOut.addContent(report);
-            }
-        }
-        return schemaTronXmlOut;
     }
 
     /**
@@ -2122,7 +2062,7 @@ public class DataManager {
         Element xsdErrors = getXSDXmlReport(schema, md);
         if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
             errorReport.addContent(xsdErrors);
-            Integer[] results = {0, 0, 0};
+            Integer[] results = {0, xsdErrors.getChildren().size(), xsdErrors.getChildren("error", Namespaces.GEONET).size()};
             valTypeAndStatus.put("xsd", results);
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "  - XSD error: " + Xml.getString(xsdErrors));
@@ -2244,8 +2184,6 @@ public class DataManager {
                             Log.debug(Geonet.DATA_MANAGER, " - Schematron group is accepted:" + criteriaGroup.getId().getName() + " for schematron: "+schematron.getRuleName());
                         }
                         requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
-                    } else {
-                        requirement = SchematronRequirement.DISABLED;
                     }
                 }
 
@@ -2278,6 +2216,7 @@ public class DataManager {
                         Element xmlReport = Xml.transform(md, file, params);
                         if (xmlReport != null) {
                             report.addContent(xmlReport);
+
                             // add results to persistent validation information
                             int firedRules = 0;
                             @SuppressWarnings("unchecked")
@@ -2298,19 +2237,16 @@ public class DataManager {
                             }
                         }
                     } catch (Exception e) {
-                        Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+rule+" failed");
+                        Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+rule+" failed", e);
 
                         // If an error occurs that prevents to verify schematron rules, add to show in report
                         Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
                         errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
                         report.addContent(errorReport);
-
-                        e.printStackTrace();
                     }
 
                     // -- append report to main XML report.
                     schemaTronXmlOut.addContent(report);
-
 
                 }
 
