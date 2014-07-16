@@ -385,10 +385,10 @@ public class MetadataSchema
                     Xml.transform(schematronRule, schematronCompilationFile, schematronXsl);
                 } catch (FileNotFoundException e) {
                     Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule file not found " + schematronXslFilePath 
-                            + ". Error is " + e.getMessage());
+                            + ". Error is " + e.getMessage(), e);
                 } catch (Exception e) {
                     Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule compilation failed for " + schematronXslFilePath 
-                            + ". Error is " + e.getMessage());
+                            + ". Error is " + e.getMessage(), e);
                 }
             }
         }
