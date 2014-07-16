@@ -23,25 +23,24 @@
 
 package org.fao.geonet.geocat.services.thesaurus;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 //=============================================================================
 
@@ -87,7 +86,7 @@ public class GeocatUpdateElement implements Service {
 				return elResp;
 			}
 		}
-		KeywordBean bean = new KeywordBean().setNamespaceCode(namespace).setRelativeCode(newid);
+		KeywordBean bean = new KeywordBean(context.getBean(IsoLanguagesMapper.class)).setNamespaceCode(namespace).setRelativeCode(newid);
 		if (thesaType.equals("place")) {
 			String east = Util.getParam(params, "east");
 			String west = Util.getParam(params, "west");

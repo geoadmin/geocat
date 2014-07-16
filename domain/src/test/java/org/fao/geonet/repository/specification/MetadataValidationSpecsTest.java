@@ -1,14 +1,17 @@
 package org.fao.geonet.repository.specification;
 
-import static org.junit.Assert.*;
-
 import org.fao.geonet.domain.MetadataValidation;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.MetadataValidationRepositoryTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test metadata validation specification class.
@@ -33,7 +36,7 @@ public class MetadataValidationSpecsTest extends AbstractSpringDataTest {
         final Specification<MetadataValidation> hasMetadata2Id = MetadataValidationSpecs.hasMetadataId(validation2.getId().getMetadataId());
         assertEquals(1, _repo.count(hasMetadata2Id));
 
-        SpringDataTestSupport.assertSameContents(validation, _repo.findOne(hasMetadata1Id));
-        SpringDataTestSupport.assertSameContents(validation2, _repo.findOne(hasMetadata2Id));
+        assertSameContents(validation, _repo.findOne(hasMetadata1Id));
+        assertSameContents(validation2, _repo.findOne(hasMetadata2Id));
     }
 }

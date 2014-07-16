@@ -71,6 +71,7 @@ import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserGroupRepository;
@@ -341,7 +342,9 @@ public final class Utils {
             strategy = new ExtentsStrategy(baseUrl, appPath, context.getBean(ExtentManager.class), language);
             break;
         case keywords:
-            strategy = new KeywordsStrategy(context.getBean(ThesaurusManager.class), appPath, baseUrl, language);
+            final ThesaurusManager thesaurusMan = context.getBean(ThesaurusManager.class);
+            final IsoLanguagesMapper languagesMapper = context.getBean(IsoLanguagesMapper.class);
+            strategy = new KeywordsStrategy(languagesMapper, thesaurusMan, appPath, baseUrl, language);
             break;
         case formats:
             strategy = new FormatsStrategy(context.getBean(FormatRepository.class), appPath, baseUrl, language);

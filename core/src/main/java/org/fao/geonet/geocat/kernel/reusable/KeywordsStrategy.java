@@ -68,13 +68,15 @@ public final class KeywordsStrategy extends ReplacementStrategy
     private static final String GEOCAT_THESAURUS_NAME = "local._none_.geocat.ch";
     public static final String NON_VALID_THESAURUS_NAME = "local._none_.non_validated";
 
-    private final ThesaurusManager _thesaurusMan;
-    private final String           _styleSheet;
-    private final String           _currentLocale;
+    private final ThesaurusManager   _thesaurusMan;
+    private final String             _styleSheet;
+    private final String             _currentLocale;
+    private final IsoLanguagesMapper _isoLanguagesMapper;
 
-    public KeywordsStrategy(ThesaurusManager thesaurusMan, String appPath, String baseURL, String currentLocale)
+    public KeywordsStrategy(IsoLanguagesMapper isoLanguagesMapper, ThesaurusManager thesaurusMan, String appPath, String baseURL, String currentLocale)
     {
         this._thesaurusMan = thesaurusMan;
+        this._isoLanguagesMapper = isoLanguagesMapper;
         _styleSheet = appPath + Utils.XSL_REUSABLE_OBJECT_DATA_XSL;
 
         _currentLocale = currentLocale;
@@ -160,7 +162,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
 
     private KeywordsSearcher search(String keyword) throws Exception
     {
-        KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(IsoLanguagesMapper.getInstance());
+        KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(this._isoLanguagesMapper);
         builder.addLang("eng")
             .addLang("ger")
             .addLang("fre")
@@ -187,7 +189,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
         
         builder.addThesaurus(NON_VALID_THESAURUS_NAME);
 
-        KeywordsSearcher searcher = new KeywordsSearcher(IsoLanguagesMapper.getInstance(), _thesaurusMan);
+        KeywordsSearcher searcher = new KeywordsSearcher(this._isoLanguagesMapper, _thesaurusMan);
 
         searcher.search(builder.build());
         searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
@@ -204,9 +206,9 @@ public final class KeywordsStrategy extends ReplacementStrategy
         } else {
             thesaurusName = NON_VALID_THESAURUS_NAME;
         }
-        KeywordsSearcher searcher = new KeywordsSearcher(IsoLanguagesMapper.getInstance(), _thesaurusMan);
+        KeywordsSearcher searcher = new KeywordsSearcher(this._isoLanguagesMapper, _thesaurusMan);
 
-        KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(IsoLanguagesMapper.getInstance());
+        KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(this._isoLanguagesMapper);
         builder.addLang(_currentLocale)
         	.keyword("*", KeywordSearchType.MATCH, false)
         	.addThesaurus(thesaurusName);
@@ -358,7 +360,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
 
         Thesaurus thesaurus = _thesaurusMan.getThesaurusByName(nonValidThesaurusName);
 
-        KeywordBean bean = new KeywordBean().
+        KeywordBean bean = new KeywordBean(this._isoLanguagesMapper).
         		setNamespaceCode(NAMESPACE).
         		setRelativeCode(code);
         		
@@ -447,7 +449,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
         String code = UUID.randomUUID().toString();
         Thesaurus thesaurus = _thesaurusMan.getThesaurusByName(NON_VALID_THESAURUS_NAME);
 
-        KeywordBean keywordBean = new KeywordBean()
+        KeywordBean keywordBean = new KeywordBean(this._isoLanguagesMapper)
             .setNamespaceCode(NAMESPACE)
             .setRelativeCode(code)
             .setValue("", Geocat.DEFAULT_LANG)

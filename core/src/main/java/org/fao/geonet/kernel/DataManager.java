@@ -46,6 +46,7 @@ import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.geocat.kernel.reusable.*;
 import org.fao.geonet.geocat.kernel.reusable.log.ReusableObjectLogger;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.geocat.HiddenMetadataElementsRepository;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 
@@ -152,7 +153,11 @@ public class DataManager {
     public static void reindex(ServiceContext context, String newid, ThesaurusManager manager) throws Exception {
         Processor.clearCache();
 
-        final KeywordsStrategy strategy = new KeywordsStrategy(manager, context.getAppPath(), context.getBaseUrl(), context.getLanguage());
+        final String appPath1 = context.getAppPath();
+        final String baseUrl = context.getBaseUrl();
+        final String language = context.getLanguage();
+        final IsoLanguagesMapper isolangMapper = context.getBean(IsoLanguagesMapper.class);
+        final KeywordsStrategy strategy = new KeywordsStrategy(isolangMapper, manager, appPath1, baseUrl, language);
         ArrayList<String> fields = new ArrayList<String>();
 
         fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
@@ -1469,6 +1474,7 @@ public class DataManager {
         if (!gc.isReadOnly()) {
             final IncreasePopularityTask task = srvContext.getBean(IncreasePopularityTask.class);
             task.setMetadataId(Integer.valueOf(id));
+            task.setServiceContext(srvContext);
             gc.getThreadPool().runTask(task);
         } else {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
@@ -2081,7 +2087,7 @@ public class DataManager {
      * @return
      * @throws Exception
      */
-    public Pair <Element, String> doValidate(ServiceContext context, String schema, String id, Element metadata, String lang, boolean forEditing) throws Exception {
+    public Pair <Element, String> doValidate(ServiceContext context, String schema, String metadataId, Element metadata, String lang, boolean forEditing) throws Exception {
 
         String version = null;
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
@@ -2091,14 +2097,14 @@ public class DataManager {
         if (!forEditing) {
             md = (Element) metadata.clone();
             // always hideElements for validation
-            hideElements(context, md, id, false, true);
+            hideElements(context, md, metadataId, false, true);
         } else {
             md = metadata;
         }
         UserSession session = null;
         if (context != null && context.getUserSession() != null) {
             session = context.getUserSession();
-            Element sessionReport = (Element) session.getProperty(Geonet.Session.VALIDATION_REPORT + id);
+            Element sessionReport = (Element) session.getProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
         if (sessionReport != null && !forEditing) {
                 if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
                 Log.debug(Geonet.DATA_MANAGER, "  Validation report available in session.");

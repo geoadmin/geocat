@@ -24,7 +24,6 @@
 package org.fao.geonet.geocat.cgp;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataType;
@@ -44,7 +43,10 @@ import org.jdom.Element;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 //=============================================================================
@@ -235,7 +237,7 @@ class Harvester
 
 		// log.info("  - XSLT transformation using /GM03-to-ISO19139CHE.xsl");
 
-		Map<String, String> param = new HashMap<String, String>();
+		Map<String, Object> param = new HashMap<String, Object>();
 		//param.put("lang", params.lang);
 		//param.put("topic", params.topic);
 		param.put("uuid", uuid);

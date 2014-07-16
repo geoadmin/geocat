@@ -6,7 +6,6 @@ import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.jdom.Element;
 import org.junit.Test;
@@ -52,7 +51,7 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
                                 GMD).addContent(new Element("CharacterString", GCO)));
 
                         Metadata updateMd = _dataManager.updateMetadata(serviceContext, mdId, newMd, false, false, false, "eng",
-                                new ISODate().getDateAndTime(), false);
+                                new ISODate().getDateAndTime(), false, false);
                         assertNotNull(updateMd);
                         final boolean hasNext = updateMd.getCategories().iterator().hasNext();
                         assertTrue(hasNext);

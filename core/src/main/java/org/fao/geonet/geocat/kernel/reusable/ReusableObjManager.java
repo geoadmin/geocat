@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.geocat.kernel.reusable.log.ReusableObjectLogger;
 import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.geocat.FormatRepository;
@@ -242,8 +243,9 @@ public class ReusableObjManager
         ReusableObjectLogger logger = params.logger;
         String baseURL = params.baseURL;
         ThesaurusManager thesaurusMan = params.srvContext.getBean(ThesaurusManager.class);
-
-        KeywordsStrategy strategy = new KeywordsStrategy(thesaurusMan, _appPath, baseURL, params.srvContext.getLanguage());
+        final IsoLanguagesMapper isoLanguagesMapper = params.srvContext.getBean(IsoLanguagesMapper.class);
+        final String language = params.srvContext.getLanguage();
+        KeywordsStrategy strategy = new KeywordsStrategy(isoLanguagesMapper, thesaurusMan, _appPath, baseURL, language);
         return performReplace(xml, defaultMetadataLang, KEYWORDS_PLACEHOLDER, KEYWORDS, logger, strategy,
                 params.addOnly,params.srvContext);
     }
@@ -265,7 +267,7 @@ public class ReusableObjManager
         String baseURL = params.baseURL;
 
         UserRepository userRepo = params.srvContext.getBean(UserRepository.class);
-        UserGroupRepository userGroupRepo = params.srvContext.getBean(UserGroupRepository.class);;
+        UserGroupRepository userGroupRepo = params.srvContext.getBean(UserGroupRepository.class);
         ContactsStrategy strategy = new ContactsStrategy(userRepo, userGroupRepo, _appPath, baseURL, params.srvContext.getLanguage());
         return performReplace(xml, defaultMetadataLang, CONTACTS_PLACEHOLDER, CONTACTS, logger, strategy,
                 params.addOnly,params.srvContext);
@@ -507,22 +509,24 @@ public class ReusableObjManager
 
             ReplacementStrategy strategy;
 
+            final String language = params.srvContext.getLanguage();
             if (xlink.getName().equals("contact") || xlink.getName().equals("pointOfContact")
                      || xlink.getName().equals("distributorContact") || xlink.getName().equals("citedResponsibleParty") || xlink.getName().equals("parentResponsibleParty")) {
 
 
                 UserRepository userRepo = params.srvContext.getBean(UserRepository.class);
                 UserGroupRepository userGroupRepo = params.srvContext.getBean(UserGroupRepository.class);
-                strategy = new ContactsStrategy(userRepo, userGroupRepo, _appPath, baseUrl, params.srvContext.getLanguage());
+                strategy = new ContactsStrategy(userRepo, userGroupRepo, _appPath, baseUrl, language);
             } else if (xlink.getName().equals("resourceFormat") || xlink.getName().equals("distributionFormat")) {
                 FormatRepository formatRepo = params.srvContext.getBean(FormatRepository.class);
-                strategy = new FormatsStrategy(formatRepo, _appPath, baseUrl, params.srvContext.getLanguage());
+                strategy = new FormatsStrategy(formatRepo, _appPath, baseUrl, language);
             } else if (xlink.getName().equals("descriptiveKeywords")) {
                 ThesaurusManager thesaurusManager = params.srvContext.getBean(ThesaurusManager.class);
-                strategy = new KeywordsStrategy(thesaurusManager, _appPath, baseUrl, params.srvContext.getLanguage());
+                IsoLanguagesMapper isoLanguagesMapper = params.srvContext.getBean(IsoLanguagesMapper.class);
+                strategy = new KeywordsStrategy(isoLanguagesMapper, thesaurusManager, _appPath, baseUrl, language);
             } else {
                 ExtentManager extentManager = params.srvContext.getBean(ExtentManager.class);
-                strategy = new ExtentsStrategy(baseUrl, _appPath, extentManager, params.srvContext.getLanguage());
+                strategy = new ExtentsStrategy(baseUrl, _appPath, extentManager, language);
             }
 
             Log.info(Geocat.Module.REUSABLE, "Updating a " + strategy + " in metadata id="

@@ -23,20 +23,12 @@
 
 package org.fao.geonet.geocat.services.reusable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.base.Function;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geocat;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.geocat.kernel.reusable.ContactsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
@@ -48,6 +40,7 @@ import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.geocat.FormatRepository;
@@ -55,7 +48,11 @@ import org.fao.geonet.repository.geocat.RejectedSharedObjectRepository;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
-import com.google.common.base.Function;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Deletes the objects from deleted reusable object table and unpublishes the
@@ -72,11 +69,13 @@ public class DeleteUnused implements Service {
         try {
             UserRepository userRepo = context.getBean(UserRepository.class);
             UserGroupRepository userGroupRepo = context.getBean(UserGroupRepository.class);
+            final IsoLanguagesMapper isoLanguagesMapper = context.getBean(IsoLanguagesMapper.class);
+            final ThesaurusManager thesaurusMan = context.getBean(ThesaurusManager.class);
 
             process(new ContactsStrategy(userRepo, userGroupRepo, appPath, baseUrl, language), context);
             process(new ExtentsStrategy(baseUrl, appPath, context.getBean(ExtentManager.class), language), context);
             process(new FormatsStrategy(context.getBean(FormatRepository.class), appPath, baseUrl, language), context);
-            process(new KeywordsStrategy(context.getBean(ThesaurusManager.class), appPath, baseUrl, language), context);
+            process(new KeywordsStrategy(isoLanguagesMapper, thesaurusMan, appPath, baseUrl, language), context);
             processDeleted(context);
 
             return new Element("status").setText("true");

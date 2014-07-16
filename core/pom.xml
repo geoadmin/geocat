@@ -62,10 +62,6 @@
             <groupId>org.jzkit</groupId>
             <artifactId>a2j</artifactId>
         </dependency>
-        <dependency>
-            <groupId>marc4j</groupId>
-            <artifactId>marc4j</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.geotools</groupId>

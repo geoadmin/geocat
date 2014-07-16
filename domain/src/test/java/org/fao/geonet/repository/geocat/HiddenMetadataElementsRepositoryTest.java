@@ -1,14 +1,13 @@
 package org.fao.geonet.repository.geocat;
 
-import static org.junit.Assert.*;
-
 import org.fao.geonet.domain.geocat.HiddenMetadataElement;
 import org.fao.geonet.repository.AbstractSpringDataTest;
-import org.fao.geonet.repository.SpringDataTestSupport;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test HiddenMetadataElementsRepository.
@@ -30,7 +29,7 @@ public class HiddenMetadataElementsRepositoryTest extends AbstractSpringDataTest
         repo.save(elem);
 
         HiddenMetadataElement found = repo.findOne(elem.getId());
-        SpringDataTestSupport.assertSameContents(elem, found);
+        assertSameContents(elem, found);
     }
 
     @Test
@@ -49,11 +48,11 @@ public class HiddenMetadataElementsRepositoryTest extends AbstractSpringDataTest
 
         List<HiddenMetadataElement> found = repo.findAllByMetadataId(2);
         assertEquals(1, found.size());
-        SpringDataTestSupport.assertSameContents(elem2, found.get(0));
+        assertSameContents(elem2, found.get(0));
 
         found = repo.findAllByMetadataId(1);
         assertEquals(1, found.size());
-        SpringDataTestSupport.assertSameContents(elem, found.get(0));
+        assertSameContents(elem, found.get(0));
     }
 
     @Test
@@ -84,6 +83,6 @@ public class HiddenMetadataElementsRepositoryTest extends AbstractSpringDataTest
 
         found = repo.findAllByMetadataIdAndXPathExpr(elem3.getMetadataId(), elem3.getxPathExpr());
         assertEquals(1, found.size());
-        SpringDataTestSupport.assertSameContents(elem3, found.get(0));
+        assertSameContents(elem3, found.get(0));
     }
 }

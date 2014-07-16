@@ -23,35 +23,39 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.xlink.XLink;
-
-import org.fao.geonet.domain.geocat.HiddenMetadataElement;
-import org.fao.geonet.exceptions.BadParameterEx;
-
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
-import org.fao.geonet.repository.geocat.HiddenMetadataElementsRepository;
-
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.Util;
-import org.fao.geonet.utils.Xml;
+import jeeves.xlink.XLink;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.geocat.HiddenMetadataElement;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
+import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.lib.Lib;
-import org.jdom.*;
-
-import java.util.*;
-import org.jdom.filter.ElementFilter;
+import org.fao.geonet.repository.geocat.HiddenMetadataElementsRepository;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Attribute;
+import org.jdom.Content;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.Text;
 import org.jdom.xpath.XPath;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -454,7 +458,7 @@ class EditUtils {
      *    <gco:CharacterString>Template for Vector data in ISO19139 (multilingual)</gco:CharacterString>
      *    <gmd:PT_FreeText>
      *        <gmd:textGroup>
-     *            <gmd:LocalisedCharacterString locale="#FRE">Modèle de données vectorielles en ISO19139 (multilingue)</gmd:LocalisedCharacterString>
+     *            <gmd:LocalisedCharacterString locale="#FRE">ModÃ©le de donnÃ©es vectorielles en ISO19139 (multilingue)</gmd:LocalisedCharacterString>
      *        </gmd:textGroup>
      * </pre>
      *

@@ -27,13 +27,10 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.KeywordsSearcher;
-import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.KeywordBean;
+import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
 
@@ -75,7 +72,7 @@ public class GetCHEKeywordById implements Service {
 
 		String[] langs = locales.split(",");
 		for (int i = 0; i < langs.length; i++) {
-			langs[i] = IsoLanguagesMapper.getInstance().iso639_1_to_iso639_2(langs[i], langs[i]);
+			langs[i] = context.getBean(IsoLanguagesMapper.class).iso639_1_to_iso639_2(langs[i], langs[i]);
 		}
 		KeywordBean kb = searcher.searchById(uri, sThesaurusName, langs);
 		if (kb == null)

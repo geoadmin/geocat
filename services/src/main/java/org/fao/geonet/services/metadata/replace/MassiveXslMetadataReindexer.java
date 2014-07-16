@@ -38,7 +38,7 @@ public class MassiveXslMetadataReindexer extends MetadataIndexerProcessor {
                                        ServiceContext context,
                                        Set<Integer> metadata,
                                        MassiveReplaceReport report) {
-        super(dm);
+        super(context);
         this.iter = iter;
         this.process = process;
         this.params = params;
@@ -205,7 +205,7 @@ public class MassiveXslMetadataReindexer extends MetadataIndexerProcessor {
                     dataMan.updateMetadata(context, id, processedMetadata,
                             false, true, true,
                             context.getLanguage(),
-                            new ISODate().toString(), true);
+                            new ISODate().toString(), true, false);
                 }
 
 

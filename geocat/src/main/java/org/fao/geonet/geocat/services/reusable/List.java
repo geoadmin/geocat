@@ -32,6 +32,7 @@ import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.geocat.kernel.reusable.*;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.geocat.FormatRepository;
@@ -66,7 +67,8 @@ public class List implements Service
                 strategy = new ExtentsStrategy(baseUrl, appPath, context.getBean(ExtentManager.class), language);
                 break;
             case keywords:
-                strategy = new KeywordsStrategy(context.getBean(ThesaurusManager.class), appPath, baseUrl, language);
+                strategy = new KeywordsStrategy(context.getBean(IsoLanguagesMapper.class), context.getBean(ThesaurusManager.class),
+                        appPath, baseUrl, language);
                 break;
             case formats:
                 strategy = new FormatsStrategy(context.getBean(FormatRepository.class), appPath, baseUrl, language);

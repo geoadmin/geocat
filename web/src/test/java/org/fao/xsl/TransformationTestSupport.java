@@ -78,7 +78,7 @@ public final class TransformationTestSupport {
             transformer.outputDir = outputDir;
             transformer.debug = true;
             
-            Map<String, String> params = new HashMap<String, String>();
+            Map<String, Object> params = new HashMap<String, Object>();
             params.put("uuid", "1234");
             params.put("validate", testValidity ? TransformationTestSupport.isoXsd.getAbsolutePath(): null);
             params.put("debugFileName", outputDir.getAbsolutePath()+File.separator+src.getName());

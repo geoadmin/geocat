@@ -34,8 +34,12 @@ import org.apache.xml.resolver.tools.CatalogResolver;
 import org.eclipse.core.runtime.URIUtil;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.jdom.Attribute;
-import org.jdom.*;
 import org.jdom.Content;
+import org.jdom.DocType;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
 import org.jdom.Text;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
@@ -71,13 +75,16 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import java.util.*;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
@@ -1353,4 +1360,6 @@ public final class Xml
 
             builder.insert(0, attBuilder);
         }
-    
+    }
+
+}

@@ -1028,14 +1028,14 @@
       <name>Geotools repository</name>
       <url>http://download.osgeo.org/webdav/geotools/</url>
     </repository>
-    <repository>
+<!--     <repository>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
       <id>k-int</id>
       <name>Developer k-int repository</name>
       <url>http://developer.k-int.com/maven2/</url>
-    </repository>
+    </repository> -->
 
     <!-- Local repository which allow to handle temporarly local dependencies
      // FIXME : Should be a remote repository -->

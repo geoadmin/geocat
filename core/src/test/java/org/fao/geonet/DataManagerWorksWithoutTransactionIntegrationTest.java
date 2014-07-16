@@ -48,7 +48,7 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
                                 GMD).addContent(new Element("CharacterString", GCO)));
 
                         Metadata updateMd = _dataManager.updateMetadata(serviceContext, mdId, newMd, false, false, false, "eng",
-                                new ISODate().getDateAndTime(), false);
+                                new ISODate().getDateAndTime(), false, false);
                         assertNotNull(updateMd);
                         final boolean hasNext = updateMd.getCategories().iterator().hasNext();
                         assertTrue(hasNext);

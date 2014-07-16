@@ -1,28 +1,35 @@
 package org.fao.geonet.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.net.URLEncoder;
-import java.util.*;
-
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.AttributeImpl;
 import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.search.GeoNetworkAnalyzer;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.guiservices.XmlCacheManager;
-import org.fao.geonet.utils.Xml;
 import org.jdom.filter.Filter;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class LangUtils {
 
@@ -308,7 +315,7 @@ public class LangUtils {
         descElem.setNamespace(null);
 
         String desc;
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, Object> params = new HashMap<String, Object>();
         params.put("metadataLang", metadataLang);
         String styleSheet;
         switch (fieldType)

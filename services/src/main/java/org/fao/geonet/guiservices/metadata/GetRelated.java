@@ -28,8 +28,6 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.geocat.kernel.RelatedMetadata;
-
-import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
@@ -57,99 +55,96 @@ import java.util.List;
 
 /**
  * Perform a search and return all children metadata record for current record.
- * 
+ *
  * In some cases, related records found :
  * <ul>
  * <li>could not be readable by current user.</li>
  * <li>could not be visible by current user.</li>
  * </ul>
  * so results depend on user privileges for related records.
- * 
+ *
  * Parameters:
  * <ul>
  * <li>type: online|thumbnail|service|dataset|parent|children|source|fcat|siblings|associated|related|null (ie. all)</li>
  * <li>from: start record</li>
  * <li>to: end record (default 1000)</li>
- * <li>id or uuid: could be optional if call in Jeeves service forward call. 
+ * <li>id or uuid: could be optional if call in Jeeves service forward call.
  *  In that case geonet:info/uuid is used.</li>
  * </ul>
- * 
+ *
  * In general, relations are defined in ISO19139 records an ISO profiles. The
  * target document may be in a different schema (eg. ISO19110 for feature
- * catalog, Dublin core for cross reference to a document). 
- * 
- * 
+ * catalog, Dublin core for cross reference to a document).
+ *
+ *
  * Note about each type:
  * <h3>online</h3>
  * List of online resources (see <schema>/process/extract-relations.xsl for details).
- * 
+ *
  * <h3>thumbnail</h3>
  * List of thumbnails (see <schema>/process/extract-relations.xsl for details).
- * 
+ *
  * <h3>service</h3>
  * Only apply to ISO19139 and ISO profiles.
- * Search for all records having an operatesOn element pointing to the requested 
+ * Search for all records having an operatesOn element pointing to the requested
  * metadata record UUID (see indexing to know how operatesOn element is indexed).
- * 
+ *
  * <h3>parent</h3>
  * Only apply to ISO19139 and ISO profiles.
- * Get the parentIdentifier from the requested 
+ * Get the parentIdentifier from the requested
  * metadata record
- * 
+ *
  * <h3>children</h3>
  * Only apply to ISO19139 and ISO profiles.
- * Search for all records having an parentUuid element pointing to the requested 
+ * Search for all records having an parentUuid element pointing to the requested
  * metadata record UUID (see indexing to know how operatesOn element is indexed).
- * 
- * 
+ *
+ *
  * <h3>dataset</h3>
  * Only apply to ISO19139 and ISO profiles.
  * Get all records defined in operatesOn element (the current metadata is supposed
  * to be a service metadata in that case).
- * 
+ *
  * <h3>source</h3>
  * Only apply to ISO19139 and ISO profiles.
  * Get all records defined in source element (in data quality section).
- * 
+ *
  * <h3>hassource</h3>
  * Only apply to ISO19139 and ISO profiles.
  * Get all records where this record is defined has source (in data quality section).
- * 
+ *
  * <h3>fcat</h3>
  * Only apply to ISO19110, ISO19139 and ISO profiles.
  * Get all records defined in featureCatalogueCitation.
- * 
+ *
  * <h3>siblings</h3>
  * Only apply to ISO19139 and ISO profiles.
  * Get all aggregationInfo records. This relation provides
  * information about association type and initiative type.
- * 
+ *
  * <h3>associated</h3>
  * Only apply to ISO19139 and ISO profiles.
  * Search for all records having an agg_associated field pointing to the requested
  * metadata record (inverse direction of sibilings). This relation does not
  * inform about association type and initiative type.
- * 
+ *
  * <h3>related</h3>
  * (deprecated) Use to link ISO19110 and ISO19139 record.
- * 
- * 
+ *
+ *
  *
  * TODO: Part of this should be moved to schema plugins as it might
  * be different according to schema. extract-relations.xsl cover part
  * of the needs.
- * 
+ *
  */
 public class GetRelated implements Service, RelatedMetadata {
 
     private ServiceConfig _config;
     private static Namespace dct = Namespace.getNamespace("dct", "http://purl.org/dc/terms/");
-    private static Namespace gmd = Namespace.getNamespace("gmd",
-            "http://www.isotc211.org/2005/gmd");
-    private static Namespace srv = Namespace.getNamespace("srv",
-            "http://www.isotc211.org/2005/srv");
-    private static Namespace gco = Namespace.getNamespace("gco",
-            "http://www.isotc211.org/2005/gco");
+    private static Namespace gmd = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
+    private static Namespace srv = Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
+    private static Namespace gco = Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
     private static final String XPATH_FOR_AGGRGATIONINFO = "*//gmd:aggregationInfo/*" +
             "[gmd:aggregateDataSetIdentifier/*/gmd:code " +
             "and gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue != '' " +
@@ -157,6 +152,10 @@ public class GetRelated implements Service, RelatedMetadata {
     private static List<Namespace> nsList = Arrays.asList(gmd, gco, srv);
     private static String maxRecords = "1000";
     private static boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+
+    public void init(String appPath, ServiceConfig config) throws Exception {
+        _config = config;
+    }
 
     public Element exec(Element params, ServiceContext context)
             throws Exception {
@@ -192,22 +191,13 @@ public class GetRelated implements Service, RelatedMetadata {
 
         return getRelated(context, id, uuid, type, Integer.parseInt(from), Integer.parseInt(to), Boolean.parseBoolean(fast));
     }
-    
-    public void init(String appPath, ServiceConfig config) throws Exception {
-        _config = config;
-    }
 
-    public Element getRelated(Element params, ServiceContext context) throws Exception {
-        String type = Util.getParam(params, "type", "");
-        String fast = Util.getParam(params, "fast", "true");
-        String from = Util.getParam(params, "from", "1");
-        String to = Util.getParam(params, "to", maxRecords);
-
-        Log.info(Geonet.SEARCH_ENGINE, "GuiService param is " + _config.getValue("guiService"));
-
-        Element info = params.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
-        int id;
-        String uuid;
+    @Override
+    public Element getRelated(ServiceContext context, int id, String uuid, String type, int from_, int to_, boolean fast_)
+            throws Exception {
+        final String from = "" + from_;
+        final String to = "" + to_;
+        final String fast = "" + fast_;
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
         Element relatedRecords = new Element("relations");
@@ -249,8 +239,6 @@ public class GetRelated implements Service, RelatedMetadata {
         // Get aggregates from this record
         if (type.equals("") || type.contains("siblings")) {
             Element response = new Element("response");
-
-            // TODO this should use lucene index instead of xsl transforms
             List<?> sibs = Xml
                     .selectNodes(
                             md,
@@ -324,7 +312,7 @@ public class GetRelated implements Service, RelatedMetadata {
             }
         }
 
-        // 
+        //
         if (type.equals("") || type.contains("hassource")) {
             // Return records where this record is a source dataset
             relatedRecords.addContent(search(uuid, "hassource", context, from, to, fast));
@@ -335,8 +323,7 @@ public class GetRelated implements Service, RelatedMetadata {
             // Related records could be feature catalogue defined in relation table
             relatedRecords.addContent(new Element("related").addContent(Get.getRelation(id, "full", context)));
             // Or feature catalogue define in feature catalogue citation
-            relatedRecords.addContent(search(uuid, "hasfeaturecat", context, from,
-                    to, fast));
+            relatedRecords.addContent(search(uuid, "hasfeaturecat", context, from, to, fast));
 
             //Now, add the aggregationInfo elements
             if(md != null) {
@@ -354,7 +341,7 @@ public class GetRelated implements Service, RelatedMetadata {
 
                     element.setAttribute("parent", "true");
                     relatedRecords.addContent(element);
-        }
+                }
             }
         }
 
@@ -380,16 +367,15 @@ public class GetRelated implements Service, RelatedMetadata {
             relatedRecords.addContent(new Element("metadata").addContent((Content) md.clone()));
         }
 
-
         return relatedRecords;
     }
 
     /**
-     * Search in metadata all matching element for the filter 
+     * Search in metadata all matching element for the filter
      * and return a list of uuid separated by or to be used in a
      * search on uuid. Extract uuid from attribute uuidref of
      * matched element.
-     * 
+     *
      * @param md
      * @param el
      * @return
@@ -451,10 +437,8 @@ public class GetRelated implements Service, RelatedMetadata {
         return uuids;
     }
 
-    private Element search(String uuid, String type, ServiceContext context,
-            String from, String to, String fast) throws Exception {
-        GeonetContext gc = (GeonetContext) context
-                .getHandlerContext(Geonet.CONTEXT_NAME);
+    private Element search(String uuid, String type, ServiceContext context, String from, String to, String fast) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SearchManager searchMan = gc.getBean(SearchManager.class);
 
         // perform the search
@@ -503,21 +487,18 @@ public class GetRelated implements Service, RelatedMetadata {
         }
     }
 
-	private Element getRecord(String uuid, ServiceContext context, DataManager dm) {
-		Element content = null;
-		try {
-			String id = dm.getMetadataId(uuid);
-			boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+		private Element getRecord(String uuid, ServiceContext context, DataManager dm) {
+			Element content = null;
+			try {
+				String id = dm.getMetadataId(uuid);
+				boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
 
-            Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
-			content = dm.getMetadata(context, id,
-																forEditing, withValidationErrors,
-                            	keepXlinkAttributes);
-		} catch (Exception e) {
-			if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-				Log.debug(Geonet.SEARCH_ENGINE, "Metadata "+uuid+" record is not visible for user.");
+                Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
+				content = dm.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+			} catch (Exception e) {
+				if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+					Log.debug(Geonet.SEARCH_ENGINE, "Metadata "+uuid+" record is not visible for user.");
+			}
+			return content;
 		}
-		return content;
-	}
-
 }

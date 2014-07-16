@@ -8,6 +8,7 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.persistence.*;
 import java.util.Date;
+import java.util.IdentityHashMap;
 
 /**
  * Represents a record of a metadata that was published or unpublished.
@@ -144,7 +145,7 @@ public class PublishRecord extends GeonetEntity {
 
     @Nonnull
     @Override
-    public Element asXml() {
+    protected Element asXml(IdentityHashMap<Object, Void> alreadyEncoded) {
         return new Element("record")
                 .addContent(new Element("uuid").setText("" + uuid))
                 .addContent(new Element("entity").setText(entity))

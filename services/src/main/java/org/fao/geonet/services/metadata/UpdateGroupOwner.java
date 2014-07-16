@@ -37,12 +37,9 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
-
-import javax.annotation.Nonnull;
 
 /**
  * Update the metadata group owner.
@@ -95,7 +92,7 @@ public class UpdateGroupOwner extends NotInReadOnlyModeService {
         metadataRepository.save(metadata);
 
         //--- index metadata
-        dataMan.indexMetadata(id, true);
+        dataMan.indexMetadata(id, true, context);
 
         //--- return id for showing
         return new Element(Jeeves.Elem.RESPONSE).
