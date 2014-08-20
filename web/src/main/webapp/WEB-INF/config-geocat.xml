@@ -69,7 +69,13 @@
 
             <output sheet="shared-user/user-xml.xsl" contentType="text/xml; charset=UTF-8" />
         </service>
-        
+
+        <service name="plain.xml.user.get">
+            <class name=".services.user.Get">
+                <param name="xml" />
+            </class>
+        </service>
+
         <service name="validated.shared.user.admin">
             <class name=".services.user.List" >
                 <param name="type" value="VALIDATED_SHARED"/>
@@ -79,6 +85,7 @@
                 <xml name="strings" file="xml/confirm.xml" />
             </output>
         </service>
+
         <service name="nonvalidated.shared.user.admin">
             <class name=".services.user.List" >
                 <param name="type" value="NON_VALIDATED_SHARED"/>
@@ -601,6 +608,38 @@
         <service name="header-template.xml">
             <output sheet="banner-template.xsl" />
         </service>
+        <service name="inspire.edit">
+            <documentation>
+                <![CDATA[
+            Edit a metadata record to make the metadata INSPIRE compliant.
 
+            Parameters:
+            * id or uuid
+            ]]></documentation>
+                        <output sheet="../xslt/ui-metadata/edit/inspire.xsl"/>
+                    </service>
+
+                    <service name="inspire.edit.model">
+                        <documentation>
+                            <![CDATA[
+            Obtain the json/model required by inspire.edit
+
+            Parameters:
+            * id or uuid
+            ]]></documentation>
+                        <class name=".services.metadata.inspire.GetEditModel" />
+                        <output sheet="../xslt/ui-metadata/edit/inspire-model.xsl" contentType="application/json" />
+                    </service>
+
+                    <service name="inspire.edit.save">
+                        <documentation>
+                            <![CDATA[
+            Save the changes made in inspire.edit
+
+            Parameters:
+            * id or uuid
+            ]]></documentation>
+            <class name=".services.metadata.inspire.Save" />
+        </service>
     </services>
 </geonet>

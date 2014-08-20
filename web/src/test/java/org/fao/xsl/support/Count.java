@@ -1,18 +1,25 @@
 package org.fao.xsl.support;
 
-import java.util.Iterator;
-
 import org.jdom.Element;
 import org.jdom.filter.Filter;
+
+import java.util.Iterator;
 
 public class Count implements Requirement
 {
 
     private final int    _expected;
     private final Filter _filter;
+    private final String msg;
 
     public Count(int expected, Filter filter)
     {
+        this("", expected, filter);
+    }
+
+    public Count(String msg, int expected, Filter filter)
+    {
+        this.msg = msg;
         this._filter = filter;
         _expected = expected;
     }
@@ -28,7 +35,7 @@ public class Count implements Requirement
         }
 
         if(_expected != count) {
-            System.err.println("Expected "+_expected+" but got "+count);
+            System.err.println(toString() + "\n\tExpected "+_expected+" but got "+count);
         }
         return _expected == count;
     }
@@ -36,6 +43,6 @@ public class Count implements Requirement
     @Override
     public String toString()
     {
-        return "count[" + _filter + "] = " + _expected;
+        return msg + " count[" + _filter + "] = " + _expected;
     }
 }

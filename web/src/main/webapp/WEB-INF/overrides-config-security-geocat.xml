@@ -126,5 +126,9 @@
         <addInterceptUrl  pattern="/apps/shared-objects/app/.*" access="hasRole('Administrator')"/>
 
         <addInterceptUrl  pattern="/srv/.*/metadata.summary.zip!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/.*//srv/.*/inspire.edit!?.*" access="hasRole('Editor')"/>
+        <addInterceptUrl  pattern="/srv/.*//srv/.*/inspire.edit.model!?.*" access="hasRole('Editor')"/>
+        <addInterceptUrl  pattern="/srv/.*//srv/.*/inspire.edit.save!?.*" access="hasRole('Editor')"/>
+        <addInterceptUrl pattern="/srv/.*/plain.xml.user.get!?.*" access="permitAll" />
     </spring>
 </overrides>

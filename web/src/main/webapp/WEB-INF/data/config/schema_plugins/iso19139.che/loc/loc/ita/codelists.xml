@@ -1,0 +1,394 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<codelists xmlns:gmd="http://www.isotc211.org/2005/gmd">
+	<!--  
+		<codelist name="gmd:CI_DateTypeCode">
+		<entry><code></code><label></label><description></description></entry>
+		</codelist>-->
+	<codelist name="gmd:MD_ScopeCode">
+		<entry>
+			<code>attribute</code>
+			<label>Istanza di attributo</label>
+			<description>Informazione valida per una concreta assegnazione di in genere di attributo, il valore dell'attributo</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>attributeType</code>
+			<label>Genere di attributo</label>
+			<description>Informazione valida per un genere di attributo</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>collectionHardware</code>
+			<label>Strumenti di rilevamento</label>
+			<description>Informazione valida per gli strumenti impiegati per la raccolta di dati</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>collectionSession</code>
+			<label>Operazione di rilevamento</label>
+			<description>Informazione valida per le attività di un'operazione di rilevamento</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>dataset</code>
+			<label>Set di dati</label>
+			<description>Informazione valida per un set di dati</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>series</code>
+			<label>Serie</label>
+			<description>Informazione valida per una serie
+				
+				Annotazione: Il termine serie si riferisce a qualsiasi unione di DS_Aggregate</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>nonGeographicDataset</code>
+			<label>Set di dati non geografico</label>
+			<description>Informazione valida per un set di dati non geografico</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>dimensionGroup</code>
+			<label>Gruppo di dimensioni</label>
+			<description>Informazione valida per un gruppo di dimensioni</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>feature</code>
+			<label>Istanza di oggetto</label>
+			<description>Informazione valida per un oggetto concreto</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>featureType</code>
+			<label>Genre di oggetto</label>
+			<description>Informazione valida per una classe di istanze simili di oggetti</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>propertyType</code>
+			<label>Genre di proprietà</label>
+			<description>Informazione valida per la proprietà di un genere di oggetto</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>fieldSession</code>
+			<label>Campagna sul terreno</label>
+			<description>Informazione per un'attività di raccolta di dati sul terreno</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>software</code>
+			<label>Software</label>
+			<description>Informazione per sistemi, moduli o procedure di software</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>service</code>
+			<label>Servizio</label>
+			<description>Informazione valida per un servizio che viene messo a disposizione da un offerente ad un utilizzatore attraverso determinate interfacce</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>model</code>
+			<label>Modello</label>
+			<description>Informazione valida per una riproduzione di un oggetto reale o ipotetico</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>tile</code>
+			<label>Piastrella</label>
+			<description>Informazione valida per un'unità spaziale inferiore (tile) di dati geografici</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!--<entry>
+			<code>stereomate</code>
+			<label>stereomate</label>
+			<description>The referencing entity applies to a transfer aggregate which was originally
+				identified as a stereo mate (DS_StereoMate)</description>
+		</entry>-->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!--<entry>
+			<code>sensor</code>
+			<label>Sensor</label>
+			<description>Einheit oder Teil einer Ausrüstung, welche erfasst oder registriert</description>
+		</entry>
+		<entry>
+			<code>transferAggregate</code>
+			<label>transferAggregate</label>
+			
+			<description>The referencing entity applies to a transfer aggregate which has no existence
+				outside of the transfer context</description>
+		</entry>-->
+		<!-- - - - - - - - - - - -
+			<entry>
+			<code>initiative</code>
+			<label>initiative</label>
+			<description>The referencing entity applies to a transfer aggregate which was originally
+			identified as an initiative (DS_Initiative)</description>
+			
+			</entry>
+			
+		<entry>
+			<code>platformSeries</code>
+			<label>platformSeries</label>
+			<description>The referencing entity applies to a transfer aggregate which was originally
+				identified as a platform series (DS_PlatformSeries)</description>
+		</entry>
+		<entry>
+			
+			<code>sensorSeries</code>
+			<label>sensorSeries</label>
+			<description>The referencing entity applies to a transfer aggregate which was originally
+				identified as a sensor series (DS_SensorSeries)</description>
+		</entry>
+		<entry>
+			<code>productionSeries</code>
+			
+			<label>productionSeries</label>
+			<description>The referencing entity applies to a transfer aggregate which was originally
+				identified as a production series (DS_ProductionSeries)</description>
+		</entry>
+		
+		<entry>
+			<code>otherAggregate</code>
+			<label>otherAggregate</label>
+			<description>The referencing entity applies to a transfer aggregate which has an existence
+				outside of the transfer context, but which does not pertains to a specific aggregate
+				type.</description>
+			
+		</entry>
+		-->
+		<entry>
+			<code>project</code>
+			<label>Progetto</label>
+			<description>Il progetto definisce il quadro organizzativo per l'esecuzione di un compito</description>
+		</entry>
+		<entry>
+			<code>stationSite</code>
+			<label>Stazione</label>
+			<description>Attività di rilevamento di dati di stazioni di misurazione. Questo tipo di dati non descrive i dati medesimi ma il genere e il modo di raccolta (parametri registrati, metodi, strumenti)</description>
+		</entry>
+		<entry>
+			<code>publication</code>
+			<label>Pubblicazione</label>
+			<description>Pubblicazioni e prodotti (opuscoli, articoli, rapporti, materiale audiovisivo)</description>
+		</entry>
+	</codelist>
+	<codelist name="che:CHE_CI_LegislationCode">
+		<entry>
+			<code>cantonalLaw</code>
+			<label>Legge cantonale</label>
+			<description>Legge cantonale</description>
+		</entry>
+		<entry>
+			<code>nationalLaw</code>
+			<label>Legge federale</label>
+			<description>Legge federale</description>
+		</entry>
+		<entry>
+			<code>nationalDecree</code>
+			<label>Ordinanza federale</label>
+			<description>Ordinanza federale</description>
+		</entry>
+		<entry>
+			<code>internationalObligation</code>
+			<label>Convenzione internazionale</label>
+			<description>Convenzione internazionale</description>
+		</entry>
+		<entry>
+			<code>otherLegalText</code>
+			<label>Altro testo legislativo</label>
+			<description>Altro testo legislativo</description>
+		</entry>
+		<entry>
+			<code>bylawsPrivatLaw</code>
+			<label>Statuti di diritto privato</label>
+			<description>Statuti di diritto privato</description>
+		</entry>
+		<entry>
+			<code>bylawsPublicLaw</code>
+			<label>Statuti di diritto pubblico</label>
+			<description>Statuti di diritto pubblico</description>
+		</entry>
+		<entry>
+			<code>communalLaw</code>
+			<label>Legge comunale</label>
+			<description>Legge comunale</description>
+		</entry>
+	</codelist>
+	<codelist name="che:CI_NumberTypeCode">
+		<entry>
+			<code>mainNumber</code>
+			<label>Numero principale</label>
+			<description>Numero principale</description>
+		</entry>
+		<entry>
+			<code>directNumber</code>
+			<label>Numero diretto</label>
+			<description>Numero diretto</description>
+		</entry>
+		<entry>
+			<code>mobile</code>
+			<label>Numero di cellulare</label>
+			<description>Numero di cellulare</description>
+		</entry>
+		<entry>
+			<code>facsimile</code>
+			<label>Numero di fax</label>
+			<description>Numero di fax</description>
+		</entry>
+	</codelist>
+	<codelist name="che:CHE_MD_FilmTypeCode">
+		<entry>
+			<code>BW</code>
+			<label>BN</label>
+			<description>Bianco/nero</description>
+		</entry>
+		<entry>
+			<code>C</code>
+			<label>C</label>
+			<description>A colori</description>
+		</entry>
+		<entry>
+			<code>CIR</code>
+			<label>IRC</label>
+			<description>Infrarosso a colori</description>
+		</entry>
+		<entry>
+			<code>IR</code>
+			<label>IR</label>
+			<description>Infrarosso</description>
+		</entry>
+	</codelist>
+	<codelist name="che:CHE_CI_projectTypeCode">
+		<entry>
+			<code>research</code>
+			<label>Ricerca</label>
+			<description>Ricerca</description>
+		</entry>
+		<entry>
+			<code>monitoringProgram</code>
+			<label>Programma di monitoraggio</label>
+			<description>Programma di monitoraggio</description>
+		</entry>
+		<entry>
+			<code>workProgram</code>
+			<label>Programma di lavoro</label>
+			<description>Programma di lavoro</description>
+		</entry>
+		<entry>
+			<code>inventory</code>
+			<label>Inventario</label>
+			<description>Inventario / ripresa</description>
+		</entry>
+		<entry>
+			<code>planning</code>
+			<label>Pianificazione</label>
+			<description>Pianificazione</description>
+		</entry>
+	</codelist>
+	<codelist name="che:basicGeodataIDTypeCode">
+		<entry>
+			<code>communal</code>
+			<label>Comune</label>
+			<description>ID del geodato di base a livello comunale</description>
+		</entry>
+		<entry>
+			<code>cantonal</code>
+			<label>Cantone</label>
+			<description>ID del geodato di base a livello cantonale</description>
+		</entry>
+		<entry>
+			<code>federal</code>
+			<label>Confederazione</label>
+			<description>ID del geodato di base a livello federale (cfr. raccolta dei geodati di base del diritto federale)</description>
+		</entry>
+		<entry>
+			<code>other</code>
+			<label>Altro</label>
+		</entry>
+	</codelist>
+	<codelist name="che:CHE_MD_modelTypeCode">
+		<entry>
+			<code>FeatureDescription</code>
+			<label>Descrizione di oggetto</label>
+			<description>Descrizione concettuale del modello</description>
+		</entry>
+		<entry>
+			<code>UMLdiagram</code>
+			<label>Diagramma UML</label>
+			<description>Descrizione grafica del modello in UML</description>
+		</entry>
+		<entry>
+			<code>EntityRelationshipModel</code>
+			<label>Diagramma entità-relazione</label>
+			<description>Descrizione grafica del modello in forma di diagramma E-R</description>
+		</entry>
+		<entry>
+			<code>INTERLIS1</code>
+			<label>INTERLIS 1</label>
+			<description>Descrizione testuale del modello in INTERLIS 1</description>
+		</entry>
+		<entry>
+			<code>INTERLIS2</code>
+			<label>INTERLIS 2</label>
+			<description>Descrizione testuale del modello in INTERLIS 2</description>
+		</entry>
+		<entry>
+			<code>GML</code>
+			<label>GML</label>
+			<description>Descrizione testuale del modello in GML</description>
+		</entry>
+		<entry>
+			<code>Other</code>
+			<label>Altro</label>
+			<description/>
+		</entry>
+	</codelist>
+	<codelist name="che:CHE_SV_inspireServiceTypeCode">
+		<entry>
+			<code>DiscoveryService</code>
+			<label>Servizio di ricerca</label>
+		</entry>
+		<entry>
+			<code>ViewService</code>
+			<label>Servizio di consultazione</label>
+		</entry>
+		<entry>
+			<code>DownloadService</code>
+			<label>Servizio di scaricamento</label>
+		</entry>
+		<entry>
+			<code>TransformationService</code>
+			<label>Servizio di conversione</label>
+		</entry>
+		<entry>
+			<code>InvokeSpatialDataService</code>
+			<label>Servizio di richiesta dei servizi di dati territoriali</label>
+		</entry>
+		<entry>
+			<code>OtherServices</code>
+			<label>Altri servizi</label>
+		</entry>
+	</codelist>
+    <codelist name="gmd:DS_AssociationTypeCode">
+        <entry>
+            <code>largerWorkCitation</code>
+            <label>Larger work citation</label>
+            <description>Riferimento ad un set di dati principale, del quale il presente è parte.</description>
+        </entry>
+        <entry>
+            <code>isTemporalStatOf</code>
+            <label>Temporal state</label>
+            <description>Riferimento da un set di dati in una serie temporale ad un altro set nella stessa serie.</description>
+        </entry>
+        <entry>
+            <code>isDescriptionOf</code>
+            <label>Description</label>
+            <description>Riferimento da un set di dati che descrive i dati referenziati.</description>
+        </entry>
+    </codelist>
+</codelists>

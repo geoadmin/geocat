@@ -118,13 +118,28 @@ public class ValidateTransformationTest
     	file = testFile(file, Control.ISO_GM03, rules, true);
 
     }
+@Test
+    public void exportAltTitleDuplicated() throws Throwable
+    {
+    	File file = new File(data, "non_validating/iso19139che/duplicate_group_text_in_gm03_bug.xml");
+    	Multimap<String, Requirement> rules = ArrayListMultimap.create();
+    	rules.put("title", new Count("title", 1, new Finder("plainText")));
+    	rules.put("alternateTitle", new Count("alternateTitle", 1, new Finder("plainText")));
+    	rules.put("collectiveTitle", new Count("collectiveTitle", 1, new Finder("plainText")));
+    	rules.put("abstract", new Count("abstract", 1, new Finder("plainText")));
+    	rules.put("purpose", new Count("purpose", 2, new Finder("plainText")));
+    	rules.put("organisationName", new Count("organisationName", 2, new Finder("plainText")));
+    	rules.put("positionName", new Count("positionName", 2, new Finder("plainText")));
+    	testFile(file, Control.ISO_GM03, rules, false);
+
+    }
 
     @Test
     public void smallGeom() throws Throwable
     {
         File file = new File(data, "non_validating/smallGeom.xml");
 		Multimap<String, Requirement> rules = ArrayListMultimap.create();
-	    file = testFile(file, Control.GM03_2_ISO, rules, true);
+	    testFile(file, Control.GM03_2_ISO, rules, true);
     }
 
     @Test
@@ -185,7 +200,13 @@ public class ValidateTransformationTest
         file = testFile(file, Control.ISO_GM03, rules, false);
         
         rules.clear();
-        
+        rules.put("che:CHE_MD_DataIdentification/gmd:topicCategory", new Exists(new Finder("MD_TopicCategoryCode", new EqualText("planningCadastre_Planning"))));
+        rules.put("che:CHE_MD_DataIdentification/gmd:topicCategory", new Exists(new Finder("MD_TopicCategoryCode", new EqualText("imageryBaseMapsEarthCover_BaseMaps"))));
+        rules.put("che:CHE_MD_DataIdentification/gmd:topicCategory", new Exists(new Finder("MD_TopicCategoryCode", new EqualText("planningCadastre_Planning"))));
+        rules.put("che:CHE_MD_DataIdentification/gmd:topicCategory", new Exists(new Finder("MD_TopicCategoryCode", new EqualText("geoscientificInformation_Geology"))));
+        rules.put("che:CHE_MD_DataIdentification/gmd:topicCategory", new Exists(new Finder("MD_TopicCategoryCode", new EqualText("environment_EnvironmentalProtection"))));
+        rules.put("che:CHE_MD_DataIdentification/gmd:topicCategory", new Exists(new Finder("MD_TopicCategoryCode", new EqualText("utilitiesCommunication_Energy"))));
+
         testFile(file, Control.GM03_2_ISO, rules, false);
         
     }

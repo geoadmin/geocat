@@ -283,7 +283,10 @@
             <class name=".services.metadata.ExportMetadataSummary"/>
             <output file="true" contentType="application/zip" />
         </service>
-
+        <service name="metadata.summary.zip">
+            <class name=".services.metadata.ExportMetadataSummary"/>
+            <output file="true" contentType="application/zip" />
+        </service>
         <!-- Validation framework extended -->
 		<service name="metadata.schema.validation">
 			<class name=".services.metadata.schema.Validation" />

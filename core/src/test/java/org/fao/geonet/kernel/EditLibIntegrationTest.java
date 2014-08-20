@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel;
 
 import com.google.common.collect.Lists;
+import junit.framework.TestCase;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.schema.MetadataSchema;
@@ -622,6 +623,8 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         MetadataSchema schema = _schemaManager.getSchema("iso19139");
         final EditLib editLib = new EditLib(_schemaManager);
         final Pair<Element, String> longestMatch = editLib.findLongestMatch(element, schema, xpathParts);
-        assertEquals("gmd:MD_Distribution", longestMatch.one().getQualifiedName());
-        assertEquals("gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage", longestMatch.two());
-    }}
+        TestCase.assertEquals("gmd:MD_Distribution", longestMatch.one().getQualifiedName());
+        TestCase.assertEquals("gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage",
+                longestMatch.two());
+    }
+}

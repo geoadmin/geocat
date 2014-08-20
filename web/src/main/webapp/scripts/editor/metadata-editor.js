@@ -1,9 +1,5 @@
 var getGNServiceURL = function(service) {
-    if (service.indexOf("/") == 0) {
-        return Env.locService+service;
-    } else {
-        return Env.locService+'/'+service;
-    }
+	return Env.locService+"/"+service;
 };
 
 function findPos(obj) 
@@ -128,8 +124,29 @@ function doAction(action)
 
 function doTabAction(action, tab)
 {
-	disableEditForm();
 
+    if (/.*\/metadata\.(edit)|(update).*/.test(window.location) && tab === 'inspire') {
+      var metadataId = document.mainForm.id.value;
+      var myAjax = new Ajax.Request(
+        getGNServiceURL(action),
+        {
+          method: 'post',
+          parameters: $('editForm').serialize(true),
+          onSuccess: function (req) {
+            window.location.href = 'inspire.edit?id=' + metadataId;
+          },
+          onFailure: function(req) {
+            alert(translate("errorSaveFailed") + "/ status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
+            Element.remove($("editorOverlay"));
+            setBunload(true); // reset warning for window destroy
+          }
+        });
+        document.getElementsByTagName("body")[0].innerHTML = '<img src="' + Env.url + '/images/spinner.gif"></img>';
+
+      return;
+    }
+
+	disableEditForm();
 	document.mainForm.currTab.value = tab;
 	doAction(action);
 }
@@ -282,12 +299,12 @@ function swapControls(el1,el2)
     var el1Descs = getControlsFromElement(el1);
 	var el2Descs = getControlsFromElement(el2);
 	for (var index = 0; index < el1Descs.length; ++index) {
-	 var visible1 = el1Descs[index].visible();
-	 var visible2 = el2Descs[index].visible();
+	 var visible1 = el1Descs[index] && el1Descs[index].visible();
+	 var visible2 = el2Descs[index] && el2Descs[index].visible();
 	 if (visible1) el2Descs[index].show();
-	 else el2Descs[index].hide();
+	 else if(el2Descs[index]) el2Descs[index].hide();
 	 if (visible2) el1Descs[index].show();
-	 else el1Descs[index].hide();
+	 else if (el1Descs[index]) el1Descs[index].hide();
 	}
 }
 
@@ -1297,7 +1314,12 @@ function showLinkedMetadataSelectionPanel(ref, name, fullRelationships) {
         closeAction: 'hide',
         constrain: true,
         iconCls: 'linkIcon',
-        modal: true
+        modal: true,
+        listeners: {
+            beforeshow: function() {
+                linkedMetadataSelectionPanel.doSearch();
+            }
+        }
     });
 
     linkedMetadataSelectionWindow.show();
