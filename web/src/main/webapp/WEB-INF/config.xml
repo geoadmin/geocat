@@ -120,10 +120,6 @@
 
 	<!-- ====================================================================== -->
 
-	<schedules package="org.fao.geonet" />
-
-	<!-- ====================================================================== -->
-
 	<services package="org.fao.geonet">
 		<service name="strings.js">
 			<output sheet="strings.xsl" contentType="application/json"/>

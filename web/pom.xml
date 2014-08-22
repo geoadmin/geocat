@@ -32,12 +32,6 @@
           <groupId>org.slf4j</groupId>
           <artifactId>slf4j-log4j12</artifactId>
       </dependency>
-
-      <dependency>
-      	<groupId>net.sf.ehcache</groupId>
-      	<artifactId>ehcache-core</artifactId>
-      </dependency>
-
       <!-- rewrite url servletfilter -->
       <dependency>
           <groupId>org.tuckey</groupId>
@@ -105,7 +99,6 @@
       <groupId>org.jzkit</groupId>
       <artifactId>a2j</artifactId>
     </dependency>
-   
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-api</artifactId>
