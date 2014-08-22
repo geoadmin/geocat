@@ -23,25 +23,29 @@
 
 package org.fao.geonet.geocat.services.reusable;
 
-import static org.fao.geonet.util.LangUtils.iso19139DefaultLang;
+import com.google.common.base.Function;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
+import org.fao.geonet.geocat.kernel.reusable.FindMetadataReferences;
+import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
+import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
+import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
+import org.fao.geonet.geocat.kernel.reusable.Utils;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.util.GeocatXslUtil;
+import org.fao.geonet.util.LangUtils;
+import org.jdom.Element;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.base.Function;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.geocat.kernel.reusable.*;
-import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.util.GeocatXslUtil;
-import org.fao.geonet.util.LangUtils;
-import org.jdom.Element;
+import static org.fao.geonet.util.LangUtils.iso19139DefaultLang;
 
 /**
  * Return the metadata that references the reusable object
@@ -61,7 +65,10 @@ public class ReferencingMetadata implements Service
 
         List<String> fields = new LinkedList<String>();
         Function<String,String> idConverter;
+        FindMetadataReferences findResources;
+
         if (type.equalsIgnoreCase("deleted")) {
+            findResources = DeletedObjects.createFindMetadataReferences();
             fields.addAll(Arrays.asList(DeletedObjects.getLuceneIndexField()));
             idConverter= ReplacementStrategy.ID_FUNC;
         } else {
@@ -72,9 +79,10 @@ public class ReferencingMetadata implements Service
                 fields.addAll(Arrays.asList(replacementStrategy.getInvalidXlinkLuceneField()));
             }
             idConverter=replacementStrategy.numericIdToConcreteId(context.getUserSession());
+            findResources = replacementStrategy;
         }
 
-        Set<MetadataRecord> md = Utils.getReferencingMetadata(context, fields, id, true, idConverter);
+        Set<MetadataRecord> md = Utils.getReferencingMetadata(context, findResources, fields, id, validated, true, idConverter);
         UserRepository userRepository = context.getBean(UserRepository.class);
         Element response = new Element("response");
         for (MetadataRecord metadataRecord : md) {

@@ -23,27 +23,26 @@
 
 package org.fao.geonet.geocat.services.reusable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.common.base.Function;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.geocat.kernel.reusable.*;
+import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
+import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
+import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
+import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
+import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
+import org.fao.geonet.geocat.kernel.reusable.SendEmailParameter;
+import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.geocat.kernel.reusable.Utils.FindXLinks;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -53,9 +52,14 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 
-import com.google.common.base.Function;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Makes a list of all the non-validated elements
@@ -123,7 +127,7 @@ public class Reject implements Service
         List<Element> result = new ArrayList<Element>();
         List<String> allAffectedMdIds = new ArrayList<String>();
         for (String id : ids) {
-            Set<MetadataRecord> results = Utils.getReferencingMetadata(context, luceneFields, id, true, idConverter);
+            Set<MetadataRecord> results = Utils.getReferencingMetadata(context, strategy, luceneFields, id, isValidObject, true, idConverter);
 
             // compile a list of email addresses for notifications
             for (MetadataRecord record : results) {

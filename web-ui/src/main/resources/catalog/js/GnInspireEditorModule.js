@@ -2,7 +2,7 @@
   'use strict';
   goog.provide('gn_inspire_editor');
 
-  goog.require('gn');
+  goog.require('gn_language_switcher');
   goog.require('inspire_contact_directive');
   goog.require('inspire_multilingual_text_directive');
   goog.require('inspire_get_shared_users_factory');
@@ -10,31 +10,80 @@
   goog.require('inspire_get_extents_factory');
   goog.require('inspire_date_picker_directive');
   goog.require('inspire-metadata-loader');
+  goog.require('inspire_ie9_select');
 
-  var module = angular.module('gn_inspire_editor',
-    [ 'gn', 'inspire_contact_directive', 'inspire_multilingual_text_directive', 'inspire_metadata_factory',
-      'inspire_get_shared_users_factory', 'inspire_get_keywords_factory', 'inspire_get_extents_factory',
-      'inspire_date_picker_directive']);
+  angular.module('gn', []);
 
-  // Define the translation files to load
-  module.constant('$LOCALES', ['core', 'editor', 'inspire']);
+  var module = angular.module('gn_inspire_editor', ['gn_language_switcher', 'pascalprecht.translate', 'inspire_contact_directive',
+    'inspire_multilingual_text_directive', 'inspire_metadata_factory', 'inspire_get_shared_users_factory', 'inspire_get_keywords_factory',
+    'inspire_get_extents_factory', 'inspire_date_picker_directive', 'inspire_ie9_select']);
 
-  module.config(['$translateProvider', '$LOCALES',
-    function($translateProvider, $LOCALES) {
-      $translateProvider.useLoader('localeLoader', {
-        locales: $LOCALES,
-        prefix: '../../catalog/locales/',
-        suffix: '.json'
+  module.factory('localeLoader', ['$http', '$q', function($http, $q) {
+    return function(options) {
+      var allPromises = [];
+      angular.forEach(options.locales, function(value, index) {
+        var langUrl = options.prefix +
+          options.key + '-' + value + options.suffix;
+
+        var deferredInst = $q.defer();
+        allPromises.push(deferredInst.promise);
+
+        $http({
+          method: 'GET',
+          url: langUrl
+        }).success(function(data, status, header, config) {
+          deferredInst.resolve(data);
+        }).error(function(data, status, header, config) {
+          deferredInst.reject(options.key);
+        });
       });
 
+      // Finally, create a single promise containing all the promises
+      // for each app module:
+      var deferred = $q.all(allPromises);
+      return deferred;
+    };
+  }]);
+
+  module.config(['$translateProvider',
+    function($translateProvider) {
       var lang = location.href.split('/')[5].substring(0, 2) || 'en';
+      $translateProvider.translations(lang, translationJson);
+
       $translateProvider.preferredLanguage(lang);
+
       moment.lang(lang);
     }]);
 
+  module.filter('translateLang', function () {
+    var translations = {
+      "eng" : "English",
+      "en" : "English",
+      "fre" : "Français",
+      "fr" : "Français",
+      "ger" : "Deutsch",
+      "ge" : "Deutsch",
+      "de" : "Deutsch",
+      "deu" : "Deutsch",
+      "ita" : "Italiano",
+      "it" : "Italiano",
+      "roh" : "Rumantsch",
+      "rm" : "Rumantsch"
+    };
+    return function (input) {
+      var translation = translations[angular.lowercase(input)];
+      return translation ? translation : input;
+    };
+  });
+
+
   module.controller('GnInspireController', [
-    '$scope', 'inspireMetadataLoader', '$translate', '$http',
-    function($scope, inspireMetadataLoader, $translate, $http) {
+    '$scope', 'inspireMetadataLoader', 'translateLangFilter', '$translate', '$http',
+    function($scope, inspireMetadataLoader, translateLangFilter, $translate, $http) {
+      $scope.base = "../../catalog/";
+      $scope.url = "";
+      $scope.lang = location.href.split('/')[5].substring(0, 3) || 'eng';
+      $scope.langs = {ger: 'ger', fre:'fre', ita:'ita', eng:'eng'};
       var allowUnload = false;
       window.onbeforeunload = function() {
         if (!allowUnload) {
@@ -42,7 +91,6 @@
         }
       };
       $scope.languages = ['ger', 'fre', 'ita', 'eng', 'roh'];
-
       var params = window.location.search;
       var mdId = params.substring(params.indexOf("id=") + 3);
       var indexOfAmp = mdId.indexOf('&');
@@ -52,6 +100,25 @@
       $scope.mdId = mdId;
 
       $scope.data = inspireMetadataLoader($scope.lang, $scope.url, mdId);
+      $scope.emptyContact = $scope.data.contact[0];
+
+      $scope.translateLanguage = function(lang) {
+        return function (lang) {
+          return translateLangFilter(lang);
+        };
+      };
+      var legalNames = ["dataset", "series", "service"];
+      $scope.hierarchyLevelFilter = function () {
+        return function(input) {
+          var result = [];
+          angular.forEach(input, function (val) {
+            if (legalNames.indexOf(val.name) > -1) {
+              result.push(val);
+            }
+          });
+          return result;
+        };
+      };
       $scope.validationErrorClass = 'has-error';
       $scope.validationClassString = function(model) {
         if (model && model.length > 0) {
@@ -89,6 +156,11 @@
         });
 
       });
+      $scope.$watch("data.language", function(lang) {
+        if ($scope.data.otherLanguages.indexOf(lang) < 0) {
+          $scope.data.otherLanguages.push(lang);
+        }
+      });
       $scope.isOtherLanguage = function (lang) {
         var langs =  $scope.data.otherLanguages;
         var i = 0;
@@ -109,7 +181,6 @@
           }
         }
       };
-
       $scope.editContact = function(title, contact) {
         $scope.contactUnderEdit = contact;
         $scope.contactUnderEdit.title = title;
@@ -158,7 +229,7 @@
           data: finalData,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function (data) {
-          if (typeof data[0] == 'string') {
+          if (typeof data[0] === 'string') {
 
             if (waitDialog) {
               waitDialog.modal('hide');
@@ -207,23 +278,43 @@
   module.controller('InspireKeywordController', [
     '$scope', 'inspireGetKeywordsFactory',
     function($scope, inspireGetKeywordsFactory) {
+
+      var dataThesaurus = 'external.theme.inspire-theme';
+      var serviceThesaurus = 'external.theme.inspire-service-taxonomy';
+
       $scope.editKeyword = function(keyword) {
         $scope.keywordUnderEdit = keyword;
         $scope.selectedKeyword = {};
         var modal = $('#editKeywordModal');
         modal.modal('show');
       };
+
+      var isEmpty = function (keyword) {
+        return keyword.thesaurus === '' && keyword.code === -1;
+      };
+
       $scope.deleteKeyword = function(keyword) {
-        var keywords = $scope.data.identification.descriptiveKeywords;
+        var k, i, keywords = $scope.data.identification.descriptiveKeywords;
         keywords.splice(keywords.indexOf(keyword), 1);
+
+        for (i = 0; i < keywords.length; i++) {
+          k = keywords[i];
+          if (k.thesaurus === dataThesaurus || k.thesaurus === serviceThesaurus || isEmpty(k)) {
+            return;
+          }
+        }
+
+        keywords.push({
+          code: -1,
+          thesaurus: '',
+          words: {}
+        });
       };
 
       $scope.keywords = {
         data: {},
         service: {}
       };
-      var dataThesaurus = 'external.theme.inspire-theme';
-      var serviceThesaurus = 'external.theme.inspire-service-taxonomy';
 
       inspireGetKeywordsFactory($scope.url, dataThesaurus).then (function (keywords) {
         $scope.keywords.data = keywords;
@@ -237,7 +328,7 @@
       };
 
       $scope.linkToOtherKeyword = function() {
-        var thesaurus = $scope.data.identification.type == 'data' ? dataThesaurus : serviceThesaurus;
+        var thesaurus = $scope.data.identification.type === 'data' ? dataThesaurus : serviceThesaurus;
 
         var keyword = $scope.selectedKeyword;
         $scope.keywordUnderEdit.code = keyword.code;
@@ -251,7 +342,7 @@
         var keyword, i, keywords, thesaurus, valid = false;
         keywords = $scope.data.identification.descriptiveKeywords;
 
-        thesaurus = $scope.data.identification.type == 'data' ? dataThesaurus : serviceThesaurus;
+        thesaurus = $scope.data.identification.type === 'data' ? dataThesaurus : serviceThesaurus;
 
         for (i = 0; i < keywords.length; i++) {
           keyword = keywords[i];
@@ -319,16 +410,18 @@
   module.controller('InspireConstraintsController', [
     '$scope', function($scope) {
       var countProperties = function(propertyName) {
-        var legal, i, count;
-        var legalConstraints = $scope.data.constraints.legal;
+        var legal, i, count = 0;
+        var allConstraints = [$scope.data.constraints.legal, $scope.data.constraints.generic, $scope.data.constraints.security];
 
-        count = 0;
-        for (i = 0; i < legalConstraints.length; i++) {
-          legal = legalConstraints[i];
-          if (legal[propertyName]) {
-            count += legal[propertyName].length;
+        angular.forEach(allConstraints, function (constraints) {
+          for (i = 0; i < constraints.length; i++) {
+            legal = constraints[i];
+            if (legal[propertyName]) {
+              count += legal[propertyName].length;
+            }
           }
-        }
+
+        });
         return count;
       };
 
@@ -359,6 +452,28 @@
         }
       };
 
+      var hasNonEmptyOtherConstraintInConstraint = function(legalConstraint) {
+        var x;
+        for (x = 0; x < legalConstraint.otherConstraints.length; x++) {
+          if (legalConstraint.otherConstraints[x][$scope.data.language] !== '') {
+            return true;
+          }
+        }
+        return false;
+      };
+      $scope.hasNonEmptyOtherConstraint = function() {
+        var x;
+        for (x = 0; x < $scope.data.constraints.legal.length; x++) {
+          if (hasNonEmptyOtherConstraintInConstraint($scope.data.constraints.legal[x])) {
+            return true;
+          }
+        }
+        return false;
+      };
+
+      $scope.validityClass = {
+          otherConstraints: ''
+        };
       $scope.$watchCollection('data.constraints.legal', function(newValue) {
         if (newValue.length === 0) {
           newValue.push({
@@ -369,7 +484,16 @@
             legislationConstraints: []
           });
         }
-
+        $scope.propertyCount.updateAccessConstraints();
+        $scope.propertyCount.updateUseConstraints();
+        $scope.propertyCount.updateUseLimitations();
+      });
+      $scope.$watchCollection('data.constraints.generic', function() {
+        $scope.propertyCount.updateAccessConstraints();
+        $scope.propertyCount.updateUseConstraints();
+        $scope.propertyCount.updateUseLimitations();
+      });
+      $scope.$watchCollection('data.constraints.security', function() {
         $scope.propertyCount.updateAccessConstraints();
         $scope.propertyCount.updateUseConstraints();
         $scope.propertyCount.updateUseLimitations();
@@ -389,41 +513,45 @@
     '$scope', function($scope) {
 
       $scope.$watch('accessConstraint', function() {
-        var i, j, otherConstraint, toRemove, remove;
+        var otherConstraint;
         var hasOtherRestrictions = $scope.hasOtherRestrictions($scope.legal);
-        if (hasOtherRestrictions && $scope.legal.otherConstraints.length === 0) {
+        if ($scope.legal.otherConstraints.length === 0) {
           otherConstraint = {};
           otherConstraint[$scope.data.language] = '';
           $scope.legal.otherConstraints.push(otherConstraint);
-        } else if (!hasOtherRestrictions) {
-          toRemove = [];
-          for (i = 0; i < $scope.legal.otherConstraints.length; i++) {
-            otherConstraint = $scope.legal.otherConstraints[i];
-            remove = otherConstraint[$scope.data.language].trim().length === 0;
-            for (j = 0; j < $scope.data.otherLanguages.length; j++) {
-              if (otherConstraint[$scope.data.language].trim().length > 0) {
-                remove = false;
-                break;
-              }
-            }
+        }
+        $scope.validityClass.otherConstraints = !hasOtherRestrictions || $scope.hasNonEmptyOtherConstraint() ? '' : $scope.validationErrorClass;
+      });
+  }]);
+  module.controller('InspireUseConstraintController', [
+    '$scope', function($scope) {
 
-            if (remove) {
-              toRemove.push(otherConstraint);
-            }
-          }
-
-          for (i = 0; i < toRemove.length; i++) {
-            $scope.deleteFromArray($scope.legal.otherConstraints, toRemove[i]);
-          }
+      $scope.$watch('useConstraint', function() {
+        var otherConstraint;
+        if ($scope.legal.otherConstraints.length === 0) {
+          otherConstraint = {};
+          otherConstraint[$scope.data.language] = '';
+          $scope.legal.otherConstraints.push(otherConstraint);
         }
       });
+  }]);
+  module.controller('InspireOtherConstraintController', [
+    '$scope', function($scope) {
+
+      $scope.$watch('other', function() {
+        var hasOtherRestrictions = $scope.hasOtherRestrictions($scope.legal);
+        $scope.validityClass.otherConstraints = !hasOtherRestrictions || $scope.hasNonEmptyOtherConstraint() ? '' : $scope.validationErrorClass;
+      }, true);
+      $scope.deleteOtherConstraint = function (legal, constraint) {
+        $scope.deleteFromArray(legal.otherConstraints, constraint);
+      };
   }]);
 
   module.controller('InspireConformityController', [
     '$scope', '$translate', function($scope, $translate) {
 
       $scope.validationClassObject = function(model) {
-        var cls, elem, i;
+        var elem, i;
         for (i in model) {
           if (model.hasOwnProperty(i)) {
             elem = model[i];
@@ -460,16 +588,29 @@
           }
         }
       });
-      $scope.updateConformanceResultTitle = function(desc, mainLang) {
-        if (desc.title[mainLang]) {
-          return desc.title[mainLang];
-        } else if (desc.title[$scope.data.language]) {
-          return desc.title[$scope.data.language];
-        } else if (desc.title.length > 0) {
-          return desc.title[0];
-        } else {
-          return desc.ref;
-        }
+      $scope.updateSelectedConformity = function() {
+        return function (report) {
+          var i = null;
+          for (i in report) {
+            if (report.hasOwnProperty(i)) {
+              $scope.data.conformity[i] = angular.copy(report[i]);
+            }
+          }
+        };
+      };
+      $scope.updateConformanceResultTitle = function(mainLang) {
+        return function (desc) {
+          if (desc.title[mainLang]) {
+            return desc.title[mainLang];
+          }
+          if (desc.title[$scope.data.language]) {
+            return desc.title[$scope.data.language];
+          }
+          if (desc.title.length > 0) {
+            return desc.title[0];
+          }
+          return desc.conformanceResultRef;
+        };
       };
   }]);
 
@@ -478,33 +619,55 @@
 
       $scope.$watch('link', function(newVal) {
         var lang, url;
+        var errorHandler = function (msg,errorCode) {
+          if (errorCode === 404) {
+            $scope.isValidURL = false;
+          }
+        };
         $scope.isValidURL = undefined;
 
         for (lang in newVal.localizedURL) {
-          if ($scope.isValidURL === undefined) {
-              $scope.isValidURL = true;
-          }
           if (newVal.localizedURL.hasOwnProperty(lang) &&
               $scope.data.otherLanguages.indexOf(lang) > -1) {
+            if ($scope.isValidURL === undefined) {
+              $scope.isValidURL = true;
+            }
             url = newVal.localizedURL[lang];
             if (!/\S+/.test(url)) {
               if (lang === $scope.data.language) {
                 $scope.isValidURL = false;
               }
             } else {
-              $http.head("../../proxy?url=" + encodeURIComponent(url)).error(function () {
-                $scope.isValidURL = false;
-              });
+              $http.head("../../proxy?url=" + encodeURIComponent(url)).error(errorHandler);
             }
           } else {
-            delete newVal.localizedURL[lang]
+            delete newVal.localizedURL[lang];
           }
         }
       }, true);
       $scope.deleteLink = function(link) {
         delete link.localizedURL;
-      }
+      };
   }]);
 
+  module.filter('hideNonCheTopicCategories', function () {
+    var acceptable = {
+      environment: true,
+      geoscientificInformation: true,
+      planningCadastre: true,
+      imageryBaseMapsEarthCover: true,
+      utilitiesCommunication: true
+    };
+    return function (input) {
+      var i, filtered = [];
+      for(i = 0; i < input.length; i++) {
+        if (!acceptable.hasOwnProperty(input[i])) {
+          filtered.push(i);
+        }
+      }
+      return filtered;
+    };
+  });
 
 }());
+

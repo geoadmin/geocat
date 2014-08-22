@@ -17,9 +17,9 @@
                                             data-ng-controller="InspireAccessConstraintController">
                                             <td class="'no-border-top'"
                                                 data-ng-class="validationClassString(accessConstraint)">
-                                                <select class="form-control" data-ng-model="legal.accessConstraints[$index]"
-                                                        data-ng-options="opt.name as opt.title for opt in data.constraintOptions">
-                                                </select>
+                                                <div data-ie9-select data-options="data.constraintOptions"
+                                                     data-value="name" data-title="title"
+                                                     data-field="legal.accessConstraints[$index]"></div>
                                             </td>
                                             <td width="24px" data-ng-class="'no-border-top'">
                                                 <a class="inspire-input-group"
@@ -38,12 +38,14 @@
 
                                 <div class="table-responsive col-xs-9">
                                     <table class="table table-condensed">
-                                        <tr data-ng-repeat="useConstraint in legal.useConstraints track by $index">
+                                        <tr data-ng-repeat="useConstraint in legal.useConstraints track by $index"
+                                            data-ng-controller="InspireUseConstraintController">
                                             <td class="'no-border-top'"
                                                 data-ng-class="validationClassString(useConstraint)">
-                                                <select class="form-control" data-ng-model="legal.useConstraints[$index]"
-                                                        data-ng-options="opt.name as opt.title for opt in data.constraintOptions">
-                                                </select>
+                                                <div data-ie9-select
+                                                     data-options="data.constraintOptions"
+                                                     data-value="name" data-title="title"
+                                                     data-field="legal.useConstraints[$index]"></div>
                                             </td>
                                             <td width="24px" data-ng-class="'no-border-top'">
                                                 <a class="inspire-input-group"
@@ -81,11 +83,11 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div class="table-responsive col-xs-12"
-                                 data-ng-if="legal.otherConstraints && legal.otherConstraints.length > 0">
+                            <div class="table-responsive col-xs-12">
                                 <table class="table table-condensed">
-                                    <tr data-ng-repeat="other in legal.otherConstraints">
-                                        <td data-ng-class="'no-border-top'">
+                                    <tr data-ng-repeat="other in legal.otherConstraints"
+                                        data-ng-controller="InspireOtherConstraintController">
+                                        <td class="no-border-top" data-ng-class="validityClass.otherConstraints">
                                         <div
                                              data-ng-class="$first ? '' : ['col-xs-offset-3', 'indent-1em']">
                                             <div data-inspire-multilingual-text
@@ -100,7 +102,7 @@
                                             <a class="inspire-input-group"
                                                data-ng-hide="legal.otherConstraints.length === 1 && hasOtherRestrictions(legal)"
                                                style="color: red"
-                                               data-ng-click="deleteFromArray(legal.otherConstraints, other)">
+                                               data-ng-click="deleteOtherConstraint(legal, other)">
                                                 <i class="fa fa-times fa-fw"></i>
                                             </a>
                                         </td>
@@ -132,7 +134,7 @@
                             </div>
                         </td>
                         <td width="24px" data-ng-class="$first ? 'no-border-top' : ''">
-                            &NonBreakingSpace;
+                            &nbsp;
                         </td>
                         <td width="24px" data-ng-class="$first ? 'no-border-top' : ''">
                             <a class="inspire-input-group" data-ng-hide="data.constraints.legal.length == 1" style="color: red"
@@ -169,7 +171,7 @@
                                 </div>
                         </td>
                         <td width="24px" data-ng-class="$first ? 'no-border-top' : ''">
-                            &NonBreakingSpace;
+                            &nbsp;
                         </td>
                         <td width="24px" data-ng-class="$first ? 'no-border-top' : ''">
                             <a class="inspire-input-group" style="color: red"
@@ -189,14 +191,12 @@
         <legend data-translate="">securityConstraints</legend>
         <div class="form-group">
 
-            <div class="table-responsive col-xs-12">
+            <div class="table-responsive col-xs-12" data-ng-repeat="security in data.constraints.security">
                 <table class="table table-condensed">
-                    <tr data-ng-repeat="security in data.constraints.security">
+                    <tr data-ng-repeat="limitation in security.useLimitations">
                         <td data-ng-class="$first ? 'no-border-top' : ''">
-                            <div data-ng-repeat="limitation in security.useLimitations"
-                                 data-ng-class="$first ? '' : ['col-xs-offset-3', 'indent-1em']">
+                            <div data-ng-class="$first ? '' : ['col-xs-offset-3', 'indent-1em']">
                                 <div data-inspire-multilingual-text
-                                     title="notEditableInInspireView"
                                      data-title="{{ $first ? 'useLimitations': ''}}"
                                      data-rows="1"
                                      data-main-lang="data.language"
@@ -206,7 +206,7 @@
                                 </div>
                         </td>
                         <td width="24px" data-ng-class="$first ? 'no-border-top' : ''">
-                            &NonBreakingSpace;
+                            &nbsp;
                         </td>
                         <td width="24px" data-ng-class="$first ? 'no-border-top' : ''">
                             <a class="inspire-input-group" style="color: red"

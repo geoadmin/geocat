@@ -36,7 +36,7 @@
             "role": '',
             "validated": false
           }],
-          "otherLanguages": ['ger', 'fre', 'ita', 'eng', 'roh'],
+          "otherLanguages": [],
           "identification": {
             "type": 'data',
             "title": {},
@@ -89,16 +89,15 @@
           },
           "conformity": {
             "updateResultRef": "",
-            "allConformanceReports": [],
-            "conformanceResultRef": '',
-            "title": {},
-            "date": {
-              "date": "2010-12-08",
-              "dateTagName": "gco:Date",
-              "dateType": "publication"
-            } ,
-            "pass": "",
-            "explanation": "",
+            "allConformanceReports": [{
+              "conformanceResultRef":"",
+              "scopeCode" : "",
+              "title": {},
+              "pass": "",
+              "explanation": ""
+            }],
+            "isTitleSet": false,
+            "reportIndex" : -1,
             "lineage": {
               "ref": "",
               "statement" : {}

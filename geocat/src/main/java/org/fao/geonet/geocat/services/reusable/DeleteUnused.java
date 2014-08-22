@@ -97,7 +97,7 @@ public class DeleteUnused implements Service {
         for (Element element : nonValidated) {
             String objId = element.getChildTextTrim(ReplacementStrategy.REPORT_ID);
 
-            Set<MetadataRecord> md = Utils.getReferencingMetadata(context, luceneFields, objId, false, idConverter);
+            Set<MetadataRecord> md = Utils.getReferencingMetadata(context, strategy, luceneFields, objId, false, false, idConverter);
             if (md.isEmpty()) {
                 toDelete.add(objId);
             }
@@ -118,7 +118,8 @@ public class DeleteUnused implements Service {
         for (Element element : nonValidated) {
             String objId = element.getChildTextTrim(ReplacementStrategy.REPORT_ID);
 
-			Set<MetadataRecord> md = Utils.getReferencingMetadata(context, fields, objId, false, idConverter);
+			Set<MetadataRecord> md = Utils.getReferencingMetadata(context, DeletedObjects.createFindMetadataReferences(), fields, objId,
+                    false, false, idConverter);
             if (md.isEmpty()) {
                 toDelete.add(Integer.parseInt(objId));
             }

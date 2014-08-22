@@ -25,6 +25,9 @@ package org.fao.geonet.geocat.kernel.reusable;
 
 import com.google.common.base.Function;
 import jeeves.server.UserSession;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.domain.Pair;
 import org.jdom.Element;
 
@@ -33,8 +36,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-public abstract class ReplacementStrategy
-{
+import static org.apache.lucene.search.WildcardQuery.WILDCARD_STRING;
+
+public abstract class ReplacementStrategy implements FindMetadataReferences {
     static final Pair<Collection<Element>, Boolean> NULL           = Pair.read((Collection<Element>) Collections
                                                                            .<Element> emptySet(), false);
     public static final String                             REPORT_ROOT    = "records";
@@ -153,5 +157,11 @@ public abstract class ReplacementStrategy
 
     public Function<String,String> numericIdToConcreteId(final UserSession session) {
         return ID_FUNC;
+    }
+
+    @Override
+    public Query createFindMetadataQuery(String field, String concreteId, boolean isValidated) {
+        Term term = new Term(field, WILDCARD_STRING + "id=" + concreteId + WILDCARD_STRING);
+        return new WildcardQuery(term);
     }
 }

@@ -23,20 +23,12 @@
 
 package org.fao.geonet.geocat.services.extent;
 
-import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.common.base.Functions;
+import com.vividsolutions.jts.geom.Geometry;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -57,7 +49,19 @@ import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.feature.type.Name;
 
-import com.vividsolutions.jts.geom.Geometry;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.DESC;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.FORMAT;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.GEOM;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.GEO_ID;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.ID;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.SOURCE;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.TYPENAME;
 
 /**
  * Service for updating extent information
@@ -181,7 +185,7 @@ public class Update implements Service
 
         fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
         fields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
-        final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, fields, id, false,
+        final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, strategy, fields, id, null, false,
                 Functions.<String>identity());
 
         DataManager dm = context.getBean(DataManager.class);

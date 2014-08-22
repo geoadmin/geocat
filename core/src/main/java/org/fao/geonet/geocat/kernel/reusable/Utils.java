@@ -23,34 +23,9 @@
 
 package org.fao.geonet.geocat.kernel.reusable;
 
-import static java.lang.Double.parseDouble;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
-import static org.springframework.data.jpa.domain.Specifications.where;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.regex.Pattern;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
-
+import com.google.common.base.Function;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.XLink;
-
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
@@ -60,24 +35,20 @@ import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.geocat.kernel.Email;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.geocat.FormatRepository;
-import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.utils.Log;
 import org.geotools.gml3.GMLConfiguration;
@@ -86,10 +57,30 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.filter.Filter;
-
-import com.google.common.base.Function;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.regex.Pattern;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+
+import static java.lang.Double.parseDouble;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * Utility methods for this package
@@ -185,8 +176,13 @@ public final class Utils {
      *
      * @param context
      */
-    public static Set<MetadataRecord> getReferencingMetadata( ServiceContext context, List<String> fields, String id,
-            boolean loadMetadata, Function<String, String> idConverter ) throws Exception {
+    public static Set<MetadataRecord> getReferencingMetadata(final ServiceContext context,
+                                                             final FindMetadataReferences strategy,
+                                                             final List<String> fields,
+                                                             final String id,
+                                                             final Boolean isValidated,
+                                                             final boolean loadMetadata,
+                                                             final Function<String, String> idConverter ) throws Exception {
 
         String concreteId = idConverter.apply(id);
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -211,8 +207,15 @@ public final class Utils {
                 requiredFields.add("_id");
                 requiredFields.add("_owner");
                 requiredFields.add(field);
-                Term term = new Term(field, "*id=" + concreteId + "*");
-                WildcardQuery query = new WildcardQuery(term);
+                Query query;
+                if (isValidated == null) {
+                    BooleanQuery booleanQuery = new BooleanQuery();
+                    booleanQuery.add(strategy.createFindMetadataQuery(field, id, true), BooleanClause.Occur.SHOULD);
+                    booleanQuery.add(strategy.createFindMetadataQuery(field, id, false), BooleanClause.Occur.SHOULD);
+                    query = booleanQuery;
+                } else {
+                    query = strategy.createFindMetadataQuery(field, concreteId, isValidated);
+                }
                 TopDocs tdocs = searcher.search(query, Integer.MAX_VALUE);
 
                 for( ScoreDoc sdoc : tdocs.scoreDocs ) {

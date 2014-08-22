@@ -31,7 +31,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class LangUtils {
+/**
+ * Used to get translations and strings from the strings xml files
+ *
+ * @author jeichar
+ */
+public final class LangUtils
+{
 
 
     public static List<Element> loadCodeListFile(String schemaDir, String langCode, String codeListName)
@@ -163,9 +169,12 @@ public class LangUtils {
         }
 
         if(fallback == null ){
-            @SuppressWarnings("unchecked")
-            Iterator<Element> children = element.getDescendants(finder);
-            return children.next().getTextTrim();
+            Iterator children = element.getDescendants(finder);
+            if (children.hasNext()) {
+                return ((Element) children.next()).getTextTrim();
+            } else {
+                return element.toString();
+        }
         }
         return fallback;
     }

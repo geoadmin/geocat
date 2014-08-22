@@ -22,8 +22,15 @@
 package org.fao.geonet.geocat.services.format;
 
 import com.google.common.base.Functions;
-import org.fao.geonet.GeonetContext;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
+import jeeves.xlink.XLink;
 import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geocat;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.geocat.Format;
 import org.fao.geonet.geocat.kernel.reusable.FormatsStrategy;
@@ -34,20 +41,13 @@ import org.fao.geonet.geocat.services.reusable.Reject;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.geocat.FormatRepository;
-import org.jdom.*;
-
-import jeeves.constants.*;
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-import jeeves.xlink.Processor;
-import jeeves.xlink.XLink;
-
-import org.fao.geonet.constants.*;
 import org.fao.geonet.util.LangUtils;
+import org.jdom.Element;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
 import javax.annotation.Nonnull;
-import java.util.*;
 
 //=============================================================================
 
@@ -124,7 +124,7 @@ public class Manager implements Service {
 
                 fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
                 fields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
-                final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, fields, id, false,
+                final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, strategy, fields, id, null, false,
                         Functions.<String>identity());
 
                 DataManager dm = context.getBean(DataManager.class);

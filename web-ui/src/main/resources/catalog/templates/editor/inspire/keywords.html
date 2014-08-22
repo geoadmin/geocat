@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" data-ng-translate="">descriptiveKeyword</h4>
+                    <h4 class="modal-title" data-translate="">descriptiveKeyword</h4>
                 </div>
                 <div class="modal-body">
                     <input class="form-control" type="search"
@@ -20,8 +20,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-translate="">cancel</button>
-                    <button type="button" class="btn btn-primary" data-ng-translate=""
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-translate="">cancel</button>
+                    <button type="button" class="btn btn-primary" data-translate=""
                             data-ng-disabled="!selectedKeyword.code"
                             data-ng-click="linkToOtherKeyword()">update</button>
                 </div>
@@ -40,6 +40,7 @@
                         <div data-inspire-multilingual-text
                              data-ng-dblclick="editKeyword(keyword)"
                              data-rows="1"
+                             data-validation-class="{{validationErrorClass}}"
                              data-disabled="true"
                              data-main-lang="data.language"
                              data-languages="data.otherLanguages"
@@ -54,7 +55,7 @@
                         <a class="inspire-input-group"
                            data-ng-hide="data.identification.descriptiveKeywords.length == 1"
                            style="color: red"
-                           data-ng-click="deleteFromArray(data.identification.descriptiveKeywords, keyword)">
+                           data-ng-click="deleteKeyword(keyword)">
                             <i class="fa fa-times fa-fw"></i>
                         </a>
                     </td>

@@ -1,8 +1,9 @@
 (function() {
   'use strict';
   goog.provide('inspire_multilingual_text_directive');
+  goog.require('placeholder_directive');
 
-  var module = angular.module('inspire_multilingual_text_directive', []);
+  var module = angular.module('inspire_multilingual_text_directive', ['placeholder_directive']);
 
   module.directive('inspireMultilingualText', function() {
     return {
@@ -20,6 +21,20 @@
       restrict: 'A',
       replace: 'true',
       link: function($scope) {
+        $scope.placeholderOffset = function (index) {
+          var rows, prefix = 'placeholder-offset-';
+          rows = $scope.rows || 1;
+          if (navigator.appVersion.indexOf('MSIE 9.') != -1) {
+            prefix = 'ie9-placeholder-offset-';
+          }
+          if ($scope.editLang === 'all') {
+            return prefix + (index * rows);
+          }
+          return '';
+        };
+        $scope.showAllClass = function (index) {
+          return $scope.editLang === 'all' && index > 0 ? 'show-all' : '';
+        };
         $scope.$watchCollection('languages', function(newVal){
           if (newVal.indexOf($scope.editLang) < 0) {
             $scope.editLang = newVal[0];

@@ -24,6 +24,8 @@
 package org.fao.geonet.geocat.kernel.reusable;
 
 import jeeves.server.context.ServiceContext;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.geocat.RejectedSharedObject;
 import org.fao.geonet.domain.geocat.RejectedSharedObject_;
@@ -106,4 +108,13 @@ public final class DeletedObjects {
         return new String[]{"xlink_deleted"};
     }
 
+    public static FindMetadataReferences createFindMetadataReferences() {
+        return new FindMetadataReferences() {
+            @Override
+            public Query createFindMetadataQuery(String field, String concreteId, boolean validated) {
+                Term term = new Term(field, WILDCARD_STRING + "id=" + concreteId + WILDCARD_STRING);
+                return new WildcardQuery(term);
+            }
+        };
+    }
 }

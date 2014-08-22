@@ -23,33 +23,24 @@
 
 package org.fao.geonet.geocat.kernel.reusable;
 
-import static org.fao.geonet.geocat.kernel.reusable.Utils.gml2Conf;
-import static org.fao.geonet.geocat.kernel.reusable.Utils.gml3Conf;
-import static org.fao.geonet.geocat.kernel.reusable.Utils.addChild;
-import static org.fao.geonet.util.LangUtils.FieldType.STRING;
-
-import java.io.StringReader;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.UUID;
-
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Polygon;
 import jeeves.server.UserSession;
 import jeeves.xlink.XLink;
-
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.geocat.kernel.extent.ExtentFormat;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper.ExtentTypeCode;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
-import org.fao.geonet.geocat.kernel.extent.ExtentFormat;
 import org.fao.geonet.geocat.kernel.extent.Source;
 import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
 import org.fao.geonet.util.ElementFinder;
@@ -82,13 +73,23 @@ import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.spatial.Within;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
+import java.io.StringReader;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.UUID;
+
+import static org.fao.geonet.geocat.kernel.reusable.Utils.addChild;
+import static org.fao.geonet.geocat.kernel.reusable.Utils.gml2Conf;
+import static org.fao.geonet.geocat.kernel.reusable.Utils.gml3Conf;
+import static org.fao.geonet.util.LangUtils.FieldType.STRING;
 
 public final class ExtentsStrategy extends ReplacementStrategy {
 
@@ -515,8 +516,9 @@ public final class ExtentsStrategy extends ReplacementStrategy {
                 Element e = new Element(REPORT_ELEMENT);
 
                 String id = idAttributeToIdString(featureType, feature);
+                String typeName = validated ? XLINK_TYPE : NON_VALIDATED_TYPE;
                 String url = XLink.LOCAL_PROTOCOL+"extent.edit?closeOnSave&crs=EPSG:21781&wfs=default&typename="
-                        + NON_VALIDATED_TYPE + "&id=" + id;
+                        + typeName + "&id=" + id;
 
                 addChild(e, REPORT_URL, url);
                 addChild(e, REPORT_ID, id);
@@ -797,11 +799,9 @@ public final class ExtentsStrategy extends ReplacementStrategy {
             result = new Extent(ExtentTypeCode.EXCLUDE, exclusion,format, showNative);
         } else if (inclusion != null && exclusion == null) {
             result = new Extent(ExtentTypeCode.INCLUDE,inclusion,format, showNative);
-        } else if (inclusion != null && exclusion != null){
+        } else {
             Pair<ExtentTypeCode, MultiPolygon> diff = ExtentHelper.diff(fac, inclusion, exclusion);
             result = new Extent(diff.one(), diff.two(),format, showNative);
-        } else {
-        	throw new IllegalArgumentException("???");
         }
         
         return result;
@@ -1110,5 +1110,19 @@ public final class ExtentsStrategy extends ReplacementStrategy {
 
             return href.replaceFirst("&id=[^&]+", "&id=" + id);
         }
+    }
+
+    @Override
+    public org.apache.lucene.search.Query createFindMetadataQuery(String field, String concreteId, boolean isValidated) {
+        String typename = isValidated ? XLINK_TYPE : NON_VALIDATED_TYPE;
+        WildcardQuery query = new WildcardQuery(new Term(field, WILDCARD_STRING + "id=" + concreteId + WILDCARD_STRING +
+                                                                  "typename=" + typename + WILDCARD_STRING));
+        WildcardQuery query2 = new WildcardQuery(new Term(field, WILDCARD_STRING + "typename=" + typename + WILDCARD_STRING +
+                                                                 "id=" + concreteId + WILDCARD_STRING));
+
+        final BooleanQuery finalQuery = new BooleanQuery();
+        finalQuery.add(query, BooleanClause.Occur.SHOULD);
+        finalQuery.add(query2, BooleanClause.Occur.SHOULD);
+        return finalQuery;
     }
 }

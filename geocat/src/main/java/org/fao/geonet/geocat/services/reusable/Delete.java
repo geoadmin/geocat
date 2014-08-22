@@ -78,8 +78,9 @@ public class Delete implements Service
         Collection<Integer> metadataIds = new HashSet<Integer>();
         Multimap<Integer/* ownerid */, Integer/* metadataid */> emailInfo = HashMultimap.create();
 
-        for (String id : sIds) {
-            Set<MetadataRecord> md = Utils.getReferencingMetadata(context, Arrays.asList(DeletedObjects.getLuceneIndexField()),id, false, ReplacementStrategy.ID_FUNC);
+        for (String id : ids) {
+            Set<MetadataRecord> md = Utils.getReferencingMetadata(context, DeletedObjects.createFindMetadataReferences(),
+                    Arrays.asList(DeletedObjects.getLuceneIndexField()), id, false, false, ReplacementStrategy.ID_FUNC);
             for (MetadataRecord metadataRecord : md) {
                 metadataIds.add(metadataRecord.id);
 
