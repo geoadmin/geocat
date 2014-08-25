@@ -31,8 +31,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
+import jeeves.xlink.Processor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.jxpath.ri.parser.Token;
 import org.apache.commons.jxpath.ri.parser.XPathParser;
@@ -472,13 +472,11 @@ public class EditLib {
      * {@link #addElementOrFragmentFromXpath(org.jdom.Element, org.fao.geonet.kernel.schema.MetadataSchema, String, AddElemValue, boolean)}
      * except that it is done multiple times, once for each element in the map
      *
-     *
      * @param metadataRecord the record to update
      * @param xmlAndXpathInputs the xpaths and new values
      * @param metadataSchema the schema of the metadata record
      * @param createXpathNodeIfNotExist if true then xpaths will be created if they don't indentify an existing element or attribute.
      *                                  Otherwise only existing xpaths will be updated.
-     * @param updatedXLinks
      * @return the number of updates.
      */
     public int addElementOrFragmentFromXpaths(Element metadataRecord, Map<String, AddElemValue> xmlAndXpathInputs,
@@ -667,10 +665,11 @@ public class EditLib {
     /**
      * Performs the updating of the element selected from the metadata by the xpath.
      */
-    private void doAddFragmentFromXpath(Element newValue, Element propEl) {
+    private void doAddFragmentFromXpath(MetadataSchema metadataSchema, Element newValue, Element propEl) throws Exception {
 
         if (newValue.getName().equals(SpecialUpdateTags.REPLACE) || newValue.getName().equals(SpecialUpdateTags.ADD)) {
-            if (newValue.getName().equals(SpecialUpdateTags.REPLACE)) {
+            final boolean isReplace = newValue.getName().equals(SpecialUpdateTags.REPLACE);
+            if (isReplace) {
                 propEl.removeContent();
             }
 
@@ -680,7 +679,17 @@ public class EditLib {
                 if (Log.isDebugEnabled(Geonet.EDITORADDELEMENT)) {
                     Log.debug(Geonet.EDITORADDELEMENT, " > add " + Xml.getString(child));
                 }
-                propEl.addContent(child.detach());
+                child.detach();
+                if (isReplace) {
+                    propEl.addContent(child);
+                } else {
+                    final Element newElement = addElement(metadataSchema, propEl, child.getQualifiedName());
+                    if (newElement.getParent() != null) {
+                        propEl.setContent(propEl.indexOf(newElement), child);
+                    } else if (child.getParentElement() == null) {
+                        propEl.addContent(child);
+            }
+                }
             }
         } else  if (newValue.getName().equals(propEl.getName()) && newValue.getNamespace().equals(propEl.getNamespace())) {
             int idx = propEl.getParentElement().indexOf(propEl);
@@ -704,7 +713,7 @@ public class EditLib {
         if (rootElem.result instanceof Element) {
             result = findLongestMatch(metadataRecord, metadataSchema, xpathParts);
         } else {
-            result = Pair.read(metadataRecord, COMMA_STRING_JOINER.join(xpathParts));
+            result = Pair.read(metadataRecord, SLASH_STRING_JOINER.join(xpathParts));
         }
         final Element elementToAttachTo = result.one();
         final Element clonedMetadata = (Element) elementToAttachTo.clone();
@@ -841,7 +850,7 @@ public class EditLib {
         return true;
     }
 
-    private static final Joiner COMMA_STRING_JOINER = Joiner.on('/');
+    private static final Joiner SLASH_STRING_JOINER = Joiner.on('/');
     @VisibleForTesting
     protected Pair<Element, String> findLongestMatch(final Element metadataRecord,
                                                      final MetadataSchema metadataSchema,
@@ -856,23 +865,25 @@ public class EditLib {
                                      BitSet visited) {
 
         if (visited.get(nextIndex)) {
-            return Pair.read(bestMatch, COMMA_STRING_JOINER.join(xpathPropertyParts.subList(indexOfBestMatch, xpathPropertyParts.size())));
+            return Pair.read(bestMatch, SLASH_STRING_JOINER.join(xpathPropertyParts.subList(indexOfBestMatch, xpathPropertyParts.size())));
         }
         visited.set(nextIndex);
 
         // do linear search when for last couple elements of xpath
         if (xpathPropertyParts.size() - nextIndex < 3) {
             for (int i = xpathPropertyParts.size() - 1; i > -1 ; i--) {
-                final String xpath = COMMA_STRING_JOINER.join(xpathPropertyParts.subList(0, i));
+                final String xpath = SLASH_STRING_JOINER.join(xpathPropertyParts.subList(0, i));
                 SelectResult result = trySelectNode(metadataRecord, metadataSchema, xpath);
                 if (result.result instanceof Element) {
-                    return Pair.read((Element) result.result, COMMA_STRING_JOINER.join(xpathPropertyParts.subList(i, xpathPropertyParts.size())));
+                    return Pair.read((Element) result.result, SLASH_STRING_JOINER.join(xpathPropertyParts.subList(i,
+                            xpathPropertyParts.size())));
                 }
             }
-            return Pair.read(bestMatch, COMMA_STRING_JOINER.join(xpathPropertyParts.subList(indexOfBestMatch, xpathPropertyParts.size())));
+            return Pair.read(bestMatch, SLASH_STRING_JOINER.join(xpathPropertyParts.subList(indexOfBestMatch, xpathPropertyParts.size())));
         } else {
-            final SelectResult found = trySelectNode(metadataRecord, metadataSchema, COMMA_STRING_JOINER.join(xpathPropertyParts.subList(0,
-                    nextIndex)));
+            final SelectResult found = trySelectNode(metadataRecord, metadataSchema, SLASH_STRING_JOINER.join(xpathPropertyParts
+                    .subList(0,
+                            nextIndex)));
             if (found.result instanceof Element) {
                 Element newBest = (Element) found.result;
                 int newIndex = nextIndex + ((xpathPropertyParts.size() - nextIndex) / 2);
@@ -889,11 +900,11 @@ public class EditLib {
         }
     }
 
-    private static class SelectResult {
+    public static class SelectResult {
         private static final SelectResult ERROR = new SelectResult(null, true);
 
-        final Object result;
-        final boolean error;
+        public final Object result;
+        public final boolean error;
 
         private SelectResult(Object result, boolean error) {
             this.result = result;
@@ -904,7 +915,7 @@ public class EditLib {
         }
     }
 
-    private SelectResult trySelectNode(Element metadataRecord, MetadataSchema metadataSchema, String xpathProperty)  {
+    public SelectResult trySelectNode(Element metadataRecord, MetadataSchema metadataSchema, String xpathProperty)  {
         if (xpathProperty.trim().isEmpty()) {
             return SelectResult.of(metadataRecord);
         }
@@ -1350,6 +1361,7 @@ public class EditLib {
 
 		int thisRef = ref;
 		int thisParent = ref;
+        // GEOCAT
 		boolean inDisabledXlinkElem = parentInDisabledXLinkElem;
         String href = XLink.getHRef(md);
         if(href!=null) {
@@ -1359,6 +1371,7 @@ public class EditLib {
             }
             xlinks.put(href, thisRef);
         }
+        // END GEOCAT
 
 		@SuppressWarnings("unchecked")
         List<Element> list = md.getChildren();
@@ -2053,6 +2066,12 @@ public class EditLib {
     public static void tagForDisplay(Element elem) {
         elem.setAttribute("addedObj","true", Edit.NAMESPACE);
     }
+    /**
+     * Remove the tag element so the tag does not stay in the actual metadata.
+     */
+    public static void removeDisplayTag(Element elem) {
+        elem.removeAttribute("addedObj", Edit.NAMESPACE);
+    }
 
     /**
      * Get the XPath expression for identified Element.
@@ -2125,11 +2144,5 @@ public class EditLib {
         }
 
         return xPath;
-    }
-    /**
-     * Remove the tag element so the tag does not stay in the actual metadata.
-     */
-    public static void removeDisplayTag(Element elem) {
-        elem.removeAttribute("addedObj", Edit.NAMESPACE);
     }
 }

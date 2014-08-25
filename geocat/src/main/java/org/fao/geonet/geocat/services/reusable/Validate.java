@@ -23,26 +23,15 @@
 
 package org.fao.geonet.geocat.services.reusable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.common.base.Function;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
-
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geocat;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
 import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
@@ -51,7 +40,13 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
-import com.google.common.base.Function;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Makes a list of all the non-validated elements
@@ -110,7 +105,7 @@ public class Validate implements Service
 	    luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
 
 	    final Function<String, String> idConverter = strategy.numericIdToConcreteId(session);
-	    Set<MetadataRecord> results = Utils.getReferencingMetadata(context, luceneFields, id, true, idConverter);
+        Set<MetadataRecord> results = Utils.getReferencingMetadata(context, strategy, luceneFields, id, false, true, idConverter);
 	
 	    for( MetadataRecord metadataRecord : results ) {
 	

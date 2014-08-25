@@ -3,12 +3,12 @@ package org.fao.geonet.domain;
 import org.jdom.Element;
 import org.springframework.beans.BeanWrapperImpl;
 
-import javax.annotation.Nonnull;
-import javax.persistence.Embeddable;
 import java.beans.PropertyDescriptor;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.persistence.Embeddable;
 
 /**
  * Contains common methods of all entities in Geonetwork.
@@ -36,17 +36,7 @@ public class GeonetEntity {
     public final Element asXml() {
         IdentityHashMap<Object, Void> alreadyEncoded = new IdentityHashMap<Object, Void>();
 
-        Element record = asXml(alreadyEncoded);
-
-        return record;
-    }
-
-    private static Element asXml(Object obj) {
-        IdentityHashMap<Object, Void> alreadyEncoded = new IdentityHashMap<Object, Void>();
-
-        Element record = asXml(obj, alreadyEncoded);
-
-        return record;
+        return asXml(alreadyEncoded);
     }
 
     protected Element asXml(IdentityHashMap<Object, Void> alreadyEncoded) {

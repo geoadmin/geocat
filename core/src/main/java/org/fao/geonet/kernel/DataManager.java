@@ -225,7 +225,7 @@ public class DataManager {
 
         fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
         fields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
-        final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, fields, newid, false,
+        final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, strategy, fields, newid, null, false,
                 Functions.<String>identity());
 
 
@@ -912,7 +912,7 @@ public class DataManager {
      * @throws Exception
      */
     // GEOCAT
-    public Element doSchemaTronForEditor(ServiceContext context, String schema,Element md,String lang) throws Exception {
+    public Element doSchemaTronForEditor(String schema,Element md,String lang) throws Exception {
         // enumerate the metadata xml so that we can report any problems found
         // by the schematron_xml script to the geonetwork editor
         editLib.enumerateTree(md);
@@ -1110,10 +1110,10 @@ public class DataManager {
         //--- Note we have to use uuid here instead of id because we don't have
         //--- an id...
         // GEOCAT
-        Element schemaTronXml = dataMan.doSchemaTronForEditor(context, schema,xml,context.getLanguage());
+        Element schemaTronXml = dataMan.doSchemaTronForEditor(schema,xml,context.getLanguage());
         xml.detach();
         if (schemaTronXml != null && schemaTronXml.getContent().size() > 0) {
-			Element schemaTronReport = dataMan.doSchemaTronForEditor(context, schema,xml,context.getLanguage());
+			Element schemaTronReport = dataMan.doSchemaTronForEditor(schema,xml,context.getLanguage());
 
             List<Namespace> theNSs = new ArrayList<Namespace>();
             theNSs.add(Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork"));

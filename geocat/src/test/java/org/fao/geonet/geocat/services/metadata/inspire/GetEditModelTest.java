@@ -3,18 +3,16 @@ package org.fao.geonet.geocat.services.metadata.inspire;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.AjaxEditUtils;
-import org.fao.geonet.services.metadata.inspire.GetEditModel;
-import org.fao.geonet.services.metadata.inspire.Save;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.json.JSONArray;
@@ -37,7 +35,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.fao.geonet.kernel.search.spatial.Pair.read;
+import static org.fao.geonet.domain.Pair.read;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -49,7 +47,7 @@ public class GetEditModelTest {
         final Element testMetadata = Xml.loadFile(GetEditModelTest.class.getResource("conformity/metadata.xml"));
 
 
-        org.fao.geonet.services.metadata.inspire.GetEditModel service = new TestGetEditModel(testMetadata);
+        org.fao.geonet.geocat.services.metadata.inspire.GetEditModel service = new TestGetEditModel(testMetadata);
 
         Element params = new Element("params").addContent(new Element("id").setText("2"));
         ServiceContext context = Mockito.mock(ServiceContext.class);
@@ -73,7 +71,7 @@ public class GetEditModelTest {
                                                     "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
                                                     "gco:isoType=\"gmd:MD_Metadata\"></che:CHE_MD_Metadata>", false);
 
-        org.fao.geonet.services.metadata.inspire.GetEditModel service = new TestGetEditModel(testMetadata);
+        org.fao.geonet.geocat.services.metadata.inspire.GetEditModel service = new TestGetEditModel(testMetadata);
 
         Element params = new Element("params").addContent(new Element("id").setText("2"));
         ServiceContext context = Mockito.mock(ServiceContext.class);
@@ -101,7 +99,7 @@ public class GetEditModelTest {
     public void testAddConstraintWhenRequired() throws Exception {
         final Element testMetadata = Xml.loadFile(GetEditModelTest.class.getResource("stackoverflow/metadata.xml"));
 
-        org.fao.geonet.services.metadata.inspire.GetEditModel service = new TestGetEditModel(testMetadata);
+        org.fao.geonet.geocat.services.metadata.inspire.GetEditModel service = new TestGetEditModel(testMetadata);
         Element params = new Element("params").addContent(new Element("id").setText("2"));
         ServiceContext context = Mockito.mock(ServiceContext.class);
 
@@ -519,7 +517,7 @@ public class GetEditModelTest {
         private final Map<String, Element> sharedObjects = Maps.newHashMap();
 
 
-        KeywordBean inspireBean = new KeywordBean().
+        KeywordBean inspireBean = new KeywordBean(SaveServiceTestImpl.LANGUAGES_MAPPER).
                 setUriCode("http://test.com/INSPIRE").
                 setDefaultLang("ger").
                 setValue("ger", "INSPIRE").

@@ -7,30 +7,28 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.AddElemValue;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataType;
-import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.AjaxEditUtils;
-import org.fao.geonet.services.metadata.inspire.GetEditModel;
-import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -57,7 +55,7 @@ import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.fao.geonet.constants.Geonet.Namespaces.SRV;
 import static org.fao.geonet.constants.Geonet.Namespaces.XLINK;
 import static org.fao.geonet.constants.Geonet.Namespaces.XSI;
-import static org.fao.geonet.util.XslUtil.CHE_NAMESPACE;
+import static org.fao.geonet.util.GeocatXslUtil.CHE_NAMESPACE;
 
 /**
  * @author Jesse on 5/17/2014.
@@ -69,7 +67,7 @@ public class Save implements Service {
             SRV,
             GEONET,
             Geonet.Namespaces.XLINK,
-            XslUtil.CHE_NAMESPACE);
+            CHE_NAMESPACE);
 
     private static final String PARAM_DATA = "data";
     private static final String PARAM_FINISH = "finish";
@@ -155,9 +153,8 @@ public class Save implements Service {
             final String data = Util.getParam(params, PARAM_DATA);
             final String id = params.getChildText(Params.ID);
 
-            GeonetContext handlerContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-            final SchemaManager schemaManager = handlerContext.getSchemamanager();
-            final DataManager dataManager = handlerContext.getDataManager();
+            final SchemaManager schemaManager = context.getBean(SchemaManager.class);
+            final DataManager dataManager = context.getBean(DataManager.class);
             final EditLib editLib = new EditLib(schemaManager);
 
             final AjaxEditUtils ajaxEditUtils = getAjaxEditUtils(params, context);
@@ -194,17 +191,17 @@ public class Save implements Service {
 
     private void updateLinks(EditLib editLib, MetadataSchema metadataSchema, Element metadata, JSONObject jsonObject)
             throws JSONException, JDOMException {
-        final JSONArray jsonArray = jsonObject.optJSONArray(org.fao.geonet.services.metadata.inspire.Save.JSON_LINKS);
+        final JSONArray jsonArray = jsonObject.optJSONArray(Save.JSON_LINKS);
         if (jsonArray != null) {
             for (int i = 0; i < jsonArray.length(); i++) {
                 final JSONObject linkJson = jsonArray.getJSONObject(i);
                 String ref = linkJson.optString(Params.REF);
                 if (Strings.isNullOrEmpty(ref)) {
-                    if (linkJson.has(org.fao.geonet.services.metadata.inspire.Save.JSON_LINKS_LOCALIZED_URL)) {
+                    if (linkJson.has(Save.JSON_LINKS_LOCALIZED_URL)) {
                         addXLink(editLib, metadataSchema, linkJson, metadata, false);
                     }
                 } else {
-                    boolean delete = !linkJson.has(org.fao.geonet.services.metadata.inspire.Save.JSON_LINKS_LOCALIZED_URL);
+                    boolean delete = !linkJson.has(Save.JSON_LINKS_LOCALIZED_URL);
                     final Element element = Xml.selectElement(metadata, "*//*[geonet:element/@ref = '" + ref + "']", NS);
                     if (delete) {
                         element.detach();
@@ -504,7 +501,7 @@ public class Save implements Service {
                         new Element(EditLib.SpecialUpdateTags.ADD, GEONET).addContent(conformanceResult));
             } else {
                 final Element gmdDQ_DataQuality = resultEl.getParentElement().getParentElement().getParentElement();
-                final Element gmdReport = editLib.addElement(metadataSchema.getName(), gmdDQ_DataQuality, "gmd:report");
+                final Element gmdReport = editLib.addElement(metadataSchema, gmdDQ_DataQuality, "gmd:report");
                 addElementFromXPath(editLib, metadataSchema, gmdReport, "gmd:DQ_DomainConsistency/gmd:result",
                         new Element(EditLib.SpecialUpdateTags.ADD, GEONET).addContent(conformanceResult));
             }
@@ -554,8 +551,7 @@ public class Save implements Service {
         String lineageRef = lineageJSON.optString(Params.REF);
 
         Element lineageEl = Xml.selectElement(metadata,
-                "gmd:dataQualityInfo//gmd:lineage/gmd:LI_Lineage[geonet:element/@ref = '" + lineageRef + "']", org.fao.geonet.services
-                        .metadata.inspire.Save.NS);
+                "gmd:dataQualityInfo//gmd:lineage/gmd:LI_Lineage[geonet:element/@ref = '" + lineageRef + "']", Save.NS);
 
         if (lineageEl == null) {
             lineageEl = new Element("LI_Lineage", GMD);
@@ -605,7 +601,7 @@ public class Save implements Service {
                     identification,
                     metadataSchema,
                     new Element("SV_CouplingType", SRV),
-                    identificationJson.optString(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_COUPLING_TYPE),
+                    identificationJson.optString(Save.JSON_IDENTIFICATION_COUPLING_TYPE),
                     "srv:couplingType",
                     "http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#SV_CouplingType",
                     true);
@@ -627,7 +623,7 @@ public class Save implements Service {
     @SuppressWarnings("unchecked")
     private void updateContainsOperation(EditLib editLib, Element identification, MetadataSchema metadataSchema, JSONObject
             identificationJson) throws JSONException, JDOMException {
-        final JSONArray jsonArray = identificationJson.optJSONArray(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_CONTAINS_OPERATIONS);
+        final JSONArray jsonArray = identificationJson.optJSONArray(Save.JSON_IDENTIFICATION_CONTAINS_OPERATIONS);
         if (jsonArray == null) {
             return;
         }
@@ -668,12 +664,12 @@ public class Save implements Service {
                 opEl = new Element("SV_OperationMetadata", SRV);
             }
             updateCharString(editLib, opEl, metadataSchema, "srv:operationName",
-                    op.optString(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_OPERATION_NAME));
+                    op.optString(Save.JSON_IDENTIFICATION_OPERATION_NAME));
             updateCodeList(editLib,
                     opEl,
                     metadataSchema,
                     new Element("DCPList", SRV),
-                    op.optString(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_DCP_LIST),
+                    op.optString(Save.JSON_IDENTIFICATION_DCP_LIST),
                     "srv:DCP",
                     "http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList", true);
             updateLinks(editLib, metadataSchema, opEl, op);
@@ -858,7 +854,7 @@ public class Save implements Service {
                                       JSONObject identificationJson) throws Exception {
         Element identificationInfo = metadata.getChild("identificationInfo", Geonet.Namespaces.GMD);
         if (identificationInfo == null) {
-            identificationInfo = editLib.addElement(metadataSchema.getName(), metadata, "gmd:identificationInfo");
+            identificationInfo = editLib.addElement(metadataSchema, metadata, "gmd:identificationInfo");
         }
 
         final String requiredInfoTagName;
@@ -955,7 +951,7 @@ public class Save implements Service {
 
         if (previousEls.isEmpty()) {
             // if there are no contacts then we need to add one to know where to insert all of the new ones.
-            Element newEl = editLib.addElement(metadataSchema.getName(), metadata, tagName);
+            Element newEl = editLib.addElement(metadataSchema, metadata, tagName);
             previousEls = Arrays.asList(newEl);
         }
 
@@ -1117,8 +1113,7 @@ public class Save implements Service {
 
     @VisibleForTesting
     protected void saveMetadata(ServiceContext context, String id, DataManager dataManager, Element metadata) throws Exception {
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        dataManager.updateMetadata(context, dbms, id, metadata, false, true, true, context.getLanguage(), null, true, true);
+        dataManager.updateMetadata(context, id, metadata, false, true, true, context.getLanguage(), null, true, true);
         context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING + id, metadata);
     }
 
@@ -1136,7 +1131,7 @@ public class Save implements Service {
 
     @VisibleForTesting
     protected IsoLanguagesMapper getIsoLanguagesMapper() {
-        return IsoLanguagesMapper.getInstance();
+        return ServiceContext.get().getBean(IsoLanguagesMapper.class);
     }
 
     @VisibleForTesting
@@ -1198,7 +1193,7 @@ public class Save implements Service {
 
     static class ExtentHrefBuilder implements HrefBuilder {
         /**
-         * Don't forget to update {@link org.fao.geonet.services.metadata.inspire.GetEditModel#extentJsonEncoder}
+         * Don't forget to update {@link org.fao.geonet.geocat.services.metadata.inspire.GetEditModel#extentJsonEncoder}
          */
         Map<String, String> typenameMapping = Maps.newHashMap();
 

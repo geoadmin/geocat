@@ -23,26 +23,27 @@
 
 package org.fao.geonet.geocat.services.reusable;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geocat;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.geocat.kernel.reusable.*;
+import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
+import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
+import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
+import org.fao.geonet.geocat.kernel.reusable.SendEmailParameter;
+import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Deletes the objects from deleted reusable object table and unpublishes the
@@ -78,7 +79,7 @@ public class Delete implements Service
         Collection<Integer> metadataIds = new HashSet<Integer>();
         Multimap<Integer/* ownerid */, Integer/* metadataid */> emailInfo = HashMultimap.create();
 
-        for (String id : ids) {
+        for (String id : sIds) {
             Set<MetadataRecord> md = Utils.getReferencingMetadata(context, DeletedObjects.createFindMetadataReferences(),
                     Arrays.asList(DeletedObjects.getLuceneIndexField()), id, false, false, ReplacementStrategy.ID_FUNC);
             for (MetadataRecord metadataRecord : md) {

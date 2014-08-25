@@ -34,6 +34,7 @@ import jeeves.server.UserSession;
 import jeeves.xlink.XLink;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
@@ -86,6 +87,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
+import static org.apache.lucene.search.WildcardQuery.WILDCARD_STRING;
 import static org.fao.geonet.geocat.kernel.reusable.Utils.addChild;
 import static org.fao.geonet.geocat.kernel.reusable.Utils.gml2Conf;
 import static org.fao.geonet.geocat.kernel.reusable.Utils.gml3Conf;

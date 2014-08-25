@@ -25,6 +25,7 @@ package org.fao.geonet.geocat.kernel.reusable;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.geocat.RejectedSharedObject;
@@ -37,6 +38,8 @@ import org.springframework.data.domain.Sort;
 
 import java.sql.SQLException;
 import java.util.List;
+
+import static org.apache.lucene.search.WildcardQuery.WILDCARD_STRING;
 
 /**
  * Handles operations for interacting with the Deleted Objects database table

@@ -10,29 +10,29 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
+import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
-import org.fao.geonet.kernel.reusable.KeywordsStrategy;
-import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchType;
-import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.AjaxEditUtils;
-import org.fao.geonet.services.metadata.inspire.Save;
-import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.util.GeocatXslUtil;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.json.JSONArray;
@@ -60,7 +60,7 @@ import javax.annotation.Nullable;
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GEONET;
 import static org.fao.geonet.constants.Geonet.Namespaces.XLINK;
-import static org.fao.geonet.services.metadata.inspire.Save.NS;
+import static org.fao.geonet.geocat.services.metadata.inspire.Save.NS;
 
 /**
  * @author Jesse on 5/17/2014.
@@ -156,7 +156,7 @@ public class GetEditModel implements Service {
 
     protected Element createModel(ServiceContext context, boolean pretty, Element metadataEl, Boolean valid) throws Exception {
         JSONObject metadataJson = new JSONObject();
-        metadataJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_VALID_METADATA, valid);
+        metadataJson.put(Save.JSON_VALID_METADATA, valid);
         addCodeLists(context, metadataJson);
         metadataJson.append("metadataTypeOptions", "data");
         metadataJson.append("metadataTypeOptions", "service");
@@ -181,18 +181,18 @@ public class GetEditModel implements Service {
 
     private void processTransferOptions(Element metadataEl, JSONObject metadataJson) throws JDOMException, JSONException {
         JSONArray linksJson = new JSONArray();
-        metadataJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_LINKS, linksJson);
+        metadataJson.put(Save.JSON_LINKS, linksJson);
 
         final String xpath = "gmd:distributionInfo//gmd:transferOptions//gmd:linkage";
         processLinkages(metadataEl, linksJson, xpath, "gmd:CI_OnlineResource/gmd:linkage");
 
-        String identificationType = metadataJson.getJSONObject(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION).getString(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_TYPE);
+        String identificationType = metadataJson.getJSONObject(Save.JSON_IDENTIFICATION).getString(Save.JSON_IDENTIFICATION_TYPE);
 
-        if (!org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_TYPE_DATA_VALUE.equals(identificationType) && linksJson.length() == 0) {
+        if (!Save.JSON_IDENTIFICATION_TYPE_DATA_VALUE.equals(identificationType) && linksJson.length() == 0) {
             JSONObject link = new JSONObject();
-            link.put(org.fao.geonet.services.metadata.inspire.Save.JSON_LINKS_LOCALIZED_URL, new JSONObject());
-            link.put(org.fao.geonet.services.metadata.inspire.Save.JSON_LINKS_DESCRIPTION, "");
-            link.put(org.fao.geonet.services.metadata.inspire.Save.JSON_LINKS_XPATH, TRANSFER_OPTION_XPATH);
+            link.put(Save.JSON_LINKS_LOCALIZED_URL, new JSONObject());
+            link.put(Save.JSON_LINKS_DESCRIPTION, "");
+            link.put(Save.JSON_LINKS_XPATH, TRANSFER_OPTION_XPATH);
             linksJson.put(link);
         }
     }
@@ -215,14 +215,14 @@ public class GetEditModel implements Service {
             List<?> localisedUrls = Xml.selectNodes(linkage, "*//che:LocalisedURL", NS);
             JSONObject urls = new JSONObject();
             addTranslationElements(getIsoLanguagesMapper(), urls, localisedUrls);
-            linkJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_LINKS_LOCALIZED_URL, urls);
+            linkJson.put(Save.JSON_LINKS_LOCALIZED_URL, urls);
 
             List<?> description = Xml.selectNodes(linkage.getParentElement(), "gmd:description//gmd:LocalisedCharacterString", NS);
             JSONObject descriptionJson = new JSONObject();
             addTranslationElements(getIsoLanguagesMapper(), descriptionJson, description);
-            linkJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_LINKS_DESCRIPTION, descriptionJson);
-            linkJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_LINKS_XPATH, jsonXLink);
-            addValue(linkage.getParentElement(), linkJson, org.fao.geonet.services.metadata.inspire.Save.JSON_LINKS_PROTOCOL, "gmd:description");
+            linkJson.put(Save.JSON_LINKS_DESCRIPTION, descriptionJson);
+            linkJson.put(Save.JSON_LINKS_XPATH, jsonXLink);
+            addValue(linkage.getParentElement(), linkJson, Save.JSON_LINKS_PROTOCOL, "gmd:description");
 
             linksJson.put(linkJson);
         }
@@ -240,7 +240,7 @@ public class GetEditModel implements Service {
             JSONObject conformanceJSON = new JSONObject();
             addConformanceProperties(metadataJson, conformityElement, conformanceJSON);
 
-            JSONObject titles = conformanceJSON.getJSONObject(org.fao.geonet.services.metadata.inspire.Save.JSON_TITLE);
+            JSONObject titles = conformanceJSON.getJSONObject(Save.JSON_TITLE);
 
             final Iterator keys = titles.keys();
 
@@ -259,63 +259,62 @@ public class GetEditModel implements Service {
 
         if (conformanceResultIndex == -1) {
             final JSONObject newObject = new JSONObject();
-            newObject.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONFORMITY_RESULT_REF, "");
+            newObject.put(Save.JSON_CONFORMITY_RESULT_REF, "");
             JSONObject title = new JSONObject();
             title.put("eng", "New");
             title.put("fre", "Nouveau");
             title.put("ger", "Neu");
             title.put("ita", "Nuovo");
-            newObject.put(org.fao.geonet.services.metadata.inspire.Save.JSON_TITLE, title);
-            newObject.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONFORMITY_SCOPE_CODE , "");
-            newObject.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONFORMITY_EXPLANATION, "");
-            newObject.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONFORMITY_PASS, "");
+            newObject.put(Save.JSON_TITLE, title);
+            newObject.put(Save.JSON_CONFORMITY_SCOPE_CODE , "");
+            newObject.put(Save.JSON_CONFORMITY_EXPLANATION, "");
+            newObject.put(Save.JSON_CONFORMITY_PASS, "");
             allConformanceResults.put(newObject);
         }
 
         JSONObject conformityJson = new JSONObject();
         String updateRef = "";
         if (conformanceResultIndex > -1) {
-            updateRef = allConformanceResults.getJSONObject(conformanceResultIndex).getString(org.fao.geonet.services.metadata.inspire
-                    .Save.JSON_CONFORMITY_RESULT_REF);
+            updateRef = allConformanceResults.getJSONObject(conformanceResultIndex).getString(Save.JSON_CONFORMITY_RESULT_REF);
         }
-        conformityJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONFORMITY_UPDATE_ELEMENT_REF, updateRef);
-        conformityJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONFORMITY_ALL_CONFORMANCE_REPORTS, allConformanceResults);
-        conformityJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONFORMITY_ALL_CONFORMANCE_REPORT_INDEX, conformanceResultIndex);
+        conformityJson.put(Save.JSON_CONFORMITY_UPDATE_ELEMENT_REF, updateRef);
+        conformityJson.put(Save.JSON_CONFORMITY_ALL_CONFORMANCE_REPORTS, allConformanceResults);
+        conformityJson.put(Save.JSON_CONFORMITY_ALL_CONFORMANCE_REPORT_INDEX, conformanceResultIndex);
 
         JSONObject lineageJson = new JSONObject();
-        conformityJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONFORMITY_LINEAGE, lineageJson);
+        conformityJson.put(Save.JSON_CONFORMITY_LINEAGE, lineageJson);
 
         Element lineageEl = Xml.selectElement(metadataEl, "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage", NS);
-        String mainLanguage = metadataJson.getString(org.fao.geonet.services.metadata.inspire.Save.JSON_LANGUAGE);
-        addTranslatedElement(mainLanguage, lineageEl, getIsoLanguagesMapper(), lineageJson, org.fao.geonet.services.metadata.inspire.Save.JSON_CONFORMITY_LINEAGE_STATEMENT,
+        String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
+        addTranslatedElement(mainLanguage, lineageEl, getIsoLanguagesMapper(), lineageJson, Save.JSON_CONFORMITY_LINEAGE_STATEMENT,
                 "gmd:statement");
         addValue(lineageEl, lineageJson, Params.REF, "geonet:element/@ref");
 
-        conformityJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONFORMITY_IS_TITLE_SET, false);
-        metadataJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONFORMITY, conformityJson);
+        conformityJson.put(Save.JSON_CONFORMITY_IS_TITLE_SET, false);
+        metadataJson.put(Save.JSON_CONFORMITY, conformityJson);
     }
 
     private JSONObject addConformanceProperties(JSONObject metadataJson, Element conformanceResult,
                                                 JSONObject conformityJson)
             throws JSONException, JDOMException {
-        String mainLanguage = metadataJson.getString(org.fao.geonet.services.metadata.inspire.Save.JSON_LANGUAGE);
+        String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
 
-        addValue(conformanceResult, conformityJson, org.fao.geonet.services.metadata.inspire.Save.JSON_CONFORMITY_RESULT_REF, "geonet:element/@ref");
+        addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_RESULT_REF, "geonet:element/@ref");
 
         final boolean hasTitle = addTranslatedElement(mainLanguage, conformanceResult, getIsoLanguagesMapper(), conformityJson,
-                org.fao.geonet.services.metadata.inspire.Save.JSON_TITLE, "gmd:specification/gmd:CI_Citation/gmd:title");
-        conformityJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONFORMITY_IS_TITLE_SET, hasTitle);
+                Save.JSON_TITLE, "gmd:specification/gmd:CI_Citation/gmd:title");
+        conformityJson.put(Save.JSON_CONFORMITY_IS_TITLE_SET, hasTitle);
 
         JSONObject date = new JSONObject();
-        date.put(org.fao.geonet.services.metadata.inspire.Save.JSON_DATE, "2010-12-08");
-        date.put(org.fao.geonet.services.metadata.inspire.Save.JSON_DATE_TYPE, "publication");
-        date.put(org.fao.geonet.services.metadata.inspire.Save.JSON_DATE_TAG_NAME, "gco:Date");
-        conformityJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_DATE, date);
+        date.put(Save.JSON_DATE, "2010-12-08");
+        date.put(Save.JSON_DATE_TYPE, "publication");
+        date.put(Save.JSON_DATE_TAG_NAME, "gco:Date");
+        conformityJson.put(Save.JSON_DATE, date);
 
-        addValue(conformanceResult, conformityJson, org.fao.geonet.services.metadata.inspire.Save.JSON_CONFORMITY_PASS, "gmd:pass/gco:Boolean");
-        addValue(conformanceResult, conformityJson, org.fao.geonet.services.metadata.inspire.Save.JSON_CONFORMITY_EXPLANATION, "gmd:explanation/gco:CharacterString");
+        addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_PASS, "gmd:pass/gco:Boolean");
+        addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_EXPLANATION, "gmd:explanation/gco:CharacterString");
         final String scopeCodeXPath = "gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue";
-        addValue(getDataQualityEl(conformanceResult), conformityJson, org.fao.geonet.services.metadata.inspire.Save.JSON_CONFORMITY_SCOPE_CODE, scopeCodeXPath, "");
+        addValue(getDataQualityEl(conformanceResult), conformityJson, Save.JSON_CONFORMITY_SCOPE_CODE, scopeCodeXPath, "");
 
         return conformityJson;
     }
@@ -348,8 +347,9 @@ public class GetEditModel implements Service {
     @VisibleForTesting
     protected void addCodeLists(ServiceContext context, JSONObject metadataJson) throws JDOMException, IOException, JSONException {
         GeonetContext geonetContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        final MetadataSchema iso19139CHESchema = geonetContext.getSchemamanager().getSchema("iso19139.che");
-        final MetadataSchema iso19139Schema = geonetContext.getSchemamanager().getSchema("iso19139");
+        final SchemaManager schemaManager = context.getBean(SchemaManager.class);
+        final MetadataSchema iso19139CHESchema = schemaManager.getSchema("iso19139.che");
+        final MetadataSchema iso19139Schema = schemaManager.getSchema("iso19139");
         final Element codelists = cacheManager.get(context, true, iso19139Schema.getSchemaDir() + "/loc", "codelists.xml",
                 context.getLanguage(), "ger", true);
         final Element cheCodelistExtensions = cacheManager.get(context, true, iso19139CHESchema.getSchemaDir() + "/loc", "codelists.xml",
@@ -462,10 +462,10 @@ public class GetEditModel implements Service {
     }
 
     private void processConstraints(Element identificationInfo, JSONObject metadataJson) throws Exception {
-        String mainLanguage = metadataJson.getString(org.fao.geonet.services.metadata.inspire.Save.JSON_LANGUAGE);
+        String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
 
         JSONObject constraintsJson = new JSONObject();
-        metadataJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS, constraintsJson);
+        metadataJson.put(Save.JSON_CONSTRAINTS, constraintsJson);
 
         @SuppressWarnings("unchecked")
         List<Element> legalConstraints = (List<Element>) Xml.selectNodes(identificationInfo,
@@ -473,27 +473,27 @@ public class GetEditModel implements Service {
                 "or @gco:isoType = 'gmd:MD_LegalConstraints']", NS);
 
         if (legalConstraints.isEmpty()) {
-            constraintsJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_LEGAL, new JSONArray());
+            constraintsJson.put(Save.JSON_CONSTRAINTS_LEGAL, new JSONArray());
         }
 
         ConstraintTracker tracker = new ConstraintTracker();
         for (Element legalConstraint : legalConstraints) {
             JSONObject legalJson = new JSONObject();
             processLegalConstraint(mainLanguage, legalConstraint, legalJson, tracker);
-            constraintsJson.append(org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_LEGAL, legalJson);
+            constraintsJson.append(Save.JSON_CONSTRAINTS_LEGAL, legalJson);
         }
 
         if (!tracker.access) {
-            final JSONArray array = constraintsJson.getJSONArray(org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_LEGAL);
+            final JSONArray array = constraintsJson.getJSONArray(Save.JSON_CONSTRAINTS_LEGAL);
             if (array.length() > 0) {
-                array.getJSONObject(0).getJSONArray(org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_ACCESS_CONSTRAINTS).put("");
+                array.getJSONObject(0).getJSONArray(Save.JSON_CONSTRAINTS_ACCESS_CONSTRAINTS).put("");
             }
         }
 
         if (!tracker.use) {
-            final JSONArray array = constraintsJson.getJSONArray(org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_LEGAL);
+            final JSONArray array = constraintsJson.getJSONArray(Save.JSON_CONSTRAINTS_LEGAL);
             if (array.length() > 0) {
-                array.getJSONObject(0).getJSONArray(org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_USE_CONSTRAINTS).put("");
+                array.getJSONObject(0).getJSONArray(Save.JSON_CONSTRAINTS_USE_CONSTRAINTS).put("");
             }
         }
 
@@ -502,30 +502,30 @@ public class GetEditModel implements Service {
                 "gmd:resourceConstraints/gmd:MD_Constraints", NS);
 
         if (genericConstraints.isEmpty()) {
-            constraintsJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_GENERIC, new JSONArray());
+            constraintsJson.put(Save.JSON_CONSTRAINTS_GENERIC, new JSONArray());
         }
         for (Element genericConstraint : genericConstraints) {
             JSONObject json = new JSONObject();
             addRef(genericConstraint, json);
-            addArray(mainLanguage, genericConstraint, getIsoLanguagesMapper(), json, "gmd:useLimitation", org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
+            addArray(mainLanguage, genericConstraint, getIsoLanguagesMapper(), json, "gmd:useLimitation", Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
                     translatedElemEncoder);
-            constraintsJson.append(org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_GENERIC, json);
+            constraintsJson.append(Save.JSON_CONSTRAINTS_GENERIC, json);
         }
         @SuppressWarnings("unchecked")
         List<Element> securityConstraints = (List<Element>) Xml.selectNodes(identificationInfo,
                 "gmd:resourceConstraints/gmd:MD_SecurityConstraints", NS);
         if (securityConstraints.isEmpty()) {
-            constraintsJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_SECURITY, new JSONArray());
+            constraintsJson.put(Save.JSON_CONSTRAINTS_SECURITY, new JSONArray());
         }
 
         for (Element securityConstraint : securityConstraints) {
             JSONObject json = new JSONObject();
             addRef(securityConstraint, json);
-            addArray(mainLanguage, securityConstraint, getIsoLanguagesMapper(), json, "gmd:useLimitation", org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
+            addArray(mainLanguage, securityConstraint, getIsoLanguagesMapper(), json, "gmd:useLimitation", Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
                     translatedElemEncoder);
             addArray(mainLanguage, securityConstraint, getIsoLanguagesMapper(), json, "gmd:classification/gmd:MD_ClassificationCode",
-                    org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_CLASSIFICATION, codeListJsonEncoder);
-            constraintsJson.append(org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_SECURITY, json);
+                    Save.JSON_CONSTRAINTS_CLASSIFICATION, codeListJsonEncoder);
+            constraintsJson.append(Save.JSON_CONSTRAINTS_SECURITY, json);
         }
 
     }
@@ -539,17 +539,17 @@ public class GetEditModel implements Service {
     }
     private void processLegalConstraint(String mainLanguage, Element constraint, JSONObject legalJson, ConstraintTracker tracker) throws Exception {
         addRef(constraint, legalJson);
-        addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson, "gmd:useLimitation", org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
+        addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson, "gmd:useLimitation", Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
                 translatedElemEncoder, new JSONArray());
         tracker.access |= addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson, "gmd:accessConstraints/gmd:MD_RestrictionCode",
-                org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_ACCESS_CONSTRAINTS, noDefaultJsonEncoder);
+                Save.JSON_CONSTRAINTS_ACCESS_CONSTRAINTS, noDefaultJsonEncoder);
         tracker.use |= addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson, "gmd:useConstraints/gmd:MD_RestrictionCode",
-                org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_USE_CONSTRAINTS, noDefaultJsonEncoder);
-        addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson, "gmd:otherConstraints", org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_OTHER_CONSTRAINTS,
+                Save.JSON_CONSTRAINTS_USE_CONSTRAINTS, noDefaultJsonEncoder);
+        addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson, "gmd:otherConstraints", Save.JSON_CONSTRAINTS_OTHER_CONSTRAINTS,
                 translatedElemEncoder, new JSONArray());
         addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson,
                 "che:legislationConstraints/che:CHE_MD_Legislation",
-                org.fao.geonet.services.metadata.inspire.Save.JSON_CONSTRAINTS_LEGISLATION_CONSTRAINTS, legislationConstraintsJsonEncoder, new JSONArray());
+                Save.JSON_CONSTRAINTS_LEGISLATION_CONSTRAINTS, legislationConstraintsJsonEncoder, new JSONArray());
 
     }
 
@@ -568,47 +568,47 @@ public class GetEditModel implements Service {
         );
 
         if (identificationInfoEl == null) {
-            identificationInfoEl = new Element("CHE_MD_DataIdentification", XslUtil.CHE_NAMESPACE).setAttribute("isoType", "gmd:MD_DataIdentification", GCO);
+            identificationInfoEl = new Element("CHE_MD_DataIdentification", GeocatXslUtil.CHE_NAMESPACE).setAttribute("isoType", "gmd:MD_DataIdentification", GCO);
         }
 
         JSONObject identificationJSON = new JSONObject();
-        metadataJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION, identificationJSON);
+        metadataJson.put(Save.JSON_IDENTIFICATION, identificationJSON);
         boolean isDataType = identificationInfoEl.getName().equals("gmd:MD_DataIdentification") ||
                              (identificationInfoEl.getAttributeValue("isoType", GCO)!= null &&
                               identificationInfoEl.getAttributeValue("isoType", GCO).equals("gmd:MD_DataIdentification"));
-        identificationJSON.put(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_TYPE, isDataType ? "data" : "service");
+        identificationJSON.put(Save.JSON_IDENTIFICATION_TYPE, isDataType ? "data" : "service");
 
-        String mainLanguage = metadataJson.getString(org.fao.geonet.services.metadata.inspire.Save.JSON_LANGUAGE);
-        addTranslatedElement(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, org.fao.geonet.services.metadata.inspire.Save.JSON_TITLE,
+        String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
+        addTranslatedElement(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, Save.JSON_TITLE,
                 "gmd:citation/gmd:CI_Citation/gmd:title");
 
-        addValue(identificationInfoEl, identificationJSON, org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_IDENTIFIER,
+        addValue(identificationInfoEl, identificationJSON, Save.JSON_IDENTIFICATION_IDENTIFIER,
                 "gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString");
 
         addDateElement(identificationInfoEl, identificationJSON, "gmd:citation/gmd:CI_Citation/gmd:date");
 
-        addTranslatedElement(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_ABSTRACT,
+        addTranslatedElement(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, Save.JSON_IDENTIFICATION_ABSTRACT,
                 "gmd:abstract");
 
-        addValue(identificationInfoEl, identificationJSON, org.fao.geonet.services.metadata.inspire.Save.JSON_LANGUAGE, "gmd:language");
-        addValue(identificationInfoEl, identificationJSON, org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_SERVICETYPE, "srv:serviceType");
+        addValue(identificationInfoEl, identificationJSON, Save.JSON_LANGUAGE, "gmd:language");
+        addValue(identificationInfoEl, identificationJSON, Save.JSON_IDENTIFICATION_SERVICETYPE, "srv:serviceType");
         addArray(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:topicCategory/gmd:MD_TopicCategoryCode",
-                org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_TOPIC_CATEGORIES, valueJsonEncoder);
+                Save.JSON_IDENTIFICATION_TOPIC_CATEGORIES, valueJsonEncoder);
 
         addArray(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:pointOfContact",
-                org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_POINT_OF_CONTACT, contactJsonEncoder);
+                Save.JSON_IDENTIFICATION_POINT_OF_CONTACT, contactJsonEncoder);
         addArray(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:descriptiveKeywords ",
-                org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_KEYWORDS, keywordJsonEncoder);
+                Save.JSON_IDENTIFICATION_KEYWORDS, keywordJsonEncoder);
 
         addInspireKeywordIfRequired(getIsoLanguagesMapper(), context, mainLanguage, identificationJSON);
         addEmptyKeywordIfRequired(identificationJSON, isDataType);
 
         addArray(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:extent|srv:extent",
-                org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_EXTENTS, extentJsonEncoder);
+                Save.JSON_IDENTIFICATION_EXTENTS, extentJsonEncoder);
 
-        addValue(identificationInfoEl, identificationJSON, org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_COUPLING_TYPE, "srv:couplingType/srv:SV_CouplingType/@codeListValue");
+        addValue(identificationInfoEl, identificationJSON, Save.JSON_IDENTIFICATION_COUPLING_TYPE, "srv:couplingType/srv:SV_CouplingType/@codeListValue");
         addArray(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "srv:containsOperations/srv:SV_OperationMetadata",
-                org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_CONTAINS_OPERATIONS, containsOperationsEncoder);
+                Save.JSON_IDENTIFICATION_CONTAINS_OPERATIONS, containsOperationsEncoder);
 
         return identificationInfoEl;
     }
@@ -621,11 +621,11 @@ public class GetEditModel implements Service {
         if (inspireKeywords.isEmpty()) {
             throw new IllegalStateException("No INSPIRE keyword registered in any of the thesauri");
         } else {
-            final JSONArray jsonArray = identificationJSON.getJSONArray(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_KEYWORDS);
+            final JSONArray jsonArray = identificationJSON.getJSONArray(Save.JSON_IDENTIFICATION_KEYWORDS);
             for (KeywordBean keyword : inspireKeywords) {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     final JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    if (jsonObject.has(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_KEYWORD_CODE) && keyword.getUriCode().equals(jsonObject.getString(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_KEYWORD_CODE))) {
+                    if (jsonObject.has(Save.JSON_IDENTIFICATION_KEYWORD_CODE) && keyword.getUriCode().equals(jsonObject.getString(Save.JSON_IDENTIFICATION_KEYWORD_CODE))) {
                         return;
                     }
                 }
@@ -644,8 +644,7 @@ public class GetEditModel implements Service {
 
     @VisibleForTesting
     protected List<KeywordBean> findINSPIREKeywordBeans(IsoLanguagesMapper mapper, ServiceContext context) throws IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {
-        final GeonetContext handlerContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        ThesaurusManager thesaurusManager = handlerContext.getThesaurusManager();
+        ThesaurusManager thesaurusManager = context.getBean(ThesaurusManager.class);
         KeywordSearchParamsBuilder paramsBuilder = new KeywordSearchParamsBuilder(mapper).
                 keyword("INSPIRE", KeywordSearchType.MATCH, false).
                 addLang("eng").addLang("ger").addLang("ita").addLang("fre").addThesaurus(KeywordsStrategy.GEOCAT_THESAURUS_NAME);
@@ -659,53 +658,53 @@ public class GetEditModel implements Service {
             requiredThesaurus = "external.theme.inspire-service-taxonomy";
         }
         boolean needsNewKeyword = true;
-        JSONArray keywords = identificationJSON.optJSONArray(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_KEYWORDS);
+        JSONArray keywords = identificationJSON.optJSONArray(Save.JSON_IDENTIFICATION_KEYWORDS);
         if (keywords == null) {
             keywords = new JSONArray();
-            identificationJSON.put(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_KEYWORDS, keywords);
+            identificationJSON.put(Save.JSON_IDENTIFICATION_KEYWORDS, keywords);
         }
         for (int i = 0; i < keywords.length(); i++) {
             JSONObject keyword = keywords.getJSONObject(i);
-            String thesaurus = keyword.optString(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_KEYWORD_THESAURUS, "");
+            String thesaurus = keyword.optString(Save.JSON_IDENTIFICATION_KEYWORD_THESAURUS, "");
             if (requiredThesaurus.equals(thesaurus) || DEFAULT_THESAURUS.equals(thesaurus)) {
                 needsNewKeyword = false;
             }
         }
 
         if (needsNewKeyword) {
-            keywords.put(new JSONObject("{"+ org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_KEYWORD_WORD+":{}}"));
+            keywords.put(new JSONObject("{"+Save.JSON_IDENTIFICATION_KEYWORD_WORD+":{}}"));
         }
     }
 
     private void addDateElement(Element identificationInfoEl, JSONObject identificationJSON, String xpathToDate) throws JSONException,
             JDOMException {
         JSONObject dateObject = new JSONObject();
-        addValue(identificationInfoEl, dateObject, org.fao.geonet.services.metadata.inspire.Save.JSON_DATE,
+        addValue(identificationInfoEl, dateObject, Save.JSON_DATE,
                 xpathToDate + "/gmd:CI_Date/gmd:date/*");
 
         final Element dateElement = Xml.selectElement(identificationInfoEl,
                 xpathToDate + "/gmd:CI_Date/gmd:date/*", NS);
-        dateObject.put(org.fao.geonet.services.metadata.inspire.Save.JSON_DATE_TAG_NAME, dateElement == null ? "" : dateElement.getQualifiedName());
-        addValue(identificationInfoEl, dateObject, org.fao.geonet.services.metadata.inspire.Save.JSON_DATE_TYPE,
+        dateObject.put(Save.JSON_DATE_TAG_NAME, dateElement == null ? "" : dateElement.getQualifiedName());
+        addValue(identificationInfoEl, dateObject, Save.JSON_DATE_TYPE,
                 xpathToDate + "/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue");
-        identificationJSON.put(org.fao.geonet.services.metadata.inspire.Save.JSON_DATE, dateObject);
+        identificationJSON.put(Save.JSON_DATE, dateObject);
     }
 
     protected void processMetadata(Element metadataEl, JSONObject metadataJson) throws Exception {
-        addValue(metadataEl, metadataJson, org.fao.geonet.services.metadata.inspire.Save.JSON_LANGUAGE, "gmd:language/gco:CharacterString/text()");
-        String mainLanguage = metadataJson.getString(org.fao.geonet.services.metadata.inspire.Save.JSON_LANGUAGE);
+        addValue(metadataEl, metadataJson, Save.JSON_LANGUAGE, "gmd:language/gco:CharacterString/text()");
+        String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
 
-        addValue(metadataEl, metadataJson, org.fao.geonet.services.metadata.inspire.Save.JSON_CHARACTER_SET, "gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue", "utf-8");
-        addValue(metadataEl, metadataJson, org.fao.geonet.services.metadata.inspire.Save.JSON_HIERARCHY_LEVEL, "gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue");
-        addValue(metadataEl, metadataJson, org.fao.geonet.services.metadata.inspire.Save.JSON_HIERARCHY_LEVEL_NAME, "gmd:hierarchyLevelName/gco:CharacterString/text()");
-        addArray(mainLanguage, metadataEl, getIsoLanguagesMapper(), metadataJson, "gmd:contact", org.fao.geonet.services.metadata.inspire.Save.JSON_CONTACT, contactJsonEncoder);
+        addValue(metadataEl, metadataJson, Save.JSON_CHARACTER_SET, "gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue", "utf-8");
+        addValue(metadataEl, metadataJson, Save.JSON_HIERARCHY_LEVEL, "gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue");
+        addValue(metadataEl, metadataJson, Save.JSON_HIERARCHY_LEVEL_NAME, "gmd:hierarchyLevelName/gco:CharacterString/text()");
+        addArray(mainLanguage, metadataEl, getIsoLanguagesMapper(), metadataJson, "gmd:contact", Save.JSON_CONTACT, contactJsonEncoder);
         JSONArray def = new JSONArray();
         def.put("ger").put("fre").put("ita").put("eng").put("roh");
         addArray(mainLanguage, metadataEl, getIsoLanguagesMapper(), metadataJson,
                 "gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode",
-                org.fao.geonet.services.metadata.inspire.Save.JSON_OTHER_LANGUAGES, codeListJsonEncoder, def);
+                Save.JSON_OTHER_LANGUAGES, codeListJsonEncoder, def);
 
-        final JSONArray otherLanguages = metadataJson.getJSONArray(org.fao.geonet.services.metadata.inspire.Save.JSON_OTHER_LANGUAGES);
+        final JSONArray otherLanguages = metadataJson.getJSONArray(Save.JSON_OTHER_LANGUAGES);
         Set<String> langs = Sets.newHashSet();
         JSONArray noDupsLanguages = new JSONArray();
         for (int i = 0; i < otherLanguages.length(); i++) {
@@ -716,7 +715,7 @@ public class GetEditModel implements Service {
             }
         }
 
-        metadataJson.put(org.fao.geonet.services.metadata.inspire.Save.JSON_OTHER_LANGUAGES, noDupsLanguages);
+        metadataJson.put(Save.JSON_OTHER_LANGUAGES, noDupsLanguages);
 
     }
 
@@ -815,8 +814,7 @@ public class GetEditModel implements Service {
             metadata = ajaxEditUtils.getMetadataEmbedded(context, id, true, false);
             context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING + id, metadata);
         }
-        GeonetContext geonetContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SchemaManager schemaManager = geonetContext.getSchemamanager();
+        SchemaManager schemaManager = context.getBean(SchemaManager.class);
         EditLib lib = new EditLib(schemaManager);
 
         lib.removeEditingInfo(metadata);
@@ -824,7 +822,7 @@ public class GetEditModel implements Service {
         metadata.removeAttribute("schemaLocation", Geonet.Namespaces.XSI);
 
         Element validationMd = Xml.transform(metadata, context.getAppPath() + "/xsl/add-charstring.xsl");
-        final boolean valid = geonetContext.getDataManager().validate(validationMd);
+        final boolean valid = context.getBean(DataManager.class).validate(validationMd);
         lib.enumerateTree(metadata);
 
         return Pair.read(metadata, valid);
@@ -832,7 +830,7 @@ public class GetEditModel implements Service {
 
     @VisibleForTesting
     protected IsoLanguagesMapper getIsoLanguagesMapper() {
-        return IsoLanguagesMapper.getInstance();
+        return ServiceContext.get().getBean(IsoLanguagesMapper.class);
     }
 
     @VisibleForTesting
@@ -857,13 +855,13 @@ public class GetEditModel implements Service {
         @Override
         public Object getDefault() throws JSONException {
             JSONObject json = new JSONObject();
-            json.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONTACT_ID, "");
-            json.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONTACT_FIRST_NAME, "");
-            json.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONTACT_LAST_NAME, "");
-            json.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONTACT_ROLE, "");
-            json.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONTACT_EMAIL, "");
-            json.put(org.fao.geonet.services.metadata.inspire.Save.JSON_VALIDATED, false);
-            json.put(org.fao.geonet.services.metadata.inspire.Save.JSON_CONTACT_ORG_NAME, new JSONObject());
+            json.put(Save.JSON_CONTACT_ID, "");
+            json.put(Save.JSON_CONTACT_FIRST_NAME, "");
+            json.put(Save.JSON_CONTACT_LAST_NAME, "");
+            json.put(Save.JSON_CONTACT_ROLE, "");
+            json.put(Save.JSON_CONTACT_EMAIL, "");
+            json.put(Save.JSON_VALIDATED, false);
+            json.put(Save.JSON_CONTACT_ORG_NAME, new JSONObject());
             return json;
         }
 
@@ -873,23 +871,23 @@ public class GetEditModel implements Service {
 
             final String hRef = XLink.getHRef(node);
             if (hRef != null) {
-                String id = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(hRef), "UTF-8");
-                addValue(node, json, org.fao.geonet.services.metadata.inspire.Save.JSON_CONTACT_ID, id);
+                String id = URLDecoder.decode(org.fao.geonet.geocat.kernel.reusable.Utils.id(hRef), "UTF-8");
+                addValue(node, json, Save.JSON_CONTACT_ID, id);
             }
-            addValue(node, json, org.fao.geonet.services.metadata.inspire.Save.JSON_CONTACT_FIRST_NAME, "che:CHE_CI_ResponsibleParty/che:individualFirstName");
-            addValue(node, json, org.fao.geonet.services.metadata.inspire.Save.JSON_CONTACT_LAST_NAME, "che:CHE_CI_ResponsibleParty/che:individualLastName");
-            addValue(node, json, org.fao.geonet.services.metadata.inspire.Save.JSON_CONTACT_ROLE, "che:CHE_CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue");
-            addValue(node, json, org.fao.geonet.services.metadata.inspire.Save.JSON_CONTACT_EMAIL,
+            addValue(node, json, Save.JSON_CONTACT_FIRST_NAME, "che:CHE_CI_ResponsibleParty/che:individualFirstName");
+            addValue(node, json, Save.JSON_CONTACT_LAST_NAME, "che:CHE_CI_ResponsibleParty/che:individualLastName");
+            addValue(node, json, Save.JSON_CONTACT_ROLE, "che:CHE_CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue");
+            addValue(node, json, Save.JSON_CONTACT_EMAIL,
                     "che:CHE_CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/" +
                     "che:CHE_CI_Address/gmd:electronicMailAddress/gco:CharacterString/text()");
 
-            addTranslatedElement(mainLanguage, node, mapper, json, org.fao.geonet.services.metadata.inspire.Save.JSON_CONTACT_ORG_NAME, "che:CHE_CI_ResponsibleParty/gmd:organisationName");
+            addTranslatedElement(mainLanguage, node, mapper, json, Save.JSON_CONTACT_ORG_NAME, "che:CHE_CI_ResponsibleParty/gmd:organisationName");
             boolean validated = true;
             if (ReusableObjManager.NON_VALID_ROLE.equals(node.getAttributeValue("role", XLINK))) {
                 validated = false;
             }
 
-            json.put(org.fao.geonet.services.metadata.inspire.Save.JSON_VALIDATED, validated);
+            json.put(Save.JSON_VALIDATED, validated);
 
             return json;
         }
@@ -900,9 +898,9 @@ public class GetEditModel implements Service {
         @Override
         public Object getDefault() throws JSONException {
             JSONObject def = new JSONObject();
-            def.put(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_KEYWORD_CODE, "");
-            def.put(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_KEYWORD_WORD, new JSONObject());
-            def.put(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_KEYWORD_THESAURUS, DEFAULT_THESAURUS);
+            def.put(Save.JSON_IDENTIFICATION_KEYWORD_CODE, "");
+            def.put(Save.JSON_IDENTIFICATION_KEYWORD_WORD, new JSONObject());
+            def.put(Save.JSON_IDENTIFICATION_KEYWORD_THESAURUS, DEFAULT_THESAURUS);
             return def;
         }
 
@@ -912,26 +910,26 @@ public class GetEditModel implements Service {
 
             final String hRef = XLink.getHRef(node);
             if (hRef != null) {
-                Element element = org.fao.geonet.services.metadata.inspire.GetEditModel.this.resolveXLink(hRef, ServiceContext.get());
+                Element element = GetEditModel.this.resolveXLink(hRef, ServiceContext.get());
                 if (element == null) {
                     element = node;
                 }
                 if (element != null) {
                     String thesaurus = null;
-                    String code = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(hRef), "UTF-8");
+                    String code = URLDecoder.decode(org.fao.geonet.geocat.kernel.reusable.Utils.id(hRef), "UTF-8");
                     Matcher matcher = THESAURUS_PATTERN.matcher(hRef);
                     if (matcher.find()) {
                         thesaurus = matcher.group(1);
-                        json.put(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_KEYWORD_THESAURUS, thesaurus);
+                        json.put(Save.JSON_IDENTIFICATION_KEYWORD_THESAURUS, thesaurus);
                     }
-                    json.put(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_KEYWORD_CODE, code);
+                    json.put(Save.JSON_IDENTIFICATION_KEYWORD_CODE, code);
 
                     addTranslatedElement(mainLanguage, element, mapper, json,
-                            org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_KEYWORD_WORD, "gmd:keyword");
+                            Save.JSON_IDENTIFICATION_KEYWORD_WORD, "gmd:keyword");
 
                     if (thesaurus != null) {
                         Map<String, String> thesaurusNames = getThesaurusTranslations(mapper, element);
-                        final JSONObject translations = json.getJSONObject(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_KEYWORD_WORD);
+                        final JSONObject translations = json.getJSONObject(Save.JSON_IDENTIFICATION_KEYWORD_WORD);
                         final Iterator keys = translations.keys();
 
                         while (keys.hasNext()) {
@@ -990,7 +988,7 @@ public class GetEditModel implements Service {
 
         @Override
         public Object encode(String mainLanguage, Element node, IsoLanguagesMapper mapper) throws Exception {
-            return node.getAttributeValue(org.fao.geonet.services.metadata.inspire.Save.ATT_CODE_LIST_VALUE);
+            return node.getAttributeValue(Save.ATT_CODE_LIST_VALUE);
         }
     };
     private static final JsonEncoder noDefaultJsonEncoder = new JsonEncoder() {
@@ -1002,7 +1000,7 @@ public class GetEditModel implements Service {
 
         @Override
         public Object encode(String mainLanguage, Element node, IsoLanguagesMapper mapper) throws Exception {
-            return node.getAttributeValue(org.fao.geonet.services.metadata.inspire.Save.ATT_CODE_LIST_VALUE);
+            return node.getAttributeValue(Save.ATT_CODE_LIST_VALUE);
         }
     };
     private static final JsonEncoder translatedElemEncoder = new JsonEncoder() {
@@ -1024,10 +1022,10 @@ public class GetEditModel implements Service {
     private final JsonEncoder containsOperationsEncoder = new JsonEncoder() {
         private JSONObject defaultLinkage() throws JSONException {
             final JSONObject jsonObject = new JSONObject();
-            jsonObject.put(org.fao.geonet.services.metadata.inspire.Save.JSON_LINKS_XPATH, "gmd:linkage");
-            jsonObject.put(org.fao.geonet.services.metadata.inspire.Save.JSON_LINKS_LOCALIZED_URL, new JSONObject());
-            jsonObject.put(org.fao.geonet.services.metadata.inspire.Save.JSON_LINKS_PROTOCOL, "");
-            jsonObject.put(org.fao.geonet.services.metadata.inspire.Save.JSON_LINKS_DESCRIPTION, new JSONObject());
+            jsonObject.put(Save.JSON_LINKS_XPATH, "gmd:linkage");
+            jsonObject.put(Save.JSON_LINKS_LOCALIZED_URL, new JSONObject());
+            jsonObject.put(Save.JSON_LINKS_PROTOCOL, "");
+            jsonObject.put(Save.JSON_LINKS_DESCRIPTION, new JSONObject());
             jsonObject.put(Params.REF, "");
             return jsonObject;
         }
@@ -1035,12 +1033,12 @@ public class GetEditModel implements Service {
         public Object getDefault() throws JSONException {
             JSONObject json = new JSONObject();
             json.put(Params.REF, "");
-            json.put(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_OPERATION_NAME, "");
-            json.put(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_OPERATION_NAME, "");
-            json.put(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_DCP_LIST, "");
+            json.put(Save.JSON_IDENTIFICATION_OPERATION_NAME, "");
+            json.put(Save.JSON_IDENTIFICATION_OPERATION_NAME, "");
+            json.put(Save.JSON_IDENTIFICATION_DCP_LIST, "");
             JSONArray linkages = new JSONArray();
             linkages.put(defaultLinkage());
-            json.put(org.fao.geonet.services.metadata.inspire.Save.JSON_LINKS, linkages);
+            json.put(Save.JSON_LINKS, linkages);
             return json;
         }
 
@@ -1049,14 +1047,14 @@ public class GetEditModel implements Service {
             JSONObject json = new JSONObject();
 
             addRef(node, json);
-            addValue(node, json, org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_OPERATION_NAME, "srv:operationName/gco:CharacterString");
-            addValue(node, json, org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_DCP_LIST, "srv:DCP/srv:DCPList/@codeListValue");
+            addValue(node, json, Save.JSON_IDENTIFICATION_OPERATION_NAME, "srv:operationName/gco:CharacterString");
+            addValue(node, json, Save.JSON_IDENTIFICATION_DCP_LIST, "srv:DCP/srv:DCPList/@codeListValue");
             JSONArray linkages = new JSONArray();
             processLinkages(node, linkages, "srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage", "gmd:linkage");
             if (linkages.length() == 0) {
                 linkages.put(defaultLinkage());
             }
-            json.put(org.fao.geonet.services.metadata.inspire.Save.JSON_LINKS, linkages);
+            json.put(Save.JSON_LINKS, linkages);
 
             return json;
         }
@@ -1082,7 +1080,7 @@ public class GetEditModel implements Service {
     final JsonEncoder extentJsonEncoder = new JsonEncoder() {
         final Pattern typenamePattern = Pattern.compile("typename=([^&]+)");
         /**
-         * don't forget to update {@link org.fao.geonet.services.metadata.inspire.Save.ExtentHrefBuilder}
+         * don't forget to update {@link org.fao.geonet.geocat.services.metadata.inspire.Save.ExtentHrefBuilder}
          */
         Map<String, String> typenameMapper = Maps.newHashMap();
         {
@@ -1097,8 +1095,8 @@ public class GetEditModel implements Service {
         @Override
         public Object getDefault() throws JSONException {
             JSONObject def = new JSONObject();
-            def.put(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_EXTENT_GEOM, "");
-            def.put(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_EXTENT_DESCRIPTION, new JSONObject());
+            def.put(Save.JSON_IDENTIFICATION_EXTENT_GEOM, "");
+            def.put(Save.JSON_IDENTIFICATION_EXTENT_DESCRIPTION, new JSONObject());
             return def;
         }
 
@@ -1107,9 +1105,9 @@ public class GetEditModel implements Service {
             JSONObject json = new JSONObject();
             final String href = XLink.getHRef(node);
             if (href != null) {
-                final Element element = org.fao.geonet.services.metadata.inspire.GetEditModel.this.resolveXLink(href, ServiceContext.get());
+                final Element element = GetEditModel.this.resolveXLink(href, ServiceContext.get());
                 if (element != null) {
-                    String id = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(href), "UTF-8");
+                    String id = URLDecoder.decode(org.fao.geonet.geocat.kernel.reusable.Utils.id(href), "UTF-8");
                     final Matcher matcher = typenamePattern.matcher(href);
                     if (!matcher.find()) {
                         throw new AssertionError("Unable to extract the typename in extent href: " + href);
@@ -1118,7 +1116,7 @@ public class GetEditModel implements Service {
                     if (featureType == null) {
                         throw new RuntimeException(matcher.group(1) + " is not a recognized featuretype of geonetwork");
                     }
-                    json.put(org.fao.geonet.services.metadata.inspire.Save.JSON_IDENTIFICATION_EXTENT_GEOM, featureType + ":" + id);
+                    json.put(Save.JSON_IDENTIFICATION_EXTENT_GEOM, featureType + ":" + id);
                 }
             }
             addTranslatedElement(mainLanguage, node, mapper, json, Save.JSON_IDENTIFICATION_EXTENT_DESCRIPTION, "gmd:EX_Extent/gmd:description");
