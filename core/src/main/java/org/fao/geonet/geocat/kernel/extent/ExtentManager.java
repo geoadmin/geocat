@@ -42,7 +42,7 @@ public class ExtentManager {
     private DataStore datastore;
 
 
-    private final class SourcesLogHandler extends Handler {
+    private static final class SourcesLogHandler extends Handler {
 
         @Override
         public void publish(LogRecord record) {
@@ -79,11 +79,9 @@ public class ExtentManager {
                     id = DEFAULT_SOURCE_ID;
                 }
 
-                final Source source = new Source(id);
+                final Source source = new Source(id, this.datastore);
 
                 sources.put(id, source);
-
-                source.datastore = this.datastore;
 
                 for (final Object obj : sourceElem.getChildren(TYPENAME)) {
                     final Element elem = (Element) obj;

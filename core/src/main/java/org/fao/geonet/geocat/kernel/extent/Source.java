@@ -23,17 +23,9 @@
 
 package org.fao.geonet.geocat.kernel.extent;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.geotools.data.*;
+import org.geotools.data.DataStore;
+import org.geotools.data.FeatureSource;
+import org.geotools.data.Query;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.referencing.CRS;
@@ -46,16 +38,27 @@ import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 public class Source
 {
     final Set<FeatureType>          modifiable         = new LinkedHashSet<FeatureType>();
     final Map<String, FeatureType>  types              = new LinkedHashMap<String, FeatureType>();
     public final String             wfsId;
-    DataStore                       datastore;
+    private final DataStore                       datastore;
 
-    public Source(String id)
+    public Source(String id, DataStore datastore)
     {
         this.wfsId = id;
+        this.datastore = datastore;
     }
 
     public synchronized DataStore getDataStore() throws IOException

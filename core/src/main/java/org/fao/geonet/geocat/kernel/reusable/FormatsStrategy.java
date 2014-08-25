@@ -23,16 +23,10 @@
 
 package org.fao.geonet.geocat.kernel.reusable;
 
-import static org.fao.geonet.geocat.kernel.reusable.Utils.addChild;
-
-import java.sql.SQLException;
-import java.util.*;
-
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import jeeves.server.UserSession;
 import jeeves.xlink.XLink;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.Pair;
@@ -48,9 +42,24 @@ import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import static org.fao.geonet.geocat.kernel.reusable.Utils.addChild;
 
 public final class FormatsStrategy extends ReplacementStrategy
 {
@@ -200,7 +209,7 @@ public final class FormatsStrategy extends ReplacementStrategy
             @Nullable
             @Override
             public Integer apply(@Nullable String input) {
-                return Integer.parseInt(input);
+                return input == null ? -1 : Integer.parseInt(input);
             }
         });
     }

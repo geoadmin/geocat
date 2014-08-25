@@ -371,17 +371,20 @@ public class GeocatXslUtil {
                 exclusion = ExtentHelper.joinPolygons(fac, geoms.get(false));
             }
 
-            final Object result;
 
-            if (inclusion == null && exclusion == null) {
-                result = src;
-            } else if (inclusion == null && exclusion != null) {
-                result = writer.write(ExtentTypeCode.EXCLUDE, exclusion);
-            } else if (inclusion != null && exclusion == null) {
+            Object result;
+
+            if (inclusion == null) {
+                if (exclusion == null) {
+                    result = src;
+                } else {
+                    result = writer.write(ExtentTypeCode.EXCLUDE, exclusion);
+                }
+            } else if (exclusion == null) {
                 result = writer.write(ExtentTypeCode.INCLUDE, inclusion);
             } else {
                 Pair<ExtentTypeCode, MultiPolygon> diff = ExtentHelper.diff(fac, inclusion, exclusion);
-                result = writer.write(diff.one(), diff.two());
+                result = writer.write(diff.one(), diff.two());;
             }
 
             return result;
@@ -405,7 +408,7 @@ public class GeocatXslUtil {
 
     static Multimap<Boolean, Polygon> geometries(NodeInfo next) throws Exception {
         Boolean inclusion = GeocatXslUtil.inclusion(next);
-        inclusion = inclusion == null ? true : inclusion;
+        inclusion = inclusion == null ? Boolean.TRUE : inclusion;
         Polygon geom = GeocatXslUtil.geom(next);
         Multimap<Boolean, Polygon> geoms = ArrayListMultimap.create();
         geoms.put(inclusion, geom);
@@ -521,7 +524,7 @@ public class GeocatXslUtil {
 
             xformer.transform(doc, result);
             return out.toString("utf-8").replaceFirst("<\\?xml.+?>", "");
-        } catch (Exception e) {
+        } catch (Throwable e) {
             return doc.getStringValue();
         }
     }

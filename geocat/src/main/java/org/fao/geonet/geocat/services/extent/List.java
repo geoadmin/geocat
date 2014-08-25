@@ -24,25 +24,17 @@
 package org.fao.geonet.geocat.services.extent;
 
 
-import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.*;
-
-import java.io.IOException;
-import java.util.AbstractCollection;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.geocat.kernel.extent.*;
-import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.geocat.kernel.extent.ExtentFormat;
+import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
+import org.fao.geonet.geocat.kernel.extent.ExtentManager;
+import org.fao.geonet.geocat.kernel.extent.ExtentSelection;
+import org.fao.geonet.geocat.kernel.extent.Source;
+import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
 import org.fao.geonet.utils.Xml;
 import org.geotools.data.DataStore;
@@ -53,6 +45,32 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+
+import java.io.IOException;
+import java.util.AbstractCollection;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Map;
+
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.DESC;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.DESC_COLUMN;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.FEATURE;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.FEATURE_TYPE;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.GEO_ID;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.GEO_ID_COLUMN;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.ID;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.ID_COLUMN;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.MODIFIABLE_FEATURE_TYPE;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.NUM_RESULTS;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.RESPONSE;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.SELECTED;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.SOURCE;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.TYPENAME;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.error;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.getSelection;
 
 /**
  * List all the available extents
@@ -241,7 +259,10 @@ public class List implements Service
         }
         featureElem.setAttribute(ID, id);
 
-        final boolean selected = selection != null && selection.ids.contains(Pair.read(featureType, id));
+        final boolean selected;
+        synchronized (selection.getIds()) {
+            selected = selection != null && selection.getIds().contains(Pair.read(featureType, id));
+        }
         featureElem.setAttribute(SELECTED, String.valueOf(selected));
 
         final String href = ExtentsStrategy.baseHref(id, wfs.wfsId, featureType.typename)+"&format=" + format;

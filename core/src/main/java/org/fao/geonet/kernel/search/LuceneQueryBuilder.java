@@ -194,21 +194,11 @@ public class LuceneQueryBuilder {
                     if(field.equals("or")) {
                         // handle as 'any', add ' or ' for space-separated values
 
-                        // GEOCAT
-                        for(String fieldValue : fieldValues) {
-                            field = "any";
-                            Scanner whitespaceScan = new Scanner(fieldValue).useDelimiter("\\w");
-                            while(whitespaceScan.hasNext()) {
-                                fieldValue += " or " + whitespaceScan.next();
-                            }
-                            fieldValue = fieldValue.substring(" or ".length());
-                            Set<String> values = searchCriteriaOR.get(field);
-                            if(values == null) values = new HashSet<String>();
-                            values.addAll(fieldValues);
-                            searchCriteriaOR.put(field, values);
-                        }
-
-                        // END GEOCAT
+                        field = "any";
+                        Set<String> values = searchCriteriaOR.get(field);
+                        if(values == null) values = new HashSet<String>();
+                        values.addAll(fieldValues);
+                        searchCriteriaOR.put(field, values);
                     }
                     else {
                             Set<String> values = searchCriteriaOR.get(field);
@@ -584,13 +574,7 @@ public class LuceneQueryBuilder {
                     templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
                 }
             } else {
-            // GEOCAT
-            if (fieldValue != null && (fieldValue.equals("y") || fieldValue.equals("s"))) {
-                templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, fieldValue));
-            } else {
-                // END GEOCAT
                 templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
-            }
             }
             query.add(templateQ, templateOccur);
 
@@ -693,40 +677,43 @@ public class LuceneQueryBuilder {
         // but that's not what we want)
         if (string.indexOf('*') >= 0 || string.indexOf('?') >= 0) {
             // GEOCAT
-            String starsPreserved = "";
+            StringBuilder starsPreserved = new StringBuilder();
             String[] starSeparatedList = string.split("\\*");
             for (String starSeparatedPart : starSeparatedList) {
-                String qPreserved = "";
+                StringBuilder qPreserved = new StringBuilder();
                 // ? present
                 if (starSeparatedPart.indexOf('?') >= 0) {
                     String[] qSeparatedList = starSeparatedPart.split("\\?");
                     for (String qSeparatedPart : qSeparatedList) {
                         String analyzedPart = LuceneSearcher.analyzeQueryText(luceneIndexField, qSeparatedPart, _analyzer, _tokenizedFieldSet);
-                        qPreserved += '?' + analyzedPart;
+                        qPreserved.append('?').append(analyzedPart);
                     }
                     // remove leading ?
-                    qPreserved = qPreserved.substring(1);
-                    starsPreserved += '*' + qPreserved;
+                    qPreserved.deleteCharAt(0);
+                    starsPreserved.append('*').append(qPreserved);
                 }
                 // no ? present
                 else {
-                    starsPreserved += '*' + LuceneSearcher.analyzeQueryText(luceneIndexField, starSeparatedPart, _analyzer, _tokenizedFieldSet);
+                    final String analyzeQueryText = LuceneSearcher.analyzeQueryText(luceneIndexField, starSeparatedPart, _analyzer,
+                            _tokenizedFieldSet);
+                    starsPreserved.append('*').
+                            append(analyzeQueryText);
                 }
             }
             // remove leading *
-            if (!StringUtils.isEmpty(starsPreserved)) {
-                starsPreserved = starsPreserved.substring(1);
+            if (starsPreserved.length() > 0) {
+                starsPreserved.deleteCharAt(0);
             }
 
             // restore ending wildcard
             if (string.endsWith("*")) {
-                starsPreserved += "*";
+                starsPreserved.append("*");
             }
             else if (string.endsWith("?")) {
-                starsPreserved += "?";
+                starsPreserved.append("?");
             }
 
-            analyzedString = starsPreserved;
+            analyzedString = starsPreserved.toString();
             // END GEOCAT
 //            WildCardStringAnalyzer wildCardStringAnalyzer = new WildCardStringAnalyzer();
 //            analyzedString = wildCardStringAnalyzer.analyze(string, luceneIndexField, _analyzer, _tokenizedFieldSet);

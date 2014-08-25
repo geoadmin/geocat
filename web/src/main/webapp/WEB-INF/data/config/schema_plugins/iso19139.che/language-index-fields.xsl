@@ -69,22 +69,19 @@
 				<!-- not tokenized title for sorting -->
 				<Field name="_defaultTitle" string="{string($_defaultTitle)}"
 					store="true" index="true" token="false" />
-	
-				<xsl:variable name="title"
-					select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo//gmd:citation//gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId]" />
-	
-				<!-- not tokenized title for sorting -->
-				<xsl:choose>
-					<xsl:when test="normalize-space($title) = ''">
-						<Field name="_title" string="{string($_defaultTitle)}" store="true"
-							index="true" token="false" />
-					</xsl:when>
-					<xsl:otherwise>
-						<Field name="_title" string="{string($title)}" store="true"
-							index="true" token="false" />
-					</xsl:otherwise>
-	
-				</xsl:choose>
+
+                <xsl:variable name="title"
+                    select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo//gmd:citation//gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId]"/>
+
+                <!-- not tokenized title for sorting -->
+                <xsl:choose>
+                    <xsl:when test="normalize-space($title) = ''">
+                        <Field name="_title" string="{string($_defaultTitle)}" store="true" index="true" />
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <Field name="_title" string="{string($title)}" store="true" index="true" />
+                    </xsl:otherwise>
+                </xsl:choose>
 
                 <xsl:variable name="_defaultAbstract">
                     <xsl:call-template name="defaultAbstract">
@@ -122,14 +119,19 @@
 				<xsl:for-each select="gmd:identifier/gmd:MD_Identifier/gmd:code//gmd:LocalisedCharacterString[@locale=$langId]">
 					<Field name="identifier" string="{string(.)}" store="true" index="true" token="false"/>
 				</xsl:for-each>
-	
-				<xsl:for-each select="gmd:title//gmd:LocalisedCharacterString[@locale=$langId]">
-					<Field name="title" string="{string(.)}" store="true" index="true" token="true"/>
-				</xsl:for-each>
-	
-				<xsl:for-each select="gmd:alternateTitle//gmd:LocalisedCharacterString[@locale=$langId]">
-					<Field name="altTitle" string="{string(.)}" store="true" index="true" token="true"/>
-				</xsl:for-each>
+
+                <!-- not tokenized title for sorting -->
+                <Field name="_defaultTitle" string="{string(gmd:title/gco:CharacterString)}" store="true" index="true"/>
+                <!-- not tokenized title for sorting -->
+                <Field name="_title" string="{string(gmd:title//gmd:LocalisedCharacterString[@locale=$langId])}" store="true" index="true"/>
+
+                <xsl:for-each select="gmd:title//gmd:LocalisedCharacterString[@locale=$langId]">
+                    <Field name="title" string="{string(.)}" store="true" index="true"/>
+                </xsl:for-each>
+
+                <xsl:for-each select="gmd:alternateTitle//gmd:LocalisedCharacterString[@locale=$langId]">
+                    <Field name="altTitle" string="{string(.)}" store="true" index="true"/>
+                </xsl:for-each>
 
 				<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='revision']/gmd:date/gco:Date">
 					<Field name="revisionDate" string="{string(.)}" store="true" index="true" token="false"/>

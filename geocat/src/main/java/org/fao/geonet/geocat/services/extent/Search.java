@@ -23,15 +23,11 @@
 
 package org.fao.geonet.geocat.services.extent;
 
-import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.*;
-
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.WKTReader;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Util;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.geocat.kernel.extent.Source;
 import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
 import org.fao.geonet.util.LangUtils;
@@ -47,8 +43,13 @@ import org.opengis.filter.PropertyIsLike;
 import org.opengis.filter.expression.Expression;
 import org.opengis.filter.expression.PropertyName;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Set;
+
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.CLEAR_SELECTION;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.getSelection;
 
 /**
  * Searches for matching extents. It is either a Like search or a XML filter
@@ -117,7 +118,10 @@ public class Search extends List
 
         final String clearSelection = Util.getParamText(params, CLEAR_SELECTION);
         if (clearSelection != null && Boolean.parseBoolean(clearSelection)) {
-            getSelection(context).ids.clear();
+            final Set<Pair<FeatureType, String>> ids = getSelection(context).getIds();
+            synchronized (ids) {
+                ids.clear();
+            }
         }
         return super.exec(params, context);
     }

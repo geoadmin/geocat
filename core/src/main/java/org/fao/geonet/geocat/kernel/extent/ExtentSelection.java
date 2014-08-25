@@ -23,14 +23,18 @@
 
 package org.fao.geonet.geocat.kernel.extent;
 
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
-
 public class ExtentSelection
 {
-    public Set<Pair<FeatureType, String>> ids = Collections.synchronizedSet(new HashSet<Pair<FeatureType, String>>());
+    private Set<Pair<FeatureType, String>> ids = Collections.synchronizedSet(new HashSet<Pair<FeatureType, String>>());
+
+    public Set<Pair<FeatureType, String>> getIds() {
+        return ids;
+    }
 }

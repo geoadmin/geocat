@@ -39,7 +39,6 @@ import java.util.Set;
 public final class LangUtils
 {
 
-
     public static List<Element> loadCodeListFile(String schemaDir, String langCode, String codeListName)
             throws IOException, JDOMException
     {
@@ -385,9 +384,7 @@ public final class LangUtils
             String text = elem.getText();
             elem.setText(null);
             // GEOCAT HACK.
-            if (text != null) {
-                text = text.replace("<GE>", "<DE>").replace("</GE>", "</DE>");
-            }
+            text = text.replace("<GE>", "<DE>").replace("</GE>", "</DE>");
             // GEOCAT END HACK
             List<Content> translationsAsSimpleXML = loadInternalMultiLingualElemCollection(text);
             if(removeTranslation) elem.setText(getSingleTranslation(translationsAsSimpleXML));
@@ -406,28 +403,6 @@ public final class LangUtils
             }
         }
         return "";
-    }
-
-    public static String two2ThreeLangCode(String sLang)
-    {
-        // HACK needs to be more complete
-
-        if( sLang.equalsIgnoreCase("en")){
-            return "eng";
-        }
-        if( sLang.equalsIgnoreCase("de")){
-            return "deu";
-        }
-        if( sLang.equalsIgnoreCase("fr")){
-            return "fra";
-        }
-        if( sLang.equalsIgnoreCase("it")){
-            return "ita";
-        }
-        if( sLang.equalsIgnoreCase("rm")){
-            return "roh";
-        }
-        return sLang;
     }
 
     public static String loadString(String string, String appPath, String language) throws IOException, JDOMException {

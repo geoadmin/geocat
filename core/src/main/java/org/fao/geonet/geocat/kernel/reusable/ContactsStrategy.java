@@ -30,7 +30,13 @@ import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Address;
+import org.fao.geonet.domain.Constants;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroupId_;
+import org.fao.geonet.domain.User_;
 import org.fao.geonet.domain.geocat.GeocatUserInfo_;
 import org.fao.geonet.domain.geocat.Phone;
 import org.fao.geonet.repository.BatchUpdateQuery;
@@ -51,12 +57,24 @@ import org.jdom.filter.Filter;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
-import javax.annotation.Nullable;
-import javax.persistence.criteria.*;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.annotation.Nullable;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import static org.fao.geonet.util.LangUtils.FieldType.STRING;
 import static org.fao.geonet.util.LangUtils.FieldType.URL;
@@ -499,7 +517,7 @@ public final class ContactsStrategy extends ReplacementStrategy
             @Nullable
             @Override
             public Integer apply(@Nullable String input) {
-                return Integer.parseInt(input);
+                return input == null ? -1 : Integer.parseInt(input);
             }
         });
 
@@ -534,7 +552,7 @@ public final class ContactsStrategy extends ReplacementStrategy
             @Nullable
             @Override
             public Integer apply(@Nullable String input) {
-                return Integer.parseInt(input);
+                return input == null ? -1 : Integer.parseInt(input);
             }
         });
 

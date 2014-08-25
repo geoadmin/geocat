@@ -23,17 +23,9 @@
 
 package org.fao.geonet.geocat.services.extent;
 
-import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.*;
-
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
@@ -51,6 +43,17 @@ import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.FilterFactory2;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.ID;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.SELECTION;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.SOURCE;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.TYPENAME;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.getSelection;
 
 /**
  * Service for deleting extent objects from the WMS
@@ -125,9 +128,10 @@ public class Delete implements Service
         
         FeatureType currentType = null;
 
-        synchronized (selection.ids) {
+        final Set<Pair<FeatureType, String>> selectionIds = selection.getIds();
+        synchronized (selectionIds) {
             @SuppressWarnings("unchecked")
-			Pair<FeatureType, String>[] array = selection.ids.toArray(new Pair[selection.ids.size()]);
+			Pair<FeatureType, String>[] array = selectionIds.toArray(new Pair[selectionIds.size()]);
             Arrays.sort(array, new Comparator<Pair<FeatureType, String>>()
             {
 

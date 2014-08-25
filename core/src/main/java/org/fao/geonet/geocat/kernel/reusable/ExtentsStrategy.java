@@ -243,7 +243,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
             } else if(geom2.getSRID() == 21781 && geom1.getSRID() != 21781) {
                 geom2 = JTS.transform(geom2,ExtentHelper.CH03_TO_WGS84);
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             return false;
         }
 
@@ -722,25 +722,27 @@ public final class ExtentsStrategy extends ReplacementStrategy {
                 parser.setValidating(true);
                 parser.setStrict(false);
                 geometry = (Geometry) parser.parse(new StringReader(geomXML));
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 try {
                     parser = new Parser(gml2Conf);
                     parser.setValidating(true);
                     parser.setStrict(false);
                     geometry = (Geometry) parser.parse(new StringReader(geomXML));
-                } catch (Exception e2) {
+                } catch (Throwable e2) {
                     StringBuilder builder = new StringBuilder("GML is not legal: \n" + geomXML);
                     builder.append("\n");
                     int i = 0;
-                    for (Object error : parser.getValidationErrors()) {
-                        i++;
-                        builder.append(i);
-                        builder.append(": ");
-                        builder.append(error);
-                        builder.append("\n");
-                    }
+                    if (parser != null) {
+                        for (Object error : parser.getValidationErrors()) {
+                            i++;
+                            builder.append(i);
+                            builder.append(": ");
+                            builder.append(error);
+                            builder.append("\n");
+                        }
 
-                    Log.error("reusableObjectReplace", builder.toString());
+                        Log.error("reusableObjectReplace", builder.toString());
+                    }
 
                 }
             }
@@ -795,17 +797,20 @@ public final class ExtentsStrategy extends ReplacementStrategy {
         }
 
         Extent result;
-        if(inclusion == null && exclusion == null) {
-            result = new Extent(ExtentTypeCode.INCLUDE, null, format, showNative);
-        }else if (inclusion == null && exclusion != null) {
-            result = new Extent(ExtentTypeCode.EXCLUDE, exclusion,format, showNative);
-        } else if (inclusion != null && exclusion == null) {
+
+        if (inclusion == null) {
+            if (exclusion == null) {
+                result = new Extent(ExtentTypeCode.INCLUDE, null, format, showNative);
+            } else {
+                result = new Extent(ExtentTypeCode.EXCLUDE, exclusion,format, showNative);
+            }
+        } else if (exclusion == null) {
             result = new Extent(ExtentTypeCode.INCLUDE,inclusion,format, showNative);
         } else {
             Pair<ExtentTypeCode, MultiPolygon> diff = ExtentHelper.diff(fac, inclusion, exclusion);
             result = new Extent(diff.one(), diff.two(),format, showNative);
         }
-        
+
         return result;
     }
 
@@ -1055,8 +1060,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
             final Geometry currEnv = current.geom.getEnvelope();
             currEnv.setSRID(current.geom.getSRID());
 
-            return current.format == ExtentFormat.GMD_BBOX && current.geom != null && previous.geom != null
-                    && matchingGeom(prevEnv, currEnv);
+            return current.format == ExtentFormat.GMD_BBOX &&  matchingGeom(prevEnv, currEnv);
         }
 
         private void remove(Info info) {

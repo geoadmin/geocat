@@ -55,12 +55,12 @@ public class Geocat {
 
     }
 
-    public class Config {
+    public static class Config {
         public static final String EXTENT_CONFIG = "extent";
         public static final String REUSABLE_OBJECT_CONFIG = "reusable";
     }
 
-    public class Module {
+    public static class Module {
         public static final String EXTENT = "extent";
         public static final String REUSABLE = "reusable";
         public static final String MONITORING = "monitoring";
@@ -70,7 +70,7 @@ public class Geocat {
 	public static final String LUCENE_LOCALE_KEY = "_lucene";
     public static final String INSPIRE_SCHEMATRON_ID = "schematron-rules-inspire";
 
-    public class BeanId {
+    public static class BeanId {
         public static final String DATASTORE = "datastore";
     }
 }

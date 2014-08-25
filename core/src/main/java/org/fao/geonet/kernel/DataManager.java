@@ -28,40 +28,25 @@
 package org.fao.geonet.kernel;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.base.Functions;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.fao.geonet.constants.Geocat;
-import org.fao.geonet.domain.geocat.HiddenMetadataElement;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import jeeves.TransactionAspect;
 import jeeves.TransactionTask;
 import jeeves.server.UserSession;
-import org.fao.geonet.geocat.kernel.reusable.*;
-import org.fao.geonet.geocat.kernel.reusable.log.ReusableObjectLogger;
-import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.repository.geocat.HiddenMetadataElementsRepository;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.kernel.search.index.IndexingList;
-import org.fao.geonet.kernel.search.index.IndexingTask;
-import org.fao.geonet.repository.specification.*;
-import org.fao.geonet.repository.statistic.PathSpec;
-import org.fao.geonet.util.FileCopyMgr;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.utils.Xml.ErrorHandler;
-
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.constants.Params;
@@ -74,7 +59,6 @@ import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataDataInfo_;
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataFileUpload_;
-import org.jdom.*;
 import org.fao.geonet.domain.MetadataHarvestInfo;
 import org.fao.geonet.domain.MetadataRatingByIp;
 import org.fao.geonet.domain.MetadataRatingByIpId;
@@ -84,7 +68,6 @@ import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.MetadataStatusId_;
 import org.fao.geonet.domain.MetadataStatus_;
 import org.fao.geonet.domain.MetadataType;
-import java.util.*;
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.MetadataValidationId;
 import org.fao.geonet.domain.MetadataValidationStatus;
@@ -103,15 +86,24 @@ import org.fao.geonet.domain.SchematronRequirement;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;
+import org.fao.geonet.domain.geocat.HiddenMetadataElement;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
+import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
+import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
+import org.fao.geonet.geocat.kernel.reusable.ProcessParams;
+import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
+import org.fao.geonet.geocat.kernel.reusable.Utils;
+import org.fao.geonet.geocat.kernel.reusable.log.ReusableObjectLogger;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.GroupRepository;
@@ -129,6 +121,7 @@ import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.geocat.HiddenMetadataElementsRepository;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.MetadataStatusSpecs;
@@ -136,10 +129,17 @@ import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
+import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.Xml.ErrorHandler;
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
+import org.jdom.Parent;
 import org.jdom.filter.ElementFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -150,10 +150,22 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.Assert;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
@@ -688,7 +700,6 @@ public class DataManager {
 
             // get privileges
             OperationAllowedRepository operationAllowedRepository = _applicationContext.getBean(OperationAllowedRepository.class);
-            GroupRepository groupRepository = _applicationContext.getBean(GroupRepository.class);
             List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(id$);
 
             // GEOCAT
@@ -974,13 +985,13 @@ public class DataManager {
      * Start an editing session. This will record the original metadata record
      * in the session under the {@link Geonet.Session.METADATA_BEFORE_ANY_CHANGES} + id
      * session property.
-     * 
+     *
      * The record contains geonet:info element.
-     * 
+     *
      * Note: Only the metadata record is stored in session. If the editing
      * session upload new documents or thumbnails, those documents will not
      * be cancelled. This needs improvements.
-     * 
+     *
      * @param context
      * @param id
      * @throws Exception
@@ -990,7 +1001,7 @@ public class DataManager {
       if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
         Log.debug(Geonet.EDITOR_SESSION, "Editing session starts for record " + id);
       }
-      
+
       boolean keepXlinkAttributes = false;
       boolean forEditing = false;
       boolean withValidationErrors = false;
@@ -1001,7 +1012,7 @@ public class DataManager {
     /**
      * Rollback to the record in the state it was when the editing session started
      * (See {@link #startEditingSession(ServiceContext, String)}).
-     * 
+     *
      * @param context
      * @param id
      * @throws Exception
@@ -1010,13 +1021,13 @@ public class DataManager {
         String id) throws Exception {
         UserSession session = context.getUserSession();
         Element metadataBeforeAnyChanges = (Element) session.getProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id);
-        
+
         if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-              Log.debug(Geonet.EDITOR_SESSION, 
-                  "Editing session end. Cancel changes. Restore record " + id + 
+              Log.debug(Geonet.EDITOR_SESSION,
+                  "Editing session end. Cancel changes. Restore record " + id +
                   ". Replace by original record which was: ");
         }
-        
+
         if (metadataBeforeAnyChanges != null) {
             if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
               Log.debug(Geonet.EDITOR_SESSION, " > restoring record: ");
@@ -1027,14 +1038,14 @@ public class DataManager {
             boolean ufo = false;
                 boolean index = true;
                 metadataBeforeAnyChanges.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
-                updateMetadata(context, id, metadataBeforeAnyChanges, 
-                    validate, ufo, index, 
+                updateMetadata(context, id, metadataBeforeAnyChanges,
+                    validate, ufo, index,
                     context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE), false, false);
                 endEditingSession(id, session);
         } else {
             if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-              Log.debug(Geonet.EDITOR_SESSION, 
-                  " > nothing to cancel for record " + id + 
+              Log.debug(Geonet.EDITOR_SESSION,
+                  " > nothing to cancel for record " + id +
                   ". Original record was null. Use starteditingsession to.");
             }
         }
@@ -1042,7 +1053,7 @@ public class DataManager {
 
     /**
      * Remove the original record stored in session.
-     * 
+     *
      * @param id
      * @param session
      */
@@ -1610,6 +1621,7 @@ public class DataManager {
             @Nullable
             @Override
             public HiddenMetadataElement apply(@Nullable HiddenMetadataElement input) {
+                Assert.notNull(input);
                 input.setMetadataId(finalId);
                 return input;
             }
@@ -2458,7 +2470,7 @@ public class DataManager {
      */
     public void deleteMetadataOper(ServiceContext context, String metadataId, boolean skipAllIntranet) throws Exception {
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-        
+
         if (skipAllIntranet) {
             operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(Integer.valueOf(metadataId), ReservedGroup.intranet.getId());
         } else {
@@ -2683,7 +2695,7 @@ public class DataManager {
     //--- Privileges API
     //---
     //--------------------------------------------------------------------------
-    
+
     /**
      *  Adds a permission to a group. Metadata is not reindexed.
      *
@@ -3429,7 +3441,7 @@ public class DataManager {
 
     /**
      * Add privileges information about metadata record
-     * which depends on context and usually could not be stored in db 
+     * which depends on context and usually could not be stored in db
      * or Lucene index because depending on the current user
      * or current client IP address.
      *
@@ -3442,6 +3454,7 @@ public class DataManager {
             @Nullable
             @Override
             public Integer apply(String input) {
+                Assert.notNull(input);
                 return Integer.valueOf(input);
             }
         });
@@ -3519,7 +3532,8 @@ public class DataManager {
             return;
         }
 
-        List<HiddenMetadataElement> hiddenElements = context.getBean(HiddenMetadataElementsRepository.class).findAllByMetadataId(new
+        final HiddenMetadataElementsRepository repository = this._applicationContext.getBean(HiddenMetadataElementsRepository.class);
+        List<HiddenMetadataElement> hiddenElements = repository.findAllByMetadataId(new
                 Integer(id));
 
 
@@ -3737,6 +3751,7 @@ public class DataManager {
             @Nullable
             @Override
             public String apply(@Nonnull Integer input) {
+                Assert.notNull(input);
                 return input.toString();
             }
         }));

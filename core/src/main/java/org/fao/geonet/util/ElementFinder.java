@@ -31,7 +31,7 @@ public class ElementFinder implements Filter
 {
     private static final long serialVersionUID = 1L;
     private final String            elemName;
-    private final Namespace         ns;
+    private final transient Namespace         ns;
     private final String            parentName;
 
     public ElementFinder(String name, Namespace ns, String parent)

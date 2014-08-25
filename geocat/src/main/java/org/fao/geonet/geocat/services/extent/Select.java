@@ -23,19 +23,18 @@
 
 package org.fao.geonet.geocat.services.extent;
 
-import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.getSelection;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.geocat.kernel.extent.ExtentSelection;
 import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
-import org.jdom.Content;
 import org.jdom.Element;
+
+import java.util.Set;
+
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.getSelection;
 
 /**
  * Allows for selecting one or more extents for operations such as deletion
@@ -53,12 +52,13 @@ public class Select implements Service
 
         final Element success = new Element("success");
 
-        synchronized (selection.ids) {
+        final Set<Pair<FeatureType, String>> selectionIds = selection.getIds();
+        synchronized (selectionIds) {
 
             @SuppressWarnings("unchecked")
 			java.util.Iterator<Object> iter = params.getChildren().iterator();
             while (iter.hasNext()) {
-                Object next = (Content) iter.next();
+                Object next = iter.next();
                 if (next instanceof Element) {
                     Element elem = (Element) next;
                     if (elem.getName().equalsIgnoreCase("add")) {
@@ -66,19 +66,19 @@ public class Select implements Service
                         String wfs = elem.getAttributeValue("wfs");
                         String id = elem.getAttributeValue("id");
                         FeatureType ft = extentMan.getSource(wfs).getFeatureType(typename);
-                        selection.ids.add(Pair.read(ft, id));
+                        selectionIds.add(Pair.read(ft, id));
                     } else if (elem.getName().equalsIgnoreCase("remove")) {
                         String typename = elem.getAttributeValue("typename");
                         String wfs = elem.getAttributeValue("wfs");
                         String id = elem.getAttributeValue("id");
                         FeatureType ft = extentMan.getSource(wfs).getFeatureType(typename);
-                        selection.ids.remove(Pair.read(ft, id));
+                        selectionIds.remove(Pair.read(ft, id));
                     }
                 }
             }
+            success.setAttribute("count", String.valueOf(selectionIds.size()));
         }
 
-        success.setAttribute("count", String.valueOf(selection.ids.size()));
         return success;
     }
 

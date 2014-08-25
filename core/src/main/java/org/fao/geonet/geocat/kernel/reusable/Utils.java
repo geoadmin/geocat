@@ -186,8 +186,6 @@ public final class Utils {
                                                              final Function<String, String> idConverter ) throws Exception {
 
         String concreteId = idConverter.apply(id);
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
         SearchManager searchManager = context.getBean(SearchManager.class);
 
         IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(null, -1);
@@ -396,7 +394,7 @@ public final class Utils {
                 gc.getEmail().sendToAdmin(args.subject, emailBody, args.testing);
                 Log.warning(Geocat.Module.REUSABLE, emailBody);
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             Log.error(Geocat.Module.REUSABLE, "The System Configuration is not correctly configured and there for emails cannot be sent.  "
                     + "Make sure the email/feedback settings are configured");
         }
@@ -461,8 +459,11 @@ public final class Utils {
 
         for( Attribute attribute : currAtts ) {
             String value = originalElem.getAttributeValue(attribute.getName(), attribute.getNamespace());
-            if (value == null && attribute.getValue() != null) {
-            	return false;
+
+            if (value == null) {
+                if (attribute.getValue() != null) {
+                    return false;
+                }
             } else  if (!value.equals(attribute.getValue())) {
             	return false;
             }

@@ -102,7 +102,9 @@
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:title/gco:CharacterString">
-					<Field name="title" string="{string(.)}" store="true" index="true" token="true"/>
+                    <Field name="title" string="{string(.)}" store="true" index="true"/>
+                    <!-- not tokenized title for sorting -->
+                    <Field name="_title" string="{string(.)}" store="false" index="true"/>
 				</xsl:for-each>
 	
 				<xsl:for-each select="gmd:alternateTitle/gco:CharacterString">
