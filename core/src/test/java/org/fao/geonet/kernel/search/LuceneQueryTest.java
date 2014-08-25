@@ -1,28 +1,27 @@
 package org.fao.geonet.kernel.search;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import jeeves.server.ServiceConfig;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.search.Query;
-import org.junit.Ignore;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.jdom.DefaultJDOMFactory;
 import org.jdom.Element;
 import org.jdom.JDOMFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test for building Lucene queries.
@@ -1202,22 +1201,21 @@ public class LuceneQueryTest {
      * 'altTitle' parameter.	
      */
     @Test
-    public void testAltTitle() {	
+    public void testAltTitle() {
         // create request object
         JDOMFactory factory = new DefaultJDOMFactory();
         Element request = factory.element("request");
-        Element altTitle = factory.element("altTitle");	
-        altTitle.addContent("humph");	
-        request.addContent(altTitle);	
+        Element altTitle = factory.element("altTitle");
+        altTitle.addContent("humph");
+        request.addContent(altTitle);
         // build lucene query input
         LuceneQueryInput lQI = new LuceneQueryInput(request);
         // build lucene query
-        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, 
-                _analyzer, null).build(lQI);	
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet,
+                _analyzer, null).build(lQI);
         // verify query
-        // GEOCAT allow groupOwner queries
-        assertEquals("unexpected Lucene query", "+_groupOwner:JanMetDeKorteNaam +_isTemplate:n", query.toString());
-        // END GEOCAT
+        assertEquals("unexpected Lucene query", "+altTitle:humph +_isTemplate:n",
+                query.toString());
     }
 
     /**

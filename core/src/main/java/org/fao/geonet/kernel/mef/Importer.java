@@ -24,35 +24,56 @@
 package org.fao.geonet.kernel.mef;
 
 import com.google.common.base.Optional;
-import org.fao.geonet.domain.*;
-import org.fao.geonet.exceptions.BadFormatEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.Util;
-import org.fao.geonet.utils.Xml;
-
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataDataInfo;
+import org.fao.geonet.domain.MetadataRelation;
+import org.fao.geonet.domain.MetadataRelationId;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.exceptions.BadFormatEx;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataRelationRepository;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.Updater;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import javax.annotation.Nonnull;
 
 public class Importer {
 	public static List<String> doImport(final Element params, final ServiceContext context,
@@ -226,7 +247,7 @@ public class Importer {
 				final MetadataType isTemplate;
 				String rating = null;
 				String popularity = null;
-				String groupId = Util.getParam(params, Params.GROUP);
+				String groupId = null;
 				Element categs = null;
 				final boolean skipPrivileges = Util.getParam(params, "skipPrivileges", false);
 
