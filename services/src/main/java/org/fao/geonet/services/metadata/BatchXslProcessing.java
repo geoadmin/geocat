@@ -23,22 +23,18 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.util.Iterator;
-
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
-
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
+
+import java.util.Iterator;
 
 /**
  * Process a metadata with an XSL transformation declared for the metadata
@@ -85,9 +81,6 @@ public class BatchXslProcessing extends NotInReadOnlyModeService {
 			throws Exception {
 		String process = Util.getParam(params, Params.PROCESS);
 
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dataMan = gc.getBean(DataManager.class);
 		UserSession session = context.getUserSession();
 
         XslProcessingReport xslProcessingReport = new XslProcessingReport(process);

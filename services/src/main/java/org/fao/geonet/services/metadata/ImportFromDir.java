@@ -310,9 +310,6 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 
 	private int standardImport(Element params, ServiceContext context) throws Exception
 	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getBean(DataManager.class);
-
 		String dir      = Util.getParam(params, Params.DIR);
 		boolean recurse = Util.getParam(params, Params.RECURSE, "off").equals("on");
 		

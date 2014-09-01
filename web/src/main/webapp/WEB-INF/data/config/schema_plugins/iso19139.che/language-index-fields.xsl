@@ -283,7 +283,7 @@
 	
 			<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
 				<Field name="topicCat" string="{string(.)}" store="true" index="true" token="false"/>
-				<Field name="subject" string="{string(.)}" store="true" index="true" token="false"/>				
+				<Field name="subject" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
@@ -478,7 +478,7 @@
 		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
-		<!-- === Free text search === -->		
+		<!-- === Free text search === -->
 
 		<Field name="any" store="false" index="true" token="true">
 			<xsl:attribute name="string">

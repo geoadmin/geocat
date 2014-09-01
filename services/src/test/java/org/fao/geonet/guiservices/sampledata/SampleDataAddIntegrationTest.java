@@ -26,8 +26,9 @@ public class SampleDataAddIntegrationTest extends AbstractServiceIntegrationTest
     public void testExec() throws Exception {
         final Add add = new Add();
         ServiceContext context = createServiceContext();
-
-        final Collection<String> schemas = Arrays.asList("iso19115", "fgdc-std", "iso19139", "dublin-core");
+        // GEOCAT
+        final Collection<String> schemas = Arrays.asList("iso19139.che");
+        // END GEOCAT
         StringBuilder builder = new StringBuilder();
 
         for (String schema : schemas) {

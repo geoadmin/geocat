@@ -42,10 +42,11 @@
 
         <!-- ========================================================================================= -->
 
-    <xsl:template match="/">
-      <xsl:variable name="isoLangId">
-          <xsl:call-template name="langId19139"/>
+    <xsl:variable name="isoLangId">
+        <xsl:call-template name="langId19139"/>
     </xsl:variable>
+
+    <xsl:template match="/">
 
 		<xsl:variable name="poundLangId" select="concat('#', upper-case(java:twoCharLangCode(normalize-space(string($isoLangId)))))" />
         <Document locale="{$isoLangId}">
@@ -265,7 +266,11 @@
 	
 			<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
 				<Field name="topicCat" string="{string(.)}" store="true" index="true" token="false"/>
-				<Field name="subject" string="{string(.)}" store="true" index="true" token="false"/>				
+                <Field name="keyword"
+                    string="{java:getCodelistTranslation('gmd:MD_TopicCategoryCode', string(.), string($isoLangId))}"
+                    store="true"
+                    index="true"/>
+                <Field name="subject" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
@@ -471,13 +476,33 @@
 		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
-		<!-- === Free text search === -->		
+		<!-- === Free text search === -->
 
 		<Field name="any" store="false" index="true" token="true">
 			<xsl:attribute name="string">
 				<xsl:apply-templates select="." mode="allText"/>
 			</xsl:attribute>
 		</Field>
+
+        <xsl:variable name="identification" select="gmd:identificationInfo//gmd:MD_DataIdentification|
+			gmd:identificationInfo//*[contains(@gco:isoType, 'MD_DataIdentification')]|
+			gmd:identificationInfo/srv:SV_ServiceIdentification"/>
+
+        <Field name="anylight" store="false" index="true">
+            <xsl:attribute name="string">
+                <xsl:for-each
+                    select="$identification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString|
+                        $identification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString|
+                        $identification/gmd:abstract/gco:CharacterString|
+                        $identification/gmd:credit/gco:CharacterString|
+                        $identification//gmd:organisationName/gco:CharacterString|
+                        $identification/gmd:supplementalInformation/gco:CharacterString|
+                        $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString|
+                        $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor">
+                    <xsl:value-of select="concat(., ' ')"/>
+                </xsl:for-each>
+            </xsl:attribute>
+        </Field>
 
 		<xsl:apply-templates select="." mode="codeList"/>
 		
@@ -547,12 +572,12 @@
 
 	<!-- ========================================================================================= -->
 	<!--allText -->
-	
+
 	<xsl:template match="*" mode="allText">
 		<xsl:for-each select="@*">
 			<xsl:if test="name(.) != 'codeList' ">
 				<xsl:value-of select="concat(string(.),' ')"/>
-			</xsl:if>	
+			</xsl:if>
 		</xsl:for-each>
 
 		<xsl:choose>
@@ -560,7 +585,7 @@
 			other terms will go in language specific indices -->
 			<xsl:when test="*[@locale]"/>
 			<xsl:when test="*"><xsl:apply-templates select="*" mode="allText"/></xsl:when>
-			<xsl:otherwise><xsl:value-of select="concat(string(.),' ')"/></xsl:otherwise>			
+			<xsl:otherwise><xsl:value-of select="concat(string(.),' ')"/></xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 

@@ -23,18 +23,11 @@
 
 package org.fao.geonet.services.user;
 
-import static org.fao.geonet.repository.geocat.specification.GeocatUserSpecs.isValidated;
-import static org.fao.geonet.repository.specification.UserGroupSpecs.*;
-import static org.fao.geonet.repository.specification.UserSpecs.hasProfile;
-import static org.springframework.data.jpa.domain.Specifications.not;
-import static org.springframework.data.jpa.domain.Specifications.where;
-
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Constants;
@@ -42,16 +35,29 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.User_;
 import org.fao.geonet.domain.geocat.GeocatUserInfo_;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specifications;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.*;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import static org.fao.geonet.repository.geocat.specification.GeocatUserSpecs.isValidated;
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
+import static org.fao.geonet.repository.specification.UserSpecs.hasProfile;
+import static org.springframework.data.jpa.domain.Specifications.not;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 //=============================================================================
 
@@ -95,7 +101,7 @@ public class List implements Service {
         boolean sortByValidated = "true".equalsIgnoreCase(Util.getParam(params, "sortByValidated", "false"));
 
         String name = params.getChildText(Params.NAME);
-        String profilesParam = params.getChildText(Params.PROFILE);
+        Profile profilesParam = Profile.findProfileIgnoreCase(params.getChildText(Params.PROFILE));
 
         boolean findingShared = type != Type.NORMAL;
         Set<Profile> profileSet;
@@ -145,7 +151,7 @@ public class List implements Service {
 					usersToRemove.add(user.getId());
                 }
 
-				if (!profileSet.contains(profile.name())) {
+				if (!profileSet.contains(profile)) {
 					usersToRemove.add(user.getId());
                 }
 			}

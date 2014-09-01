@@ -26,16 +26,13 @@ package org.fao.geonet.guiservices.regions;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.kernel.region.Region;
-import org.fao.geonet.services.region.List;
 import org.jdom.Element;
 
 //=============================================================================
 
 public class Get implements Service
 {
-	private Element regions;
 
     public void init(String appPath, ServiceConfig params) throws Exception {}
 
@@ -48,17 +45,7 @@ public class Get implements Service
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
 
-        return new Element(Region.REGION_EL);  /*
-	    if(regions == null){
-	        regions = new List().exec(params, context);
-	        @SuppressWarnings("unchecked")
-            java.util.List<Element> children = regions.getChildren(Region.REGION_EL);
-	        for (Element element : children) {
-                element.setName("record");
-                element.addContent(new Element("id").setText(element.getAttributeValue("id")));
-            }
-	    }
-		return (Element) regions.clone();      */
+        return new Element(Region.REGION_EL);
 	}
 
 }
