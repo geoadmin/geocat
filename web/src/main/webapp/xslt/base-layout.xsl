@@ -5,7 +5,7 @@
 -->
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <xsl:output omit-xml-declaration="yes" method="html" doctype-public="html" indent="yes"
+  <xsl:output omit-xml-declaration="yes" method="html" doctype-system="html" indent="yes"
     encoding="UTF-8"/>
 
   <xsl:include href="common/base-variables.xsl"/>
@@ -53,8 +53,11 @@
           <xsl:otherwise>
             <!-- AngularJS application -->
             <div data-ng-cloak="" class="ng-cloak">
-              <div class="navbar navbar-default"
-                data-ng-include="'{$uiResourcesPath}templates/top-toolbar.html'"> </div>
+
+              <xsl:if test="$angularApp != 'gn_search'">
+                <div class="navbar navbar-default"
+                     data-ng-include="'{$uiResourcesPath}templates/top-toolbar.html'"> </div>
+              </xsl:if>
 
               <xsl:apply-templates mode="content" select="."/>
 

@@ -25,11 +25,10 @@
         return {
 
           importProj4js: function() {
-            Proj4js.defs['EPSG:3857'] = Proj4js.defs['EPSG:900913'];
-            if (Proj4js && gnConfig['map.proj4js'] &&
-                angular.isArray(gnConfig['map.proj4js'])) {
+            proj4.defs("EPSG:2154","+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
+            if (proj4 && angular.isArray(gnConfig['map.proj4js'])) {
               angular.forEach(gnConfig['map.proj4js'], function(item) {
-                Proj4js.defs[item.code] = item.value;
+                proj4.defs(item.code,item.value);
               });
             }
           },
@@ -61,9 +60,32 @@
                      [extent[0], extent[1]],
                      [extent[0], extent[3]],
                      [extent[2], extent[3]],
-                     [extent[2], extent[1]]
+                     [extent[2], extent[1]],
+                     [extent[0], extent[1]]
               ]
             ];
+          },
+
+          /**
+           * Get the extent of the md.
+           * It is stored in the object md.geoBox as a String
+           * '150|-12|160|12'.
+           * Returns it as an array of floats.
+           *
+           * @param md
+           */
+          getBboxFromMd: function(md) {
+            if(angular.isUndefined(md.geoBox)) return;
+
+            var bbox = angular.isArray(md.geoBox) ?
+                md.geoBox[0] : md.geoBox;
+            var c = bbox.split('|');
+            if(angular.isArray(c) && c.length == 4) {
+              return [parseFloat(c[0]),
+                parseFloat(c[1]),
+                parseFloat(c[2]),
+                parseFloat(c[3])];
+            }
           },
 
           getMapConfig: function() {
@@ -133,8 +155,27 @@
             } else {
               return '';
             }
+          },
+
+          /**
+           * Zoom map by given delta with animation
+           * @param map
+           * @param delta
+           */
+          zoom : function(map, delta) {
+            var view = map.getView();
+            var currentResolution = view.getResolution();
+            if (angular.isDefined(currentResolution)) {
+              map.beforeRender(ol.animation.zoom({
+                resolution: currentResolution,
+                duration: 250,
+                easing: ol.easing.easeOut
+              }));
+              var newResolution = view.constrainResolution(currentResolution, delta);
+              view.setResolution(newResolution);
+            }
           }
-        };
+      };
       }];
   });
 })();
