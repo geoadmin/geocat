@@ -1,342 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<!-- GEOCAT Strings -->
-    <metadataValidationConfiguration>Metadata Validation</metadataValidationConfiguration>
-    <metadataValidationConfigurationDesc>Configure Metadata Validation</metadataValidationConfigurationDesc>
-    <noTitle>No Title</noTitle>
-    <isDescriptionOf js="true">Description</isDescriptionOf>
-    <largerWorkCitation js="true">Larger Work Citation</largerWorkCitation>
-    <isTemporalStatOf js="true">Temporal State</isTemporalStatOf>
-    <createNewSharedObject js="true">Edit %objtype%</createNewSharedObject>
-    <noRecords js='true'>Aucun enregistrement trouvé</noRecords>
-    <edit js='true'>Edition</edit>
-    <searchView js='true'>Recherche</searchView>
-    <actions js='true'>Actions</actions>
-    <contacts js='true'>Contacts</contacts>
-    <SharedObjects js='true'>Objets réutilisables</SharedObjects>
-    <actions js='true'>Actions</actions>
-    <reusable_confirmValidate js="true">Confirmer la validation</reusable_confirmValidate>
-    <reusable_confirmDelete js="true">Confirmer la suppression</reusable_confirmDelete>
-    <reusable_confirmDeleteMsg js="true">Etes-vous sûr de vouloir supprimer les objets sélectionnés?</reusable_confirmDeleteMsg>
-    <reusable_confirmValidateMsg js="true">Etes-vous sûr de vouloir valider les objets sélectionnés?</reusable_confirmValidateMsg>
-    <reusable_validated js="true">validé</reusable_validated>
-    <reusable_nonValidated js="true">non validé</reusable_nonValidated>
-    <reusable_nonValidTitle js="true">Gérer les objets réutilisables</reusable_nonValidTitle>
-    <reusable_nonValidDesc js="true">Valider/rejeter les objets réutilisables</reusable_nonValidDesc>
-    <reusable_rejectTitle js="true">Message de rejet</reusable_rejectTitle>
-    <reusable_rejectDefaultMsg js="true">Choisissez un autre objet réutilisable...</reusable_rejectDefaultMsg>
-    <archived>Archived</archived>
-    <performingOperation js="true">Performing Operation.  Please wait...</performingOperation>
-    <description js="true">Description</description>
-    <metadataschemaValidate>Validation</metadataschemaValidate>
-    <metadataschemaValidateDes>Configure what rules are applied for each schema metadata. If no rule defined for a schema, it will be applied always.</metadataschemaValidateDes>
-    <xpathlabel>xPath</xpathlabel>
-    <xpathvalue>Value</xpathvalue>
-    <xpathrequired>Required</xpathrequired>
-    <xpathschematron>Schematron</xpathschematron>
-    <xpathconfirm>Are you sure you want to remove this criteria?</xpathconfirm>
+	<recurse>Rechercher dans les sous rÃ©pertoires Ã©galement</recurse>
+	<ara>Ø¹Ø±Ø¨ÙŠ</ara> <!-- Do not translate! -->
+	<cat>CatalÃ </cat> <!-- Do not translate! -->
+	<chi>ä¸­æ–‡</chi> <!-- Do not translate! -->
+	<dut>Nederlands</dut> <!-- Do not translate! -->
+	<eng>English</eng> <!-- Do not translate! -->
+	<fin>Suomeksi</fin> <!-- Do not translate! -->
+	<fre>FranÃ§ais</fre> <!-- Do not translate! -->
+	<ger>Deutsch</ger> <!-- Do not translate! -->
+	<ita>Italiano</ita> <!-- Do not translate! -->
+	<nor>Norsk</nor> <!-- Do not translate! -->
+	<por>Ğ ortuguÃªs</por> <!-- Do not translate! -->
+	<rus>Ğ ÑƒÑÑĞºĞ¸Ğ¹</rus> <!-- Do not translate! -->
+	<spa>EspaÃ±ol</spa> <!-- Do not translate! -->
+	<tur>TÃ¼rkÃ§e</tur> <!-- Do not translate! -->
+	<pol>Polski</pol> <!-- Do not translate! -->
 
-    <local._none_.non_validated>geocat.ch Thesaurus (non validié)</local._none_.non_validated>
-	<local._none_.geocat.ch>geocat.ch Thesaurus</local._none_.geocat.ch>
-	<external.theme.gemet-theme>GEMET themes</external.theme.gemet-theme>
-	<external.theme.inspire-theme>GEMET - INSPIRE themes, version 1.0</external.theme.inspire-theme>
-	<external._none_.gemet>GEMET concepts</external._none_.gemet>
-	<downloadBackup>Télécharger le fichier de back-up</downloadBackup>
-	<downloadBackupDesc>Télécharger le fichier de back-up de l'ensemble des métadonnées du catalogue</downloadBackupDesc>
-	<ContactSelectionTitle js="true">Sélection du contacte</ContactSelectionTitle>
-	<FormatSelectionTitle js="true">Sélection du format</FormatSelectionTitle>
-	<ExtentSelectionTitle js="true">Sélection de l’étendue</ExtentSelectionTitle>
-	<refine.titles js="true">Titre</refine.titles>
-	<refine.keyword js="true">Mot-clé</refine.keyword>
-	<refine.resolution js="true">Résolution spatiale</refine.resolution>
-	<refine.category js="true">Thématique</refine.category>
-	<refine.spatialRepresentation js="true">Représentation spatiale</refine.spatialRepresentation>
-	<refine.organisationName js="true">Organisation</refine.organisationName>
-	<refine.serviceType js="true">Type de service</refine.serviceType>
-	<refine.type js="true">Type</refine.type>
-	<skipPrivilegesImport>Ignorer l'import des privilèges</skipPrivilegesImport>
-	<unpublishReport>Rapport CSV de dépublication</unpublishReport>
-	<unpublishReportDes>Télécharger le rapport CSV des métadonnées (dé-)publiées ces dernières semaines</unpublishReportDes>
-	<unpublish_invalid_metadata_desc>Valider toutes les métadonnées locales et dépublier les non-valides</unpublish_invalid_metadata_desc>
-
-	<duplicate>Dupliquer</duplicate>
-    <geocatNext js="true">Suivante</geocatNext>
-    <geocatPrevious js="true">Précédente</geocatPrevious>
-    <nav>
-        <home>Page d'accueil</home>
-        <overview>Vue d'ensemble</overview>
-        <news>Actualités</news>
-        <metasearch>Catalogue</metasearch>
-        <metainput>Gestion de métadonnées</metainput>
-        <doc>Documentation</doc>
-        <about>Autour de geocat</about>
-    </nav>
-    <replaceSharedObjects js="true">Remplacer par des objets réutilisables</replaceSharedObjects>
-    <spatialRepresentation js="true">Représentation spatiale</spatialRepresentation>
-    <selectedElementsAction js="true">Actions sur la sélection</selectedElementsAction>
-    <resolution js="true">Résolution spatiale</resolution>
-    <mainpageTitle js="true">Recherche de géodonnées et géoservices</mainpageTitle>
-    <refinements js="true">Affinage</refinements>
-    <refineSearch.title js="true">Précisez votre recherche</refineSearch.title>
-    <keyword js="true">Mot-clé</keyword>
-    <theme js="true">Sujet ISO</theme>
-    <contact js="true">Nom de famille</contact>
-    <rtitle js="true">Titre</rtitle>
-    <organisationName js="true">Organisation</organisationName>
-    <kantone js="true">Canton(s)</kantone>
-    <theme js="true">Thématique</theme>
-    <formatTxt js="true">Format</formatTxt>
-    <toEdit js="true">A éditer</toEdit>
-    <toPublish js="true">A publier</toPublish>
-    <bbox js="true">BBOX</bbox>
-    <wherenone js="true">Partout</wherenone>
-    <adminUnit js="true">Unité administrative</adminUnit>
-    <drawOnMap js="true">Dessiner sur la carte</drawOnMap>
-    <startNewPolygon js="true">Dessiner un nouveau polygone</startNewPolygon>
-    <startNewPolygonHelp js="true">Dessiner un polygone (Double clique pour terminer)</startNewPolygonHelp>
-    <valid js="true">Valide</valid>
-    <yes js="true">Oui</yes>
-    <no js="true">Non</no>
-    <intersectGeo js="true">au moins partiellement à l\'intérieur</intersectGeo>
-    <withinGeo js="true">complètement à l\'intérieur ou égal</withinGeo>
-    <containsGeo js="true">comprend au moins</containsGeo>
-    <layerTree js="true">Arbre des couches</layerTree>
-    <nothingFound js="true">Pas de résultat</nothingFound>
-    <source js="true">Provenance?</source>
-    <catalog js="true">Catalogue(s)</catalog>
-    <dataType id="dataset">Données</dataType>
-    <dataType id="basicgeodata">Geodonnées de base</dataType>
-    <dataType id="basicgeodata-federal"> + Geodonnées de base - fédérales</dataType>
-    <dataType id="basicgeodata-cantonal"> + Geodonnées de base - cantonales</dataType>
-    <dataType id="basicgeodata-communal"> + Geodonnées de base - communales</dataType>
-    <dataType id="basicgeodata-other"> + Geodonnées de base - autres</dataType>
-    <dataType id="service">Services</dataType>
-    <dataType id="service-OGC:WMS"> + Services WMS</dataType>
-    <dataType id="service-OGC:WFS"> + Services WFS</dataType>
-    <extended js="true">Recherche avancée</extended>
-    <hideAdvancedOptions js="true">Recherche simple</hideAdvancedOptions>
-    <highlights js="true">Epinglés</highlights>
-    <hitsPerPage js="true">Résultats par page</hitsPerPage>
-    <hitsPerPageChoice value="10">10</hitsPerPageChoice>
-    <hitsPerPageChoice value="20">20</hitsPerPageChoice>
-    <hitsPerPageChoice value="50">50</hitsPerPageChoice>
-    <hitsPerPageChoice value="100">100</hitsPerPageChoice>
-	<metadata.expired>
-		<recipient>Email du bénéficiaire</recipient>
-		<numExpiredElements>Nombre de dossiers trop vieux</numExpiredElements>
-		<owner>propriétaire</owner>
-		<formTitle>Recherche les métadonnées non mises à jour</formTitle>
-		<limit>Limite de dernière modification :</limit>
-		<email>Alerte email</email>
-		<unpublish>Dépublier</unpublish>
-		<email.desc>Envoyer un email aux auteurs qui n'ont pas modifiée leurs métadonnées depuis la date limite</email.desc>
-		<unpublish.desc>Dépublier les métadonnées qui n'ont pas été modifiée depuis la date limite</unpublish.desc>
-		<email.action>Email</email.action>
-		<unpublish.action>Dépublier</unpublish.action>
-		<unsentNotifications>email non envoyé : information manquante</unsentNotifications>
-		<sentNotifications>Notification envoyée à l'auteur</sentNotifications>
-		<unpublished>dépublié</unpublished>
-	</metadata.expired>
-	<monitoring>Rapport du Monitoring</monitoring>
-    <monitoringDes>Rapport du Monitoring du statut des services de GeoNetwork</monitoringDes>
-    <monitoring.service.db>Connection Base de données</monitoring.service.db>
-    <monitoring.service.csw>Service CSW</monitoring.service.csw>
-    <monitoring.service.csw.capabilities>Capabilities</monitoring.service.csw.capabilities>
-    <monitoring.service.csw.getrecords>GetRecords</monitoring.service.csw.getrecords>
-    <monitoring.service.print>Service d'impression</monitoring.service.print>
-    <monitoring.service.index>Service d'index</monitoring.service.index>
-    <monitoring.url>URL</monitoring.url>
-    <monitoring.status>Statut</monitoring.status>
-    <monitoring.error.code>Code de l'erreur</monitoring.error.code>
-    <monitoring.error.description>Description de l'erreur</monitoring.error.description>
-    <monitoring.responsetime>Temps de réponse</monitoring.responsetime>
-    <monitoring.metadatarecords>Entrées de métadonnées</monitoring.metadatarecords>
-    <monitoring.connectionsuccess>Connection établie</monitoring.connectionsuccess>
-    <monitoring.connectionerror>Erreur</monitoring.connectionerror>
-    <monitoring.enabled>Activé</monitoring.enabled>
-    <monitoring.disabled>Desactivé</monitoring.disabled>
-    <monitoring.refresh>Actualiser</monitoring.refresh>
-    <monitoring.indexing>Indexation</monitoring.indexing>
-    <monitoring.idle>Idle</monitoring.idle>
-    <monitoring.service.disk>Monitor du disque</monitoring.service.disk>
-    <monitoring.freespace>Espace libre</monitoring.freespace>
-
-    <reject js='true'>Refuser</reject>
-    <rejected>rejeté</rejected>
-    <replaceSharedObjects>Remplacer par des objets réutilisables</replaceSharedObjects>
-    <format>
-        <management>Gestion des formats de distribution</management>
-        <manDes>Ajouter/modifier/supprimer des formats de distribution</manDes>
-    </format>
-    <formats js='true'>Formats</formats>
-    <extents js='true'>Etendues</extents>
-    <deleted js='true'>Supprimé</deleted>
-    <insufficient.privileges.import.replace>Une métadonnée avec le même identifiant existe déjà. Vos privilèges ne suffisent pas pour la remplacer.</insufficient.privileges.import.replace>
-    <updateDatasetTitle>Mettre à jour une MDD</updateDatasetTitle>
-    <updateDatasetMsg>Il faut cocher \'Mettre à jour une MDD\' pour ajouter une section "ressource online" si on n\'a pas droit d\'édition sur la MDS</updateDatasetMsg>
-    <deletedSharedObject>
-        <msg>Mail envoyé automatiquement.
-Des objets réutilisables que vous utilisez dans vos métadonnées ont été rejetés. Vous trouverez ci-contre la liste des métadonnées concernées et la raison du rejet. Nous vous prions de bien vouloir adapter ces métadonnées et de les republier. N&apos;hésitez pas à prendre contact avec nous en cas de questions: geocat@swisstopo.ch
-</msg>
-        <subject>Objet réutilisable rejeté</subject>
-    </deletedSharedObject>
-    <Shared>Objet réutilisable</Shared>
-    <extents>
-        <deselectAll>Tout déselectionner</deselectAll>
-        <selectAll>Tout selectionner</selectAll>
-        <management>Gérer les étendues</management>
-        <confirmDelete>Etes-vous sur de vouloir suprimmer les étendues sélectionnées</confirmDelete>
-        <manDes>Gestion des objets géographiques</manDes>
-    </extents>
-    <page>Page</page>
-    
-    <streetname>Nom de rue</streetname>
-    <streetnumber>N°</streetnumber>
-    <postbox>Case postale</postbox>
-    <userdetails>User details</userdetails>
-    <facsimile>Fax</facsimile>
-    <phone>Téléphone</phone>
-    <orgacronym>Abbréviation de l'organisation</orgacronym>
-    <positionname>Position</positionname>
-    <directnumber>Numéro direct</directnumber>
-    <mobile>Mobile</mobile>
-    <onlineresource>Site Web</onlineresource>
-    <desc>Description</desc>
-    <hoursofservice>Heures de service</hoursofservice>
-    <contactinstructions>Instructions pour le contact</contactinstructions>
-    <mostPopular>Les plus populaires</mostPopular>
-
-    <popXlink.about js="true">Rechercher un objet existant ou utiliser le bouton 'Nouveau' si vous n'en trouvez pas.</popXlink.about>
-    <popXlink.contact.search js="true">Rechercher dans la liste de valeur un contact</popXlink.contact.search>
-    <popXlink.contact.role js="true">Renseigner le rôle de ce contact</popXlink.contact.role>
-    <popXlink.add.action.tooltip js="true">Ajouter l’élément sélectionné dans le document de métadonnées</popXlink.add.action.tooltip>
-    <popXlink.create.action.tooltip js="true">Proposer un nouvel élément, si l’élément recherché n’est pas trouvé</popXlink.create.action.tooltip>
-    <popXlink.extent.search js="true">Rechercher une étendue dans la liste</popXlink.extent.search>
-    <popXlink.format.search js="true">Recherche d’un format dans la liste</popXlink.format.search>
-    <extentBbox js="true">BBOX seulement</extentBbox>
-    <extentPolygon js="true">Polygone seulement</extentPolygon>
-    <extentBboxAndPolygon js="true">Polygone et BBOX</extentBboxAndPolygon>
-    <boolean value="1" context="">Vrai</boolean>
-    <boolean value="0" context="">Faux</boolean>
-    <boolean value="1" context="gmd:extentTypeCode">Inclusion</boolean>
-    <boolean value="0" context="gmd:extentTypeCode">Exclusion</boolean>
-    <boolean value="true" context="gmd:extentTypeCode">Inclusion</boolean>
-    <boolean value="false" context="gmd:extentTypeCode">Exclusion</boolean>
-    <extentTypeCode js="true">Autorité Code</extentTypeCode>
-    <inclusion js="true">Inclusion</inclusion>
-    <exclusion js="true">Exclusion</exclusion>
-    <xlink.new js="true">Nouveau</xlink.new>
-    <xlink.newGeographic js="true">Nouvelle étendue géographique</xlink.newGeographic>
-    <noXlink js="true">Elément choisi non valide.</noXlink>
-
-	<displayValidationReport>Rapport de validation</displayValidationReport>
-	<publishOnlyIfAdminOrValid>Une métadonnée peut être publiée si elle est valide ISO ou si vous êtes un administrateur.</publishOnlyIfAdminOrValid>
-	<xsdValid>Valide XSD</xsdValid>
-	<isoValid>Valide ISO</isoValid>
-	<gm03Valid>Valide GM03</gm03Valid>
-	<inspireValid>Valide INSPIRE</inspireValid>
-
-	<validmd>
-		<xsd>Valide XSD</xsd>
-		<schematron-rules-iso>Valide ISO</schematron-rules-iso>
-		<schematron-rules-iso-che>Valide GM03</schematron-rules-iso-che>
-		<schematron-rules-inspire>Valide INSPIRE</schematron-rules-inspire>
-	</validmd>
-
-    <xsl.admin>Feuilles de style pour la présentation des métadonnées</xsl.admin>
-    <xsl.admin.des>Feuilles de style (XSL) personalisées pour l'affichage des métadonnées en HTML</xsl.admin.des>
-    <toggleVisibilityEdit>Activer la gestion de la visibilité des informations</toggleVisibilityEdit>
-    <addLayerConfirmTitle js="true">Ajout d'une nouvelle couche WMS</addLayerConfirmTitle>
-    <addLayerConfirmText js="true">Voulez-vous supprimer les couches déjà ajoutées à la carte ?</addLayerConfirmText>
-    <other js="true">- Autre -</other>
-	<ajaxRequestFailed mode="js">Echec lors de la recherche</ajaxRequestFailed>
-	<searchElements mode="js">Rechercher un élément</searchElements>
-	<viewCapabilities>Consulter le document GetCapabilities</viewCapabilities>
-	<viewCapabilitiesHelp>Le fichier GetCapabilities contient les noms des couches diffusées par le service. Saisir ici le nom d'une couche (ie. layername).</viewCapabilitiesHelp>
-	<noCapabilities>URL du service invalide</noCapabilities>
-	<createAssoServiceHelp>
-	        <ul>
-	            <li class="arrow">Utiliser le formulaire de recherche pour trouver des métadonnées de services</li>
-	            <li class="arrow">
-	                En sélectionnant une ou plusieurs métadonnées de service, vous allez ajouter une référence (ie. les éléments operatesOn et coupledResource) vers la métadonnée de données en cours d'édition fonction de vos privilèges.
-	            </li>
-	            <li class="arrow">
-	                Saisir le nom de la couche tel que définit dans le service OGC (eg. layername du document GetCapabilities)
-	            </li>
-	            <li class="arrow">
-	                Pour ajouter une section ressource en ligne ou si vous n'avez pas les privilèges de mise à jour des métadonnées
-	                de service, vous pouvez cocher l'option mise à jour de la métadonnée de donnée.
-	            </li>
-	        </ul>
-	    </createAssoServiceHelp>
-	<standardValid>Valide ISO et GM03</standardValid>
-	<scopedName>Nom de la couche</scopedName>
-	<boxSelectEmptyText>Saisissez un texte ou pressez la flèche vers le bas</boxSelectEmptyText>
-	<legislationInformation>Information sur la législation</legislationInformation>
-	<months>mois</months>
-	<searchBoxLegend>Rechercher des métadonnées</searchBoxLegend>
-	<codelistManager>Gestion des listes de valeurs</codelistManager>
-	<completeTabPrint>Vue print</completeTabPrint>
-	<confirmMassiveDelete>Confirmer la suppression</confirmMassiveDelete>
-	<creation>Création</creation>
-	<datasets>Données</datasets>
-	<elementAdd>Ajouter un élément</elementAdd>
-	<elementDel>Supprimer</elementDel>
-	<elementDown>Descendre</elementDown>
-	<elementMandatory>Obligatoire</elementMandatory>
-	<elementSch>Condition</elementSch>
-	<elementUp>Monter</elementUp>
-	<elementVisAll>Visible à tous</elementVisAll>
-	<elementVisibility>Visibilité des éléments (disponible dans la Vue ISO)</elementVisibility>
-	<elementVisIntra>Uniquement pour le groupe</elementVisIntra>
-	<elementVisNo>Invisible</elementVisNo>
-	<elementXLink>Ajouter des valeurs prédéfinies</elementXLink>
-	<emailAddress>Email</emailAddress>
-	<generateUUID><span>Générer un <a href="http://fr.wikipedia.org/wiki/Universal_Unique_Identifier">UUID (Universally Unique Identifier)</a></span></generateUUID>
-	<deleteGroup.confirm>Effacer le groupe?</deleteGroup.confirm>
-	<deleteGroup.deleteUsers.confirm>Effacer le groupe, mais garder les utilisateurs (Annuler efface le groupe ET les utilisateurs)?</deleteGroup.deleteUsers.confirm>
-	<interMapInfo><a target="_blank" class="sm" href="http://www.opengeospatial.org">Open GeoSpatial®
-	            Consortium</a><a target="_blank" class="sm" href="http://www.esri.com">ESRI®
-	            ArcIMS</a></interMapInfo>
-	<languageIso3>fra</languageIso3>
-	<mainpage1><ul>
-	            <li>Améliorer l'accès et l'usage des informations et données spatiales</li>
-	            <li>Aider les processus de prise de décision</li>
-	            <li>Favoriser l'approche multidisciplinaire nécessaire au développement durable</li>
-	            <li>Améliorer la compréhension des apports de l'information géographique</li>
-	        </ul></mainpage1>
-	<mainMetadataLanguageNotSet>(Langue des métadonnées non définie)</mainMetadataLanguageNotSet>
-	<massiveActions>Actions</massiveActions>
-	<mef2File>Fichier MEF v2</mef2File>
-	<organizationName>Organisation</organizationName>
-	<parent>Consulter la fiche du parent</parent>
-	<publicaccess>Autoriser l'utilisation de cet utilisateur dans les métadonnées</publicaccess>
-	<searchIn>Recherche dans :</searchIn>
-	<services>Services</services>
-	<serviceType>Type de service</serviceType>
-	<showPdf>Fiche complète</showPdf>
-	<sort>Trier</sort>
-	<stat.requestParamsLink>le lien entre requetes et paramètres se fait par le champs requestId</stat.requestParamsLink>
-	<titles>Titres</titles>
-	<users>Utilisateurs</users>
-	<version>Version</version>
-	<website>Website</website>
-	<xlink>Recherche</xlink>
-	<emailPDF>Envoyer un PDF</emailPDF>
-	<emailFrom>Expéditeur</emailFrom>
-	<emailTo>Destinataire</emailTo>
-	<subject>Sujet</subject>
-	<emailSent>E-Mail envoyé!</emailSent>
-	<replaceDuplicates>Doublons</replaceDuplicates>
-	<permlink mode="js">Lien permanent</permlink>
-	<rm>Romanche</rm>
-	<fra>Français</fra> <!-- Do not translate! -->
-    <deu>Deutsch</deu> <!-- Do not translate! -->
-	
-	<!-- END GEOCAT Strings -->
-	<statusTitle> / Modification de l'état d'une fiche</statusTitle>
-	<statusUserEdit>L'utilisateur %s (%s) a modifié la métadonnée #%s</statusUserEdit>
-	<statusInform>%s / Métadonnée - État : %s par %s (%s) le %s</statusInform>
+	<statusTitle> / Modification de l'Ã©tat d'une fiche</statusTitle>
+	<statusUserEdit>L'utilisateur %s (%s) a modifiÃ© la mÃ©tadonnÃ©e #%s</statusUserEdit>
+	<statusInform>%s / MÃ©tadonnÃ©e - Ã‰tat : %s par %s (%s) le %s</statusInform>
 	<!--
         legacy UI 
         <statusSendEmail>%s\n\nRecords are available from the following URL:\n %s/main.search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
@@ -349,24 +32,6 @@ La liste des mÃ©tadonnÃ©es concernÃ©es par le changement est la suivante:
 La liste des changements d'Ã©tat sont accessibles ici :
 %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search
 	</statusSendEmail>	
-  <statusMetadataDetails>* {{index:title}} ({{serverurl}}/search?uuid={{index:_uuid}})</statusMetadataDetails>
-
-    <ara>????</ara> <!-- Do not translate! -->
-    <cat>Català</cat> <!-- Do not translate! -->
-    <chi>??</chi> <!-- Do not translate! -->
-    <dut>Nederlands</dut> <!-- Do not translate -->
-    <eng>English</eng> <!-- Do not translate! -->
-    <fin>Suomeksi</fin>  <!-- Do not translate! -->
-    <fre>Français</fre> <!-- Do not translate! -->
-    <ger>Deutsch</ger> <!-- Do not translate! -->
-    <ita>Italiano</ita> <!-- Do not translate! -->
-    <nor>Norsk</nor>  <!-- Do not translate! -->
-    <por>?ortuguês</por> <!-- Do not translate! -->
-    <rus>???????</rus> <!-- Do not translate! -->
-    <spa>Español</spa> <!-- Do not translate! -->
-    <tur>Türkçe</tur> <!-- Do not translate! -->
-    <pol>Polski</pol> <!-- Do not translate! -->
-
   <statusMetadataDetails>* {{index:title}} ({{serverurl}}/search?uuid={{index:_uuid}})</statusMetadataDetails>
 	<otherValue>Autre :</otherValue>
 	<warning>Attention</warning>
@@ -400,13 +65,8 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<surnameMandatory>Le nom est obligatoire</surnameMandatory>
 	<firstnameMandatory>Le prÃ©nom est obligatoire</firstnameMandatory>
 	<emailMandatory>Le mail est obligatoire</emailMandatory>
-	<forgottenPassword>Mot de passe oublié ?</forgottenPassword>
-  <io>Import, export &amp; moissonnage</io>
-  <usersAndGroups>Utilisateurs et groupes</usersAndGroups>
-  <classification>Thesaurus et système de classification</classification>
-  <catalogueConfiguration>Paramètres du catalogue</catalogueConfiguration>
-  <indexConfiguration>Paramètres de l'Index</indexConfiguration>
-	<selectTemplate>Sélectionner les standards </selectTemplate>
+	<forgottenPassword>Mot de passe oubliÃ© ?</forgottenPassword>
+	<selectTemplate>SÃ©lectionner les standards </selectTemplate>
 	<useStopwords>L'index de Lucene utilise des mots vides pour les langues suivantes:</useStopwords>    
 	<rebuildIndexMessage>Si vous modifiez ces valeurs, il est recommandÃ© de reconstruire l'index Lucene.</rebuildIndexMessage>
 	<notificationsDes>Configurer la mise Ã  jour distante de dÃ©pÃ´t</notificationsDes>
@@ -414,12 +74,11 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<metadata-schema-select>SÃ©lectionner un standard pour lequel ajouter les modÃ¨les ou les exemples</metadata-schema-select>
 	<templatesSamples>GÃ©rer les modÃ¨les et les exemples</templatesSamples>
 	<simpleSearch>Recherche simple</simpleSearch>
-	<advancedSearch>avancée</advancedSearch>
-	<remoteSearch>distribuée</remoteSearch>
-	<displayRemoteHtml>Afficher les résultats avec le HTML du catalogue ?</displayRemoteHtml>
-	<showRemoteHTML>Afficher la métadonnée à partir du catalogue distant</showRemoteHTML>
-	<noSearchCriteria js="true">Sélectionner des critères de recherches.</noSearchCriteria>
-	<noServer js="true">Sélectionner au moins un catalogue à interroger.</noServer>
+	<advancedSearch>avancÃ©e</advancedSearch>
+	<remoteSearch>distribuÃ©e</remoteSearch>
+	<displayRemoteHtml>Afficher les rÃ©sultats avec le HTML du catalogue ?</displayRemoteHtml>
+	<noSearchCriteria js="true">SÃ©lectionner des critÃ¨res de recherches.</noSearchCriteria>
+	<noServer js="true">SÃ©lectionner au moins un catalogue Ã  interroger.</noServer>
 	<anyWith>Tous - au moins un des mots suivants</anyWith>
 	<anyWithExactPhrase>Tous - cette expression exacte</anyWithExactPhrase>
 	<anyWithAllWords>Tous - tous les mots suivants</anyWithAllWords>
@@ -432,7 +91,7 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<schemaFileName>Chemin vers l'archive ZIP</schemaFileName>
 	<schemaUrl>URL de l'archive ZIP</schemaUrl>
 	<schemaUuid>Identifiant (UUID) d'une mÃ©tadonnÃ©e locale avec l'URL du schÃ©ma (GeoNetwork Metadata Schema Archive-GMSA URL) dans la section ressource en ligne</schemaUuid>
-	<add js="true">Ajouter</add>
+	<add>Ajouter</add>
 	<schemaOps>Gestion des schÃ©mas de mÃ©tadonnÃ©es</schemaOps>
 	<enterSchema>Nom du schÃ©ma Ã  ajouter</enterSchema>
 	<selectSchemaOperations>Nom du schÃ©ma source :</selectSchemaOperations>
@@ -442,9 +101,7 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<assignToGroup>Attribuer au(x) groupe(s)</assignToGroup>
 	<copyThumbnail>Copier les imagettes ?</copyThumbnail>
 	<copyResources>Copier les fichiers Ã  tÃ©lÃ©charger ?</copyResources>
-	<searchStatistics>Statistiques</searchStatistics>
-	<searchStatisticsDes>Consulter les statistiques de consultation du
-	catalogue</searchStatisticsDes>
+
 	<stat.byDay>par jour</stat.byDay>
 	<stat.byMonth>par mois</stat.byMonth>
 	<stat.byWeek>par semaine</stat.byWeek>
@@ -462,10 +119,8 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<stat.requestDate>Date de la requÃªte</stat.requestDate>
 	<stat.spatialFilter>Filtre spatial</stat.spatialFilter>
 	<stat.totalsearches>Nombre total de recherches</stat.totalsearches>
-	<stat.year>Année</stat.year>
-	<stat.filesDel> fichier(s) supprimé(s).</stat.filesDel>
-	<stat.noValue>pas de valeur</stat.noValue>
-	<stat.mdSheet>fiche Métadonnées</stat.mdSheet>
+	<stat.year>AnnÃ©e</stat.year>
+	<stat.mdSheet>fiche MÃ©tadonnÃ©es</stat.mdSheet>
 	<stat.noTitle>pas de titre</stat.noTitle>
 	<stat.csvExport>Export CSV</stat.csvExport>
 	<stat.tabularStats>Statistiques tabulaires</stat.tabularStats>
@@ -494,10 +149,9 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<stat.numSimpleSearch>Recherches simples</stat.numSimpleSearch>
 	<stat.numAdvancedSearch>Recherches avancÃ©es</stat.numAdvancedSearch>
 	<stat.></stat.>
-	<stat.exportRequests>Exporter la table des requêtes (table 'Requests', une entrée par requête utilisateur)</stat.exportRequests>
-	<stat.exportParams>Exporter la table des paramètres (table 'Parameters', plusieurs entrées par requête utilisateur)</stat.exportParams>
-	<stat.requestParamsLink>le lien entre requetes et paramètres se fait par le champs requestId</stat.requestParamsLink>
-	<stat.csvSemiColumnDelimiter>Séparateur point-virgule</stat.csvSemiColumnDelimiter>
+	<stat.exportRequests>Exporter la table des requÃªtes (table 'Requests', une entrÃ©e par requÃªte utilisateur)</stat.exportRequests>
+	<stat.exportParams>Exporter la table des paramÃ¨tres (table 'Parameters', plusieurs entrÃ©es par requÃªte utilisateur)</stat.exportParams>
+	<stat.csvSemiColumnDelimiter>SÃ©parateur point-virgule</stat.csvSemiColumnDelimiter>
 	<stat.rightClickSaveAs>Clic bouton droit sur le lien pour enregistrer le fichier CSV sur le disque</stat.rightClickSaveAs>
 	<stat.searchedKeywords>Mots-clÃ©s recherchÃ©s</stat.searchedKeywords>
 	<stat.popuByGroup>PopularitÃ© des mÃ©tadonnÃ©es par groupe</stat.popuByGroup>
@@ -517,9 +171,6 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<stat.warnCsvExport>Attention, exporter les tables de log peut prendre plusieurs minutes</stat.warnCsvExport>
 	<stat.clickToDownload>Cliquer sur le lien pour tÃ©lÃ©charger le fichier CSV</stat.clickToDownload>
 	<stat.requestParamsLink>le lien entre requetes et paramÃ¨tres se fait par le champs requestId</stat.requestParamsLink>
-
-    <useStopwords>L'index de Lucene utilise des mots vides pour les langues suivantes:</useStopwords>
-    <rebuildIndexMessage>Si vous modifiez ces valeurs, il est recommandé de reconstruire l'index Lucene.</rebuildIndexMessage>
 
 	<drawRectangle js="true">Dessiner une emprise</drawRectangle>
 	<drawPolygon js="true">Dessiner un polygone</drawPolygon>
@@ -616,11 +267,10 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	</helpShortcutsEditor>
 	<validationReport js="true">Rapport de validation</validationReport>
 	<errorsOnly>Erreurs uniquement</errorsOnly>
-	<schematronReport>Conformité par rapport aux recommendations (Schematron)</schematronReport>
-	<xsdReport>Conformité par rapport au standard (Schéma XML)</xsdReport>
-	<rules name="schematron-rules-inspire">Règles INSPIRE</rules>
-	<rules name="schematron-rules-iso-che">Règles GM03</rules>
-	<rules name="schematron-rules-iso">Règles ISO 19115/19119</rules>
+	<schematronReport>ConformitÃ© par rapport aux recommendations (Schematron)</schematronReport>
+	<xsdReport>ConformitÃ© par rapport au standard (SchÃ©ma XML)</xsdReport>
+	<rules name="schematron-rules-inspire">RÃ¨gles INSPIRE</rules>
+	<rules name="schematron-rules-iso">RÃ¨gles ISO 19115/19119</rules>
 	<rules name="schematron-rules-geonetwork">Recommendations GeoNetwork</rules>
 	<getCapabilitiesLayer js="true">Couches du GetCapabilities</getCapabilitiesLayer>
 	<ServiceUpdateError js="true">Erreur lors de la mise Ã  jour de la mÃ©tadonnÃ©e.</ServiceUpdateError>
@@ -640,41 +290,30 @@ La liste des changements d'Ã©tat sont accessibles ici :
 		</layerNameHelp>
 	
 	<layerName js="true">Nom de la couche</layerName>
-	<createIfNotExistButton js="true">Créer une nouvelle métadonnée</createIfNotExistButton>
-	<associateService js="true">Associer une métadonnée de service</associateService>
-	<associateDataset js="true">Associer une métadonnée de données</associateDataset>
-	<associateSibling js="true">Associer une métadonnée des fréres</associateSibling>
-	<associateSiblingText js="true">Rechercher le frère que vous souhaitez ajouter. Ensuite, double cliquez sur relation colonne et spécifier pour chaque frère.</associateSiblingText>
-	<associateServiceHelp>Pour associer une métadonnée de service, rechercher un service et choisir la couche associée.</associateServiceHelp>
-	<associateDatasetHelp>Pour associer une métadonnée de données, aller dans la vue ISO &gt; onglet Identification,
-		et définir l'élément "operates on".</associateDatasetHelp>
-	<addParent> Ajouter ou mettre à jour l'information sur le parent</addParent>
-	<createAssoService>Créer la relation</createAssoService>
-	<updateMdd>Mettre à jour la métadonnée de données</updateMdd>
-	<datasetCreate>Créer une métadonnée de données</datasetCreate>
-	<linkedServices> Services associés:</linkedServices>
-	<linkedServiceMetadataHelp>Pour associer une métadonnée de service, aller dans la vue ISO &gt; onglet Distribution.</linkedServiceMetadataHelp>
+	<createIfNotExistButton js="true">CrÃ©er une nouvelle mÃ©tadonnÃ©e</createIfNotExistButton>
+	<associateService js="true">Associer une mÃ©tadonnÃ©e de service</associateService>
+	<associateDataset js="true">Associer une mÃ©tadonnÃ©e de donnÃ©es</associateDataset>
+	<associateServiceHelp>Pour associer une mÃ©tadonnÃ©e de service, rechercher un service et choisir la couche associÃ©e.</associateServiceHelp>
+	<associateDatasetHelp>Pour associer une mÃ©tadonnÃ©e de donnÃ©es, aller dans la vue ISO &gt; onglet Identification,
+		et dÃ©finir l'Ã©lÃ©ment "operates on".</associateDatasetHelp>
+	<addParent> Ajouter ou mettre Ã  jour l'information sur le parent</addParent>
+	<createAssoService>CrÃ©er la relation</createAssoService>
+	<updateMdd>Mettre Ã  jour la mÃ©tadonnÃ©e de donnÃ©es</updateMdd>
+	<datasetCreate>CrÃ©er une mÃ©tadonnÃ©e de donnÃ©es</datasetCreate>
+	<linkedServices> Services associÃ©s:</linkedServices>
+	<linkedServiceMetadataHelp>Pour associer une mÃ©tadonnÃ©e de service, aller dans la vue ISO &gt; onglet Distribution.</linkedServiceMetadataHelp>
 	<linkedParentMetadata> Parent/enfant :</linkedParentMetadata>
 	<linkedParentMetadataHelp>Pour associer un parent, aller dans la vue ISO &gt; onglet MetadonnÃ©es.</linkedParentMetadataHelp>
 	<linkedChildrenMetadata> Enfants:</linkedChildrenMetadata>
-	<linkedChildrenMetadataHelp>Liste des enfants pour la métadonnée en cours.</linkedChildrenMetadataHelp>
-	<linkedDatasetMetadata> Jeux de données associés:</linkedDatasetMetadata>
-	<serviceCreate>Créer une métadonnée de service</serviceCreate>
-	<parentSearch js="true">Chercher un parent pour la métadonnée en cours.</parentSearch>
-	<linkedMetadataSelectionWindowTitle js="true">Sélection des métadonnées associées</linkedMetadataSelectionWindowTitle>
-	<relatedMetadataTitle js="true">Métadonnées associées</relatedMetadataTitle>
+	<linkedChildrenMetadataHelp>Liste des enfants pour la mÃ©tadonnÃ©e en cours.</linkedChildrenMetadataHelp>
+	<linkedDatasetMetadata> Jeux de donnÃ©es associÃ©s:</linkedDatasetMetadata>
+	<serviceCreate>CrÃ©er une mÃ©tadonnÃ©e de service</serviceCreate>
+	<parentSearch js="true">Chercher un parent pour la mÃ©tadonnÃ©e en cours.</parentSearch>
+	<linkedMetadataSelectionWindowTitle js="true">SÃ©lection des mÃ©tadonnÃ©es associÃ©es</linkedMetadataSelectionWindowTitle>
 	<searchText js="true">Recherche libre</searchText>
-	<mdTitle js="true">Titre de la métadonnée</mdTitle>
-	<selectRelation js="true">Double-cliquez pour sélectionner relation</selectRelation>
-	<parent js="true">Père</parent>
-	<source js="true">Source</source>
-	<sourceLabel js="true">Source</sourceLabel>
-	<crossReference js="true">Cross Reference</crossReference>
-	<partOfSeamlessDatabase js="true">Part of Seamless Database</partOfSeamlessDatabase>
-	<stereoMate js="true">Stereo Mate</stereoMate>
-	<relationships js="true">Relations</relationships>
-	<createRelation js="true">Créer la relation</createRelation>
-	<export js="true">Exporter</export>
+	<mdTitle js="true">Titre de la mÃ©tadonnÃ©e</mdTitle>
+	<createRelation js="true">CrÃ©er la relation</createRelation>
+	<export>Exporter</export>
 	<exportText>Export (TXT)</exportText>
 	<addXMLFragment>Ajouter depuis un dictionnaire ...</addXMLFragment>
 	<translateWithGoogle>Utiliser le service de traduction de Google pour proposer une traduction pour la langue sÃ©lectionnÃ©e.</translateWithGoogle>
@@ -693,7 +332,6 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<rateMetadataFailed js="true">Impossible de noter la mÃ©tadonnÃ©e.</rateMetadataFailed>
 	<error js="true">Erreur</error>
 	<errors>erreurs</errors>
-	<errorNotSelected js="true">Vous devez sélectionner au moins une chose.</errorNotSelected>
 	<northSouth js="true">Nord &lt; Sud</northSouth>
 	<north90 js="true">Nord &gt; 90 degrÃ©s</north90>
 	<south90 js="true">Sud &lt; -90 degrÃ©s</south90>
@@ -725,8 +363,8 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<foundCRS js="true">SystÃ¨mes disponibles</foundCRS>
 	
 	<about>A propos</about>
-	<abstract js="true">Résumé</abstract>
-	<accept js="true">Accepter</accept>
+	<abstract>RÃ©sumÃ©</abstract>
+	<accept>Accepter</accept>
 	<actionOnSelect>Actions sur la sÃ©lection</actionOnSelect>
 	<add js="true">Ajouter</add>
 	<addNewMetadata>CrÃ©er une nouvelle fiche de mÃ©tadonnÃ©es</addNewMetadata>
@@ -734,8 +372,8 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<admin>Administration</admin>
 	<Administrator>Administrateur</Administrator>
 	<agrovocKeyword>Mots clÃ©s Agrovoc</agrovocKeyword>
-	<all js="true">Tout</all>
-	<any js="true">- Tous -</any>
+	<all>Tout</all>
+	<any>- Tous -</any>
 	<anytime>N'importe quand</anytime>
 	<appSchInfoTab>SchÃ©ma d'app.</appSchInfoTab>
 
@@ -769,28 +407,28 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<browset>Browse Graphic File Type</browset>
 	<byGroup>Vue ISO</byGroup>
 	<byPackage>Vue AvancÃ©e</byPackage>
-	<cancel js="true">Annuler</cancel>
-	<categories>Catégories</categories>
-	<category js="true">Catégorie</category>
-	<categoryManagement>Gestion des catégories</categoryManagement>
-	<categoryManDes>Ajouter/Modifier/Supprimer et visualiser les catégories</categoryManDes>
-	<categoryNameMandatory>Le nom de la catégorie est obligatoire.</categoryNameMandatory>
-	<changeDate>Date de mise à jour des métadonnées</changeDate>
-	<checkusername>Vérification</checkusername>
+	<cancel>Annuler</cancel>
+	<categories>CatÃ©gories</categories>
+	<category>CatÃ©gorie</category>
+	<categoryManagement>Gestion des catÃ©gories</categoryManagement>
+	<categoryManDes>Ajouter/Modifier/Supprimer et visualiser les catÃ©gories</categoryManDes>
+	<categoryNameMandatory>Le nom de la catÃ©gorie est obligatoire.</categoryNameMandatory>
+	<changeDate>Date de mise Ã  jour des mÃ©tadonnÃ©es</changeDate>
+	<checkusername>VÃ©rification</checkusername>
 	<choose>- Choisir -</choose>
 	<chooseFile>Choisir le fichier Ã  tÃ©lÃ©charger</chooseFile>
 	<chooseLargeThumbnail>Choisir la vignette (grand format)</chooseLargeThumbnail>
 	<chooseThumbnail>Choisir la vignette (petit format)</chooseThumbnail>
-	<city js="true">Ville</city>
+	<city>Ville</city>
 	<clear js="true">Effacer</clear>
 	<clearAll>Aucun</clearAll>
 	<close js="true">Fermer</close>
 	<completeTab>Vue avancÃ©e</completeTab>
 	<completeTabEditor>Editeur avancÃ©</completeTabEditor>
-	<confirmCancel>Ã?tes-vous sÃ»r de vouloir quitter l\'Ã©diteur? (vous allez perdre les changements non sauvegardÃ©s)</confirmCancel>
+	<confirmCancel>ÃŠtes-vous sÃ»r de vouloir quitter l\'Ã©diteur? (vous allez perdre les changements non sauvegardÃ©s)</confirmCancel>
 	<confirmCancelCreate>Etes-vous sÃ»r de vouloir annuler la crÃ©ation de ces mÃ©tadonnÃ©es?</confirmCancelCreate>
-	<confirmDelete js="true">Ã?tes-vous sÃ»r de vouloir supprimer cette mÃ©tadonnÃ©e ?</confirmDelete> <!-- Check if js=true is required -->
-	<confirmBatchDelete>Ã?tes-vous sÃ»r de vouloir supprimer toutes les $1 mÃ©tadonnÃ©es sÃ©lectionnÃ©es ?</confirmBatchDelete>
+	<confirmDelete js="true">ÃŠtes-vous sÃ»r de vouloir supprimer cette mÃ©tadonnÃ©e ?</confirmDelete> <!-- Check if js=true is required -->
+	<confirmBatchDelete>ÃŠtes-vous sÃ»r de vouloir supprimer toutes les $1 mÃ©tadonnÃ©es sÃ©lectionnÃ©es ?</confirmBatchDelete>
 	<confirmNewPassword>Confirmer le nouveau mot de passe</confirmNewPassword>
 	<confirmPassword>Confirmer le mot de passe</confirmPassword>
 	<constraintsTab>Contraintes</constraintsTab>
@@ -800,8 +438,8 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<convert>Conversion</convert>
 	<copyright1>Copyright</copyright1>
 	<copyright2><p>Tout droit rÃ©servÃ©.</p></copyright2>
-	<country js="true">Pays</country>
-	<create js="true">Créer</create>
+	<country>Pays</country>
+	<create>Dupliquer</create>
 	<createTip>CrÃ©er des mÃ©tadonnÃ©es Ã  partir de ce template</createTip>
 	<crs code="EPSG:4326">WGS 84</crs>
 	<crs code="EPSG:2154">RGF93 / Lambert-93</crs>
@@ -823,7 +461,7 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<decline>Refuser</decline>
 	<definition>DÃ©finition</definition>
 	<del>Supprimer</del>
-	<delete js="true">Supprimer</delete>
+	<delete>Supprimer</delete>
 	<deleteCategory>Supprimer la catÃ©gorie ?</deleteCategory>
 	<deleteConfirmationTitle>Rapport sur la suppression</deleteConfirmationTitle>
 	<deleteGroup>Supprimer le groupe ?</deleteGroup>
@@ -860,8 +498,8 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<durationYears>annÃ©e(s)</durationYears>
 	<dynamic>Interactive</dynamic>
 	<eastbc>CoordonnÃ©e est de l'emprise</eastbc>
-	<edit js="true">Editer</edit>
-	<Editor>Ã?diteur</Editor>
+	<edit>Editer</edit>
+	<Editor>Ã‰diteur</Editor>
 	<email>Email</email>
 	<emailAddressInvalid js="true">Adresse email invalide</emailAddressInvalid>
 	<enclosing>Incluant</enclosing>
@@ -882,12 +520,12 @@ La liste des changements d'Ã©tat sont accessibles ici :
 
 	<file>Fichier</file>
 	<fileType>Type de fichier :</fileType>
-	<fileUploadSuccessful>Téléchargement réussi</fileUploadSuccessful>
-	<firstName>Prénom</firstName>
-	<firstNameMandatory js="true">Le prénom est obligatoire</firstNameMandatory>
-	<foundWords>Nombre de mots trouvés :</foundWords>
-	<freeKeyword>Mot-clés libres</freeKeyword>
-	<from js="true">Début</from>
+	<fileUploadSuccessful>TÃ©lÃ©chargement rÃ©ussi</fileUploadSuccessful>
+	<firstName>PrÃ©nom</firstName>
+	<firstNameMandatory js="true">Le prÃ©nom est obligatoire</firstNameMandatory>
+	<foundWords>Nombre de mots trouvÃ©s :</foundWords>
+	<freeKeyword>Mot-clÃ©s libres</freeKeyword>
+	<from>DÃ©but</from>
 	<fromDateSelector>Select FROM date</fromDateSelector>
 	<fuzzy>PrÃ©cision</fuzzy>
 	<fuzzyImprecise>ImprÃ©cis</fuzzyImprecise>
@@ -921,7 +559,7 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<i18n>Test i18n</i18n>
 	<i18nDesc>Permet de lister les chaÃ®nes de traduction manquantes pour l'interface.</i18nDesc>
 	<identificationTab>Identification</identificationTab>
-	<identifier js="true">Identifiant</identifier>
+	<identifier>Identifiant</identifier>
 	<imAreaInterest>Select an Area Of Interest</imAreaInterest>
 	<imPan>Pan</imPan>
 	<import>Importer</import>
@@ -963,7 +601,7 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<legend>LÃ©gende</legend>
 	<link>Lien</link>
 	<links>Liens</links>
-	<loading js="true">Chargement en cours ...</loading>
+	<loading>Chargement en cours ...</loading>
 	<local>Recherche local</local>
 	<localiz>Internationalisation</localiz>
 	<localizationHelp>Pour traduire les nouvelles valeurs, aller dans la page d'<a href="admin">administration</a> section <a href="localization">internationalisation</a>.</localizationHelp>
@@ -1013,7 +651,7 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<metadata.admin.index.rebuildxlinks.desc>Vider le cache d'XLink et reconstruire l'index</metadata.admin.index.rebuildxlinks.desc>
 
 	<lucene.config.reload>Recharger la configuration Lucene</lucene.config.reload>
-	<reload js="true">Recharger</reload>
+	<reload>Recharger</reload>
 	<rebuildxlinks>Reconstruire</rebuildxlinks>
 	<doYouReallyWantToDoThis js="true">Cette opÃ©ration peut prendre du temps sur des catalogues volumineux. Il n'est pas recommandÃ© de la lancer lors des pÃ©riodes d'utilisation intense. Continuer ?</doYouReallyWantToDoThis>
 	<optimize>Optimiser</optimize>
@@ -1032,10 +670,9 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<metadataDeleted>MÃ©tadonnÃ©es supprimer avec l'ID:</metadataDeleted>
 	<metadataInsertResults>Rapport sur l'import de mÃ©tadonnÃ©es</metadataInsertResults>
 	<metadataJSForm>Metadata depuis le formulaire javascript</metadataJSForm>
-	<metadataRecordsAdded>Nombres de métadonnées insérées :</metadataRecordsAdded>
-	<failOnError>Arrêt en cas d'erreur</failOnError>
-	<metadataRecordsProcessed>Nombre de métadonnées traitées :</metadataRecordsProcessed>
-	<metadataRecordsAdded>Nombres de métadonnées insérées :</metadataRecordsAdded>
+	<failOnError>ArrÃªt en cas d'erreur</failOnError>
+	<metadataRecordsProcessed>Nombre de mÃ©tadonnÃ©es traitÃ©es :</metadataRecordsProcessed>
+	<metadataRecordsAdded>Nombres de mÃ©tadonnÃ©es insÃ©rÃ©es :</metadataRecordsAdded>
 	<min>Minimum</min>
 	<minor>Modification mineure</minor>
 	<missing>Vide ou manquant</missing>
@@ -1056,7 +693,7 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<noHelp>DÃ©solÃ©, pas d'aide disponible</noHelp>
 	<noInfo>DÃ©solÃ©, pas d'information disponible</noInfo>
 	<noLogin>Vous n'Ã©tes pas connectÃ©.</noLogin>
-	<none js="true">Aucun</none>
+	<none>Aucun</none>
 	<noOwnerRights>PrivilÃ¨ges/CatÃ©gories bloquÃ©s: vous n'avez pas ce privilÃ¨ge</noOwnerRights>
 	<northbc>CoordonnÃ©e nord de l'emprise</northbc>
 	<noSelectedMd>SÃ©lectionner au moins une mÃ©tadonnÃ©e avant d\'utiliser une action.</noSelectedMd>
@@ -1073,7 +710,7 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<outputType id="full">Complet</outputType>
 	<outputType id="text">Texte seulement</outputType>
 	<overwrite>Ecraser les mÃ©tadonnÃ©es de mÃªme identifiant</overwrite>
-	<overwriteFile>Ã?craser ?</overwriteFile>
+	<overwriteFile>Ã‰craser ?</overwriteFile>
 	<owner>Auteur</owner>
 	<ownerRights>Suppression/PrivilÃ¨ges/CatÃ©gories dÃ©bloquÃ©s: vous avez les droits</ownerRights>
 
@@ -1110,28 +747,6 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<progressChoice value="planned">prÃ©vu</progressChoice>
 	<progressChoice/>
 	<protocol>Protocol</protocol>
-<!-- Deleted on trunk -->
-    <protocolChoice show="y" value="WWW:LINK-1.0-http--link">Adresse Internet (URL)</protocolChoice>
-    <protocolChoice show="y" value="WWW:LINK-1.0-http--samples">Produit vitrine (URL)</protocolChoice>
-    <protocolChoice show="y" value="WWW:LINK-1.0-http--related">Adresse Internet associée (URL)</protocolChoice>
-    <protocolChoice show="y" value="WWW:LINK-1.0-http--partners">Site web partenaire (URL)</protocolChoice>
-    <protocolChoice show="y" value="WWW:LINK-1.0-http--rss">Fil RSS (URL)</protocolChoice>
-    <protocolChoice show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</protocolChoice>
-    <protocolChoice value="WWW:LINK-1.0-http--download">Adresse Internet pour téléchargement</protocolChoice>
-    <protocolChoice show="-" value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</protocolChoice>
-    <protocolChoice show="-" value="WWW:DOWNLOAD-1.0-ftp--download">Fichier à télécharger (FTP)</protocolChoice>
-    <protocolChoice value="OGC:WMS-http-get-map">OGC-WMS Web Map Service</protocolChoice>
-    <protocolChoice value="OGC:WFS-http-get-capabilities">OGC-WFS Web Feature Service</protocolChoice>
-    <protocolChoice value="OGC:WCS-http-get-capabilities">OGC-WCS Web Coverage Service</protocolChoice>
-    <protocolChoice value="OGC:WMTS-http-get-capabilities">OGC-WMTS Web Map Tile Service</protocolChoice>
-    <protocolChoice value="OGC:WMC-http-get-capabilities">OGC-WMC Web Map Context</protocolChoice>
-    <protocolChoice value="OGC:WMS-http-get-capabilities">OGC-WMS Capabilities Service</protocolChoice>
-    <protocolChoice value="CHTOPO:specialised-geoportal">Géoportail Spécialisé</protocolChoice>
-    <protocolChoice show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</protocolChoice>
-    <protocolChoice show="-" value="ESRI:AIMS--http--configuration">ArcIMS Map Service : Fichier de configuration (*.AXL)</protocolChoice>
-    <protocolChoice show="y" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</protocolChoice>
-    <protocolChoice show="-" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature MapService</protocolChoice>
-<!-- End deleted on trunk -->
 	<pubdate>Date de publication</pubdate>
 	<publicationDate>Date de diffusion</publicationDate>
 	<publisher>Diffuseur</publisher>
@@ -1150,7 +765,7 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<registrationDetails>Information sur l'inscription :</registrationDetails>
 	<remote>Recherche distante</remote>
 	<remoteType>Distant</remoteType>
-	<remove js="true">Supprimer</remove>
+	<remove>Supprimer</remove>
 	<res>rÃ©sultats</res>
 	<reset>RÃ©initialiser</reset>
 	<resetFeedbackForm>RÃ©initialiser</resetFeedbackForm>
@@ -1162,9 +777,9 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<searchResult>RÃ©sultats de recherche</searchResult>
 	<resources>Ressources</resources>
 	<visualizationService>URL du service de visualisation (WMS)</visualizationService>
-	<resultsCoordinate>Résultats correspondant aux critères de recherche géographiques</resultsCoordinate>
-	<resultsFreeText>Résultats de la recherche</resultsFreeText>
-	<resultsMatching js="true">Nombre de résultats : </resultsMatching>
+	<resultsCoordinate>RÃ©sultats correspondant aux critÃ¨res de recherche gÃ©ographiques</resultsCoordinate>
+	<resultsFreeText>RÃ©sultats de la recherche</resultsFreeText>
+	<resultsMatching>Nombre de rÃ©sultats : </resultsMatching>
 	<Reviewer>Relecteur</Reviewer>
 	<rss>Ouvrez flux RSS</rss>
 	<rtitle>Titre</rtitle>
@@ -1176,7 +791,7 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<printSelection>Imprimer au PDF</printSelection>
 	<schema>SchÃ©ma</schema>
 	<schematronError>Erreur Schematron</schematronError>
-	<search js="true">Rechercher</search>
+	<search>Rechercher</search>
 	<searchAllText>Partout</searchAllText>
 	<searchBox>Recherche de donnÃ©es et information</searchBox>
 	<searchIndex>Index de recherche</searchIndex>
@@ -1185,21 +800,21 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<searchPageDes>Aller Ã  la page de recherche</searchPageDes>
 	<searchTemplates>Rechercher les ModÃ¨les</searchTemplates>
 	<searchText>Recherche</searchText>
-	<searchUnused>Rechercher des métadonnées vides ou non utilisées</searchUnused>
-	<searchUnusedTitle>Métadonnées inutilisées</searchUnusedTitle>
-	<select>Sélectionner : </select>
-	<selectAll>Tout sélectionner</selectAll>
-	<selectAllNotPossible>Trop d'enregistrement ! Doit être inférieur à </selectAllNotPossible>
-	<selected js="true"> selectionné(s)</selected>
-	<selectedOnly>Afficher la sélection</selectedOnly>
-	<selection>Sélection</selection>
+	<searchUnused>Rechercher des mÃ©tadonnÃ©es vides ou non utilisÃ©es</searchUnused>
+	<searchUnusedTitle>MÃ©tadonnÃ©es inutilisÃ©es</searchUnusedTitle>
+	<select>SÃ©lectionner : </select>
+	<selectAll>Tout sÃ©lectionner</selectAll>
+	<selectAllNotPossible>Trop d'enregistrement ! Doit Ãªtre infÃ©rieur Ã  </selectAllNotPossible>
+	<selected> selectionnÃ©(s)</selected>
+	<selectedOnly>Afficher la sÃ©lection</selectedOnly>
+	<selection>SÃ©lection</selection>
 	<selectNone>Unselect metadata selected</selectNone>
 	<server>Serveur</server>
 	<setAll>Tous</setAll>
 	<setOnSave>Valeur dÃ©finie lors de la sauvegarde</setOnSave>
 	<shibLogin>Shib Login</shibLogin>
-	<show js="true">Métadonnées</show>
-	<showFileDownloadSummary>Télécharger des fichiers ...</showFileDownloadSummary>
+	<show>MÃ©tadonnÃ©es</show>
+	<showFileDownloadSummary>TÃ©lÃ©charger des fichiers ...</showFileDownloadSummary>
 	<simple>Recherche simple</simple>
 	<simpleTab>Vue par dÃ©faut</simpleTab>
 	<simpleTabEditor>Editeur par dÃ©faut</simpleTabEditor>
@@ -1209,9 +824,10 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<sizeBytes>Size (bytes)</sizeBytes>
 
 	<sort>Trier</sort>
-	<sortBy js="true">Trier par</sortBy>
-	<sortByType id="changeDate">Mise à jour des métadonnées</sortByType>
-	<sortByType id="popularity">Popularité</sortByType>
+	<sortBy>Trier par</sortBy>
+	<sortByType id="changeDate">Date de mise Ã  jour</sortByType>
+	<sortByType id="popularity">PopularitÃ©</sortByType>
+	<sortByType id="rating">Note</sortByType>
 	<sortByType id="relevance">Pertinence</sortByType>
 	<sortByType id="title">Titre</sortByType>
 
@@ -1227,11 +843,11 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<subtemplateTitle>Titre du sous modÃ¨le</subtemplateTitle>
 	<summaryTab>RÃ©sumÃ©</summaryTab>
 	<surName>Nom</surName>
-	<systemConfig>Configuration du système</systemConfig>
-	<systemConfigDes>Permet de modifier quelques paramètres systèmes</systemConfigDes>
-	<systemInfo>Information système</systemInfo>
-	<systemInfoDes>Consultation des informations sur le catalogue, l'index, Java, le système d'exploitation</systemInfoDes>
-	<template js="true">Modèle</template>
+	<systemConfig>Configuration du systÃ¨me</systemConfig>
+	<systemConfigDes>Permet de modifier quelques paramÃ¨tres systÃ¨mes</systemConfigDes>
+	<systemInfo>Information systÃ¨me</systemInfo>
+	<systemInfoDes>Consultation des informations sur le catalogue, l'index, Java, le systÃ¨me d'exploitation</systemInfoDes>
+	<template>ModÃ¨le</template>
 	<Term>Terme</Term>
 	<thanks>Merci</thanks>
 	<theme>Sujet ISO</theme>
@@ -1241,22 +857,15 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<timeoutChoice value="10">10 secondes</timeoutChoice>
 	<timeoutChoice value="20">20 secondes</timeoutChoice>
 	<timeoutChoice value="30">30 secondes</timeoutChoice>
-	<title>geocat.ch – Le catalogue géographique suisse</title>
-	<to js="true">Fin</to>
+	<title>GeoNetwork - Portail pour l'information gÃ©o-spatiale</title>
+	<to>Fin</to>
 	<toDateSelector>Select TO date</toDateSelector>
 	<tools>Outils</tools>
 	<topic>Sujet</topic>
-    <metadataschemaValidate>Validation</metadataschemaValidate>
-    <metadataschemaValidateDes>Configure what rules are applied for each schema metadata. If no rule defined for a schema, it will be applied always.</metadataschemaValidateDes>
-    <xpathlabel>xPath</xpathlabel>
-    <xpathvalue>Value</xpathvalue>
-    <xpathrequired>Required</xpathrequired>
-    <xpathschematron>Schematron</xpathschematron>
-    <xpathconfirm>Are you sure you want to remove this criteria?</xpathconfirm>
 
 	<transferOwnership>Transfert de privilÃ¨ges</transferOwnership>
 	<transferOwnershipDes>Transfert des privilÃ¨ges de mÃ©tadonnÃ©es pour un autre utilisateur</transferOwnershipDes>
-	<type js="true">Type</type>
+	<type>Type</type>
 	<up>Monter</up>
 	<update>Mettre Ã  jour</update>
 	<updateCategories>Mettre Ã  jour les catÃ©gories</updateCategories>
@@ -1278,7 +887,7 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<userPw>Modifier le mot de passe</userPw>
 	<userPwDes>Autoriser l'utilisateur en cours de changer le mot de passe</userPwDes>
 	<uuidAction>Actions Ã  l'import :</uuidAction>
-	<validate js='true'>Valider</validate>
+	<validate>Valider</validate>
 	<assign>Affecter Ã  ce catalogue</assign>
 	<validityBegins>Date de dÃ©but de validitÃ©</validityBegins>
 	<validityEnds> et fin </validityEnds>
@@ -1286,11 +895,11 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<viewInGE>Google Earth</viewInGE>
 	<waitGetCap js="true">Chargement en cours ...</waitGetCap>
 	<westbc>CoordonnÃ©e ouest de l'emprise</westbc>
-	<what js="true">Quoi ?</what>
-	<when js="true">Quand ?</when>
-	<where js="true">Où ?</where>
-	<winInfo1>Cette fenêtre montre les ressources de GeoNetwork.</winInfo1>
-	<winInfo2>L'icône Besoin d'aide (?) vous donne accès à l'aide.</winInfo2>
+	<what>Quoi ?</what>
+	<when>Quand ?</when>
+	<where>OÃ¹ ?</where>
+	<winInfo1>Cette fenÃªtre montre les ressources de GeoNetwork.</winInfo1>
+	<winInfo2>L'icÃ´ne Besoin d'aide (?) vous donne accÃ¨s Ã  l'aide.</winInfo2>
 	<wwwlink>Liens Internet</wwwlink>
 	<xmlInsert>Importer des fichiers de mÃ©tadonnÃ©es (format XML ou MEF)</xmlInsert>
 	<xmlInsertTitle>Import de mÃ©tadonnÃ©es</xmlInsertTitle>
@@ -1453,7 +1062,7 @@ La liste des changements d'Ã©tat sont accessibles ici :
 		</metadata>
 	</inspireSection>
 	<inspireAddConformity>Ajouter une section conformitÃ© INSPIRE</inspireAddConformity>    
-	<xsdError>Erreur de validation XSD</xsdError>
+	<xsdError>Erreur </xsdError>
 	<yourRegistration js="true">CrÃ©ation du compte ...</yourRegistration>
 	<zip>Code postal</zip>
 
@@ -1532,7 +1141,6 @@ La liste des changements d'Ã©tat sont accessibles ici :
 		<iso19139>TÃ©lÃ©charger les mÃ©tadonnÃ©es au format ISO19115/19139</iso19139>
 		<iso19139fra>TÃ©lÃ©charger les mÃ©tadonnÃ©es au format ISO19115/19139 profil France</iso19139fra>
 	</savexml>
-  <url>URL</url>
 	<thesaurus>
 		<load>Installer un thÃ©saurus Ã  partir du dÃ©pÃ´t GeoNetwork disponible en ligne</load>    
 		<addelement>Ajouter un Ã©lÃ©ment</addelement>
@@ -1616,8 +1224,8 @@ La liste des changements d'Ã©tat sont accessibles ici :
                 <value id="subscriptionService">Subscription service</value>
             </group>
 
-            <group label="Geographic processing services â?? spatial">
-                <value id="spatialProcessingService">Geographic processing services â?? spatial</value>
+            <group label="Geographic processing services â€“ spatial">
+                <value id="spatialProcessingService">Geographic processing services â€“ spatial</value>
                 <value id="spatialCoordinateConversionService">Coordinate conversion service </value>
                 <value id="spatialCoordinateTransformationService">Coordinate transformation service </value>
                 <value id="spatialCoverageVectorConversionService">Coverage/vector conversion service </value>
@@ -1638,8 +1246,8 @@ La liste des changements d'Ã©tat sont accessibles ici :
                 <value id="spatialProximityAnalysisService">Proximity analysis service</value>
             </group>
 
-            <group label="Geographic processing services â?? thematic">
-                <value id="thematicProcessingService">Geographic processing services â?? thematic</value>
+            <group label="Geographic processing services â€“ thematic">
+                <value id="thematicProcessingService">Geographic processing services â€“ thematic</value>
                 <value id="thematicGoparameterCalculationService">Geoparameter calculation service</value>
                 <value id="thematicClassificationService">Thematic classification service</value>
                 <value id="thematicFeatureGeneralizationService">Feature generalisation service</value>
@@ -1658,16 +1266,16 @@ La liste des changements d'Ã©tat sont accessibles ici :
                 <value id="thematicGeocodingService">Geocoding service</value>
             </group>
 
-             <group label="Geographic processing services â?? temporal">
-                <value id="temporalProcessingService">Geographic processing services â?? temporal</value>
+             <group label="Geographic processing services â€“ temporal">
+                <value id="temporalProcessingService">Geographic processing services â€“ temporal</value>
                 <value id="temporalReferenceSystemTransformationService"> Temporal reference system transformation service</value>
                 <value id="temporalSubsettingService">Subsetting service</value>
                 <value id="temporalSamplingService">Sampling service</value>
                 <value id="temporalProximityAnalysisService">Temporal proximity analysis service</value>
             </group>
 
-            <group label="Geographic processing services â?? metadata">
-                <value id="metadataProcessingService">Geographic processing services â?? metadata</value>
+            <group label="Geographic processing services â€“ metadata">
+                <value id="metadataProcessingService">Geographic processing services â€“ metadata</value>
                 <value id="metadataStatisticalCalculationService">Statistical calculation service</value>
                 <value id="metadataGeographicAnnotationService">Geographic annotation services</value>
             </group>
@@ -1728,7 +1336,7 @@ La liste des changements d'Ã©tat sont accessibles ici :
             <theme id="inspire_EnvironmentalMonitoringFacilities">Installations de suivi environnemental</theme>
             <theme id="inspire_ProductionAndIndustrialFacilities">Lieux de production et sites industriels</theme>
             <theme id="inspire_AgriculturalAndAquacultureFacilities">Installations agricoles et aquacoles</theme>
-            <theme id="inspire_PopulationDistribution-Demography">RÃ©partition de la population â?? dÃ©mographie</theme>
+            <theme id="inspire_PopulationDistribution-Demography">RÃ©partition de la population â€” dÃ©mographie</theme>
             <theme id="inspire_AreaManagementRestrictionRegulationZonesAndReportingUnits">Zones de gestion, de restriction ou de rÃ©glementation et unitÃ©s de dÃ©claration</theme>
             <theme id="inspire_NaturalRiskZones">Zones Ã  risque naturel</theme>
             <theme id="inspire_AtmosphericConditions">Conditions atmosphÃ©riques</theme>
@@ -1754,7 +1362,6 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<mapViewer>Visualiseur</mapViewer>
 
 	<uuid>Identifiant unique</uuid>    
-    <mymetadata>Mes métadonnées</mymetadata>
 	<quickSearch>Recherches rapides</quickSearch>
 	<mymetadata>Mes mÃ©tadonnÃ©es</mymetadata>
 	<catalogueRecords>MÃ©tadonnÃ©es du catalogue</catalogueRecords>
@@ -1763,7 +1370,6 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<addremove>Ajouter / Supprimer</addremove>
 	<enabled>ActivÃ©</enabled>
 	<notifications>Notification de n&#339;uds distants</notifications>
-    <url>URL</url>    
 
 	<cswServer>Configuration CSW</cswServer>
 	<cswServerDes>Configuration du serveur CSW</cswServerDes>
@@ -1798,7 +1404,7 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<virtualcswTitle>Titre</virtualcswTitle>
 	<virtualcswAbstract>RÃ©sumÃ©</virtualcswAbstract>
 	<virtualcswKeywords>Mot-clÃ©</virtualcswKeywords>
-	<virtualcswDenominator>Ã?chelle</virtualcswDenominator>
+	<virtualcswDenominator>Ã‰chelle</virtualcswDenominator>
 	<virtualcswCatalog>Catalogue</virtualcswCatalog>
 	<virtualcswGroup>Groupe</virtualcswGroup>
 	<virtualcswCategory>CatÃ©gorie</virtualcswCategory>
@@ -1817,15 +1423,13 @@ La liste des changements d'Ã©tat sont accessibles ici :
 	<concealed>Concealed</concealed>
 	<serviceNotAllowed>You do not have the correct permissions to access the following service {1}</serviceNotAllowed>
 
-    <advancedOptions.show>Recherche avancée</advancedOptions.show>
-    <advancedOptions.hide>Recherche simple</advancedOptions.hide>
-	<latestDatasets>Nouveautés</latestDatasets>
+	<advancedOptions.show>plus de critÃ¨res</advancedOptions.show>
+	<advancedOptions.hide>moins de critÃ¨res</advancedOptions.hide>
+	<latestDatasets>NouveautÃ©s</latestDatasets>
 	<popularDatasets>Populaire</popularDatasets>
 	<filter>Filtrer</filter>
 	<welcome.text></welcome.text>
 	<tag_label>Tags</tag_label>
 	<map_label>Carte</map_label>
     <unknown>Unknown</unknown>
-
-    <deleteRow>Supprimer la ligne</deleteRow>
 </strings>

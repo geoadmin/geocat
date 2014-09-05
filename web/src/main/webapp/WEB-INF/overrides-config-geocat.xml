@@ -13,6 +13,7 @@
     </properties>
     <spring>
         <import file="/WEB-INF/config-db/postgres.xml"/>
+        <import file="/WEB-INF/config-spring-geocat.xml"/>
     </spring>
     <file name=".*/WEB-INF/config.xml">
         <replaceText xpath="default/language">eng</replaceText>
