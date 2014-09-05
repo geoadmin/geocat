@@ -1,0 +1,335 @@
+<strings>
+    <metadataValidationConfiguration>Metadata Validation</metadataValidationConfiguration>
+    <metadataValidationConfigurationDesc>Configure Metadata Validation</metadataValidationConfigurationDesc>
+    <noTitle>No Title</noTitle>
+    <isDescriptionOf js="true">Description</isDescriptionOf>
+    <largerWorkCitation js="true">Larger Work Citation</largerWorkCitation>
+    <isTemporalStatOf js="true">Temporal State</isTemporalStatOf>
+    <createNewSharedObject js="true">Edit %objtype%</createNewSharedObject>
+    <noRecords js='true'>Aucun enregistrement trouvé</noRecords>
+    <edit js='true'>Edition</edit>
+    <searchView js='true'>Recherche</searchView>
+    <actions js='true'>Actions</actions>
+    <contacts js='true'>Contacts</contacts>
+    <SharedObjects js='true'>Objets réutilisables</SharedObjects>
+    <actions js='true'>Actions</actions>
+    <reusable_confirmValidate js="true">Confirmer la validation</reusable_confirmValidate>
+    <reusable_confirmDelete js="true">Confirmer la suppression</reusable_confirmDelete>
+    <reusable_confirmDeleteMsg js="true">Etes-vous sûr de vouloir supprimer les objets sélectionnés?</reusable_confirmDeleteMsg>
+    <reusable_confirmValidateMsg js="true">Etes-vous sûr de vouloir valider les objets sélectionnés?</reusable_confirmValidateMsg>
+    <reusable_validated js="true">validé</reusable_validated>
+    <reusable_nonValidated js="true">non validé</reusable_nonValidated>
+    <reusable_nonValidTitle js="true">Gérer les objets réutilisables</reusable_nonValidTitle>
+    <reusable_nonValidDesc js="true">Valider/rejeter les objets réutilisables</reusable_nonValidDesc>
+    <reusable_rejectTitle js="true">Message de rejet</reusable_rejectTitle>
+    <reusable_rejectDefaultMsg js="true">Choisissez un autre objet réutilisable...</reusable_rejectDefaultMsg>
+    <archived>Archived</archived>
+    <performingOperation js="true">Performing Operation.  Please wait...</performingOperation>
+    <description js="true">Description</description>
+    <metadataschemaValidate>Validation</metadataschemaValidate>
+    <metadataschemaValidateDes>Configure what rules are applied for each schema metadata. If no rule defined for a schema, it will be applied always.</metadataschemaValidateDes>
+    <xpathlabel>xPath</xpathlabel>
+    <xpathvalue>Value</xpathvalue>
+    <xpathrequired>Required</xpathrequired>
+    <xpathschematron>Schematron</xpathschematron>
+    <xpathconfirm>Are you sure you want to remove this criteria?</xpathconfirm>
+    <schematronRequiredConfirmToggle>Are you sure you want to toggle the mandatory property of this schematron rules?</schematronRequiredConfirmToggle>
+    <schematronMandatoryDes>Indicates if the schematron is mandatory or optional. Click to toggle.</schematronMandatoryDes>
+
+    <local._none_.non_validated>geocat.ch Thesaurus (non validié)</local._none_.non_validated>
+    <local._none_.geocat.ch>geocat.ch Thesaurus</local._none_.geocat.ch>
+    <external.theme.gemet-theme>GEMET themes</external.theme.gemet-theme>
+    <external.theme.inspire-theme>GEMET - INSPIRE themes, version 1.0</external.theme.inspire-theme>
+    <external._none_.gemet>GEMET concepts</external._none_.gemet>
+    <downloadBackup>Télécharger le fichier de back-up</downloadBackup>
+    <downloadBackupDesc>Télécharger le fichier de back-up de l'ensemble des métadonnées du catalogue</downloadBackupDesc>
+    <ContactSelectionTitle js="true">Sélection du contacte</ContactSelectionTitle>
+    <FormatSelectionTitle js="true">Sélection du format</FormatSelectionTitle>
+    <ExtentSelectionTitle js="true">Sélection de l’étendue</ExtentSelectionTitle>
+    <refine.titles js="true">Titre</refine.titles>
+    <refine.keyword js="true">Mot-clé</refine.keyword>
+    <refine.resolution js="true">Résolution spatiale</refine.resolution>
+    <refine.category js="true">Thématique</refine.category>
+    <refine.spatialRepresentation js="true">Représentation spatiale</refine.spatialRepresentation>
+    <refine.organisationName js="true">Organisation</refine.organisationName>
+    <refine.serviceType js="true">Type de service</refine.serviceType>
+    <refine.type js="true">Type</refine.type>
+    <skipPrivilegesImport>Ignorer l'import des privilèges</skipPrivilegesImport>
+    <unpublishReport>Rapport CSV de dépublication</unpublishReport>
+    <unpublishReportDes>Télécharger le rapport CSV des métadonnées (dé-)publiées ces dernières semaines</unpublishReportDes>
+    <unpublish_invalid_metadata_desc>Valider toutes les métadonnées locales et dépublier les non-valides</unpublish_invalid_metadata_desc>
+
+    <duplicate>Dupliquer</duplicate>
+    <geocatNext js="true">Suivante</geocatNext>
+    <geocatPrevious js="true">Précédente</geocatPrevious>
+    <nav>
+        <home>Page d'accueil</home>
+        <overview>Vue d'ensemble</overview>
+        <news>Actualités</news>
+        <metasearch>Catalogue</metasearch>
+        <metainput>Gestion de métadonnées</metainput>
+        <doc>Documentation</doc>
+        <about>Autour de geocat</about>
+    </nav>
+    <replaceSharedObjects js="true">Remplacer par des objets réutilisables</replaceSharedObjects>
+    <spatialRepresentation js="true">Représentation spatiale</spatialRepresentation>
+    <selectedElementsAction js="true">Actions sur la sélection</selectedElementsAction>
+    <resolution js="true">Résolution spatiale</resolution>
+    <mainpageTitle js="true">Recherche de géodonnées et géoservices</mainpageTitle>
+    <refinements js="true">Affinage</refinements>
+    <refineSearch.title js="true">Précisez votre recherche</refineSearch.title>
+    <keyword js="true">Mot-clé</keyword>
+    <theme js="true">Sujet ISO</theme>
+    <contact js="true">Nom de famille</contact>
+    <rtitle js="true">Titre</rtitle>
+    <organisationName js="true">Organisation</organisationName>
+    <kantone js="true">Canton(s)</kantone>
+    <theme js="true">Thématique</theme>
+    <formatTxt js="true">Format</formatTxt>
+    <toEdit js="true">A éditer</toEdit>
+    <toPublish js="true">A publier</toPublish>
+    <bbox js="true">BBOX</bbox>
+    <wherenone js="true">Partout</wherenone>
+    <adminUnit js="true">Unité administrative</adminUnit>
+    <drawOnMap js="true">Dessiner sur la carte</drawOnMap>
+    <startNewPolygon js="true">Dessiner un nouveau polygone</startNewPolygon>
+    <startNewPolygonHelp js="true">Dessiner un polygone (Double clique pour terminer)</startNewPolygonHelp>
+    <valid js="true">Valide</valid>
+    <yes js="true">Oui</yes>
+    <no js="true">Non</no>
+    <intersectGeo js="true">au moins partiellement à l\'intérieur</intersectGeo>
+    <withinGeo js="true">complètement à l\'intérieur ou égal</withinGeo>
+    <containsGeo js="true">comprend au moins</containsGeo>
+    <layerTree js="true">Arbre des couches</layerTree>
+    <nothingFound js="true">Pas de résultat</nothingFound>
+    <source js="true">Provenance?</source>
+    <catalog js="true">Catalogue(s)</catalog>
+    <dataType id="dataset">Données</dataType>
+    <dataType id="basicgeodata">Geodonnées de base</dataType>
+    <dataType id="basicgeodata-federal"> + Geodonnées de base - fédérales</dataType>
+    <dataType id="basicgeodata-cantonal"> + Geodonnées de base - cantonales</dataType>
+    <dataType id="basicgeodata-communal"> + Geodonnées de base - communales</dataType>
+    <dataType id="basicgeodata-other"> + Geodonnées de base - autres</dataType>
+    <dataType id="service">Services</dataType>
+    <dataType id="service-OGC:WMS"> + Services WMS</dataType>
+    <dataType id="service-OGC:WFS"> + Services WFS</dataType>
+    <extended js="true">Recherche avancée</extended>
+    <hideAdvancedOptions js="true">Recherche simple</hideAdvancedOptions>
+    <highlights js="true">Epinglés</highlights>
+    <hitsPerPage js="true">Résultats par page</hitsPerPage>
+    <hitsPerPageChoice value="10">10</hitsPerPageChoice>
+    <hitsPerPageChoice value="20">20</hitsPerPageChoice>
+    <hitsPerPageChoice value="50">50</hitsPerPageChoice>
+    <hitsPerPageChoice value="100">100</hitsPerPageChoice>
+    <metadata.expired>
+        <recipient>Email du bénéficiaire</recipient>
+        <numExpiredElements>Nombre de dossiers trop vieux</numExpiredElements>
+        <owner>propriétaire</owner>
+        <formTitle>Recherche les métadonnées non mises à jour</formTitle>
+        <limit>Limite de dernière modification :</limit>
+        <email>Alerte email</email>
+        <unpublish>Dépublier</unpublish>
+        <email.desc>Envoyer un email aux auteurs qui n'ont pas modifiée leurs métadonnées depuis la date limite</email.desc>
+        <unpublish.desc>Dépublier les métadonnées qui n'ont pas été modifiée depuis la date limite</unpublish.desc>
+        <email.action>Email</email.action>
+        <unpublish.action>Dépublier</unpublish.action>
+        <unsentNotifications>email non envoyé : information manquante</unsentNotifications>
+        <sentNotifications>Notification envoyée à l'auteur</sentNotifications>
+        <unpublished>dépublié</unpublished>
+    </metadata.expired>
+    <monitoring>Rapport du Monitoring</monitoring>
+    <monitoringDes>Rapport du Monitoring du statut des services de GeoNetwork</monitoringDes>
+    <monitoring.service.db>Connection Base de données</monitoring.service.db>
+    <monitoring.service.csw>Service CSW</monitoring.service.csw>
+    <monitoring.service.csw.capabilities>Capabilities</monitoring.service.csw.capabilities>
+    <monitoring.service.csw.getrecords>GetRecords</monitoring.service.csw.getrecords>
+    <monitoring.service.print>Service d'impression</monitoring.service.print>
+    <monitoring.service.index>Service d'index</monitoring.service.index>
+    <monitoring.url>URL</monitoring.url>
+    <monitoring.status>Statut</monitoring.status>
+    <monitoring.error.code>Code de l'erreur</monitoring.error.code>
+    <monitoring.error.description>Description de l'erreur</monitoring.error.description>
+    <monitoring.responsetime>Temps de réponse</monitoring.responsetime>
+    <monitoring.metadatarecords>Entrées de métadonnées</monitoring.metadatarecords>
+    <monitoring.connectionsuccess>Connection établie</monitoring.connectionsuccess>
+    <monitoring.connectionerror>Erreur</monitoring.connectionerror>
+    <monitoring.enabled>Activé</monitoring.enabled>
+    <monitoring.disabled>Desactivé</monitoring.disabled>
+    <monitoring.refresh>Actualiser</monitoring.refresh>
+    <monitoring.indexing>Indexation</monitoring.indexing>
+    <monitoring.idle>Idle</monitoring.idle>
+    <monitoring.service.disk>Monitor du disque</monitoring.service.disk>
+    <monitoring.freespace>Espace libre</monitoring.freespace>
+
+    <reject js='true'>Refuser</reject>
+    <rejected>rejeté</rejected>
+    <replaceSharedObjects>Remplacer par des objets réutilisables</replaceSharedObjects>
+    <format>
+        <management>Gestion des formats de distribution</management>
+        <manDes>Ajouter/modifier/supprimer des formats de distribution</manDes>
+    </format>
+    <formats js='true'>Formats</formats>
+    <extents js='true'>Etendues</extents>
+    <deleted js='true'>Supprimé</deleted>
+    <insufficient.privileges.import.replace>Une métadonnée avec le même identifiant existe déjà. Vos privilèges ne suffisent pas pour la remplacer.</insufficient.privileges.import.replace>
+    <updateDatasetTitle>Mettre à jour une MDD</updateDatasetTitle>
+    <updateDatasetMsg>Il faut cocher \'Mettre à jour une MDD\' pour ajouter une section "ressource online" si on n\'a pas droit d\'édition sur la MDS</updateDatasetMsg>
+    <deletedSharedObject>
+        <msg>Mail envoyé automatiquement.
+            Des objets réutilisables que vous utilisez dans vos métadonnées ont été rejetés. Vous trouverez ci-contre la liste des métadonnées concernées et la raison du rejet. Nous vous prions de bien vouloir adapter ces métadonnées et de les republier. N&apos;hésitez pas à prendre contact avec nous en cas de questions: geocat@swisstopo.ch
+        </msg>
+        <subject>Objet réutilisable rejeté</subject>
+    </deletedSharedObject>
+    <Shared>Objet réutilisable</Shared>
+    <extents>
+        <deselectAll>Tout déselectionner</deselectAll>
+        <selectAll>Tout selectionner</selectAll>
+        <management>Gérer les étendues</management>
+        <confirmDelete>Etes-vous sur de vouloir suprimmer les étendues sélectionnées</confirmDelete>
+        <manDes>Gestion des objets géographiques</manDes>
+    </extents>
+    <page>Page</page>
+
+    <streetname>Nom de rue</streetname>
+    <streetnumber>N°</streetnumber>
+    <postbox>Case postale</postbox>
+    <userdetails>User details</userdetails>
+    <facsimile>Fax</facsimile>
+    <phone>Téléphone</phone>
+    <orgacronym>Abbréviation de l'organisation</orgacronym>
+    <positionname>Position</positionname>
+    <directnumber>Numéro direct</directnumber>
+    <mobile>Mobile</mobile>
+    <onlineresource>Site Web</onlineresource>
+    <desc>Description</desc>
+    <hoursofservice>Heures de service</hoursofservice>
+    <contactinstructions>Instructions pour le contact</contactinstructions>
+    <mostPopular>Les plus populaires</mostPopular>
+
+    <popXlink.about js="true">Rechercher un objet existant ou utiliser le bouton 'Nouveau' si vous n'en trouvez pas.</popXlink.about>
+    <popXlink.contact.search js="true">Rechercher dans la liste de valeur un contact</popXlink.contact.search>
+    <popXlink.contact.role js="true">Renseigner le rôle de ce contact</popXlink.contact.role>
+    <popXlink.add.action.tooltip js="true">Ajouter l’élément sélectionné dans le document de métadonnées</popXlink.add.action.tooltip>
+    <popXlink.create.action.tooltip js="true">Proposer un nouvel élément, si l’élément recherché n’est pas trouvé</popXlink.create.action.tooltip>
+    <popXlink.extent.search js="true">Rechercher une étendue dans la liste</popXlink.extent.search>
+    <popXlink.format.search js="true">Recherche d’un format dans la liste</popXlink.format.search>
+    <extentBbox js="true">BBOX seulement</extentBbox>
+    <extentPolygon js="true">Polygone seulement</extentPolygon>
+    <extentBboxAndPolygon js="true">Polygone et BBOX</extentBboxAndPolygon>
+    <boolean value="1" context="">Vrai</boolean>
+    <boolean value="0" context="">Faux</boolean>
+    <boolean value="1" context="gmd:extentTypeCode">Inclusion</boolean>
+    <boolean value="0" context="gmd:extentTypeCode">Exclusion</boolean>
+    <boolean value="true" context="gmd:extentTypeCode">Inclusion</boolean>
+    <boolean value="false" context="gmd:extentTypeCode">Exclusion</boolean>
+    <extentTypeCode js="true">Autorité Code</extentTypeCode>
+    <inclusion js="true">Inclusion</inclusion>
+    <exclusion js="true">Exclusion</exclusion>
+    <xlink.new js="true">Nouveau</xlink.new>
+    <xlink.newGeographic js="true">Nouvelle étendue géographique</xlink.newGeographic>
+    <noXlink js="true">Elément choisi non valide.</noXlink>
+
+    <displayValidationReport>Rapport de validation</displayValidationReport>
+    <publishOnlyIfAdminOrValid>Une métadonnée peut être publiée si elle est valide ISO ou si vous êtes un administrateur.</publishOnlyIfAdminOrValid>
+    <xsdValid>Valide XSD</xsdValid>
+    <isoValid>Valide ISO</isoValid>
+    <gm03Valid>Valide GM03</gm03Valid>
+    <inspireValid>Valide INSPIRE</inspireValid>
+
+    <validmd>
+        <xsd>Valide XSD</xsd>
+        <schematron-rules-iso>Valide ISO</schematron-rules-iso>
+        <schematron-rules-iso-che>Valide GM03</schematron-rules-iso-che>
+        <schematron-rules-inspire>Valide INSPIRE</schematron-rules-inspire>
+    </validmd>
+
+    <xsl.admin>Feuilles de style pour la présentation des métadonnées</xsl.admin>
+    <xsl.admin.des>Feuilles de style (XSL) personalisées pour l'affichage des métadonnées en HTML</xsl.admin.des>
+    <toggleVisibilityEdit>Activer la gestion de la visibilité des informations</toggleVisibilityEdit>
+    <addLayerConfirmTitle js="true">Ajout d'une nouvelle couche WMS</addLayerConfirmTitle>
+    <addLayerConfirmText js="true">Voulez-vous supprimer les couches déjà ajoutées à la carte ?</addLayerConfirmText>
+    <other js="true">- Autre -</other>
+    <ajaxRequestFailed mode="js">Echec lors de la recherche</ajaxRequestFailed>
+    <searchElements mode="js">Rechercher un élément</searchElements>
+    <viewCapabilities>Consulter le document GetCapabilities</viewCapabilities>
+    <viewCapabilitiesHelp>Le fichier GetCapabilities contient les noms des couches diffusées par le service. Saisir ici le nom d'une couche (ie. layername).</viewCapabilitiesHelp>
+    <noCapabilities>URL du service invalide</noCapabilities>
+    <createAssoServiceHelp>
+        <ul>
+            <li class="arrow">Utiliser le formulaire de recherche pour trouver des métadonnées de services</li>
+            <li class="arrow">
+                En sélectionnant une ou plusieurs métadonnées de service, vous allez ajouter une référence (ie. les éléments operatesOn et coupledResource) vers la métadonnée de données en cours d'édition fonction de vos privilèges.
+            </li>
+            <li class="arrow">
+                Saisir le nom de la couche tel que définit dans le service OGC (eg. layername du document GetCapabilities)
+            </li>
+            <li class="arrow">
+                Pour ajouter une section ressource en ligne ou si vous n'avez pas les privilèges de mise à jour des métadonnées
+                de service, vous pouvez cocher l'option mise à jour de la métadonnée de donnée.
+            </li>
+        </ul>
+    </createAssoServiceHelp>
+    <standardValid>Valide ISO et GM03</standardValid>
+    <scopedName>Nom de la couche</scopedName>
+    <boxSelectEmptyText>Saisissez un texte ou pressez la flèche vers le bas</boxSelectEmptyText>
+    <legislationInformation>Information sur la législation</legislationInformation>
+    <months>mois</months>
+    <searchBoxLegend>Rechercher des métadonnées</searchBoxLegend>
+    <codelistManager>Gestion des listes de valeurs</codelistManager>
+    <completeTabPrint>Vue print</completeTabPrint>
+    <confirmMassiveDelete>Confirmer la suppression</confirmMassiveDelete>
+    <creation>Création</creation>
+    <datasets>Données</datasets>
+    <elementAdd>Ajouter un élément</elementAdd>
+    <elementDel>Supprimer</elementDel>
+    <elementDown>Descendre</elementDown>
+    <elementMandatory>Obligatoire</elementMandatory>
+    <elementSch>Condition</elementSch>
+    <elementUp>Monter</elementUp>
+    <elementVisAll>Visible à tous</elementVisAll>
+    <elementVisibility>Visibilité des éléments (disponible dans la Vue ISO)</elementVisibility>
+    <elementVisIntra>Uniquement pour le groupe</elementVisIntra>
+    <elementVisNo>Invisible</elementVisNo>
+    <elementXLink>Ajouter des valeurs prédéfinies</elementXLink>
+    <emailAddress>Email</emailAddress>
+    <generateUUID><span>Générer un <a href="http://fr.wikipedia.org/wiki/Universal_Unique_Identifier">UUID (Universally Unique Identifier)</a></span></generateUUID>
+    <deleteGroup.confirm>Effacer le groupe?</deleteGroup.confirm>
+    <deleteGroup.deleteUsers.confirm>Effacer le groupe, mais garder les utilisateurs (Annuler efface le groupe ET les utilisateurs)?</deleteGroup.deleteUsers.confirm>
+    <interMapInfo><a target="_blank" class="sm" href="http://www.opengeospatial.org">Open GeoSpatial®
+        Consortium</a><a target="_blank" class="sm" href="http://www.esri.com">ESRI®
+        ArcIMS</a></interMapInfo>
+    <languageIso3>fra</languageIso3>
+    <mainpage1><ul>
+        <li>Améliorer l'accès et l'usage des informations et données spatiales</li>
+        <li>Aider les processus de prise de décision</li>
+        <li>Favoriser l'approche multidisciplinaire nécessaire au développement durable</li>
+        <li>Améliorer la compréhension des apports de l'information géographique</li>
+    </ul></mainpage1>
+    <mainMetadataLanguageNotSet>(Langue des métadonnées non définie)</mainMetadataLanguageNotSet>
+    <massiveActions>Actions</massiveActions>
+    <mef2File>Fichier MEF v2</mef2File>
+    <organizationName>Organisation</organizationName>
+    <parent>Consulter la fiche du parent</parent>
+    <publicaccess>Autoriser l'utilisation de cet utilisateur dans les métadonnées</publicaccess>
+    <searchIn>Recherche dans :</searchIn>
+    <services>Services</services>
+    <serviceType>Type de service</serviceType>
+    <showPdf>Fiche complète</showPdf>
+    <sort>Trier</sort>
+    <stat.requestParamsLink>le lien entre requetes et paramètres se fait par le champs requestId</stat.requestParamsLink>
+    <titles>Titres</titles>
+    <users>Utilisateurs</users>
+    <version>Version</version>
+    <website>Website</website>
+    <xlink>Recherche</xlink>
+    <emailPDF>Envoyer un PDF</emailPDF>
+    <emailFrom>Expéditeur</emailFrom>
+    <emailTo>Destinataire</emailTo>
+    <subject>Sujet</subject>
+    <emailSent>E-Mail envoyé!</emailSent>
+    <replaceDuplicates>Doublons</replaceDuplicates>
+    <permlink mode="js">Lien permanent</permlink>
+    <rm>Romanche</rm>
+    <fra>Français</fra> <!-- Do not translate! -->
+    <deu>Deutsch</deu> <!-- Do not translate! -->
+</strings>

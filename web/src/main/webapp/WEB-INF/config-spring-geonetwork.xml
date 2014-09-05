@@ -49,13 +49,6 @@
         <value>ger</value>
         <value>ita</value>
     </util:set>
-	<bean id="RegionsDAO" class="org.fao.geonet.geocat.services.region.geocat.GeocatRegionsDAO">
-		<property name="cacheAllRegionsInMemory" value="false"/>
-	</bean>
-	<bean id="MetadataRegionsDAO" class="org.fao.geonet.services.region.MetadataRegionDAO">
-		<property name="cacheAllRegionsInMemory" value="false"/>
-	</bean>
-
 
     <util:map id="jpaPropertyMap">
         <entry key="shared-cache-mode" value="ENABLE_SELECTIVE"/>
