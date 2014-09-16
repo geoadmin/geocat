@@ -233,6 +233,7 @@
         'http://geonetwork-opensource.org/regions%23country',
     regionsList: 'regions.category.list@json',
     region: 'regions.list@json',
+    regionWkt: 'region.geom.wkt',
 
     suggest: 'suggest',
 

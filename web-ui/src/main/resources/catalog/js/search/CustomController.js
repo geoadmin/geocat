@@ -45,13 +45,15 @@
         style: gnOlStyles.bbox
       });
       var addCantonFeature = function(id) {
-        var url = 'http://www.geocat.ch/geonetwork/srv/eng/region.geom.wkt?id=kantone:'+id+'&srs=EPSG:3857';
-        var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
         nbCantons++;
 
-        return $http.get(proxyUrl).success(function(wkt) {
+        return gnHttp.callService('regionWkt', {
+          id: id,
+          srs: 'EPSG:21781'
+        }).success(function(wkt) {
           var parser = new ol.format.WKT();
           var feature = parser.readFeature(wkt);
+          feature.setGeometry(feature.getGeometry().transform('EPSG:21781', 'EPSG:3857'));
           cantonSource.addFeature(feature);
         });
       };
@@ -59,20 +61,22 @@
 
       // Request cantons geometry and zoom to extent when
       // all requests respond.
-      $scope.$watch('searchObj.params.cantons', function(v){
+      var onRegionSelect = function(v){
         cantonSource.clear();
         if(angular.isDefined(v) && v != '') {
           var cs = v.split(',');
           for(var i=0; i<cs.length;i++) {
-            var id = cs[i].split('#')[1];
-            addCantonFeature(Math.floor((Math.random() * 10) + 1)).then(function(){
+            addCantonFeature(cs[i]).then(function(){
               if(--nbCantons == 0) {
                 $scope.map.getView().fitExtent(cantonSource.getExtent(), $scope.map.getSize());
               }
             });
           }
         }
-      });
+      };
+
+      $scope.$watch('searchObj.params.cantons', onRegionSelect);
+      $scope.$watch('searchObj.params.cities', onRegionSelect);
 
 
       $('#categoriesF').tagsinput({
@@ -98,6 +102,31 @@
         this.tagsinput('add', datum);
         this.tagsinput('input').typeahead('setQuery', '');
       }, $('#categoriesF')));
+
+      gnHttpServices.geocatKeywords = 'geocat.keywords.list';
+      $('#keywordsF').tagsinput({
+        itemValue: 'id',
+        itemText: 'label'
+      });
+      $('#keywordsF').tagsinput('input').typeahead({
+        valueKey: 'label',
+        prefetch: {
+          url :gnHttpServices.info,
+          filter: function(data) {
+            var res = [];
+            for(var i=0; i<data.metadatacategory.length;i++) {
+              res.push({
+                id: data.metadatacategory[i]['@id'],
+                label : data.metadatacategory[i].label.eng
+              })
+            }
+            return res;
+          }
+        }
+      }).bind('typeahead:selected', $.proxy(function (obj, datum) {
+        this.tagsinput('add', datum);
+        this.tagsinput('input').typeahead('setQuery', '');
+      }, $('#keywordsF')));
 
 
       // Keywords input list

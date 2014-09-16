@@ -173,7 +173,8 @@
             },
             link: function(scope, element, attrs) {
               var type = {
-                id: 'http://geonetwork-opensource.org/regions#'+scope.field
+                //id: 'http://geonetwork-opensource.org/regions#'+scope.field
+                id: scope.field
               };
               gnRegionService.loadRegion(type, 'fre').then(
                   function(data) {
