@@ -10,14 +10,17 @@
             restrict: 'A',
             templateUrl: '../../catalog/components/search/map/' +
                 'partials/mapfield.html',
-            link: function(scope, element, attrs) {
+            compile: function compile(tElement, tAttrs, transclude) {
+              return {
+                pre: function preLink(scope, iElement, iAttrs, controller) {
+                  scope.map = scope.$eval(iAttrs['gnMapField']);
+                  scope.gnMap = gnMap;
 
-              scope.map = scope.$eval(attrs['gnMapField']);
-              scope.gnMap = gnMap;
-
-              scope.maxExtent = function() {
-                scope.map.getView().fitExtent(scope.map.getView().getProjection().getExtent(),
-                    scope.map.getSize());
+                  scope.maxExtent = function () {
+                    scope.map.getView().fitExtent(scope.map.getView().getProjection().getExtent(),
+                        scope.map.getSize());
+                  }
+                }
               }
             }
           };
@@ -25,15 +28,15 @@
       .directive('gnDrawBboxBtn', [
         'goDecorateInteraction',
         '$parse',
-        'gnOlStyles',
+        'gnSearchSettings',
         'gnMap',
-        function(goDecorateInteraction, $parse, gnOlStyles, gnMap) {
+        function(goDecorateInteraction, $parse, gnSearchSettings, gnMap) {
           return {
             restrict: 'A',
             scope: true,
             controller: ['$scope', function($scope) {
               var dragbox = new ol.interaction.DragBox({
-                style: gnOlStyles.bbox
+                style: gnSearchSettings.olStyles.drawBbox
               });
               goDecorateInteraction(dragbox, $scope.map);
               $scope.interaction = dragbox;
@@ -47,7 +50,7 @@
               // Create overlay to persist the bbox
               var feature = new ol.Feature();
               var featureOverlay = new ol.FeatureOverlay({
-                style: gnOlStyles.bbox
+                style: gnSearchSettings.olStyles.drawBbox
               });
               featureOverlay.setMap(scope.map);
               featureOverlay.addFeature(feature);

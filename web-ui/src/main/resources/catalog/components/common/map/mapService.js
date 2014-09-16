@@ -3,12 +3,15 @@
 
 
   var module = angular.module('gn_map_service', [
+    'go'
   ]);
 
   module.provider('gnMap', function() {
     this.$get = [
+      'goDecorateLayer',
+      'gnOwsCapabilities',
       'gnConfig',
-      function(gnConfig) {
+      function(goDecorateLayer, gnOwsCapabilities, gnConfig) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -76,17 +79,52 @@
            * @param md
            */
           getBboxFromMd: function(md) {
-            if(angular.isUndefined(md.geoBox)) return;
+            if (angular.isUndefined(md.geoBox)) return;
 
             var bbox = angular.isArray(md.geoBox) ?
                 md.geoBox[0] : md.geoBox;
             var c = bbox.split('|');
-            if(angular.isArray(c) && c.length == 4) {
+            if (angular.isArray(c) && c.length == 4) {
               return [parseFloat(c[0]),
                 parseFloat(c[1]),
                 parseFloat(c[2]),
                 parseFloat(c[3])];
             }
+          },
+
+          /**
+           * Convert coordinates object into text
+           *
+           * @param coord must be an array of points (array with
+           * dimension 2) or a point
+           * @returns coordinates as text with format : 'x1 y1,x2 y2,x3 y3'
+           */
+          getTextFromCoordinates: function(coord) {
+            var text;
+
+            var addPointToText = function(point) {
+              if(text) {
+                text += ',';
+              }
+              else {
+                text = '';
+              }
+              text += point[0] + ' ' + point[1];
+            };
+
+            if(angular.isArray(coord) && coord.length > 0) {
+              if(angular.isArray(coord[0])) {
+                for(var i=0;i<coord.length;++i) {
+                  var point = coord[i];
+                  if(angular.isArray(point) && point.length == 2) {
+                    addPointToText(point);
+                  }
+                }
+              } else if(coord.length == 2) {
+                addPointToText(coord);
+              }
+            }
+            return text;
           },
 
           getMapConfig: function() {
@@ -143,7 +181,7 @@
            * or
            * North 90, South -90, East 180, West -180. Global
            */
-          getDcExtent: function(extent, location) {
+          getDcExtent: function(extent) {
             if (angular.isArray(extent)) {
               var dc = 'North ' + extent[3] + ', ' +
                   'South ' + extent[1] + ', ' +
@@ -158,12 +196,90 @@
             }
           },
 
+          addWmsToMap : function(map, layerParams, layerOptions, index) {
+
+            var options = layerOptions || {};
+
+            var source = new ol.source.TileWMS({
+              params: layerParams,
+              url: options.url
+            });
+
+            var olLayer = new ol.layer.Tile({
+              url: options.url,
+              type: 'WMS',
+              opacity: options.opacity,
+              visible: options.visible,
+              source: source,
+              legend: options.legend,
+              attribution: options.attribution,
+              metadata: options.metadata,
+              label: options.label,
+              cextent: options.extent
+            });
+            goDecorateLayer(olLayer);
+            olLayer.displayInLayerManager = true;
+
+            if (index) {
+              map.getLayers().insertAt(index, olLayer);
+            } else {
+              map.addLayer(olLayer);
+            }
+            return olLayer;
+          },
+
           /**
-           * Zoom map by given delta with animation
+           * Parse an object describing a layer from
+           * a getCapabilities document parsing. Create a ol.Layer WMS
+           * from this object and add it to the map with all known
+           * properties.
+           *
+           * @param map
+           * @param getCapLayer
+           * @returns {*}
+           */
+          addWmsToMapFromCap : function(map, getCapLayer) {
+
+            var legend, attribution, metadata;
+            if (getCapLayer) {
+              var layer = getCapLayer;
+
+              // TODO: parse better legend & attribution
+              if(angular.isArray(layer.Style) && layer.Style.length > 0) {
+                legend = layer.Style[layer.Style.length-1].LegendURL[0].OnlineResource;
+              }
+              if(angular.isDefined(layer.Attribution) ) {
+                if(angular.isArray(layer.Attribution)){
+
+                } else {
+                  attribution = layer.Attribution.Title;
+                }
+              }
+              if(angular.isArray(layer.MetadataURL)) {
+                metadata = layer.MetadataURL[0].OnlineResource;
+              }
+
+              return this.addWmsToMap(map, {
+                    LAYERS: layer.Name
+                  }, {
+                    url: layer.url,
+                    label: layer.Title,
+                    attribution: attribution,
+                    legend: legend,
+                    metadata: metadata,
+                    extent: gnOwsCapabilities.getLayerExtentFromGetCap(map, layer)
+                  }
+              );
+            }
+          },
+
+
+          /**
+           * Zoom by delta with animation
            * @param map
            * @param delta
            */
-          zoom : function(map, delta) {
+          zoom: function(map, delta) {
             var view = map.getView();
             var currentResolution = view.getResolution();
             if (angular.isDefined(currentResolution)) {
@@ -176,7 +292,26 @@
               view.setResolution(newResolution);
             }
           }
-      };
+        };
       }];
   });
+
+  module.provider('gnLayerFilters', function() {
+    this.$get = function() {
+      return {
+        /**
+         * Filters out background layers, preview
+         * layers, draw, measure.
+         * In other words, all layers that
+         * were actively added by the user and that
+         * appear in the layer manager
+         */
+        selected: function(layer) {
+          return layer.displayInLayerManager;
+        }
+      };
+    };
+  });
+
+
 })();

@@ -243,7 +243,8 @@
     lang: 'lang@json',
     removeThumbnail: 'md.thumbnail.remove@json',
     removeOnlinesrc: 'resource.del.and.detach', // TODO: CHANGE
-    geoserverNodes: 'geoserver.publisher@json' // TODO: CHANGE
+    geoserverNodes: 'geoserver.publisher@json', // TODO: CHANGE
+    suggest: 'suggest'
 
   });
 
@@ -445,9 +446,9 @@
     function formatLink(sLink) {
       var linkInfos = sLink.split('|');
       return {
-        name: linkInfos[1],
+        name: linkInfos[0],
         url: linkInfos[2],
-        desc: linkInfos[0],
+        desc: linkInfos[1],
         protocol: linkInfos[3],
         contentType: linkInfos[4]
       };
@@ -463,13 +464,16 @@
       getLinks: function() {
         return this.link;
       },
-      getLinksByType: function(type) {
+      getLinksByType: function() {
         var ret = [];
+        var types = Array.prototype.splice.call(arguments, 0);
         angular.forEach(this.link, function(link) {
           var linkInfo = formatLink(link);
-          if (linkInfo.protocol.indexOf(type) >= 0) {
-            ret.push(linkInfo);
-          }
+          types.forEach(function(type) {
+            if (linkInfo.protocol.indexOf(type) >= 0) {
+              ret.push(linkInfo);
+            }
+          });
         });
         return ret;
       },

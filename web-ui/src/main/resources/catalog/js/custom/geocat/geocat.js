@@ -1,13 +1,33 @@
 (function() {
 
-  goog.provide('gn_search_customui');
-  var module = angular.module('gn_search_customui', []);
+  goog.provide('gn_search_geocat');
+
+  goog.require('gn_search');
+  goog.require('gn_search_geocat_config');
+
+  var module = angular.module('gn_search_geocat', ['gn_search', 'gn_search_geocat_config']);
 
   /**
-   * Specific geocat search form controller, attached to the root node of the search form,
-   * in the searchForm.html view.
+   * @ngdoc controller
+   * @name gn_search_geocat.controller:gnsGeocat
+   *
+   * @description
+   * Geocat view root controller
+   * its $scope inherits from gnSearchController scope.
+   *
    */
-  module.controller('gocatSearchFormCtrl', [
+  module.controller('gnsGeocat', [
+      '$scope',
+      'gnSearchSettings',
+    function($scope, gnSearchSettings) {
+
+      angular.extend($scope.searchObj, {
+        advancedMode: false,
+        searchMap: gnSearchSettings.searchMap
+      });
+    }]);
+
+    module.controller('gocatSearchFormCtrl', [
     '$scope',
     'gnHttp',
     'gnHttpServices',
@@ -15,11 +35,10 @@
     '$timeout',
     'suggestService',
     '$http',
-    'gnOlStyles',
-    '$location',
+    'gnSearchSettings',
 
     function($scope, gnHttp, gnHttpServices, gnRegionService,
-             $timeout, suggestService,$http, gnOlStyles, $location) {
+             $timeout, suggestService,$http, gnSearchSettings) {
 
       $scope.types = ['any',
         'dataset',
@@ -32,6 +51,8 @@
         'service-OGC:WFS'
       ];
 
+      var map = $scope.searchObj.searchMap;
+
       gnRegionService.loadRegion('ocean', 'fre').then(
           function (data) {
             $scope.cantons = data;
@@ -42,7 +63,7 @@
       var nbCantons = 0;
       var cantonVector = new ol.layer.Vector({
         source: cantonSource,
-        style: gnOlStyles.bbox
+        style: gnSearchSettings.olStyles.drawBbox
       });
       var addCantonFeature = function(id) {
         nbCantons++;
@@ -57,7 +78,7 @@
           cantonSource.addFeature(feature);
         });
       };
-      $scope.map.addLayer(cantonVector);
+      map.addLayer(cantonVector);
 
       // Request cantons geometry and zoom to extent when
       // all requests respond.
@@ -68,7 +89,7 @@
           for(var i=0; i<cs.length;i++) {
             addCantonFeature(cs[i]).then(function(){
               if(--nbCantons == 0) {
-                $scope.map.getView().fitExtent(cantonSource.getExtent(), $scope.map.getSize());
+                map.getView().fitExtent(cantonSource.getExtent(), map.getSize());
               }
             });
           }
@@ -141,4 +162,5 @@
        */
 
     }]);
+
 })();

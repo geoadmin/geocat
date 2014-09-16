@@ -29,7 +29,9 @@
   <xsl:variable name="isDebugMode" select="/root/request/debug"/>
   <xsl:variable name="isReadOnly" select="/root/gui/env/readonly = 'true'"/>
   <xsl:variable name="withD3" select="$service = 'admin.console'"/>
-  
+  <xsl:variable name="searchView" select="if (/root/request/view) then /root/request/view else 'default'"></xsl:variable>
+  <xsl:variable name="angularModule" select="if ($angularApp = 'gn_search') then concat('gn_search_', $searchView) else $angularApp"></xsl:variable>
+
   <!-- Define which JS module to load using Closure -->
   <xsl:variable name="angularApp" select="
     if ($service = 'admin.console') then 'gn_admin'
@@ -41,6 +43,7 @@
               $service = 'node-change-warning') then 'gn_login'
     else if ($service = 'contact.us') then 'gn_contact_us'
     else if ($service = 'catalog.edit') then 'gn_editor'
+    else if ($service = 'catalog.viewer') then 'gn_viewer'
     else if ($service = 'catalog.search') then 'gn_search'
     else 'gn'"/>
   

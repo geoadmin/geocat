@@ -21,8 +21,8 @@
    * element.
    */
   module.directive('gnResultsTplSwitcher', [
-    'gnFacetService',
-    function(gnFacetService) {
+    'gnSearchSettings',
+    function(gnSearchSettings) {
 
       return {
         restrict: 'A',
@@ -32,15 +32,7 @@
           'templateUrl': '='
         },
         link: function(scope, element, attrs, controller) {
-          scope.tpls = [{
-            tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/title.html',
-            tooltip: 'Simple',
-            icon: 'fa-list'
-          }, {
-            tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/thumb.html',
-            tooltip: 'Thumbnails',
-            icon: 'fa-th-list'
-          }]
+          scope.tpls = gnSearchSettings.resultViewTpls;
         }
       };
     }]);
@@ -58,8 +50,9 @@
   module.directive('gnResultsContainer', [
       '$compile',
       'gnMap',
-      'gnOlStyles',
-    function($compile, gnMap, gnOlStyles) {
+      'gnOwsCapabilities',
+      'gnSearchSettings',
+    function($compile, gnMap, gnOwsCapabilities, gnSearchSettings) {
 
       return {
         restrict: 'A',
@@ -81,16 +74,19 @@
           };
 
           scope.hoverOL = new ol.FeatureOverlay({
-            style: gnOlStyles.bbox
+            style: gnSearchSettings.olStyles.mdExtentHighlight
           });
 
           /**
            * Draw md bbox on search
            */
-          var fo = new ol.FeatureOverlay();
+          var fo = new ol.FeatureOverlay({
+            style: gnSearchSettings.olStyles.mdExtent
+          });
           fo.setMap(scope.map);
 
           scope.$watchCollection('searchResults.records', function(rec) {
+
             fo.getFeatures().clear();
             if (!angular.isArray(rec) || angular.isUndefined(scope.map.getTarget())) {
               return;
@@ -118,6 +114,7 @@
           });
 
           scope.$watch('templateUrl', function(templateUrl) {
+
             if (angular.isUndefined(templateUrl)) {
               return;
             }
@@ -130,12 +127,39 @@
             $compile(template)(scope);
           });
 
+          scope.addToMap = function(link) {
+            gnOwsCapabilities.getCapabilities(link.url).then(function(capObj) {
+              var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(link.name, capObj);
+              scope.$emit('addLayerFromMd', layerInfo);
+            });
+
+          };
+
           scope.hoverOL.setMap(scope.map);
         }
       };
     }]);
 
-  module.directive('gnDisplayextentOnhover', [
+  /**
+   * As we cannot use nested ng-repeat on a getLinksByType()
+   * function, we have to load them once into the scope on rendering.
+   */
+  module.directive('gnFixMdlinks', [
+    function($compile, gnMap, gnSearchSettings) {
+
+      return {
+        restrict: 'A',
+        scope: false,
+        link: function (scope, element, attrs, controller) {
+          scope.links = scope.md.getLinksByType('LINK');
+          scope.downloads = scope.md.getLinksByType('DOWNLOAD');
+          scope.layers = scope.md.getLinksByType('OGC', 'kml');
+
+        }
+      }
+    }]);
+
+          module.directive('gnDisplayextentOnhover', [
     'gnMap',
     function(gnMap) {
 
@@ -169,17 +193,11 @@
 
   module.directive('gnZoomtoOnclick', [
     'gnMap',
-    'gnOlStyles',
-    function(gnMap, gnOlStyles) {
+    function(gnMap) {
 
       return {
         restrict: 'A',
         link: function(scope, element, attrs, controller) {
-
-          var fo = new ol.FeatureOverlay({
-            style: gnOlStyles.bbox
-          });
-          var feat = new ol.Feature();
 
           element.bind('dblclick', function() {
 
