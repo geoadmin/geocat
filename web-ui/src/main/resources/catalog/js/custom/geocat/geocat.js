@@ -30,9 +30,6 @@
         advancedMode: false,
         searchMap: gnSearchSettings.searchMap
       });
-
-      proj4.defs("EPSG:21781","+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=660.077,13.551,369.344,2.484,1.783,2.939,5.66 +units=m +no_defs");
-
     }]);
 
     module.controller('gocatSearchFormCtrl', [
@@ -45,10 +42,11 @@
     '$http',
     'gnSearchSettings',
     'goDecorateInteraction',
+    'gnMap',
 
     function($scope, gnHttp, gnHttpServices, gnRegionService,
              $timeout, suggestService,$http, gnSearchSettings,
-             goDecorateInteraction) {
+             goDecorateInteraction, gnMap) {
 
       // data store for types field
       $scope.types = ['any',
@@ -76,6 +74,11 @@
 
       var map = $scope.searchObj.searchMap;
 
+      var setSearchGeometry = function(geometry) {
+        geometry.transform('EPSG:3857', 'EPSG:4326');
+        $scope.searchObj.params.geometry = format.writeGeometry(geometry);
+      };
+
       /** Manage draw area on search map */
       var feature = new ol.Feature();
       var featureOverlay = new ol.FeatureOverlay({
@@ -95,6 +98,7 @@
         style: gnSearchSettings.olStyles.drawBbox
       });
       drawInteraction.on('drawend', function(){
+        setSearchGeometry(featureOverlay.getFeatures().item(0).getGeometry());
         setTimeout(function() {
           drawInteraction.active = false;
         }, 0);
@@ -123,46 +127,57 @@
       });
 
       /** Manage cantons selection (add feature to the map) */
-      var cantonSource = new ol.source.Vector();
       var nbCantons = 0;
-      var cantonVector = new ol.layer.Vector({
-        source: cantonSource,
-        style: gnSearchSettings.olStyles.drawBbox
-      });
       var addCantonFeature = function(id) {
+        var url = 'http://www.geocat.ch/geonetwork/srv/eng/region.geom.wkt?id=kantone:'+id+'&srs=EPSG:3857';
+        var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
         nbCantons++;
 
-        return gnHttp.callService('regionWkt', {
-          id: id,
-          srs: 'EPSG:21781'
-        }).success(function(wkt) {
+        return $http.get(proxyUrl).success(function(wkt) {
           var parser = new ol.format.WKT();
           var feature = parser.readFeature(wkt);
-          feature.setGeometry(feature.getGeometry().transform('EPSG:21781', 'EPSG:3857'));
-          cantonSource.addFeature(feature);
+          featureOverlay.getFeatures().push(feature);
         });
       };
-      map.addLayer(cantonVector);
 
       // Request cantons geometry and zoom to extent when
       // all requests respond.
-      var onRegionSelect = function(v){
-        cantonSource.clear();
+      $scope.$watch('searchObj.params.cantons', function(v){
+        featureOverlay.getFeatures().clear();
         if(angular.isDefined(v) && v != '') {
           var cs = v.split(',');
           for(var i=0; i<cs.length;i++) {
-            addCantonFeature(cs[i]).then(function(){
+            var id = cs[i].split('#')[1];
+            addCantonFeature(Math.floor((Math.random() * 10) + 1)).then(function(){
               if(--nbCantons == 0) {
-                map.getView().fitExtent(cantonSource.getExtent(), map.getSize());
+                var features = featureOverlay.getFeatures();
+                var extent = features.item(0).getGeometry().getExtent();
+                features.forEach(function(f) {
+                  ol.extent.extend(extent, f.getGeometry().getExtent());
+                });
+                map.getView().fitExtent(extent, map.getSize());
               }
             });
           }
         }
-      };
+      });
 
-      $scope.$watch('searchObj.params.cantons', onRegionSelect);
-      $scope.$watch('searchObj.params.cities', onRegionSelect);
+      var key;
+      var format = new ol.format.WKT();
+      $scope.$watch('restrictArea', function(v) {
+        if (v == 'bbox') {
+          key = map.getView().on('propertychange', function() {
+            var geometry = new ol.geom.Polygon(gnMap.getPolygonFromExtent(
+                map.getView().calculateExtent(map.getSize())));
+            setSearchGeometry(geometry);
+          });
+        } else {
+          $scope.searchObj.params.geometry = '';
+          map.getView().unByKey(key);
+        }
+      });
 
+      $scope.searchObj.params.relation = 'within';
 
 /*
       $('#categoriesF').tagsinput({
@@ -189,31 +204,6 @@
         this.tagsinput('input').typeahead('setQuery', '');
       }, $('#categoriesF')));
 */
-
-      gnHttpServices.geocatKeywords = 'geocat.keywords.list';
-      $('#keywordsF').tagsinput({
-        itemValue: 'id',
-        itemText: 'label'
-      });
-      $('#keywordsF').tagsinput('input').typeahead({
-        valueKey: 'label',
-        prefetch: {
-          url :gnHttpServices.geocatKeywords,
-          filter: function(data) {
-            var res = [];
-            for(var i=0; i<data.metadatacategory.length;i++) {
-              res.push({
-                id: data.metadatacategory[i]['@id'],
-                label : data.metadatacategory[i].label.eng
-              })
-            }
-            return res;
-          }
-        }
-      }).bind('typeahead:selected', $.proxy(function (obj, datum) {
-        this.tagsinput('add', datum);
-        this.tagsinput('input').typeahead('setQuery', '');
-      }, $('#keywordsF')));
 
 
       // Keywords input list
