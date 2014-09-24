@@ -221,6 +221,7 @@
     getRelations: 'md.relations@json',
     suggestionsList: 'md.suggestion@json',
     getValidation: 'md.validate@json',
+    mdSelect: 'metadata.select@json', // TODO: CHANGE
 
     processMd: 'md.processing',
     processAll: 'md.processing.batch',
@@ -438,7 +439,8 @@
   module.factory('Metadata', function() {
     function Metadata(k) {
       $.extend(true, this, k);
-      if(!angular.isArray(this.category)){
+      if(angular.isDefined(this.category) &&
+          !angular.isArray(this.category)){
         this.category = [this.category];
       }
     };

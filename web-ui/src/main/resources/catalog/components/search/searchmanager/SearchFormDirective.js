@@ -8,11 +8,13 @@
 
   goog.require('gn_catalog_service');
   goog.require('gn_facets_directive');
+  goog.require('gn_selection_directive');
   goog.require('gn_search_form_results_directive');
 
   var module = angular.module('gn_search_form_controller', [
     'gn_catalog_service',
     'gn_facets_directive',
+    'gn_selection_directive',
     'gn_search_form_results_directive'
   ]);
 
@@ -192,7 +194,6 @@
     });
 
     $scope.triggerSearch = this.triggerSearch;
-    $scope.resetSearch = this.resetSearch;
   };
 
   searchFormController['$inject'] = [
@@ -210,7 +211,13 @@
         restrict: 'A',
         scope: true,
         controller: searchFormController,
+        controllerAs: 'controller',
         link: function(scope, element, attrs) {
+
+          scope.resetSearch = function() {
+            scope.controller.resetSearch();
+            $('.geocat-search').find('.bootstrap-tagsinput .tag').remove();
+          };
 
           if (attrs.runsearch) {
 

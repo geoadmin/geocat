@@ -3,6 +3,21 @@
 body {
   font-family: Arial, @font-family-sans-serif;
 }
+.navbar {
+  .navbar-brand {
+    padding: 0 15px;
+    line-height: 50px;
+  }
+  img {
+    max-height: 50px;
+  }
+  .navbar-form input {
+    width: 7em;
+  }
+  [gn-language-switcher] {
+    margin-left: 1em;
+  }
+}
 
 .twitter-typeahead {
   width: 100%;
@@ -24,27 +39,82 @@ body {
 }
 
 .more {
-  margin: 0 0 .7em 15px;
+  margin: 0 0 0 15px;
 }
-.advanced {
+.basic,
+.advanced,
+.administrative {
   max-height: 0;
-  overflow-y: hidden;
+  overflow: hidden;
   transition: max-height ease .25s;
   &.active {
-    max-height: 30em;
+    max-height: 60em;
+    overflow: visible;
   }
 }
+.administrative.active {
+  max-height: 5em;
+}
+.basic.active {
+  max-height: 6em;
+}
+
+.geocat-search {
+  .backtonormal {
+    position: absolute;
+    top: 4.33em;
+  }
+  font-size: 90%;
+  label {
+    font-weight: normal;
+  }
+  input, select {
+    .input-sm;
+  }
+  .form-group {
+    margin-bottom: 10px;
+  }
+  .bootstrap-tagsinput {
+    padding: 0;
+  }
+  .advanced .bootstrap-tagsinput {
+    margin-bottom: 0;
+  }
+  .tt-dropdown-menu {
+    left: 6px !important;
+  }
+  legend {
+    font-size: 1em;
+    font-style: italic;
+    padding-top: .4em;
+    margin-bottom: 12px;
+  }
+  .bootstrap-tagsinput {
+    .label {
+      .label-primary;
+      font-size: 12px;
+      font-weight: normal;
+      margin: 2px;
+    }
+  }
+}
+
 [search-results] {
   .list-group-item.row {
     margin-left: 0;
     margin-right: 0;
+    padding-left: 13px;
+    .pull-left {
+      margin-right: .8em;
+    }
   }
 }
 
 .submit {
-  margin-top: 1.5em;
-  /* width: 100%; */
   text-align: right;
+  .btn-link {
+    color: @gray-light;
+  }
 }
 
 .aside {
@@ -61,9 +131,16 @@ body {
     clear: both;
     display: block;
     width: 100%;
-    margin-bottom: .5em;
     .fa {
       color: @brand-primary;
+    }
+    .btn-default {
+      border-color: transparent;
+      background: inherit;
+      &:hover {
+        border-color: @dropdown-border;
+        background-color: white;
+      }
     }
   }
 }

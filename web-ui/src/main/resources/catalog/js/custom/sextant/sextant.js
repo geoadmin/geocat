@@ -1,19 +1,19 @@
 (function() {
 
-  goog.provide('gn_search_default');
+  goog.provide('gn_search_sextant');
 
   goog.require('gn_search');
-  goog.require('gn_search_default_config');
+  goog.require('gn_search_sextant_config');
 
-  var module = angular.module('gn_search_default', ['gn_search', 'gn_search_default_config']);
+  var module = angular.module('gn_search_sextant', ['gn_search', 'gn_search_sextant_config']);
 
-  module.controller('gnsDefault', [
+  module.controller('gnsSextant', [
     '$scope',
     '$location',
     'suggestService',
     '$http',
     'gnSearchSettings',
-      'gnMap',
+    'gnMap',
     function($scope, $location, suggestService, $http, gnSearchSettings, gnMap) {
 
       var viewerMap = gnSearchSettings.viewerMap;
@@ -36,14 +36,12 @@
         }};
 
       $scope.addLayerToMap = function(number) {
-        $scope.mainTabs.map.titleInfo = '+' + number;
+        $scope.mainTabs.map.titleInfo = '  (+' + number + ')';
       };
 
       $scope.$on('addLayerFromMd', function(evt, getCapLayer) {
         gnMap.addWmsToMapFromCap(viewerMap, getCapLayer);
       });
-
-
 
       $scope.displayMapTab = function() {
         if(viewerMap.getSize()[0] == 0 || viewerMap.getSize()[1] == 0){
@@ -55,6 +53,16 @@
       };
 
 ///////////////////////////////////////////////////////////////////
+      $scope.getAnySuggestions = function(val) {
+        var url = suggestService.getUrl(val, 'anylight',
+            ('STARTSWITHFIRST'));
+
+        return $http.get(url, {
+        }).then(function(res){
+          return res.data[1];
+        });
+      };
+
       $scope.$watch('searchObj.advancedMode', function(val) {
         if(val && (searchMap.getSize()[0] == 0 || searchMap.getSize()[1] == 0)){
           setTimeout(function(){
