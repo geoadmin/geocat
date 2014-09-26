@@ -75,8 +75,9 @@
       var map = $scope.searchObj.searchMap;
 
       var setSearchGeometry = function(geometry) {
-        geometry.transform('EPSG:3857', 'EPSG:4326');
-        $scope.searchObj.params.geometry = format.writeGeometry(geometry);
+        $scope.searchObj.params.geometry = format.writeGeometry(
+          geometry.clone().transform('EPSG:3857', 'EPSG:4326')
+        );
       };
 
       /** Manage draw area on search map */
@@ -164,13 +165,15 @@
 
       var key;
       var format = new ol.format.WKT();
+      var setSearchGeometryFromMapExtent = function() {
+        var geometry = new ol.geom.Polygon(gnMap.getPolygonFromExtent(
+            map.getView().calculateExtent(map.getSize())));
+        setSearchGeometry(geometry);
+      };
       $scope.$watch('restrictArea', function(v) {
         if (v == 'bbox') {
-          key = map.getView().on('propertychange', function() {
-            var geometry = new ol.geom.Polygon(gnMap.getPolygonFromExtent(
-                map.getView().calculateExtent(map.getSize())));
-            setSearchGeometry(geometry);
-          });
+          setSearchGeometryFromMapExtent();
+          key = map.getView().on('propertychange', setSearchGeometryFromMapExtent);
         } else {
           $scope.searchObj.params.geometry = '';
           map.getView().unByKey(key);
@@ -178,6 +181,13 @@
       });
 
       $scope.searchObj.params.relation = 'within';
+
+      $scope.scrollToBottom = function($event) {
+        var elem = $($event.target).parents('.panel-body')[0];
+        setTimeout(function() {
+          elem.scrollTop = elem.scrollHeight;
+        }, 0);
+      };
 
 /*
       $('#categoriesF').tagsinput({
