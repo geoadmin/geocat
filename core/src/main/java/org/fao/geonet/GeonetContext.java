@@ -28,7 +28,6 @@ import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ThreadPool;
 import org.springframework.context.ApplicationContext;
-import sun.security.krb5.KdcComm;
 
 public class GeonetContext {
     private final ApplicationContext _springAppContext;
