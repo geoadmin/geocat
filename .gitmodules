@@ -10,9 +10,3 @@
 [submodule "web-ui/src/main/resources/catalog/lib/style/font-awesome"]
 	path = web-ui/src/main/resources/catalog/lib/style/font-awesome
 	url = git@github.com:FortAwesome/Font-Awesome.git
-[submodule "geoserver"]
-	path = geoserver
-	url = https://github.com/geonetwork/core-geoserver.git
-[submodule "maven_repo"]
-	path = maven_repo
-	url = https://github.com/geonetwork/core-maven-repo.git
