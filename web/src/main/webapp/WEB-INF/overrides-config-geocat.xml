@@ -101,7 +101,7 @@
     	</addXML>
     </file>
     <file name=".*/WEB-INF/config-gui.xml">
-        <replaceAtt xpath="client" attName="url" value="geocat"/>
+        <replaceAtt xpath="client" attName="url" value="catalog.search?view=geocat&amp;debug=true"/>
         <replaceAtt xpath="client" attName="parameters" value=""/>
         <removeXML xpath="editor-geopublisher"/>
         <removeXML xpath="compute-extent-from-keyword"/>
