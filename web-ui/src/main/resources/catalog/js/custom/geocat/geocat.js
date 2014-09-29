@@ -72,6 +72,9 @@
         label: 'archiveonly'
       }];
 
+      // data store for topic category
+      $scope.topicCats = gnSearchSettings.gnStores.topicCat;
+
       var map = $scope.searchObj.searchMap;
 
       var setSearchGeometry = function(geometry) {
