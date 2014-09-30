@@ -21,7 +21,7 @@
   /**
    * Controller to create new metadata record.
    */
-  var searchFormController = function($scope, $location,
+  var searchFormController = function($scope, $location, gnSearchSettings,
                                       gnSearchManagerService, gnFacetService, Metadata) {
     var defaultServiceUrl = 'qi@json';
     var defaultParams = {
@@ -77,7 +77,7 @@
      * @param {boolean} resetPagination If true, then
      * don't reset pagination info.
      */
-    this.triggerSearch = function(keepPagination) {
+    this.triggerSearchFn = function(keepPagination) {
 
       $scope.searching++;
       angular.extend($scope.searchObj.params, defaultParams);
@@ -129,11 +129,11 @@
     };
 
     if($scope.searchObj.permalink) {
-      var triggerSearchFn = self.triggerSearch;
-      var init = false; // Avoid the first $locationChangeSuccess event
+      var triggerSearchFn = self.triggerSearchFn;
       var facetsParams;
 
-      self.triggerSearch = function(keepPagination) {
+      self.triggerSearch = function(keepPagination, initial) {
+        $scope.initial = !!initial;
         if(!keepPagination) {
           self.resetPagination();
         }
@@ -143,24 +143,24 @@
         angular.extend(params, facetsParams);
 
         if(angular.equals(params, $location.search())) {
-          triggerSearchFn();
+          triggerSearchFn(false);
         }
         else {
           $location.search(params);
         }
-        init = true;
       };
 
       $scope.$on('$locationChangeSuccess', function () {
-        if(init) {
           var params = angular.copy($location.search());
           for(var o in facetsParams) {
             delete params[o];
           }
           $scope.searchObj.params = params;
           triggerSearchFn();
-        }
       });
+    }
+    else {
+      this.triggerSearch = this.triggerSearchFn;
     }
 
     /**
@@ -177,6 +177,8 @@
       } else {
         $scope.searchObj.params = {};
       }
+      $scope.searchObj.params.sortBy = gnSearchSettings.sortbyValues[0];
+
       self.resetPagination();
       $scope.currentFacets = [];
       $scope.triggerSearch();
@@ -199,6 +201,7 @@
   searchFormController['$inject'] = [
     '$scope',
     '$location',
+    'gnSearchSettings',
     'gnSearchManagerService',
     'gnFacetService',
     'Metadata'
@@ -226,16 +229,18 @@
               angular.extend(scope.searchObj.params, $location.search());
             }
 
+            var initial = jQuery.isEmptyObject(scope.searchObj.params);
+
             // wait for pagination to be set before triggering search
             if (element.find('[data-gn-pagination]').length > 0) {
               var unregisterFn = scope.$watch('hasPagination', function() {
                 if (scope.hasPagination) {
-                  scope.triggerSearch(true);
+                  scope.triggerSearch(true, initial);
                   unregisterFn();
                 }
               });
             } else {
-              scope.triggerSearch();
+              scope.triggerSearch(false, initial);
             }
           }
         }
