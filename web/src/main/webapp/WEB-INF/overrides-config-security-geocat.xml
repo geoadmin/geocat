@@ -75,6 +75,8 @@
         <addInterceptUrl  pattern="/srv/.*/gm03small.xml!?.*" access="permitAll"/>
         <addInterceptUrl  pattern="/srv/.*/monitoring.csv!?.*" access="permitAll"/>
 
+        <addInterceptUrl  pattern="/srv/.*/sources.get!?.*" access="permitAll"/>
+
         <!-- Extent services -->
         <addInterceptUrl  pattern="/srv/.*/xml.extent.get!?.*" access="permitAll"/>
         <addInterceptUrl  pattern="/srv/.*/xml.extent.list!?.*" access="permitAll"/>

@@ -32,6 +32,16 @@
             </output>
         </service>
 
+        <service name="sources.get">
+            <documentation><![CDATA[
+              Retrieve all sources for geocat catalog.
+              This service feeds the 'Catalog sources' combo box in the
+              advanced search form
+              ]]></documentation>
+            <class name=".guiservices.util.Sources">
+            </class>
+        </service>
+
         <service name="oldgeocat">
             <output sheet="geocat.xsl">
             	<call name="groups" class=".geocat.guiservices.groups.GetAll" />
