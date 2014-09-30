@@ -28,10 +28,10 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.repository.HarvesterSettingRepository;
-import org.fao.geonet.utils.Xml;
+import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 //=============================================================================
@@ -68,9 +68,9 @@ public class Sources implements Service
         asXml.addContent(local);
 
         // GEOCAT
-        final HarvesterSettingRepository bean = context.getBean(HarvesterSettingRepository.class);
+        final HarvesterSettingsManager bean = context.getBean(HarvesterSettingsManager.class);
 
-        Element harvestingNodes = bean.findAllAsXml();
+        Element harvestingNodes = bean.get("harvestingy", -1);
 
         for (Object obj : asXml.getChildren()) {
             Element record = (Element) obj;
