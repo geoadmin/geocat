@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <schematron.title>Extension des règles strictement Inspire </schematron.title>
+    <report.M44.spec><div>Specification:</div></report.M44.spec>
+    <assert.M44.date><div>Le rapport de conformité nécessite la date</div></assert.M44.date>
+    <assert.M44.title><div>Le rapport de conformité nécessite un titre dans la langue de la métadonnée</div></assert.M44.title>
+    <assert.M44.conformityActual><div>Titre de conformité invalide:<br></br></div></assert.M44.conformityActual>
+    <assert.M44.conformityExpected><div><br></br>Titre de conformité obligatoire:<br></br></div></assert.M44.conformityExpected>
+    <report.M44.degree><div>Degré de conformité trouvé:</div></report.M44.degree>
+
+    <conformity>Data Quality Conformity</conformity>
+    <dataquality>Data Quality</dataquality>
+
+    <assert.M44.dataQualityExpected><div><br></br>Expected Data Quality Elements<br></br></div></assert.M44.dataQualityExpected>
+    <report.M44.dataQualityExpected><div>Data Quality Elements</div></report.M44.dataQualityExpected>
+    <assert.M44.dataQualityScopeNotAllowed><div>No children of data quality scope allowed for Inspire compatibility</div></assert.M44.dataQualityScopeNotAllowed>
+
+    <uselimitation>UseLimitation</uselimitation>
+    <assert.useLimitation><div>Identification / resourceConstraints // useLimitation is required</div></assert.useLimitation>
+    <report.useLimitation><div>Use Limitation Elements</div></report.useLimitation>
+
+</strings>
