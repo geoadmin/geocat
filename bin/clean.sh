@@ -38,7 +38,8 @@ case $POSTGIS_INSTALL in
 esac
 
 rm -rf $DATA_DIR
-mkdir -p $DATA_DIR/config/
+mkdir -p $DATA_DIR/config/schema_plugins
 cp -R $WEB_DIR/src/main/webapp/WEB-INF/data/config/codelist $DATA_DIR/config/
 cp -R $WEB_DIR/src/main/webapp/WEB-INF/data/config/schema_plugins $DATA_DIR/config/
 
+find schemas -name plugin -type d -exec echo cp -r {} $DATA_DIR/config/schema_plugins/ \;
