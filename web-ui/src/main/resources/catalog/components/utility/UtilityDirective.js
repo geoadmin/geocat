@@ -225,51 +225,106 @@
     };
   });
 
+
   /**
-   * Use to initialize bootstrap datepicker
+   * @ngdoc directive
+   * @name gn_utility_directive.directive:gnPaginationList
+   * @function
+   *
+   * @description
+   * Adjust textarea size onload and when text change.
+   *
+   * Source: http://www.frangular.com/2012/12/
+   *  pagination-cote-client-directive-angularjs.html
    */
-  module.directive('gnBootstrapDatepicker', [
-    function() {
-
+  module.factory('gnPaginationListStateCache', ['$cacheFactory',
+    function($cacheFactory) {
+      return $cacheFactory('gnPaginationListStateCache');
+    }]);
+  module.directive('gnPaginationList', ['gnPaginationListStateCache',
+    function(gnPaginationListStateCache) {
+      var pageSizeLabel = 'Page size';
       return {
+        priority: 0,
         restrict: 'A',
-        scope: {
-          date: '=gnBootstrapDatepicker',
-          dates: '=dateAvailable'
-        },
-        link: function (scope, element, attrs, ngModelCtrl) {
+        scope: {items: '&'},
+        templateUrl: '../../catalog/components/utility/' +
+            'partials/paginationlist.html',
+        replace: false,
+        compile: function compile(tElement, tAttrs) {
+          var cacheId = tAttrs.cache ? tAttrs.cache + '.paginator' : '';
+          return {
+            pre: function preLink(scope) {
+              scope.pageSizeList = [10, 20, 50, 100];
+              var defaultSettings = {
+                pageSize: 10,
+                currentPage: 0
+              };
+              scope.paginator = cacheId ?
+                  gnPaginationListStateCache.get(cacheId) || defaultSettings :
+                  defaultSettings;
+              if (cacheId) {
+                gnPaginationListStateCache.put(cacheId, scope.paginator);
+              }
+              scope.isFirstPage = function() {
+                return scope.paginator.currentPage == 0;
+              };
+              scope.isLastPage = function() {
+                if (scope.items()) {
+                  return scope.paginator.currentPage >=
+                      scope.items().length / scope.paginator.pageSize - 1;
+                } else {
+                  return false;
+                }
+              };
+              scope.incPage = function() {
+                if (!scope.isLastPage()) {
+                  scope.paginator.currentPage++;
+                }
+              };
+              scope.decPage = function() {
+                if (!scope.isFirstPage()) {
+                  scope.paginator.currentPage--;
+                }
+              };
+              scope.firstPage = function() {
+                scope.paginator.currentPage = 0;
+              };
+              scope.numberOfPages = function() {
+                if (scope.items()) {
+                  return Math.ceil(scope.items().length /
+                      scope.paginator.pageSize);
+                } else {
+                  return 0;
+                }
+              };
+              scope.$watch('paginator.pageSize',
+                  function(newValue, oldValue) {
+                    if (newValue != oldValue) {
+                      scope.firstPage();
+                    }
+                  });
 
-          var available = function(date) {
-            if(scope.dates && scope.dates[date.getFullYear()] &&
-                scope.dates[date.getFullYear()][date.getMonth()] &&
-                $.inArray(date.getDate(), scope.dates[date.getFullYear()][date.getMonth()]) != -1 ) {
-              return '';
-            } else {
-              return 'disabled';
+              // ---- Functions available in parent scope -----
+
+              scope.$parent.firstPage = function() {
+                scope.firstPage();
+              };
+              // Function that returns the reduced items list,
+              // to use in ng-repeat
+              scope.$parent.pageItems = function() {
+                if (scope.items()) {
+                  var start = scope.paginator.currentPage *
+                      scope.paginator.pageSize;
+                  var limit = scope.paginator.pageSize;
+                  return scope.items().slice(start, start + limit);
+                } else {
+                  return null;
+                }
+              };
             }
           };
-
-          $(element).datepicker({
-            onRender:
-                function(dt,a,b)
-                {
-                  return available(dt);
-                }
-          }).on('changeDate', function(ev) {
-            // view -> model
-            scope.$apply(function () {
-              scope.date = $(element).find('input')[0].value;
-            });
-          });
-
-          // model -> view
-          scope.$watch('date', function(v) {
-            if(angular.isUndefined(v)) {
-              v ='';
-            }
-            $(element).find('input')[0].value = v;
-          });
         }
-      }
+      };
     }]);
 })();

@@ -33,8 +33,8 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.HarvesterDataRepository;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.kernel.harvest.harvester.*;
+import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.services.harvesting.Util;
@@ -232,11 +232,22 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        // In forWAF harvester, rf.getChangeDate() returns null null
+
+        // Get the change date from the metadata content. If not possible, get it from the file change date if available
+        // and if not possible use current date
         String date = null;
+
+        try {
+            date = dataMan.extractDateModified(schema, md);
+        } catch (Exception ex) {
+            log.error("WebDavHarvester - addMetadata - Can't get metadata modified date for metadata uuid= " + uuid +
+                    ", using current date for modified date");
+            // WAF harvester, rf.getChangeDate() returns null
         if (rf.getChangeDate() != null) {
             date = rf.getChangeDate().getDateAndTime();
         }
+        }
+
         String id = dataMan.insertMetadata(context, schema, md, uuid, Integer.parseInt(params.ownerId), group, params.uuid,
                 isTemplate, docType, category, date, date, ufo, indexImmediate);
 
@@ -351,8 +362,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 			
 			//--- set uuid inside metadata (on metadata add it's created a new uuid ignoring fileIdentifier uuid).
             //--- In update we should use db uuid to update the xml uuid and keep in sych both.
+            String schema = null;
             try {
-                String schema = dataMan.autodetectSchema(md);
+                schema = dataMan.autodetectSchema(md);
                 
                 //Update only if different
                 String uuid = dataMan.extractUUID(schema,  md);
@@ -371,8 +383,24 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             boolean ufo = false;
             boolean index = false;
             String language = context.getLanguage();
+
+            // Get the change date from the metadata content. If not possible, get it from the file change date if available
+            // and if not possible use current date
+            String date = null;
+
+            try {
+                date = dataMan.extractDateModified(schema, md);
+            } catch (Exception ex) {
+                log.error("WebDavHarvester - updateMetadata - Can't get metadata modified date for metadata id= "
+                        + record.id + ", using current date for modified date");
+                // WAF harvester, rf.getChangeDate() returns null
+                if (rf.getChangeDate() != null) {
+                    date = rf.getChangeDate().getDateAndTime();
+                }
+            }
+
             final Metadata metadata = dataMan.updateMetadata(context, record.id, md, validate, ufo, index, language,
-                    rf.getChangeDate().getDateAndTime(), false, false);
+                    date, false, false);
 
             //--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both

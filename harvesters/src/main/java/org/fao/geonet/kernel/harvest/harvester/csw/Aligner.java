@@ -292,7 +292,7 @@ public class Aligner extends BaseAligner
                     md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
                             md, processName, processParams, log);
                 }
-				
+
                 //
                 // update metadata
                 //
@@ -300,7 +300,7 @@ public class Aligner extends BaseAligner
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false, false);
+                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, true, false);
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
 				repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));

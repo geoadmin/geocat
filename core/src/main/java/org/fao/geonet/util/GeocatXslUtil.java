@@ -24,6 +24,7 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
+import org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.geotools.gml3.GMLConfiguration;
@@ -78,7 +79,7 @@ public class GeocatXslUtil {
 
     public static final org.geotools.gml2.GMLConfiguration GML2_CONFIG = new org.geotools.gml2.GMLConfiguration();
     private static final Random RANDOM = new Random();
-    public static final Namespace CHE_NAMESPACE = Namespace.getNamespace("che", "http://www.geocat.ch/2008/che");
+    public static final Namespace CHE_NAMESPACE = ISO19139cheNamespaces.CHE;
 
     static Parser gml3Parser() {
         return new Parser(GML3_CONFIG);

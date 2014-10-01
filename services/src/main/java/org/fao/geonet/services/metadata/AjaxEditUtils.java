@@ -87,7 +87,7 @@ public class AjaxEditUtils extends EditUtils {
      * @throws Exception
      */
     // GEOCAT
-    protected Element applyChangesEmbedded(String id, Map<String, String> changes, Map<String, String> htHide, String currVersion,
+    protected Element applyChangesEmbedded(String id, Map<String, String> changes, String currVersion,
                                            String lang) throws Exception {
         //END GEOCAT
         Lib.resource.checkEditPrivilege(context, id);
@@ -157,7 +157,7 @@ public class AjaxEditUtils extends EditUtils {
                 blackboxContent = true;
             }
 
-            if (updatedLocalizedTextElement(md, ref, value, editLib, updatedXLinks) || updatedLocalizedURLElement(md, ref, value, editLib, updatedXLinks)) {
+            if (updatedLocalizedTextElement(md, schema, ref, value, editLib, updatedXLinks)) {
                 // END GEOCAT
                 continue;
             }
@@ -252,7 +252,7 @@ public class AjaxEditUtils extends EditUtils {
                     Element xlinkParent = EditUtils.findXlinkParent((Element) selectResult.result);
                     if( xlinkParent!=null && ReusableObjManager.isValidated(xlinkParent)){
                         continue;
-                    }
+        }
                     if( xlinkParent!=null ){
                         updatedXLinks.add(xlinkParent);
                     }

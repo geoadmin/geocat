@@ -133,7 +133,7 @@
         </service>
 
 		<service name="util.ping">
-			<class name="jeeves.services.Ping" />
+      <class name="jeeves.services.Ping" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -224,7 +224,7 @@
 		</service>
 		<service name="crs.get" deprecated="true">
       <!-- Still used by ExtJS editor -->
-			<class name=".services.crs.GetCRS" />
+      <class name=".services.crs.GetCRS" />
 			<output sheet="crs.xsl" contentType="text/xml; charset=UTF-8" />
 		</service>
 		
@@ -247,16 +247,16 @@
 		<service name="find">
 			<output sheet="search-cat.xsl"/>
 		</service>
-		
-	    
-	      
+
+
+
 <!--
     tabsearch is turned off by default (no maintainer).
 		<service name="tabsearch">
 			<output sheet="search-tab.xsl"/>
-	  </service>
+		</service>
 -->
-	  
+
 	</services>
 
 	<!-- ====================================================================== -->
@@ -270,7 +270,7 @@
 
 	<!-- New section of services based on refactoring
 	guideline https://github.com/geonetwork/core-geonetwork/wiki/RefactoringXSLTAndUserInterface -->
-  
+
   <include>config/config-service-xml-api.xml</include>
 
   <include>config/config-service-search.xml</include>
@@ -286,26 +286,23 @@
   <include>config/config-service-region.xml</include>
   
   <include>config/config-service-admin.xml</include>
-  <include>config/config-service-admin-harvesting.xml</include>
-  
-  <include>config/config-service-admin-schema.xml</include>
+    <include>config/config-service-admin-harvesting.xml</include>
+
+    <include>config/config-service-admin-schema.xml</include>
     <include>config/config-service-admin-schematron.xml</include>
     <include>config/config-service-batch-replace.xml</include>
-  <include>config/config-service-admin-category.xml</include>
-  
-  <include>config/config-service-admin-batchprocess.xml</include>
-  
-  <include>config/config-service-admin-notification.xml</include>
-  <include>config/config-service-admin-index.xml</include>
+
+    <include>config/config-service-admin-notification.xml</include>
+    <include>config/config-service-admin-index.xml</include>
     <include>config/config-service-admin-io.xml</include>
-  <include>config/config-service-admin-logo.xml</include>
-  <include>config/config-service-admin-user-and-group.xml</include>
-  <include>config/config-service-admin-geoserver-publication.xml</include>
-  <include>config/config-service-admin-transfert-privileges.xml</include>
-  <include>config/config-service-admin-formatter.xml</include>
-  
+    <include>config/config-service-admin-logo.xml</include>
+    <include>config/config-service-admin-user-and-group.xml</include>
+    <include>config/config-service-admin-geoserver-publication.xml</include>
+    <include>config/config-service-admin-transfert-privileges.xml</include>
+    <include>config/config-service-admin-formatter.xml</include>
+
   <include>config/config-service-statistics.xml</include>
-  
+
   <include>config/config-service-admin-csw.xml</include>
   <include>config/config-service-csw.xml</include>
   <include>config/config-service-csw-virtual.xml</include>

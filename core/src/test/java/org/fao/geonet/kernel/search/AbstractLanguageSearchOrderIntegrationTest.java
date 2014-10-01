@@ -16,9 +16,7 @@ import org.jdom.JDOMException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 
-import javax.annotation.Nonnull;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -26,9 +24,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import javax.annotation.Nonnull;
 
-import static org.junit.Assert.*;
-import static org.fao.geonet.kernel.setting.SettingInfo.SearchRequestLanguage.*;
+import static org.fao.geonet.kernel.setting.SettingInfo.SearchRequestLanguage.ONLY_DOC_LOCALE;
+import static org.fao.geonet.kernel.setting.SettingInfo.SearchRequestLanguage.ONLY_LOCALE;
+import static org.fao.geonet.kernel.setting.SettingInfo.SearchRequestLanguage.ONLY_UI_LOCALE;
+import static org.fao.geonet.kernel.setting.SettingInfo.SearchRequestLanguage.PREFER_LOCALE;
+import static org.fao.geonet.kernel.setting.SettingInfo.SearchRequestLanguage.PREFER_UI_LOCALE;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the order of search results with regards to language settings.
@@ -226,8 +231,9 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
         importMetadata("comment allez-vous aujourd'hui");
         setSearchSettings(ONLY_UI_LOCALE, false, true);
         String[] titles = doSearch("eng");
-        assertArrayEquals(new String[]{"A ENG EN and FR is EN", "A FRA EN and FR is EN", "E3 FRA EN and FR is EN",
-                "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"}, titles);
+        final String[] expecteds = {"A ENG EN and FR is EN", "A FRA EN and FR is EN", "E3 FRA EN and FR is EN",
+                "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"};
+        assertArrayEquals("\n" + Arrays.toString(titles) + "\n" + Arrays.toString(expecteds), expecteds, titles);
     }
 
     @Test

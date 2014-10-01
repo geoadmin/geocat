@@ -58,6 +58,11 @@
             <artifactId>a2j</artifactId>
         </dependency>
         <dependency>
+            <groupId>marc4j</groupId>
+            <artifactId>marc4j</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-api</artifactId>
         </dependency>
@@ -268,6 +273,16 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>cachingxslt</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>schema-iso19139</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>schema-iso19139.che</artifactId>
+          <version>${project.version}</version>
         </dependency>
         <dependency> <!-- dummy API for ARC SDE stuff -->
             <groupId>${project.groupId}</groupId>

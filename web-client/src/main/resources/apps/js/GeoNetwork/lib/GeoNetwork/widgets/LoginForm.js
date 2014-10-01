@@ -90,7 +90,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
             Ext.getCmp('btnLoginForm').fireEvent('click');
         }
     }],
-
+        
     initComponent: function () {
         Ext.applyIf(this, this.defaultConfig);
 
@@ -172,11 +172,11 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
                     this.password,
                     loginBt);
         }
-        this.toggledFieldsOff.push(this.userInfo, 
-                logoutBt);
-        if (this.catalogue.adminAppUrl !== '') {
-            this.toggledFieldsOff.push(adminBt);
-        }
+            this.toggledFieldsOff.push(this.userInfo, 
+                    logoutBt);
+            if (this.catalogue.adminAppUrl !== '') {
+                this.toggledFieldsOff.push(adminBt);
+            }
         this.items = [this.toggledFields, this.toggledFieldsOff];
         GeoNetwork.LoginForm.superclass.initComponent.call(this);
         
@@ -212,7 +212,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
             ')', false);
         } else {
             this.userInfo.setText('');
-        }
+            }
         this.doLayout(false, true);
     }
 });

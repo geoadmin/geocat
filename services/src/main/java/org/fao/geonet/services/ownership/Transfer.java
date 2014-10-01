@@ -53,7 +53,7 @@ public class Transfer extends NotInReadOnlyModeService {
      * @param params
      * @throws Exception
      */
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+    public void init(String appPath, ServiceConfig params) throws Exception {}
 
     /**
      *
@@ -91,6 +91,13 @@ public class Transfer extends NotInReadOnlyModeService {
 			int opId = Integer.parseInt(st.nextToken());
 			int mdId = Integer.parseInt(st.nextToken());
 
+            // 2 cases could happen, 1) only the owner change
+            // in that case sourceGrp = targetGrp and operations
+            // allowed does not need to be modified.
+            if (sourceGrp != targetGrp) {
+                // 2) the sourceGrp != targetGrp and in that
+                // case, all operations need to be transfered to
+                // the new group if not already defined.
 			dm.unsetOperation(context, mdId, sourceGrp, opId);
 
 			if (!targetPriv.contains(priv)) {
@@ -102,14 +109,19 @@ public class Transfer extends NotInReadOnlyModeService {
                 OperationAllowed operationAllowed = new OperationAllowed(id );
                 repository.save(operationAllowed);
 			}
+            }
 
+            // Collect all metadata ids
+            metadata.add(mdId);
+            privCount++;
+        }
+
+        // Set owner for all records to be modified.
+        for (Integer i : metadata) {
             final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-            final Metadata metadata1 = metadataRepository.findOne(mdId);
+            final Metadata metadata1 = metadataRepository.findOne(i);
             metadata1.getSourceInfo().setGroupOwner(targetGrp).setOwner(targetUsr);
             metadataRepository.save(metadata1);
-
-            metadata.add(mdId);
-			privCount++;
 		}
 
         dm.flush();
@@ -119,7 +131,6 @@ public class Transfer extends NotInReadOnlyModeService {
 		for (int mdId : metadata) {
             list.add(Integer.toString(mdId));
         }
-
         dm.indexMetadata(list, context);
 
         //--- return summary

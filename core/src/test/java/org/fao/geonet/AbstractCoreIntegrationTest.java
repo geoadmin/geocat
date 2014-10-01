@@ -11,7 +11,12 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.ServiceRequest;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
@@ -22,7 +27,9 @@ import org.fao.geonet.kernel.search.index.DirectoryFactory;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.LanguageDetector;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Log;
@@ -44,13 +51,11 @@ import org.opengis.filter.Filter;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.ContextConfiguration;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.sql.DataSource;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.sql.Connection;
@@ -58,11 +63,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.sql.DataSource;
 
 import static org.junit.Assert.assertTrue;
-
-import static org.junit.Assert.assertNotNull;
 
 /**
  * A helper class for testing services.  This super-class loads in the spring beans for Spring-data repositories and mocks for
@@ -152,12 +157,15 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         _directoryFactory.resetIndex();
 
         final String schemaPluginsDir = geonetworkDataDirectory.getSchemaPluginsDir().getPath();
+
         final String resourcePath = geonetworkDataDirectory.getResourcesDir().getPath();
 
         final SchemaManager schemaManager = _applicationContext.getBean(SchemaManager.class);
         if (syncReport.updateSchemaManager || !schemaManager.existsSchema("iso19139")) {
+
             new File(_dataDirectory, "config/schemaplugin-uri-catalog.xml").delete();
             final String schemaPluginsCatalogFile = new File(schemaPluginsDir, "/schemaplugin-uri-catalog.xml").getPath();
+            deploySchema(webappDir, schemaPluginsDir);
 
             _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
             SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCatalogFile);
@@ -221,7 +229,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
             _dataDirContainer = new File(dir.getPath()+i);
 
-
             _dataDirectory = new File(_dataDirContainer, "defaultDataDir");
             _dataDirLockFile = new File(_dataDirContainer, DATA_DIR_LOCK_NAME);
         }
@@ -240,7 +247,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         final TreeTraverser<File> fileTreeTraverser = Files.fileTreeTraverser();
 
-
         if (deleteNewFilesFromDataDir ) {
 
             final int prefixPathLength2 = _dataDirectory.getPath().length();
@@ -248,14 +254,20 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
                 String relativePath = dataDirFile.getPath().substring(prefixPathLength2);
                 final File srcFile = new File(srcDataDir, relativePath);
                 if (!srcFile.exists()) {
-                    if (srcFile.getParent().endsWith("schematron") && relativePath.contains("schema_plugins") && relativePath.endsWith(".xsl")) {
+                    if (srcFile.getParent().endsWith("schematron") &&
+                            relativePath.contains("schema_plugins") &&
+                            relativePath.endsWith(".xsl")) {
                         // don't copy because the schematron xsl files are generated.
                         // normally they shouldn't be here because they don't need to be in the
-                        // repository but some tests can generate them into the schemtrons folder
+                        // repository but some tests can generate them into the schematrons folder
                         // so ignore them here.
                         continue;
                     }
 
+                    if (relativePath.contains("/removed/")) {
+                        // Ignore removed files which may contains MEF files
+                        continue;
+                    }
                     if (relativePath.endsWith("schemaplugin-uri-catalog.xml")) {
                         // we will handle this special case later.
                         continue;
@@ -307,8 +319,27 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
                 report.updateSchemaManager |= relativePath.contains("schema_plugins");
             }
         }
-
         return report;
+    }
+
+    private void deploySchema(String srcDataDir, String schemaPluginPath) {
+        // Copy schema plugin
+        final String schemaModulePath = "schemas";
+        File schemaModuleDir = new File(srcDataDir + "/../../../../" + schemaModulePath);
+        if (schemaModuleDir.exists()) {
+            for (File schemaPluginModule : Files.fileTreeTraverser().children(schemaModuleDir)) {
+                final String schema = schemaPluginModule.getName();
+                File srcDir = new File(schemaPluginModule, "/src/main/plugin/" + schema);
+                if (srcDir.exists()) {
+                    String destPath = schemaPluginPath + "/" + schema;
+                    try {
+                        BinaryFile.copyDirectory(srcDir, new File(destPath));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     @After

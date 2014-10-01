@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.metadata;
 
+import com.google.common.collect.Lists;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.XLink;
@@ -32,16 +33,17 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.geocat.HiddenMetadataElement;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
+import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.geocat.HiddenMetadataElementsRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -49,7 +51,6 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.Text;
-import org.jdom.xpath.XPath;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -149,9 +150,6 @@ class EditUtils {
 		//--- each change is a couple (pos, value)
 
 		Map<String, String> htChanges = new HashMap<String, String>(100);
-        // GEOCAT
-		Map<String, String> htHide = new HashMap<String, String>(100);
-        // END GEOCAT
 
 		@SuppressWarnings("unchecked")
         List<Element> list = params.getChildren();
@@ -159,21 +157,8 @@ class EditUtils {
 			String sPos = el.getName();
 			String sVal = el.getText();
 
-            // GEOCAT
-			if (sPos.startsWith("_") && !sPos.startsWith("_d_")) {
-				htChanges.put(sPos.substring(1), sVal);
-            } else if (sPos.startsWith("hide_")) {
-
-                String ref = sPos.substring(5);
-                if(ref.startsWith("d_")) {
-                    ref = ref.substring(2);
-            }
-                htHide.put(ref, sVal);
-		    }
-            // END GEOCAT
-
-			if (sPos.startsWith("_")) {
-				htChanges.put(sPos.substring(1), sVal);
+            if (sPos.startsWith("_")) {
+                htChanges.put(sPos.substring(1), sVal);
             }
 		}
 
@@ -194,13 +179,13 @@ class EditUtils {
         boolean updateDateStamp = !minor.equals("true");
         String changeDate = null;
 		if (embedded) {
-            Element updatedMetada = new AjaxEditUtils(context).applyChangesEmbedded(id, htChanges, htHide, version, context.getLanguage());
+            Element updatedMetada = new AjaxEditUtils(context).applyChangesEmbedded(id, htChanges, version, context.getLanguage());
             if(updatedMetada != null) {
                 result = dataManager.updateMetadata(context, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp, processReusableObject);
             }
    		}
         else {
-            Element updatedMetada = applyChanges(id, htChanges, htHide, version, context.getLanguage());
+            Element updatedMetada = applyChanges(id, htChanges, version, context.getLanguage());
             if(updatedMetada != null) {
 			    result = dataManager.updateMetadata(context, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp, processReusableObject);
             }
@@ -220,7 +205,7 @@ class EditUtils {
      * @throws Exception
      */
     // GEOCAT
-    private Element applyChanges(String id, Map<String, String> changes, Map<String, String> htHide, String currVersion,
+    private Element applyChanges(String id, Map<String, String> changes, String currVersion,
                                  String lang) throws Exception {
         // END GEOCAT
         Lib.resource.checkEditPrivilege(context, id);
@@ -252,9 +237,7 @@ class EditUtils {
 			String val = entry.getValue().trim();
 			String attr= null;
 
-            // GEOCAT
-			if(updatedLocalizedTextElement(md, ref, val, editLib, updatedXLinks) && updatedLocalizedURLElement(md, ref, val, editLib, updatedXLinks)) {
-                // END GEOCAT
+            if(updatedLocalizedTextElement(md, schema, ref, val, editLib, updatedXLinks)) {
 			    continue;
 			}
 
@@ -325,9 +308,6 @@ class EditUtils {
 				el.addContent(val);
 			}
 		}
-        // GEOCAT
-		applyHiddenElements(context, dataManager, editLib, md, id, htHide);
-        // END GEOCAT
 
 		//--- remove editing info added by previous call
 		editLib.removeEditingInfo(md);
@@ -338,105 +318,6 @@ class EditUtils {
         dataManager.updateXlinkObjects(id, lang, md, updatedXLinks.toArray(new Element[updatedXLinks.size()]));
         // END GEOCAT
         return md;
-    }
-    // GEOCAT
-    public static void applyHiddenElements( ServiceContext context, DataManager dataManager, EditLib editLib, Element md, String id, Map<String, String> htHide ) throws Exception {
-        // Add Hiding info to MD tree
-        dataManager.addHidingInfo(context, md, id);
-
-        // Generate and manage XPath/levels for Elements to be hidden
-        Integer idInteger = new Integer(id);
-        for (Map.Entry<String, String> entry: htHide.entrySet())
-        {
-            String ref = entry.getKey();
-            String level = entry.getValue();
-            String xPathExpr = null;
-
-            // System.out.println("HIDING ref = " + ref + " - level = " + level); // DEBUG
-            Element el = editLib.findElement(md, ref);
-            if (el == null)
-            {
-                //elements may have been replaced
-                continue;
-            }
-            final HiddenMetadataElementsRepository hiddenMetadataElementsRepository = context.getBean(HiddenMetadataElementsRepository.class);
-
-            // Find possible existing Element-hiding info
-            Element hideElm = el.getChild("hide", Edit.NAMESPACE);
-            if (hideElm != null) {
-                // Delete possible existing XPath expressions/level for this Element
-                xPathExpr = editLib.getXPathExpr(md, ref);
-                if (xPathExpr == null)
-                {
-                    throw new IllegalStateException("Cannot create XPath expression for (already hidden) ref = " + ref);
-                }
-
-                // Delete existing hiding info
-                // System.out.println("HIDING ref = " + ref + " DELETE = " + xPathExpr); // DEBUG
-                final List<HiddenMetadataElement> elems = hiddenMetadataElementsRepository
-                        .findAllByMetadataIdAndXPathExpr(idInteger, xPathExpr);
-                hiddenMetadataElementsRepository.delete(elems);
-            }
-
-            if ("no".equals(level))
-            {
-                // No hiding specified for this element, nothing to do
-                continue;
-            }
-
-            // We have hiding: create XPath Expr to element if not yet generated
-            if (xPathExpr == null) {
-                xPathExpr = editLib.getXPathExpr(md, ref);
-                if (xPathExpr == null)
-                {
-                    throw new IllegalStateException("Cannot create XPath expression for ref = " + ref);
-                }
-            }
-
-            // Save hiding info
-            // System.out.println("HIDING ref = " + ref + " UPDATE = " + xPathExpr); // DEBUG
-            final HiddenMetadataElement element = new HiddenMetadataElement();
-            element.setLevel(level);
-            element.setMetadataId(idInteger);
-            element.setxPathExpr(xPathExpr);
-            hiddenMetadataElementsRepository.save(element);
-        }
-    }
-    // END GEOCAT
-    public static boolean updatedLocalizedURLElement( Element md, String ref, String val, EditLib editLib, HashSet<Element> updatedXLinks ) {
-        if (ref.startsWith("url")) {
-            if (val.length() > 0) {
-                String[] ids = ref.split("_");
-                Element parent = editLib.findElement(md, ids[2]);
-
-                Element xlinkParent = findXlinkParent(parent);
-                if (xlinkParent != null && ReusableObjManager.isValidated(xlinkParent)) {
-                    return true;
-                }
-                if (xlinkParent != null) {
-                    updatedXLinks.add(xlinkParent);
-                }
-
-                parent.setAttribute("type", "che:PT_FreeURL_PropertyType",
-                        Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
-                Namespace che = Namespace.getNamespace("che", "http://www.geocat.ch/2008/che");
-                Element langElem = new Element("LocalisedURL", che);
-                langElem.setAttribute("locale", "#" + ids[1]);
-                langElem.setText(val);
-
-                Element freeURL = getOrAdd(parent, "PT_FreeURL", che);
-
-                Element urlGroup = new Element("URLGroup", che);
-                freeURL.addContent(urlGroup);
-                urlGroup.addContent(langElem);
-                Element refElem = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
-                refElem.setAttribute(Edit.Element.Attr.REF, "");
-                urlGroup.addContent(refElem);
-                langElem.addContent((Element) refElem.clone());
-            }
-            return true;
-        }
-        return false;
     }
 
     public static  Element findXlinkParent(Element el) { return findXlinkParent(el,null);}
@@ -458,7 +339,7 @@ class EditUtils {
      *    <gco:CharacterString>Template for Vector data in ISO19139 (multilingual)</gco:CharacterString>
      *    <gmd:PT_FreeText>
      *        <gmd:textGroup>
-     *            <gmd:LocalisedCharacterString locale="#FRE">Modéle de données vectorielles en ISO19139 (multilingue)</gmd:LocalisedCharacterString>
+     *            <gmd:LocalisedCharacterString locale="#FRE">Mod?le de donn?es vectorielles en ISO19139 (multilingue)</gmd:LocalisedCharacterString>
      *        </gmd:textGroup>
      * </pre>
      *
@@ -467,9 +348,15 @@ class EditUtils {
      * @param val
      * @return
      */
-    protected static boolean updatedLocalizedTextElement(Element md, String ref, String val, EditLib editLib, HashSet<Element> updatedXLinks) {
+    // GEOCAT
+    protected boolean updatedLocalizedTextElement(Element md, String schema,
+                                                  String ref, String val, EditLib editLib, HashSet<Element> updatedXLinks) {
+   // END GEOCAT
         if (ref.startsWith("lang")) {
             if (val.length() > 0) {
+
+                SchemaPlugin schemaPlugin = SchemaManager.getSchemaPlugin(context, schema);
+                if (schemaPlugin instanceof MultilingualSchemaPlugin) {
                 String[] ids = ref.split("_");
                 // --- search element in current parent
                 Element parent = editLib.findElement(md, ids[2]);
@@ -484,66 +371,52 @@ class EditUtils {
                 }
                 // END GEOCAT
 
-                List<Element> elems = null;
-                try {
-                  XPath xpath = XPath.newInstance(".//gmd:LocalisedCharacterString[@locale='#" + ids[1] + "']");
-                  @SuppressWarnings("unchecked")
-                  List<Element> tmp = xpath.selectNodes(parent);
-                  elems = tmp;
-                } catch (Exception e) {
-                  Log.debug(Geonet.DATA_MANAGER, "updatedLocalizedTextElement exception " + e.getMessage());
-                }
+                    String language = ids[1];
+                    List<Element> elems = ((MultilingualSchemaPlugin) schemaPlugin)
+                            .getTranslationForElement(parent, language);
                 
                 // Element exists, set the value
                 if (elems != null  && elems.size() > 0) {
                   elems.get(0).setText(val);
                 } else {
-                  // --- add required attribute
-                  parent.setAttribute("type", "gmd:PT_FreeText_PropertyType", Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
-  
-                  // --- add new translation
-                  Namespace gmd = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
-                  Element langElem = new Element("LocalisedCharacterString", gmd);
-                  langElem.setAttribute("locale", "#" + ids[1]);
-                  langElem.setText(val);
-  
-                  Element freeText = getOrAdd(parent, "PT_FreeText", gmd);
-  
-                  Element textGroup = new Element("textGroup", gmd);
-                  freeText.addContent(textGroup);
-                  textGroup.addContent(langElem);
-                  
-                  Element refElem = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
-                  refElem.setAttribute(Edit.Element.Attr.REF, "");
-                  textGroup.addContent(refElem);
-                  langElem.addContent((Element) refElem.clone());
+                        ((MultilingualSchemaPlugin) schemaPlugin).addTranslationToElement(
+                                parent, language, val
+                        );
+                        addMissingGeoNetRef(parent);
                 }
+            }
             }
             return true;
         }
         return false;
     }
 
-
-	/**
-     * If no PT_FreeText element exists, creates a geonet:element with an empty ref.
+    /**
+     * Visit all descendants of an element and
+     * add an empty geonet:ref element
+     * for later use by the editor.
      *
-     * @param parent
-     * @param name
-     * @param ns
-     * @return
+     * @param element
      */
-	protected static Element getOrAdd(Element parent, String name, Namespace ns) {
-		Element child = parent.getChild(name, ns);
-		if (child == null) {
-			child = new Element(name, ns);
-			Element refElem = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
-			refElem.setAttribute(Edit.Element.Attr.REF, "");
-			child.addContent(refElem);
-			parent.addContent(child);
-		}
-		return child;
-	}
+    protected static void addMissingGeoNetRef(Element element) {
+        Iterator<Object> descendants = element.getDescendants();
+        List<Object> list = Lists.newArrayList(descendants);
+
+        for (Object descendant : list) {
+            if (descendant instanceof Element) {
+                Element e = (Element) descendant;
+                if (e.getName() != Edit.RootChild.ELEMENT
+                        && e.getNamespace() != Edit.NAMESPACE) {
+                    Element geonetRef = e.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
+                    if (geonetRef == null) {
+                        geonetRef = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
+                        geonetRef.setAttribute(Edit.Element.Attr.REF, "");
+                        e.addContent(geonetRef);
+                    }
+                }
+            }
+        }
+    }
 
     /**
      *
