@@ -448,7 +448,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		dataMan.setTemplateExt(iId, MetadataType.METADATA);
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(uri));
 
-        dataMan.indexMetadata(id, false, context);
+        dataMan.indexMetadata(id, false);
 
         dataMan.flush();
     }

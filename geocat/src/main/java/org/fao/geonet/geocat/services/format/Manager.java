@@ -129,7 +129,7 @@ public class Manager implements Service {
 
                 DataManager dm = context.getBean(DataManager.class);
                 for (MetadataRecord metadataRecord : referencingMetadata) {
-                    dm.indexMetadata(""+metadataRecord.id, false, true, context, false, false, true);
+                    dm.indexMetadata(""+metadataRecord.id, false, true, false, false, true);
                 }
             }
 		}

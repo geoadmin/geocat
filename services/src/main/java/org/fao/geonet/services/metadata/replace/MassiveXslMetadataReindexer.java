@@ -38,7 +38,7 @@ public class MassiveXslMetadataReindexer extends MetadataIndexerProcessor {
                                        ServiceContext context,
                                        Set<Integer> metadata,
                                        MassiveReplaceReport report) {
-        super(context);
+        super(dm);
         this.iter = iter;
         this.process = process;
         this.params = params;

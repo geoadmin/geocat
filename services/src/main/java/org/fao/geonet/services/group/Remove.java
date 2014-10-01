@@ -80,7 +80,7 @@ public class Remove extends NotInReadOnlyModeService {
 		DataManager   dm = gc.getBean(DataManager.class);
 
 
-        dm.indexMetadata(Lists.transform(reindex, Functions.toStringFunction()), context);
+        dm.indexMetadata(Lists.transform(reindex, Functions.toStringFunction()));
 
         return new Element(Jeeves.Elem.RESPONSE)
 							.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));

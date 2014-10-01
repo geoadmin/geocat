@@ -178,7 +178,7 @@ public class Aligner extends BaseAligner
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, false, context);
+        dataMan.indexMetadata(id, false);
 		result.addedMetadata++;
 	}
 
@@ -230,7 +230,7 @@ public class Aligner extends BaseAligner
                 addCategories(metadata, params.getCategories(), localCateg, context, log, null);
                 dataMan.flush();
 
-                dataMan.indexMetadata(id, false, context);
+                dataMan.indexMetadata(id, false);
 				result.updatedMetadata++;
 			}
 		}

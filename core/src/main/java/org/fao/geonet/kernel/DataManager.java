@@ -243,7 +243,7 @@ public class DataManager {
 
         DataManager dm = context.getBean(DataManager.class);
         for (MetadataRecord metadataRecord : referencingMetadata) {
-            dm.indexMetadata("" + metadataRecord.id, false, true, context, false, false, true);
+            dm.indexMetadata("" + metadataRecord.id, false, true, false, false, true);
         }
     }
 
@@ -496,7 +496,7 @@ public class DataManager {
     public void indexMetadata(final List<String> metadataIds, final boolean processSharedObjects, final ServiceContext servContext,
                               final boolean performValidation, final boolean fastIndex, final boolean reloadXLinks) throws Exception {
         for (String metadataId : metadataIds) {
-            indexMetadata(metadataId, false, processSharedObjects, servContext, performValidation, fastIndex, reloadXLinks);
+            indexMetadata(metadataId, false, processSharedObjects, performValidation, fastIndex, reloadXLinks);
         }
     }
 
@@ -514,24 +514,24 @@ public class DataManager {
      * @param metadataId
      * @throws Exception
      */
-    public void indexMetadata(final String metadataId, boolean forceRefreshReaders, ServiceContext servContext) throws Exception {
+    public void indexMetadata(final String metadataId, boolean forceRefreshReaders) throws Exception {
         boolean processSharedObjects = true;
         boolean performValidation = true;
         boolean fastIndex = false;
         boolean reloadXLinks = true;
 
-        indexMetadata(metadataId, forceRefreshReaders, processSharedObjects, servContext, performValidation, fastIndex, reloadXLinks);
+        indexMetadata(metadataId, forceRefreshReaders, processSharedObjects, performValidation, fastIndex, reloadXLinks);
 
     }
-    public void indexMetadata(final List<String> metadataIds, final ServiceContext context) throws Exception {
+    public void indexMetadata(final List<String> metadataIds) throws Exception {
         for (String metadataId : metadataIds) {
-            indexMetadata(metadataId, false, context);
+            indexMetadata(metadataId, false);
         }
     }
 
     // GEOCAT
 
-    private Element indexMetadataProcessSharedObjects(String metadataId, boolean processSharedObjects, ServiceContext servContext, boolean performValidation, boolean fastIndex, Vector<Element> moreFields, Element md, String schema, String uuid, String harvested) throws Exception {
+    private Element indexMetadataProcessSharedObjects(String metadataId, boolean processSharedObjects, boolean performValidation, boolean fastIndex, Vector<Element> moreFields, Element md, String schema, String uuid, String harvested) throws Exception {
         if(schema.trim().equals("iso19139.che") && !fastIndex) {
             try {
                     /*
@@ -597,7 +597,7 @@ public class DataManager {
         }
         return md;
     }
-    public void indexMetadata(final String metadataId, boolean forceRefreshReaders, boolean processSharedObjects, ServiceContext servContext,
+    public void indexMetadata(final String metadataId, boolean forceRefreshReaders, boolean processSharedObjects,
                               boolean performValidation, boolean fastIndex, boolean reloadXLinks) throws Exception {
         indexLock.lock();
         try {
@@ -653,7 +653,7 @@ public class DataManager {
             }
 
             // GEOCAT
-            md = indexMetadataProcessSharedObjects(metadataId, processSharedObjects, servContext, performValidation, fastIndex, moreFields, md,
+            md = indexMetadataProcessSharedObjects(metadataId, processSharedObjects, performValidation, fastIndex, moreFields, md,
                     schema, uuid, isHarvested);
             // END GEOCAT
 
@@ -1363,7 +1363,7 @@ public class DataManager {
      */
     public void setTemplate(final int id, final MetadataType type, final String title, ServiceContext context) throws Exception {
         setTemplateExt(id, type);
-        indexMetadata(Integer.toString(id), true, context);
+        indexMetadata(Integer.toString(id), true);
     }
 
     /**
@@ -1391,7 +1391,7 @@ public class DataManager {
      */
     public void setHarvested(int id, String harvestUuid, ServiceContext context) throws Exception {
         setHarvestedExt(id, harvestUuid);
-        indexMetadata(Integer.toString(id), false, context);
+        indexMetadata(Integer.toString(id), false);
     }
 
     /**
@@ -1540,7 +1540,7 @@ public class DataManager {
             }
         });
 
-        indexMetadata(Integer.toString(metadataId), false, servContext);
+        indexMetadata(Integer.toString(metadataId), false);
 
         return rating;
     }
@@ -1749,7 +1749,7 @@ public class DataManager {
         copyDefaultPrivForGroup(context, stringId, groupId, fullRightsForGroup);
 
         if (index) {
-            indexMetadata(stringId, forceRefreshReaders, servContext);
+            indexMetadata(stringId, forceRefreshReaders);
         }
 
         if (notifyChange) {
@@ -1995,7 +1995,7 @@ public class DataManager {
             if(index) {
                 //--- update search criteria
                 boolean processSharedObjects = false;
-                indexMetadata(metadataId, false, processSharedObjects, servContext, true, false, false);
+                indexMetadata(metadataId, false, processSharedObjects, true, false, false);
             }
         }
         // Return an up to date metadata record
@@ -2624,7 +2624,7 @@ public class DataManager {
             notifyMetadataChange(md, metadataId);
 
             //--- update search criteria
-            indexMetadata(metadataId, true, servContext);
+            indexMetadata(metadataId, true);
         }
     }
 
@@ -2966,7 +2966,7 @@ public class DataManager {
      */
     public MetadataStatus setStatus(ServiceContext context, int id, int status, ISODate changeDate, String changeMessage) throws Exception {
         MetadataStatus statusObject = setStatusExt(context, id, status, changeDate, changeMessage);
-        indexMetadata(Integer.toString(id), true, context);
+        indexMetadata(Integer.toString(id), true);
         return statusObject;
     }
 

@@ -23,7 +23,6 @@ package org.fao.geonet.kernel.harvest.harvester.z3950;
 
 import com.google.common.base.Optional;
 import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
@@ -35,14 +34,12 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
-import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -52,7 +49,6 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.main.Info;
 import org.fao.geonet.utils.Xml;
-import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -364,7 +360,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 
                 dataMan.flush();
 
-                dataMan.indexMetadata(id, false, context);
+                dataMan.indexMetadata(id, false);
 
                 result.addedMetadata++;
             }

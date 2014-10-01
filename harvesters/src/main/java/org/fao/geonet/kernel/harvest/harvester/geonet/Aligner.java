@@ -36,7 +36,6 @@ import org.fao.geonet.kernel.mef.IMEFVisitor;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFVisitor;
-import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
@@ -44,15 +43,12 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.util.*;
 
@@ -372,7 +368,7 @@ public class Aligner extends BaseAligner
         metadataRepository.save(metadata);
 //        dataMan.flush();
 
-        dataMan.indexMetadata(id, false, context);
+        dataMan.indexMetadata(id, false);
 		result.addedMetadata++;
 
 		return id;
@@ -662,7 +658,7 @@ public class Aligner extends BaseAligner
         metadataRepository.save(metadata);
 //        dataMan.flush();
 
-        dataMan.indexMetadata(id, false, context);
+        dataMan.indexMetadata(id, false);
 	}
 
 

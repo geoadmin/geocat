@@ -92,7 +92,7 @@ public class UpdateGroupOwner extends NotInReadOnlyModeService {
         metadataRepository.save(metadata);
 
         //--- index metadata
-        dataMan.indexMetadata(id, true, context);
+        dataMan.indexMetadata(id, true);
 
         //--- return id for showing
         return new Element(Jeeves.Elem.RESPONSE).

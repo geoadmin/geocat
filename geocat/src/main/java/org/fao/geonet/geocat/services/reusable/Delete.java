@@ -105,7 +105,7 @@ public class Delete implements Service
 
         Utils.unpublish(metadataIds, context);
         for (Integer metadataId : metadataIds) {
-            context.getBean(DataManager.class).indexMetadata(""+metadataId, false, true, context, false, false, true);
+            context.getBean(DataManager.class).indexMetadata(""+metadataId, false, true, false, false, true);
         }
         DeletedObjects.delete(context, ids);
 

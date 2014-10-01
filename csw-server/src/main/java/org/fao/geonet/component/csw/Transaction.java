@@ -267,7 +267,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
             dataMan.setOperation(context, id, "" + ReservedGroup.all.getId(), ReservedOperation.view);
         }
 
-        dataMan.indexMetadata(id, false, context);
+        dataMan.indexMetadata(id, false);
 
         fileIds.add(uuid);
 

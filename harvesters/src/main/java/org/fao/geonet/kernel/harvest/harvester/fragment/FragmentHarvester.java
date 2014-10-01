@@ -387,7 +387,7 @@ public class FragmentHarvester extends BaseAligner {
 
         dataMan.setTemplateExt(iId, MetadataType.SUB_TEMPLATE);
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
-        dataMan.indexMetadata(id, false, context);
+        dataMan.indexMetadata(id, false);
 
         dataMan.flush();
 
@@ -570,13 +570,13 @@ public class FragmentHarvester extends BaseAligner {
          metadata.getCategories().clear();
          addCategories(metadata, params.categories, localCateg, context, log, null);
 
-         dataMan.indexMetadata(id, false, context);
+         dataMan.indexMetadata(id, false);
          if(doExt) {
              dataMan.setTemplateExt(iId, MetadataType.SUB_TEMPLATE);
              dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
          }
 
-         dataMan.indexMetadata(id, false, context);
+         dataMan.indexMetadata(id, false);
 
          dataMan.flush();
      }
@@ -614,7 +614,7 @@ public class FragmentHarvester extends BaseAligner {
 		
 		dataMan.setTemplateExt(iId, MetadataType.METADATA);
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
-        dataMan.indexMetadata(id, false, context);
+        dataMan.indexMetadata(id, false);
 
         if(log.isDebugEnabled()) {
             log.debug("	- Commit "+id);

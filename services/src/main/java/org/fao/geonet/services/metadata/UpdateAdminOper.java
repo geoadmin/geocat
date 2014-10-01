@@ -174,7 +174,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 		// END GEOCAT
 
 		//--- index metadata
-        dm.indexMetadata(id, true, context);
+        dm.indexMetadata(id, true);
 
         //--- return id for showing
 		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));

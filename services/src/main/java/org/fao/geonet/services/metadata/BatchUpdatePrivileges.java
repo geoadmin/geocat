@@ -123,16 +123,18 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 
 						String groupId = st.nextToken();
 						String operId  = st.nextToken();
-
+                        // GEOCAT
                         if(Integer.parseInt(groupId) == 1 && Integer.parseInt(operId) == 0) {
                             publishedAgain = true;
                         }
+                        // END GEOCAT
 
 						dm.setOperation(context, "" + info.getId(), groupId, operId);
 					}
 				}
 				metadata.add(info.getId());
 
+                // GEOCAT
                 final PublishRecord record = new PublishRecord();
                 record.setEntity(context.getUserSession().getUsername());
                 record.setFailurereasons("Manually unpublished by user");
@@ -146,13 +148,14 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
                     record.setPublished(true);
                     context.getBean(PublishRecordRepository.class).save(record);
                 }
+                //  END GEOCAT
 			}
 		}
 		}
 
 		//--- reindex metadata
 		context.info("Re-indexing metadata");
-		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(context, metadata);
+		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, metadata);
 		r.process();
 
 		// -- for the moment just return the sizes - we could return the ids

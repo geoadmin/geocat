@@ -30,12 +30,10 @@ import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
-import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -256,7 +254,7 @@ public class XslProcessing { //extends NotInReadOnlyModeService {
 	                // Always udpate metadata date stamp on metadata processing (minor edit has no effect).
 	                boolean updateDateStamp = true;
 	                dataMan.updateMetadata(context, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp, true);
-                    dataMan.indexMetadata(id, true, context);
+                    dataMan.indexMetadata(id, true);
 	            }
 	
 	            report.addMetadataId(iId);

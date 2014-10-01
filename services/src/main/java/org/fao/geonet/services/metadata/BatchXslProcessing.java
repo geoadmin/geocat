@@ -23,18 +23,20 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.util.Iterator;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import jeeves.server.ServiceConfig;
 import jeeves.services.ReadWriteController;
+
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Iterator;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -137,7 +139,7 @@ public class BatchXslProcessing { // extends NotInReadOnlyModeService {
 				String process, String appPath, HttpSession session,
 				String siteURL, XslProcessingReport xslProcessingReport,
 				HttpServletRequest request) {
-            super(context);
+            super(dm);
             this.iter = iter;
             this.process = process;
 			this.session = session;

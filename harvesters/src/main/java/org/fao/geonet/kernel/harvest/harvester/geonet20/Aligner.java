@@ -132,7 +132,7 @@ public class Aligner
                 //--- maybe the metadata was unretrievable
 
                 if (id != null) {
-                    dataMan.indexMetadata(id, false, context);
+                    dataMan.indexMetadata(id, false);
                 }
             }
         }

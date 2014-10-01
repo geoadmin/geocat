@@ -24,16 +24,19 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
 import jeeves.server.UserSession;
-import jeeves.server.context.BasicContext;
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.DailyRollingFileAppender;
 import org.apache.log4j.PatternLayout;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.HarvestHistory;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.JeevesException;
@@ -44,7 +47,11 @@ import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.HarvestHistoryRepository;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.harvesting.notifier.SendNotification;
@@ -423,11 +430,11 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         Logger logger;
 
         /**
-         * @param context
+         * @param dm
          * @param logger
          */
-        public HarvestWithIndexProcessor(ServiceContext context, Logger logger) {
-            super(context);
+        public HarvestWithIndexProcessor(DataManager dm, Logger logger) {
+            super(dm);
             this.logger = logger;
         }
 
@@ -502,7 +509,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
                 //--- proper harvesting
                 logger.info("Started harvesting from node : " + nodeName);
-                HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(context, logger);
+                HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger);
                 // todo check (was: processwithfastindexing)
                 h.process();
                 logger.info("Ended harvesting from node : " + nodeName);

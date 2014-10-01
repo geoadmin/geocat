@@ -254,8 +254,8 @@ public class ImportFromDir extends NotInReadOnlyModeService {
         HashMap<String, Exception> exceptions = new HashMap<String, Exception>();
 
 
-		public ImportMetadataReindexer(Element params, ServiceContext context, List<File> fileList, String stylePath, boolean failOnError) {
-			super (context);
+		public ImportMetadataReindexer(DataManager dm, Element params, ServiceContext context, List<File> fileList, String stylePath, boolean failOnError) {
+			super (dm);
 			this.params = params;
 			this.context = context;
 			this.files = fileList.toArray(new File[fileList.size()]);
@@ -310,6 +310,9 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 
 	private int standardImport(Element params, ServiceContext context) throws Exception
 	{
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager   dm = gc.getBean(DataManager.class);
+
 		String dir      = Util.getParam(params, Params.DIR);
 		boolean recurse = Util.getParam(params, Params.RECURSE, "off").equals("on");
 		
@@ -318,7 +321,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 		if (files.size() == 0)
 			throw new Exception("No XML or MEF file found in " + dir);
 
-		ImportMetadataReindexer r = new ImportMetadataReindexer(params, context, files, stylePath, failOnError);
+		ImportMetadataReindexer r = new ImportMetadataReindexer(dm, params, context, files, stylePath, failOnError);
 		r.process();
 		exceptions = r.getExceptions();
 		

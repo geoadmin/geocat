@@ -282,7 +282,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, false, context);
+        dataMan.indexMetadata(id, false);
 	}
 
 	
@@ -323,7 +323,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, false, context);
+        dataMan.indexMetadata(id, false);
 		return id;
     }
 

@@ -30,7 +30,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.repository.HarvesterDataRepository;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
@@ -45,7 +44,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -267,7 +265,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, false, context);
+        dataMan.indexMetadata(id, false);
 		result.addedMetadata++;
 	}
 	
@@ -413,7 +411,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
             dataMan.flush();
 
-            dataMan.indexMetadata(record.id, false, context);
+            dataMan.indexMetadata(record.id, false);
 			result.updatedMetadata++;
 		}
 	}

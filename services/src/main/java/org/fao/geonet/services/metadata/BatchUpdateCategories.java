@@ -127,7 +127,7 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 
         //--- reindex metadata
 		context.info("Re-indexing metadata");
-		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(context, metadata);
+		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, metadata);
 		r.process();
 
 		// -- for the moment just return the sizes - we could return the ids

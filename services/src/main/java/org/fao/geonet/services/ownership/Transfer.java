@@ -131,7 +131,7 @@ public class Transfer extends NotInReadOnlyModeService {
 		for (int mdId : metadata) {
             list.add(Integer.toString(mdId));
         }
-        dm.indexMetadata(list, context);
+        dm.indexMetadata(list);
 
         //--- return summary
 		return new Element("response")

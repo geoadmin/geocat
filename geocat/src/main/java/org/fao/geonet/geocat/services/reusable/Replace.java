@@ -115,7 +115,7 @@ public class Replace implements Service
             for (String uuid : elements) {
                 final boolean uuidIsId = processAllRecords;
                 String id = ReusableObjManager.uuidToId(dataManager, uuid, uuidIsId);
-                dataManager.indexMetadata(id, false, context);
+                dataManager.indexMetadata(id, false);
             }
         	
         }

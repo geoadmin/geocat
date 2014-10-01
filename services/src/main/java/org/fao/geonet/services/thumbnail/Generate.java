@@ -95,7 +95,7 @@ public class Generate extends NotInReadOnlyModeService {
 
         dataMan.setThumbnail(context, id, false, file, false);
 
-        dataMan.indexMetadata(id, false, context);
+        dataMan.indexMetadata(id, false);
 
         Element response = new Element("a");
         response.addContent(new Element("id").setText(id));

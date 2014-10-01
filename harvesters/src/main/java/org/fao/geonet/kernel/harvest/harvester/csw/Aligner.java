@@ -47,7 +47,6 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.Log;
 import org.jdom.Document;
 import org.jdom.Namespace;
-import org.fao.geonet.repository.Updater;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
@@ -57,7 +56,6 @@ import java.util.*;
 
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.GET;
 
-import javax.annotation.Nonnull;
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.POST;
 
 //=============================================================================
@@ -255,7 +253,7 @@ public class Aligner extends BaseAligner
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, false, context);
+        dataMan.indexMetadata(id, false);
 		result.addedMetadata++;
 	}
 
@@ -312,7 +310,7 @@ public class Aligner extends BaseAligner
 
                 dataMan.flush();
 
-                dataMan.indexMetadata(id, false, context);
+                dataMan.indexMetadata(id, false);
 				result.updatedMetadata++;
 			}
 		}
