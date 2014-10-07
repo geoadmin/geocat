@@ -241,9 +241,7 @@ public class MEFLib {
 
 		String id = ""+metadata.getId();
         boolean forEditing = false;
-		boolean elementsHide = true;
-        Element record = dm.getGeocatMetadata(context, id, forEditing, !removeXlinkAttribute,
-                elementsHide);
+        Element record = dm.getGeocatMetadata(context, id, forEditing, !removeXlinkAttribute);
         if(resolveXlink) {
             Processor.detachXLink(record, context);
         }

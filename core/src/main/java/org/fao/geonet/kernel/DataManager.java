@@ -86,7 +86,6 @@ import org.fao.geonet.domain.SchematronRequirement;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;
-import org.fao.geonet.domain.geocat.HiddenMetadataElement;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
@@ -121,7 +120,6 @@ import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.geocat.HiddenMetadataElementsRepository;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.MetadataStatusSpecs;
@@ -1599,24 +1597,6 @@ public class DataManager {
         final int finalId = insertMetadata(context, newMetadata, xml, false, true, true, UpdateDatestamp.YES,
                 fullRightsForGroup, true).getId();
 
-        // GEOCAT
-        // --- store metadata hiding by copying them from the template
-        final HiddenMetadataElementsRepository hiddenElemRepo = _applicationContext.getBean(HiddenMetadataElementsRepository.class);
-        final List<HiddenMetadataElement> allHiddenElem = hiddenElemRepo.findAllByMetadataId(Integer.parseInt(templateId));
-        List<HiddenMetadataElement> hiddenWithRemappedMetadataIds = Lists.transform(allHiddenElem, new Function<HiddenMetadataElement, HiddenMetadataElement>() {
-
-
-            @Nullable
-            @Override
-            public HiddenMetadataElement apply(@Nullable HiddenMetadataElement input) {
-                Assert.notNull(input);
-                input.setMetadataId(finalId);
-                return input;
-            }
-        });
-        hiddenElemRepo.save(hiddenWithRemappedMetadataIds);
-        // END GEOCAT
-
         return String.valueOf(finalId);
     }
 
@@ -1767,7 +1747,7 @@ public class DataManager {
     }
 
     public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
-        return getGeocatMetadata(srvContext,id,forEditing,keepXlinkAttributes, true);
+        return getGeocatMetadata(srvContext,id,forEditing,keepXlinkAttributes);
     }
 
     /**
@@ -1781,7 +1761,7 @@ public class DataManager {
      * @return
      * @throws Exception
      */
-    public Element getGeocatMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean keepXlinkAttributes, boolean elementsHide) throws Exception {
+    public Element getGeocatMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean keepXlinkAttributes) throws Exception {
         // GEOCAT
         boolean withEditorValidationErrors = false;
         // END GEOCAT
@@ -1817,18 +1797,10 @@ public class DataManager {
         if( getMetadataSchema(id).equals("iso19139.che")) {
             metadataXml = Xml.transform(metadataXml, stylePath+"add-charstring.xsl");
         }
-        if (elementsHide) {
-            hideElements(srvContext, metadataXml, id, forEditing, elementsHide);
-        }
         // END GEOCAT
         metadataXml.addNamespaceDeclaration(Edit.NAMESPACE);
         Element info = buildInfoElem(srvContext, id, version);
         metadataXml.addContent(info);
-        //GEOCAT
-        if (forEditing) {
-            addHidingInfo(srvContext, metadataXml, id);
-        }
-        // END GEOCAT
         metadataXml.detach();
         return metadataXml;
     }
@@ -2113,8 +2085,6 @@ public class DataManager {
         Element md;
         if (!forEditing) {
             md = (Element) metadata.clone();
-            // always hideElements for validation
-            hideElements(context, md, metadataId, false, true);
         } else {
             md = metadata;
         }
@@ -2993,40 +2963,6 @@ public class DataManager {
         return _applicationContext.getBean(MetadataStatusRepository.class).save(metatatStatus);
     }
 
-    // GEOCAT
-    public void addHidingInfo(ServiceContext context, Element md, String id) throws Exception
-    {
-        md.detach(); // DEBUG
-
-        final HiddenMetadataElementsRepository hiddenElemRepo = context.getBean(HiddenMetadataElementsRepository.class);
-        final List<HiddenMetadataElement> allHidden = hiddenElemRepo.findAllByMetadataId(Integer.parseInt(id));
-
-        for (HiddenMetadataElement hiddenMetadataElement : allHidden) {
-            try {
-                String expr = hiddenMetadataElement.getxPathExpr();
-                String level = hiddenMetadataElement.getLevel();
-                Log.debug(Geonet.DATA_MANAGER, "expr = " + expr + " - level = " + level);
-
-                Element t = Xml.selectElement(md, expr);
-                md.detach();
-
-                if(t != null) {
-                    t.addContent(new Element("hide", Edit.NAMESPACE).setAttribute("level", level));
-                } else {
-                    Log.error(Geonet.DATA_MANAGER, "path to hidden xpath no longer exists. Expr:"+expr+" Level: "+level);
-                }
-
-            } catch (JDOMException e) {
-                Log.error(Geonet.DATA_MANAGER, "Error occurred adding hiding info: "+e.getMessage());
-            }
-        }
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-            Log.debug(Geonet.DATA_MANAGER, "After hiding element: "+ Xml.getString(md));
-        }
-        md.detach();
-    }
-    // END GEOCAT
-
     //--------------------------------------------------------------------------
     //---
     //--- Categories API
@@ -3237,7 +3173,7 @@ public class DataManager {
 
         // --- get parent metadata in read/only mode
         boolean forEditing = false, keepXlinkAttributes = false;
-        Element parent = getGeocatMetadata(srvContext, parentId, forEditing, keepXlinkAttributes, false);
+        Element parent = getGeocatMetadata(srvContext, parentId, forEditing, keepXlinkAttributes);
 
         Element env = new Element("update");
         env.addContent(new Element("parentUuid").setText(parentUuid));
@@ -3259,7 +3195,7 @@ public class DataManager {
                 continue;
             }
 
-            Element child = getGeocatMetadata(srvContext, childId, forEditing, keepXlinkAttributes, false);
+            Element child = getGeocatMetadata(srvContext, childId, forEditing, keepXlinkAttributes);
 
             String childSchema = child.getChild(Edit.RootChild.INFO,
                     Edit.NAMESPACE).getChildText(Edit.Info.Elem.SCHEMA);
@@ -3503,89 +3439,6 @@ public class DataManager {
             operationsPerMetadata.put(id.getMetadataId(), ReservedOperation.lookup(id.getOperationId()));
         }
         return operationsPerMetadata;
-    }
-
-    // GEOCAT
-
-    /**
-     *
-     * @param context Null when called from indexMetadata.
-     * @param elMd
-     * @param id
-     * @param forEditing
-     * @throws Exception
-     */
-    private void hideElements(ServiceContext context, Element elMd, String id, boolean forEditing, boolean forceHide) throws Exception {
-        AccessManager am = this.getAccessManager();
-
-        // Editors can always see all elements
-        if (!forceHide && (forEditing || (context != null && am.canEdit(context, id)))) {
-            return;
-        }
-
-        final HiddenMetadataElementsRepository repository = this._applicationContext.getBean(HiddenMetadataElementsRepository.class);
-        List<HiddenMetadataElement> hiddenElements = repository.findAllByMetadataId(new
-                Integer(id));
-
-
-        Set<Integer> groups = null;
-
-        if (context != null && context.getUserSession() != null && context.getIpAddress() != null) {
-            groups = am.getUserGroups(context.getUserSession(), context.getIpAddress(), true);
-        }
-
-        List<Element> removeElms = new ArrayList<Element>(hiddenElements.size());
-
-        for (HiddenMetadataElement elem : hiddenElements) {
-            try {
-
-                String expr = elem.getxPathExpr();
-                String level = elem.getLevel();
-                Log.debug(Geonet.DATA_MANAGER, "Hide expr = " + expr + " - level = " + level);
-
-                // Intranet level for admin groups: no hiding
-                if ((groups != null && groups.contains(0) && "intranet".equals(level))) {
-                    continue;
-                }
-
-                // ASSERT: we must hide the element
-
-                // Find the element using the XPath expr
-                List<?> targetElms = Xml.selectNodes(elMd, expr);
-                if (targetElms == null || targetElms.size() == 0) {
-                    Log.debug(Geonet.DATA_MANAGER, "ERROR no targetElms found for " + expr);
-                    continue;
-                }
-
-                // Found target
-                Element targetElm = (Element) targetElms.get(0);
-
-                // We cannot remove immediately since this will break
-                // XPath expressions: like /descendant::gmd:electronicMailAddress[2]
-                // So we remember the elements to be removed.
-                removeElms.add(targetElm);
-            } catch (JDOMException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // Remove elements marked for removal
-        for (Iterator<Element> i = removeElms.iterator(); i.hasNext(); ) {
-            Element removeElm = i.next();
-            Parent removeElmParent = removeElm.getParent();
-
-            // Could happen if parent or ancestor was already removed
-            if (removeElmParent == null) {
-                Log.debug(Geonet.DATA_MANAGER, "No parent found for" + removeElm.getName());
-                continue;
-            }
-
-            Log.debug(Geonet.DATA_MANAGER, "Removing " + removeElm.getName());
-            removeElmParent.removeContent(removeElm);
-            // TODO ?? t.setAttribute("nilreason", "withheld", ns);
-        }
-
-        elMd.detach();
     }
 
     public void updateXlinkObjects(String metadataId, String lang, Element md, Element... updatedXLinks) throws Exception {

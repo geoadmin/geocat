@@ -94,7 +94,7 @@ public class GetAdminOper implements Service
 
         // GEOCAT
         DataManager dm = context.getBean(DataManager.class);
-        Element md = dm.getGeocatMetadata(context, metadataId, false, false, false);
+        Element md = dm.getGeocatMetadata(context, metadataId, false, false);
         dm.doValidate(context, info.getDataInfo().getSchemaId(), metadataId,md,context.getLanguage(), false);
         // END GEOCAT
 
