@@ -243,7 +243,7 @@ public class DataManager {
 
         DataManager dm = context.getBean(DataManager.class);
         for (MetadataRecord metadataRecord : referencingMetadata) {
-            dm.indexMetadata("" + metadataRecord.id, false, true, false, false, true);
+            dm.indexMetadata("" + metadataRecord.id, true, false, false, true);
         }
     }
 
@@ -493,10 +493,10 @@ public class DataManager {
     Set<String> indexing = new HashSet<String>();
     Set<IndexMetadataTask> batchIndex = new ConcurrentHashSet<IndexMetadataTask>();
 
-    public void indexMetadata(final List<String> metadataIds, final boolean processSharedObjects, final ServiceContext servContext,
-                              final boolean performValidation, final boolean fastIndex, final boolean reloadXLinks) throws Exception {
+    public void indexMetadata(final List<String> metadataIds, final boolean processSharedObjects,
+                              final boolean fastIndex, final boolean reloadXLinks) throws Exception {
         for (String metadataId : metadataIds) {
-            indexMetadata(metadataId, false, processSharedObjects, performValidation, fastIndex, reloadXLinks);
+            indexMetadata(metadataId, false, processSharedObjects, fastIndex, reloadXLinks);
         }
     }
 
@@ -516,11 +516,10 @@ public class DataManager {
      */
     public void indexMetadata(final String metadataId, boolean forceRefreshReaders) throws Exception {
         boolean processSharedObjects = true;
-        boolean performValidation = true;
         boolean fastIndex = false;
         boolean reloadXLinks = true;
 
-        indexMetadata(metadataId, forceRefreshReaders, processSharedObjects, performValidation, fastIndex, reloadXLinks);
+        indexMetadata(metadataId, forceRefreshReaders, processSharedObjects, fastIndex, reloadXLinks);
 
     }
     public void indexMetadata(final List<String> metadataIds) throws Exception {
@@ -531,7 +530,8 @@ public class DataManager {
 
     // GEOCAT
 
-    private Element indexMetadataProcessSharedObjects(String metadataId, boolean processSharedObjects, boolean performValidation, boolean fastIndex, Vector<Element> moreFields, Element md, String schema, String uuid, String harvested) throws Exception {
+    private Element indexMetadataProcessSharedObjects(String metadataId, boolean processSharedObjects, boolean fastIndex,
+                                                      Vector<Element> moreFields, Element md, String schema, String uuid, String harvested) throws Exception {
         if(schema.trim().equals("iso19139.che") && !fastIndex) {
             try {
                     /*
@@ -583,22 +583,10 @@ public class DataManager {
             if(xlinks.size()>0) moreFields.add(SearchManager.makeField("_hasxlinks", "1", true, true));
         }
 
-
-        if(performValidation) {
-            try {
-                // GEOCAT
-                Element xlinkResolved = Processor.processXLink((Element) md.clone(), servContext);
-                doValidate(servContext, schema, metadataId, xlinkResolved, servContext.getLanguage(), false);
-                // END GEOCAT
-            } catch (Exception e) {
-                Element stackTrace = JeevesException.toElement(e);
-                Log.error(Geonet.DATA_MANAGER, "error while trying to validating metadata (during indexing), "+metadataId+":\n "+Xml.getString(stackTrace)); //DEBUG
-            }
-        }
         return md;
     }
     public void indexMetadata(final String metadataId, boolean forceRefreshReaders, boolean processSharedObjects,
-                              boolean performValidation, boolean fastIndex, boolean reloadXLinks) throws Exception {
+                              boolean fastIndex, boolean reloadXLinks) throws Exception {
         indexLock.lock();
         try {
             if (waitForIndexing.contains(metadataId)) {
@@ -653,7 +641,7 @@ public class DataManager {
             }
 
             // GEOCAT
-            md = indexMetadataProcessSharedObjects(metadataId, processSharedObjects, performValidation, fastIndex, moreFields, md,
+            md = indexMetadataProcessSharedObjects(metadataId, processSharedObjects, fastIndex, moreFields, md,
                     schema, uuid, isHarvested);
             // END GEOCAT
 
@@ -1779,7 +1767,7 @@ public class DataManager {
     }
 
     public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
-        return getGeocatMetadata(srvContext,id,forEditing,withEditorValidationErrors,keepXlinkAttributes, true);
+        return getGeocatMetadata(srvContext,id,forEditing,keepXlinkAttributes, true);
     }
 
     /**
@@ -1789,12 +1777,15 @@ public class DataManager {
      * @param srvContext
      * @param id
      * @param forEditing        Add extra element to build metadocument {@link EditLib#expandElements(String, Element)}
-     * @param withEditorValidationErrors
      * @param keepXlinkAttributes When XLinks are resolved in non edit mode, do not remove XLink attributes.
      * @return
      * @throws Exception
      */
-    public Element getGeocatMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes, boolean elementsHide) throws Exception {
+    public Element getGeocatMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean keepXlinkAttributes, boolean elementsHide) throws Exception {
+        // GEOCAT
+        boolean withEditorValidationErrors = false;
+        // END GEOCAT
+
         boolean doXLinks = xmlSerializer.resolveXLinks();
         Element metadataXml = xmlSerializer.selectNoXLinkResolver(id, false);
         if (metadataXml == null) return null;
@@ -1995,7 +1986,7 @@ public class DataManager {
             if(index) {
                 //--- update search criteria
                 boolean processSharedObjects = false;
-                indexMetadata(metadataId, false, processSharedObjects, true, false, false);
+                indexMetadata(metadataId, false, processSharedObjects, false, false);
             }
         }
         // Return an up to date metadata record
@@ -3245,8 +3236,8 @@ public class DataManager {
         String parentSchema = (String)params.get(Params.SCHEMA);
 
         // --- get parent metadata in read/only mode
-        boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-        Element parent = getGeocatMetadata(srvContext, parentId, forEditing, withValidationErrors, keepXlinkAttributes, false);
+        boolean forEditing = false, keepXlinkAttributes = false;
+        Element parent = getGeocatMetadata(srvContext, parentId, forEditing, keepXlinkAttributes, false);
 
         Element env = new Element("update");
         env.addContent(new Element("parentUuid").setText(parentUuid));
@@ -3268,7 +3259,7 @@ public class DataManager {
                 continue;
             }
 
-            Element child = getGeocatMetadata(srvContext, childId, forEditing, withValidationErrors, keepXlinkAttributes, false);
+            Element child = getGeocatMetadata(srvContext, childId, forEditing, keepXlinkAttributes, false);
 
             String childSchema = child.getChild(Edit.RootChild.INFO,
                     Edit.NAMESPACE).getChildText(Edit.Info.Elem.SCHEMA);

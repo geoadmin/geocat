@@ -148,7 +148,7 @@ public class Reject implements Service
         }
         strategy.performDelete(ids, session, strategySpecificData);
 
-        context.getBean(DataManager.class).indexMetadata(allAffectedMdIds, true, context, true, false, true);
+        context.getBean(DataManager.class).indexMetadata(allAffectedMdIds, true, false, true);
 
         return result;
 

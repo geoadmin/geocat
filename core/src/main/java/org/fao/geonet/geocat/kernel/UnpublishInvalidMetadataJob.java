@@ -120,7 +120,7 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
                 final String id = "" + metadataRecord.getId();
                 try {
                      if(checkIfNeedsUnpublishingAndSavePublishedRecord(serviceContext, metadataRecord, dataManager)) {
-                         dataManager.indexMetadata(id, false, false, true, true, true);
+                         dataManager.indexMetadata(id, false, false, true, true);
                      }
                 } catch (Exception e) {
                     String error = Xml.getString(JeevesException.toElement(e));

@@ -23,19 +23,26 @@
 
 package org.fao.geonet.services.metadata;
 
-import static org.springframework.data.jpa.domain.Specifications.*;
-
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.Operation;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.OperationRepository;
+import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -46,6 +53,8 @@ import org.springframework.data.jpa.domain.Specifications;
 
 import java.util.List;
 import java.util.Set;
+
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 //=============================================================================
 
@@ -82,6 +91,12 @@ public class GetAdminOper implements Service
 
 		if (info == null)
 			throw new MetadataNotFoundEx(metadataId);
+
+        // GEOCAT
+        DataManager dm = context.getBean(DataManager.class);
+        Element md = dm.getGeocatMetadata(context, metadataId, false, false, false);
+        dm.doValidate(context, info.getDataInfo().getSchemaId(), metadataId,md,context.getLanguage(), false);
+        // END GEOCAT
 
         Element ownerId = new Element("ownerid").setText(info.getSourceInfo().getOwner() + "");
         Element groupOwner = new Element("groupOwner").setText(info.getSourceInfo().getGroupOwner() + "");

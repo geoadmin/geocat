@@ -23,6 +23,7 @@
 
 package org.fao.geonet.component.csw;
 
+import com.google.common.collect.Lists;
 import com.vividsolutions.jts.util.Assert;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -40,7 +41,11 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.AddElemValue;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
@@ -54,7 +59,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 //=============================================================================
 
@@ -158,11 +170,10 @@ public class Transaction extends AbstractOperation implements CatalogService {
         } finally {
             try {
                 boolean processSharedObjects = true;
-                boolean performValidation = true;
                 boolean fastIndex = false;
                 boolean reloadXLinks = true;
 
-                dataMan.indexMetadata(new ArrayList<String>(toIndex), processSharedObjects, context, performValidation, fastIndex, reloadXLinks);
+                dataMan.indexMetadata(Lists.newArrayList(toIndex), processSharedObjects, fastIndex, reloadXLinks);
             } catch (Exception e) {
                 Log.error(Geonet.CSW, "cannot index");
                 Log.error(Geonet.CSW, " (C) StackTrace\n" + Util.getStackTrace(e));

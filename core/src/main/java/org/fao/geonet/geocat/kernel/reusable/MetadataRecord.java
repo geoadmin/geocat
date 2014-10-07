@@ -66,7 +66,7 @@ public class MetadataRecord
         xmlSerializer.update(""+id, xml, new ISODate().toString(), true, null, srvContext);
         GeonetContext context = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
 
-        context.getBean(DataManager.class).indexMetadata(""+id, true, true, false, false, false);
+        context.getBean(DataManager.class).indexMetadata(""+id, true, true, false, false);
     }
 
     public String email(UserRepository userRepository) throws SQLException {

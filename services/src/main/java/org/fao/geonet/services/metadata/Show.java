@@ -114,8 +114,8 @@ public class Show extends ShowViewBaseService
         // GEOCAT
 		boolean addEditing = "true".equalsIgnoreCase(Util.getParam(params, "addEditing","false"));
 		if (!skipInfo) {
-            boolean withValidationErrors = false, hideElements = true;
-            elMd = gc.getBean(DataManager.class).getGeocatMetadata(context, id, addEditing, withValidationErrors, this.keepXLinks, hideElements);
+            boolean hideElements = true;
+            elMd = gc.getBean(DataManager.class).getGeocatMetadata(context, id, addEditing, this.keepXLinks, hideElements);
             // END GEOCAT
 		} else {
 			elMd = dm.getMetadataNoInfo(context, id);
