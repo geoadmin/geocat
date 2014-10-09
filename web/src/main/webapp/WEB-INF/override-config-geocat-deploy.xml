@@ -2,13 +2,6 @@
   <import file="/WEB-INF/overrides-config-geocat.xml"/>
 
     <properties>
-      <postgis.user>@POSTGIS_USER@</postgis.user>
-      <postgis.pass>@POSTGIS_PASS@</postgis.pass>
-      <postgis.host>@POSTGIS_HOST@</postgis.host>
-      <postgis.port>@POSTGIS_PORT@</postgis.port>
-      <postgis.db>@POSTGIS_DATABASE@</postgis.db>
-      <postgis.max.active>@POSTGIS_MAX_CONNECTIONS@</postgis.max.active>
-
       <wfs.host>@WFS_HOST@</wfs.host>
       <wfs.port>@WFS_PORT@</wfs.port>
       <host>@HOST@</host>
@@ -16,12 +9,6 @@
       <datadir>@DATA_DIR@</datadir>
       <serverStage>@STAGE@</serverStage>    
     </properties>
-    <file name=".*/WEB-INF/config-geocat.xml">
-      <replaceAtt xpath="services/service[@name='metadata.formatter.register']/class/param[@name = 'user_xsl_dir']" attName="value" value="${datadir}/user_xsl"/>
-      <replaceAtt xpath="services/service[@name='metadata.formatter.remove']/class/param[@name = 'user_xsl_dir']" attName="value" value="${datadir}/user_xsl"/>
-      <replaceAtt xpath="services/service[@name='metadata.formatter.html']/class/param[@name = 'user_xsl_dir']" attName="value" value="${datadir}/user_xsl"/>
-      <replaceAtt xpath="services/service[@name='metadata.formatter.xml']/class/param[@name = 'user_xsl_dir']" attName="value" value="${datadir}/user_xsl"/>
-    </file>
 
     <file name=".*/WEB-INF/config.xml">
       <replaceText xpath="general/uploadDir">@UPLOAD_DIR@</replaceText>
