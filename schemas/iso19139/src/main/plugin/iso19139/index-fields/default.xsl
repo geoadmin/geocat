@@ -10,8 +10,8 @@
                     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                     exclude-result-prefixes="#all">
 
-	<xsl:include href="convert/functions.xsl"/>
-	<xsl:include href="../../../xsl/utils-fn.xsl"/>
+	<xsl:include href="../../convert/functions.xsl"/>
+	<xsl:include href="../../../../xsl/utils-fn.xsl"/>
   <xsl:include href="index-subtemplate-fields.xsl"/>
   
 	<!-- This file defines what parts of the metadata are indexed by Lucene
@@ -612,8 +612,8 @@
 				<!-- 
 				INSPIRE related dataset could contains a conformity section with:
 				* COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services
-				* INSPIRE Data Specification on <Theme Name> â?? <version>
-				* INSPIRE Specification on <Theme Name> â?? <version> for CRS and GRID
+				* INSPIRE Data Specification on <Theme Name> ï¿½?? <version>
+				* INSPIRE Specification on <Theme Name> ï¿½?? <version> for CRS and GRID
 				
 				Index those types of citation title to found dataset related to INSPIRE (which may be better than keyword
 				which are often used for other types of datasets).
