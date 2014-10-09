@@ -1038,6 +1038,14 @@
       <name>Geotools repository</name>
       <url>http://download.osgeo.org/webdav/geotools/</url>
     </repository>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>boundless</id>
+      <name>Boundless repository</name>
+      <url>http://repo.boundlessgeo.com/main/</url>
+    </repository>
 <!--     <repository>
       <snapshots>
         <enabled>false</enabled>
