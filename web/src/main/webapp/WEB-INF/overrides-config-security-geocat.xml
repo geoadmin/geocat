@@ -132,5 +132,6 @@
         <addInterceptUrl  pattern="/srv/.*//srv/.*/inspire.edit.model!?.*" access="hasRole('Editor')"/>
         <addInterceptUrl  pattern="/srv/.*//srv/.*/inspire.edit.save!?.*" access="hasRole('Editor')"/>
         <addInterceptUrl pattern="/srv/.*/plain.xml.user.get!?.*" access="permitAll" />
+        <addInterceptUrl pattern="/srv/.*/geocat.search.info!?.*" access="permitAll" />
     </spring>
 </overrides>
