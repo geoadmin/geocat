@@ -30,7 +30,7 @@
 		</dependency>
 
         <dependency>
-            <groupId>ch.geocat</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>services</artifactId>
             <classifier>tests</classifier>
             <scope>test</scope>
@@ -76,7 +76,7 @@
 			<artifactId>metrics-log4j</artifactId>
 		</dependency>
 
-	</dependencies>
+    </dependencies>
 
 	<profiles>
 		<profile>

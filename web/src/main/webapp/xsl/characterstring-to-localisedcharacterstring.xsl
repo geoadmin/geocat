@@ -39,8 +39,7 @@
 	gmd:abstract[gco:CharacterString] | 
 	gmd:purpose[gco:CharacterString] |
 	gmd:keyword[gco:CharacterString] | 
-	gmd:issueIdentification[gco:CharacterString] | 
-	gmd:name[gco:CharacterString] | 
+	gmd:issueIdentification[gco:CharacterString] |
 	gmd:fileDescription[gco:CharacterString] | 
 	gmd:useLimitation[gco:CharacterString] | 
 	gmd:orderingInstructions[gco:CharacterString] | 

@@ -194,7 +194,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
         return searcher;
     }
 
-    public Element find(UserSession session, boolean validated) throws Exception
+    public Element list(UserSession session, boolean validated, String language) throws Exception
     {
 
         String thesaurusName;

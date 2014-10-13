@@ -24,37 +24,57 @@
 package org.fao.geonet.geocat.kernel.reusable;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Sets;
 import jeeves.server.UserSession;
+import jeeves.xlink.XLink;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
+import org.fao.geonet.schema.iso19139che.ISO19139cheSchemaPlugin;
 import org.jdom.Element;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 import static org.apache.lucene.search.WildcardQuery.WILDCARD_STRING;
 
 public abstract class ReplacementStrategy implements FindMetadataReferences {
-    static final Pair<Collection<Element>, Boolean> NULL           = Pair.read((Collection<Element>) Collections
-                                                                           .<Element> emptySet(), false);
-    public static final String                             REPORT_ROOT    = "records";
-    static final String                             REPORT_ELEMENT = "record";
-    static final String                             REPORT_DESC    = "desc";
-    static final String                             REPORT_URL     = "url";
-    public static final String                             REPORT_ID      = "id";
-    public static final String                             REPORT_XLINK      = "xlink";
-    public static final String                             REPORT_TYPE      = "type";
-    public static final String                             REPORT_SEARCH      = "search";
-    public static final Function<String,String> ID_FUNC = new Function<String,String>(){
+    public static final String LUCENE_ROOT_FIELD = "_root";
+    static final Pair<Collection<Element>, Boolean> NULL = Pair.read((Collection<Element>) Collections.<Element>emptySet(), false);
+    public static final String REPORT_ROOT = "records";
+    public static final String REPORT_ELEMENT = "record";
+    public static final String REPORT_DESC = "desc";
+    public static final String REPORT_URL = "url";
+    public static final String REPORT_ID = "id";
+    public static final String REPORT_XLINK = "xlink";
+    public static final String REPORT_TYPE = "type";
+    public static final String REPORT_SEARCH = "search";
+    public static final String LUCENE_EXTRA_VALIDATED = "validated";
+    public static final String LUCENE_EXTRA_NON_VALIDATED = "nonvalidated";
+    public static final Function<String, String> ID_FUNC = new Function<String, String>() {
 
-        public String apply( String s) {
+        public String apply(String s) {
             return s;
         }
     };
+    protected static final String LUCENE_EXTRA_FIELD = "_extra";
+    static final String LUCENE_LOCALE_FIELD = "_locale";
+    static final String LUCENE_SCHEMA_FIELD = "_schema";
 
     /**
      * try to find a match for the original object
@@ -79,7 +99,68 @@ public abstract class ReplacementStrategy implements FindMetadataReferences {
     /**
      * Construct a list of the non_validated objects
      */
-    public abstract Element find(UserSession session, boolean validated) throws Exception;
+    public abstract Element list(UserSession session, boolean validated, String language) throws Exception;
+    public final static class DescData {
+        public final String uuid;
+        public final Document doc;
+
+        private DescData(String uuid, Document doc) {
+            this.uuid = uuid;
+            this.doc = doc;
+        }
+    }
+    protected final Element listFromIndex(SearchManager searchManager, String root, boolean validated, String language,
+                                          UserSession session,
+                                          ReplacementStrategy strategy,
+                                          Function<DescData, String> describer) throws Exception {
+
+        final IndexAndTaxonomy newIndexReader = searchManager.getNewIndexReader(language);
+        Element results = new Element(REPORT_ROOT);
+        try {
+            final GeonetworkMultiReader reader = newIndexReader.indexReader;
+            IndexSearcher searcher = new IndexSearcher(reader);
+            final BooleanQuery booleanQuery = new BooleanQuery();
+            final String contactType = validated ? LUCENE_EXTRA_VALIDATED : LUCENE_EXTRA_NON_VALIDATED;
+            booleanQuery.add(new TermQuery(new Term(LUCENE_EXTRA_FIELD, contactType)), BooleanClause.Occur.MUST);
+            booleanQuery.add(new TermQuery(new Term(LUCENE_ROOT_FIELD, root)), BooleanClause.Occur.MUST);
+            booleanQuery.add(new TermQuery(new Term(LUCENE_LOCALE_FIELD, language)), BooleanClause.Occur.SHOULD);
+            booleanQuery.add(new TermQuery(new Term(LUCENE_SCHEMA_FIELD, ISO19139cheSchemaPlugin.IDENTIFIER)), BooleanClause.Occur.MUST);
+            TopFieldCollector collector = TopFieldCollector.create(
+                    Sort.INDEXORDER, 30000, true, false, false, false);
+            searcher.search(booleanQuery, collector);
+
+            ScoreDoc[] topDocs = collector.topDocs().scoreDocs;
+            Set<String> added = Sets.newHashSet();
+            for (ScoreDoc topDoc : topDocs) {
+
+                final Document doc = searcher.doc(topDoc.doc);
+                String uuid = doc.getField("_uuid").stringValue();
+
+                if (added.contains(uuid)) {
+                    continue;
+                }
+                added.add(uuid);
+
+                Element e = new Element(REPORT_ELEMENT);
+                String id = doc.get("_id");
+                String url = XLink.LOCAL_PROTOCOL + "catalog.edit#/metadata/" + id;
+                String desc = describer.apply(new DescData(uuid, doc));
+                Utils.addChild(e, REPORT_URL, url);
+                Utils.addChild(e, REPORT_ID, uuid);
+                Utils.addChild(e, REPORT_TYPE, "contact");
+                Utils.addChild(e, REPORT_XLINK, strategy.createXlinkHref(uuid, session, ""));
+                Utils.addChild(e, REPORT_DESC, desc);
+                Utils.addChild(e, REPORT_SEARCH, uuid + desc);
+
+                results.addContent(e);
+            }
+
+        } finally {
+            searchManager.releaseIndexReader(newIndexReader);
+        }
+
+        return results;
+    }
 
     /**
      * Deletes the objects. No other function

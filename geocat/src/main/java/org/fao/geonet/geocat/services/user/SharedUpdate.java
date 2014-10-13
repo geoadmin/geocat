@@ -24,23 +24,28 @@
 package org.fao.geonet.geocat.services.user;
 
 import com.google.common.base.Functions;
-import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geocat;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
-
+import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Address;
+import org.fao.geonet.domain.Constants;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.domain.geocat.GeocatUserInfo;
 import org.fao.geonet.domain.geocat.Phone;
-import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.geocat.kernel.reusable.ContactsStrategy;
+import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -48,7 +53,11 @@ import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.util.PasswordUtil;
 import org.jdom.Element;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
+import java.util.UUID;
 
 //=============================================================================
 
@@ -108,8 +117,7 @@ public class SharedUpdate implements Service
             throw new IllegalArgumentException("unknown user update operation " + operation);
         }
 
-        final ContactsStrategy strategy = new ContactsStrategy(userRepository, groupRepository, context.getAppPath(), context.getBaseUrl(),
-                context.getLanguage());
+        final ContactsStrategy strategy = new ContactsStrategy(context.getApplicationContext(), context.getAppPath());
         ArrayList<String> fields = new ArrayList<String>();
 
         fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));

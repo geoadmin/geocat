@@ -41,9 +41,6 @@ import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.geocat.FormatRepository;
 import org.fao.geonet.repository.geocat.RejectedSharedObjectRepository;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
@@ -67,14 +64,12 @@ public class DeleteUnused implements Service {
         String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));
         String language = context.getLanguage();
         try {
-            UserRepository userRepo = context.getBean(UserRepository.class);
-            UserGroupRepository userGroupRepo = context.getBean(UserGroupRepository.class);
             final IsoLanguagesMapper isoLanguagesMapper = context.getBean(IsoLanguagesMapper.class);
             final ThesaurusManager thesaurusMan = context.getBean(ThesaurusManager.class);
 
-            process(new ContactsStrategy(userRepo, userGroupRepo, appPath, baseUrl, language), context);
+            process(new ContactsStrategy(context.getApplicationContext(), appPath), context);
             process(new ExtentsStrategy(baseUrl, appPath, context.getBean(ExtentManager.class), language), context);
-            process(new FormatsStrategy(context.getBean(FormatRepository.class), appPath, baseUrl, language), context);
+            process(new FormatsStrategy(context.getApplicationContext(), appPath), context);
             process(new KeywordsStrategy(isoLanguagesMapper, thesaurusMan, appPath, baseUrl, language), context);
             processDeleted(context);
 
@@ -87,7 +82,7 @@ public class DeleteUnused implements Service {
     private void process(ReplacementStrategy strategy, ServiceContext context) throws Exception {
         UserSession userSession = context.getUserSession();
         @SuppressWarnings("unchecked")
-        List<Element> nonValidated = strategy.find(userSession, false).getChildren();
+        List<Element> nonValidated = strategy.list(userSession, false, context.getLanguage()).getChildren();
         List<String> toDelete = new ArrayList<String>();
         final Function<String, String> idConverter = strategy.numericIdToConcreteId(userSession);
         

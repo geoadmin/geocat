@@ -497,7 +497,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
 
     }
 
-    public Element find(UserSession session, boolean validated) throws Exception {
+    public Element list(UserSession session, boolean validated, String language) throws Exception {
         FeatureType featureType;
         if (validated) {
             featureType = _extentMan.getSource().getFeatureType(XLINK_TYPE);

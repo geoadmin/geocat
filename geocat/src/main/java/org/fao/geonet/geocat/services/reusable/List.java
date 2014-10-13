@@ -29,13 +29,17 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
-import org.fao.geonet.geocat.kernel.reusable.*;
+import org.fao.geonet.geocat.kernel.reusable.ContactsStrategy;
+import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
+import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
+import org.fao.geonet.geocat.kernel.reusable.FormatsStrategy;
+import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
+import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
+import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
+import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.geocat.FormatRepository;
 import org.fao.geonet.repository.geocat.RejectedSharedObjectRepository;
 import org.jdom.Element;
 
@@ -71,19 +75,16 @@ public class List implements Service
                         appPath, baseUrl, language);
                 break;
             case formats:
-                strategy = new FormatsStrategy(context.getBean(FormatRepository.class), appPath, baseUrl, language);
+                strategy = new FormatsStrategy(context.getApplicationContext(), appPath);
                 break;
             case contacts:
-                UserRepository userRepo = context.getBean(UserRepository.class);
-                UserGroupRepository userGroupRepo = context.getBean(UserGroupRepository.class);
-                strategy = new ContactsStrategy(userRepo, userGroupRepo, appPath, baseUrl, language);
+                strategy = new ContactsStrategy(context.getApplicationContext(), appPath);
                 break;
             default:
                 throw new IllegalArgumentException(type + " is not a reusable object type");
         }
 
-        final Element element = strategy.find(session, validated);
-        return element;
+        return strategy.list(session, validated, language);
     }
 
     public void init(String appPath, ServiceConfig params) throws Exception

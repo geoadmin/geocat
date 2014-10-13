@@ -28,8 +28,11 @@ import com.google.common.collect.Lists;
 import jeeves.server.UserSession;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexableField;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Address;
 import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.Pair;
@@ -39,6 +42,7 @@ import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.domain.User_;
 import org.fao.geonet.domain.geocat.GeocatUserInfo_;
 import org.fao.geonet.domain.geocat.Phone;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.BatchUpdateQuery;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -54,6 +58,7 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.Filter;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
@@ -80,19 +85,20 @@ import static org.fao.geonet.util.LangUtils.FieldType.STRING;
 import static org.fao.geonet.util.LangUtils.FieldType.URL;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
-public final class ContactsStrategy extends ReplacementStrategy
-{
-
-     private final String _styleSheet;
+public final class ContactsStrategy extends ReplacementStrategy {
+    public static final String LUCENE_ROOT_RESPONSIBLE_PARTY = "che:CHE_CI_ResponsibleParty";
+    private final String _styleSheet;
     private final String _appPath;
     private final UserRepository _userRepository;
     private final UserGroupRepository _userGroupRepository;
+    private final SearchManager searchManager;
 
-    public ContactsStrategy(UserRepository userRepository, UserGroupRepository userGroupRepository, String appPath, String baseURL, String currentLocale) {
-        this._userRepository = userRepository;
-        this._userGroupRepository = userGroupRepository;
+    public ContactsStrategy(ApplicationContext context, String appPath) {
+        this._userRepository = context.getBean(UserRepository.class);
+        this._userGroupRepository = context.getBean(UserGroupRepository.class);
         _styleSheet = appPath + Utils.XSL_REUSABLE_OBJECT_DATA_XSL;
         this._appPath = appPath;
+        this.searchManager = context.getBean(SearchManager.class);
     }
 
     public static Specification<User> matchSharedUserSpecification(final String email, final String firstName, final String lastName) {
@@ -471,44 +477,35 @@ public final class ContactsStrategy extends ReplacementStrategy
         return email != null && email.trim().length() > 0;
     }
 
-    public Element find(UserSession session, boolean validated) throws Exception
-    {
+    public Element list(UserSession session, boolean validated, String language) throws Exception {
+        return super.listFromIndex(this.searchManager, LUCENE_ROOT_RESPONSIBLE_PARTY, validated, language, session, this,
+                new Function<DescData, String>() {
+                    @Nullable
+                    @Override
+                    public String apply(@Nullable DescData data) {
+                        String email = safeField(data.doc, "electronicmailaddress");
+                        String name = safeField(data.doc, "individualfirstname");
+                        String surname = safeField(data.doc, "individuallastname");
 
-        final Specifications<User> spec = where(UserSpecs.hasProfile(Profile.Shared))
-                .and(GeocatUserSpecs.isValidated(validated));
-        final List<User> users = _userRepository.findAll(spec);
+                        String desc;
+                        if (email == null || email.length() == 0) {
+                            desc = data.uuid;
+                        } else {
+                            desc = email;
+                        }
 
-        Element category = new Element(REPORT_ROOT);
-        for (User user : users) {
-            Element e = new Element(REPORT_ELEMENT);
-            String id = "" + user.getId();
-            String url = XLink.LOCAL_PROTOCOL+"shared.user.edit?closeOnSave&id=" + id + "&validated=n&operation=fullupdate";
+                        return name + " " + surname + " (" + desc + ")";
+                    }
+                    private String safeField(Document doc, String fieldName) {
+                        final IndexableField field = doc.getField(fieldName);
+                        if (field != null) {
+                            return field.stringValue();
+                        } else {
+                            return "";
+                        }
+                    }
 
-            Utils.addChild(e, REPORT_URL, url);
-            Utils.addChild(e, REPORT_ID, id);
-            Utils.addChild(e, REPORT_TYPE, "contact");
-            Utils.addChild(e, REPORT_XLINK, createXlinkHref(id, session, "") + "*");
-            String email = user.getEmail();
-            String username = user.getUsername();
-            String name = user.getName();
-            String surname = user.getSurname();
-
-            String desc;
-            if (email == null || email.length() == 0) {
-                desc = username;
-            } else {
-                desc = email;
-            }
-
-            desc = name + " " + surname + " &lt;" + desc + "&gt;";
-
-            Utils.addChild(e, REPORT_DESC, desc);
-            Utils.addChild(e, REPORT_SEARCH, id + desc);
-
-            category.addContent(e);
-        }
-
-        return category;
+                });
     }
 
     public void performDelete(String[] ids, UserSession session, String ignored) throws Exception {
@@ -538,7 +535,7 @@ public final class ContactsStrategy extends ReplacementStrategy
 
     public String createXlinkHref(String id, UserSession session, String notRequired)
     {
-        return XLink.LOCAL_PROTOCOL+"xml.user.get?id=" + id;
+        return XLink.LOCAL_PROTOCOL + "subtemplate?" + Params.UUID + "=" + id;
     }
 
     public String updateHrefId(String oldHref, String id, UserSession session)

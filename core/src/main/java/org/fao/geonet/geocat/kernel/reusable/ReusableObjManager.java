@@ -1,5 +1,34 @@
 package org.fao.geonet.geocat.kernel.reusable;
 
+import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
+import jeeves.xlink.XLink;
+import org.apache.jcs.access.exception.CacheException;
+import org.apache.log4j.Level;
+import org.fao.geonet.constants.Geocat;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.geocat.kernel.extent.ExtentManager;
+import org.fao.geonet.geocat.kernel.reusable.log.Record;
+import org.fao.geonet.geocat.kernel.reusable.log.ReusableObjectLogger;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.util.ElementFinder;
+import org.fao.geonet.util.LangUtils;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Content;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
+import org.jdom.filter.Filter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -16,40 +45,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import jeeves.server.context.ServiceContext;
-import jeeves.xlink.Processor;
-import jeeves.xlink.XLink;
-
-import org.apache.jcs.access.exception.CacheException;
-import org.apache.log4j.Level;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geocat;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.geocat.kernel.extent.ExtentManager;
-import org.fao.geonet.geocat.kernel.reusable.log.Record;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.ThesaurusManager;
-import org.fao.geonet.geocat.kernel.reusable.log.ReusableObjectLogger;
-import org.fao.geonet.kernel.XmlSerializer;
-import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.geocat.FormatRepository;
-import org.fao.geonet.util.ElementFinder;
-import org.fao.geonet.util.LangUtils;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Content;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
-import org.jdom.filter.Filter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Component
 public class ReusableObjManager
@@ -253,10 +248,8 @@ public class ReusableObjManager
     private boolean replaceFormats(Element xml, String defaultMetadataLang, ProcessParams params) throws Exception
     {
         ReusableObjectLogger logger = params.logger;
-        String baseURL = params.baseURL;
 
-        FormatRepository formatRepo = params.srvContext.getBean(FormatRepository.class);
-        FormatsStrategy strategy = new FormatsStrategy(formatRepo, _appPath, baseURL, params.srvContext.getLanguage());
+        FormatsStrategy strategy = new FormatsStrategy(params.srvContext.getApplicationContext(), _appPath);
         return performReplace(xml, defaultMetadataLang, FORMATS_PLACEHOLDER, FORMATS, logger, strategy,
                 params.addOnly,params.srvContext);
     }
@@ -264,11 +257,7 @@ public class ReusableObjManager
     private boolean replaceContacts(Element xml, String defaultMetadataLang, ProcessParams params) throws Exception
     {
         ReusableObjectLogger logger = params.logger;
-        String baseURL = params.baseURL;
-
-        UserRepository userRepo = params.srvContext.getBean(UserRepository.class);
-        UserGroupRepository userGroupRepo = params.srvContext.getBean(UserGroupRepository.class);
-        ContactsStrategy strategy = new ContactsStrategy(userRepo, userGroupRepo, _appPath, baseURL, params.srvContext.getLanguage());
+        ContactsStrategy strategy = new ContactsStrategy(params.srvContext.getApplicationContext(), _appPath);
         return performReplace(xml, defaultMetadataLang, CONTACTS_PLACEHOLDER, CONTACTS, logger, strategy,
                 params.addOnly,params.srvContext);
     }
@@ -513,13 +502,9 @@ public class ReusableObjManager
             if (xlink.getName().equals("contact") || xlink.getName().equals("pointOfContact")
                      || xlink.getName().equals("distributorContact") || xlink.getName().equals("citedResponsibleParty") || xlink.getName().equals("parentResponsibleParty")) {
 
-
-                UserRepository userRepo = params.srvContext.getBean(UserRepository.class);
-                UserGroupRepository userGroupRepo = params.srvContext.getBean(UserGroupRepository.class);
-                strategy = new ContactsStrategy(userRepo, userGroupRepo, _appPath, baseUrl, language);
+                strategy = new ContactsStrategy(params.srvContext.getApplicationContext(), _appPath);
             } else if (xlink.getName().equals("resourceFormat") || xlink.getName().equals("distributionFormat")) {
-                FormatRepository formatRepo = params.srvContext.getBean(FormatRepository.class);
-                strategy = new FormatsStrategy(formatRepo, _appPath, baseUrl, language);
+                strategy = new FormatsStrategy(params.srvContext.getApplicationContext(), _appPath);
             } else if (xlink.getName().equals("descriptiveKeywords")) {
                 ThesaurusManager thesaurusManager = params.srvContext.getBean(ThesaurusManager.class);
                 IsoLanguagesMapper isoLanguagesMapper = params.srvContext.getBean(IsoLanguagesMapper.class);

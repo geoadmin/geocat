@@ -1147,17 +1147,6 @@
       </modules>
     </profile>
     <profile>
-      <id>geoserver</id>
-      <activation>
-        <file>
-          <exists>geoserver/pom.xml</exists>
-        </file>
-      </activation>
-      <modules>
-        <module>geoserver</module>
-      </modules>
-    </profile>
-    <profile>
       <id>jmeter</id>
       <modules>
         <module>jmeter</module>

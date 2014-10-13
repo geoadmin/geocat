@@ -393,7 +393,7 @@ public final class XslUtil
 		if (langCode.length() == 3) {
             return langCode;
         }
-
+        langCode = langCode.toLowerCase();
         final ServiceContext serviceContext = ServiceContext.get();
         if (serviceContext != null) {
             final IsoLanguagesMapper mapper;

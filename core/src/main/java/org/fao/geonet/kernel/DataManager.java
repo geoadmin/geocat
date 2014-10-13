@@ -137,7 +137,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.jdom.Parent;
 import org.jdom.filter.ElementFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -529,59 +528,68 @@ public class DataManager {
     // GEOCAT
 
     private Element indexMetadataProcessSharedObjects(String metadataId, boolean processSharedObjects, boolean fastIndex,
-                                                      Vector<Element> moreFields, Element md, String schema, String uuid, String harvested) throws Exception {
-        if(schema.trim().equals("iso19139.che") && !fastIndex) {
+                                                      Vector<Element> moreFields, Element metadataEl,
+                                                      Metadata metadata) throws Exception {
+        final String schemaId = metadata.getDataInfo().getSchemaId();
+        final String uuid = metadata.getUuid();
+
+        if (!schemaId.trim().equals("iso19139.che")) {
+            return metadataEl;
+        }
+        if (!fastIndex) {
             try {
                     /*
                      * Geocat doesn't permit multilingual elements to have characterString elements only LocalizedString elements.
                      * This transformation ensures this property
                      */
-                md = Xml.transform(md, stylePath+"characterstring-to-localisedcharacterstring.xsl");
+                metadataEl = Xml.transform(metadataEl, stylePath + "characterstring-to-localisedcharacterstring.xsl");
                 String parentUuid = null;
-                md = updateFixedInfo(schema, Optional.of(Integer.parseInt(metadataId)), uuid, md, parentUuid , UpdateDatestamp.NO, servContext);
+                metadataEl = updateFixedInfo(schemaId, Optional.of(Integer.parseInt(metadataId)), uuid, metadataEl, parentUuid,
+                        UpdateDatestamp.NO, servContext);
 
-                xmlSerializer.update(metadataId, md, new ISODate().toString(), false, uuid, servContext);
+                xmlSerializer.update(metadataId, metadataEl, new ISODate().toString(), false, uuid, servContext);
             } catch (Throwable t) {
-                Log.error(Geonet.DATA_MANAGER, "Error converting Characterstring to PTFreeText elements. For metadata "+metadataId, t);
+                Log.error(Geonet.DATA_MANAGER, "Error converting Characterstring to PTFreeText elements. For metadata " + metadataId, t);
             }
         }
-        if("n".equalsIgnoreCase(harvested) && processSharedObjects && schema.trim().equals("iso19139.che")) {
+        if (!metadata.getHarvestInfo().isHarvested() && metadata.getDataInfo().getType() == MetadataType.METADATA &&
+            processSharedObjects) {
             try {
-                ProcessParams processParameters = new ProcessParams(ReusableObjectLogger.THREAD_SAFE_LOGGER, metadataId, md, md, false, null, servContext);
+                ProcessParams processParameters = new ProcessParams(ReusableObjectLogger.THREAD_SAFE_LOGGER, metadataId, metadataEl,
+                        metadataEl, false, null, servContext);
                 ReusableObjManager reusableObjMan = servContext.getBean(ReusableObjManager.class);
                 List<Element> modified = reusableObjMan.process(processParameters);
 
-                if(modified != null && !modified.isEmpty()) {
-                    md = modified.get(0);
-                    xmlSerializer.update(metadataId, md, new ISODate().toString(), false, null, servContext);
+                if (modified != null && !modified.isEmpty()) {
+                    metadataEl = modified.get(0);
+                    xmlSerializer.update(metadataId, metadataEl, new ISODate().toString(), false, null, servContext);
                 }
             } catch (Exception e) {
                 Element stackTrace = JeevesException.toElement(e);
                 Log.error(Geonet.DATA_MANAGER, "error while trying to update shared objects of metadata, " +
                                                "" + metadataId + ":\n " + Xml.getString(stackTrace)); //DEBUG
             }
-        }
-        if ("n".equalsIgnoreCase(harvested) && processSharedObjects && schema.trim().equals("iso19139.che")) {
-            List<Attribute> xlinks = Processor.getXLinks(md);
+
+            List<Attribute> xlinks = Processor.getXLinks(metadataEl);
             if (xlinks.size() > 0) {
                 moreFields.add(SearchManager.makeField("_hasxlinks", "1", true, true));
                 StringBuilder sb = new StringBuilder();
                 for (Attribute xlink : xlinks) {
-                    sb.append(xlink.getValue()); sb.append(" ");
+                    sb.append(xlink.getValue());
+                    sb.append(" ");
                 }
                 moreFields.add(SearchManager.makeField("_xlink", sb.toString(), true, true));
-                Processor.processXLink(md,servContext);
-                xmlSerializer.update(metadataId, md, new ISODate().toString(), false, null, servContext);
+                Processor.processXLink(metadataEl, servContext);
+                xmlSerializer.update(metadataId, metadataEl, new ISODate().toString(), false, null, servContext);
             } else {
                 moreFields.add(SearchManager.makeField("_hasxlinks", "0", true, true));
             }
-        }
-        else {
-            List<Attribute> xlinks = Processor.getXLinks(md);
-            if(xlinks.size()>0) moreFields.add(SearchManager.makeField("_hasxlinks", "1", true, true));
+        } else {
+            List<Attribute> xlinks = Processor.getXLinks(metadataEl);
+            if (xlinks.size() > 0) moreFields.add(SearchManager.makeField("_hasxlinks", "1", true, true));
         }
 
-        return md;
+        return metadataEl;
     }
     public void indexMetadata(final String metadataId, boolean forceRefreshReaders, boolean processSharedObjects,
                               boolean fastIndex, boolean reloadXLinks) throws Exception {
@@ -613,8 +621,7 @@ public class DataManager {
             Element md   = xmlSerializer.selectNoXLinkResolver(metadataId, true);
             // GEOCAT
             if (reloadXLinks) {
-                    Processor.detachXLink(md, servContext);
-
+                Processor.detachXLink(md, servContext);
             }
             // END GEOCAT
             final Metadata fullMd = _metadataRepository.findOne(id$);
@@ -640,8 +647,12 @@ public class DataManager {
             }
 
             // GEOCAT
-            md = indexMetadataProcessSharedObjects(metadataId, processSharedObjects, fastIndex, moreFields, md,
-                    schema, uuid, isHarvested);
+            md = indexMetadataProcessSharedObjects(metadataId, processSharedObjects, fastIndex, moreFields, md, fullMd);
+
+            if (isHarvested.contains("n")) {
+                moreFields.add(SearchManager.makeField("_catalog",      groupOwner,      true, true));
+            }
+            moreFields.add(SearchManager.makeField("_catalog",      source,      true, true));
             // END GEOCAT
 
             moreFields.add(SearchManager.makeField("_root",        root,        true, true));
@@ -649,21 +660,15 @@ public class DataManager {
             moreFields.add(SearchManager.makeField("_createDate",  createDate,  true, true));
             moreFields.add(SearchManager.makeField("_changeDate",  changeDate,  true, true));
             moreFields.add(SearchManager.makeField("_source",      source,      true, true));
-            // GEOCAT
-            if (isHarvested.contains("n")) {
-                moreFields.add(SearchManager.makeField("_catalog",      groupOwner,      true, true));
-            }
-            moreFields.add(SearchManager.makeField("_catalog",      source,      true, true));
-            // GEOCAT
             moreFields.add(SearchManager.makeField("_isTemplate",  metadataType.codeString,  true, true));
             moreFields.add(SearchManager.makeField("_uuid",        uuid,        true, true));
             moreFields.add(SearchManager.makeField("_isHarvested", isHarvested, true, true));
             moreFields.add(SearchManager.makeField("_owner",       owner,       true, true));
-            moreFields.add(SearchManager.makeField("_dummy",       "0",        false, true));
+            moreFields.add(SearchManager.makeField("_dummy",       "0",         false, true));
             moreFields.add(SearchManager.makeField("_popularity",  popularity,  true, true));
             moreFields.add(SearchManager.makeField("_rating",      rating,      true, true));
-            moreFields.add(SearchManager.makeField("_displayOrder",displayOrder, true, false));
-            moreFields.add(SearchManager.makeField("_extra",       extra,       true, false));
+            moreFields.add(SearchManager.makeField("_displayOrder",displayOrder,true, false));
+            moreFields.add(SearchManager.makeField("_extra",       extra,       true, true));
 
             if (owner != null) {
                 User user = _applicationContext.getBean(UserRepository.class).findOne(fullMd.getSourceInfo().getOwner());
@@ -682,17 +687,15 @@ public class DataManager {
                     moreFields.add(SearchManager.makeField("groupWebsite", group.getWebsite(), true, false));
                 } catch (NumberFormatException nfe) {
                     // that's ok, sometime groupOwner is blank
+                }
             }
-            }
+            boolean isPublished = false;
             // END GEOCAT
 
             // get privileges
             OperationAllowedRepository operationAllowedRepository = _applicationContext.getBean(OperationAllowedRepository.class);
             List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(id$);
 
-            // GEOCAT
-            boolean isPublished = false;
-            // END GEOCAT
             for (OperationAllowed operationAllowed : operationsAllowed) {
                 OperationAllowedId operationAllowedId = operationAllowed.getId();
                 int groupId = operationAllowedId.getGroupId();

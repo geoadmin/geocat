@@ -32,6 +32,7 @@ import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.geocat.Format;
 import org.fao.geonet.domain.geocat.Format_;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.geocat.FormatRepository;
 import org.fao.geonet.repository.geocat.specification.FormatSpecs;
@@ -39,6 +40,7 @@ import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.util.ElementFinder;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
@@ -59,19 +61,19 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import static org.fao.geonet.geocat.kernel.reusable.Utils.addChild;
-
 public final class FormatsStrategy extends ReplacementStrategy
 {
 
 
     private final String _styleSheet;
     private final FormatRepository _formatRepo;
+    private final SearchManager searchManager;
 
 
-    public FormatsStrategy(FormatRepository repo, String appPath, String baseURL, String currentLocale)
+    public FormatsStrategy(ApplicationContext context, String appPath)
     {
-        this._formatRepo = repo;
+        this._formatRepo = context.getBean(FormatRepository.class);
+        this.searchManager = context.getBean(SearchManager.class);
         this._styleSheet = appPath + Utils.XSL_REUSABLE_OBJECT_DATA_XSL;
     }
 
@@ -160,42 +162,30 @@ public final class FormatsStrategy extends ReplacementStrategy
         }
     }
 
-    public Element find(UserSession session, boolean validated) throws Exception
+    public Element list(UserSession session, boolean validated, String language) throws Exception
     {
-        final List<org.fao.geonet.domain.geocat.Format> all = this._formatRepo.findAll(FormatSpecs.isValidated(validated));
-
-
-        Element formats = new Element(REPORT_ROOT);
-
-        for (org.fao.geonet.domain.geocat.Format format : all) {
-            Element e = new Element(REPORT_ELEMENT);
-            String id = "" + format.getId();
-            String url = XLink.LOCAL_PROTOCOL+"format.admin?closeOnSave&id=" + id + "&dialog=true";
-            String name = format.getName();
-            if (name == null || name.length() == 0) {
-                name = id;
-            }
-            String version = format.getVersion();
-            if (version == null) {
-                version = "";
-            }
-            addChild(e, REPORT_URL, url);
-            final String desc = name + " (" + version + ")";
-            addChild(e, REPORT_DESC, desc);
-            addChild(e, REPORT_ID, id);
-            addChild(e, REPORT_TYPE, "format");
-            addChild(e, REPORT_XLINK, createXlinkHref(id, session, ""));
-            addChild(e, REPORT_SEARCH, id+desc);
-
-            formats.addContent(e);
-        }
-
-        return formats;
+        return super.listFromIndex(searchManager, "gmd:MD_Format", validated, language, session, this,
+                new Function<DescData, String>() {
+                    @Nullable
+                    @Override
+                    public String apply(@Nullable DescData data) {
+                        String name = data.doc.get("name");
+                        if (name == null || name.length() == 0) {
+                            name = data.uuid;
+                        }
+                        String version = data.doc.get("version");
+                        if (version == null) {
+                            version = "";
+                        } else {
+                            version = " (" + version + ")";
+                        }
+                        return name + version;
+                    }
+                });
     }
 
-    public String createXlinkHref(String id, UserSession session, String notRequired)
-    {
-        return XLink.LOCAL_PROTOCOL+"xml.format.get?id=" + id;
+    public String createXlinkHref(String id, UserSession session, String notRequired) {
+        return XLink.LOCAL_PROTOCOL+"subtemplate?uuid=" + id;
     }
 
     public void performDelete(String[] ids, UserSession session, String ignored) throws Exception {
