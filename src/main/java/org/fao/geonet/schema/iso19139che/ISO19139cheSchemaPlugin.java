@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ISO19139cheSchemaPlugin
         extends ISO19139SchemaPlugin {
-    public static final String IDENTIFIER = "iso19139che";
+    public static final String IDENTIFIER = "iso19139.che";
 
     private static ImmutableSet<Namespace> allNamespaces;
 
