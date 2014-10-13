@@ -1780,7 +1780,9 @@ public class DataManager {
         if (forEditing) { // copy in xlink'd fragments but leave xlink atts to editor
             if (doXLinks) Processor.processXLink(metadataXml, srvContext);
             String schema = getMetadataSchema(id);
-
+            //GEOCAT
+            metadataXml = Xml.transform(metadataXml, stylePath+"characterstring-to-localisedcharacterstring.xsl");
+            // END GEOCAT
             if (withEditorValidationErrors) {
                 version = doValidate(srvContext, schema, id, metadataXml, srvContext.getLanguage(), forEditing).two();
             } else {
@@ -2093,9 +2095,12 @@ public class DataManager {
         } else {
             md = metadata;
         }
+        // GEOCAT
+        md = Xml.transform(md, this.servContext.getAppPath() + "/xsl/characterstring-to-localisedcharacterstring.xsl");
         UserSession session = null;
         if (context != null && context.getUserSession() != null) {
             session = context.getUserSession();
+            // END GEOCAT
             Element sessionReport = (Element) session.getProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
         if (sessionReport != null && !forEditing) {
                 if (Log.isDebugEnabled(Geonet.DATA_MANAGER))

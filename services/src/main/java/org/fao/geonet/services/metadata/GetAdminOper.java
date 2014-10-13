@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -47,6 +48,7 @@ import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.services.Utils;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -95,6 +97,7 @@ public class GetAdminOper implements Service
         // GEOCAT
         DataManager dm = context.getBean(DataManager.class);
         Element md = dm.getGeocatMetadata(context, metadataId, false, false);
+        md.removeChild("info", Edit.NAMESPACE);
         dm.doValidate(context, info.getDataInfo().getSchemaId(), metadataId,md,context.getLanguage(), false);
         // END GEOCAT
 

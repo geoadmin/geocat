@@ -27,6 +27,7 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -47,48 +48,36 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Component
-public class ReusableObjManager
-{
+@Lazy
+public class ReusableObjManager {
     // The following constants are used in stylesheet and the log4J
     // configuration so make
     // sure they are updated if these are changed
-    public static final String                       CONTACTS             = "contacts";
-    private static final String                      CONTACTS_PLACEHOLDER = "contactsPlaceholder";
-    public static final String                       EXTENTS              = "extents";
-    private static final String                      EXTENTS_PLACEHOLDER  = "extentsPlaceholder";
-    public static final String                       FORMATS              = "formats";
-    private static final String                      FORMATS_PLACEHOLDER  = "formatsPlaceholder";
-    public static final String                       KEYWORDS             = "keywords";
-    private static final String                      KEYWORDS_PLACEHOLDER = "keywordsPlaceholder";
+    public static final String CONTACTS = "contacts";
+    private static final String CONTACTS_PLACEHOLDER = "contactsPlaceholder";
+    public static final String EXTENTS = "extents";
+    private static final String EXTENTS_PLACEHOLDER = "extentsPlaceholder";
+    public static final String FORMATS = "formats";
+    private static final String FORMATS_PLACEHOLDER = "formatsPlaceholder";
+    public static final String KEYWORDS = "keywords";
+    private static final String KEYWORDS_PLACEHOLDER = "keywordsPlaceholder";
 
-    private final Lock                               lock                 = new ReentrantLock();
+    private final Lock lock = new ReentrantLock();
 
-    public static final String                       NON_VALID_ROLE       = "http://www.geonetwork.org/non_valid_obj";
-
-    private String                             _styleSheet;
-    private String                             _appPath;
-    private boolean                                  _processOnInsert;
-
+    public static final String NON_VALID_ROLE = "http://www.geonetwork.org/non_valid_obj";
     @Autowired
     private GeonetworkDataDirectory dataDirectory;
 
-    public void init(List<Element> reusableConfigIter)
-    {
-        this._appPath = dataDirectory.getWebappDir();
-        this._styleSheet = _appPath + "/xsl/reusable-objects-extractor.xsl";
-        this._processOnInsert = false;
-
-        if(reusableConfigIter == null) {
-            Log.warning(Geocat.Module.REUSABLE, "Reusable configuration not specified in config.xml");
-        } else if (!reusableConfigIter.isEmpty()) {
-            Element config = reusableConfigIter.get(0);
-            _processOnInsert = "true".equalsIgnoreCase(config.getAttributeValue("value"));
-        }
+    public String getStyleSheet() {
+        return dataDirectory.getWebappDir() + "/xsl/reusable-objects-extractor.xsl";
+    }
+    public String getAppPath() {
+        return dataDirectory.getWebappDir();
     }
 
-    public int process(ServiceContext context, Set<String> elements, DataManager dm, boolean sendEmail, boolean idIsUuid, boolean ignoreErrors)
-            throws Exception
-    {
+    public int process(ServiceContext context, Set<String> elements, DataManager dm, boolean sendEmail, boolean idIsUuid,
+                       boolean ignoreErrors)
+            throws Exception {
         try {
             // Note if this lock is removed the ReusableObjectsLogger must also
             // be made thread-safe notes on how to do that are in that class
@@ -111,8 +100,8 @@ public class ReusableObjManager
                     StringWriter w = new StringWriter();
                     e.printStackTrace(new PrintWriter(w));
                     Log.debug("Reusable Objects", "Selection: " + uuid + " can not be looked up: " + w.toString());
-                    if(!ignoreErrors) {
-                    	throw e;
+                    if (!ignoreErrors) {
+                        throw e;
                     }
                 }
             }
@@ -125,15 +114,14 @@ public class ReusableObjManager
     }
 
     private boolean process(ServiceContext context, DataManager dm, String uuid,
-            ReusableObjectLogger logger, boolean idIsUUID) throws Exception
-    {
+                            ReusableObjectLogger logger, boolean idIsUUID) throws Exception {
         // the metadata ID
         String id = uuidToId(dm, uuid, idIsUUID);
 
 
         Element metadata = dm.getMetadata(context, id, false, false, false);
 
-        ProcessParams searchParams = new ProcessParams(logger, id, metadata, metadata, false,null,context);
+        ProcessParams searchParams = new ProcessParams(logger, id, metadata, metadata, false, null, context);
         List<Element> process = process(searchParams);
         if (process != null) {
             Element changed = process.get(0);
@@ -146,8 +134,7 @@ public class ReusableObjManager
         return process != null;
     }
 
-    public static String uuidToId(DataManager dm, String uuid, boolean idIsUUID)
-    {
+    public static String uuidToId(DataManager dm, String uuid, boolean idIsUUID) {
         String id = uuid;
 
         if (!idIsUUID) {
@@ -166,12 +153,11 @@ public class ReusableObjManager
         return id;
     }
 
-    public List<Element> process(ProcessParams parameterObject) throws Exception, SQLException
-    {
+    public List<Element> process(ProcessParams parameterObject) throws Exception, SQLException {
 
         try {
             String metadataId = parameterObject.metadataId;
-            if(metadataId == null) {
+            if (metadataId == null) {
                 metadataId = "anonymous";
             }
 
@@ -180,7 +166,7 @@ public class ReusableObjManager
             Element elementToProcess = parameterObject.elementToProcess;
 
             String defaultMetadataLang = parameterObject.defaultLang;
-            if(defaultMetadataLang == null) {
+            if (defaultMetadataLang == null) {
                 defaultMetadataLang = LangUtils.iso19139DefaultLang(parameterObject.metadata);
                 if (defaultMetadataLang != null && defaultMetadataLang.length() > 2) {
                     defaultMetadataLang = defaultMetadataLang.substring(0, 2).toUpperCase();
@@ -189,7 +175,7 @@ public class ReusableObjManager
                 }
             }
 
-            Element xml = Xml.transform(elementToProcess, _styleSheet);
+            Element xml = Xml.transform(elementToProcess, getStyleSheet());
 
             boolean changed = false;
             Log.debug(Geocat.Module.REUSABLE, "Replace formats with xlinks");
@@ -202,18 +188,18 @@ public class ReusableObjManager
             changed |= replaceExtents(xml, defaultMetadataLang, parameterObject);
 
             Log.info(Geocat.Module.REUSABLE, "Finished processing on id=" + parameterObject.metadataId
-                    + ".  " + (changed ? "Metadata was modified" : "No change was made"));
+                                             + ".  " + (changed ? "Metadata was modified" : "No change was made"));
 
             if (changed) {
-            	@SuppressWarnings("unchecked")
-				List<Element> metadata = xml.getChild("metadata").getChildren();
+                @SuppressWarnings("unchecked")
+                List<Element> metadata = xml.getChild("metadata").getChildren();
                 ArrayList<Element> results = new ArrayList<Element>(metadata);
                 for (Element md : results) {
                     md.detach();
                     for (Object ns : elementToProcess.getAdditionalNamespaces()) {
                         md.addNamespaceDeclaration((Namespace) ns);
                     }
-                    
+
                 }
                 return results;
             }
@@ -225,89 +211,85 @@ public class ReusableObjManager
 
             Log.error(Geocat.Module.REUSABLE,
                     "Exception occured while processing metadata object for reusable objects.  Exception is: "
-                            + s.getBuffer().toString());
+                    + s.getBuffer().toString());
             s.close();
 
             throw x;
         }
     }
 
-    private boolean replaceKeywords(Element xml, String defaultMetadataLang, ProcessParams params) throws Exception
-    {
+    private boolean replaceKeywords(Element xml, String defaultMetadataLang, ProcessParams params) throws Exception {
 
         ReusableObjectLogger logger = params.logger;
         String baseURL = params.baseURL;
         ThesaurusManager thesaurusMan = params.srvContext.getBean(ThesaurusManager.class);
         final IsoLanguagesMapper isoLanguagesMapper = params.srvContext.getBean(IsoLanguagesMapper.class);
         final String language = params.srvContext.getLanguage();
-        KeywordsStrategy strategy = new KeywordsStrategy(isoLanguagesMapper, thesaurusMan, _appPath, baseURL, language);
+        KeywordsStrategy strategy = new KeywordsStrategy(isoLanguagesMapper, thesaurusMan, getAppPath(), baseURL, language);
         return performReplace(xml, defaultMetadataLang, KEYWORDS_PLACEHOLDER, KEYWORDS, logger, strategy,
-                params.addOnly,params.srvContext);
+                params.addOnly, params.srvContext);
     }
 
-    private boolean replaceFormats(Element xml, String defaultMetadataLang, ProcessParams params) throws Exception
-    {
+    private boolean replaceFormats(Element xml, String defaultMetadataLang, ProcessParams params) throws Exception {
         ReusableObjectLogger logger = params.logger;
 
-        FormatsStrategy strategy = new FormatsStrategy(params.srvContext.getApplicationContext(), _appPath);
+        FormatsStrategy strategy = new FormatsStrategy(params.srvContext.getApplicationContext(), getAppPath());
         return performReplace(xml, defaultMetadataLang, FORMATS_PLACEHOLDER, FORMATS, logger, strategy,
-                params.addOnly,params.srvContext);
+                params.addOnly, params.srvContext);
     }
 
-    private boolean replaceContacts(Element xml, String defaultMetadataLang, ProcessParams params) throws Exception
-    {
+    private boolean replaceContacts(Element xml, String defaultMetadataLang, ProcessParams params) throws Exception {
         ReusableObjectLogger logger = params.logger;
-        ContactsStrategy strategy = new ContactsStrategy(params.srvContext.getApplicationContext(), _appPath);
+        ContactsStrategy strategy = new ContactsStrategy(params.srvContext.getApplicationContext(), getAppPath());
         return performReplace(xml, defaultMetadataLang, CONTACTS_PLACEHOLDER, CONTACTS, logger, strategy,
-                params.addOnly,params.srvContext);
+                params.addOnly, params.srvContext);
     }
 
-    private boolean replaceExtents(Element xml, String defaultMetadataLang, ProcessParams params) throws Exception
-    {
+    private boolean replaceExtents(Element xml, String defaultMetadataLang, ProcessParams params) throws Exception {
 
         ReusableObjectLogger logger = params.logger;
         String baseURL = params.baseURL;
         ExtentManager extentMan = params.srvContext.getBean(ExtentManager.class);
 
-        ExtentsStrategy strategy = new ExtentsStrategy(baseURL, _appPath, extentMan, null);
+        ExtentsStrategy strategy = new ExtentsStrategy(baseURL, getAppPath(), extentMan, null);
 
         @SuppressWarnings("unchecked")
-		Iterator<Element> iter = xml.getChild(EXTENTS).getChildren().iterator();
+        Iterator<Element> iter = xml.getChild(EXTENTS).getChildren().iterator();
         List<Content> originalElems = Utils.convertToList(iter, Content.class);
 
         for (Content extent : originalElems) {
-        	Element extentAsElem = (Element) extent;
-			Element exExtent = extentAsElem.getChild("EX_Extent", Geonet.Namespaces.GMD);
-			boolean needToProcessDescendants = exExtent != null && exExtent.getDescendants(new ElementFinder("EX_Extent", Geonet.Namespaces.GMD, "*")).hasNext();
-        	if(needToProcessDescendants) {
-        		int index = extentAsElem.indexOf(exExtent);
-	            List<Element> changed = process(params.updateElementToProcess(exExtent));
-	            if(changed !=null && !changed.isEmpty()) {
-	            	extentAsElem.setContent(index, changed);
-	            }
-        	}
-		}
-        
+            Element extentAsElem = (Element) extent;
+            Element exExtent = extentAsElem.getChild("EX_Extent", Geonet.Namespaces.GMD);
+            boolean needToProcessDescendants = exExtent != null && exExtent.getDescendants(new ElementFinder("EX_Extent",
+                    Geonet.Namespaces.GMD, "*")).hasNext();
+            if (needToProcessDescendants) {
+                int index = extentAsElem.indexOf(exExtent);
+                List<Element> changed = process(params.updateElementToProcess(exExtent));
+                if (changed != null && !changed.isEmpty()) {
+                    extentAsElem.setContent(index, changed);
+                }
+            }
+        }
+
         return performReplace(xml, defaultMetadataLang, EXTENTS_PLACEHOLDER, EXTENTS, logger, strategy,
-                params.addOnly,params.srvContext);
+                params.addOnly, params.srvContext);
     }
 
     private boolean performReplace(Element xml, String defaultMetadataLang, String placeholderElemName,
-            String originalElementName, ReusableObjectLogger logger, ReplacementStrategy strategy, boolean addOnly,
-            ServiceContext srvContext)
-            throws Exception
-    {
-    	
-    	HashSet<String> updatedElements = new HashSet<String>();
-    	Map<String,Element> currentXLinkElements = new HashMap<String, Element>();
-    	
+                                   String originalElementName, ReusableObjectLogger logger, ReplacementStrategy strategy, boolean addOnly,
+                                   ServiceContext srvContext)
+            throws Exception {
+
+        HashSet<String> updatedElements = new HashSet<String>();
+        Map<String, Element> currentXLinkElements = new HashMap<String, Element>();
+
         @SuppressWarnings("unchecked")
-		Iterator<Content> iter = xml.getChild("metadata").getDescendants(new PlaceholderFilter(placeholderElemName));
+        Iterator<Content> iter = xml.getChild("metadata").getDescendants(new PlaceholderFilter(placeholderElemName));
 
         List<Element> placeholders = Utils.convertToList(iter, Element.class);
 
         @SuppressWarnings("unchecked")
-		Iterator<Element> iter2 = xml.getChild(originalElementName).getChildren().iterator();
+        Iterator<Element> iter2 = xml.getChild(originalElementName).getChildren().iterator();
         Iterator<Content> originalElems = Utils.convertToList(iter2, Content.class).iterator();
 
         boolean changed = false;
@@ -317,13 +299,13 @@ public class ReusableObjManager
 
             if (XLink.isXLink(originalElem)) {
                 originalElem.detach();
-                
+
                 changed = updateXLinkAsRequired(defaultMetadataLang, strategy,
-						updatedElements, currentXLinkElements, changed,
-						placeholder, originalElem, srvContext, originalElementName, logger);
+                        updatedElements, currentXLinkElements, changed,
+                        placeholder, originalElem, srvContext, originalElementName, logger);
                 continue;
             }
-            if(originalElem != null) {
+            if (originalElem != null) {
                 changed |= replaceSingleElement(placeholder, originalElem, strategy, defaultMetadataLang, addOnly,
                         originalElementName, logger);
             }
@@ -332,80 +314,81 @@ public class ReusableObjManager
         return changed;
     }
 
-	private boolean updateXLinkAsRequired(String defaultMetadataLang,
-			ReplacementStrategy strategy, HashSet<String> updatedElements,
-			Map<String, Element> currentXLinkElements, boolean changed,
-			Element placeholder, Element originalElem, 
-			ServiceContext srvContext, String originalElementName, ReusableObjectLogger logger) throws AssertionError, Exception {
-		
-		if(!isValidated(originalElem)) {
-			String href = XLink.getHRef(originalElem);
-			Element current = resolveXLink(currentXLinkElements, href,srvContext);
-			
-			if(current==null || originalElem.getChildren().isEmpty()) {
-			    if(current==null || current.getChildren().isEmpty()) {
-			        updatePlaceholder(placeholder, originalElem);
-			    } else {
-			        updatePlaceholder(placeholder, current);
-			    }
-			    return false;
-			}
-			
-			boolean equals = Utils.equalElem((Element) originalElem.getChildren().get(0),current);
-			if(current.getName().equalsIgnoreCase("error")) {
-				Log.error(Geocat.Module.REUSABLE, "ERROR resolving shared object xlink: "+href);
-			}
-			if(!equals && !current.getName().equalsIgnoreCase("error")) {
-				if(updatedElements.contains(href)) {
-				    Log.error(Geocat.Module.REUSABLE, "The same xlinks was updated twice, the second xlink is being processed as if new. HREF="+href);
-					originalElem.removeAttribute(XLink.HREF, XLink.NAMESPACE_XLINK);
-					originalElem.removeAttribute(XLink.ROLE, XLink.NAMESPACE_XLINK);
-					originalElem.removeAttribute(XLink.SHOW, XLink.NAMESPACE_XLINK);
-					originalElem.removeAttribute(XLink.TITLE, XLink.NAMESPACE_XLINK);
-					originalElem.removeAttribute(XLink.TYPE, XLink.NAMESPACE_XLINK);
-					replaceSingleElement(placeholder, originalElem, strategy, defaultMetadataLang, false, originalElementName, logger);
-				} else {
-					updatedElements.add(href);
-		            Processor.uncacheXLinkUri(XLink.getHRef(originalElem));
-		        	
-		            Collection<Element> newElements = strategy.updateObject(originalElem, defaultMetadataLang);
-		            if(!newElements.isEmpty()) {
-		            	ArrayList<Element> toAdd = new ArrayList<Element>(newElements);
-		            	toAdd.add(0,originalElem);
-		            	updatePlaceholder(placeholder, toAdd);
-		            } else {
-		            	updatePlaceholder(placeholder, originalElem);
-		            }
-		            changed = true;
-				}
-			} else {
-			    updatePlaceholder(placeholder, originalElem);
-			}
-		} else {
-		    updatePlaceholder(placeholder, originalElem);
-		}
-		return changed;
-	}
+    private boolean updateXLinkAsRequired(String defaultMetadataLang,
+                                          ReplacementStrategy strategy, HashSet<String> updatedElements,
+                                          Map<String, Element> currentXLinkElements, boolean changed,
+                                          Element placeholder, Element originalElem,
+                                          ServiceContext srvContext, String originalElementName,
+                                          ReusableObjectLogger logger) throws AssertionError, Exception {
 
-	/**
-	 * Get the XLink.  It is the unchanged copy so one can detect if the same xlink is modified more than once
-	 */
-	private Element resolveXLink(Map<String, Element> currentXLinkElements,
-			String href, ServiceContext srvContext) throws IOException, JDOMException, CacheException {
-		Element current;
-		if(currentXLinkElements.containsKey(href)) {
-			current = currentXLinkElements.get(href);
-		} else {
-			current = Processor.resolveXLink(href,srvContext);
-			currentXLinkElements.put(href, current);
-		}
-		return current;
-	}
+        if (!isValidated(originalElem)) {
+            String href = XLink.getHRef(originalElem);
+            Element current = resolveXLink(currentXLinkElements, href, srvContext);
+
+            if (current == null || originalElem.getChildren().isEmpty()) {
+                if (current == null || current.getChildren().isEmpty()) {
+                    updatePlaceholder(placeholder, originalElem);
+                } else {
+                    updatePlaceholder(placeholder, current);
+                }
+                return false;
+            }
+
+            boolean equals = Utils.equalElem((Element) originalElem.getChildren().get(0), current);
+            if (current.getName().equalsIgnoreCase("error")) {
+                Log.error(Geocat.Module.REUSABLE, "ERROR resolving shared object xlink: " + href);
+            }
+            if (!equals && !current.getName().equalsIgnoreCase("error")) {
+                if (updatedElements.contains(href)) {
+                    Log.error(Geocat.Module.REUSABLE, "The same xlinks was updated twice, the second xlink is being processed as if new" +
+                                                      ". HREF=" + href);
+                    originalElem.removeAttribute(XLink.HREF, XLink.NAMESPACE_XLINK);
+                    originalElem.removeAttribute(XLink.ROLE, XLink.NAMESPACE_XLINK);
+                    originalElem.removeAttribute(XLink.SHOW, XLink.NAMESPACE_XLINK);
+                    originalElem.removeAttribute(XLink.TITLE, XLink.NAMESPACE_XLINK);
+                    originalElem.removeAttribute(XLink.TYPE, XLink.NAMESPACE_XLINK);
+                    replaceSingleElement(placeholder, originalElem, strategy, defaultMetadataLang, false, originalElementName, logger);
+                } else {
+                    updatedElements.add(href);
+                    Processor.uncacheXLinkUri(XLink.getHRef(originalElem));
+
+                    Collection<Element> newElements = strategy.updateObject(originalElem, defaultMetadataLang);
+                    if (!newElements.isEmpty()) {
+                        ArrayList<Element> toAdd = new ArrayList<Element>(newElements);
+                        toAdd.add(0, originalElem);
+                        updatePlaceholder(placeholder, toAdd);
+                    } else {
+                        updatePlaceholder(placeholder, originalElem);
+                    }
+                    changed = true;
+                }
+            } else {
+                updatePlaceholder(placeholder, originalElem);
+            }
+        } else {
+            updatePlaceholder(placeholder, originalElem);
+        }
+        return changed;
+    }
+
+    /**
+     * Get the XLink.  It is the unchanged copy so one can detect if the same xlink is modified more than once
+     */
+    private Element resolveXLink(Map<String, Element> currentXLinkElements,
+                                 String href, ServiceContext srvContext) throws IOException, JDOMException, CacheException {
+        Element current;
+        if (currentXLinkElements.containsKey(href)) {
+            current = currentXLinkElements.get(href);
+        } else {
+            current = Processor.resolveXLink(href, srvContext);
+            currentXLinkElements.put(href, current);
+        }
+        return current;
+    }
 
     private boolean replaceSingleElement(Element placeholder, Element originalElem, ReplacementStrategy strategy,
-            String defaultMetadataLang, boolean addOnly, String originalElementName,
-            ReusableObjectLogger logger) throws Exception
-    {
+                                         String defaultMetadataLang, boolean addOnly, String originalElementName,
+                                         ReusableObjectLogger logger) throws Exception {
 
         boolean updated = false;
         if (!addOnly) {
@@ -418,7 +401,7 @@ public class ReusableObjManager
                     defaultMetadataLang));
             if (updated)
                 Log.debug(Geocat.Module.REUSABLE, "A new reusable element was added for "
-                        + strategy);
+                                                  + strategy);
         }
         if (!updated) {
             updatePlaceholder(placeholder, originalElem);
@@ -432,18 +415,15 @@ public class ReusableObjManager
         return updated;
     }
 
-    private boolean updatePlaceholder(Element placeholder, Element elem)
-    {
+    private boolean updatePlaceholder(Element placeholder, Element elem) {
         return updatePlaceholder(placeholder, Collections.singleton(elem));
     }
 
-    private boolean updatePlaceholder(Element placeholder, Collection<Element> xlinks)
-    {
+    private boolean updatePlaceholder(Element placeholder, Collection<Element> xlinks) {
         return updatePlaceholder(placeholder, Pair.read(xlinks, !xlinks.isEmpty()));
     }
 
-    private boolean updatePlaceholder(Element placeholder, Pair<Collection<Element>, Boolean> xlinks)
-    {
+    private boolean updatePlaceholder(Element placeholder, Pair<Collection<Element>, Boolean> xlinks) {
         if (xlinks == null) {
             return false;
         }
@@ -464,18 +444,16 @@ public class ReusableObjManager
         return false;
     }
 
-    private static final class PlaceholderFilter implements Filter
-    {
+    private static final class PlaceholderFilter implements Filter {
 
         private static final long serialVersionUID = 1L;
-        private final String      elemName;
-        public PlaceholderFilter(String elemName)
-        {
+        private final String elemName;
+
+        public PlaceholderFilter(String elemName) {
             this.elemName = elemName;
         }
 
-        public boolean matches(Object obj)
-        {
+        public boolean matches(Object obj) {
             if (obj instanceof Element) {
                 Element elem = (Element) obj;
 
@@ -486,8 +464,7 @@ public class ReusableObjManager
 
     }
 
-    public Collection<Element> updateXlink(Element xlink, ProcessParams params) throws Exception
-    {
+    public Collection<Element> updateXlink(Element xlink, ProcessParams params) throws Exception {
         try {
             // Note if this lock is removed the ReusableObjectsLogger must also
             // be made thread-safe notes on how to do that are in that class
@@ -500,27 +477,28 @@ public class ReusableObjManager
 
             final String language = params.srvContext.getLanguage();
             if (xlink.getName().equals("contact") || xlink.getName().equals("pointOfContact")
-                     || xlink.getName().equals("distributorContact") || xlink.getName().equals("citedResponsibleParty") || xlink.getName().equals("parentResponsibleParty")) {
+                || xlink.getName().equals("distributorContact") || xlink.getName().equals("citedResponsibleParty") || xlink.getName()
+                    .equals("parentResponsibleParty")) {
 
-                strategy = new ContactsStrategy(params.srvContext.getApplicationContext(), _appPath);
+                strategy = new ContactsStrategy(params.srvContext.getApplicationContext(), getAppPath());
             } else if (xlink.getName().equals("resourceFormat") || xlink.getName().equals("distributionFormat")) {
-                strategy = new FormatsStrategy(params.srvContext.getApplicationContext(), _appPath);
+                strategy = new FormatsStrategy(params.srvContext.getApplicationContext(), getAppPath());
             } else if (xlink.getName().equals("descriptiveKeywords")) {
                 ThesaurusManager thesaurusManager = params.srvContext.getBean(ThesaurusManager.class);
                 IsoLanguagesMapper isoLanguagesMapper = params.srvContext.getBean(IsoLanguagesMapper.class);
-                strategy = new KeywordsStrategy(isoLanguagesMapper, thesaurusManager, _appPath, baseUrl, language);
+                strategy = new KeywordsStrategy(isoLanguagesMapper, thesaurusManager, getAppPath(), baseUrl, language);
             } else {
                 ExtentManager extentManager = params.srvContext.getBean(ExtentManager.class);
-                strategy = new ExtentsStrategy(baseUrl, _appPath, extentManager, language);
+                strategy = new ExtentsStrategy(baseUrl, getAppPath(), extentManager, language);
             }
 
             Log.info(Geocat.Module.REUSABLE, "Updating a " + strategy + " in metadata id="
-                    + params.metadataId);
+                                             + params.metadataId);
 
             Processor.uncacheXLinkUri(xlink.getAttributeValue(XLink.HREF, XLink.NAMESPACE_XLINK));
 
             String metadataLang = LangUtils.iso19139DefaultLang(params.elementToProcess);
-            if (metadataLang != null && metadataLang.length()>1) {
+            if (metadataLang != null && metadataLang.length() > 1) {
                 metadataLang = metadataLang.substring(0, 2).toUpperCase();
             } else {
                 metadataLang = "EN";
@@ -528,7 +506,7 @@ public class ReusableObjManager
             Collection<Element> newElements = strategy.updateObject(xlink, metadataLang);
             Log.info(Geocat.Module.REUSABLE, "New elements were created as a result of update");
             Log.info(Geocat.Module.REUSABLE, "Done updating " + strategy + " in metadata id="
-                    + params.metadataId);
+                                             + params.metadataId);
 
             return newElements;
         } finally {
@@ -556,8 +534,7 @@ public class ReusableObjManager
     }
 
 
-    public boolean isValidated(String href, ServiceContext context) throws Exception
-    {
+    public boolean isValidated(String href, ServiceContext context) throws Exception {
         try {
             // Note if this lock is removed the ReusableObjectsLogger must also
             // be made thread-safe notes on how to do that are in that class
@@ -590,10 +567,9 @@ public class ReusableObjManager
     }
 
 
-    public static boolean isValidated(Element xlinkParent)
-    {
+    public static boolean isValidated(Element xlinkParent) {
         String attributeValue = xlinkParent.getAttributeValue(XLink.ROLE, XLink.NAMESPACE_XLINK);
-		return !NON_VALID_ROLE.equals(attributeValue);
+        return !NON_VALID_ROLE.equals(attributeValue);
     }
 
 }

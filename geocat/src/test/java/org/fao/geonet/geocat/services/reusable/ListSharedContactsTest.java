@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import org.apache.lucene.document.Document;
 import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
+import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
@@ -86,7 +87,7 @@ public class ListSharedContactsTest extends AbstractSharedObjectTest {
 
         ServiceContext context = createServiceContext();
         Element response = listSharedObjects.exec(
-                createParams(read("type", "contacts"), read("validated", true)),
+                createParams(read("type", ReusableObjManager.CONTACTS), read("validated", true)),
                 context);
 
         assertEquals(2, response.getChildren().size());

@@ -3,6 +3,7 @@ package org.fao.geonet.geocat.services.reusable;
 import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import org.apache.lucene.document.Document;
+import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
@@ -60,7 +61,7 @@ public class ListSharedFormatsTest extends AbstractSharedObjectTest {
 
         ServiceContext context = createServiceContext();
         final Element response = listSharedObjects.exec(
-                createParams(read("type", "formats"), read("validated", true)),
+                createParams(read("type", ReusableObjManager.FORMATS), read("validated", true)),
                 context);
 
         assertEquals(2, response.getChildren().size());
