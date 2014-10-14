@@ -66,15 +66,17 @@ public abstract class ReplacementStrategy implements FindMetadataReferences {
     public static final String REPORT_SEARCH = "search";
     public static final String LUCENE_EXTRA_VALIDATED = "validated";
     public static final String LUCENE_EXTRA_NON_VALIDATED = "nonvalidated";
+    protected static final String LUCENE_UUID_FIELD = "_uuid";
+    protected static final String LUCENE_EXTRA_FIELD = "_extra";
+    protected static final String LUCENE_LOCALE_FIELD = "_locale";
+    protected static final String LUCENE_SCHEMA_FIELD = "_schema";
+
     public static final Function<String, String> ID_FUNC = new Function<String, String>() {
 
         public String apply(String s) {
             return s;
         }
     };
-    protected static final String LUCENE_EXTRA_FIELD = "_extra";
-    static final String LUCENE_LOCALE_FIELD = "_locale";
-    static final String LUCENE_SCHEMA_FIELD = "_schema";
 
     /**
      * try to find a match for the original object

@@ -26,6 +26,8 @@ import static org.junit.Assert.assertArrayEquals;
  */
 public class AbstractSharedObjectTest extends AbstractServiceIntegrationTest {
 
+    protected static final String SHARED_USER_XML = "shared-user.xml";
+    protected static final String SHARED_FORMAT_XML = "shared-format.xml";
     @Autowired
     private MetadataRepository metadataRepository;
     @Autowired
@@ -34,7 +36,7 @@ public class AbstractSharedObjectTest extends AbstractServiceIntegrationTest {
     private MetadataCategoryRepository categoryRepository;
 
     public Metadata addFormatSubtemplate(String uuid, boolean validated) throws Exception {
-        return addSubTemplate(uuid, validated, "shared-format.xml", "gmd:MD_Format");
+        return addSubTemplate(uuid, validated, SHARED_FORMAT_XML, "gmd:MD_Format");
     }
 
     /**
@@ -46,7 +48,7 @@ public class AbstractSharedObjectTest extends AbstractServiceIntegrationTest {
      * @throws Exception
      */
     public Metadata addUserSubtemplate(String uuid, boolean validated, String... excludeLangs) throws Exception {
-        return addSubTemplate(uuid, validated, "shared-user.xml", ContactsStrategy.LUCENE_ROOT_RESPONSIBLE_PARTY, excludeLangs);
+        return addSubTemplate(uuid, validated, SHARED_USER_XML, ContactsStrategy.LUCENE_ROOT_RESPONSIBLE_PARTY, excludeLangs);
     }
 
     /**
@@ -77,7 +79,7 @@ public class AbstractSharedObjectTest extends AbstractServiceIntegrationTest {
                 setSchemaId("iso19139.che").
                 setRoot(root).
                 setDisplayOrder(0).
-                setType(MetadataType.TEMPLATE).
+                setType(MetadataType.SUB_TEMPLATE).
                 setExtra(categoryName);
         metadata.setDataInfo(dataInfo);
         MetadataSourceInfo sourceInfo = new MetadataSourceInfo().setSourceId(getSourceId());

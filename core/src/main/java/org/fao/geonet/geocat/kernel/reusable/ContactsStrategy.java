@@ -30,28 +30,46 @@ import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexableField;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopFieldCollector;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Address;
 import org.fao.geonet.domain.Constants;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataDataInfo;
+import org.fao.geonet.domain.MetadataSourceInfo;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.domain.User_;
 import org.fao.geonet.domain.geocat.GeocatUserInfo_;
-import org.fao.geonet.domain.geocat.Phone;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.BatchUpdateQuery;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.geocat.specification.GeocatUserSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
+import org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces;
+import org.fao.geonet.schema.iso19139che.ISO19139cheSchemaPlugin;
 import org.fao.geonet.util.ElementFinder;
 import org.fao.geonet.util.GeocatXslUtil;
-import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
@@ -75,62 +93,46 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import static org.fao.geonet.util.LangUtils.FieldType.STRING;
-import static org.fao.geonet.util.LangUtils.FieldType.URL;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 public final class ContactsStrategy extends ReplacementStrategy {
     public static final String LUCENE_ROOT_RESPONSIBLE_PARTY = "che:CHE_CI_ResponsibleParty";
-    private final String _styleSheet;
-    private final String _appPath;
+    protected static final String LUCENE_EMAIL = "electronicmailaddress";
+    protected static final String LUCENE_FIRST_NAME = "individualfirstname";
+    protected static final String LUCENE_LAST_NAME = "individuallastname";
+    private static final String LUCENE_ORG_NAME = "organisationname";
+
     private final UserRepository _userRepository;
     private final UserGroupRepository _userGroupRepository;
     private final SearchManager searchManager;
+    private final IsoLanguagesMapper mapper;
+    private final MetadataRepository metadataRepository;
+    private final SettingRepository settingRepository;
+    private final DataManager dataManager;
 
     public ContactsStrategy(ApplicationContext context, String appPath) {
         this._userRepository = context.getBean(UserRepository.class);
+        this.metadataRepository = context.getBean(MetadataRepository.class);
         this._userGroupRepository = context.getBean(UserGroupRepository.class);
-        _styleSheet = appPath + Utils.XSL_REUSABLE_OBJECT_DATA_XSL;
-        this._appPath = appPath;
         this.searchManager = context.getBean(SearchManager.class);
-    }
-
-    public static Specification<User> matchSharedUserSpecification(final String email, final String firstName, final String lastName) {
-        return new Specification<User>() {
-            @Override
-            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-
-                Predicate emailExp = cb.isMember(email, root.get(User_.emailAddresses));
-                Predicate firstNameExp = cb.equal(cb.trim(cb.lower(root.get(User_.name))), cb.lower(cb.literal(firstName)));
-                Predicate lastNameExp = cb.equal(cb.trim(root.get(User_.surname)), cb.lower(cb.literal(lastName)));
-
-                return cb.or(emailExp, firstNameExp, lastNameExp);
-            }
-        };
+        this.settingRepository = context.getBean(SettingRepository.class);
+        this.dataManager = context.getBean(DataManager.class);
+        this.mapper = context.getBean(IsoLanguagesMapper.class);
     }
 
     public Pair<Collection<Element>, Boolean> find(Element placeholder, Element originalElem, String defaultMetadataLang)
-            throws Exception
-    {
-        if (XLink.isXLink(originalElem))
+            throws Exception {
+        if (XLink.isXLink(originalElem)) {
             return NULL;
-
-        String email = lookupElement(originalElem, "electronicMailAddress", defaultMetadataLang);
-        String firstname = lookupElement(originalElem, "individualFirstName", defaultMetadataLang);
-        String lastname = lookupElement(originalElem, "individualLastName", defaultMetadataLang);
-
-        final List<User> users = _userRepository.findAll(matchSharedUserSpecification(email, firstname, lastname));
+        }
 
         @SuppressWarnings("unchecked")
-		Iterator<Content> descendants = originalElem.getDescendants(new ElementFinder("CI_RoleCode",
+        Iterator<Content> descendants = originalElem.getDescendants(new ElementFinder("CI_RoleCode",
                 Geonet.Namespaces.GMD, "role"));
-		Element roleElem = Utils.nextElement(descendants);
+        Element roleElem = Utils.nextElement(descendants);
         String role;
         if (roleElem == null) {
             role = "";
@@ -140,77 +142,88 @@ public final class ContactsStrategy extends ReplacementStrategy {
             role = roleElem.getAttributeValue("codeListValue");
         }
 
-        User bestFit = null;
-        int rating = 0;
+        String email = lookupElement(originalElem, "electronicMailAddress", defaultMetadataLang);
+        String firstname = lookupElement(originalElem, "individualFirstName", defaultMetadataLang);
+        String lastname = lookupElement(originalElem, "individualLastName", defaultMetadataLang);
 
-        for (User user: users) {
+        String locale = mapper.iso639_1_to_iso639_2(defaultMetadataLang);
+        final IndexAndTaxonomy indexAndTaxonomy = this.searchManager.getNewIndexReader(locale);
+        try {
+            BooleanQuery query = new BooleanQuery();
+            query.add(new TermQuery(new Term(LUCENE_FIRST_NAME, firstname)), BooleanClause.Occur.SHOULD);
+            query.add(new TermQuery(new Term(LUCENE_LAST_NAME, lastname)), BooleanClause.Occur.SHOULD);
+            query.add(new TermQuery(new Term(LUCENE_EMAIL, email)), BooleanClause.Occur.SHOULD);
 
-            Element recordOrg = LangUtils.loadInternalMultiLingualElem(user.getOrganisation());
+            query.add(new TermQuery(new Term(LUCENE_LOCALE_FIELD, locale)), BooleanClause.Occur.SHOULD);
 
-            String elemOrg = lookupElement(originalElem, "organisationName", defaultMetadataLang);
+            TopFieldCollector collector = TopFieldCollector.create(Sort.RELEVANCE, 30000, true, false, false, false);
 
-            if (translation(recordOrg, defaultMetadataLang).equalsIgnoreCase(elemOrg)) {
-                int newRating = 0;
+            final GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
+            IndexSearcher searcher = new IndexSearcher(reader);
+            searcher.search(query, collector);
 
-                HashSet<String> lowerCaseEmails = new HashSet<String>();
+            ScoreDoc[] topDocs = collector.topDocs().scoreDocs;
 
-                for (String e : user.getEmailAddresses()) {
-                    lowerCaseEmails.add(e.trim().toLowerCase());
-                }
+            Document bestFit = null;
+            int rating = 0;
+            for (ScoreDoc scoreDoc : topDocs) {
+                Document doc = searcher.doc(scoreDoc.doc);
+                String[] docEmail = doc.getValues(LUCENE_EMAIL);
+                String docFirstName = doc.get(LUCENE_FIRST_NAME);
+                String docLastName = doc.get(LUCENE_LAST_NAME);
 
-                if (lowerCaseEmails.contains(email.trim().toLowerCase())) {
-                    newRating += 10;
-                }
+                String elemOrg = lookupElement(originalElem, "organisationName", defaultMetadataLang);
+                String docLocale = doc.get(LUCENE_LOCALE_FIELD);
+                String docOrgName = doc.get(LUCENE_ORG_NAME);
+                if (docLocale.equals(locale) && docOrgName.equalsIgnoreCase(elemOrg)) {
+                    int newRating = 0;
 
-                if (firstname.trim().equals(user.getName())) {
-                    newRating += 2;
-                }
+                    HashSet<String> lowerCaseEmails = new HashSet<String>();
 
-                if (lastname.trim().equals(user.getSurname())) {
-                    newRating += 4;
-                }
+                    for (String e : docEmail) {
+                        lowerCaseEmails.add(e.trim().toLowerCase());
+                    }
 
-                if (newRating > rating) {
-                    rating = newRating;
-                    bestFit = user;
-                }
+                    if (lowerCaseEmails.contains(email.trim().toLowerCase())) {
+                        newRating += 10;
+                    }
 
-                if (newRating == (10 + 2 + 4)) {
-                    break;
+                    if (firstname.trim().equals(docFirstName)) {
+                        newRating += 2;
+                    }
+
+                    if (lastname.trim().equals(docLastName)) {
+                        newRating += 4;
+                    }
+
+                    if (newRating > rating) {
+                        rating = newRating;
+                        bestFit = doc;
+                    }
+
+                    if (newRating == (10 + 2 + 4)) {
+                        break;
+                    }
                 }
             }
-        }
 
-        if (bestFit == null) {
-            return NULL;
-        } else {
+            if (bestFit == null) {
+                return NULL;
+            } else {
 
-            int id = bestFit.getId();
-            boolean validated = bestFit.getGeocatUserInfo().isValidated();
-            Collection<Element> xlinkIt = xlinkIt(originalElem, role, "" + id, validated);
+                String uuid = bestFit.get(LUCENE_UUID_FIELD);
+                boolean validated = LUCENE_EXTRA_VALIDATED.equals(bestFit.get(LUCENE_EXTRA_FIELD));
+                Collection<Element> xlinkIt = xlinkIt(originalElem, role, uuid, validated);
 
-            return Pair.read(xlinkIt, true);
+                return Pair.read(xlinkIt, true);
+            }
+        } finally {
+            this.searchManager.releaseIndexReader(indexAndTaxonomy);
         }
     }
 
     @SuppressWarnings("unchecked")
-	private String translation(Element elemOrg, String defaultMetadataLang)
-    {
-        defaultMetadataLang = defaultMetadataLang.substring(0, 2);
-        for (Element e : (List<Element>) elemOrg.getChildren()) {
-            if (e.getName().equalsIgnoreCase(defaultMetadataLang)) {
-                return e.getTextTrim();
-            }
-        }
-        if (elemOrg.getTextTrim().length() > 0) {
-            return elemOrg.getTextTrim();
-        }
-        return "";
-    }
-
-    @SuppressWarnings("unchecked")
-    public static String lookupElement(Element originalElem, String name, final String defaultMetadataLang)
-    {
+    public static String lookupElement(Element originalElem, String name, final String defaultMetadataLang) {
         Element elem = Utils.nextElement(originalElem.getDescendants(new ContactElementFinder("CharacterString",
                 Geonet.Namespaces.GCO, name)));
         if (elem == null) {
@@ -218,18 +231,15 @@ public final class ContactsStrategy extends ReplacementStrategy {
                     Geonet.Namespaces.GMD, name));
             while (freeTexts.hasNext()) {
                 Element next = freeTexts.next();
-                Iterator<Element> defaultLangElem = next.getDescendants(new Filter()
-                {
+                Iterator<Element> defaultLangElem = next.getDescendants(new Filter() {
 
                     private static final long serialVersionUID = 1L;
 
-                    public boolean matches(Object arg0)
-                    {
+                    public boolean matches(Object arg0) {
                         if (arg0 instanceof Element) {
                             Element element = (Element) arg0;
                             return element.getName().equals("LocalisedCharacterString")
-                                    && ("#" + defaultMetadataLang)
-                                            .equalsIgnoreCase(element.getAttributeValue("locale"));
+                                   && ("#" + defaultMetadataLang).equalsIgnoreCase(element.getAttributeValue("locale"));
                         }
                         return false;
                     }
@@ -249,23 +259,16 @@ public final class ContactsStrategy extends ReplacementStrategy {
     }
 
     public static String baseHref(String id) {
-        return  XLink.LOCAL_PROTOCOL+"xml.user.get?id=" + id;
+        return XLink.LOCAL_PROTOCOL + "subtemplate?uuid=" + id;
     }
-    private Collection<Element> xlinkIt(Element originalElem, String role, String id, boolean validated)
-    {
-        String schema = "iso19139";
-        if (originalElem.getChild("CHE_CI_ResponsibleParty", GeocatXslUtil.CHE_NAMESPACE) != null) {
-            schema = "iso19139.che";
-        }
 
+    private Collection<Element> xlinkIt(Element originalElem, String role, String id, boolean validated) {
         originalElem.removeContent();
         // param order is important, id param must be first
-        originalElem.setAttribute(XLink.HREF,baseHref(id) + "&schema=" + schema
-                + "&role=" + role, XLink.NAMESPACE_XLINK);
+        originalElem.setAttribute(XLink.HREF, baseHref(id) + "&process=*//gmd:CI_RoleCode/@codeListValue~" + role, XLink.NAMESPACE_XLINK);
 
         if (!validated) {
-            originalElem
-                    .setAttribute(XLink.ROLE, ReusableObjManager.NON_VALID_ROLE, XLink.NAMESPACE_XLINK);
+            originalElem.setAttribute(XLink.ROLE, ReusableObjManager.NON_VALID_ROLE, XLink.NAMESPACE_XLINK);
         }
         originalElem.setAttribute(XLink.SHOW, XLink.SHOW_EMBED, XLink.NAMESPACE_XLINK);
 
@@ -277,14 +280,15 @@ public final class ContactsStrategy extends ReplacementStrategy {
             throws Exception {
         UpdateResult result = processQuery(originalElem, null, false, metadataLang);
 
-        return xlinkIt(originalElem, result.role, String.valueOf(result.id), false);
+        return xlinkIt(originalElem, result.role, result.uuid, false);
     }
 
 
     private static class UpdateResult {
-        int id;
+        String uuid;
         String role;
     }
+
     /**
      * Executes the query using all the user data from the element. There must
      * be exactly 28 ? in the query. id is not one of them
@@ -292,189 +296,63 @@ public final class ContactsStrategy extends ReplacementStrategy {
      * @param metadataLang
      */
     private UpdateResult processQuery(Element originalElem, Integer id, boolean validated,
-            String metadataLang) throws Exception {
-        Element xml = Xml.transform((Element) originalElem.clone(), _styleSheet);
+                                      String metadataLang) throws Exception {
+        Element responsibleParty = originalElem.getChild("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE);
 
-        // not all strings need to default to a space so they show up in editor.
-        // If not then they will be lost
-        String email1 = getTextPadEmpty(xml, "email1");
-        String name = Utils.getText(xml, "firstName");
-        String surname = Utils.getText(xml, "lastName");
-        String username = Utils.getText(xml, "email1", UUID.randomUUID().toString());
-
-        if (notEmpty(email1)) {
-            username = email1 + "_" + id;
-        } else if (notEmpty(name) || notEmpty(surname)) {
-            username = name + "_" + surname + "_" + id;
-        }
-
-        if (username.trim().length() == 0) {
-            username = "" + id;
-        }
-        username = username.replaceAll("\\s+", "_");
-
-        if (id == null && _userRepository.count(UserSpecs.hasUserName(username)) > 0) {
-            username = UUID.randomUUID().toString();
-        }
-
-        String passwd = UUID.randomUUID().toString().substring(0, 12);
-
-        String address = Utils.getText(xml, "addressLine");
-        String state = Utils.getText(xml, "adminArea");
-        String zip = Utils.getText(xml, "postalCode");
-        String country = Utils.getText(xml, "country");
-        String organ = LangUtils.toInternalMultilingual(metadataLang, _appPath, xml.getChild("orgName"), STRING);
-        String streetnb = Utils.getText(xml, "streetNumber");
-        String street = Utils.getText(xml, "streetName");
-        String postbox = Utils.getText(xml, "postBox");
-        String city = Utils.getText(xml, "city");
-
-        String position = LangUtils.toInternalMultilingual(metadataLang, _appPath, xml.getChild("position"), STRING);
-        String onlineResource = LangUtils.toInternalMultilingual(metadataLang, _appPath, xml.getChild("online"), URL);
-        String onlinename = LangUtils.toInternalMultilingual(metadataLang, _appPath, xml.getChild("name"), STRING);
-        String onlinedesc = LangUtils.toInternalMultilingual(metadataLang, _appPath, xml.getChild("desc"), STRING);
-
-        String hours = Utils.getText(xml, "hoursOfService");
-        String instruct = Utils.getText(xml, "contactInstructions");
-        String orgacronym = LangUtils.toInternalMultilingual(metadataLang, _appPath, xml.getChild("acronym"), STRING);
-        String role = Utils.getText(xml, "role");
-
-
-        Integer parentInfo = processParent(originalElem, xml.getChild("parentInfo"), metadataLang);
-
-
-        User user = new User();
+        final Metadata metadata = new Metadata();
         if (id != null) {
-            user.setId(id);
+            metadata.setId(id);
         }
+        metadata.setDataAndFixCR(responsibleParty);
+        String uuid = UUID.randomUUID().toString();
+        metadata.setUuid(uuid);
+        MetadataDataInfo dataInfo = new MetadataDataInfo().
+                setExtra(validated ? LUCENE_EXTRA_VALIDATED : LUCENE_EXTRA_NON_VALIDATED).
+                setRoot(responsibleParty.getQualifiedName()).
+                setSchemaId(ISO19139cheSchemaPlugin.IDENTIFIER).
+                setType(MetadataType.SUB_TEMPLATE);
+        metadata.setDataInfo(dataInfo);
+        metadata.setSourceInfo(new MetadataSourceInfo().setSourceId(getSourceId()));
 
-        user.setKind("");
-        user.setName(name);
-        user.setOrganisation(organ);
-        user.getSecurity().setPassword(passwd);
-        user.getGeocatUserInfo()
-                .setParentInfo(parentInfo)
-                .setContactinstructions(instruct)
-                .setHoursofservice(hours)
-                .setOnlinedescription(onlinedesc)
-                .setOnlinename(onlinename)
-                .setOnlineresource(onlineResource)
-                .setOrgacronym(orgacronym)
-                .setPositionname(position)
-                .setPublicaccess("y")
-                .setValidated(validated);
+        this.metadataRepository.save(metadata);
 
-        List<Element> emails = xml.getChildren("email");
+        this.dataManager.indexMetadata(String.valueOf(metadata.getId()), true, false, false, false);
 
-        for (Element email : emails) {
-            user.getEmailAddresses().add(email.getTextTrim());
-        }
+        final String role = Xml.selectString(responsibleParty, "*//gmd:CI_RoleCode/@codeListValue");
+        final Element parent = Xml.selectElement(responsibleParty, "*//che:parentResponsibleParty");
 
-        final List<Element> phones = xml.getChildren("phone");
-
-        for (Element phone : phones) {
-            String voice = getTextPadEmpty(phone, "voice");
-            String mobile = getTextPadEmpty(phone, "mobile");
-            String facsimile = getTextPadEmpty(phone, "facsimile");
-            String directNumber = getTextPadEmpty(phone, "directNumber");
-            user.getPhones().add(new Phone()
-                    .setPhone(voice)
-                    .setFacsimile(facsimile)
-                    .setDirectnumber(directNumber)
-                    .setMobile(mobile));
-        }
-
-        user.setProfile(Profile.Shared);
-        user.setSurname(surname);
-        user.setUsername(username);
-
-        Address addressEntity = new Address()
-                .setAddress(address)
-                .setZip(zip)
-                .setCity(city)
-                .setCountry(country)
-                .setState(state)
-                .setPostbox(postbox)
-                .setStreetname(street)
-                .setStreetnumber(streetnb);
-
-        user.getAddresses().add(addressEntity);
-
-        user = _userRepository.save(user);
+        processParent(responsibleParty, parent, metadataLang);
 
         UpdateResult result = new UpdateResult();
-        result.id = user.getId();
+        result.uuid = uuid;
         result.role = role;
 
         return result;
     }
 
-    private Integer processParent(Element original, Element xml, String metadataLang) throws Exception
-    {
-        if (xml==null || xml.getChildren().isEmpty()) return null;
+    private String getSourceId() {
+        return this.settingRepository.findOne(SettingManager.SYSTEM_SITE_SITE_ID_PATH).getValue();
+    }
 
-        Element parentInfo = xml.getChild("CHE_CI_ResponsibleParty", GeocatXslUtil.CHE_NAMESPACE);
-        @SuppressWarnings("unchecked")
-		Iterator<Content> descendants = original.getDescendants(new ElementFinder("parentResponsibleParty",
-                GeocatXslUtil.CHE_NAMESPACE, "CHE_CI_ResponsibleParty"));
-		Element toReplace = Utils.nextElement(descendants);
+    private void processParent(Element parent, Element parentInfo, String metadataLang) throws Exception {
+        if (parentInfo == null || parentInfo.getChildren().isEmpty()) return;
 
-
-        Integer finalId = null;
-
-        if (toReplace.getAttribute(XLink.HREF, XLink.NAMESPACE_XLINK)==null){
-            Collection<Element> result;
+        Element parentResponsibleParty = parentInfo.getChild("CHE_CI_ResponsibleParty", GeocatXslUtil.CHE_NAMESPACE);
+        if (parentInfo.getAttribute(XLink.HREF, XLink.NAMESPACE_XLINK) == null) {
             Element placeholder = new Element("placeholder");
-            Pair<Collection<Element>, Boolean> findResult = find(placeholder, parentInfo, metadataLang);
-            if(!findResult.two()){
-                UpdateResult afterQuery = processQuery(xml, null, false, metadataLang);
+            Pair<Collection<Element>, Boolean> findResult = find(placeholder, parentResponsibleParty, metadataLang);
 
-                result = xlinkIt(xml, afterQuery.role, "" + afterQuery.id, false);
+            if (!findResult.two()) {
+                UpdateResult afterQuery = processQuery(parentResponsibleParty, null, false, metadataLang);
+                parent.addContent(xlinkIt(parentInfo, afterQuery.role, afterQuery.uuid, false));
             } else {
-                result = findResult.one();
+                parent.addContent(findResult.one());
             }
+        } else if (!ReusableObjManager.isValidated(parentInfo)) {
+            Processor.uncacheXLinkUri(parentInfo.getAttributeValue(XLink.HREF, XLink.NAMESPACE_XLINK));
 
-
-            Element xlinkedParent = result.iterator().next();
-
-            try {
-                int parsedId = Integer.parseInt(Utils.extractUrlParam(xlinkedParent, "id"));
-                Element parent = toReplace.getParentElement();
-
-                toReplace.detach();
-
-                parent.addContent(xlinkedParent);
-                finalId = parsedId;
-
-            } catch (NumberFormatException e) {
-                Log.error(Geocat.Module.REUSABLE, "Error parsing the id of the parentResponsibleParty: "
-                        + Utils.extractUrlParam(xlinkedParent, "id"));
-            }
-        } else if( !ReusableObjManager.isValidated(toReplace)){
-            Processor.uncacheXLinkUri(toReplace.getAttributeValue(XLink.HREF, XLink.NAMESPACE_XLINK));
-
-            updateObject((Element)toReplace.clone(), metadataLang);
-            int parsedId = Integer.parseInt(Utils.extractUrlParam(toReplace, "id"));
-            finalId = parsedId;
+            updateObject((Element) parentInfo.clone(), metadataLang);
         }
-        return finalId;
-
-    }
-
-    private String getTextPadEmpty(Element xml, String name)
-    {
-        String val = Utils.getText(xml, name, null);
-        if (val == null)
-            return null;
-        // need space so xslt from user-xml.xsl doesnt get rid of the element
-        if (val.length() == 0)
-            return " ";
-        return val;
-    }
-
-    private boolean notEmpty(String email)
-    {
-        return email != null && email.trim().length() > 0;
     }
 
     public Element list(UserSession session, boolean validated, String language) throws Exception {
@@ -483,9 +361,9 @@ public final class ContactsStrategy extends ReplacementStrategy {
                     @Nullable
                     @Override
                     public String apply(@Nullable DescData data) {
-                        String email = safeField(data.doc, "electronicmailaddress");
-                        String name = safeField(data.doc, "individualfirstname");
-                        String surname = safeField(data.doc, "individuallastname");
+                        String email = safeField(data.doc, LUCENE_EMAIL);
+                        String name = safeField(data.doc, LUCENE_FIRST_NAME);
+                        String surname = safeField(data.doc, LUCENE_LAST_NAME);
 
                         String desc;
                         if (email == null || email.length() == 0) {
@@ -496,6 +374,7 @@ public final class ContactsStrategy extends ReplacementStrategy {
 
                         return name + " " + surname + " (" + desc + ")";
                     }
+
                     private String safeField(Document doc, String fieldName) {
                         final IndexableField field = doc.getField(fieldName);
                         if (field != null) {
@@ -533,18 +412,15 @@ public final class ContactsStrategy extends ReplacementStrategy {
         _userRepository.deleteAll(UserSpecs.hasUserIdIn(intIds));
     }
 
-    public String createXlinkHref(String id, UserSession session, String notRequired)
-    {
+    public String createXlinkHref(String id, UserSession session, String notRequired) {
         return XLink.LOCAL_PROTOCOL + "subtemplate?" + Params.UUID + "=" + id;
     }
 
-    public String updateHrefId(String oldHref, String id, UserSession session)
-    {
-        return oldHref.replaceAll("id=\\d+","id="+id).replaceAll("/fra/|/deu/|/ita/|/___/","/eng/");
+    public String updateHrefId(String oldHref, String id, UserSession session) {
+        return oldHref.replaceAll("id=\\d+", "id=" + id).replaceAll("/fra/|/deu/|/ita/|/___/", "/eng/");
     }
 
-    public Map<String, String> markAsValidated(String[] ids, UserSession session) throws Exception
-    {
+    public Map<String, String> markAsValidated(String[] ids, UserSession session) throws Exception {
         List<Integer> intIds = Lists.transform(Arrays.asList(ids), new Function<String, Integer>() {
             @Nullable
             @Override
@@ -571,8 +447,7 @@ public final class ContactsStrategy extends ReplacementStrategy {
         return idMap;
     }
 
-    public Collection<Element> updateObject(Element xlink, String metadataLang) throws Exception
-    {
+    public Collection<Element> updateObject(Element xlink, String metadataLang) throws Exception {
         int id = Integer.parseInt(Utils.extractUrlParam(xlink, "id"));
 
         UpdateResult results = processQuery(xlink, id, false, metadataLang);
@@ -585,10 +460,9 @@ public final class ContactsStrategy extends ReplacementStrategy {
         return Collections.emptySet();
     }
 
-    public boolean isValidated(String href) throws NumberFormatException, SQLException
-    {
+    public boolean isValidated(String href) throws NumberFormatException, SQLException {
         String id = Utils.id(href);
-        if(id==null) return false;
+        if (id == null) return false;
         try {
             Specifications<User> spec = where(UserSpecs.hasUserId(Integer.parseInt(id)))
                     .and(UserSpecs.hasProfile(Profile.Shared))
@@ -600,30 +474,26 @@ public final class ContactsStrategy extends ReplacementStrategy {
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Reusable Contact";
     }
 
     private static class ContactElementFinder extends ElementFinder {
 
-        public ContactElementFinder(String name, Namespace ns, String parent)
-        {
+        public ContactElementFinder(String name, Namespace ns, String parent) {
             super(name, ns, parent);
         }
 
         private static final long serialVersionUID = 1L;
 
         @Override
-        protected boolean otherChecks(Element elem)
-        {
+        protected boolean otherChecks(Element elem) {
             return !isParentResponsibleParty(elem);
         }
 
-        public boolean isParentResponsibleParty(Element elem)
-        {
-            if(elem == null) return false;
-            if(elem.getName().equals("parentResponsibleParty")){
+        public boolean isParentResponsibleParty(Element elem) {
+            if (elem == null) return false;
+            if (elem.getName().equals("parentResponsibleParty")) {
                 return true;
             }
             return isParentResponsibleParty(elem.getParentElement());
@@ -634,15 +504,16 @@ public final class ContactsStrategy extends ReplacementStrategy {
     public String[] getInvalidXlinkLuceneField() {
         return new String[]{"invalid_xlink_contact"};
     }
+
     @Override
     public String[] getValidXlinkLuceneField() {
-    	return new String[]{"valid_xlink_contact"};
+        return new String[]{"valid_xlink_contact"};
     }
 
     @Override
     public String createAsNeeded(String href, UserSession session) throws Exception {
         String startId = Utils.id(href);
-        if(startId!=null) return href;
+        if (startId != null) return href;
 
         final String regex = ".+\\?.*role=([^&#]+)&?.*";
         Matcher matcher = Pattern.compile(regex, Pattern.CASE_INSENSITIVE).matcher(href);
@@ -651,9 +522,9 @@ public final class ContactsStrategy extends ReplacementStrategy {
             throw new IllegalArgumentException("cannot find role");
         }
         String role = matcher.group(1);
-        
+
         String username = UUID.randomUUID().toString();
-        String email = username+"@generated.org";
+        String email = username + "@generated.org";
         User user = new User();
         user.setUsername(username);
         user.getSecurity().setPassword("");
@@ -664,6 +535,6 @@ public final class ContactsStrategy extends ReplacementStrategy {
         final User saved = _userRepository.save(user);
         int id = saved.getId();
 
-        return XLink.LOCAL_PROTOCOL+"xml.user.get?id="+id+"&schema=iso19139.che&role="+role;
+        return XLink.LOCAL_PROTOCOL + "xml.user.get?id=" + id + "&schema=iso19139.che&role=" + role;
     }
 }
