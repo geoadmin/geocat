@@ -67,7 +67,7 @@ public class DeleteUnused implements Service {
             final IsoLanguagesMapper isoLanguagesMapper = context.getBean(IsoLanguagesMapper.class);
             final ThesaurusManager thesaurusMan = context.getBean(ThesaurusManager.class);
 
-            process(new ContactsStrategy(context.getApplicationContext(), appPath), context);
+            process(new ContactsStrategy(context.getApplicationContext()), context);
             process(new ExtentsStrategy(baseUrl, appPath, context.getBean(ExtentManager.class), language), context);
             process(new FormatsStrategy(context.getApplicationContext(), appPath), context);
             process(new KeywordsStrategy(isoLanguagesMapper, thesaurusMan, appPath, baseUrl, language), context);

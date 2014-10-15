@@ -350,7 +350,7 @@ public final class Utils {
             strategy = new FormatsStrategy(context.getApplicationContext(), appPath);
             break;
         case contacts:
-            strategy = new ContactsStrategy(context.getApplicationContext(), appPath);
+            strategy = new ContactsStrategy(context.getApplicationContext());
             break;
         default:
             break;

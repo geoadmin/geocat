@@ -78,7 +78,7 @@ public class List implements Service
                 strategy = new FormatsStrategy(context.getApplicationContext(), appPath);
                 break;
             case contacts:
-                strategy = new ContactsStrategy(context.getApplicationContext(), appPath);
+                strategy = new ContactsStrategy(context.getApplicationContext());
                 break;
             default:
                 throw new IllegalArgumentException(type + " is not a reusable object type");

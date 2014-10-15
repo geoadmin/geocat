@@ -240,7 +240,7 @@ public class ReusableObjManager {
 
     private boolean replaceContacts(Element xml, String defaultMetadataLang, ProcessParams params) throws Exception {
         ReusableObjectLogger logger = params.logger;
-        ContactsStrategy strategy = new ContactsStrategy(params.srvContext.getApplicationContext(), getAppPath());
+        ContactsStrategy strategy = new ContactsStrategy(params.srvContext.getApplicationContext());
         return performReplace(xml, defaultMetadataLang, CONTACTS_PLACEHOLDER, CONTACTS, logger, strategy,
                 params.addOnly, params.srvContext);
     }
@@ -480,7 +480,7 @@ public class ReusableObjManager {
                 || xlink.getName().equals("distributorContact") || xlink.getName().equals("citedResponsibleParty") || xlink.getName()
                     .equals("parentResponsibleParty")) {
 
-                strategy = new ContactsStrategy(params.srvContext.getApplicationContext(), getAppPath());
+                strategy = new ContactsStrategy(params.srvContext.getApplicationContext());
             } else if (xlink.getName().equals("resourceFormat") || xlink.getName().equals("distributionFormat")) {
                 strategy = new FormatsStrategy(params.srvContext.getApplicationContext(), getAppPath());
             } else if (xlink.getName().equals("descriptiveKeywords")) {

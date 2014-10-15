@@ -17,7 +17,6 @@ import org.fao.geonet.geocat.services.reusable.AbstractSharedObjectTest;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces;
 import org.fao.geonet.schema.iso19139che.ISO19139cheSchemaPlugin;
 import org.fao.geonet.services.subtemplate.Get;
 import org.fao.geonet.utils.Xml;
@@ -25,12 +24,16 @@ import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import static org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy.LUCENE_EXTRA_FIELD;
 import static org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy.LUCENE_EXTRA_NON_VALIDATED;
 import static org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy.LUCENE_UUID_FIELD;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
+import static org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces.CHE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -45,7 +48,7 @@ public class ContactsStrategyTest extends AbstractSharedObjectTest {
         final Metadata contact = addUserSubtemplate("testFind_NoXLink", true);
 
         final Element contactXml = contact.getXmlData(false);
-        Element md = new Element("CHE_MD_Metadata", ISO19139cheNamespaces.CHE).addContent(
+        Element md = new Element("CHE_MD_Metadata", CHE).addContent(
                 new Element("contact", GMD).addContent(contactXml)
         );
 
@@ -75,11 +78,10 @@ public class ContactsStrategyTest extends AbstractSharedObjectTest {
         assertEqualsText("testFind_NoXLinklastname", subtemplateXml, "che:individualLastName/gco:CharacterString", GMD);
     }
 
-
     @Test
-    public void testAdd() throws Exception {
+    public void testAddParentAndMain() throws Exception {
         Element sharedObjTmp = Xml.loadFile(AbstractSharedObjectTest.class.getResource(SHARED_USER_XML));
-        Element md = new Element("CHE_MD_Metadata", ISO19139cheNamespaces.CHE).addContent(
+        Element md = new Element("CHE_MD_Metadata", CHE).addContent(
                 new Element("contact", GMD).addContent(sharedObjTmp)
         );
 
@@ -108,13 +110,81 @@ public class ContactsStrategyTest extends AbstractSharedObjectTest {
         assertEquals("che:CHE_CI_ResponsibleParty", oneByUuid.getDataInfo().getRoot());
         assertEquals(LUCENE_EXTRA_NON_VALIDATED, oneByUuid.getDataInfo().getExtra());
         assertEquals(ISO19139cheSchemaPlugin.IDENTIFIER, oneByUuid.getDataInfo().getSchemaId());
+        final Element xmlData = oneByUuid.getXmlData(false);
+
+        final Element parentResponsibleParty = xmlData.getChild("parentResponsibleParty", CHE);
+        assertNotNull(parentResponsibleParty);
+        assertTrue(parentResponsibleParty.getChildren().isEmpty());
+        final String parentHref = parentResponsibleParty.getAttributeValue("href", XLink.NAMESPACE_XLINK);
+        assertNotNull(parentHref);
+        assertTrue(parentHref.contains("custodian"));
 
         final SearchManager searchManager = _applicationContext.getBean(SearchManager.class);
         final IndexAndTaxonomy reader = searchManager.getNewIndexReader("eng");
 
         try {
             final IndexSearcher searcher = new IndexSearcher(reader.indexReader);
-            final TopDocs search = searcher.search(new TermQuery(new Term(LUCENE_UUID_FIELD, uuid)), 300);
+            final TopDocs search = searcher.search(new TermQuery(new Term(LUCENE_EXTRA_FIELD, LUCENE_EXTRA_NON_VALIDATED)), 300);
+
+            final ScoreDoc[] scoreDocs = search.scoreDocs;
+
+            Set<String> uuids = Sets.newHashSet();
+            for (ScoreDoc scoreDoc : scoreDocs) {
+                Document doc = searcher.doc(scoreDoc.doc);
+                uuids.add(doc.get(LUCENE_UUID_FIELD));
+            }
+
+            assertEquals(2, uuids.size());
+        } finally {
+            searchManager.releaseIndexReader(reader);
+        }
+    }
+
+    @Test
+    public void testAddMainUpdateParent() throws Exception {
+        Element sharedObjTmp = Xml.loadFile(AbstractSharedObjectTest.class.getResource(SHARED_USER_XML));
+        Element md = new Element("CHE_MD_Metadata", CHE).addContent(
+                new Element("contact", GMD).addContent(sharedObjTmp)
+        );
+
+        String parentUUID = saveParentSubtemplate(sharedObjTmp, false);
+
+        final ServiceContext context = createServiceContext();
+        ProcessParams params = new ProcessParams(ReusableObjectLogger.THREAD_SAFE_LOGGER, null, md,
+                md, false, "eng", context);
+        final List<Element> process = manager.process(params);
+
+        assertEquals(1, process.size());
+        Element updated = process.get(0);
+        final Element updatedContactEl = updated.getChild("contact", GMD);
+        final String href = updatedContactEl.getAttributeValue("href", XLink.NAMESPACE_XLINK, null);
+        assertTrue(href != null);
+        assertTrue(href, href.contains("CI_RoleCode"));
+        assertTrue(href, href.contains("subtemplate?"));
+        assertTrue(href, href.contains("process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact"));
+        assertTrue(href, href.contains("uuid="));
+
+        final String uuid = Utils.id(href);
+
+        final MetadataRepository repository = _applicationContext.getBean(MetadataRepository.class);
+        final Metadata addedMd = repository.findOneByUuid(uuid);
+
+        assertNotNull(addedMd);
+        assertEquals(MetadataType.SUB_TEMPLATE, addedMd.getDataInfo().getType());
+        assertEquals("che:CHE_CI_ResponsibleParty", addedMd.getDataInfo().getRoot());
+        assertEquals(LUCENE_EXTRA_NON_VALIDATED, addedMd.getDataInfo().getExtra());
+        assertEquals(ISO19139cheSchemaPlugin.IDENTIFIER, addedMd.getDataInfo().getSchemaId());
+
+        final Metadata parentMd = repository.findOneByUuid(parentUUID);
+        assertEqualsText("pf name", parentMd.getXmlData(false), "che:individualFirstName/gco:CharacterString",
+                CHE, GCO);
+
+        final SearchManager searchManager = _applicationContext.getBean(SearchManager.class);
+        final IndexAndTaxonomy reader = searchManager.getNewIndexReader("eng");
+
+        try {
+            final IndexSearcher searcher = new IndexSearcher(reader.indexReader);
+            final TopDocs search = searcher.search(new TermQuery(new Term(LUCENE_EXTRA_FIELD, LUCENE_EXTRA_NON_VALIDATED)), 300);
 
             final ScoreDoc[] scoreDocs = search.scoreDocs;
 
@@ -128,6 +198,81 @@ public class ContactsStrategyTest extends AbstractSharedObjectTest {
         } finally {
             searchManager.releaseIndexReader(reader);
         }
+    }
+
+    @Test
+    public void testAddMainValidatedParent() throws Exception {
+        Element sharedObjTmp = Xml.loadFile(AbstractSharedObjectTest.class.getResource(SHARED_USER_XML));
+        Element md = new Element("CHE_MD_Metadata", CHE).addContent(
+                new Element("contact", GMD).addContent(sharedObjTmp)
+        );
+
+        String parentUUID = saveParentSubtemplate(sharedObjTmp, true);
+
+        final ServiceContext context = createServiceContext();
+        ProcessParams params = new ProcessParams(ReusableObjectLogger.THREAD_SAFE_LOGGER, null, md,
+                md, false, "eng", context);
+        final List<Element> process = manager.process(params);
+
+        assertEquals(1, process.size());
+        Element updated = process.get(0);
+        final Element updatedContactEl = updated.getChild("contact", GMD);
+        final String href = updatedContactEl.getAttributeValue("href", XLink.NAMESPACE_XLINK, null);
+        assertTrue(href != null);
+        assertTrue(href, href.contains("CI_RoleCode"));
+        assertTrue(href, href.contains("subtemplate?"));
+        assertTrue(href, href.contains("process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact"));
+        assertTrue(href, href.contains("uuid="));
+
+        final String uuid = Utils.id(href);
+
+        final MetadataRepository repository = _applicationContext.getBean(MetadataRepository.class);
+        final Metadata addedMd = repository.findOneByUuid(uuid);
+
+        assertNotNull(addedMd);
+        assertEquals(MetadataType.SUB_TEMPLATE, addedMd.getDataInfo().getType());
+        assertEquals("che:CHE_CI_ResponsibleParty", addedMd.getDataInfo().getRoot());
+        assertEquals(LUCENE_EXTRA_NON_VALIDATED, addedMd.getDataInfo().getExtra());
+        assertEquals(ISO19139cheSchemaPlugin.IDENTIFIER, addedMd.getDataInfo().getSchemaId());
+
+        final Metadata parentMd = repository.findOneByUuid(parentUUID);
+        assertEqualsText("original parent first name", parentMd.getXmlData(false), "che:individualFirstName/gco:CharacterString",
+                CHE, GCO);
+
+        final SearchManager searchManager = _applicationContext.getBean(SearchManager.class);
+        final IndexAndTaxonomy reader = searchManager.getNewIndexReader("eng");
+
+        try {
+            final IndexSearcher searcher = new IndexSearcher(reader.indexReader);
+            final TopDocs search = searcher.search(new TermQuery(new Term(LUCENE_EXTRA_FIELD, LUCENE_EXTRA_NON_VALIDATED)), 300);
+
+            final ScoreDoc[] scoreDocs = search.scoreDocs;
+
+            Set<String> uuids = Sets.newHashSet();
+            for (ScoreDoc scoreDoc : scoreDocs) {
+                Document doc = searcher.doc(scoreDoc.doc);
+                uuids.add(doc.get(LUCENE_UUID_FIELD));
+            }
+
+            assertEquals(1, uuids.size());
+        } finally {
+            searchManager.releaseIndexReader(reader);
+        }
+    }
+
+    private String saveParentSubtemplate(Element sharedObjTmp, boolean validated) throws Exception {
+        final Element parent = sharedObjTmp.getChild("parentResponsibleParty", CHE);
+        Element parentCopy = (Element) parent.clone();
+        Xml.selectElement(parentCopy, "*/che:individualFirstName/gco:CharacterString", Arrays.asList(CHE, GCO)).
+                setText("original parent first name");
+        final String parentUUID = "parentUUID";
+        saveSubtemplate(parentUUID, validated, parentCopy);
+        ContactsStrategy contactsStrategy = new ContactsStrategy(_applicationContext);
+        parent.setAttribute("href", contactsStrategy.createXlinkHref(parentUUID, null, "custodian"), XLink.NAMESPACE_XLINK);
+        if (!validated) {
+            parent.setAttribute("role", ReusableObjManager.NON_VALID_ROLE, XLink.NAMESPACE_XLINK);
+        }
+        return parentUUID;
     }
 
     @Test

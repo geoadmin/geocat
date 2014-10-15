@@ -117,7 +117,7 @@ public class SharedUpdate implements Service
             throw new IllegalArgumentException("unknown user update operation " + operation);
         }
 
-        final ContactsStrategy strategy = new ContactsStrategy(context.getApplicationContext(), context.getAppPath());
+        final ContactsStrategy strategy = new ContactsStrategy(context.getApplicationContext());
         ArrayList<String> fields = new ArrayList<String>();
 
         fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));

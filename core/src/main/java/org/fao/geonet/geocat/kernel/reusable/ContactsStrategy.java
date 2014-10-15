@@ -66,6 +66,7 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.geocat.specification.GeocatUserSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces;
 import org.fao.geonet.schema.iso19139che.ISO19139cheSchemaPlugin;
 import org.fao.geonet.util.ElementFinder;
@@ -113,7 +114,7 @@ public final class ContactsStrategy extends ReplacementStrategy {
     private final SettingRepository settingRepository;
     private final DataManager dataManager;
 
-    public ContactsStrategy(ApplicationContext context, String appPath) {
+    public ContactsStrategy(ApplicationContext context) {
         this._userRepository = context.getBean(UserRepository.class);
         this.metadataRepository = context.getBean(MetadataRepository.class);
         this._userGroupRepository = context.getBean(UserGroupRepository.class);
@@ -175,7 +176,8 @@ public final class ContactsStrategy extends ReplacementStrategy {
                 String elemOrg = lookupElement(originalElem, "organisationName", defaultMetadataLang);
                 String docLocale = doc.get(LUCENE_LOCALE_FIELD);
                 String docOrgName = doc.get(LUCENE_ORG_NAME);
-                if (docLocale.equals(locale) && docOrgName.equalsIgnoreCase(elemOrg)) {
+                if (docLocale != null && docLocale.equals(locale) &&
+                    docOrgName != null && docOrgName.equalsIgnoreCase(elemOrg)) {
                     int newRating = 0;
 
                     HashSet<String> lowerCaseEmails = new HashSet<String>();
@@ -299,6 +301,12 @@ public final class ContactsStrategy extends ReplacementStrategy {
                                       String metadataLang) throws Exception {
         Element responsibleParty = originalElem.getChild("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE);
 
+        final List namespaces = Arrays.asList(ISO19139Namespaces.GMD);
+        final String role = Xml.selectString(responsibleParty, "*//gmd:CI_RoleCode/@codeListValue", namespaces);
+        final Element parent = responsibleParty.getChild("parentResponsibleParty", ISO19139cheNamespaces.CHE);
+
+        processParent(responsibleParty, parent, metadataLang);
+
         final Metadata metadata = new Metadata();
         if (id != null) {
             metadata.setId(id);
@@ -317,11 +325,6 @@ public final class ContactsStrategy extends ReplacementStrategy {
         this.metadataRepository.save(metadata);
 
         this.dataManager.indexMetadata(String.valueOf(metadata.getId()), true, false, false, false);
-
-        final String role = Xml.selectString(responsibleParty, "*//gmd:CI_RoleCode/@codeListValue");
-        final Element parent = Xml.selectElement(responsibleParty, "*//che:parentResponsibleParty");
-
-        processParent(responsibleParty, parent, metadataLang);
 
         UpdateResult result = new UpdateResult();
         result.uuid = uuid;
@@ -343,7 +346,7 @@ public final class ContactsStrategy extends ReplacementStrategy {
             Pair<Collection<Element>, Boolean> findResult = find(placeholder, parentResponsibleParty, metadataLang);
 
             if (!findResult.two()) {
-                UpdateResult afterQuery = processQuery(parentResponsibleParty, null, false, metadataLang);
+                UpdateResult afterQuery = processQuery(parentInfo, null, false, metadataLang);
                 parent.addContent(xlinkIt(parentInfo, afterQuery.role, afterQuery.uuid, false));
             } else {
                 parent.addContent(findResult.one());
@@ -412,8 +415,12 @@ public final class ContactsStrategy extends ReplacementStrategy {
         _userRepository.deleteAll(UserSpecs.hasUserIdIn(intIds));
     }
 
-    public String createXlinkHref(String id, UserSession session, String notRequired) {
-        return XLink.LOCAL_PROTOCOL + "subtemplate?" + Params.UUID + "=" + id;
+    public String createXlinkHref(String id, UserSession session, String role) {
+        String href = XLink.LOCAL_PROTOCOL + "subtemplate?" + Params.UUID + "=" + id;
+        if (role != null) {
+            href = href + "&process=*//gmd:CI_RoleCode/@codeListValue~"+role;
+        }
+        return href;
     }
 
     public String updateHrefId(String oldHref, String id, UserSession session) {
