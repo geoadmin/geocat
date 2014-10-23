@@ -243,13 +243,6 @@ public class Geonetwork implements ApplicationHandler {
 
         _applicationContext.getBean(ExtentManager.class).init(extentConfig);
 
-		//-------------------------------------------------------------------------
-		//--- ReusableObjectManager
-
-        List<Element> reusableConfig = handlerConfig.getChildren(Geocat.Config.REUSABLE_OBJECT_CONFIG);
-        context.getBean(ReusableObjManager.class).init(reusableConfig);
-
-
         try {
             _applicationContext.getBean(DataStore.class);
         } catch (NoSuchBeanDefinitionException e) {
