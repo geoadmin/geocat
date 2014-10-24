@@ -7845,6 +7845,9 @@ body {
 .twitter-typeahead {
   width: 100%;
 }
+[ng-search-form] .panel-heading .input-group-btn {
+  line-height: normal;
+}
 [ng-search-form] .relative {
   position: relative;
 }
@@ -8103,4 +8106,3 @@ select[multiple].geocat-search .geotype {
     width: calc(100% - 30px);
   }
 }
-/*# sourceMappingURL=geocat.css.map */
