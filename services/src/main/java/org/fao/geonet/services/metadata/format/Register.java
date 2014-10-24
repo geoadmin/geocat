@@ -23,7 +23,9 @@
 
 package org.fao.geonet.services.metadata.format;
 
+import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.IO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -51,10 +53,9 @@ import java.util.zip.ZipFile;
  *  
  * @author jeichar
  */
-public class Register extends AbstractFormatService {
+public class Register extends AbstractFormatService implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        ensureInitializedDir(context);
         String fileName = Util.getParam(params, Params.FNAME);
         String xslid = Util.getParam(params, Params.ID, null);
         if (xslid == null) {
@@ -66,7 +67,8 @@ public class Register extends AbstractFormatService {
         }
 
         checkLegalId(Params.ID, xslid);
-        File file = new File(userXslDir + xslid);
+        File userXslDir = context.getBean(GeonetworkDataDirectory.class).getFormatterDir();
+        File file = new File(userXslDir, xslid);
         
         File uploadedFile = new File(context.getUploadDir(), fileName);
         if (file.exists()) {
@@ -123,7 +125,7 @@ public class Register extends AbstractFormatService {
     }
 
     private void handleRawXsl(File uploadedFile, File dir) throws IOException {
-        FileUtils.moveFile(uploadedFile, new File(dir, VIEW_XSL_FILENAME));
+        FileUtils.moveFile(uploadedFile, new File(dir, FormatterConstants.VIEW_XSL_FILENAME));
     }
 
     private void handleZipFile(ZipFile zipFile, File dir) throws IOException {
@@ -132,7 +134,7 @@ public class Register extends AbstractFormatService {
         Collection<File> xslFiles = FileUtils.listFiles(dir, new String[]{"xsl"}, false);
         File toRename = null;
         for (File file : xslFiles) {
-            if (file.getName().equals(VIEW_XSL_FILENAME)) return;
+            if (file.getName().equals(FormatterConstants.VIEW_XSL_FILENAME)) return;
             toRename = file;
         }
         
@@ -140,7 +142,7 @@ public class Register extends AbstractFormatService {
             throw new IllegalStateException("Uploaded zip file must have a view.xsl file or only a single xsl file");
         }
         
-        FileUtils.moveFile(toRename, new File(dir, VIEW_XSL_FILENAME));
+        FileUtils.moveFile(toRename, new File(dir, FormatterConstants.VIEW_XSL_FILENAME));
     }
 
     private void removeTopDir(File dir) throws IOException {

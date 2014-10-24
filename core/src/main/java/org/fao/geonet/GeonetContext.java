@@ -33,13 +33,14 @@ public class GeonetContext {
     private final ApplicationContext _springAppContext;
     private final Class<StatusActions> _statusActionsClass;
     private final ThreadPool _threadPool;
-    private boolean _readOnly;
+    private final NodeInfo nodeInfo;
 
     // ---------------------------------------------------------------------------
     /* package */GeonetContext(ApplicationContext springAppContext, boolean readOnly,
                                Class<StatusActions> statusActionsClass, ThreadPool threadPool) {
         this._springAppContext = springAppContext;
-        this._readOnly = readOnly;
+        this.nodeInfo = springAppContext.getBean(NodeInfo.class);
+        nodeInfo.setReadOnly(readOnly);
         this._statusActionsClass = statusActionsClass;
         this._threadPool = threadPool;
     }
@@ -66,11 +67,11 @@ public class GeonetContext {
     }
 
     public boolean isReadOnly() {
-        return _readOnly;
+        return nodeInfo.isReadOnly();
     }
 
     public void setReadOnly(boolean readOnly) {
-        this._readOnly = readOnly;
+        nodeInfo.setReadOnly(readOnly);
     }
 
     public Email getEmail() {

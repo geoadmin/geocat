@@ -23,200 +23,271 @@
 
 package org.fao.geonet.services.metadata.format;
 
-import jeeves.server.ServiceConfig;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Maps;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.utils.Xml;
+import jeeves.server.dispatchers.ServiceManager;
+import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.apache.commons.io.FileUtils;
-import org.fao.geonet.GeonetContext;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.services.metadata.Show;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.services.metadata.format.groovy.ParamValue;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Allows a user to display a metadata with a particular formatters
- * 
+ *
  * @author jeichar
  */
+@Controller("metadata.formatter")
 public class Format extends AbstractFormatService {
 
-	private Show showService;
-    private WeakHashMap<String, List<SchemaLocalization>> labels = new WeakHashMap<String, List<SchemaLocalization>>();
+    @Autowired
+    private SettingManager settingManager;
+    @Autowired
+    private MetadataRepository metadataRepository;
+    @Autowired
+    private XmlSerializer xmlSerializer;
+    @Autowired
+    private XsltFormatter xsltFormatter;
+    @Autowired
+    private GroovyFormatter groovyFormatter;
+    @Autowired
+    private ServiceManager serviceManager;
+    @Autowired
+    private SchemaManager schemaManager;
+    @Autowired
+    private DataManager dataManager;
+    @Autowired
+    private GeonetworkDataDirectory geonetworkDataDirectory;
 
-    public Element exec(Element params, ServiceContext context) throws Exception {
-        ensureInitializedDir(context);
+    /**
+     * Map (canonical path to formatter dir -> Element containing all xml files in Formatter bundle's loc directory)
+     */
+    private WeakHashMap<String, Element> pluginLocs = new WeakHashMap<String, Element>();
 
-        String xslid = Util.getParam(params, "xsl", null);
-        String uuid = Util.getParam(params, Params.UUID, null);
-        String id = Util.getParam(params, Params.ID, null);
 
-        if (uuid == null && id == null) {
-            throw new IllegalArgumentException("Either '" + Params.UUID + "' or '" + Params.ID + "'is a required parameter");
-        }
+    @RequestMapping(value = "/{lang}/metadata.formatter.{type}", produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_HTML_VALUE })
+    @ResponseBody
+    public String exec(
+            @PathVariable final String lang,
+            @PathVariable final String type,
+            @RequestParam(required = false) final String id,
+            @RequestParam(required = false) final String uuid,
+            @RequestParam(value = "xsl", required = false) final String xslid,
+            @RequestParam(defaultValue = "n") final String skipPopularity,
+            @RequestParam(value = "hide_withheld", required = false) final Boolean hide_withheld,
+            final HttpServletRequest request) throws Exception {
 
-        File formatDir = getAndVerifyFormatDir("xsl", xslid);
+        Pair<FormatterImpl, FormatterParams> result = createFormatterAndParams(lang, type, id, uuid, xslid, skipPopularity,
+                hide_withheld, request);
+        FormatterImpl formatter = result.one();
+        FormatterParams fparams = result.two();
+        return formatter.format(fparams);
 
-        File viewXslFile = new File(formatDir, VIEW_XSL_FILENAME);
-
-        if (!viewXslFile.exists())
-            throw new IllegalArgumentException("The 'xsl' parameter must be a valid URL");
-
-        Element metadata = showService.exec(params, context);
-
-        ConfigFile config = new ConfigFile(formatDir);
-        String lang = config.getLang(context.getLanguage());
-
-        if(!isCompatibleMetadata(params, config, context)) {
-        	throw new IllegalArgumentException("The bundle cannot format metadata with the "+getMetadataSchema(params, context)+" schema");
-        }
-        
-        List<SchemaLocalization> localization = getLabels(context, lang);
-        
-        Element root = new Element("root");
-        
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        String url = gc.getBean(SettingManager.class).getSiteURL(context);
-
-        root.addContent (new Element("url").setText(url));
-        String locUrl = url+"/" + context.getNodeId() + "/"+context.getLanguage()+"/";
-        root.addContent (new Element("locUrl").setText(locUrl));
-        String resourceUrl = locUrl+"/metadata.formatter.resource?"+Params.ID+"="+xslid+"&"+Params.FNAME+"=";
-        root.addContent(new Element("resourceUrl").setText(resourceUrl));
-        root.addContent(metadata);
-        root.addContent(getResources(context, formatDir, lang));
-        if(config.loadStrings()) {
-        	root.addContent(getStrings(context.getAppPath(), lang));
-        }
-        
-        Element schemas = new Element("schemas");
-        root.addContent(schemas);
-        
-        List<String> schemasToLoadList = config.listOfSchemasToLoad();
-        
-        String schemasToLoad = config.schemasToLoad();
-		if(!"none".equalsIgnoreCase(schemasToLoad )) {
-	        for (SchemaLocalization schemaLocalization : localization) {
-	            String schema = schemaLocalization.schema.trim();
-	            if("all".equalsIgnoreCase(schemasToLoad) || schemasToLoadList.contains(schema.toLowerCase())) {
-		            Element schemaEl = new Element(schema);
-		            schemas.addContent(schemaEl);
-		            
-		            schemaEl.addContent((Element)schemaLocalization.labels.clone());
-		            schemaEl.addContent((Element)schemaLocalization.codelists.clone());
-		            schemaEl.addContent((Element)schemaLocalization.strings.clone());
-	            }
-	        }
-        }
-        if(Util.getParam(params, "debug", false)) {
-            return root;
-        }
-        
-        // verify xsl is a valid file before loading metadata and increasing
-        // popularity
-        Xml.loadFile(viewXslFile);
-        Element transformed = Xml.transform(root, viewXslFile.getAbsolutePath());
-        Element response = new Element("metadata");
-        response.addContent(transformed);
-        return response;
     }
 
-    private boolean isCompatibleMetadata(Element params, ConfigFile config,
-			ServiceContext context) throws Exception {
-    	String schema = getMetadataSchema(params, context);
-    	List<String> applicable = config.listOfApplicableSchemas();
-		return applicable.contains(schema) || applicable.contains("all");
-		
-	}
+    @VisibleForTesting
+    Pair<FormatterImpl, FormatterParams> createFormatterAndParams(
+            final String lang, final String type, final String id, final String uuid, final String xslid,
+            final String skipPopularity, final Boolean hide_withheld, final HttpServletRequest request) throws Exception {
 
-	private Element getStrings(String appPath, String lang) throws IOException, JDOMException {
+        ServiceContext context = this.serviceManager.createServiceContext("metadata.formatter" + type, lang, request);
+        final Pair<Element, Metadata> elementMetadataPair = getMetadata(context, id, uuid, new ParamValue(skipPopularity), hide_withheld);
+        Element metadata = elementMetadataPair.one();
+        Metadata metadataInfo = elementMetadataPair.two();
+
+        final String schema = metadataInfo.getDataInfo().getSchemaId();
+        File schemaDir = null;
+        if (schema != null) {
+            schemaDir = new File(schemaManager.getSchemaDir(schema));
+        }
+        File formatDir = getAndVerifyFormatDir(geonetworkDataDirectory, "xsl", xslid, schemaDir);
+
+        ConfigFile config = new ConfigFile(formatDir, false);
+
+        if (!isCompatibleMetadata(schema, config)) {
+            throw new IllegalArgumentException("The bundle cannot format metadata with the " + schema + " schema");
+        }
+
+        FormatterParams fparams = new FormatterParams();
+        fparams.config = config;
+        fparams.format = this;
+        fparams.params = request.getParameterMap();
+        fparams.context = context;
+        fparams.formatDir = formatDir.getCanonicalFile();
+        fparams.metadata = metadata;
+        fparams.schema = schema;
+        fparams.url = settingManager.getSiteURL(lang);
+        fparams.metadataId = metadataInfo.getId();
+        fparams.metadataUUID = metadataInfo.getUuid();
+
+        File viewXslFile = new File(formatDir, FormatterConstants.VIEW_XSL_FILENAME);
+        File viewGroovyFile = new File(formatDir, FormatterConstants.VIEW_GROOVY_FILENAME);
+        FormatterImpl formatter;
+        if (viewXslFile.exists()) {
+            fparams.viewFile = viewXslFile.getCanonicalFile();
+            formatter = this.xsltFormatter;
+        } else if (viewGroovyFile.exists()){
+            fparams.viewFile = viewGroovyFile.getCanonicalFile();
+            formatter = this.groovyFormatter;
+        } else {
+            throw new IllegalArgumentException("The 'xsl' parameter must be a valid id of a formatter");
+        }
+
+        return Pair.read(formatter, fparams);
+    }
+
+    public Pair<Element, Metadata> getMetadata(ServiceContext context, String id, String uuid, ParamValue skipPopularity, Boolean hide_withheld)
+            throws Exception {
+
+        Metadata md = null;
+        if (id != null) {
+            try {
+                md = metadataRepository.findOne(Integer.parseInt(id));
+            } catch (NumberFormatException e) {
+                md = metadataRepository.findOneByUuid(id);
+            }
+        }
+
+        if (id == null && uuid != null) {
+            md = metadataRepository.findOneByUuid(uuid);
+        }
+
+        if (md == null) {
+            throw new IllegalArgumentException("Either '" + Params.UUID + "' or '" + Params.ID + "'is a required parameter");
+        }
+        Element metadata = xmlSerializer.removeHiddenElements(false, md);
+
+
+        boolean withholdWithheldElements = hide_withheld != null && hide_withheld;
+        if (XmlSerializer.getThreadLocal(false) != null || withholdWithheldElements) {
+            XmlSerializer.getThreadLocal(true).setForceFilterEditOperation(withholdWithheldElements);
+        }
+        if (id == null) {
+            throw new MetadataNotFoundEx("Metadata not found.");
+        }
+
+        Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
+
+        if (!skipPopularity.toBool()) {
+            this.dataManager.increasePopularity(context, id);
+        }
+
+
+        return Pair.read(metadata, md);
+
+    }
+    private boolean isCompatibleMetadata(String schemaName, ConfigFile config) throws Exception {
+
+        List<String> applicable = config.listOfApplicableSchemas();
+        return applicable.contains(schemaName) || applicable.contains("all");
+    }
+
+    Element getStrings(String appPath, String lang) throws IOException, JDOMException {
         File baseLoc = new File(appPath, "loc");
         File locDir = findLocDir(lang, baseLoc);
-        if(locDir.exists()) {
-            return Xml.loadFile(new File(locDir, "xml"+File.separator+"strings.xml"));
+        if (locDir.exists()) {
+            return Xml.loadFile(new File(locDir, "xml" + File.separator + "strings.xml"));
         }
         return new Element("strings");
     }
 
-    private Element getResources(ServiceContext context, File formatDir, String lang) throws Exception {
-        Element resources = new Element("loc");
-        File baseLoc = new File(formatDir, "loc");
-        File locDir = findLocDir(lang, baseLoc);
+    /**
+     * Get the localization files from current format plugin.  It will load all xml file in the loc/lang/ directory as children
+     * of the returned element.
+     */
+    protected synchronized Element getPluginLocResources(ServiceContext context, File formatDir, String lang) throws Exception {
+        final String formatDirPath = formatDir.getPath();
+        Element resources = this.pluginLocs.get(formatDirPath);
+        if (isDevMode(context) || resources == null) {
+            resources = new Element("loc");
+            File baseLoc = new File(formatDir, "loc");
+            File locDir = findLocDir(lang, baseLoc);
 
-        resources.addContent(new Element("iso639_2").setAttribute("codeLength","3").setText(locDir.getName()));
-        String iso639_1 = context.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(locDir.getName());
+            resources.addContent(new Element("iso639_2").setAttribute("codeLength", "3").setText(locDir.getName()));
+            String iso639_1 = context.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(locDir.getName());
 
-        resources.addContent(new Element("iso639_1").setAttribute("codeLength","2").setText(iso639_1 ));
+            resources.addContent(new Element("iso639_1").setAttribute("codeLength", "2").setText(iso639_1));
 
-        if(locDir.exists()) {
-            Collection<File> files = FileUtils.listFiles(locDir, new String[]{"xml"}, false);
-            for (File file : files) {
-                resources.addContent(Xml.loadFile(file));
+            if (locDir.exists()) {
+                Collection<File> files = FileUtils.listFiles(locDir, new String[]{"xml"}, false);
+                for (File file : files) {
+                    resources.addContent(Xml.loadFile(file));
+                }
             }
+            this.pluginLocs.put(formatDirPath, resources);
         }
         return resources;
     }
 
     private File findLocDir(String lang, File baseLoc) {
         File locDir = new File(baseLoc, lang);
-        if(!locDir.exists()) {
+        if (!locDir.exists()) {
             locDir = new File(baseLoc, Geonet.DEFAULT_LANGUAGE);
         }
-        if(!locDir.exists()) {
+        if (!locDir.exists()) {
             File[] files = baseLoc.listFiles();
-            if(files != null && files.length > 0 && files[0].isDirectory()) {
+            if (files != null && files.length > 0 && files[0].isDirectory()) {
                 locDir = files[0];
             }
         }
         return locDir;
     }
 
-    private synchronized List<SchemaLocalization> getLabels(ServiceContext context, String lang) throws IOException, JDOMException {
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        List<SchemaLocalization> localization = labels.get(lang);
-        if(localization == null) {
-            SchemaManager schemamanager = gc.getBean(SchemaManager.class);
-            Set<String> schemas = schemamanager.getSchemas();
-            localization = new ArrayList<SchemaLocalization>(schemas.size());
-            for (String schema : schemas) {
-                String schemaLocDir = schemamanager.getSchemaDir(schema)+File.separator+"loc"+File.separator+lang+File.separator;
-                localization.add(new SchemaLocalization(schema, schemaLocDir));
-                labels.put(lang, localization);
-            }
+    /**
+     * Get the strings.xml, codelists.xml and labels.xml for the correct language from the schema plugin
+     *
+     * @return Map(SchemaName, SchemaLocalizations)
+     */
+    protected Map<String, SchemaLocalization> getSchemaLocalizations(ServiceContext context)
+            throws IOException, JDOMException {
+
+        Map<String, SchemaLocalization> localization =  Maps.newHashMap();
+        final SchemaManager schemaManager = context.getBean(SchemaManager.class);
+        final Set<String> allSchemas = schemaManager.getSchemas();
+        for (String schema : allSchemas) {
+            Map<String, XmlFile> schemaInfo = schemaManager.getSchemaInfo(schema);
+            localization.put(schema, new SchemaLocalization(context, schema, schemaInfo));
         }
 
         return localization;
     }
 
-    @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
-        super.init(appPath, params);
+    protected boolean isDevMode(ServiceContext context) {
+        return context.getApplicationContext().getBean(SystemInfo.class).isDevMode();
+    }
 
-        showService = new Show();
-        showService.init(appPath, params);
-    }
-    
-    private static class SchemaLocalization {
-        private String schema;
-        private final Element strings; 
-        private final Element codelists;
-        private final Element labels;
-        
-        private SchemaLocalization(String schema, String schemaLocDir) throws IOException, JDOMException {
-            this.schema = schema;
-            this.strings = Xml.loadFile(schemaLocDir+"strings.xml").setName("strings");
-            this.codelists = Xml.loadFile(schemaLocDir+"codelists.xml").setName("codelists");
-            this.labels = Xml.loadFile(schemaLocDir+"labels.xml").setName("labels");
-        }
-        
-    }
 }

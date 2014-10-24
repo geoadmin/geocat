@@ -9,9 +9,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 /**
  * Useful extensions to Junit TestCase.
  *
@@ -56,7 +53,7 @@ public final class Assert extends junit.framework.TestCase {
             element = Xml.selectElement(xml, xpath, Arrays.asList(namespaces));
         }
         assertNotNull("No element found at: " + xpath + " in \n" + Xml.getString(xml), element);
-        assertEquals(expected, element.getText());
+        assertEquals(Xml.getString(xml), expected, element.getText());
     }
     /**
      * Look up the webapp directory.

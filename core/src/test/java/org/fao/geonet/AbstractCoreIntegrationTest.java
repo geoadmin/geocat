@@ -56,13 +56,18 @@ import org.springframework.test.context.ContextConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
@@ -92,7 +97,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     protected DirectoryFactory _directoryFactory;
 
     /**
-     * Contain all datadirectories for all nodes.
+     * Contain all data directories for all nodes.
      */
     protected static File _dataDirContainer;
     private static File _dataDirLockFile;
@@ -120,6 +125,8 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         }
         final String initializedString = "initialized";
         final String webappDir = getWebappDir(getClass());
+        _applicationContext.getBean(GeonetMockServletContext.class).setResourcePath(webappDir);
+
         LanguageDetector.init(webappDir + _applicationContext.getBean(Geonet.Config.LANGUAGE_PROFILES_DIR, String.class));
 
         final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
@@ -199,7 +206,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
                 conn.close();
             }
         }
-
     }
 
     private void setUpDataDirectory() {
@@ -216,7 +222,9 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             dir = new File(dir, pathToTargetDir+"/integration-test-datadirs");
 
             int i = 0;
-            while (new File(dir.getPath()+i, DATA_DIR_LOCK_NAME).exists() && new File(dir.getPath()+i, DATA_DIR_LOCK_NAME).exists()) {
+            final long timeOut = TimeUnit.MINUTES.toMillis(30);
+            while (new File(dir.getPath()+i, DATA_DIR_LOCK_NAME).exists() &&
+                                System.currentTimeMillis() - new File(dir.getPath()+i, DATA_DIR_LOCK_NAME).lastModified() < timeOut) {
                 i++;
             }
 
@@ -245,6 +253,9 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         boolean deleteNewFilesFromDataDir = _dataDirectory.exists();
 
+        for (File file : Files.fileTreeTraverser().postOrderTraversal(new File(_dataDirectory, "config/schema_plugins"))) {
+            file.delete();
+        }
         final TreeTraverser<File> fileTreeTraverser = Files.fileTreeTraverser();
 
         if (deleteNewFilesFromDataDir ) {
@@ -254,9 +265,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
                 String relativePath = dataDirFile.getPath().substring(prefixPathLength2);
                 final File srcFile = new File(srcDataDir, relativePath);
                 if (!srcFile.exists()) {
-                    if (srcFile.getParent().endsWith("schematron") &&
-                            relativePath.contains("schema_plugins") &&
-                            relativePath.endsWith(".xsl")) {
+                    if (relativePath.contains("schema_plugins")) {
                         // don't copy because the schematron xsl files are generated.
                         // normally they shouldn't be here because they don't need to be in the
                         // repository but some tests can generate them into the schematrons folder
@@ -278,7 +287,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
                         continue;
                     }
 
-                    if (dataDirFile.isFile() || dataDirFile.list().length == 0) {
+                    if (dataDirFile.isFile() || dataDirFile.list() == null || dataDirFile.list().length == 0) {
                         if (!dataDirFile.delete()) {
                             // a file is holding on to a reference so we can't properly clean the data directory.
                             // this means we need a new one.
@@ -356,6 +365,52 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             _dataDirLockFile.delete();
         }
 
+    }
+
+    /**
+     * This test looks for methods in the current class with the ReadOnlyTest annotation and will execute all of those methods
+     * in this one test.  This allows the tests to execute quicker.  It has the disadvantage (at the moment) of not providing a JUnit
+     * test report per test but has the advantage of executing very quickly.
+     *
+     * Note it is important that all changes (metadata import etc...) are done in the @Before and @After methods and the @ReadOnlyTest
+     * method makes no changes to the system that will affect any of the tests because there is no ordering of the tests.
+     */
+    protected void runReadOnlyTests() throws InvocationTargetException, IllegalAccessException {
+        StringBuilder errors = new StringBuilder();
+        StringBuilder summary = new StringBuilder();
+
+        final Method[] methods = getClass().getMethods();
+        for (Method method : methods) {
+            if (method.getAnnotation(ReadOnlyTest.class) != null) {
+                try {
+                    method.invoke(this);
+                } catch (Throwable e) {
+                    summary.append("\n").append(getClass().getName()).append("#").append(method.getName()).
+                            append("() failed with error: ").append(e.getMessage());
+                    summary.append("\n    ").append(lineInMethod(e, method));
+                    errors.append("\n\n").append(getClass().getName()).append("#").append(method.getName()).
+                            append("() failed with error: ").append(e.getMessage());
+                    final StringWriter out = new StringWriter();
+                    final PrintWriter writer = new PrintWriter(out);
+                    e.printStackTrace(writer);
+                    errors.append("\n").append(out);
+                }
+            }
+        }
+
+        if (summary.length() > 0) {
+            throw new AssertionError(errors.toString() + "\n\n" + summary.toString());
+        }
+
+    }
+
+    protected String lineInMethod(Throwable e, Method method) {
+        for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+            if (stackTraceElement.getMethodName().equals(method.getName())) {
+                return stackTraceElement.toString();
+            }
+        }
+        throw new Error("No Method " + method.getName() + " found in " + e, e);
     }
 
     protected boolean isDefaultNode() {
@@ -448,12 +503,12 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
      */
     public static String getWebappDir(Class<?> cl) {
         File here = getClassFile(cl);
-        while (!new File(here, "pom.xml").exists() && !new File(here.getParentFile(), "web/src/main/webapp/").exists()) {
+        while (!new File(here, "web/src/main/webapp/").exists()) {
 //            System.out.println("Did not find pom file in: "+here);
             here = here.getParentFile();
         }
 
-        return new File(here.getParentFile(), "web/src/main/webapp/").getAbsolutePath() + File.separator;
+        return new File(here, "web/src/main/webapp/").getAbsolutePath() + File.separator;
     }
 
     protected static File getClassFile(Class<?> cl) {

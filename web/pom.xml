@@ -290,7 +290,7 @@
     <!-- ====================== -->
     <!-- Generated dependencies -->
     <dependency>
-      <groupId>ch.geocat</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>jeeves</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -499,7 +499,7 @@
       <version>${project.version}</version>
     </dependency>
 
-	</dependencies>
+  </dependencies>
 
   
   <build>
@@ -634,7 +634,7 @@
               <targetPath>WEB-INF/data/config/schema_plugins</targetPath>
             </resource>
             <resource>
-                <directory>${project.basedir}/../web-client/src/main/resources</directory>
+              <directory>${project.basedir}/../web-client/src/main/resources</directory>
             </resource>
             <resource>
                   <directory>${project.basedir}/../web-ui/src/main/resources</directory>
