@@ -56,7 +56,7 @@
             <div class="panel-heading search-top">
               <input type="text" ng-model="searchObj.params.any" placeholder="{{'anyPlaceHolder' | translate}}"
                      typeahead="address for address in getAnySuggestions($viewValue)" typeahead-loading="anyLoading" class="form-control"
-                     typeahead-min-length="1">
+                     typeahead-min-length="1" id="anySearchField">
               <i ng-show="anyLoading" class="fa fa-refresh inner-spinner"></i>
             </div>
             <div class="panel-body geocat-search">

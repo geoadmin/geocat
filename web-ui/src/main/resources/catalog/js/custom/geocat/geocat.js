@@ -30,6 +30,8 @@
         advancedMode: false,
         searchMap: gnSearchSettings.searchMap
       });
+
+      $('#anySearchField').focus();
     }]);
 
   module.controller('gnsGeocatHome', [
@@ -73,6 +75,7 @@
     function($scope, gnHttp, gnHttpServices, gnRegionService,
              $timeout, suggestService,$http, gnSearchSettings,
              goDecorateInteraction, gnMap) {
+
 
       // data store for types field
       $scope.types = ['any',
