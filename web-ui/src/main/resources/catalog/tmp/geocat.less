@@ -3,6 +3,11 @@
 body {
   font-family: Arial, @font-family-sans-serif;
 }
+.geocat-header {
+  background-image: url('/geonetwork/apps/geocatch/images/header-background.jpg');
+  display: none;
+}
+
 .navbar {
   .navbar-brand {
     padding: 0 15px;
@@ -191,7 +196,11 @@ body {
 [data-gn-facet-list] {
   font-size: 90%;
 }
-
+@media (min-width: @screen-md-min) {
+  .geocat-header {
+    display: block;
+  }
+}
 @media (min-width: @screen-lg-min) {
   html, body,
   body > div,

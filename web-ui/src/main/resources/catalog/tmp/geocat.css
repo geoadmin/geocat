@@ -7829,6 +7829,10 @@ select[multiple][hitsperpage-combo] select {
 body {
   font-family: Arial, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+.geocat-header {
+  background-image: url('/geonetwork/apps/geocatch/images/header-background.jpg');
+  display: none;
+}
 .navbar .navbar-brand {
   padding: 0 15px;
   line-height: 50px;
@@ -8070,6 +8074,11 @@ select[multiple].geocat-search .geotype {
 }
 [data-gn-facet-list] {
   font-size: 90%;
+}
+@media (min-width: 992px) {
+  .geocat-header {
+    display: block;
+  }
 }
 @media (min-width: 1200px) {
   html,
