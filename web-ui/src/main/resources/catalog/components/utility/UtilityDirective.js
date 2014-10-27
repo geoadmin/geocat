@@ -16,11 +16,12 @@
    * TODO: This could be used in other places
    * probably. Move to another common or language module ?
    */
-  module.directive('gnCountryPicker', ['gnHttp',
-    function(gnHttp) {
+  module.directive('gnCountryPicker', ['gnHttp', 'gnUtilityService',
+    function(gnHttp, gnUtilityService) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
+          element.attr('placeholder', '...');
           gnHttp.callService('country', {}, {
             cache: true
           }).success(function(response) {
@@ -35,13 +36,20 @@
               });
               country.name = country.label[scope.lang];
             });
-
-            $(element).typeahead({
-              name: 'countries',
-              valueKey: 'name',
+            var source = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
               local: data,
-              minLength: 0,
               limit: 30
+            });
+            source.initialize();
+            $(element).typeahead({
+              minLength: 0,
+              highlight: true
+            }, {
+              name: 'countries',
+              displayKey: 'name',
+              source: source.ttAdapter()
             }).on('typeahead:selected', function(event, datum) {
               if (angular.isFunction(scope.onRegionSelect)) {
                 scope.onRegionSelect(datum);
@@ -108,11 +116,21 @@
               gnRegionService.loadRegion(scope.regionType, scope.lang).then(
                   function(data) {
                     $(element).typeahead('destroy');
-                    $(element).typeahead({
-                      valueKey: 'name',
+                    var source = new Bloodhound({
+                      datumTokenizer:
+                          Bloodhound.tokenizers.obj.whitespace('name'),
+                      queryTokenizer: Bloodhound.tokenizers.whitespace,
                       local: data,
-                      minLength: 0,
                       limit: 30
+                    });
+                    source.initialize();
+                    $(element).typeahead({
+                      minLength: 0,
+                      highlight: true
+                    }, {
+                      name: 'countries',
+                      displayKey: 'name',
+                      source: source.ttAdapter()
                     }).on('typeahead:selected', function(event, datum) {
                       if (angular.isFunction(scope.onRegionSelect)) {
                         scope.onRegionSelect(datum);
@@ -144,6 +162,7 @@
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
+          element.attr('placeholder', '...');
           gnHttp.callService('lang', {}, {
             cache: true
           }).success(function(data) {
@@ -154,21 +173,92 @@
               lang.name = lang.label[scope.lang] || defaultName;
               lang.tokens = [lang.name, lang.code, defaultName];
             });
-
-            $(element).typeahead({
-              name: 'isoLanguages',
-              valueKey: 'code',
-              template: function(datum) {
-                return '<p>' + datum.name + ' (' + datum.code + ')</p>';
-              },
+            var source = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
               local: data,
-              minLength: 0,
               limit: 30
+            });
+            source.initialize();
+            $(element).typeahead({
+              minLength: 0,
+              highlight: true
+            }, {
+              name: 'isoLanguages',
+              displayKey: 'code',
+              source: source.ttAdapter(),
+              templates: {
+                suggestion: function(datum) {
+                  return '<p>' + datum.name + ' (' + datum.code + ')</p>';
+                }
+              }
             });
           });
         }
       };
     }]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_fields_directive.directive:gnDirectoryEntryPicker
+   * @function
+   *
+   * @description
+   * Use the directory (aka subtemplate) search service
+   * to retrieve the list of entry available and provide autocompletion
+   * for the input field with that directive attached.
+   *
+   */
+  module.directive('gnDirectoryEntryPicker',
+      ['gnUrlUtils', 'gnSearchManagerService',
+       function(gnUrlUtils, gnSearchManagerService) {
+         return {
+           restrict: 'A',
+           link: function(scope, element, attrs) {
+             element.attr('placeholder', '...');
+
+             var url = gnUrlUtils.append('q@json',
+             gnUrlUtils.toKeyValue({
+               _isTemplate: 's',
+               any: '*QUERY*',
+               _root: 'gmd:CI_ResponsibleParty',
+               sortBy: 'title',
+               sortOrder: 'reverse',
+               resultType: 'subtemplates',
+               fast: 'index'
+             })
+             );
+             var parseResponse = function(data) {
+               var records = gnSearchManagerService.format(data);
+               return records.metadata;
+             };
+             var source = new Bloodhound({
+               datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+               queryTokenizer: Bloodhound.tokenizers.whitespace,
+               limit: 200,
+               remote: {
+                 wildcard: 'QUERY',
+                 url: url,
+                 filter: parseResponse
+               }
+             });
+             source.initialize();
+             $(element).typeahead({
+               minLength: 0,
+               highlight: true
+             }, {
+               name: 'directoryEntry',
+               displayKey: 'title',
+               source: source.ttAdapter(),
+               templates: {
+                 suggestion: function(datum) {
+                   return '<p>' + datum.title + '</p>';
+                 }
+               }
+             });
+           }
+         };
+       }]);
 
   /**
    * @ngdoc directive
@@ -225,6 +315,51 @@
     };
   });
 
+  /**
+   * Use to initialize bootstrap datepicker
+   */
+  module.directive('gnBootstrapDatepicker', [
+    function() {
+
+      return {
+        restrict: 'A',
+        scope: {
+          date: '=gnBootstrapDatepicker',
+          dates: '=dateAvailable'
+        },
+        link: function (scope, element, attrs, ngModelCtrl) {
+
+          var available = function (date) {
+            if (scope.dates && scope.dates[date.getFullYear()] &&
+                scope.dates[date.getFullYear()][date.getMonth()] &&
+                $.inArray(date.getDate(), scope.dates[date.getFullYear()][date.getMonth()]) != -1) {
+              return '';
+            } else {
+              return 'disabled';
+            }
+          };
+
+          $(element).datepicker({
+            onRender: function (dt, a, b) {
+              return available(dt);
+            }
+          }).on('changeDate', function (ev) {
+            // view -> model
+            scope.$apply(function () {
+              scope.date = $(element).find('input')[0].value;
+            });
+          });
+
+          // model -> view
+          scope.$watch('date', function (v) {
+            if (angular.isUndefined(v)) {
+              v = '';
+            }
+            $(element).find('input')[0].value = v;
+          });
+        }
+      };
+    }]);
 
   /**
    * @ngdoc directive

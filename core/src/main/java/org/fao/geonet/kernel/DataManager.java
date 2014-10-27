@@ -3592,7 +3592,7 @@ public class DataManager {
 
     }
 
-    public void batchDeleteMetadataAndUpdateIndex(Specification<Metadata> specification) throws Exception {
+    public int batchDeleteMetadataAndUpdateIndex(Specification<Metadata> specification) throws Exception {
         final List<Integer> idsOfMetadataToDelete = _metadataRepository.findAllIdsBy(specification);
 
         for (Integer id: idsOfMetadataToDelete) {
@@ -3615,6 +3615,8 @@ public class DataManager {
 
         // Remove records from the database
         _metadataRepository.deleteAll(specification);
+
+        return idsOfMetadataToDelete.size();
     }
 
     // END GEOCAT

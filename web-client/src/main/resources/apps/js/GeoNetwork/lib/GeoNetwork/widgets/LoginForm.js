@@ -150,10 +150,19 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
         });
         this.userInfo = new Ext.form.Label({
             width: 170,
-            text: '',
-            cls: 'loginInfo'
+            tpl: this.userInfoTpl,
+            cls: 'loginInfo',
+            listeners: {
+                'render': function () {
+                    this.userInfo.update(this.catalogue.identifiedUser);
+
+                    this.userInfo.getEl().on('click', function () {
+                        this.show();
+                    }, this.tooltipMenu);
+                },
+                scope: form
+            }
         });
-        
         
         
         if (this.hideLoginLabels) {
