@@ -1,8 +1,6 @@
 package iso19139che;
 
 import com.google.common.collect.Lists;
-import com.google.common.io.Files;
-import org.fao.geonet.Constants;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
@@ -18,6 +16,7 @@ import org.jdom.Text;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.File;
 import java.util.List;
@@ -45,8 +44,10 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
 
 //        measureFormatterPerformance(request, formatterId);
 
-        final String view = formatService.exec("eng", "html", "" + id, null, formatterId, "true", false, request);
-        Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        formatService.exec("eng", "html", "" + id, null, formatterId, "true", false, request, response);
+        final String view = response.getContentAsString();
+//        Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
 
         List<String> excludes = Lists.newArrayList(
                 "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:title > " +
