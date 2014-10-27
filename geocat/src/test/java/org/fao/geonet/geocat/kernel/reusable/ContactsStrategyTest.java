@@ -1,6 +1,7 @@
 package org.fao.geonet.geocat.kernel.reusable;
 
 import com.google.common.collect.Sets;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.local.LocalServiceRequest;
 import jeeves.xlink.XLink;
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy.LUCENE_EXTRA_FIELD;
 import static org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy.LUCENE_EXTRA_NON_VALIDATED;
@@ -38,7 +40,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class ContactsStrategyTest extends AbstractSharedObjectTest {
+public class ContactsStrategyTest extends AbstractSharedObjectStrategyTest {
 
     @Autowired
     ReusableObjManager manager;
@@ -73,9 +75,9 @@ public class ContactsStrategyTest extends AbstractSharedObjectTest {
         final Get get = new Get();
 
         final Element subtemplateXml = get.exec(paramXml, context);
-        assertEqualsText("pointOfContact", subtemplateXml, "*//gmd:CI_RoleCode/@codeListValue", GMD);
-        assertEqualsText("testFind_NoXLinkfirstname", subtemplateXml, "che:individualFirstName/gco:CharacterString", GMD);
-        assertEqualsText("testFind_NoXLinklastname", subtemplateXml, "che:individualLastName/gco:CharacterString", GMD);
+        assertEqualsText("pointOfContact", subtemplateXml, "gmd:role/gmd:CI_RoleCode/@codeListValue", GMD);
+        assertEqualsText("testFind_NoXLinkfirstname", subtemplateXml, "che:individualFirstName/gco:CharacterString", GMD, CHE, GCO);
+        assertEqualsText("testFind_NoXLinklastname", subtemplateXml, "che:individualLastName/gco:CharacterString", GMD, CHE, GCO);
     }
 
     @Test
@@ -149,6 +151,7 @@ public class ContactsStrategyTest extends AbstractSharedObjectTest {
 
         String parentUUID = saveParentSubtemplate(sharedObjTmp, false);
 
+        Xml.selectElement(md, "gmd:contact/*/che:parentResponsibleParty/che:CHE_CI_ResponsibleParty/gmd:role/*", Arrays.asList(GMD, CHE)).setAttribute("codeListValue", "author");
         final ServiceContext context = createServiceContext();
         ProcessParams params = new ProcessParams(ReusableObjectLogger.THREAD_SAFE_LOGGER, null, md,
                 md, false, "eng", context);
@@ -178,6 +181,8 @@ public class ContactsStrategyTest extends AbstractSharedObjectTest {
         final Metadata parentMd = repository.findOneByUuid(parentUUID);
         assertEqualsText("pf name", parentMd.getXmlData(false), "che:individualFirstName/gco:CharacterString",
                 CHE, GCO);
+         assertEqualsText("author", parentMd.getXmlData(false), "gmd:role/*/@codeListValue",
+                GMD);
 
         final SearchManager searchManager = _applicationContext.getBean(SearchManager.class);
         final IndexAndTaxonomy reader = searchManager.getNewIndexReader("eng");
@@ -194,7 +199,7 @@ public class ContactsStrategyTest extends AbstractSharedObjectTest {
                 uuids.add(doc.get(LUCENE_UUID_FIELD));
             }
 
-            assertEquals(1, uuids.size());
+            assertEquals(2, uuids.size());
         } finally {
             searchManager.releaseIndexReader(reader);
         }
@@ -262,8 +267,8 @@ public class ContactsStrategyTest extends AbstractSharedObjectTest {
 
     private String saveParentSubtemplate(Element sharedObjTmp, boolean validated) throws Exception {
         final Element parent = sharedObjTmp.getChild("parentResponsibleParty", CHE);
-        Element parentCopy = (Element) parent.clone();
-        Xml.selectElement(parentCopy, "*/che:individualFirstName/gco:CharacterString", Arrays.asList(CHE, GCO)).
+        Element parentCopy = (Element) parent.getChild("CHE_CI_ResponsibleParty", CHE).clone();
+        Xml.selectElement(parentCopy, "che:individualFirstName/gco:CharacterString", Arrays.asList(CHE, GCO)).
                 setText("original parent first name");
         final String parentUUID = "parentUUID";
         saveSubtemplate(parentUUID, validated, parentCopy);
@@ -276,27 +281,25 @@ public class ContactsStrategyTest extends AbstractSharedObjectTest {
     }
 
     @Test
-    public void testPerformDelete() throws Exception {
-
-    }
-
-    @Test
-    public void testMarkAsValidated() throws Exception {
-
-    }
-
-    @Test
-    public void testUpdateObject() throws Exception {
-
-    }
-
-    @Test
-    public void testIsValidated() throws Exception {
-
-    }
-
-    @Test
     public void testCreateAsNeeded() throws Exception {
-
+        final ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+        final UserSession userSession = serviceContext.getUserSession();
+        final ContactsStrategy contactsStrategy = new ContactsStrategy(_applicationContext);
+        String href = contactsStrategy.createXlinkHref("", userSession, "author");
+        contactsStrategy.createAsNeeded(href, userSession);
     }
-}
+
+
+    protected Metadata createDefaultSubtemplate(boolean validated) throws Exception {
+        return addUserSubtemplate("contact" +
+                                  "" + UUID.randomUUID(), validated);
+    }
+
+    protected String getIsValidatedSpecificData() {
+        return "author";
+    }
+
+    protected ReplacementStrategy createReplacementStrategy() {
+        return new ContactsStrategy(_applicationContext);
+    }}
