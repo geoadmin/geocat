@@ -433,4 +433,9 @@
             <class name=".services.metadata.inspire.Save" />
         </service>
     </services>
+
+    <service name="metadata.summary.zip">
+        <class name=".services.metadata.ExportMetadataSummary"/>
+        <output file="true" contentType="application/zip" />
+    </service>
 </geonet>

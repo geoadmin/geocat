@@ -25,17 +25,18 @@ package org.fao.geonet.services.metadata.format;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
+import com.lowagie.text.DocumentException;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.apache.commons.io.FileUtils;
+import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
@@ -45,16 +46,16 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.metadata.format.groovy.ParamValue;
+import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,13 +65,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Allows a user to display a metadata with a particular formatters
  *
  * @author jeichar
  */
-@Controller("metadata.formatter")
+@Controller("md.formatter")
 public class Format extends AbstractFormatService {
 
     @Autowired
@@ -98,10 +100,8 @@ public class Format extends AbstractFormatService {
     private WeakHashMap<String, Element> pluginLocs = new WeakHashMap<String, Element>();
 
 
-    @RequestMapping(value = "/{lang}/metadata.formatter.{type}", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_HTML_VALUE })
-    @ResponseBody
-    public String exec(
+    @RequestMapping(value = "/{lang}/md.formatter.{type}")
+    public void exec(
             @PathVariable final String lang,
             @PathVariable final String type,
             @RequestParam(required = false) final String id,
@@ -109,19 +109,42 @@ public class Format extends AbstractFormatService {
             @RequestParam(value = "xsl", required = false) final String xslid,
             @RequestParam(defaultValue = "n") final String skipPopularity,
             @RequestParam(value = "hide_withheld", required = false) final Boolean hide_withheld,
-            final HttpServletRequest request) throws Exception {
+            final HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        Pair<FormatterImpl, FormatterParams> result = createFormatterAndParams(lang, type, id, uuid, xslid, skipPopularity,
+        FormatType formatType = FormatType.valueOf(type.toLowerCase());
+        Pair<FormatterImpl, FormatterParams> result = createFormatterAndParams(lang, formatType, id, uuid, xslid, skipPopularity,
                 hide_withheld, request);
         FormatterImpl formatter = result.one();
         FormatterParams fparams = result.two();
-        return formatter.format(fparams);
 
+        response.setContentType(formatType.contentType);
+        String filename = "metadata." + formatType;
+        response.addHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
+        final String formattedMetadata = formatter.format(fparams);
+        if (formatType == FormatType.pdf) {
+            writerAsPDF(response, formattedMetadata, lang);
+        } else {
+            final byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
+            response.setContentLength(bytes.length);
+            response.getOutputStream().write(bytes);
+        }
+    }
+
+    private void writerAsPDF(HttpServletResponse response, String htmlContent, String lang) throws IOException, DocumentException {
+        XslUtil.setNoScript();
+        ITextRenderer renderer = new ITextRenderer();
+        String siteUrl = this.settingManager.getSiteURL(lang);
+        renderer.getSharedContext().setReplacedElementFactory(new ImageReplacedElementFactory(siteUrl, renderer.getSharedContext()
+                .getReplacedElementFactory()));
+        renderer.getSharedContext().setDotsPerPixel(13);
+        renderer.setDocumentFromString(htmlContent, siteUrl);
+        renderer.layout();
+        renderer.createPDF(response.getOutputStream());
     }
 
     @VisibleForTesting
     Pair<FormatterImpl, FormatterParams> createFormatterAndParams(
-            final String lang, final String type, final String id, final String uuid, final String xslid,
+            final String lang, final FormatType type, final String id, final String uuid, final String xslid,
             final String skipPopularity, final Boolean hide_withheld, final HttpServletRequest request) throws Exception {
 
         ServiceContext context = this.serviceManager.createServiceContext("metadata.formatter" + type, lang, request);
@@ -150,9 +173,9 @@ public class Format extends AbstractFormatService {
         fparams.formatDir = formatDir.getCanonicalFile();
         fparams.metadata = metadata;
         fparams.schema = schema;
+        fparams.formatType = type;
         fparams.url = settingManager.getSiteURL(lang);
-        fparams.metadataId = metadataInfo.getId();
-        fparams.metadataUUID = metadataInfo.getUuid();
+        fparams.metadataInfo = metadataInfo;
 
         File viewXslFile = new File(formatDir, FormatterConstants.VIEW_XSL_FILENAME);
         File viewGroovyFile = new File(formatDir, FormatterConstants.VIEW_GROOVY_FILENAME);
@@ -160,7 +183,7 @@ public class Format extends AbstractFormatService {
         if (viewXslFile.exists()) {
             fparams.viewFile = viewXslFile.getCanonicalFile();
             formatter = this.xsltFormatter;
-        } else if (viewGroovyFile.exists()){
+        } else if (viewGroovyFile.exists()) {
             fparams.viewFile = viewGroovyFile.getCanonicalFile();
             formatter = this.groovyFormatter;
         } else {
@@ -170,7 +193,8 @@ public class Format extends AbstractFormatService {
         return Pair.read(formatter, fparams);
     }
 
-    public Pair<Element, Metadata> getMetadata(ServiceContext context, String id, String uuid, ParamValue skipPopularity, Boolean hide_withheld)
+    public Pair<Element, Metadata> getMetadata(ServiceContext context, String id, String uuid, ParamValue skipPopularity,
+                                               Boolean hide_withheld)
             throws Exception {
 
         Metadata md = null;
@@ -179,6 +203,7 @@ public class Format extends AbstractFormatService {
                 md = metadataRepository.findOne(Integer.parseInt(id));
             } catch (NumberFormatException e) {
                 md = metadataRepository.findOneByUuid(id);
+                uuid = id;
             }
         }
 
@@ -196,9 +221,8 @@ public class Format extends AbstractFormatService {
         if (XmlSerializer.getThreadLocal(false) != null || withholdWithheldElements) {
             XmlSerializer.getThreadLocal(true).setForceFilterEditOperation(withholdWithheldElements);
         }
-        if (id == null) {
-            throw new MetadataNotFoundEx("Metadata not found.");
-        }
+
+        id = String.valueOf(md.getId());
 
         Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
 
@@ -210,6 +234,7 @@ public class Format extends AbstractFormatService {
         return Pair.read(metadata, md);
 
     }
+
     private boolean isCompatibleMetadata(String schemaName, ConfigFile config) throws Exception {
 
         List<String> applicable = config.listOfApplicableSchemas();
@@ -275,7 +300,7 @@ public class Format extends AbstractFormatService {
     protected Map<String, SchemaLocalization> getSchemaLocalizations(ServiceContext context)
             throws IOException, JDOMException {
 
-        Map<String, SchemaLocalization> localization =  Maps.newHashMap();
+        Map<String, SchemaLocalization> localization = Maps.newHashMap();
         final SchemaManager schemaManager = context.getBean(SchemaManager.class);
         final Set<String> allSchemas = schemaManager.getSchemas();
         for (String schema : allSchemas) {
