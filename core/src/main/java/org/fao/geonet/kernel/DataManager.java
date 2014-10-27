@@ -43,11 +43,11 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.constants.Geocat;
 
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
-import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -108,12 +108,12 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.repository.MetadataRatingByIpRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataStatusRepository;
+import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
@@ -131,13 +131,13 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.repository.statistic.PathSpec;
-import org.fao.geonet.util.FileCopyMgr;
-import org.fao.geonet.utils.Log;
 import org.jdom.Attribute;
 import org.jdom.Document;
+import org.fao.geonet.util.FileCopyMgr;
 import org.jdom.Element;
-import org.fao.geonet.utils.Xml;
 import org.jdom.JDOMException;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.Xml.ErrorHandler;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
@@ -625,8 +625,8 @@ public class DataManager {
             Element md   = xmlSerializer.selectNoXLinkResolver(metadataId, true);
             // GEOCAT
             if (reloadXLinks) {
-                Processor.detachXLink(md, servContext);
-            }
+                    Processor.detachXLink(md, servContext);
+                }
             // END GEOCAT
             final Metadata fullMd = _metadataRepository.findOne(id$);
 
@@ -671,8 +671,8 @@ public class DataManager {
             moreFields.add(SearchManager.makeField("_dummy",       "0",         false, true));
             moreFields.add(SearchManager.makeField("_popularity",  popularity,  true, true));
             moreFields.add(SearchManager.makeField("_rating",      rating,      true, true));
-            moreFields.add(SearchManager.makeField("_displayOrder",displayOrder,true, false));
-            moreFields.add(SearchManager.makeField("_extra",       extra,       true, true));
+            moreFields.add(SearchManager.makeField("_displayOrder",displayOrder, true, false));
+            moreFields.add(SearchManager.makeField("_extra",       extra,       true, false));
 
             if (owner != null) {
                 User user = _applicationContext.getBean(UserRepository.class).findOne(fullMd.getSourceInfo().getOwner());
@@ -691,7 +691,7 @@ public class DataManager {
                     moreFields.add(SearchManager.makeField("groupWebsite", group.getWebsite(), true, false));
                 } catch (NumberFormatException nfe) {
                     // that's ok, sometime groupOwner is blank
-                }
+            }
             }
             boolean isPublished = false;
             // END GEOCAT
@@ -712,9 +712,9 @@ public class DataManager {
                     // GEOCAT
                     if (ReservedGroup.all.getId() == groupId) {
                         isPublished = true;
-                }
+                    }
                     // END GEOCAT
-            }
+                }
             }
 
             for (MetadataCategory category : fullMd.getCategories()) {

@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.user;
 
+import com.google.common.collect.Sets;
 import jeeves.server.ServiceConfig;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
@@ -36,7 +37,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,15 +82,22 @@ public class List {
 			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	public @ResponseBody
 	UserList exec() throws Exception {
-		User me = userRepository.findOneByUsername(SecurityContextHolder
-				.getContext().getAuthentication().getName());
+        final SecurityContext context = SecurityContextHolder.getContext();
+        if (context == null || context.getAuthentication() == null) {
+            throw new AuthenticationCredentialsNotFoundException("User needs to log in");
+        }
+        User me = userRepository.findOneByUsername(context.getAuthentication().getName());
+
+        if (me == null) {
+            throw new AccessDeniedException(SecurityContextHolder.class.getSimpleName() + " has a user that is not in the database: " +
+                                            context.getAuthentication());
+        }
 
 		Set<Integer> hsMyGroups = getGroups(me.getId(), me.getProfile());
 
-		Collection<? extends GrantedAuthority> roles = SecurityContextHolder
-				.getContext().getAuthentication().getAuthorities();
+		Collection<? extends GrantedAuthority> roles = me.getAuthorities();
 
-		Set<String> profileSet = new HashSet<String>();
+		Set<String> profileSet = Sets.newHashSet();
 
 		for (GrantedAuthority rol : roles) {
 			profileSet.add(rol.getAuthority());
@@ -107,12 +118,10 @@ public class List {
 				Profile profile = user.getProfile();
 
 				// TODO is this already equivalent to ID?
-				if (user.getName().equals(
-						SecurityContextHolder.getContext().getAuthentication()
-								.getName())) {
-                    // user is permitted to access his/her own user information
-                    continue;
-                }
+				if (user.getUsername().equals(context.getAuthentication().getName())) {
+					// user is permitted to access his/her own user information
+					continue;
+				}
 				Set<Integer> userGroups = getGroups(userId, profile);
 				// Is user belong to one of the current user admin group?
 				boolean isInCurrentUserAdminGroups = false;
@@ -125,11 +134,11 @@ public class List {
 				// if (!hsMyGroups.containsAll(userGroups))
 				if (!isInCurrentUserAdminGroups) {
 					usersToRemove.add(user.getId());
-                }
+				}
 
 				if (!profileSet.contains(profile.name())) {
 					usersToRemove.add(user.getId());
-                }
+				}
 			}
 		}
 		UserList res = new UserList();
@@ -137,8 +146,8 @@ public class List {
 		for (User u : Collections.unmodifiableList(all)) {
 			if (!usersToRemove.contains(u.getId())) {
 				res.addUser(u);
-            }
-        }
+			}
+		}
 
 		
 		return res;
@@ -152,16 +161,16 @@ public class List {
 
 	private Set<Integer> getGroups(final int id, final Profile profile)
 			throws Exception {
-        Set<Integer> hs = new HashSet<Integer>();
+		Set<Integer> hs = new HashSet<Integer>();
 
-        if (profile == Profile.Administrator) {
-            hs.addAll(groupRepository.findIds());
-        } else if (profile == Profile.UserAdmin) {
+		if (profile == Profile.Administrator) {
+			hs.addAll(groupRepository.findIds());
+		} else if (profile == Profile.UserAdmin) {
 			hs.addAll(userGroupRepo.findGroupIds(Specifications.where(
 					hasProfile(profile)).and(hasUserId(id))));
-        } else {
-            hs.addAll(userGroupRepo.findGroupIds(hasUserId(id)));
-        }
+		} else {
+			hs.addAll(userGroupRepo.findGroupIds(hasUserId(id)));
+		}
 
 		return hs;
 	}
