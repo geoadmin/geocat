@@ -100,7 +100,6 @@
         <addInterceptUrl  pattern="/srv/.*/xml.user.get!?.*" access="permitAll"/>
         <addInterceptUrl  pattern="/srv/.*/shared.user.list!?.*" access="permitAll"/>
         <addInterceptUrl  pattern="/srv/.*/che.keyword.get!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/metadata.print!?.*" access="permitAll"/>
         <addInterceptUrl  pattern="/srv/.*/metadata.show.xml!?.*" access="permitAll"/>
         <addInterceptUrl  pattern="/srv/.*/csw.pdf!?.*" access="permitAll"/>
         <addInterceptUrl  pattern="/srv/.*/csw.csv!?.*" access="permitAll"/>

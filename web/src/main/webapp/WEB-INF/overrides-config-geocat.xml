@@ -80,16 +80,6 @@
     		<parameter name="geonetworkId" field="_id" type="AdditionalQueryables" />
     	</addXML>
     </file>
-    
-    
-   <file name=".*/WEB-INF/config-metadata.xml">
-    	<addXML xpath="*//service[@name='metadata.show.embedded']/output">
-			<preSheet sheet="metadata-order-complex-elements.xsl"/>
-    	</addXML>
-    	<replaceXML xpath="*//service[@name = 'pdf']">
-			<output forward="metadata.print" />
-    	</replaceXML>
-    </file>
     <file name=".*WEB-INF/config-lucene.xml">
     	<addXML xpath="search/dumpFields">
 	      <field name="wms_uri" tagName="wmsuri"/>
