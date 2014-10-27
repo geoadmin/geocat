@@ -50,13 +50,8 @@
       };
 
       // Fill last updated section
-      callSearch('changeDate', 10).then(function(data) {
+      callSearch('changeDate', 15).then(function(data) {
         $scope.lastUpdated = data.metadata;
-      });
-
-      // Fill most popular section
-      callSearch('popularity', 5).then(function(data) {
-        $scope.mostPopular = data.metadata;
       });
   }]);
 

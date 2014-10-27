@@ -83,7 +83,7 @@
 
       /* Pagination configuration */
       searchSettings.paginationInfo = {
-        hitsPerPage: 3
+        hitsPerPage: 10
       };
 
       /* Hits per page combo values configuration */
