@@ -102,67 +102,6 @@ public abstract class ReplacementStrategy implements FindMetadataReferences {
      * Construct a list of the non_validated objects
      */
     public abstract Element list(UserSession session, boolean validated, String language) throws Exception;
-    public final static class DescData {
-        public final String uuid;
-        public final Document doc;
-
-        private DescData(String uuid, Document doc) {
-            this.uuid = uuid;
-            this.doc = doc;
-        }
-    }
-    protected final Element listFromIndex(SearchManager searchManager, String root, boolean validated, String language,
-                                          UserSession session,
-                                          ReplacementStrategy strategy,
-                                          Function<DescData, String> describer) throws Exception {
-
-        final IndexAndTaxonomy newIndexReader = searchManager.getNewIndexReader(language);
-        Element results = new Element(REPORT_ROOT);
-        try {
-            final GeonetworkMultiReader reader = newIndexReader.indexReader;
-            IndexSearcher searcher = new IndexSearcher(reader);
-            final BooleanQuery booleanQuery = new BooleanQuery();
-            final String contactType = validated ? LUCENE_EXTRA_VALIDATED : LUCENE_EXTRA_NON_VALIDATED;
-            booleanQuery.add(new TermQuery(new Term(LUCENE_EXTRA_FIELD, contactType)), BooleanClause.Occur.MUST);
-            booleanQuery.add(new TermQuery(new Term(LUCENE_ROOT_FIELD, root)), BooleanClause.Occur.MUST);
-            booleanQuery.add(new TermQuery(new Term(LUCENE_LOCALE_FIELD, language)), BooleanClause.Occur.SHOULD);
-            booleanQuery.add(new TermQuery(new Term(LUCENE_SCHEMA_FIELD, ISO19139cheSchemaPlugin.IDENTIFIER)), BooleanClause.Occur.MUST);
-            TopFieldCollector collector = TopFieldCollector.create(
-                    Sort.INDEXORDER, 30000, true, false, false, false);
-            searcher.search(booleanQuery, collector);
-
-            ScoreDoc[] topDocs = collector.topDocs().scoreDocs;
-            Set<String> added = Sets.newHashSet();
-            for (ScoreDoc topDoc : topDocs) {
-
-                final Document doc = searcher.doc(topDoc.doc);
-                String uuid = doc.getField("_uuid").stringValue();
-
-                if (added.contains(uuid)) {
-                    continue;
-                }
-                added.add(uuid);
-
-                Element e = new Element(REPORT_ELEMENT);
-                String id = doc.get("_id");
-                String url = XLink.LOCAL_PROTOCOL + "catalog.edit#/metadata/" + id;
-                String desc = describer.apply(new DescData(uuid, doc));
-                Utils.addChild(e, REPORT_URL, url);
-                Utils.addChild(e, REPORT_ID, uuid);
-                Utils.addChild(e, REPORT_TYPE, "contact");
-                Utils.addChild(e, REPORT_XLINK, strategy.createXlinkHref(uuid, session, ""));
-                Utils.addChild(e, REPORT_DESC, desc);
-                Utils.addChild(e, REPORT_SEARCH, uuid + desc);
-
-                results.addContent(e);
-            }
-
-        } finally {
-            searchManager.releaseIndexReader(newIndexReader);
-        }
-
-        return results;
-    }
 
     /**
      * Deletes the objects. No other function

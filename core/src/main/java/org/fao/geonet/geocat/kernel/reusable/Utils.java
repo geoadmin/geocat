@@ -102,6 +102,17 @@ public final class Utils {
         return id;
     }
 
+    public static String uuid( String href ) {
+        if (href.indexOf("uuid=") < 0) {
+            return null; // nothing to be done
+        }
+        String id = href.substring(href.indexOf("uuid=") + 5);
+        if (id.contains("&")) {
+            id = id.substring(0, id.indexOf('&'));
+        }
+        return id;
+    }
+
     /**
      * Finds xlinks with the href that contains the fragment provided in the constructor
      *
@@ -347,7 +358,7 @@ public final class Utils {
             strategy = new KeywordsStrategy(languagesMapper, thesaurusMan, appPath, baseUrl, language);
             break;
         case formats:
-            strategy = new FormatsStrategy(context.getApplicationContext(), appPath);
+            strategy = new FormatsStrategy(context.getApplicationContext());
             break;
         case contacts:
             strategy = new ContactsStrategy(context.getApplicationContext());

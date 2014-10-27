@@ -75,7 +75,7 @@ public class List implements Service
                         appPath, baseUrl, language);
                 break;
             case formats:
-                strategy = new FormatsStrategy(context.getApplicationContext(), appPath);
+                strategy = new FormatsStrategy(context.getApplicationContext());
                 break;
             case contacts:
                 strategy = new ContactsStrategy(context.getApplicationContext());

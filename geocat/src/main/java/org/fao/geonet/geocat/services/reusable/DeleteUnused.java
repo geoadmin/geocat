@@ -69,7 +69,7 @@ public class DeleteUnused implements Service {
 
             process(new ContactsStrategy(context.getApplicationContext()), context);
             process(new ExtentsStrategy(baseUrl, appPath, context.getBean(ExtentManager.class), language), context);
-            process(new FormatsStrategy(context.getApplicationContext(), appPath), context);
+            process(new FormatsStrategy(context.getApplicationContext()), context);
             process(new KeywordsStrategy(isoLanguagesMapper, thesaurusMan, appPath, baseUrl, language), context);
             processDeleted(context);
 

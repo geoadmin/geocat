@@ -233,7 +233,7 @@ public class ReusableObjManager {
     private boolean replaceFormats(Element xml, String defaultMetadataLang, ProcessParams params) throws Exception {
         ReusableObjectLogger logger = params.logger;
 
-        FormatsStrategy strategy = new FormatsStrategy(params.srvContext.getApplicationContext(), getAppPath());
+        FormatsStrategy strategy = new FormatsStrategy(params.srvContext.getApplicationContext());
         return performReplace(xml, defaultMetadataLang, FORMATS_PLACEHOLDER, FORMATS, logger, strategy,
                 params.addOnly, params.srvContext);
     }
@@ -482,7 +482,7 @@ public class ReusableObjManager {
 
                 strategy = new ContactsStrategy(params.srvContext.getApplicationContext());
             } else if (xlink.getName().equals("resourceFormat") || xlink.getName().equals("distributionFormat")) {
-                strategy = new FormatsStrategy(params.srvContext.getApplicationContext(), getAppPath());
+                strategy = new FormatsStrategy(params.srvContext.getApplicationContext());
             } else if (xlink.getName().equals("descriptiveKeywords")) {
                 ThesaurusManager thesaurusManager = params.srvContext.getBean(ThesaurusManager.class);
                 IsoLanguagesMapper isoLanguagesMapper = params.srvContext.getBean(IsoLanguagesMapper.class);
