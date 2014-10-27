@@ -53,6 +53,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
 public final class ContactsStrategy extends AbstractSubtemplateStrategy {
@@ -65,6 +67,17 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
 
     public ContactsStrategy(ApplicationContext context) {
         super(context);
+    }
+
+    @Override
+    protected String createExtraData(String href) {
+        final String regex = ".+\\?.*codeListValue~([^&#]+)&?.*";
+        Matcher matcher = Pattern.compile(regex, Pattern.CASE_INSENSITIVE).matcher(href);
+
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("cannot find role");
+        }
+        return matcher.group(1);
     }
 
     @Override

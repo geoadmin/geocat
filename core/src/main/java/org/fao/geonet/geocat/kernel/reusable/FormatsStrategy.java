@@ -62,6 +62,11 @@ public final class FormatsStrategy extends AbstractSubtemplateStrategy {
     }
 
     @Override
+    protected String createExtraData(String href) {
+        return null;
+    }
+
+    @Override
     protected FindResult calculateFit(Element originalElem, Document doc, String twoCharLangCode, String threeCharLangCode) throws JDOMException {
 
         String name = Xml.selectString(originalElem, "*/gmd:name/gco:CharacterString", NAMESPACES);

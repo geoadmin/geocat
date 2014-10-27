@@ -50,8 +50,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 
@@ -174,16 +172,9 @@ public abstract class AbstractSubtemplateStrategy extends ReplacementStrategy {
     @Override
     public final String createAsNeeded(String href, UserSession session) throws Exception {
         String startId = Utils.uuid(href);
-        if (startId != null) return href;
+        if (startId != null && !startId.isEmpty()) return href;
 
-        final String regex = ".+\\?.*codeListValue~([^&#]+)&?.*";
-        Matcher matcher = Pattern.compile(regex, Pattern.CASE_INSENSITIVE).matcher(href);
-
-        if (!matcher.matches()) {
-            throw new IllegalArgumentException("cannot find role");
-        }
-        String role = matcher.group(1);
-
+        String extraData = createExtraData(href);
 
         String template = getEmptyTemplate();
         String uuid = UUID.randomUUID().toString();
@@ -191,8 +182,10 @@ public abstract class AbstractSubtemplateStrategy extends ReplacementStrategy {
         addBasicMetadataInfo(uuid, false, "che:CHE_CI_ResponsibleParty", metadata);
         this.metadataRepository.save(metadata);
 
-        return createXlinkHref(uuid, session, role);
+        return createXlinkHref(uuid, session, extraData);
     }
+
+    protected abstract String createExtraData(String href);
 
     protected final void addBasicMetadataInfo(String uuid, boolean validated, String root, Metadata metadata) {
         metadata.setUuid(uuid);
