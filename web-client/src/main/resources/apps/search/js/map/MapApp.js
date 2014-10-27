@@ -363,9 +363,11 @@ GeoNetwork.mapApp = function() {
         });
         
         map.events.register('moveend', map, function () {
-            printPage.fit(this, {
-                mode: "screen"
-            });
+            if (!printPanel.collapsed) {
+                printPage.fit(this, {
+                    mode: "screen"
+                });
+            }
         });
     };
     /**

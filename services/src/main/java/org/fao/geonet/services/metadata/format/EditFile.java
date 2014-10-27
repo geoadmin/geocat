@@ -23,12 +23,14 @@
 
 package org.fao.geonet.services.metadata.format;
 
-import jeeves.server.ServiceConfig;
+import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
 import org.jdom.Element;
 
 import java.io.File;
@@ -39,15 +41,19 @@ import java.net.URLDecoder;
  * 
  * @author jeichar
  */
-public class EditFile extends AbstractFormatService {
+public class EditFile extends AbstractFormatService implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        ensureInitializedDir(context);
 
         String xslid = Util.getParam(params, Params.ID);
         String file = URLDecoder.decode(Util.getParam(params, Params.FNAME), Constants.ENCODING);
+        String schema = Util.getParam(params, Params.SCHEMA, null);
+        File schemaDir = null;
+        if (schema != null) {
+            schemaDir = new File(context.getBean(SchemaManager.class).getSchemaDir(schema));
+        }
 
-        File formatDir = getAndVerifyFormatDir(Params.ID, xslid);
+        File formatDir = getAndVerifyFormatDir(context.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);
 
         Element result = new Element("data");
 
@@ -56,11 +62,6 @@ public class EditFile extends AbstractFormatService {
         result.setText(data);
 
         return result;
-    }
-
-    @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
-        super.init(appPath, params);
     }
 
 }

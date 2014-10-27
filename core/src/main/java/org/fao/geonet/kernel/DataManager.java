@@ -41,12 +41,15 @@ import jeeves.TransactionAspect;
 import jeeves.TransactionTask;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.NodeInfo;
+
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
+import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.constants.Params;
@@ -100,12 +103,12 @@ import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.geocat.kernel.reusable.log.ReusableObjectLogger;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.repository.MetadataRatingByIpRepository;
@@ -126,16 +129,16 @@ import org.fao.geonet.repository.specification.MetadataStatusSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
+import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.util.FileCopyMgr;
-import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.utils.Xml.ErrorHandler;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.fao.geonet.utils.Xml;
 import org.jdom.JDOMException;
+import org.fao.geonet.utils.Xml.ErrorHandler;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -519,6 +522,7 @@ public class DataManager {
         indexMetadata(metadataId, forceRefreshReaders, processSharedObjects, fastIndex, reloadXLinks);
 
     }
+
     public void indexMetadata(final List<String> metadataIds) throws Exception {
         for (String metadataId : metadataIds) {
             indexMetadata(metadataId, false);
@@ -1475,8 +1479,7 @@ public class DataManager {
      */
     public void increasePopularity(ServiceContext srvContext, String id) throws Exception {
         // READONLYMODE
-        GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
-        if (!gc.isReadOnly()) {
+        if (!srvContext.getBean(NodeInfo.class).isReadOnly()) {
             // Update the popularity in database
             Integer iId = Integer.valueOf(id);
             _metadataRepository.update(iId, new Updater<Metadata>() {

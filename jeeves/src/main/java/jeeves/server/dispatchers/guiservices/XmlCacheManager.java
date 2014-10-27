@@ -1,5 +1,4 @@
 package jeeves.server.dispatchers.guiservices;
-
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.XmlFileCacher;
 import org.fao.geonet.JeevesJCS;
@@ -43,9 +42,23 @@ public class XmlCacheManager {
     	}
     	
     }
-    public Element get(ServiceContext context, boolean localized, String base, String file, String preferedLanguage, String defaultLang, boolean isExternal) throws JDOMException, IOException {
 
+    /**
+     * Obtain the stings for the provided xml file.
+     *
+     * @param context
+     * @param localized        if this xml is a localized file or is a normal xml file
+     * @param base             the directory to the localization directory (often is loc).
+     *                         If file is not localized then this is the directory that contains the xml file.
+     * @param file             the name of the file to load
+     * @param preferedLanguage the language to attempt to load if it exists
+     * @param defaultLang      a fall back language
+     * @param makeCopy         if false then xml is not cloned and MUST NOT BE MODIFIED!
+     */
+    public Element get(ServiceContext context, boolean localized, String base, String file, String preferedLanguage,
+                                    String defaultLang, boolean makeCopy, boolean isEternal) throws JDOMException, IOException {
 
+        
         String appPath = context.getAppPath();
         String xmlFilePath;
 
@@ -70,19 +83,24 @@ public class XmlCacheManager {
 
         Element result;
 
-        result = getFromCache(localized, base, file, preferedLanguage, defaultLang, isExternal, appPath, xmlFilePath, rootPath,
+        result = getFromCache(localized, base, file, preferedLanguage, defaultLang, isEternal, appPath, xmlFilePath, rootPath,
                 servletContext, xmlFile);
-        result = (Element) result.clone();
-        String name = xmlFile.getName();
-        int lastIndexOfDot = name.lastIndexOf('.');
-        if (lastIndexOfDot > 0) {
-            name = name.substring(0,lastIndexOfDot);
+        if (makeCopy) {
+            result = (Element) result.clone();
+             String name = xmlFile.getName();
+             int lastIndexOfDot = name.lastIndexOf('.');
+            if (lastIndexOfDot > 0) {
+                name = name.substring(0,lastIndexOfDot);
+            }
+            return result.setName(name);
+        } else {
+            return result;
         }
-        return result.setName(name);
     }
 
     private Element getFromCache(boolean localized, String base, String file, String preferedLanguage, String defaultLang,
-                                 boolean isExternal, String appPath, String xmlFilePath, String rootPath, ServletContext servletContext, File xmlFile) throws JDOMException, IOException {
+                                 boolean isExternal, String appPath, String xmlFilePath, String rootPath, ServletContext servletContext,
+                                 File xmlFile) throws JDOMException, IOException {
         Element result;
         synchronized (this) {
             Map<String, XmlFileCacher> cacheMap;

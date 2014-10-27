@@ -404,6 +404,13 @@
             <artifactId>sardine</artifactId>
             <version>5.1-GEONETWORK</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.3.7</version>
+        </dependency>
+
       <!-- universal character set detector -->
       <dependency>
         <groupId>com.googlecode.juniversalchardet</groupId>
@@ -1126,6 +1133,7 @@
     <module>healthmonitor</module>
     <module>services</module>
     <module>geocat</module>
+    <module>schemas-test</module>
     <module>web-client</module>
     <module>wro4j</module>
     <module>web</module>

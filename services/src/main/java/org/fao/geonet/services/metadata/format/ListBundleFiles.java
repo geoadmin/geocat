@@ -23,11 +23,13 @@
 
 package org.fao.geonet.services.metadata.format;
 
-import jeeves.server.ServiceConfig;
+import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
 import org.jdom.Element;
 
 import java.io.File;
@@ -39,14 +41,18 @@ import java.net.URLEncoder;
  * 
  * @author jeichar
  */
-public class ListBundleFiles extends AbstractFormatService {
+public class ListBundleFiles extends AbstractFormatService implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        ensureInitializedDir(context);
 
         String xslid = Util.getParam(params, Params.ID);
+        String schema = Util.getParam(params, Params.SCHEMA, null);
+        File schemaDir = null;
+        if (schema != null) {
+            schemaDir = new File(context.getBean(SchemaManager.class).getSchemaDir(schema));
+        }
 
-        File formatDir = getAndVerifyFormatDir(Params.ID, xslid).getCanonicalFile();
+        File formatDir = getAndVerifyFormatDir(context.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir).getCanonicalFile();
 
         Element result = new Element("bundleFiles");
         makeTree("", formatDir, result);
@@ -95,9 +101,5 @@ public class ListBundleFiles extends AbstractFormatService {
         return !f.getName().startsWith(".") && !f.isHidden() && f.canRead() && f.canWrite();
     }
 
-    @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
-        super.init(appPath, params);
-    }
 
 }

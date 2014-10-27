@@ -1,14 +1,13 @@
 package org.fao.geonet.geocat.services.selection;
 
-import java.io.File;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
+
+import java.io.File;
 
 public class Info implements Service {
 
@@ -29,7 +28,7 @@ public class Info implements Service {
                 FileUtils.copyFile(base, templates);
             }
         }
-        return context.getXmlCacheManager().get(context, false, Resources.locateResourcesDir(context), EMAIL_TEMPLATES, "eng", "eng", true);
+        return context.getXmlCacheManager().get(context, false, Resources.locateResourcesDir(context), EMAIL_TEMPLATES, "eng", "eng", true, false);
     }
 
 }
