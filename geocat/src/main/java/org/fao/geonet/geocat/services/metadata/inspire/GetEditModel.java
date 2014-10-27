@@ -351,13 +351,13 @@ public class GetEditModel implements Service {
         final MetadataSchema iso19139CHESchema = schemaManager.getSchema("iso19139.che");
         final MetadataSchema iso19139Schema = schemaManager.getSchema("iso19139");
         final Element codelists = cacheManager.get(context, true, iso19139Schema.getSchemaDir() + "/loc", "codelists.xml",
-                context.getLanguage(), "ger", true);
+                context.getLanguage(), "ger", true, false);
         final Element cheCodelistExtensions = cacheManager.get(context, true, iso19139CHESchema.getSchemaDir() + "/loc", "codelists.xml",
-                context.getLanguage(), "ger", true);
+                context.getLanguage(), "ger", true, false);
         final Element labels = cacheManager.get(context, true, iso19139Schema.getSchemaDir() + "/loc", "labels.xml",
-                context.getLanguage(), "ger", true);
+                context.getLanguage(), "ger", true, false);
         final Element labelExtensions = cacheManager.get(context, true, iso19139CHESchema.getSchemaDir() + "/loc", "labels.xml",
-                context.getLanguage(), "ger", true);
+                context.getLanguage(), "ger", true, false);
 
 
         addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:CI_DateTypeCode", "dateTypeOptions", null);
