@@ -1046,18 +1046,16 @@
       <url>http://download.osgeo.org/webdav/geotools/</url>
     </repository>
     <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>boundless</id>
-      <name>Boundless repository</name>
-      <url>http://repo.boundlessgeo.com/main/</url>
+        <snapshots>
+            <enabled>false</enabled>
+        </snapshots>
+        <id>boundless</id>
+        <name>Boundless repository</name>
+        <url>http://repo.boundlessgeo.com/main/</url>
     </repository>
+<!--
      <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-<!--      <id>k-int</id>
+      <id>k-int</id>
       <name>Developer k-int repository</name>
       <url>http://developer.k-int.com/maven2/</url>
     </repository> -->
