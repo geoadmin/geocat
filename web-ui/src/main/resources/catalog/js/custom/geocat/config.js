@@ -44,7 +44,7 @@
       ];
 
       var matrixIds = [];
-      for (var i = 0; i <= resolutions.length; i++) {
+      for (var i = 0; i<resolutions.length; i++) {
         matrixIds.push(i);
       }
 
