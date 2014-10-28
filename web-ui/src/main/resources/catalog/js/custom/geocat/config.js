@@ -43,10 +43,15 @@
         1000, 750, 650, 500, 250, 100, 50, 20, 10, 5, 2.5, 2, 1.5, 1, 0.5
       ];
 
+      var matrixIds = [];
+      for (var i = 0; i <= resolutions.length; i++) {
+        matrixIds.push(i);
+      }
+
       var tileGrid = new ol.tilegrid.WMTS({
         origin: [420000, 350000],
         resolutions: resolutions,
-        matrixIds: goog.array.range(resolutions.length)
+        matrixIds: matrixIds
       });
 
       var chLayer = new ol.layer.Tile({
@@ -70,7 +75,6 @@
           projection: 'EPSG:21781'
         })
       });
-      window.map = searchSettings.searchMap;
 
       /** Facets configuration */
       searchSettings.facetsConfig = {
