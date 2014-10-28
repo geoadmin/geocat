@@ -22,68 +22,6 @@
             </class>
         </service>
 
-        <service name="validated.shared.user.admin">
-            <class name=".services.user.List" >
-                <param name="type" value="VALIDATED_SHARED"/>
-            </class>
-
-            <output sheet="shared-user/user-list.xsl">
-                <xml name="strings" file="xml/confirm.xml" />
-            </output>
-        </service>
-
-        <service name="nonvalidated.shared.user.admin">
-            <class name=".services.user.List" >
-                <param name="type" value="NON_VALIDATED_SHARED"/>
-            </class>
-
-            <output sheet="shared-user/user-list.xsl">
-                <xml name="strings" file="xml/confirm.xml" />
-            </output>
-        </service>
-
-        <service name="shared.user.edit">
-            <class name=".services.user.Get" />
-
-            <output sheet="shared-user/user-update.xsl">
-                <call name="groups" class=".guiservices.groups.GetMine" />
-                <call name="profiles" class="jeeves.guiservices.profiles.Get" />
-            </output>
-        </service>
-
-        <service name="validated.shared.user.update">
-            <class name=".geocat.services.user.SharedUpdate" />
-            <output forward="validated.shared.user.admin" />
-        </service>
-
-        <service name="validated.shared.user.remove">
-            <class name=".services.user.Remove">
-                <param name="type" value="VALIDATED_SHARED"/>
-            </class>
-            <output forward="validated.shared.user.admin" />
-        </service>
-
-        <service name="shared.user.update">
-            <class name=".geocat.services.user.SharedUpdate" />
-        </service>
-
-        <service name="nonvalidated.shared.user.update">
-            <class name=".geocat.services.user.SharedUpdate" />
-            <output forward="nonvalidated.shared.user.admin" />
-        </service>
-
-        <service name="nonvalidated.shared.user.remove">
-            <class name=".services.user.Remove">
-                <param name="type" value="NON_VALIDATED_SHARED"/>
-            </class>
-            <output forward="nonvalidated.shared.user.admin" />
-        </service>
-        <service name="shared.user.remove">
-            <class name=".services.user.Remove">
-                <param name="type" value="SHARED"/>
-            </class>
-        </service>
-
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="reusable.object.process">
@@ -108,15 +46,6 @@
             <class name=".geocat.services.metadata.GetValidationStatus"/>
         </service>
 
-        <service name="shared.user.list">
-            <class name=".services.user.List">
-                <param name="xml" />
-                <param name="type" value="SHARED"/>
-            </class>
-
-            <output sheet="shared-user/user-list-xml.xsl" contentType="application/xml; charset=UTF-8"/>
-
-        </service>
 
         <service name="xml.extent.get">
             <class name=".geocat.services.extent.Get" />
@@ -299,12 +228,6 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="format">
-            <class name=".geocat.services.format.Manager" />
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
         <service name="che.keyword.get" type="xml">
             <class name=".geocat.services.thesaurus.GetCHEKeywordById" />
             <output sheet="skos-to-iso.xsl" contentType="text/xml; charset=UTF-8"/>
@@ -418,7 +341,7 @@
             Parameters:
             * id or uuid
             ]]></documentation>
-                        <class name=".services.metadata.inspire.GetEditModel" />
+                        <class name=".geocat.services.metadata.inspire.GetEditModel" />
                         <output sheet="../xslt/ui-metadata/edit/inspire-model.xsl" contentType="application/json" />
                     </service>
 
@@ -430,12 +353,18 @@
             Parameters:
             * id or uuid
             ]]></documentation>
-            <class name=".services.metadata.inspire.Save" />
+            <class name=".geocat.services.metadata.inspire.Save" />
         </service>
     </services>
 
     <service name="metadata.summary.zip">
         <class name=".services.metadata.ExportMetadataSummary"/>
         <output file="true" contentType="application/zip" />
+    </service>
+
+
+    <service name="admin.shared.objects">
+        <documentation>The shared objects administration page.</documentation>
+        <output sheet="../xslt/ui-admin/shared-objects.xsl"/>
     </service>
 </geonet>

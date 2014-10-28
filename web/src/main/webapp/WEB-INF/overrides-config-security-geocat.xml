@@ -2,6 +2,7 @@
            xsi:noNamespaceSchemaLocation="overrides/config-overrides.xsd">
 
     <spring>
+        <addInterceptUrl pattern="/srv/.*/admin.shared.objects!?" access="permitAll"/>
         <addInterceptUrl pattern="/srv/.*/strings.js!?" access="permitAll"/>
 
         <addInterceptUrl  pattern="/srv/.*/metadata.xlink.add!?.*" access="hasRole('Editor')"/>
@@ -98,7 +99,6 @@
         <addInterceptUrl  pattern="/srv/.*/xml.format.get!?.*" access="permitAll"/>
         <addInterceptUrl  pattern="/srv/.*/xml.format.list!?.*" access="permitAll"/>
         <addInterceptUrl  pattern="/srv/.*/xml.user.get!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/shared.user.list!?.*" access="permitAll"/>
         <addInterceptUrl  pattern="/srv/.*/che.keyword.get!?.*" access="permitAll"/>
         <addInterceptUrl  pattern="/srv/.*/metadata.show.xml!?.*" access="permitAll"/>
         <addInterceptUrl  pattern="/srv/.*/csw.pdf!?.*" access="permitAll"/>
