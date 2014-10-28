@@ -76,7 +76,7 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
         final ReplacementStrategy replacementStrategy = createReplacementStrategy();
         String href = replacementStrategy.createXlinkHref("", userSession, null);
         final String updatedHref = replacementStrategy.createAsNeeded(href, userSession);
-        String uuid = Utils.id(href);
+        String uuid = Utils.id(updatedHref);
 
         assertEquals(count + 1, bean.count());
 

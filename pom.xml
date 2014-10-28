@@ -399,11 +399,11 @@
         <artifactId>jts</artifactId>
         <version>1.13</version>
       </dependency>
-        <dependency>
-            <groupId>com.github.lookfirst</groupId>
-            <artifactId>sardine</artifactId>
-            <version>5.1-GEONETWORK</version>
-        </dependency>
+      <dependency>
+        <groupId>com.github.lookfirst</groupId>
+        <artifactId>sardine</artifactId>
+        <version>5.1-GEONETWORK</version>
+      </dependency>
 
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
@@ -411,7 +411,7 @@
             <version>2.3.7</version>
         </dependency>
 
-      <!-- universal character set detector -->
+        <!-- universal character set detector -->
       <dependency>
         <groupId>com.googlecode.juniversalchardet</groupId>
         <artifactId>juniversalchardet</artifactId>
@@ -1053,11 +1053,11 @@
       <name>Boundless repository</name>
       <url>http://repo.boundlessgeo.com/main/</url>
     </repository>
-<!--     <repository>
+     <repository>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
-      <id>k-int</id>
+<!--      <id>k-int</id>
       <name>Developer k-int repository</name>
       <url>http://developer.k-int.com/maven2/</url>
     </repository> -->
@@ -1165,7 +1165,7 @@
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
     <rootProjectDir>..</rootProjectDir>
-    <wro.version>1.7.1</wro.version>
+    <wro.version>1.7.7</wro.version>
     <node.version>v0.10.24</node.version>
     <npm.version>1.3.23</npm.version>
     <print-lib.version>2.0.0</print-lib.version>

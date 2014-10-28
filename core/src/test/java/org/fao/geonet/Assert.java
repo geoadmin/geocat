@@ -7,9 +7,10 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.Text;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
+
+import java.io.File;
 import java.util.List;
 
 /**
@@ -55,7 +56,7 @@ public final class Assert extends junit.framework.TestCase {
         } else {
             element = Xml.selectNodes(xml, xpath, Arrays.asList(namespaces));
         }
-        assertEquals("Expected 1 element but found "+element.size()+"No element found at: " + xpath + " in \n" + Xml.getString(xml),
+        assertEquals("Expected 1 element but found " + element.size() + "No element found at: " + xpath + " in \n" + Xml.getString(xml),
                 1, element.size());
         String text;
         if (element.get(0) instanceof Element) {
