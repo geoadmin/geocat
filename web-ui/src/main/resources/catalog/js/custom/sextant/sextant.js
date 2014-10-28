@@ -27,11 +27,6 @@
       var searchMap = gnSearchSettings.searchMap;
 
       $scope.mainTabs = {
-        home :{
-          title: 'Home',
-          titleInfo: 0,
-          active: true
-        },
         search: {
           title: 'Search',
           titleInfo: 0,
@@ -117,8 +112,10 @@
 
         },
         addMdLayerToPanier: function(link,md) {
-          md.url = link.url;
-          $scope.searchObj.panier.push(md);
+          $scope.searchObj.panier.push({
+            link: link,
+              md: md
+          });
           $scope.mainTabs.panier.titleInfo += 1;
         }
       };

@@ -24,10 +24,14 @@
 
     </div>
 
-    <div class="form-group">
-      <div class="col-md-offset-4">
-        <button class="btn btn-default more" ng-click="advanced = !advanced" ng-class="{'backtonormal': advanced}">
-          <i translate>{{ (advanced) ? 'simpleForm' : 'advancedForm' }}</i>
+    <div class="form-group row">
+      <div class="col-md-4">
+        <button type="button" data-ng-click="resetSearch('#anySearchField');" class="btn btn-link" data-translate>Reset</button>
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-link" ng-click="advanced = !advanced" ng-class="{'backtonormal': advanced}">
+          <span translate ng-if="!advanced">advancedForm</span>
+          <span translate ng-if="advanced">simpleForm</span>
         </button>
       </div>
     </div>

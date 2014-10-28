@@ -7829,6 +7829,10 @@ select[multiple][hitsperpage-combo] select {
 body {
   font-family: Arial, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+.geocat-header {
+  background-image: url('/geonetwork/apps/geocatch/images/header-background.jpg');
+  display: none;
+}
 .navbar .navbar-brand {
   padding: 0 15px;
   line-height: 50px;
@@ -7845,6 +7849,9 @@ body {
 .twitter-typeahead {
   width: 100%;
 }
+[ng-search-form] .panel-heading .input-group-btn {
+  line-height: normal;
+}
 [ng-search-form] .relative {
   position: relative;
 }
@@ -7859,6 +7866,7 @@ body {
 }
 .more {
   margin: 0 0 0 15px;
+  font-style: italic;
 }
 .basic,
 .advanced,
@@ -7995,6 +8003,12 @@ textarea.geocat-search .geotype,
 select[multiple].geocat-search .geotype {
   height: auto;
 }
+.geocat-search [gn-draw-bbox-extent] {
+  display: none;
+}
+.datepicker {
+  height: auto;
+}
 .loading {
   position: absolute;
   top: 1.8em;
@@ -8026,7 +8040,6 @@ select[multiple].geocat-search .geotype {
 }
 .aside .well {
   margin-bottom: .5em;
-  margin-right: -20px;
 }
 .aside .well .fa {
   font-size: 110%;
@@ -8043,13 +8056,29 @@ select[multiple].geocat-search .geotype {
 .aside .btn-group .btn-default {
   border-color: transparent;
   background: inherit;
+  width: 100%;
+  text-align: left;
 }
 .aside .btn-group .btn-default:hover {
   border-color: rgba(0, 0, 0, 0.15);
   background-color: white;
 }
+.aside .btn-group .btn-default .caret {
+  position: absolute;
+  top: 1.1em;
+  right: 1em;
+}
+.aside .btn-group .dropdown-menu {
+  right: 0;
+  left: auto;
+}
 [data-gn-facet-list] {
   font-size: 90%;
+}
+@media (min-width: 992px) {
+  .geocat-header {
+    display: block;
+  }
 }
 @media (min-width: 1200px) {
   html,
@@ -8086,4 +8115,3 @@ select[multiple].geocat-search .geotype {
     width: calc(100% - 30px);
   }
 }
-/*# sourceMappingURL=geocat.css.map */

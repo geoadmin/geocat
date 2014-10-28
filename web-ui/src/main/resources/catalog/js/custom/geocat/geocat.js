@@ -30,6 +30,8 @@
         advancedMode: false,
         searchMap: gnSearchSettings.searchMap
       });
+
+      $('#anySearchField').focus();
     }]);
 
   module.controller('gnsGeocatHome', [
@@ -48,13 +50,8 @@
       };
 
       // Fill last updated section
-      callSearch('changeDate', 10).then(function(data) {
+      callSearch('changeDate', 15).then(function(data) {
         $scope.lastUpdated = data.metadata;
-      });
-
-      // Fill most popular section
-      callSearch('popularity', 5).then(function(data) {
-        $scope.mostPopular = data.metadata;
       });
   }]);
 
@@ -73,6 +70,7 @@
     function($scope, gnHttp, gnHttpServices, gnRegionService,
              $timeout, suggestService,$http, gnSearchSettings,
              goDecorateInteraction, gnMap) {
+
 
       // data store for types field
       $scope.types = ['any',
