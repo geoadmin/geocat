@@ -20,30 +20,7 @@
         <replaceAtt xpath="appHandler/param[@name = 'preferredSchema']" attName="value" value="iso19139.che"/>
         <replaceAtt xpath="appHandler/param[@name = 'useSubversion']" attName="value" value="false"/>
         <replaceAtt xpath="appHandler/param[@name = 'maxWritesInTransaction']" attName="value" value="1"/>
-        <addXML xpath="default/gui">
-			<call name="geocatEnv" class="org.fao.geonet.geocat.guiservices.util.GeocatExtraEnv" />
-        </addXML>
-        <addXML xpath="appHandler">
-            <param name="reusable">
-                <param name="processOnInsert" value="true" />
-            </param>
-            <param name="extent">
-                <!--  If there is no id then the server is the default server and can be accessed with ExtentManager.DEFAULT_SOURCE_ID id -->
-                <!--  columns are case sensitive -->
-                <source>
-                    <typename typename="gn:countries" idColumn="ID" descColumn="LAND" searchColumn="SEARCH"
-                                        geoIdColumn="LAND" CRS="EPSG:21781" />
-                    <typename typename="gn:gemeindenBB" idColumn="OBJECTVAL" descColumn="DESC" searchColumn="SEARCH"
-                                        geoIdColumn="GEMNAME" CRS="EPSG:21781" />
-                    <typename typename="gn:kantoneBB" idColumn="KANTONSNR" descColumn="NAME" searchColumn="SEARCH"
-                                        geoIdColumn="KUERZEL" CRS="EPSG:21781" />
-                    <typename typename="gn:xlinks" idColumn="ID" descColumn="DESC" geoIdColumn="GEO_ID"
-                                        searchColumn="SEARCH" modifiable="true" CRS="EPSG:21781" />
-                    <typename typename="gn:non_validated" idColumn="ID" descColumn="DESC" geoIdColumn="GEO_ID"
-                                        searchColumn="SEARCH" modifiable="true" CRS="EPSG:21781" />
-                </source>
-            </param>
-        </addXML>
+
         <addXML xpath="">
             <include>config-geocat.xml</include>
         </addXML>

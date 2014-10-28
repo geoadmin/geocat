@@ -6,7 +6,7 @@
 
 // Demonstrate how to register services
 // In this case it is a simple value service.
-angular.module('SharedObjects.factories', []).
+angular.module('geocat_shared_objects_factories', []).
   factory('commonProperties', ['$window', '$http', function ($window, $http) {
       var loadRecords = function ($scope) {
           var validated = $scope.isValidated ? 'true' : 'false';
@@ -39,22 +39,22 @@ angular.module('SharedObjects.factories', []).
               $scope.validated = $routeParams.validated;
               $scope.isValidated = $routeParams.validated === 'validated';
               if ($scope.isValidated) {
-                  $scope.validatedTitle = Geonet.translate('reusable_validated');
+                  $scope.validatedTitle = 'reusable_validated';// Geonet.translate('reusable_validated');
               } else {
-                  $scope.validatedTitle = Geonet.translate('reusable_nonValidated');
+                  $scope.validatedTitle = 'reusable_nonValidated'; //Geonet.translate('reusable_nonValidated');
               }
           },
           add: function ($scope) {
               
-              $scope.translate = Geonet.translate;
-              $scope.language = Geonet.language;
+              $scope.translate = function(key) {return key;}; //Geonet.translate;
+              $scope.language = 'eng'; //Geonet.language;
               $scope.search = {
                   search: ''
               };
               $scope.edit = {
                   
               };
-              var baseUrl = '../../../srv/' + $scope.language;
+              var baseUrl = '../../srv/' + $scope.language;
               $scope.baseUrl = baseUrl;
               $scope.filter = "";
               $scope.selected = null;
@@ -95,8 +95,8 @@ angular.module('SharedObjects.factories', []).
                   }
                   window.open(finalUrl, '_sharedTab');
               };
-              $scope.editTitle = Geonet.translate('createNewSharedObject').replace(/\%objtype\%/g, Geonet.translate($scope.type))
-              $scope.editTitle = Geonet.translate('createNewSharedObject').replace(/\%objtype\%/g, Geonet.translate($scope.type))
+              $scope.editTitle = 'createNewSharedObject'; //Geonet.translate('createNewSharedObject').replace(/\%objtype\%/g, Geonet.translate($scope.type))
+              $scope.editTitle = 'createNewSharedObject';// Geonet.translate('createNewSharedObject').replace(/\%objtype\%/g, Geonet.translate($scope.type))
               $scope.startCreateNew = function () {
                   $scope.finishEdit = $scope.createNewObject;
                   $('#editModal').modal('show');

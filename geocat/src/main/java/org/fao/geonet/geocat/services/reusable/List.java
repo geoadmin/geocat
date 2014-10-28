@@ -48,11 +48,11 @@ import org.jdom.Element;
  *
  * @author jeichar
  */
-public class List implements Service
-{
+public class List implements Service {
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+
+
+    public Element exec(Element params, ServiceContext context) throws Exception {
         String type = Util.getParam(params, "type", "contacts");
         boolean validated = Boolean.parseBoolean(Util.getParam(params, "validated", "false"));
 

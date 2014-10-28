@@ -43,7 +43,7 @@ import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper.ExtentTypeCode;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.geocat.kernel.extent.Source;
-import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
+import org.fao.geonet.geocat.kernel.extent.FeatureType;
 import org.fao.geonet.util.ElementFinder;
 import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.utils.Log;
@@ -147,65 +147,63 @@ public final class ExtentsStrategy extends ReplacementStrategy {
                 }
 
                 FilterFactory2 filterFactory = CommonFactoryFinder.getFilterFactory2(GeoTools.getDefaultHints());
-                Collection<Source> wfss = _extentMan.getSources().values();
-                SEARCH: for (Source wfs : wfss) {
-                    Collection<Source.FeatureType> types = wfs.getFeatureTypes();
-                    for (Source.FeatureType featureType : types) {
-                        FeatureSource<SimpleFeatureType, SimpleFeature> featureSource = featureType.getFeatureSource();
-                        Name geomAtt = featureSource.getSchema().getGeometryDescriptor().getName();
-                        PropertyName property = filterFactory.property(geomAtt);
+                Source wfs = _extentMan.getSource();
+                Collection<FeatureType> types = wfs.getFeatureTypes();
+                for (FeatureType featureType : types) {
+                    FeatureSource<SimpleFeatureType, SimpleFeature> featureSource = featureType.getFeatureSource();
+                    Name geomAtt = featureSource.getSchema().getGeometryDescriptor().getName();
+                    PropertyName property = filterFactory.property(geomAtt);
 
 
-                        Geometry transformedGeom;
-                        if(geometry.getSRID() == 21781) {
-                            transformedGeom = geometry;
-                        } else {
-                            transformedGeom = JTS.transform(geometry, ExtentHelper.WGS84_TO_CH03);
-                            transformedGeom.setSRID(21781);
-                        }
+                    Geometry transformedGeom;
+                    if(geometry.getSRID() == 21781) {
+                        transformedGeom = geometry;
+                    } else {
+                        transformedGeom = JTS.transform(geometry, ExtentHelper.WGS84_TO_CH03);
+                        transformedGeom.setSRID(21781);
+                    }
 
-                        Literal literal = filterFactory.literal(transformedGeom.convexHull().buffer(3000));
-                        Within filter = filterFactory.within(property, literal);
+                    Literal literal = filterFactory.literal(transformedGeom.convexHull().buffer(3000));
+                    Within filter = filterFactory.within(property, literal);
 
-                        final String[] properties = {featureType.idColumn, featureType.descColumn, geomAtt.getLocalPart()};
-                        Query query = featureType.createQuery(filter, properties);
-                        FeatureIterator<SimpleFeature> features = featureSource.getFeatures(query).features();
-                        try {
-                            while (features.hasNext()) {
-                                SimpleFeature next = features.next();
+                    final String[] properties = {featureType.idColumn, featureType.descColumn, geomAtt.getLocalPart()};
+                    Query query = featureType.createQuery(filter, properties);
+                    FeatureIterator<SimpleFeature> features = featureSource.getFeatures(query).features();
+                    try {
+                        while (features.hasNext()) {
+                            SimpleFeature next = features.next();
 
-                                final Geometry ch03LoadedGeom = (Geometry) next.getDefaultGeometry();
-                                ch03LoadedGeom.setSRID(21781);
+                            final Geometry ch03LoadedGeom = (Geometry) next.getDefaultGeometry();
+                            ch03LoadedGeom.setSRID(21781);
 
-                                final Geometry transformedLoadedGeom;
-                                if(geometry.getSRID() == 21781){
-                                    transformedLoadedGeom = ch03LoadedGeom;
-                                } else {
-                                    transformedLoadedGeom = ExtentHelper.reducePrecision(
-                                            JTS.transform(ch03LoadedGeom, ExtentHelper.CH03_TO_WGS84)
-                                            ,ExtentHelper.COORD_DIGITS);
-                                    transformedLoadedGeom.setSRID(4326);
-                                }
-                                if (matchingGeom(geometry, transformedLoadedGeom)
-                                        || (format == ExtentFormat.GMD_BBOX && matchingGeom(geometry, transformedLoadedGeom.getEnvelope()))) {
-                                    geomInfo.original.detach();
-                                    boolean validated = !featureType.typename.equals(NON_VALIDATED_TYPE);
-                                    String idString = idAttributeToIdString(featureType, next);
-
-                                    boolean extentTypeCode = geomInfo.inclusion == ExtentHelper.ExtentTypeCode.INCLUDE;
-
-                                    Namespace prefix = prefix(placeholder, originalElem);
-                                    results.add(xlinkIt(format, wfs, featureType, idString, validated, extentTypeCode,
-                                    		new Element(originalElem.getName(),prefix)));
-                                    break SEARCH;
-                                }
+                            final Geometry transformedLoadedGeom;
+                            if(geometry.getSRID() == 21781){
+                                transformedLoadedGeom = ch03LoadedGeom;
+                            } else {
+                                transformedLoadedGeom = ExtentHelper.reducePrecision(
+                                        JTS.transform(ch03LoadedGeom, ExtentHelper.CH03_TO_WGS84)
+                                        ,ExtentHelper.COORD_DIGITS);
+                                transformedLoadedGeom.setSRID(4326);
                             }
+                            if (matchingGeom(geometry, transformedLoadedGeom)
+                                    || (format == ExtentFormat.GMD_BBOX && matchingGeom(geometry, transformedLoadedGeom.getEnvelope()))) {
+                                geomInfo.original.detach();
+                                boolean validated = !featureType.typename.equals(NON_VALIDATED_TYPE);
+                                String idString = idAttributeToIdString(featureType, next);
 
-                        } catch (NoSuchElementException e) {
-                            Log.error("Reusable Objects", "Error reading feature type: " + featureType.typename);
-                        } finally {
-                            features.close();
+                                boolean extentTypeCode = geomInfo.inclusion == ExtentHelper.ExtentTypeCode.INCLUDE;
+
+                                Namespace prefix = prefix(placeholder, originalElem);
+                                results.add(xlinkIt(format, wfs, featureType, idString, validated, extentTypeCode,
+                                        new Element(originalElem.getName(),prefix)));
+                                break;
+                            }
                         }
+
+                    } catch (NoSuchElementException e) {
+                        Log.error("Reusable Objects", "Error reading feature type: " + featureType.typename);
+                    } finally {
+                        features.close();
                     }
                 }
             }
@@ -277,7 +275,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
         }
     }
 
-    private String idAttributeToIdString(Source.FeatureType featureType, SimpleFeature feature) {
+    private String idAttributeToIdString(FeatureType featureType, SimpleFeature feature) {
 
         final Object attribute = feature.getAttribute(featureType.idColumn);
         if (attribute instanceof Number) {
@@ -374,7 +372,7 @@ public final class ExtentsStrategy extends ReplacementStrategy {
         boolean extentTypeCode = e.inclusion == ExtentHelper.ExtentTypeCode.INCLUDE;
 
         Source wfs = _extentMan.getSource();
-        Source.FeatureType featureType = wfs.getFeatureType(NON_VALIDATED_TYPE);
+        FeatureType featureType = wfs.getFeatureType(NON_VALIDATED_TYPE);
         FeatureStore<SimpleFeatureType, SimpleFeature> store = (FeatureStore<SimpleFeatureType, SimpleFeature>) featureType
                 .getFeatureSource();
 

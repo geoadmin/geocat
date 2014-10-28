@@ -25,14 +25,12 @@ package org.fao.geonet.geocat.services.extent;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.extent.ExtentFormat;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.geocat.kernel.extent.Source;
-import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
+import org.fao.geonet.geocat.kernel.extent.FeatureType;
 import org.fao.geonet.kernel.region.Region;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Query;
@@ -77,7 +75,6 @@ public class Get implements Service
 
         final String id = Util.getParamText(params, ExtentHelper.ID);
         final String formatParam = Util.getParamText(params, ExtentHelper.FORMAT);
-        final String wfsId = Util.getParamText(params, ExtentHelper.SOURCE);
         final String typename = Util.getParamText(params, ExtentHelper.TYPENAME);
         final String extentTypeCode = Util.getParamText(params, ExtentHelper.EXTENT_TYPE_CODE);
         final String epsgCode = Util.getParamText(params, ExtentHelper.CRS_PARAM);
@@ -99,7 +96,7 @@ public class Get implements Service
         if (typename == null) {
             ExtentHelper.error("typename parameter is required");
         }
-        final Source wfs = extentMan.getSource(wfsId);
+        final Source wfs = extentMan.getSource();
         final FeatureType featureType = wfs.getFeatureType(typename);
         if (featureType == null) {
             return errorTypename(extentMan, typename);

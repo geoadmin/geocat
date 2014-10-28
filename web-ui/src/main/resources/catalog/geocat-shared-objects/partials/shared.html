@@ -1,4 +1,4 @@
-<div ng-include src="'partials/menubar.html'"></div>
+<div ng-include src="'../../catalog/geocat-shared-objects/partials/menubar.html'"></div>
 <table class="table table-condensed">
     <thead>
         <tr>
@@ -40,7 +40,7 @@
                                 <td class="title" style="width: 60%">{{md.title}}</td>
                                 <td class="name" style="width: 10%">{{md.name}}</td>
                                 <td class="email" style="width: 20%">{{md.email}}</td>
-                                <td style="width: 5%"><button class="show-md" type="button" class="btn btn-primary" data-ng-click="open('metadata.show?currTab=xml&id=' + md.id)">Show</button></td>
+                                <td style="width: 5%"><button class="show-md" type="button" class="btn btn-primary" data-ng-click="open('md.format.html?xsl=xml_view&id=' + md.id)">Show</button></td>
                             </tr>
                         </table>
                    <!--     <div class="panel-title">
@@ -68,9 +68,10 @@
         </tr>
     </tbody>
 </table>
-<div ng-include src="'partials/modal-confirm-delete.html'"></div>
-<div ng-include src="'partials/modal-confirm-validate.html'"></div>
-<div ng-include src="'partials/modal-reject.html'"></div>
-<div ng-include src="'partials/modal-executing-operation.html'"></div>
-<div ng-include src="'partials/modal-edit-common.html'"></div>
+<div ng-include src="'../../catalog/geocat-shared-objects/partials/modal-confirm-delete.html'"></div>
+<div ng-include src="'../../catalog/geocat-shared-objects/partials/modal-confirm-validate.html'"></div>
+<div ng-include src="'../../catalog/geocat-shared-objects/partials/modal-reject.html'"></div>
+<div ng-include src="'../../catalog/geocat-shared-objects/partials/modal-executing-operation.html'"></div>
+<div ng-include src="'../../catalog/geocat-shared-objects/partials/modal-edit-common.html'"></div>
+
 

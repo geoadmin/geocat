@@ -1,0 +1,13 @@
+{
+  "contacts" : "Contacts",
+  "formats" : "Formats",
+  "extents" : "Extents",
+  "keywords" : "Keywords",
+  "reusable_nonValidated" : "Nonvalidated",
+  "reusable_validated" : "Nonvalidated",
+  "rejected" : "Rejected",
+  "noRecords" : "No Records",
+  "description" : "Description",
+  "actions" : "Actions",
+  "filter": "Filter"
+}

@@ -145,7 +145,7 @@ public class ExtentHelper
         }
     }
 
-    public static String findNextId(FeatureStore<SimpleFeatureType, SimpleFeature> store, Source.FeatureType featureType)
+    public static String findNextId(FeatureStore<SimpleFeatureType, SimpleFeature> store, FeatureType featureType)
             throws IOException
     {
         final Query query = featureType.createQuery(new String[] { featureType.idColumn });
@@ -168,7 +168,7 @@ public class ExtentHelper
         return String.valueOf(max + 1);
     }
 
-    public static Geometry prepareGeometry(final String requestCrsCode, final Source.FeatureType featureType,
+    public static Geometry prepareGeometry(final String requestCrsCode, final FeatureType featureType,
             Geometry geometry, final SimpleFeatureType schema) throws NoSuchAuthorityCodeException, FactoryException,
             TransformException
     {

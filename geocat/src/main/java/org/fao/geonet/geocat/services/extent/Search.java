@@ -28,8 +28,7 @@ import com.vividsolutions.jts.io.WKTReader;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.geocat.kernel.extent.Source;
-import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
+import org.fao.geonet.geocat.kernel.extent.FeatureType;
 import org.fao.geonet.util.LangUtils;
 import org.geotools.data.Query;
 import org.geotools.factory.CommonFactoryFinder;
@@ -127,7 +126,7 @@ public class Search extends List
     }
 
     @Override
-    protected Query createQuery(Element params, Source.FeatureType featureType, String[] properties, int maxFeatures)
+    protected Query createQuery(Element params, FeatureType featureType, String[] properties, int maxFeatures)
             throws Exception
     {
         final String xml = Util.getParamText(params, "xml");

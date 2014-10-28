@@ -4,12 +4,13 @@
   <xsl:include href="../base-layout.xsl"/>
 
   <xsl:template mode="content" match="/">
-    <div class="container" data-ng-controller="SharedObjects" data-ng-show="authenticated" data-ng-view="">
-    </div>
-    
-    <!-- Make this a directive TODO -->
-    <!--<div ng-include="'{$uiResourcesPath}geocat-shared-objects/index.html'">-->
-    <!--</div>-->
+
+      <div data-ng-view="">
+      </div>
+
+      <div ng-include="'{$uiResourcesPath}templates/info.html'">
+      </div>
+
   </xsl:template>
 
 </xsl:stylesheet>
