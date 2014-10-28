@@ -135,11 +135,6 @@
       <class name=".services.metadata.BatchUpdatePrivileges" />
     </service>
 
-    <service name="xml.metadata.processing" xmlapi="true">
-      <class name=".services.metadata.XslProcessing" />
-      <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
-    </service>
-
     <service name="xml.metadata.status.set" xmlapi="true">
       <class name=".services.metadata.UpdateStatus" />
     </service>
