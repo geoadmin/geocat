@@ -23,13 +23,22 @@
    */
   module.controller('gnsGeocat', [
       '$scope',
+      '$timeout',
       'gnSearchSettings',
-    function($scope, gnSearchSettings) {
+    function($scope, $timeout, gnSearchSettings) {
 
       angular.extend($scope.searchObj, {
         advancedMode: false,
         searchMap: gnSearchSettings.searchMap
       });
+
+      $scope.searchExpanded = false;
+      $scope.toggleSearch = function() {
+        $scope.searchExpanded = !$scope.searchExpanded;
+        $timeout(function(){
+          gnSearchSettings.searchMap.updateSize();
+        }, 300);
+      };
 
       $('#anySearchField').focus();
     }]);
@@ -199,13 +208,14 @@
       var key;
       var format = new ol.format.WKT();
       var setSearchGeometryFromMapExtent = function() {
+        if (!map.getSize()) { return; }
         var geometry = new ol.geom.Polygon(gnMap.getPolygonFromExtent(
             map.getView().calculateExtent(map.getSize())));
         setSearchGeometry(geometry);
       };
       $scope.$watch('restrictArea', function(v) {
-        if (v == 'bbox') {
           setSearchGeometryFromMapExtent();
+        if (v == 'bbox') {
           key = map.getView().on('propertychange', setSearchGeometryFromMapExtent);
         } else {
           $scope.searchObj.params.geometry = '';

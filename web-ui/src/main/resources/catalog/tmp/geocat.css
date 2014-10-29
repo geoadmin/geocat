@@ -4352,7 +4352,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navbar {
   position: relative;
-  min-height: 50px;
+  min-height: 34px;
   margin-bottom: 20px;
   border: 1px solid transparent;
 }
@@ -4449,10 +4449,10 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navbar-brand {
   float: left;
-  padding: 15px 15px;
+  padding: 7px 15px;
   font-size: 18px;
   line-height: 20px;
-  height: 50px;
+  height: 34px;
 }
 .navbar-brand:hover,
 .navbar-brand:focus {
@@ -4469,8 +4469,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   float: right;
   margin-right: 15px;
   padding: 9px 10px;
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin-top: 0px;
+  margin-bottom: 0px;
   background-color: transparent;
   background-image: none;
   border: 1px solid transparent;
@@ -4494,7 +4494,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   }
 }
 .navbar-nav {
-  margin: 7.5px -15px;
+  margin: 3.5px -15px;
 }
 .navbar-nav > li > a {
   padding-top: 10px;
@@ -4532,8 +4532,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     float: left;
   }
   .navbar-nav > li > a {
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 7px;
+    padding-bottom: 7px;
   }
   .navbar-nav.navbar-right:last-child {
     margin-right: -15px;
@@ -4557,8 +4557,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   border-bottom: 1px solid transparent;
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 @media (min-width: 768px) {
   .navbar-form .form-group {
@@ -4625,20 +4625,20 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   border-bottom-left-radius: 0;
 }
 .navbar-btn {
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 .navbar-btn.btn-sm {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 .navbar-btn.btn-xs {
-  margin-top: 14px;
-  margin-bottom: 14px;
+  margin-top: 6px;
+  margin-bottom: 6px;
 }
 .navbar-text {
-  margin-top: 15px;
-  margin-bottom: 15px;
+  margin-top: 7px;
+  margin-bottom: 7px;
 }
 @media (min-width: 768px) {
   .navbar-text {
@@ -7579,6 +7579,28 @@ fieldset[disabled] [gn-main-viewer] .panel-tools .metadata:focus {
   padding-left: 15px;
   padding-right: 15px;
 }
+/* An update to 3.2 could provide responsive class
+  for block or inline layout.
+  http://getbootstrap.com/css/#responsive-utilities
+
+  Display button label in top tool bar using inline mode.
+ */
+.gn-top-bar .visible-lg {
+  display: none !important;
+}
+@media (min-width: 1200px) {
+  .gn-top-bar .visible-lg {
+    display: inline !important;
+  }
+}
+.gn-top-bar .hidden-xs {
+  display: inline !important;
+}
+@media (max-width: 767px) {
+  .gn-top-bar .hidden-xs {
+    display: none !important;
+  }
+}
 .gn-facet .list-group-item {
   border-width: 0;
   border-radius: 0;
@@ -7833,6 +7855,9 @@ body {
   background-image: url('/geonetwork/apps/geocatch/images/header-background.jpg');
   display: none;
 }
+.navbar {
+  font-size: 12px;
+}
 .navbar .navbar-brand {
   padding: 0 15px;
   line-height: 50px;
@@ -7843,11 +7868,60 @@ body {
 .navbar .navbar-form input {
   width: 7em;
 }
+.navbar input,
+.navbar button,
+.navbar select {
+  height: 30px;
+  padding: 5px 10px;
+  line-height: 1.5;
+  border-radius: 3px;
+  font-size: 12px;
+}
+select.navbar input,
+select.navbar button,
+select.navbar select {
+  height: 30px;
+  line-height: 30px;
+}
+textarea.navbar input,
+textarea.navbar button,
+textarea.navbar select,
+select[multiple].navbar input,
+select[multiple].navbar button,
+select[multiple].navbar select {
+  height: auto;
+}
 .navbar [gn-language-switcher] {
   margin-left: 1em;
 }
+.navbar .form-group {
+  margin-top: 2px;
+}
+.navbar li a {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.navbar .navbar-nav-primary > li > a {
+  color: #428bca;
+}
 .twitter-typeahead {
   width: 100%;
+}
+[ng-search-form] .expander {
+  position: absolute;
+  right: 0px;
+  z-index: 4;
+  top: 1em;
+  border-width: 1px 1px 1px 0;
+  border-radius: 0 3px 3px 0;
+  padding-left: 4px;
+  padding-right: 5px;
+}
+[ng-search-form] .maincol:first-of-type + .maincol {
+  transition-property: width, margin;
+}
+[ng-search-form] .maincol.expanded:first-of-type + .maincol {
+  transition-property: width;
 }
 [ng-search-form] .panel-heading .input-group-btn {
   line-height: normal;
@@ -8079,6 +8153,18 @@ select[multiple].geocat-search .geotype {
   .geocat-header {
     display: block;
   }
+  .row.hfull {
+    position: relative;
+  }
+  .maincol.expanded {
+    width: 50%;
+    position: absolute;
+    top: 0;
+    z-index: 2050;
+  }
+  .maincol.expanded + .maincol {
+    margin-left: 25%;
+  }
 }
 @media (min-width: 1200px) {
   html,
@@ -8090,7 +8176,7 @@ select[multiple].geocat-search .geotype {
     overflow: hidden;
   }
   .container-fluid {
-    height: calc(100% - 6em);
+    height: calc(100% - 34px  - 40px - 103px);
   }
   .maincol .panel {
     position: relative;
@@ -8111,7 +8197,8 @@ select[multiple].geocat-search .geotype {
   }
   .maincol .panel [gn-map-field] {
     position: absolute;
-    bottom: 5.7em;
+    bottom: 1.2em;
     width: calc(100% - 30px);
   }
 }
+/*# sourceMappingURL=geocat.css.map */

@@ -1,5 +1,7 @@
 @import "gn_search.less";
 
+@navbar-height: 34px;
+
 body {
   font-family: Arial, @font-family-sans-serif;
 }
@@ -9,6 +11,7 @@ body {
 }
 
 .navbar {
+  font-size: 12px;
   .navbar-brand {
     padding: 0 15px;
     line-height: 50px;
@@ -19,8 +22,22 @@ body {
   .navbar-form input {
     width: 7em;
   }
+  input, button, select {
+    .input-sm;
+    font-size: 12px;
+  }
   [gn-language-switcher] {
     margin-left: 1em;
+  }
+  .form-group {
+    margin-top: 2px;
+  }
+  li a {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .navbar-nav-primary > li > a {
+    color: @brand-primary;
   }
 }
 
@@ -29,6 +46,22 @@ body {
 }
 
 [ng-search-form] {
+  .expander {
+    position: absolute;
+    right: 0px;
+    z-index: 4;
+    top: 1em;
+    border-width: 1px 1px 1px 0;
+    border-radius: 0 3px 3px 0;
+    padding-left: 4px;
+    padding-right: 5px;
+  }
+  .maincol:first-of-type + .maincol{
+    transition-property: width, margin;
+  }
+  .maincol.expanded:first-of-type + .maincol{
+    transition-property: width;
+  }
   .panel-heading {
     .input-group-btn {
       line-height: normal;
@@ -200,6 +233,18 @@ body {
   .geocat-header {
     display: block;
   }
+  .row.hfull {
+    position: relative;
+  }
+  .maincol.expanded {
+    width: 50%;
+    position: absolute;
+    top: 0;
+    z-index: 2050;
+  }
+  .maincol.expanded + .maincol {
+    margin-left: 25%;
+  }
 }
 @media (min-width: @screen-lg-min) {
   html, body,
@@ -211,7 +256,7 @@ body {
     overflow: hidden;
   }
   .container-fluid {
-    height: ~"calc(100% - 6em)";
+    height: calc(100% ~"-" @navbar-height ~" - 40px - 103px");
   }
   .maincol .panel{
     position: relative;
@@ -231,7 +276,7 @@ body {
     }
     [gn-map-field] {
       position: absolute;
-      bottom: 5.7em;
+      bottom: 1.2em;
       width: ~"calc(100% - 30px)";
     }
   }

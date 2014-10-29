@@ -29,7 +29,7 @@
         <button type="button" data-ng-click="resetSearch('#anySearchField');" class="btn btn-link" data-translate>Reset</button>
       </div>
       <div class="col-md-4">
-        <button class="btn btn-link" ng-click="advanced = !advanced" ng-class="{'backtonormal': advanced}">
+        <button class="btn btn-link" ng-click="advanced = !advanced" ng-class="{'backtonormal': advanced}" type="button">
           <span translate ng-if="!advanced">advancedForm</span>
           <span translate ng-if="advanced">simpleForm</span>
         </button>
@@ -169,16 +169,10 @@
 
         <div class="form-group">
           <div class="col-sm-12">
-            <div class="btn-group btn-group-justified">
-              <div class="btn-group">
-                <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'bbox'" uncheckable>bbox</button>
-              </div>
-              <div class="btn-group">
-                <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'au'" uncheckable>AU</button>
-              </div>
-              <div class="btn-group">
-                <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'draw'" uncheckable>drawOnMap</button>
-              </div>
+            <div class="btn-group-vertical">
+              <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'bbox'" uncheckable><span translate>bbox</span></button>
+              <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'au'" uncheckable><span translate>AU</span></button>
+              <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'draw'" uncheckable><span translate>drawOnMap</span></button>
             </div>
           </div>
         </div>
