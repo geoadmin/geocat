@@ -2,27 +2,15 @@
 <table class="table table-condensed">
     <thead>
         <tr>
-            <td>#</td>
             <td>{{translate('description')}}</td>
             <td></td>
         </tr>
     </thead>
     <tbody>
         <tr data-ng-if="data.length == 0" >
-            <td></td><td colspan="2"><div class="alert alert-info">{{translate('noRecords')}}</div></td>
+            <td colspan="2"><div class="alert alert-info">{{translate('noRecords')}}</div></td>
         </tr>
         <tr data-ng-repeat="row in data | filter:search:strict" class="highlight-on-hover" data-ng-mouseover="select(row)" >
-            <td style="width: 5%">
-                <div class="data-id panel-group" id="Div1">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="panel-title">
-                                {{row.id}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </td>
             <td style="width: 85%">
                 <div class="data-description panel-group" id="{{data.id}}-accordion">
                     <div class="panel panel-default">
