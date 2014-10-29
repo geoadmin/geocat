@@ -87,7 +87,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadata.thumbnail.unset.new!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.metadata.insert!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.metadata.delete!?.*" access="hasRole('Editor')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.user.list!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/mef.import!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/mef.import.ui!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.mef.import.ui!?.*" access="hasRole('Editor')"></sec:intercept-url>
@@ -192,13 +191,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/robots.txt" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/robots.txt" access="permitAll"></sec:intercept-url>
 
-                <!-- Formatter services -->
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadata.formatter.html!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadata.formatter.xml!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadata.formatter.pdf!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadata.formatter.resource!?.*" access="permitAll"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadata.formatter.list!?.*" access="permitAll"></sec:intercept-url>
-
                 <!-- Region services -->
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.region.get!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.regions.list!?.*" access="permitAll"></sec:intercept-url>
@@ -230,7 +222,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.group.remove!?.*" access="hasRole('Administrator')"/>
 
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user!?.*" access="hasRole('UserAdmin')"/>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.list!?.*" access="hasRole('UserAdmin')"/>
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.list!?.*" access="hasRole('Editor')"/>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.update!?.*" access="hasRole('UserAdmin')"/>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.remove!?.*" access="hasRole('UserAdmin')"/>
 
