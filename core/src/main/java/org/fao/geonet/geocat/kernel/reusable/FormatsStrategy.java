@@ -75,15 +75,24 @@ public final class FormatsStrategy extends AbstractSubtemplateStrategy {
 
         String docName = doc.get(LUCENE_FORMAT_NAME);
         String docVersion = doc.get(LUCENE_FORMAT_VERSION);
-        int rating = 0;
 
-        if (docName.equalsIgnoreCase(name)) {
-            rating = 10;
-        }
-        if(docVersion.equalsIgnoreCase(version)) {
-            rating += 5;
-        }
+        int rating = rate(name, docName, 10, 5);
+        rating += rate(version, docVersion, 5, 2);
+
         return new FindResult(rating == 15, rating);
+    }
+
+    private int rate(String name, String docName, int perfectMatch, int nullMatch) {
+        if (docName != null) {
+            if (docName.equalsIgnoreCase(name)) {
+                return perfectMatch;
+            }
+        } else {
+            if (name == null || name.trim().isEmpty()) {
+                return nullMatch;
+            }
+        }
+        return 0;
     }
 
     @Override

@@ -43,6 +43,41 @@ public class FormatsStrategyTest extends AbstractSharedObjectStrategyTest {
 
     @Autowired
     ReusableObjManager manager;
+    @Autowired
+    private MetadataRepository metadataRepository;
+
+
+    @Test
+    public void testNullNameAndVersion() throws Exception {
+
+        final Metadata format = addFormatSubtemplate("testFind_NoXLink", true);
+        Element xmlData = format.getXmlData(false);
+        xmlData.getChild("name", GMD).getChild("CharacterString", GCO).detach();
+
+        String noNameUUID = "NoName";
+        saveSubtemplate(noNameUUID, false, xmlData);
+        assertFormatProcessing(xmlData, noNameUUID);
+
+
+        xmlData = format.getXmlData(false);
+        xmlData.getChild("version", GMD).getChild("CharacterString", GCO).detach();
+        String noVersionUUID = "NoVersion";
+        saveSubtemplate(noVersionUUID, false, xmlData);
+        assertFormatProcessing(xmlData, noVersionUUID);
+    }
+
+    private void assertFormatProcessing(Element xmlData, String uuid) throws Exception {
+        Element md = createMetadata(xmlData);
+        final ServiceContext context = createServiceContext();
+        ProcessParams params = new ProcessParams(ReusableObjectLogger.THREAD_SAFE_LOGGER, null, md, md, false, null, context);
+        final List<Element> process = manager.process(params);
+        assertEquals(1, process.size());
+        Element updated = process.get(0);
+        final Element updatedEl = Xml.selectElement(updated, "*//gmd:distributionFormat", Arrays.asList(GMD));
+        final String href = updatedEl.getAttributeValue("href", XLink.NAMESPACE_XLINK, null);
+        assertTrue(href != null);
+        assertTrue(href, href.contains("uuid=" + uuid));
+    }
 
     @Test
     public void testFind_NoXLink() throws Exception {
