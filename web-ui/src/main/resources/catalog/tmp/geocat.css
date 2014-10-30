@@ -7938,6 +7938,12 @@ select[multiple].navbar select {
   top: 1.3em;
   right: 1.6em;
 }
+[ng-search-form] .restrictArea {
+  width: 100%;
+}
+[ng-search-form] .restrictArea button {
+  text-align: left;
+}
 .more {
   margin: 0 0 0 15px;
   font-style: italic;

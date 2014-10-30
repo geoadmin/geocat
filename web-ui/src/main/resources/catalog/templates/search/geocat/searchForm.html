@@ -169,10 +169,16 @@
 
         <div class="form-group">
           <div class="col-sm-12">
-            <div class="btn-group-vertical">
-              <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'bbox'" uncheckable><span translate>bbox</span></button>
-              <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'au'" uncheckable><span translate>AU</span></button>
-              <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'draw'" uncheckable><span translate>drawOnMap</span></button>
+            <div class="btn-group-vertical restrictArea">
+              <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'bbox'" uncheckable>
+                <span class="fa" ng-class="(restrictArea=='bbox') ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
+                <span translate>bbox</span></button>
+              <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'au'" uncheckable>
+                <span class="fa" ng-class="(restrictArea=='au') ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
+                <span translate>AU</span></button>
+              <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'draw'" uncheckable>
+                <span class="fa" ng-class="(restrictArea=='draw') ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
+                <span translate>drawOnMap</span></button>
             </div>
           </div>
         </div>
