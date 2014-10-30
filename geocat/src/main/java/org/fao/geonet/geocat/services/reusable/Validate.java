@@ -36,6 +36,7 @@ import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
 import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
@@ -71,6 +72,7 @@ public class Validate implements Service
         if (strategy != null) {
             results.addContent(performValidation(ids, strategy, context, baseUrl));
         }
+        context.getBean(SearchManager.class).forceIndexChanges();
 
         Log.info(Geocat.Module.REUSABLE, "Successfully validated following reusable objects: " + page
                 + " \n(" + Arrays.toString(ids) + ")");

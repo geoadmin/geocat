@@ -52,13 +52,14 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
         final Metadata subtemplate = createDefaultSubtemplate(false);
         final Element subtemplateXmlData = subtemplate.getXmlData(false);
         Element mdToProcess = createMetadata(subtemplateXmlData);
-        subtemplateXmlData.getParentElement().setAttribute(XLink.HREF, "local://xml.reusable.deleted?id=142", XLink.NAMESPACE_XLINK);
-        subtemplateXmlData.getParentElement().setAttribute(XLink.SHOW, "embed", XLink.NAMESPACE_XLINK);
-        subtemplateXmlData.getParentElement().setAttribute(XLink.TITLE, "rejected", XLink.NAMESPACE_XLINK);
+        final Element linkedElement = subtemplateXmlData.getParentElement();
+        linkedElement.setAttribute(XLink.HREF, "local://xml.reusable.deleted?id=142", XLink.NAMESPACE_XLINK);
+        linkedElement.setAttribute(XLink.SHOW, "embed", XLink.NAMESPACE_XLINK);
+        linkedElement.setAttribute(XLink.TITLE, "rejected", XLink.NAMESPACE_XLINK);
 
         final ReplacementStrategy replacementStrategy = createReplacementStrategy();
 
-        assertSame(ReplacementStrategy.NULL, replacementStrategy.find(subtemplateXmlData.getParentElement(), subtemplateXmlData, "en"));
+        assertSame(ReplacementStrategy.NULL, replacementStrategy.find(new Element("placeholder"), linkedElement, "en"));
 
         long numMd = this.metadataRepository.count();
 
@@ -73,7 +74,8 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
 
     @Test
     public void testPerformDelete() throws Exception {
-        final Metadata sharedObj = createDefaultSubtemplate(true);
+        final boolean validated = true;
+        final Metadata sharedObj = createDefaultSubtemplate(validated);
 
         final MetadataRepository bean = _applicationContext.getBean(MetadataRepository.class);
         long count = bean.count();
@@ -81,23 +83,20 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
 
-        int numberFormats = replacementStrategy.list(serviceContext.getUserSession(), true, "eng").getChildren().size();
+        int numberFormats = replacementStrategy.list(serviceContext.getUserSession(), validated, "eng").getChildren().size();
 
         final String mdUUID = sharedObj.getUuid();
         replacementStrategy.performDelete(new String[]{mdUUID}, serviceContext.getUserSession(), null);
 
         assertEquals(count - 1, bean.count());
 
-        final List formats = replacementStrategy.list(serviceContext.getUserSession(), true, "eng").getChildren();
+        final List formats = replacementStrategy.list(serviceContext.getUserSession(), validated, "eng").getChildren();
 
         assertEquals(numberFormats  - 1 , formats.size());
 
-        final String luceneField = replacementStrategy.getInvalidXlinkLuceneField();
-        Query query = replacementStrategy.createFindMetadataQuery(luceneField, mdUUID, false);
-        assertCorrectMetadataInLucene(_applicationContext, query);
-
+        final Element list = replacementStrategy.list(serviceContext.getUserSession(), validated, "eng");
+        assertEquals(0, list.getChildren().size());
     }
-
 
     @Test
     public void testCreateFindMetadataQuery() throws Exception {
@@ -124,17 +123,18 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
 
     @Test
     public void testMarkAsValidated() throws Exception {
-        final Metadata sharedObj = createDefaultSubtemplate(false);
+        final boolean validated = false;
+        final Metadata sharedObj = createDefaultSubtemplate(validated);
         assertEquals(ReplacementStrategy.LUCENE_EXTRA_NON_VALIDATED, sharedObj.getDataInfo().getExtra());
 
         final ReplacementStrategy replacementStrategy = createReplacementStrategy();
-        String luceneField = replacementStrategy.getInvalidXlinkLuceneField();
-        String mdUUID = sharedObj.getUuid();
-        Query query = replacementStrategy.createFindMetadataQuery(luceneField, mdUUID, false);
-        assertCorrectMetadataInLucene(_applicationContext, query, mdUUID);
 
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
+
+        Element list = replacementStrategy.list(serviceContext.getUserSession(), validated, "eng");
+        assertEquals(1, list.getChildren().size());
+        assertEqualsText(sharedObj.getUuid(), list, "record/id");
         replacementStrategy.markAsValidated(new String[]{sharedObj.getUuid()}, serviceContext.getUserSession());
 
         final MetadataRepository bean = _applicationContext.getBean(MetadataRepository.class);
@@ -142,13 +142,12 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
         assertEquals(ReplacementStrategy.LUCENE_EXTRA_VALIDATED, updated.getDataInfo().getExtra());
 
 
-        luceneField = replacementStrategy.getInvalidXlinkLuceneField();
-        query = replacementStrategy.createFindMetadataQuery(luceneField, mdUUID, false);
-        assertCorrectMetadataInLucene(_applicationContext, query);
+        list = replacementStrategy.list(serviceContext.getUserSession(), validated, "eng");
+        assertEquals(0, list.getChildren().size());
 
-        luceneField = replacementStrategy.getValidXlinkLuceneField();
-        query = replacementStrategy.createFindMetadataQuery(luceneField, mdUUID, false);
-        assertCorrectMetadataInLucene(_applicationContext, query, mdUUID);
+        list = replacementStrategy.list(serviceContext.getUserSession(), true, "eng");
+        assertEquals(1, list.getChildren().size());
+        assertEqualsText(sharedObj.getUuid(), list, "record/id");
     }
 
 

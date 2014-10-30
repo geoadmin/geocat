@@ -136,7 +136,6 @@ public abstract class AbstractSubtemplateStrategy extends ReplacementStrategy {
         for (Integer id : idsBy) {
             this.dataManager.deleteMetadata(ServiceContext.get(), String.valueOf(id));
         }
-
     }
 
     public final Map<String, String> markAsValidated(String[] uuids, UserSession session) throws Exception {
@@ -150,12 +149,17 @@ public abstract class AbstractSubtemplateStrategy extends ReplacementStrategy {
             }
         }, LUCENE_EXTRA_VALIDATED, spec).execute();
 
-        Map<String, String> idMap = new HashMap<String, String>();
-
-        for (String id : uuids) {
-            idMap.put(id, id);
+        Map<String, String> uuidMap = new HashMap<>();
+        final List<Integer> allIds = this.metadataRepository.findAllIdsBy(spec);
+        for (Integer id : allIds) {
+            this.dataManager.indexMetadata(String.valueOf(id), false, false, false, false);
         }
-        return idMap;
+        for (String uuid : uuids) {
+            uuidMap.put(uuid, uuid);
+        }
+
+        this.searchManager.forceIndexChanges();
+        return uuidMap;
     }
 
     public final boolean isValidated(String href) throws NumberFormatException, SQLException {
