@@ -32,8 +32,6 @@ import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
-import org.fao.geonet.domain.geocat.Format;
-import org.fao.geonet.repository.geocat.FormatRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -41,12 +39,9 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.springframework.context.ApplicationContext;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Nullable;
 
@@ -156,36 +151,6 @@ public final class FormatsStrategy extends AbstractSubtemplateStrategy {
     public String toString()
     {
         return "Reusable Format";
-    }
-
-    public static final class Formats implements Iterable<Format> {
-        List<Format> formats = new ArrayList<Format>();
-
-        public Formats(FormatRepository repo) throws SQLException {
-            this.formats = repo.findAll();
-        }
-
-        public Iterator<Format> iterator() {
-            return formats.iterator();
-        }
-
-        public List<Format> matches(Format format) {
-            List<Format> matches = new ArrayList<Format>();
-            for (Format other : this) {
-                if(other.match(format)) {
-                    if(other.isValidated()) {
-                        matches.add(0, other);
-                    } else {
-                        matches.add(other);
-                    }
-                }
-            }
-            return matches;
-        }
-
-        public int size() {
-            return formats.size();
-        }
     }
 
     @Override
