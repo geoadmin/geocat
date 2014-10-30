@@ -425,13 +425,13 @@ public final class KeywordsStrategy extends ReplacementStrategy
     }
 
     @Override
-    public String[] getInvalidXlinkLuceneField() {
-        return new String[]{"invalid_xlink_keyword"};
+    public String getInvalidXlinkLuceneField() {
+        return "invalid_xlink_keyword";
     }
     
     @Override
-    public String[] getValidXlinkLuceneField() {
-    	return new String[]{"valid_xlink_keyword"};
+    public String getValidXlinkLuceneField() {
+    	return "valid_xlink_keyword";
     }
 
     @Override

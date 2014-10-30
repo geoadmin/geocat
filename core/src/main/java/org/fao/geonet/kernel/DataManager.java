@@ -672,7 +672,7 @@ public class DataManager {
             moreFields.add(SearchManager.makeField("_popularity",  popularity,  true, true));
             moreFields.add(SearchManager.makeField("_rating",      rating,      true, true));
             moreFields.add(SearchManager.makeField("_displayOrder",displayOrder, true, false));
-            moreFields.add(SearchManager.makeField("_extra",       extra,       true, false));
+            moreFields.add(SearchManager.makeField("_extra",       extra,       true, true));
 
             if (owner != null) {
                 User user = _applicationContext.getBean(UserRepository.class).findOne(fullMd.getSourceInfo().getOwner());
@@ -685,13 +685,13 @@ public class DataManager {
             if (groupOwner != null) {
                 try {
                     int groupOwnerId = Integer.valueOf(groupOwner);
-                moreFields.add(SearchManager.makeField("_groupOwner", groupOwner, true, true));
+                    moreFields.add(SearchManager.makeField("_groupOwner", groupOwner, true, true));
                     final Group group = _applicationContext.getBean(GroupRepository.class).findOne(groupOwnerId);
                     moreFields.add(SearchManager.makeField("groupLogoUuid", group.getLogo(), true, false));
                     moreFields.add(SearchManager.makeField("groupWebsite", group.getWebsite(), true, false));
                 } catch (NumberFormatException nfe) {
                     // that's ok, sometime groupOwner is blank
-            }
+                }
             }
             boolean isPublished = false;
             // END GEOCAT

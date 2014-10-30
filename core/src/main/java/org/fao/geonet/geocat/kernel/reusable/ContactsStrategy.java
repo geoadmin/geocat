@@ -307,13 +307,13 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
     }
 
     @Override
-    public String[] getInvalidXlinkLuceneField() {
-        return new String[]{"invalid_xlink_contact"};
+    public String getInvalidXlinkLuceneField() {
+        return "invalid_xlink_contact";
     }
 
     @Override
-    public String[] getValidXlinkLuceneField() {
-        return new String[]{"valid_xlink_contact"};
+    public String getValidXlinkLuceneField() {
+        return "valid_xlink_contact";
     }
 
     @Override

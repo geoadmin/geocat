@@ -46,7 +46,6 @@ public class FormatsStrategyTest extends AbstractSharedObjectStrategyTest {
     @Autowired
     private MetadataRepository metadataRepository;
 
-
     @Test
     public void testNullNameAndVersion() throws Exception {
 
@@ -162,7 +161,7 @@ public class FormatsStrategyTest extends AbstractSharedObjectStrategyTest {
     }
 
     protected Metadata createDefaultSubtemplate(boolean validated) throws Exception {
-        return addUserSubtemplate("format" + UUID.randomUUID(), validated);
+        return addFormatSubtemplate("format" + UUID.randomUUID(), validated);
     }
 
     protected String getIsValidatedSpecificData() {
@@ -174,7 +173,7 @@ public class FormatsStrategyTest extends AbstractSharedObjectStrategyTest {
     }
 
 
-    private Element createMetadata(Element formatXml) {
+    protected Element createMetadata(Element formatXml) {
         return new Element("CHE_MD_Metadata", CHE).addContent(
                 new Element("distributionInfo", GMD).addContent(
                         new Element("MD_Distribution", GMD).addContent(

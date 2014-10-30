@@ -558,6 +558,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
                 "" + groupId, metadataType);
 
         dataManager.indexMetadata(id.get(0), true);
+
         return Integer.parseInt(id.get(0));
     }
 

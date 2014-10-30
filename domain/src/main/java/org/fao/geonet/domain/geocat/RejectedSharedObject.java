@@ -3,13 +3,24 @@ package org.fao.geonet.domain.geocat;
 import org.fao.geonet.domain.GeonetEntity;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.utils.Xml;
+import org.hibernate.annotations.Type;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
-import javax.persistence.*;
 import java.io.IOException;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 /**
  * Represents a rejected shared object.
@@ -48,6 +59,10 @@ public class RejectedSharedObject extends GeonetEntity {
         this.description = description;
     }
 
+    @Column(nullable = false)
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Type(type="org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
     public String getXml() {
         return xml;
     }

@@ -24,32 +24,17 @@
 package org.fao.geonet.geocat.kernel.reusable;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Sets;
 import jeeves.server.UserSession;
-import jeeves.xlink.XLink;
-import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.kernel.search.IndexAndTaxonomy;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
-import org.fao.geonet.schema.iso19139che.ISO19139cheSchemaPlugin;
 import org.jdom.Element;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 
 import static org.apache.lucene.search.WildcardQuery.WILDCARD_STRING;
 
@@ -165,12 +150,12 @@ public abstract class ReplacementStrategy implements FindMetadataReferences {
     /**
      * Return the field that contains the xlinks references to invalid metadata
      */
-    public abstract String[] getInvalidXlinkLuceneField();
+    public abstract String getInvalidXlinkLuceneField();
 
     /**
      * Return the field that contains the xlinks references to valid metadata
      */
-    public abstract String[] getValidXlinkLuceneField();
+    public abstract String getValidXlinkLuceneField();
 
     /**
      * Create a default shared object as defined by href

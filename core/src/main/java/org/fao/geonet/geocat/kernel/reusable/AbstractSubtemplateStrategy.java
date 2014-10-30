@@ -3,6 +3,7 @@ package org.fao.geonet.geocat.kernel.reusable;
 import com.google.common.base.Function;
 import com.google.common.collect.Sets;
 import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import jeeves.xlink.XLink;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
@@ -14,6 +15,7 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopFieldCollector;
+import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo;
@@ -21,7 +23,6 @@ import org.fao.geonet.domain.MetadataDataInfo_;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Metadata_;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
@@ -53,6 +54,7 @@ import java.util.UUID;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 
+import static org.apache.lucene.search.WildcardQuery.WILDCARD_STRING;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
@@ -132,10 +134,9 @@ public abstract class AbstractSubtemplateStrategy extends ReplacementStrategy {
         final Specification<Metadata> spec = where(MetadataSpecs.hasMetadataUuidIn(Arrays.asList(uuids)));
         final List<Integer> idsBy = this.metadataRepository.findAllIdsBy(spec);
         for (Integer id : idsBy) {
-            this.operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, id);
+            this.dataManager.deleteMetadata(ServiceContext.get(), String.valueOf(id));
         }
 
-        this.metadataRepository.deleteAll(spec);
     }
 
     public final Map<String, String> markAsValidated(String[] uuids, UserSession session) throws Exception {
@@ -291,13 +292,12 @@ public abstract class AbstractSubtemplateStrategy extends ReplacementStrategy {
             final GeonetworkMultiReader reader = newIndexReader.indexReader;
             IndexSearcher searcher = new IndexSearcher(reader);
             final BooleanQuery booleanQuery = new BooleanQuery();
-            final String contactType = validated ? LUCENE_EXTRA_VALIDATED : LUCENE_EXTRA_NON_VALIDATED;
-            booleanQuery.add(new TermQuery(new Term(LUCENE_EXTRA_FIELD, contactType)), BooleanClause.Occur.MUST);
+            final String validationType = validated ? LUCENE_EXTRA_VALIDATED : LUCENE_EXTRA_NON_VALIDATED;
+            booleanQuery.add(new TermQuery(new Term(LUCENE_EXTRA_FIELD, validationType)), BooleanClause.Occur.MUST);
             booleanQuery.add(new TermQuery(new Term(LUCENE_ROOT_FIELD, root)), BooleanClause.Occur.MUST);
             booleanQuery.add(new TermQuery(new Term(LUCENE_LOCALE_FIELD, language)), BooleanClause.Occur.SHOULD);
             booleanQuery.add(new TermQuery(new Term(LUCENE_SCHEMA_FIELD, ISO19139cheSchemaPlugin.IDENTIFIER)), BooleanClause.Occur.MUST);
-            TopFieldCollector collector = TopFieldCollector.create(
-                    Sort.INDEXORDER, 30000, true, false, false, false);
+            TopFieldCollector collector = TopFieldCollector.create(Sort.INDEXORDER, 30000, true, false, false, false);
             searcher.search(booleanQuery, collector);
 
             ScoreDoc[] topDocs = collector.topDocs().scoreDocs;
@@ -336,4 +336,10 @@ public abstract class AbstractSubtemplateStrategy extends ReplacementStrategy {
         return this.settingRepository.findOne(SettingManager.SYSTEM_SITE_SITE_ID_PATH).getValue();
     }
 
+    @Override
+    public Query createFindMetadataQuery(String field, String concreteId, boolean isValidated) {
+        Term term = new Term(field, WILDCARD_STRING + "subtemplate?uuid=" + concreteId + WILDCARD_STRING);
+        return new WildcardQuery(term);
+
+    }
 }

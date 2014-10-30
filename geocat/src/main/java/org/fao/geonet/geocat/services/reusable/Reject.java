@@ -45,6 +45,7 @@ import org.fao.geonet.geocat.kernel.reusable.SendEmailParameter;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.geocat.kernel.reusable.Utils.FindXLinks;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.geocat.RejectedSharedObjectRepository;
 import org.fao.geonet.utils.Log;
@@ -143,12 +144,14 @@ public class Reject implements Service
             result.add(e);
         }
 
-        if (!emailInfo.isEmpty()) {
-            emailNotifications(strategy, context, session, msg, emailInfo, baseURL, strategySpecificData, testing);
-        }
         strategy.performDelete(ids, session, strategySpecificData);
 
         context.getBean(DataManager.class).indexMetadata(allAffectedMdIds, true, false, true);
+        context.getBean(SearchManager.class).forceIndexChanges();
+
+        if (!emailInfo.isEmpty()) {
+            emailNotifications(strategy, context, session, msg, emailInfo, baseURL, strategySpecificData, testing);
+        }
 
         return result;
 
@@ -156,8 +159,7 @@ public class Reject implements Service
 
     private Element updateHrefs(final ReplacementStrategy strategy, ServiceContext context,
             final UserSession session, String id, Set<MetadataRecord> results, String baseURL,
-            String strategySpecificData) throws Exception
-    {
+            String strategySpecificData) throws Exception {
         Element newIds = new Element("newIds");
         // Move the reusable object to the DeletedObjects table and update
         // the xlink attribute information so that the objects are obtained from that table
@@ -165,27 +167,29 @@ public class Reject implements Service
         for (MetadataRecord metadataRecord : results) {
             for (String href : metadataRecord.xlinks) {
                 @SuppressWarnings("unchecked")
-				Iterator<Element> xlinks = metadataRecord.xml.getDescendants(new FindXLinks(href));
+                Iterator<Element> xlinks = metadataRecord.xml.getDescendants(new FindXLinks(href));
                 while (xlinks.hasNext()) {
                     Element xlink = xlinks.next();
                     String oldHRef = xlink.getAttributeValue(XLink.HREF, XLink.NAMESPACE_XLINK);
                     String newHref;
                     if (!updatedHrefs.containsKey(oldHRef)) {
-                        Element fragment = Processor.resolveXLink(oldHRef,context);
-                        
+                        Element fragment = Processor.resolveXLink(oldHRef, context);
+
                         @SuppressWarnings("unchecked")
-						Iterator<Content> iter = fragment.getDescendants();
-                        while(iter.hasNext()) {
-                        	Object next = iter.next();
-                        	if (next instanceof Element) {
-								Element e = (Element) next;
-								e.removeAttribute("href", XLink.NAMESPACE_XLINK);
-								e.removeAttribute("show", XLink.NAMESPACE_XLINK);
-								e.removeAttribute("role", XLink.NAMESPACE_XLINK);
-							}
+                        Iterator<Content> iter = fragment.getDescendants();
+                        while (iter.hasNext()) {
+                            Object next = iter.next();
+                            if (next instanceof Element) {
+                                Element e = (Element) next;
+                                e.removeAttribute("href", XLink.NAMESPACE_XLINK);
+                                e.removeAttribute("show", XLink.NAMESPACE_XLINK);
+                                e.removeAttribute("role", XLink.NAMESPACE_XLINK);
+                            }
                         }
                         // update xlink service
-                        int newId = DeletedObjects.insert(context.getBean(RejectedSharedObjectRepository.class), Xml.getString(fragment), href);
+                        int newId = DeletedObjects.insert(
+                                context.getBean(RejectedSharedObjectRepository.class),
+                                Xml.getString(fragment), href);
                         newIds.addContent(new Element("id").setText(String.valueOf(newId)));
                         newHref = DeletedObjects.href(newId);
                         updatedHrefs.put(oldHRef, newHref);
@@ -203,7 +207,7 @@ public class Reject implements Service
 
             metadataRecord.commit(context);
         }
-        
+
         return newIds;
     }
 

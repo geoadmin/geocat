@@ -189,13 +189,13 @@ public final class FormatsStrategy extends AbstractSubtemplateStrategy {
     }
 
     @Override
-    public String[] getInvalidXlinkLuceneField() {
-        return new String[]{"invalid_xlink_format"};
+    public String getInvalidXlinkLuceneField() {
+        return "invalid_xlink_format";
     }
     
     @Override
-    public String[] getValidXlinkLuceneField() {
-    	return new String[]{"valid_xlink_format"};
+    public String getValidXlinkLuceneField() {
+    	return "valid_xlink_format";
     }
 
     @Override
