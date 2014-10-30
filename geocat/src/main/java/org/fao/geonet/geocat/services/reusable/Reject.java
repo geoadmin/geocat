@@ -84,9 +84,7 @@ public class Reject implements Service
             specificData = ExtentsStrategy.XLINK_TYPE;
         }
 
-        Element results = reject(context, ReusableTypes.valueOf(page), ids, msg, specificData, isValidObject, testing);
-
-        return results;
+        return reject(context, ReusableTypes.valueOf(page), ids, msg, specificData, isValidObject, testing);
     }
 
     public Element reject(ServiceContext context, ReusableTypes reusableType, String[] ids, String msg,
@@ -146,7 +144,8 @@ public class Reject implements Service
 
         strategy.performDelete(ids, session, strategySpecificData);
 
-        context.getBean(DataManager.class).indexMetadata(allAffectedMdIds, true, false, true);
+        final DataManager dataManager = context.getBean(DataManager.class);
+        dataManager.indexMetadata(allAffectedMdIds, true, false, true);
         context.getBean(SearchManager.class).forceIndexChanges();
 
         if (!emailInfo.isEmpty()) {
@@ -175,17 +174,7 @@ public class Reject implements Service
                     if (!updatedHrefs.containsKey(oldHRef)) {
                         Element fragment = Processor.resolveXLink(oldHRef, context);
 
-                        @SuppressWarnings("unchecked")
-                        Iterator<Content> iter = fragment.getDescendants();
-                        while (iter.hasNext()) {
-                            Object next = iter.next();
-                            if (next instanceof Element) {
-                                Element e = (Element) next;
-                                e.removeAttribute("href", XLink.NAMESPACE_XLINK);
-                                e.removeAttribute("show", XLink.NAMESPACE_XLINK);
-                                e.removeAttribute("role", XLink.NAMESPACE_XLINK);
-                            }
-                        }
+                        updateChildren(fragment);
                         // update xlink service
                         int newId = DeletedObjects.insert(
                                 context.getBean(RejectedSharedObjectRepository.class),
@@ -209,6 +198,20 @@ public class Reject implements Service
         }
 
         return newIds;
+    }
+
+    private void updateChildren(Element fragment) {
+        @SuppressWarnings("unchecked")
+        Iterator<Content> iter = fragment.getDescendants();
+        while (iter.hasNext()) {
+            Object next = iter.next();
+            if (next instanceof Element) {
+                Element e = (Element) next;
+                e.removeAttribute("href", XLink.NAMESPACE_XLINK);
+                e.removeAttribute("show", XLink.NAMESPACE_XLINK);
+                e.removeAttribute("role", XLink.NAMESPACE_XLINK);
+            }
+        }
     }
 
     private void emailNotifications(final ReplacementStrategy strategy, ServiceContext context,

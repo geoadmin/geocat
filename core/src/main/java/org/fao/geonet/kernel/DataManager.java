@@ -625,7 +625,7 @@ public class DataManager {
             Element md   = xmlSerializer.selectNoXLinkResolver(metadataId, true);
             // GEOCAT
             if (reloadXLinks) {
-                    Processor.detachXLink(md, servContext);
+                    Processor.processXLink(md, servContext);
                 }
             // END GEOCAT
             final Metadata fullMd = _metadataRepository.findOne(id$);

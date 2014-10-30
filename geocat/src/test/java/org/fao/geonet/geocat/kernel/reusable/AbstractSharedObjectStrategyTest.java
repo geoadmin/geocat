@@ -1,15 +1,20 @@
 package org.fao.geonet.geocat.kernel.reusable;
 
+import com.google.common.collect.Sets;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.xlink.XLink;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.Constants;
 import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.geocat.kernel.reusable.log.ReusableObjectLogger;
 import org.fao.geonet.geocat.services.reusable.AbstractSharedObjectTest;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -17,12 +22,18 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
+import static org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy.LUCENE_UUID_FIELD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Jesse on 10/27/2014.
@@ -30,7 +41,35 @@ import static org.junit.Assert.assertNotNull;
 public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObjectTest {
 
     @Autowired
-    private SearchManager searchManager;
+    protected ReusableObjManager manager;
+    @Autowired
+    protected MetadataRepository metadataRepository;
+    @Autowired
+    protected SearchManager searchManager;
+
+    @Test
+    public void testFindOnDeletedXLink() throws Exception {
+        final Metadata subtemplate = createDefaultSubtemplate(false);
+        final Element subtemplateXmlData = subtemplate.getXmlData(false);
+        Element mdToProcess = createMetadata(subtemplateXmlData);
+        subtemplateXmlData.getParentElement().setAttribute(XLink.HREF, "local://xml.reusable.deleted?id=142", XLink.NAMESPACE_XLINK);
+        subtemplateXmlData.getParentElement().setAttribute(XLink.SHOW, "embed", XLink.NAMESPACE_XLINK);
+        subtemplateXmlData.getParentElement().setAttribute(XLink.TITLE, "rejected", XLink.NAMESPACE_XLINK);
+
+        final ReplacementStrategy replacementStrategy = createReplacementStrategy();
+
+        assertSame(ReplacementStrategy.NULL, replacementStrategy.find(subtemplateXmlData.getParentElement(), subtemplateXmlData, "en"));
+
+        long numMd = this.metadataRepository.count();
+
+        final ServiceContext context = createServiceContext();
+        ProcessParams params = new ProcessParams(ReusableObjectLogger.THREAD_SAFE_LOGGER, null, mdToProcess,
+                mdToProcess, false, null, context);
+        manager.process(params);
+
+        assertEquals(numMd, this.metadataRepository.count());
+
+    }
 
     @Test
     public void testPerformDelete() throws Exception {
@@ -133,6 +172,32 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
         final String updatedHref2 = replacementStrategy.createAsNeeded(updatedHref, userSession);
 
         assertEquals(updatedHref, updatedHref2);
+    }
+
+    public static void assertCorrectMetadataInLucene(ApplicationContext applicationContext, Query query, String... expectedUuids) throws IOException, InterruptedException {
+        final SearchManager searchManager = applicationContext.getBean(SearchManager.class);
+        final IndexAndTaxonomy reader = searchManager.getNewIndexReader("eng");
+
+        try {
+            final IndexSearcher searcher = new IndexSearcher(reader.indexReader);
+            final TopDocs search = searcher.search(query, 300);
+
+            final ScoreDoc[] scoreDocs = search.scoreDocs;
+
+            Set<String> uuids = Sets.newHashSet();
+            for (ScoreDoc scoreDoc : scoreDocs) {
+                Document doc = searcher.doc(scoreDoc.doc);
+                uuids.add(doc.get(LUCENE_UUID_FIELD));
+            }
+
+            assertEquals(expectedUuids.length, uuids.size());
+            for (int i = 0; i < expectedUuids.length; i++) {
+                String next = expectedUuids[i];
+                assertTrue(next + " is missing", uuids.contains(next));
+            }
+        } finally {
+            searchManager.releaseIndexReader(reader);
+        }
     }
 
     protected abstract Metadata createDefaultSubtemplate(boolean validated) throws Exception;

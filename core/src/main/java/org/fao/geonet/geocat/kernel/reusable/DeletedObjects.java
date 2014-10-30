@@ -107,8 +107,8 @@ public final class DeletedObjects {
         repository.deleteAll(RejectedSharedObjectSpecifications.hasId(ids));
     }
 
-    public static String[] getLuceneIndexField() {
-        return new String[]{"xlink_deleted"};
+    public static String getLuceneIndexField() {
+        return "xlink_deleted";
     }
 
     public static FindMetadataReferences createFindMetadataReferences() {
