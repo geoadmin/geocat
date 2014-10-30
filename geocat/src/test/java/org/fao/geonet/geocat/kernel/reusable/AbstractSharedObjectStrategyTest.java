@@ -83,13 +83,18 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
 
         int numberFormats = replacementStrategy.list(serviceContext.getUserSession(), true, "eng").getChildren().size();
 
-        replacementStrategy.performDelete(new String[]{sharedObj.getUuid()}, serviceContext.getUserSession(), null);
+        final String mdUUID = sharedObj.getUuid();
+        replacementStrategy.performDelete(new String[]{mdUUID}, serviceContext.getUserSession(), null);
 
         assertEquals(count - 1, bean.count());
 
         final List formats = replacementStrategy.list(serviceContext.getUserSession(), true, "eng").getChildren();
 
         assertEquals(numberFormats  - 1 , formats.size());
+
+        final String luceneField = replacementStrategy.getInvalidXlinkLuceneField();
+        Query query = replacementStrategy.createFindMetadataQuery(luceneField, mdUUID, false);
+        assertCorrectMetadataInLucene(_applicationContext, query);
 
     }
 
@@ -123,6 +128,11 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
         assertEquals(ReplacementStrategy.LUCENE_EXTRA_NON_VALIDATED, sharedObj.getDataInfo().getExtra());
 
         final ReplacementStrategy replacementStrategy = createReplacementStrategy();
+        String luceneField = replacementStrategy.getInvalidXlinkLuceneField();
+        String mdUUID = sharedObj.getUuid();
+        Query query = replacementStrategy.createFindMetadataQuery(luceneField, mdUUID, false);
+        assertCorrectMetadataInLucene(_applicationContext, query, mdUUID);
+
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
         replacementStrategy.markAsValidated(new String[]{sharedObj.getUuid()}, serviceContext.getUserSession());
@@ -130,6 +140,15 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
         final MetadataRepository bean = _applicationContext.getBean(MetadataRepository.class);
         final Metadata updated = bean.findOne(sharedObj.getId());
         assertEquals(ReplacementStrategy.LUCENE_EXTRA_VALIDATED, updated.getDataInfo().getExtra());
+
+
+        luceneField = replacementStrategy.getInvalidXlinkLuceneField();
+        query = replacementStrategy.createFindMetadataQuery(luceneField, mdUUID, false);
+        assertCorrectMetadataInLucene(_applicationContext, query);
+
+        luceneField = replacementStrategy.getValidXlinkLuceneField();
+        query = replacementStrategy.createFindMetadataQuery(luceneField, mdUUID, false);
+        assertCorrectMetadataInLucene(_applicationContext, query, mdUUID);
     }
 
 
