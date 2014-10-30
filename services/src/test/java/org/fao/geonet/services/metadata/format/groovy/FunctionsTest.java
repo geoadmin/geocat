@@ -7,6 +7,7 @@ import jeeves.constants.ConfigFile;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.fao.geonet.domain.IsoLanguage;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.services.metadata.format.Format;
 import org.fao.geonet.services.metadata.format.FormatterParams;
@@ -43,6 +44,7 @@ public class FunctionsTest {
         fparams.schema = schema;
         fparams.context = new ServiceContext(null, null, Maps.<String, Object>newHashMap(), null);
         fparams.context.setLanguage("eng");
+        fparams.config = new org.fao.geonet.services.metadata.format.ConfigFile(new File("."), false, null);
 
         fparams.format = new Format() {
             @Override
@@ -66,7 +68,6 @@ public class FunctionsTest {
                        new Element("string2").addContent(new Element("part2").setText("String Two Part Two"))
                 ))));
 
-
                 SchemaLocalization sl = new SchemaLocalization(fparams.context, fparams.schema, schemaInfo);
                 localizations.put(fparams.schema, sl);
                 return localizations;
@@ -87,7 +88,8 @@ public class FunctionsTest {
         Mockito.when(repository.findAllByCode("eng")).thenReturn(Arrays.asList(isoLang("English")));
         Mockito.when(repository.findAllByShortCode("en")).thenReturn(Arrays.asList(isoLang("English")));
         Mockito.when(repository.findAllByShortCode("de")).thenReturn(Arrays.asList(isoLang("German")));
-        functions = new Functions(fparams, env, repository);
+        SchemaManager schemaManager = Mockito.mock(SchemaManager.class);
+        functions = new Functions(fparams, env, repository, schemaManager);
     }
 
     private static IsoLanguage isoLang(String engTranslation) {
