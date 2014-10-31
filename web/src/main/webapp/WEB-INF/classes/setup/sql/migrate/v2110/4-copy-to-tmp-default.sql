@@ -7,7 +7,9 @@ INSERT INTO USERGROUPS_TMP (userid, groupid, profile) SELECT userid, groupid, 2 
 INSERT INTO USERGROUPS_TMP (userid, groupid, profile) SELECT userid, groupid, 3 FROM USERGROUPS where profile='Editor';
 INSERT INTO USERGROUPS_TMP (userid, groupid, profile) SELECT userid, groupid, 4 FROM USERGROUPS where profile='RegisteredUser';
 INSERT INTO USERGROUPS_TMP (userid, groupid, profile) SELECT userid, groupid, 5 FROM USERGROUPS where profile='Guest';
+-- GEOCAT
 INSERT INTO USERGROUPS_TMP (userid, groupid, profile) SELECT userid, groupid, 6 FROM USERGROUPS where profile='Monitor';
+-- END GEOCAT
 
 -- Convert Profile column to the profile enumeration ordinal
 -- create address and email tables to allow multiple per user
@@ -19,6 +21,9 @@ INSERT INTO USERS_TMP SELECT id, username, password, surname, name, 3, organisat
 INSERT INTO USERS_TMP SELECT id, username, password, surname, name, 4, organisation, kind, security, authtype FROM USERS where profile='RegisteredUser';
 INSERT INTO USERS_TMP SELECT id, username, password, surname, name, 5, organisation, kind, security, authtype FROM USERS where profile='Guest';
 INSERT INTO USERS_TMP SELECT id, username, password, surname, name, 6, organisation, kind, security, authtype FROM USERS where profile='Monitor';
+-- GEOCAT
+INSERT INTO USERS_TMP SELECT id, username, password, surname, name, 6, organisation, kind, security, authtype FROM USERS where profile='Shared';
+-- END GEOCAT
 
 -- ----  Change notifier actions column to map to the MetadataNotificationAction enumeration
 

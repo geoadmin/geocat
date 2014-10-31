@@ -2,7 +2,6 @@ package v280;
 
 import org.fao.geonet.DatabaseMigrationTask;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static java.lang.String.format;
 
 public class MoveHarvesterSettingsToHigherNumber implements DatabaseMigrationTask {
-    AtomicInteger counter = new AtomicInteger(10000);
+    protected AtomicInteger counter = new AtomicInteger(10000);
 
     private class HarvesterSetting {
 
@@ -48,11 +47,12 @@ public class MoveHarvesterSettingsToHigherNumber implements DatabaseMigrationTas
         }
 
         public void write(Statement statement) throws SQLException {
-            statement.execute(format("INSERT INTO Settings (id, parentId, name, value) VALUES (%s, %s, '%s', '%s')", id, parentId, name, value));
+            statement.execute(format("INSERT INTO " + getHarvesterSettingsName() + " (id, parentId, name, value) VALUES (%s, %s, '%s', '%s')", id, parentId, name, value));
             for (HarvesterSetting child : children) {
                 child.write(statement);
             }
         }
+
 
         public void delete(Statement statement) throws SQLException {
             for (HarvesterSetting child : children) {
@@ -60,6 +60,10 @@ public class MoveHarvesterSettingsToHigherNumber implements DatabaseMigrationTas
             }
             statement.execute("DELETE FROM Settings WHERE id=" + originalId);
         }
+    }
+
+    protected String getHarvesterSettingsName() {
+        return "Settings";
     }
 
     @Override
