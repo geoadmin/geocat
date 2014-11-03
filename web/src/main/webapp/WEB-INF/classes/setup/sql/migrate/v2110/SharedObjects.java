@@ -1,6 +1,5 @@
 package v2110;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import jeeves.xlink.XLink;
 import org.fao.geonet.DatabaseMigrationTask;
@@ -14,11 +13,12 @@ import org.jdom.Namespace;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -41,58 +41,78 @@ public class SharedObjects implements DatabaseMigrationTask {
 
     private final static Pattern ID_PATTERN = Pattern.compile(".*id=(\\d+).*");
     private final static Pattern ROLE_PATTERN = Pattern.compile(".*role=([^&]+).*");
+    protected static final String PREPARED_STATEMENT_SQL = "INSERT INTO public.metadata("
+                                                           + "            id, uuid, schemaid, istemplate, isharvested, createdate, " +
+                                                           "changedate, \n"
+                                                           + "            data, source, title, root, extra, owner, groupowner, \n"
+                                                           + "            rating, popularity, displayorder)\n"
+                                                           + "    VALUES (?, ?, 'iso19139.che', 's', 'n', ?, ?, ?, ?, ?, ?, ?, 1, 2, 0," +
+                                                           " 0, 0)";
+
     @Override
-    public void update(Statement statement) throws SQLException {
+    public void update(Connection connection) throws SQLException {
         try {
-            AtomicInteger idIndex = getMaxMetadataId(statement);
-            String source = getSourceId(statement);
+            AtomicInteger idIndex;
+            String source;
+            try (Statement statement = connection.createStatement()) {
+                idIndex = getMaxMetadataId(statement);
+                source = getSourceId(statement);
+            }
 
-            Map<String, String> formatIdMap = migrateFormats(idIndex, source, statement);
-            Map<String, String> contactIdMap = migrateContacts(idIndex, source, statement);
+            Map<String, String> formatIdMap = migrateFormats(idIndex, source, connection);
+            Map<String, String> contactIdMap = migrateContacts(idIndex, source, connection);
 
-            updateMetadata(statement, formatIdMap, contactIdMap);
+            updateMetadata(connection, formatIdMap, contactIdMap);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void updateMetadata(Statement statement, Map<String, String> formatIdMap, Map<String, String> contactIdMap) throws
+    private void updateMetadata(Connection conn, Map<String, String> formatIdMap, Map<String, String> contactIdMap) throws
             SQLException, IOException, JDOMException {
-        Iterator<Map.Entry<String, String>> entries = formatIdMap.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry<String, String> entry = entries.next();
-            String pattern = "'%xml.format.get?id=" + entry.getKey() + "%'";
-            try (ResultSet results = statement.executeQuery("select id, data from metadata where data like "+pattern)) {
-                while (results.next()) {
-                    String id = results.getString("id");
-                    String data = results.getString("data");
+        try (
+                PreparedStatement select = conn.prepareStatement("select id, data from metadata where data like ?");
+                PreparedStatement update = conn.prepareStatement("UPDATE metadata SET data=? WHERE id=?");
+        ) {
+            Iterator<Map.Entry<String, String>> entries = formatIdMap.entrySet().iterator();
+            while (entries.hasNext()) {
+                Map.Entry<String, String> entry = entries.next();
+                String pattern = "'%xml.format.get?id=" + entry.getKey() + "%'";
+                select.setString(1, pattern);
+                try (ResultSet results = select.executeQuery()) {
+                    while (results.next()) {
+                        String id = results.getString("id");
+                        String data = results.getString("data");
 
-                    Element md = Xml.loadString(data, false);
+                        Element md = Xml.loadString(data, false);
 
-                    final Iterator descendants = md.getDescendants();
-                    while (descendants.hasNext()) {
-                        Object node = descendants.next();
-                        if (node instanceof Element) {
-                            Element el = (Element) node;
-                            final String atValue = el.getAttributeValue(HREF, NAMESPACE_XLINK);
-                            if (atValue != null && atValue.contains("xml.format.get?id=")) {
-                                String formatId = extractId(atValue);
-                                final String subtemplateUUID = formatIdMap.get(formatId);
-                                el.setAttribute(HREF, LOCAL_PROTOCOL + "subtemplate?uuid=" + subtemplateUUID, NAMESPACE_XLINK);
-                            } else if (atValue != null && atValue.contains("xml.user.get?id=")) {
-                                String userId = extractId(atValue);
-                                String role = extractRole(atValue);
-                                final String subtemplateUUID = contactIdMap.get(userId);
-                                el.setAttribute(HREF, LOCAL_PROTOCOL + "subtemplate?uuid=" + subtemplateUUID +
-                                                      "&process=*//gmd:CI_RoleCode/@codeListValue~" + role, NAMESPACE_XLINK);
+                        final Iterator descendants = md.getDescendants();
+                        while (descendants.hasNext()) {
+                            Object node = descendants.next();
+                            if (node instanceof Element) {
+                                Element el = (Element) node;
+                                final String atValue = el.getAttributeValue(HREF, NAMESPACE_XLINK);
+                                if (atValue != null && atValue.contains("xml.format.get?id=")) {
+                                    String formatId = extractId(atValue);
+                                    final String subtemplateUUID = formatIdMap.get(formatId);
+                                    el.setAttribute(HREF, LOCAL_PROTOCOL + "subtemplate?uuid=" + subtemplateUUID, NAMESPACE_XLINK);
+                                } else if (atValue != null && atValue.contains("xml.user.get?id=")) {
+                                    String userId = extractId(atValue);
+                                    String role = extractRole(atValue);
+                                    final String subtemplateUUID = contactIdMap.get(userId);
+                                    el.setAttribute(HREF, LOCAL_PROTOCOL + "subtemplate?uuid=" + subtemplateUUID +
+                                                          "&process=*//gmd:CI_RoleCode/@codeListValue~" + role, NAMESPACE_XLINK);
+                                }
                             }
                         }
-                    }
 
-                    String updatedData = Xml.getString(md);
-                    statement.execute("UPDATE metadata SET data=" + updatedData + " WHERE id=" + id);
+                        String updatedData = Xml.getString(md);
+                        update.setString(1, updatedData);
+                        update.setString(2, id);
+                        update.execute();
+                    }
+                    entries.remove();
                 }
-                entries.remove();
             }
         }
     }
@@ -113,12 +133,16 @@ public class SharedObjects implements DatabaseMigrationTask {
         return matcher.group(1);
     }
 
-    private Map<String, String> migrateContacts(AtomicInteger idIndex, String source, Statement statement) throws SQLException,
+    private Map<String, String> migrateContacts(AtomicInteger idIndex, String source, Connection conn) throws SQLException,
             IOException {
-        List<SharedObject> objs = Lists.newArrayList();
-        try (ResultSet contacts = statement.executeQuery("select u1.*, u2.validated as parentValidated from Users u1 " +
-                                                         "LEFT OUTER JOIN Users u2 ON u1.parentinfo = u2.id " +
-                                                         "where u1.profile = 'Shared'")) {
+        Map<String, String> idMap = Maps.newHashMap();
+        try (
+                PreparedStatement subtemplateStatement = conn.prepareStatement(PREPARED_STATEMENT_SQL);
+                Statement selectStatement = conn.createStatement();
+                ResultSet contacts = selectStatement.executeQuery("SELECT u1.*, u2.validated AS parentValidated FROM Users u1 " +
+                                                                  "LEFT OUTER JOIN Users u2 ON u1.parentinfo = u2.id " +
+                                                                  "WHERE u1.profile = 'Shared'");
+        ) {
             while (contacts.next()) {
                 String id = contacts.getString("id");
                 Element contactEl = new Element("CHE_CI_ResponsibleParty", CHE);
@@ -208,18 +232,14 @@ public class SharedObjects implements DatabaseMigrationTask {
                 }
                 String title = name + " " + surname + emailInBrackets;
 
-                objs.add(new SharedObject(id, contactEl, title, validated, "che:CHE_CI_ResponsibleParty"));
+                SharedObject obj = new SharedObject(id, contactEl, title, validated, "che:CHE_CI_ResponsibleParty");
+                String uuid = registerSubtemplate(idIndex, source, subtemplateStatement, obj);
+                idMap.put(obj.id, uuid);
             }
-        }
-        Map<String, String> idMap = Maps.newHashMap();
-        for (SharedObject obj : objs) {
-            String uuid = registerSubtemplate(idIndex, source, statement, obj);
-            idMap.put(obj.id, uuid);
-
+            subtemplateStatement.executeBatch();
         }
         return idMap;
     }
-
 
 
     private void addLocalizedEl(ResultSet contacts, Element contactEl,
@@ -253,19 +273,21 @@ public class SharedObjects implements DatabaseMigrationTask {
         }
     }
 
-    public static Element loadInternalMultiLingualElem(String basicValue) throws IOException{
+    public static Element loadInternalMultiLingualElem(String basicValue) throws IOException {
 
-        final String xml = "<description>" + basicValue.replaceAll("(<\\w+>)\\s*(\\<!\\[CDATA\\[)*\\s*(.*?)\\s*(\\]\\]\\>)*(</\\w+>)","$1<![CDATA[$3]]>$5") + "</description>";
+        final String xml = "<description>" + basicValue.replaceAll("(<\\w+>)\\s*(\\<!\\[CDATA\\[)*\\s*(.*?)\\s*(\\]\\]\\>)*(</\\w+>)",
+                "$1<![CDATA[$3]]>$5") + "</description>";
 
         Log.debug(Geonet.GEONETWORK, "Parsing xml to get languages: \n" + xml);
 
         Element desc;
         try {
             desc = Xml.loadString(xml, false);
-        } catch(JDOMException jdomParse) {
+        } catch (JDOMException jdomParse) {
             try {
                 String encoded = URLEncoder.encode(basicValue, "UTF-8");
-                desc = Xml.loadString(String.format("<description><EN>%1$s</EN><DE>%1$s</DE><FR>%1$s</FR><IT>%1$s</IT></description>", encoded),false);
+                desc = Xml.loadString(String.format("<description><EN>%1$s</EN><DE>%1$s</DE><FR>%1$s</FR><IT>%1$s</IT></description>",
+                        encoded), false);
             } catch (JDOMException e) {
                 Element en = new Element("EN").setText("Error setting parsing text: " + basicValue);
                 desc = new Element("description").addContent(en);
@@ -275,59 +297,61 @@ public class SharedObjects implements DatabaseMigrationTask {
     }
 
     private String getSourceId(Statement statement) throws SQLException {
-        try (ResultSet resultSet = statement.executeQuery("select value from Settings where name = 'system/site/siteId'")) {
+        try (ResultSet resultSet = statement.executeQuery("SELECT value FROM Settings WHERE name = 'system/site/siteId'")) {
             resultSet.next();
             return resultSet.getString("value");
         }
     }
 
     private AtomicInteger getMaxMetadataId(Statement statement) throws SQLException {
-        try (ResultSet resultSet = statement.executeQuery("select max(id) from metadata")) {
+        try (ResultSet resultSet = statement.executeQuery("SELECT max(id) FROM metadata")) {
             resultSet.next();
             return new AtomicInteger(resultSet.getInt(1));
         }
     }
 
-    private Map<String, String> migrateFormats(AtomicInteger idIndex, String source, Statement statement) throws SQLException {
-        List<SharedObject> objs = Lists.newArrayList();
-        try (ResultSet formats = statement.executeQuery("select * from Formats")) {
+    private Map<String, String> migrateFormats(AtomicInteger idIndex, String source, Connection conn) throws SQLException {
+        Map<String, String> idMap = Maps.newHashMap();
+        try (
+                PreparedStatement subtemplateStatement = conn.prepareStatement(PREPARED_STATEMENT_SQL);
+                Statement selectStatement = conn.createStatement();
+                ResultSet formats = selectStatement.executeQuery("SELECT * FROM Formats");
+        ) {
             while (formats.next()) {
                 String id = String.valueOf(formats.getInt("id"));
                 String name = formats.getString("name");
                 String validated = formats.getString("validated");
 
                 Element formatEl = new Element("MD_Format");
-                addCharacterString(formats, formatEl, "name","name", GMD);
-                addCharacterString(formats, formatEl, "version","version", GMD);
-                objs.add(new SharedObject(id, formatEl, name, validated, "gmd:MD_Format"));
+                addCharacterString(formats, formatEl, "name", "name", GMD);
+                addCharacterString(formats, formatEl, "version", "version", GMD);
+                SharedObject obj = new SharedObject(id, formatEl, name, validated, "gmd:MD_Format");
 
+                String uuid = registerSubtemplate(idIndex, source, subtemplateStatement, obj);
+                idMap.put(obj.id, uuid);
             }
-
-        }
-        Map<String, String> idMap = Maps.newHashMap();
-        for (SharedObject obj : objs) {
-            String uuid = registerSubtemplate(idIndex, source, statement, obj);
-            idMap.put(obj.id, uuid);
-
+            subtemplateStatement.executeBatch();
         }
         return idMap;
 
     }
 
-    private String registerSubtemplate(AtomicInteger idIndex, String source, Statement statement, SharedObject sharedObject) throws SQLException {
+    private String registerSubtemplate(AtomicInteger idIndex, String source, PreparedStatement statement,
+                                       SharedObject sharedObject) throws SQLException {
         String uuid = UUID.randomUUID().toString();
         int mdId = idIndex.incrementAndGet();
         String date = new ISODate().getDateAndTime();
-        String values = String.format(
-                "%s, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', 1, 2, 0, 0, 0", mdId, uuid,
-                "iso19139.che", "s", "n", date, date, sharedObject.getXml(), source, sharedObject.name, sharedObject.root,
-                sharedObject.validated);
+        statement.setInt(1, mdId);
+        statement.setString(2, uuid);
+        statement.setString(3, date);
+        statement.setString(4, date);
+        statement.setString(5, sharedObject.getXml());
+        statement.setString(5, source);
+        statement.setString(5, sharedObject.name);
+        statement.setString(5, sharedObject.root);
+        statement.setString(5, sharedObject.validated);
+        statement.addBatch();
 
-        statement.execute("INSERT INTO public.metadata(\n"
-                          + "            id, uuid, schemaid, istemplate, isharvested, createdate, changedate, \n"
-                          + "            data, source, title, root, extra, owner, groupowner, \n"
-                          + "            rating, popularity, displayorder)\n"
-                          + "    VALUES (" + values + ")");
         return uuid;
     }
 
