@@ -2,7 +2,7 @@
 
 -- Update UserGroups profiles to be one of the enumerated profiles
 
-DROP TABLE USERGROUPS;
+TRUNCATE TABLE USERGROUPS;
 CREATE TABLE USERGROUPS
   (
     userId   int          not null,
@@ -25,10 +25,12 @@ DROP TABLE USERGROUPS_TMP;
 ALTER TABLE metadata DROP CONSTRAINT IF EXISTS metadata_owner_fkey;
 ALTER TABLE metadatastatus DROP CONSTRAINT IF EXISTS metadatastatus_userid_fkey;
 ALTER TABLE useraddress DROP CONSTRAINT IF EXISTS useraddress_userid_fkey;
+-- GEOCAT
+ALTER TABLE usergroups DROP CONSTRAINT IF EXISTS usergroups_userid_fkey ;
+-- END GEOCAT
 ALTER TABLE email DROP CONSTRAINT IF EXISTS email_user_id_fkey;
 ALTER TABLE groups DROP CONSTRAINT IF EXISTS groups_referrer_fkey;
-ALTER TABLE usergroups DROP CONSTRAINT IF EXISTS usergroups_userid_fkey;
-DROP TABLE Users;
+TRUNCATE TABLE Users;
 CREATE TABLE Users
   (
     id            int           not null,
@@ -66,7 +68,7 @@ ALTER TABLE groups ADD CONSTRAINT groups_referrer_fkey FOREIGN KEY (referrer)
 
 -- ----  Change notifier actions column to map to the MetadataNotificationAction enumeration
 
-DROP TABLE MetadataNotifications;
+TRUNCATE TABLE MetadataNotifications;
 CREATE TABLE MetadataNotifications
   (
     metadataId         int            not null,
@@ -85,7 +87,7 @@ DROP TABLE MetadataNotifications_Tmp;
 
 -- ----  Change params querytype column to map to the LuceneQueryParamType enumeration
 
-DROP TABLE Params;
+TRUNCATE TABLE Params;
 
 CREATE TABLE Params
   (

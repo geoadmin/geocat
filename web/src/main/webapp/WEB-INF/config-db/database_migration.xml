@@ -85,9 +85,9 @@
             <list>
                 <!-- GEOCAT -->
                 <value>WEB-INF/classes/setup/sql/migrate/v2110/0-geocat-</value>
-                <value>java:v2110.MoveHarvesterSettings</value>
                 <!-- END GEOCAT -->
                 <value>WEB-INF/classes/setup/sql/migrate/v2110/1-migrate-db-</value>
+                <value>java:v2110.MoveHarvesterSettings</value>
                 <value>WEB-INF/classes/setup/sql/migrate/v2110/2-migrate-</value>
                 <!-- GEOCAT -->
                 <value>java:v2110.SharedObjects</value>

@@ -1,6 +1,7 @@
 package v2110;
 
-import com.beust.jcommander.internal.Maps;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import jeeves.xlink.XLink;
 import org.fao.geonet.DatabaseMigrationTask;
 import org.fao.geonet.constants.Geonet;
@@ -17,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -113,9 +115,10 @@ public class SharedObjects implements DatabaseMigrationTask {
 
     private Map<String, String> migrateContacts(AtomicInteger idIndex, String source, Statement statement) throws SQLException,
             IOException {
-        try (ResultSet contacts = statement.executeQuery("select u1.*, u2.validated as parentValidated from Users u1, Users u2 " +
-                                                         "where u1.profile = 'Shared' and u1.parentinfo = u2.id;")) {
-            Map<String, String> idMap = Maps.newHashMap();
+        List<SharedObject> objs = Lists.newArrayList();
+        try (ResultSet contacts = statement.executeQuery("select u1.*, u2.validated as parentValidated from Users u1 " +
+                                                         "LEFT OUTER JOIN Users u2 ON u1.parentinfo = u2.id " +
+                                                         "where u1.profile = 'Shared'")) {
             while (contacts.next()) {
                 String id = contacts.getString("id");
                 Element contactEl = new Element("CHE_CI_ResponsibleParty", CHE);
@@ -185,29 +188,36 @@ public class SharedObjects implements DatabaseMigrationTask {
 
                 String parentinfo = contacts.getString("parentinfo");
 
-                final Element parentResponsibleParty = new Element("parentResponsibleParty", CHE).
-                        setAttribute(HREF, parentinfo, NAMESPACE_XLINK).
-                        setAttribute(XLink.SHOW, "embed", NAMESPACE_XLINK);
+                if (parentinfo != null && !parentinfo.trim().isEmpty()) {
+                    final Element parentResponsibleParty = new Element("parentResponsibleParty", CHE).
+                            setAttribute(HREF, parentinfo, NAMESPACE_XLINK).
+                            setAttribute(XLink.SHOW, "embed", NAMESPACE_XLINK);
 
-                if (contacts.getString("parentValidated").equalsIgnoreCase("y")) {
-                    parentResponsibleParty.setAttribute(XLink.ROLE, "embed", NAMESPACE_XLINK);
+                    if (contacts.getString("parentValidated").equalsIgnoreCase("y")) {
+                        parentResponsibleParty.setAttribute(XLink.ROLE, "embed", NAMESPACE_XLINK);
+                    }
+
+                    contactEl.addContent(parentResponsibleParty);
                 }
-
-                contactEl.addContent(parentResponsibleParty);
 
                 String validated = contacts.getString("validated");
 
                 String emailInBrackets = "";
-                if (!email.trim().isEmpty()) {
+                if (email == null || !email.trim().isEmpty()) {
                     emailInBrackets = "(" + email + ")";
                 }
                 String title = name + " " + surname + emailInBrackets;
-                String uuid = registerSubtemplate(idIndex, source, statement, title, validated, contactEl, "che:CHE_CI_ResponsibleParty");
-                idMap.put(id, uuid);
 
+                objs.add(new SharedObject(id, contactEl, title, validated, "che:CHE_CI_ResponsibleParty"));
             }
-            return idMap;
         }
+        Map<String, String> idMap = Maps.newHashMap();
+        for (SharedObject obj : objs) {
+            String uuid = registerSubtemplate(idIndex, source, statement, obj);
+            idMap.put(obj.id, uuid);
+
+        }
+        return idMap;
     }
 
 
@@ -220,7 +230,7 @@ public class SharedObjects implements DatabaseMigrationTask {
         Element newEl = new Element(elName, ns);
         contactEl.addContent(newEl);
 
-        if (value.trim().isEmpty()) {
+        if (value == null || value.trim().isEmpty()) {
             addMissingCharString(newEl);
         } else {
             final Element translations = loadInternalMultiLingualElem(value);
@@ -274,39 +284,44 @@ public class SharedObjects implements DatabaseMigrationTask {
     private AtomicInteger getMaxMetadataId(Statement statement) throws SQLException {
         try (ResultSet resultSet = statement.executeQuery("select max(id) from metadata")) {
             resultSet.next();
-            return new AtomicInteger(resultSet.getInt("id"));
+            return new AtomicInteger(resultSet.getInt(1));
         }
     }
 
     private Map<String, String> migrateFormats(AtomicInteger idIndex, String source, Statement statement) throws SQLException {
+        List<SharedObject> objs = Lists.newArrayList();
         try (ResultSet formats = statement.executeQuery("select * from Formats")) {
-            Map<String, String> idMap = Maps.newHashMap();
             while (formats.next()) {
                 String id = String.valueOf(formats.getInt("id"));
                 String name = formats.getString("name");
-                String validated = formats.getString("validated").equalsIgnoreCase("y") ? LUCENE_EXTRA_VALIDATED : LUCENE_EXTRA_NON_VALIDATED;
+                String validated = formats.getString("validated");
 
                 Element formatEl = new Element("MD_Format");
                 addCharacterString(formats, formatEl, "name","name", GMD);
                 addCharacterString(formats, formatEl, "version","version", GMD);
+                objs.add(new SharedObject(id, formatEl, name, validated, "gmd:MD_Format"));
 
-
-                String uuid = registerSubtemplate(idIndex, source, statement, name, validated, formatEl, "gmd:MD_Format");
-                idMap.put(id, uuid);
             }
 
-            return idMap;
         }
+        Map<String, String> idMap = Maps.newHashMap();
+        for (SharedObject obj : objs) {
+            String uuid = registerSubtemplate(idIndex, source, statement, obj);
+            idMap.put(obj.id, uuid);
+
+        }
+        return idMap;
+
     }
 
-    private String registerSubtemplate(AtomicInteger idIndex, String source, Statement statement, String name, String validated, Element
-            formatEl, String root) throws SQLException {
+    private String registerSubtemplate(AtomicInteger idIndex, String source, Statement statement, SharedObject sharedObject) throws SQLException {
         String uuid = UUID.randomUUID().toString();
         int mdId = idIndex.incrementAndGet();
         String date = new ISODate().getDateAndTime();
         String values = String.format(
                 "%s, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', 1, 2, 0, 0, 0", mdId, uuid,
-                "iso19139.che", "s", "n", date, date, Xml.getString(formatEl), source, name, root, validated);
+                "iso19139.che", "s", "n", date, date, sharedObject.getXml(), source, sharedObject.name, sharedObject.root,
+                sharedObject.validated);
 
         statement.execute("INSERT INTO public.metadata(\n"
                           + "            id, uuid, schemaid, istemplate, isharvested, createdate, changedate, \n"
@@ -323,7 +338,7 @@ public class SharedObjects implements DatabaseMigrationTask {
         parent.addContent(elem);
 
         final String text = results.getString(columnName);
-        if (text.trim().isEmpty()) {
+        if (text == null || text.trim().isEmpty()) {
             addMissingCharString(elem);
         } else {
             elem.addContent(new Element("CharacterString", GCO).setText(text));
@@ -333,5 +348,25 @@ public class SharedObjects implements DatabaseMigrationTask {
 
     private void addMissingCharString(Element elem) {
         elem.addContent(new Element("CharacterString", GCO).setAttribute("nilReason", "missing", GCO));
+    }
+
+    private static final class SharedObject {
+        final String id;
+        final Element xml;
+        final String name;
+        final String validated;
+        final String root;
+
+        private SharedObject(String id, Element xml, String name, String validated, String root) {
+            this.id = id;
+            this.xml = xml;
+            this.name = name;
+            this.validated = validated.equalsIgnoreCase("y") ? LUCENE_EXTRA_VALIDATED : LUCENE_EXTRA_NON_VALIDATED;
+            this.root = root;
+        }
+
+        public String getXml() {
+            return Xml.getString(this.xml);
+        }
     }
 }

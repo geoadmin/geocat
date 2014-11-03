@@ -47,7 +47,9 @@ public class MoveHarvesterSettingsToHigherNumber implements DatabaseMigrationTas
         }
 
         public void write(Statement statement) throws SQLException {
-            statement.execute(format("INSERT INTO " + getHarvesterSettingsName() + " (id, parentId, name, value) VALUES (%s, %s, '%s', '%s')", id, parentId, name, value));
+            final String sql = format("INSERT INTO " + getHarvesterSettingsName() + " (id, parentId, name, value) VALUES (%s, %s, " +
+                                         "'%s', '%s')", id, parentId, name, value);
+            statement.execute(sql);
             for (HarvesterSetting child : children) {
                 child.write(statement);
             }

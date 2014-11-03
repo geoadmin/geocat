@@ -237,6 +237,27 @@ public final class LangUtils
         return Xml.transform(desc, appPath+"xsl/iso-internal-multilingual-conversion.xsl");
     }
 
+    public static Element loadInternalMultiLingualElem(String basicValue) throws IOException
+    {
+
+        final String xml = "<description>" + basicValue.replaceAll("(<\\w+>)\\s*(\\<!\\[CDATA\\[)*\\s*(.*?)\\s*(\\]\\]\\>)*(</\\w+>)","$1<![CDATA[$3]]>$5") + "</description>";
+
+        Log.debug(Geonet.GEONETWORK, "Parsing xml to get languages: \n" + xml);
+
+        Element desc;
+        try {
+            desc = Xml.loadString(xml, false);
+        } catch(JDOMException jdomParse) {
+            try {
+                String encoded = URLEncoder.encode(basicValue, "UTF-8");
+                desc = Xml.loadString(String.format("<description><EN>%1$s</EN><DE>%1$s</DE><FR>%1$s</FR><IT>%1$s</IT></description>", encoded),false);
+            } catch (JDOMException e) {
+                Element en = new Element("EN").setText("Error setting parsing text: " + basicValue);
+                desc = new Element("description").addContent(en);
+            }
+        }
+        return desc;
+    }
     public static List<Content> loadInternalMultiLingualElemCollection(String basicValue) throws IOException, JDOMException
     {
         Element multiLingualElem = loadInternalMultiLingualElem(basicValue);
