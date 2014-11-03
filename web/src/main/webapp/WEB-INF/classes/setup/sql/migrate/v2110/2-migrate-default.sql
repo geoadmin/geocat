@@ -4,7 +4,6 @@ ALTER TABLE operations DROP COLUMN reserved;
 -- GEOCAT
 -- ALTER TABLE services DROP COLUMN id;
 -- END GEOCAT
-DELETE FROM Settings WHERE id=2;
 
 
 ALTER TABLE Settings ALTER name TYPE varchar(512);

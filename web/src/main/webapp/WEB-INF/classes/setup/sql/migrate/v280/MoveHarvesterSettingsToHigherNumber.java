@@ -1,7 +1,6 @@
 package v280;
 
 import org.fao.geonet.DatabaseMigrationTask;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -23,7 +22,7 @@ public class MoveHarvesterSettingsToHigherNumber implements DatabaseMigrationTas
         String value;
         List<HarvesterSetting> children = new ArrayList<HarvesterSetting>();
 
-        public HarvesterSetting(int parentId, ResultSet resultSet, Statement statement) throws SQLException {
+        public HarvesterSetting(int parentId, ResultSet resultSet) throws SQLException {
             id = counter.incrementAndGet();
             this.parentId = parentId;
             this.name = resultSet.getString("name");
@@ -36,7 +35,7 @@ public class MoveHarvesterSettingsToHigherNumber implements DatabaseMigrationTas
             final ResultSet resultSet2 = statement.executeQuery("SELECT * FROM Settings where parentId = "+originalId);
             try {
                 while (resultSet2.next()) {
-                    children.add(new HarvesterSetting(id, resultSet2, statement));
+                    children.add(new HarvesterSetting(id, resultSet2));
                 }
             } finally {
                 resultSet2.close();
@@ -48,7 +47,7 @@ public class MoveHarvesterSettingsToHigherNumber implements DatabaseMigrationTas
 
         public void write(Statement statement) throws SQLException {
             final String sql = format("INSERT INTO " + getHarvesterSettingsName() + " (id, parentId, name, value) VALUES (%s, %s, " +
-                                         "'%s', '%s')", id, parentId, name, value);
+                                      "'%s', '%s')", id, parentId, name, value);
             statement.execute(sql);
             for (HarvesterSetting child : children) {
                 child.write(statement);
@@ -69,30 +68,33 @@ public class MoveHarvesterSettingsToHigherNumber implements DatabaseMigrationTas
     }
 
     @Override
-    public void update(Statement statement) throws SQLException {
-        final String selectHarvestersSQL = "SELECT * FROM Settings WHERE parentId = (SELECT id FROM Settings WHERE name='harvesting' and parentId=0)";
-        final ResultSet resultSet = statement.executeQuery(selectHarvestersSQL);
+    public void update(Connection connection) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            final String selectHarvestersSQL = "SELECT * FROM Settings WHERE parentId = (SELECT id FROM Settings WHERE name='harvesting' and parentId=0)";
 
-        List<HarvesterSetting> settings = new ArrayList<HarvesterSetting>();
-        try {
+            final ResultSet resultSet = statement.executeQuery(selectHarvestersSQL);
 
-            while (resultSet.next()) {
-                settings.add(new HarvesterSetting(resultSet.getInt("parentId"), resultSet, statement));
-                counter.addAndGet(200);
+            List<HarvesterSetting> settings = new ArrayList<HarvesterSetting>();
+            try {
 
+                while (resultSet.next()) {
+                    settings.add(new HarvesterSetting(resultSet.getInt("parentId"), resultSet));
+                    counter.addAndGet(200);
+
+                }
+            } finally {
+                resultSet.close();
             }
-        } finally {
-            resultSet.close();
-        }
 
-        for (HarvesterSetting setting : settings) {
-            setting.loadChildren(statement);
-        }
-        for (HarvesterSetting setting : settings) {
-            setting.delete(statement);
-        }
-        for (HarvesterSetting setting : settings) {
-            setting.write(statement);
+            for (HarvesterSetting setting : settings) {
+                setting.loadChildren(statement);
+            }
+            for (HarvesterSetting setting : settings) {
+                setting.delete(statement);
+            }
+            for (HarvesterSetting setting : settings) {
+                setting.write(statement);
+            }
         }
     }
 }
