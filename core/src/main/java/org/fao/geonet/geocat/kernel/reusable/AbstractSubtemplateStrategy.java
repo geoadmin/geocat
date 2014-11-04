@@ -24,6 +24,8 @@ import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.User_;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -33,12 +35,16 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SettingRepository;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.schema.iso19139che.ISO19139cheSchemaPlugin;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
@@ -68,6 +74,7 @@ public abstract class AbstractSubtemplateStrategy extends ReplacementStrategy {
     protected final MetadataRepository metadataRepository;
     protected final SettingRepository settingRepository;
     protected final DataManager dataManager;
+    protected final UserRepository userRepository;
     protected final OperationAllowedRepository operationAllowedRepository;
 
     public AbstractSubtemplateStrategy(ApplicationContext context) {
@@ -77,6 +84,7 @@ public abstract class AbstractSubtemplateStrategy extends ReplacementStrategy {
         this.settingRepository = context.getBean(SettingRepository.class);
         this.dataManager = context.getBean(DataManager.class);
         this.mapper = context.getBean(IsoLanguagesMapper.class);
+        this.userRepository = context.getBean(UserRepository.class);
     }
 
 
@@ -194,13 +202,21 @@ public abstract class AbstractSubtemplateStrategy extends ReplacementStrategy {
 
     protected final void addBasicMetadataInfo(String uuid, boolean validated, String root, Metadata metadata) {
         metadata.setUuid(uuid);
-        MetadataDataInfo dataInfo = new MetadataDataInfo().
-                setExtra(validated ? LUCENE_EXTRA_VALIDATED : LUCENE_EXTRA_NON_VALIDATED).
+        final String extra = validated ? LUCENE_EXTRA_VALIDATED : LUCENE_EXTRA_NON_VALIDATED;
+        MetadataDataInfo dataInfo = metadata.getDataInfo().
+                setExtra(extra).
                 setRoot(root).
                 setSchemaId(ISO19139cheSchemaPlugin.IDENTIFIER).
-                setType(MetadataType.SUB_TEMPLATE);
+                setType(MetadataType.SUB_TEMPLATE).
+                setDisplayOrder(0);
         metadata.setDataInfo(dataInfo);
-        metadata.setSourceInfo(new MetadataSourceInfo().setSourceId(getSourceId()));
+        final MetadataSourceInfo sourceInfo = metadata.getSourceInfo();
+        if (sourceInfo.getSourceId() == null) {
+            sourceInfo.setSourceId(getSourceId());
+        }
+        if (sourceInfo.getOwner() == null) {
+            sourceInfo.setOwner(getAdminId());
+        }
     }
 
     public final Collection<Element> add(Element placeholder, Element originalElem, String metadataLang)
@@ -222,6 +238,12 @@ public abstract class AbstractSubtemplateStrategy extends ReplacementStrategy {
 
         xlinkIt(xlink, uuid, false);
         return Collections.emptySet();
+    }
+
+    public int getAdminId() {
+
+        Page<User> admins = this.userRepository.findAll(new PageRequest(0, 1, SortUtils.createSort(User_.profile)));
+        return admins.getContent().get(0).getId();
     }
 
     protected static class UpdateResult {

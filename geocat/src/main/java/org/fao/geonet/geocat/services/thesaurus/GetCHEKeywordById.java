@@ -23,6 +23,7 @@
 
 package org.fao.geonet.geocat.services.thesaurus;
 
+import com.google.common.collect.Maps;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -31,15 +32,20 @@ import org.fao.geonet.Util;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
+import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
+
+import java.util.Map;
 
 /**
  * Returns a list of keywords given a list of thesaurus
  */
 
 public class GetCHEKeywordById implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+    private volatile Map<String, KeywordBean> gemetWords;
+
+    public void init(String appPath, ServiceConfig params) throws Exception {
 	}
 
 	// --------------------------------------------------------------------------
@@ -58,30 +64,68 @@ public class GetCHEKeywordById implements Service {
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
 		String sThesaurusName = Util.getParam(params, "thesaurus");
-		String uri = Util.getParam(params, "id");
+		String uri = Util.getParam(params, "id").replace('\\', '/');
 		String lang = Util.getParam(params, "lang", context.getLanguage());
 		String locales = Util.getParam(params, "locales", "");
-		Element response = new Element(Jeeves.Elem.RESPONSE);
-		
-		KeywordsSearcher searcher = null;
+        Element response = new Element(Jeeves.Elem.RESPONSE);
 
-		// perform the search and save search result into session
-		ThesaurusManager thesaurusMan = context.getBean(ThesaurusManager.class);
-		
-		searcher = new KeywordsSearcher(context, thesaurusMan);
+        ThesaurusManager thesaurusMan = context.getBean(ThesaurusManager.class);
 
-		String[] langs = locales.split(",");
-		for (int i = 0; i < langs.length; i++) {
-			langs[i] = context.getBean(IsoLanguagesMapper.class).iso639_1_to_iso639_2(langs[i], langs[i]);
-		}
-		KeywordBean kb = searcher.searchById(uri, sThesaurusName, langs);
-		if (kb == null)
+        String[] langs = locales.split(",");
+        KeywordBean kb;
+        if ("external.theme.gemet-theme".equals(sThesaurusName)){
+            kb = getGemetKeyword(context, Util.getParam(params, "id").replace('\\', '/'), thesaurusMan);
+        } else {
+            KeywordsSearcher searcher = null;
+            // perform the search and save search result into session
+
+            searcher = new KeywordsSearcher(context, thesaurusMan);
+
+            for (int i = 0; i < langs.length; i++) {
+                langs[i] = context.getBean(IsoLanguagesMapper.class).iso639_1_to_iso639_2(langs[i], langs[i]);
+            }
+            kb = searcher.searchById(uri, sThesaurusName, langs);
+        }
+        if (kb == null)
 			return response;
 		else {
 			Element element = kb.toElement(thesaurusMan, context, lang, langs);
 			return response.addContent(element);
 		}
 	}
+
+    private KeywordBean getGemetKeyword(ServiceContext context, String uri, ThesaurusManager thesaurusMan) throws Exception {
+        if (gemetWords == null) {
+            synchronized (this) {
+                if (gemetWords == null) {
+                    KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(context.getBean(IsoLanguagesMapper.class));
+                    builder.addLang("eng");
+                    builder.addLang("ger");
+                    builder.addLang("fre");
+                    builder.addLang("ita");
+                    builder.addLang("roh");
+                    builder.addThesaurus("external.theme.gemet-theme");
+
+                    KeywordsSearcher searcher = new KeywordsSearcher(context, thesaurusMan);
+
+                    searcher.search(builder.build());
+                    gemetWords = Maps.newHashMap();
+                    for (KeywordBean keywordBean : searcher.getResults()) {
+                        gemetWords.put(simplifyGemetId(keywordBean.getUriCode()), keywordBean);
+                    }
+                }
+            }
+        }
+
+        return this.gemetWords.get(simplifyGemetId(uri));
+    }
+
+    private String simplifyGemetId(String uri) {
+        if (uri.contains("gemet-theme.rdf/theme/")) {
+            return "theme/" + uri.split("\\Qgemet-theme.rdf/theme/\\E")[1];
+        }
+        return uri;
+    }
 }
 
 // =============================================================================

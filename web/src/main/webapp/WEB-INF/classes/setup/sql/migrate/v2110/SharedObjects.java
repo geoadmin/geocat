@@ -72,16 +72,16 @@ public class SharedObjects implements DatabaseMigrationTask {
             SQLException, IOException, JDOMException {
         try (
                 PreparedStatement select = conn.prepareStatement("select id, data from metadata where data like ?");
-                PreparedStatement update = conn.prepareStatement("UPDATE metadata SET data=? WHERE id=?");
+                PreparedStatement update = conn.prepareStatement("UPDATE metadata SET data=? WHERE id=?")
         ) {
             Iterator<Map.Entry<String, String>> entries = formatIdMap.entrySet().iterator();
             while (entries.hasNext()) {
                 Map.Entry<String, String> entry = entries.next();
-                String pattern = "'%xml.format.get?id=" + entry.getKey() + "%'";
+                String pattern = "%xml.format.get?id=" + entry.getKey() + "%";
                 select.setString(1, pattern);
                 try (ResultSet results = select.executeQuery()) {
                     while (results.next()) {
-                        String id = results.getString("id");
+                        int id = results.getInt("id");
                         String data = results.getString("data");
 
                         Element md = Xml.loadString(data, false);
@@ -95,26 +95,45 @@ public class SharedObjects implements DatabaseMigrationTask {
                                 if (atValue != null && atValue.contains("xml.format.get?id=")) {
                                     String formatId = extractId(atValue);
                                     final String subtemplateUUID = formatIdMap.get(formatId);
-                                    el.setAttribute(HREF, LOCAL_PROTOCOL + "subtemplate?uuid=" + subtemplateUUID, NAMESPACE_XLINK);
+                                    if (subtemplateUUID == null) {
+                                        removeBrokenXLink(el);
+                                    } else {
+                                        el.setAttribute(HREF, LOCAL_PROTOCOL + "subtemplate?uuid=" + subtemplateUUID, NAMESPACE_XLINK);
+                                    }
                                 } else if (atValue != null && atValue.contains("xml.user.get?id=")) {
                                     String userId = extractId(atValue);
                                     String role = extractRole(atValue);
                                     final String subtemplateUUID = contactIdMap.get(userId);
-                                    el.setAttribute(HREF, LOCAL_PROTOCOL + "subtemplate?uuid=" + subtemplateUUID +
-                                                          "&process=*//gmd:CI_RoleCode/@codeListValue~" + role, NAMESPACE_XLINK);
+
+                                    if (subtemplateUUID == null) {
+                                        removeBrokenXLink(el);
+                                    } else {
+                                        String href = LOCAL_PROTOCOL + "subtemplate?uuid=" + subtemplateUUID;
+                                        if (role != null && !role.trim().isEmpty()) {
+                                            href += "&process=*//gmd:CI_RoleCode/@codeListValue~" + role;
+                                        }
+                                        el.setAttribute(HREF, href, NAMESPACE_XLINK);
+                                    }
                                 }
                             }
                         }
 
                         String updatedData = Xml.getString(md);
                         update.setString(1, updatedData);
-                        update.setString(2, id);
+                        update.setInt(2, id);
                         update.execute();
                     }
                     entries.remove();
                 }
             }
         }
+    }
+
+    private void removeBrokenXLink(Element el) {
+        el.removeAttribute(HREF, NAMESPACE_XLINK);
+        el.removeAttribute(XLink.ROLE, NAMESPACE_XLINK);
+        el.removeAttribute(XLink.SHOW, NAMESPACE_XLINK);
+        el.removeAttribute(XLink.TITLE, NAMESPACE_XLINK);
     }
 
     private String extractId(String atValue) {
@@ -128,7 +147,7 @@ public class SharedObjects implements DatabaseMigrationTask {
     private String extractRole(String atValue) {
         final Matcher matcher = ROLE_PATTERN.matcher(atValue);
         if (!matcher.find()) {
-            throw new Error(atValue + " does not match the pattern: " + ROLE_PATTERN);
+           return "pointOfContact";
         }
         return matcher.group(1);
     }
@@ -213,8 +232,14 @@ public class SharedObjects implements DatabaseMigrationTask {
                 String parentinfo = contacts.getString("parentinfo");
 
                 if (parentinfo != null && !parentinfo.trim().isEmpty()) {
+                    String parentUUid = idMap.get(parentinfo);
+                    if (parentUUid == null) {
+                        parentUUid = UUID.randomUUID().toString();
+                        idMap.put(parentinfo, parentUUid);
+                    }
+                    String parentHref =  LOCAL_PROTOCOL + "subtemplate?uuid=" + parentUUid;
                     final Element parentResponsibleParty = new Element("parentResponsibleParty", CHE).
-                            setAttribute(HREF, parentinfo, NAMESPACE_XLINK).
+                            setAttribute(HREF, parentHref, NAMESPACE_XLINK).
                             setAttribute(XLink.SHOW, "embed", NAMESPACE_XLINK);
 
                     if (contacts.getString("parentValidated").equalsIgnoreCase("y")) {
@@ -231,9 +256,13 @@ public class SharedObjects implements DatabaseMigrationTask {
                     emailInBrackets = "(" + email + ")";
                 }
                 String title = name + " " + surname + emailInBrackets;
+                String uuid = idMap.get(id);
+                if (uuid == null) {
+                    uuid = UUID.randomUUID().toString();
+                }
 
-                SharedObject obj = new SharedObject(id, contactEl, title, validated, "che:CHE_CI_ResponsibleParty");
-                String uuid = registerSubtemplate(idIndex, source, subtemplateStatement, obj);
+                SharedObject obj = new SharedObject(id, contactEl, title, validated, "che:CHE_CI_ResponsibleParty", uuid);
+                registerSubtemplate(idIndex, source, subtemplateStatement, obj);
                 idMap.put(obj.id, uuid);
             }
             subtemplateStatement.executeBatch();
@@ -327,8 +356,8 @@ public class SharedObjects implements DatabaseMigrationTask {
                 addCharacterString(formats, formatEl, "version", "version", GMD);
                 SharedObject obj = new SharedObject(id, formatEl, name, validated, "gmd:MD_Format");
 
-                String uuid = registerSubtemplate(idIndex, source, subtemplateStatement, obj);
-                idMap.put(obj.id, uuid);
+                registerSubtemplate(idIndex, source, subtemplateStatement, obj);
+                idMap.put(obj.id, obj.uuid);
             }
             subtemplateStatement.executeBatch();
         }
@@ -336,23 +365,20 @@ public class SharedObjects implements DatabaseMigrationTask {
 
     }
 
-    private String registerSubtemplate(AtomicInteger idIndex, String source, PreparedStatement statement,
+    private void registerSubtemplate(AtomicInteger idIndex, String source, PreparedStatement statement,
                                        SharedObject sharedObject) throws SQLException {
-        String uuid = UUID.randomUUID().toString();
         int mdId = idIndex.incrementAndGet();
         String date = new ISODate().getDateAndTime();
         statement.setInt(1, mdId);
-        statement.setString(2, uuid);
+        statement.setString(2, sharedObject.uuid);
         statement.setString(3, date);
         statement.setString(4, date);
         statement.setString(5, sharedObject.getXml());
-        statement.setString(5, source);
-        statement.setString(5, sharedObject.name);
-        statement.setString(5, sharedObject.root);
-        statement.setString(5, sharedObject.validated);
+        statement.setString(6, source);
+        statement.setString(7, sharedObject.name);
+        statement.setString(8, sharedObject.root);
+        statement.setString(9, sharedObject.validated);
         statement.addBatch();
-
-        return uuid;
     }
 
     private String addCharacterString(ResultSet results, Element parent, String columnName, String elemName, Namespace ns) throws
@@ -380,13 +406,18 @@ public class SharedObjects implements DatabaseMigrationTask {
         final String name;
         final String validated;
         final String root;
+        final String uuid;
 
         private SharedObject(String id, Element xml, String name, String validated, String root) {
+            this(id, xml, name, validated, root, UUID.randomUUID().toString());
+        }
+        private SharedObject(String id, Element xml, String name, String validated, String root, String uuid) {
             this.id = id;
             this.xml = xml;
             this.name = name;
             this.validated = validated.equalsIgnoreCase("y") ? LUCENE_EXTRA_VALIDATED : LUCENE_EXTRA_NON_VALIDATED;
             this.root = root;
+            this.uuid = uuid;
         }
 
         public String getXml() {

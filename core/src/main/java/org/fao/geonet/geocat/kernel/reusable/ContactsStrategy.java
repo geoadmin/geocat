@@ -196,7 +196,11 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
     private Collection<Element> xlinkIt(Element originalElem, String role, String id, boolean validated) {
         originalElem.removeContent();
         // param order is important, id param must be first
-        originalElem.setAttribute(XLink.HREF, baseHref(id) + "&process=*//gmd:CI_RoleCode/@codeListValue~" + role, XLink.NAMESPACE_XLINK);
+        String href = baseHref(id);
+        if (role != null && !role.trim().isEmpty()) {
+            href += "&process=*//gmd:CI_RoleCode/@codeListValue~" + role;
+        }
+        originalElem.setAttribute(XLink.HREF, href, XLink.NAMESPACE_XLINK);
 
         if (!validated) {
             originalElem.setAttribute(XLink.ROLE, ReusableObjManager.NON_VALID_ROLE, XLink.NAMESPACE_XLINK);
@@ -273,7 +277,7 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
 
     public String createXlinkHref(String uuid, UserSession session, String role) {
         String href = XLink.LOCAL_PROTOCOL + "subtemplate?" + Params.UUID + "=" + uuid;
-        if (role != null) {
+        if (role != null && !role.trim().isEmpty()) {
             href = href + "&process=*//gmd:CI_RoleCode/@codeListValue~"+role;
         }
         return href;

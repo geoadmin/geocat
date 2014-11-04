@@ -1,6 +1,5 @@
 <overrides xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="overrides/config-overrides.xsd">
-    <import file="/WEB-INF/server-props-overrides.xml"/>
     <import file="/WEB-INF/overrides-config-csw-geocat.xml"/>
     <import file="/WEB-INF/overrides-config-security-geocat.xml"/>
 

@@ -33,7 +33,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -153,69 +152,63 @@ public class ReusableObjManager {
         return id;
     }
 
-    public List<Element> process(ProcessParams parameterObject) throws Exception, SQLException {
+    public List<Element> process(ProcessParams parameterObject) throws Exception {
 
-        try {
-            String metadataId = parameterObject.metadataId;
-            if (metadataId == null) {
-                metadataId = "anonymous";
-            }
-
-            Log.info(Geocat.Module.REUSABLE,
-                    "Beginning reusable object processing on metadata object id= " + metadataId);
-            Element elementToProcess = parameterObject.elementToProcess;
-
-            String defaultMetadataLang = parameterObject.defaultLang;
-            if (defaultMetadataLang == null) {
-                defaultMetadataLang = LangUtils.iso19139DefaultLang(parameterObject.metadata);
-                if (defaultMetadataLang != null && defaultMetadataLang.length() > 2) {
-                    defaultMetadataLang = defaultMetadataLang.substring(0, 2).toUpperCase();
-                } else {
-                    defaultMetadataLang = "EN";
-                }
-            }
-
-            Element xml = Xml.transform(elementToProcess, getStyleSheet());
-
-            boolean changed = false;
-            Log.debug(Geocat.Module.REUSABLE, "Replace formats with xlinks");
-            changed |= replaceFormats(xml, defaultMetadataLang, parameterObject);
-            Log.debug(Geocat.Module.REUSABLE, "Replace contacts with xlinks");
-            changed |= replaceContacts(xml, defaultMetadataLang, parameterObject);
-            Log.debug(Geocat.Module.REUSABLE, "Replace keywords with xlinks");
-            changed |= replaceKeywords(xml, defaultMetadataLang, parameterObject);
-            Log.debug(Geocat.Module.REUSABLE, "Replace extents with xlinks");
-            changed |= replaceExtents(xml, defaultMetadataLang, parameterObject);
-
-            Log.info(Geocat.Module.REUSABLE, "Finished processing on id=" + parameterObject.metadataId
-                                             + ".  " + (changed ? "Metadata was modified" : "No change was made"));
-
-            if (changed) {
-                @SuppressWarnings("unchecked")
-                List<Element> metadata = xml.getChild("metadata").getChildren();
-                ArrayList<Element> results = new ArrayList<Element>(metadata);
-                for (Element md : results) {
-                    md.detach();
-                    for (Object ns : elementToProcess.getAdditionalNamespaces()) {
-                        md.addNamespaceDeclaration((Namespace) ns);
-                    }
-
-                }
-                return results;
-            }
-
-            return Collections.emptyList();
-        } catch (Exception x) {
-            StringWriter s = new StringWriter();
-            x.printStackTrace(new PrintWriter(s));
-
-            Log.error(Geocat.Module.REUSABLE,
-                    "Exception occured while processing metadata object for reusable objects.  Exception is: "
-                    + s.getBuffer().toString());
-            s.close();
-
-            throw x;
+        String metadataId = parameterObject.metadataId;
+        if (metadataId == null) {
+            metadataId = "anonymous";
         }
+
+        Log.info(Geocat.Module.REUSABLE,
+                "Beginning reusable object processing on metadata object id= " + metadataId);
+        Element elementToProcess = parameterObject.elementToProcess;
+
+        String defaultMetadataLang = parameterObject.defaultLang;
+        if (defaultMetadataLang == null) {
+            defaultMetadataLang = LangUtils.iso19139DefaultLang(parameterObject.metadata);
+            if (defaultMetadataLang != null && defaultMetadataLang.length() > 2) {
+                defaultMetadataLang = parameterObject.srvContext.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1
+                        (defaultMetadataLang);
+                defaultMetadataLang = defaultMetadataLang.substring(0, 2).toUpperCase();
+            } else {
+                defaultMetadataLang = "EN";
+            }
+        }
+
+        if (defaultMetadataLang.equalsIgnoreCase("GE")) {
+            defaultMetadataLang = "DE";
+        }
+
+        Element xml = Xml.transform(elementToProcess, getStyleSheet());
+
+        boolean changed;
+        Log.debug(Geocat.Module.REUSABLE, "Replace formats with xlinks");
+        changed = replaceFormats(xml, defaultMetadataLang, parameterObject);
+        Log.debug(Geocat.Module.REUSABLE, "Replace contacts with xlinks");
+        changed |= replaceContacts(xml, defaultMetadataLang, parameterObject);
+        Log.debug(Geocat.Module.REUSABLE, "Replace keywords with xlinks");
+        changed |= replaceKeywords(xml, defaultMetadataLang, parameterObject);
+        Log.debug(Geocat.Module.REUSABLE, "Replace extents with xlinks");
+        changed |= replaceExtents(xml, defaultMetadataLang, parameterObject);
+
+        Log.info(Geocat.Module.REUSABLE, "Finished processing on id=" + parameterObject.metadataId
+                                         + ".  " + (changed ? "Metadata was modified" : "No change was made"));
+
+        if (changed) {
+            @SuppressWarnings("unchecked")
+            List<Element> metadata = xml.getChild("metadata").getChildren();
+            ArrayList<Element> results = new ArrayList<Element>(metadata);
+            for (Element md : results) {
+                md.detach();
+                for (Object ns : elementToProcess.getAdditionalNamespaces()) {
+                    md.addNamespaceDeclaration((Namespace) ns);
+                }
+
+            }
+            return results;
+        }
+
+        return Collections.emptyList();
     }
 
     private boolean replaceKeywords(Element xml, String defaultMetadataLang, ProcessParams params) throws Exception {
