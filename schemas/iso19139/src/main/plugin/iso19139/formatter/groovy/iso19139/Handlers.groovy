@@ -22,7 +22,7 @@ public class Handlers {
         packageViews = [
                 'gmd:identificationInfo', 'gmd:metadataMaintenance', 'gmd:metadataConstraints', 'gmd:spatialRepresentationInfo',
                 'gmd:distributionInfo', 'gmd:applicationSchemaInfo', 'gmd:dataQualityInfo', 'gmd:portrayalCatalogueInfo',
-                'gmd:contentInfo', 'gmd:metadataExtensionInfo']
+                'gmd:contentInfo', 'gmd:metadataExtensionInfo', 'gmd:referenceSystemInfo']
     }
 
     def addDefaultHandlers() {
@@ -33,15 +33,22 @@ public class Handlers {
         handlers.add name: 'Date Elements', select: matchers.isDateEl, dateEl
         handlers.add name: 'Elements with single Date child', select: matchers.hasDateChild, commonHandlers.applyToChild(isoCodeListEl, '*')
         handlers.add name: 'Elements with single Codelist child', select: matchers.hasCodeListChild, commonHandlers.applyToChild(isoCodeListEl, '*')
-        handlers.add name: 'ResponsibleParty Elements', select: matchers.isRespParty, respPartyEl
-        handlers.add 'gmd:contactInfo', commonHandlers.flattenedEntryEl({it.'gmd:CI_Contact'}, f.&nodeLabel)
-        handlers.add 'gmd:address', commonHandlers.flattenedEntryEl({it.'gmd:CI_Address'}, f.&nodeLabel)
-        handlers.add 'gmd:phone', commonHandlers.flattenedEntryEl({it.'gmd:CI_Telephone'}, f.&nodeLabel)
+        handlers.add name: 'ResponsibleParty Elements', select: matchers.isRespParty, pointOfContactEl
+        //handlers.add 'gmd:identificationInfo', commonHandlers.flattenedEntryEl(commonHandlers.selectIsotype('gmd:MD_DataIdentification'), f.&nodeLabel)
+        handlers.add 'gmd:contactInfo', commonHandlers.flattenedEntryEl(commonHandlers.selectIsotype('gmd:CI_Contact'), f.&nodeLabel)
+        handlers.add 'gmd:address', commonHandlers.flattenedEntryEl(commonHandlers.selectIsotype('gmd:CI_Address'), f.&nodeLabel)
+        handlers.add 'gmd:phone', commonHandlers.flattenedEntryEl(commonHandlers.selectIsotype('gmd:CI_Telephone'), f.&nodeLabel)
         handlers.add 'gmd:onlineResource', commonHandlers.flattenedEntryEl({it.'gmd:CI_OnlineResource'}, f.&nodeLabel)
         handlers.add 'gmd:CI_OnlineResource', commonHandlers.entryEl(f.&nodeLabel)
+
+        handlers.add 'gmd:referenceSystemIdentifier', commonHandlers.flattenedEntryEl({it.'gmd:RS_Identifier'}, f.&nodeLabel)
+
         handlers.add 'gmd:locale', localeEl
+        handlers.add 'gmd:CI_Date', ciDateEl
+        handlers.add 'gmd:CI_Citation', citationEl
         handlers.add name: 'BBox Element', select: matchers.isBBox, bboxEl
         handlers.add name: 'Root Element', select: matchers.isRoot, rootPackageEl
+        handlers.add name: 'Skip Container', select: matchers.isSkippedContainer, skipContainer
 
         handlers.add name: 'Container Elements', select: matchers.isContainerEl, priority: -1, commonHandlers.entryEl(f.&nodeLabel)
         addPackageNav();
@@ -57,7 +64,13 @@ public class Handlers {
     def isoUrlEl = { commonHandlers.func.textEl(f.nodeLabel(it), it.'gmd:Url'.text())}
     def isoCodeListEl = {commonHandlers.func.textEl(f.nodeLabel(it), f.codelistValueLabel(it))}
     def isoSimpleEl = {commonHandlers.func.textEl(f.nodeLabel(it), it.'*'.text())}
-    def dateEl = { commonHandlers.func.textEl(f.nodeLabel(it), it.text()); }
+    def dateEl = {commonHandlers.func.textEl(f.nodeLabel(it), it.text());}
+    def ciDateEl = {
+        if(!it.'gmd:date'.'gco:Date'.text().isEmpty()) {
+            def dateType = f.codelistValueLabel(it.'gmd:dateType'.'gmd:CI_DateTypeCode')
+            commonHandlers.func.textEl(dateType, it.'gmd:date'.'gco:Date'.text());
+        }
+    }
 
     def localeEl = { el ->
         def ptLocale = el.'gmd:PT_Locale'
@@ -70,21 +83,66 @@ public class Handlers {
         '<p> -- TODO Need widget for gmd:PT_Locale -- ' + nonEmptyEls.join("") + ' -- </p>'
     }
 
+    def skipContainer = {
+        el ->
+            handlers.processElements(el.children())
+    }
+
+    def citationEl = { el ->
+        def output = '<div class="row">'
+        output += commonHandlers.func.textColEl(handlers.processElements([el.'gmd:title', el.'gmd:alternateTitle']), 8)
+        def dateContent = handlers.processElements(el.'gmd:date'.'gmd:CI_Date')
+        if (el.'gmd:edition' && el.'gmd:editionDate') {
+            dateContent += commonHandlers.func.textEl(el.'gmd:edition'.'gco:CharacterString'.text(),
+                    el.'gmd:editionDate'.'gco:Date'.text())
+        }
+        output += commonHandlers.func.textColEl(dateContent, 4)
+        output += '</div>'
+
+        output += '<div class="row">'
+        def infoContent = ''
+        if(!el.'gmd:identifier'.text().isEmpty()) {
+            infoContent += commonHandlers.func.textEl(f.nodeLabel(el.'gmd:identifier'),
+                    el.'gmd:identifier'.'gmd:MD_Identifier'.'gmd:code'.'gco:CharacterString'.text())
+        }
+        if(!el.'gmd:presentationForm'.text().isEmpty()) {
+            infoContent += commonHandlers.func.textEl(f.nodeLabel(el.'gmd:presentationForm'),
+                    f.codelistValueLabel(el.'gmd:presentationForm'.'gmd:CI_PresentationFormCode'))
+        }
+        infoContent += handlers.processElements([el.'gmd:ISBN', el.'gmd:ISSN'])
+        output += commonHandlers.func.textColEl(infoContent, 4)
+        output += '</div>'
+
+        def processedChildren = ['gmd:title', 'gmd:alternateTitle', 'gmd:identifier', 'gmd:ISBN', 'gmd:ISSN',
+                                 'gmd:date', 'gmd:edition', 'gmd:editionDate', 'gmd:presentationForm']
+
+        def otherChildrens = el.children().findAll { ch -> !processedChildren.contains(ch.name()) }
+        output += handlers.processElements(otherChildrens)
+
+        return output
+    }
+
     /**
      * El must be a parent of gmd:CI_ResponsibleParty
      */
-    def respPartyEl = {el ->
-        def party = el.'gmd:CI_ResponsibleParty'
+    def pointOfContactEl = { el ->
+
+        def party = el.children().find { ch ->
+            ch.name() == 'gmd:CI_ResponsibleParty' || ch['@gco:isoType'].text() == 'gmd:CI_ResponsibleParty'
+        }
 
         def childrenToProcess = [
                 party.'gmd:individualName',
                 party.'gmd:organisationName',
                 party.'gmd:positionName',
-                party.'gmd:role',
-                party.'gmd:contactInfo'.'*'.'*']
-        def contactData = handlers.processElements( childrenToProcess )
+                party.'gmd:role']
 
-        return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: contactData])
+        def output = '<div class="row">'
+        output += commonHandlers.func.textColEl(handlers.processElements(childrenToProcess), 6)
+        output += commonHandlers.func.textColEl(handlers.processElements([party.'gmd:contactInfo'.'*']), 6)
+        output += '</div>'
+
+        return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: output])
     }
 
     def bboxEl = {
@@ -98,8 +156,7 @@ public class Handlers {
 
             def bboxData = handlers.fileResult("html/bbox.html", replacements)
             return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: bboxData])
-    }
-
+}
     def addPackageNav() {
         def navBar = '''
             <ul class="nav nav-pills">
@@ -108,7 +165,7 @@ public class Handlers {
               <li><a href="" rel=".gmd_distributionInfo" >Distribution</a></li>
               <li><a href="" rel=".gmd_dataQualityInfo" >Quality</a></li>
               <li><a href="" rel=".gmd_spatialRepresentationInfo" >Spatial rep.</a></li>
-              <li><a href="" rel=".gmd_distributionInfo" >Ref. system</a></li>
+              <li><a href="" rel=".gmd_referenceSystemInfo" >Ref. system</a></li>
               <li><a href="" rel=".gmd_metadataExtensionInfo" >Extension</a></li>
               <li><a href="" rel=".gmd_MD_Metadata">Metadata</a></li>
               <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="" title="More information"><i class="fa fa-ellipsis-h"></i><b class="caret"></b></a><ul class="dropdown-menu">

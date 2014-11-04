@@ -8,6 +8,9 @@ public class Matchers {
     def isUrlEl = {!it.'gmd:URL'.text().isEmpty()}
     def simpleElements = ['gco:Decimal', 'gco:Integer', 'gco:Scale', 'gco:Angle', 'gco:Measure', 'gco:Distance',
                           'gmd:MD_PixelOrientationCode', 'gts:TM_PeriodDuration']
+
+    def skipContainers = ['gmd:CI_Series', 'gmd:MD_ReferenceSystem']
+
     def isSimpleEl = {el ->
         el.children().size() == 1 && simpleElements.any{!el[it].text().isEmpty()}
     }
@@ -26,10 +29,11 @@ public class Matchers {
                 !isCodeListEl(el) && !hasCodeListChild(el) &&
                 !isDateEl(el) && !hasDateChild(el) &&
                 !el.children().isEmpty()
+                //!excludeContainer.any{it == el.name()}
     }
 
     def isRespParty = { el ->
-        !el.'gmd:CI_ResponsibleParty'.isEmpty() || el.'gmd:CI_ResponsibleParty'['@gco:isoType'].text() == 'gmd:CI_ResponsibleParty'
+        !el.'gmd:CI_ResponsibleParty'.isEmpty() || el.'*'['@gco:isoType'].text() == 'gmd:CI_ResponsibleParty'
     }
 
     def isBBox = { el ->
@@ -37,5 +41,10 @@ public class Matchers {
     }
     def isRoot = { el ->
         el.parent() is el
+}
+
+    def isSkippedContainer = { el ->
+        skipContainers.any{it == el.name()}
     }
+
 }

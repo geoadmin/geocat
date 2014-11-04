@@ -12,7 +12,12 @@
 
     <form ng-search-form="" runsearch="true" class="hfull">
       <div class="row hfull">
-        <div class="col-md-3 maincol hfull">
+
+        <div class="col-md-3 maincol hfull" ng-class="{'expanded': searchExpanded}">
+          <button class="btn btn-primary btn-sm expander" ng-click="toggleSearch()" type="button">
+            <span ng-show="!searchExpanded">»</span>
+            <span ng-show="searchExpanded">&times;</span>
+          </button>
           <div class="panel panel-primary hfull">
             <div class="panel-heading search-top">
               <div class="input-group">
@@ -21,7 +26,7 @@
                        typeahead-min-length="1" id="anySearchField">
                 <i ng-show="anyLoading" class="fa fa-refresh inner-spinner"></i>
                 <span class="input-group-btn">
-                  <button type="button" data-ng-click="triggerSearch()" class="btn btn-default">
+                  <button type="submit" data-ng-click="triggerSearch()" class="btn btn-default">
                     <i class="fa fa-search"></i>
                   </button>
                 </span>
@@ -38,7 +43,7 @@
         <div ng-class="(!collapsed) ? 'col-md-7' : 'col-md-9'" class="maincol hfull">
           <div class="panel panel-default hfull" ng-if="initial" ng-controller="gnsGeocatHome">
             <div class="panel-heading" translate>
-              <h3 class="panel-title"translate>homeTitle</h3>
+              <h3 class="panel-title" translate>homeTitle</h3>
             </div>
             <div class="panel-body">
               <img src="http://www.geocat.ch/geonetwork/images/geocatII-web.jpg" alt=""></p>
