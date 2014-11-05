@@ -41,10 +41,10 @@ public class Matchers {
     }
     def isRoot = { el ->
         el.parent() is el
-}
+    }
 
     def isSkippedContainer = { el ->
         skipContainers.any{it == el.name()}
-    }
+}
 
 }

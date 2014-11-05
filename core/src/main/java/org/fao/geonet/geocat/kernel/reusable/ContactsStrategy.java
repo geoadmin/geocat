@@ -55,6 +55,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public final class ContactsStrategy extends AbstractSubtemplateStrategy {
@@ -248,7 +249,7 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
                 new Function<DescData, String>() {
                     @Nullable
                     @Override
-                    public String apply(@Nullable DescData data) {
+                    public String apply(@Nonnull DescData data) {
                         String email = safeField(data.doc, LUCENE_EMAIL);
                         String name = safeField(data.doc, LUCENE_FIRST_NAME);
                         String surname = safeField(data.doc, LUCENE_LAST_NAME);

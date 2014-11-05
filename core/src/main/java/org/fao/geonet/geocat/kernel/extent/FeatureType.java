@@ -65,7 +65,7 @@ public final class FeatureType {
         this.searchColumn = searchColumn;
     }
 
-    public void setSrs(String srs) {
+    public synchronized void setSrs(String srs) {
         this.srs = srs;
     }
 
@@ -131,7 +131,7 @@ public final class FeatureType {
         return projection;
     }
 
-    public String srs()
+    public synchronized String srs()
     {
         return srs;
     }

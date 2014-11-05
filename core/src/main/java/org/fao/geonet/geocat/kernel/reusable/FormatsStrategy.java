@@ -43,6 +43,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public final class FormatsStrategy extends AbstractSubtemplateStrategy {
@@ -109,7 +110,7 @@ public final class FormatsStrategy extends AbstractSubtemplateStrategy {
                 new Function<DescData, String>() {
                     @Nullable
                     @Override
-                    public String apply(@Nullable DescData data) {
+                    public String apply(@Nonnull DescData data) {
                         String name = data.doc.get("name");
                         if (name == null || name.length() == 0) {
                             name = data.uuid;
