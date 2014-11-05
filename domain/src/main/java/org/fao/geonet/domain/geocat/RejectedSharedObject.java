@@ -39,7 +39,7 @@ public class RejectedSharedObject extends GeonetEntity {
     private int id;
     private String description;
     private String xml;
-    private ISODate deletionDate;
+    private ISODate deletionDate = new ISODate();
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
@@ -67,16 +67,19 @@ public class RejectedSharedObject extends GeonetEntity {
         return xml;
     }
 
-    public void setXml(String xml) {
+    public RejectedSharedObject setXml(String xml) {
         this.xml = xml;
+        return this;
     }
 
+    @Column(nullable = false)
     public ISODate getDeletionDate() {
         return deletionDate;
     }
 
-    public void setDeletionDate(ISODate deletionDate) {
+    public RejectedSharedObject setDeletionDate(ISODate deletionDate) {
         this.deletionDate = deletionDate;
+        return this;
     }
 
     public Element getXmlElement(boolean validate) throws IOException, JDOMException {
