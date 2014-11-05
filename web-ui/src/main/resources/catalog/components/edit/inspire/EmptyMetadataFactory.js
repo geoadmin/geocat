@@ -22,6 +22,7 @@
           "conformityTitleOptions": [],
           "dcpListOptions": [],
           "couplingTypeOptions": [],
+          "refSysOptions": [],
 
           "language": "",
           "characterSet": "utf-8",
@@ -92,6 +93,7 @@
             "allConformanceReports": [{
               "conformanceResultRef":"",
               "scopeCode" : "",
+              "levelDescription" : "",
               "title": {},
               "pass": "",
               "explanation": ""
@@ -102,7 +104,9 @@
               "ref": "",
               "statement" : {}
             }
-          }
+          },
+          "distributionFormats": [],
+          "refSys": []
         };
         // END TEST DATA
     };

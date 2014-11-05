@@ -1,4 +1,4 @@
-package org.fao.geonet.geocat.services.metadata.inspire;
+package org.fao.geonet.services.metadata.inspire;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
@@ -10,29 +10,28 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
+import jeeves.utils.Util;
+import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
-import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.reusable.KeywordsStrategy;
+import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchType;
+import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.AjaxEditUtils;
-import org.fao.geonet.util.GeocatXslUtil;
-import org.fao.geonet.utils.Xml;
+import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.json.JSONArray;
@@ -59,8 +58,9 @@ import javax.annotation.Nullable;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GEONET;
+import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.fao.geonet.constants.Geonet.Namespaces.XLINK;
-import static org.fao.geonet.geocat.services.metadata.inspire.Save.NS;
+import static org.fao.geonet.services.metadata.inspire.Save.NS;
 
 /**
  * @author Jesse on 5/17/2014.
@@ -72,9 +72,9 @@ public class GetEditModel implements Service {
     static {
         try {
             final JSONObject option = new JSONObject();
-            option.put("ger", "VERORDNUNG (EG) NR. 1089/2010 DER KOMMISSION VOM 23. NOVEMBER 2010 ZUR DURCHFÜHRUNG DER RICHTLINIE " +
-                              "2007/2/EG DES EUROPÄISCHEN PARLAMENTS UND DES RATES HINSICHTLICH DER INTEROPERABILITÄT VON " +
-                              "GEODATENSÄTZEN UND -DIENSTEN");
+            option.put("ger", "VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung " +
+                              "der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität " +
+                              "von Geodatensätzen und -diensten");
             option.put("eng", "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing " +
                               "Directive 2007/2/EC of the European Parliament and of the Council as regards " +
                               "interoperability of spatial data sets and services");
@@ -88,6 +88,30 @@ public class GetEditModel implements Service {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+    }
+    private static final JSONArray REF_SYS_OPTIONS = new JSONArray();
+    static {
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/4936");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/4937");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/4258");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3035");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3034");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3038");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3039");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3040");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3041");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3042");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3043");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3044");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3045");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3046");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3047");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3048");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3049");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3050");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3051");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/5730");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/7409");
     }
     private Function<CodeListEntry, CodeListEntry> topicCategoryGrouper = new Function<CodeListEntry, CodeListEntry>() {
         Map<String, String> topicCategoryGrouping = Maps.newHashMap();
@@ -162,11 +186,13 @@ public class GetEditModel implements Service {
         metadataJson.append("metadataTypeOptions", "service");
 
         metadataJson.put("conformityTitleOptions", CONFORMITY_TITLE_OPTIONS);
+        metadataJson.put("refSysOptions", REF_SYS_OPTIONS);
 
         processMetadata(metadataEl, metadataJson);
         Element identificationInfo = processIdentificationInfo(context, metadataEl, metadataJson);
 
         processConstraints(identificationInfo, metadataJson);
+        processReferenceSystems(metadataEl, metadataJson);
         processConformity(metadataEl, metadataJson);
         processTransferOptions(metadataEl, metadataJson);
 
@@ -179,12 +205,32 @@ public class GetEditModel implements Service {
         return new Element("data").setText(jsonString);
     }
 
+    private void processReferenceSystems(Element metadataEl, JSONObject metadataJson) throws JSONException,
+            JDOMException {
+        String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
+        JSONArray referenceSystemJson = new JSONArray();
+        metadataJson.put(Save.JSON_REF_SYS, referenceSystemJson);
+
+        final List<Element> refSysEls = metadataEl.getChildren("referenceSystemInfo", GMD);
+
+        for (Element refSysEl : refSysEls) {
+            JSONObject instanceJson = new JSONObject();
+            addRef(refSysEl, instanceJson);
+            addTranslatedElement(mainLanguage, refSysEl, getIsoLanguagesMapper(), instanceJson,
+                    Save.JSON_REF_SYS_CODE, "gmd:MD_ReferenceSystem//gmd:code");
+
+            referenceSystemJson.put(instanceJson);
+        }
+    }
+
     private void processTransferOptions(Element metadataEl, JSONObject metadataJson) throws JDOMException, JSONException {
         JSONArray linksJson = new JSONArray();
         metadataJson.put(Save.JSON_LINKS, linksJson);
 
-        final String xpath = "gmd:distributionInfo//gmd:transferOptions//gmd:linkage";
-        processLinkages(metadataEl, linksJson, xpath, "gmd:CI_OnlineResource/gmd:linkage");
+        final String xpathLinkage = "gmd:distributionInfo/*/gmd:transferOptions//gmd:linkage";
+        processLinkages(metadataEl, linksJson, xpathLinkage, "gmd:CI_OnlineResource/gmd:linkage");
+
+        processDistributionFormat(metadataEl, metadataJson);
 
         String identificationType = metadataJson.getJSONObject(Save.JSON_IDENTIFICATION).getString(Save.JSON_IDENTIFICATION_TYPE);
 
@@ -195,6 +241,46 @@ public class GetEditModel implements Service {
             link.put(Save.JSON_LINKS_XPATH, TRANSFER_OPTION_XPATH);
             linksJson.put(link);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void processDistributionFormat(Element metadataEl, JSONObject metadataJson) throws JDOMException, JSONException {
+        final String xpathDistributionFormat = "gmd:distributionInfo/*/gmd:distributionFormat/gmd:MD_Format";
+        final List<Element> formats = (List<Element>) Xml.selectNodes(metadataEl, xpathDistributionFormat, NS);
+        JSONArray formatJson = new JSONArray();
+        metadataJson.put(Save.JSON_DISTRIBUTION_FORMAT, formatJson);
+        for (Element format : formats) {
+            final Element nameEl = format.getChild("name", GMD);
+            String name = "";
+            if (nameEl != null) {
+                name = nameEl.getChildText("CharacterString", GCO);
+            }
+            final Element versionEl = format.getChild("version", GMD);
+            String version = "";
+            if (versionEl != null) {
+                version = versionEl.getChildText("CharacterString", GCO);
+            }
+            final String href = format.getParentElement().getAttributeValue("href", XLINK, "");
+            final String validated = format.getParentElement().getAttributeValue("role", XLINK, "");
+            String id = org.fao.geonet.kernel.reusable.Utils.id(href);
+
+            formatJson.put(createDistributionFormat(name, version, id, !ReusableObjManager.NON_VALID_ROLE.equals(validated)));
+        }
+
+        if (formatJson.length() == 0) {
+            formatJson.put(createDistributionFormat("", "", "", false));
+        }
+    }
+
+    private JSONObject createDistributionFormat(String name, String version, String id, boolean validated) throws JSONException {
+        JSONObject obj = new JSONObject();
+
+        obj.put(Save.JSON_DISTRIBUTION_FORMAT_NAME, name);
+        obj.put(Save.JSON_DISTRIBUTION_FORMAT_VERSION, version);
+        obj.put(Save.JSON_DISTRIBUTION_FORMAT_VALIDATED, validated);
+        obj.put(Params.ID, id);
+
+        return obj;
     }
 
     private void processLinkages(Element metadataEl, JSONArray linksJson, String xpath, String jsonXLink) throws JDOMException, JSONException {
@@ -267,6 +353,7 @@ public class GetEditModel implements Service {
             title.put("ita", "Nuovo");
             newObject.put(Save.JSON_TITLE, title);
             newObject.put(Save.JSON_CONFORMITY_SCOPE_CODE , "");
+            newObject.put(Save.JSON_CONFORMITY_LEVEL_DESC, "");
             newObject.put(Save.JSON_CONFORMITY_EXPLANATION, "");
             newObject.put(Save.JSON_CONFORMITY_PASS, "");
             allConformanceResults.put(newObject);
@@ -305,18 +392,51 @@ public class GetEditModel implements Service {
                 Save.JSON_TITLE, "gmd:specification/gmd:CI_Citation/gmd:title");
         conformityJson.put(Save.JSON_CONFORMITY_IS_TITLE_SET, hasTitle);
 
-        JSONObject date = new JSONObject();
-        date.put(Save.JSON_DATE, "2010-12-08");
-        date.put(Save.JSON_DATE_TYPE, "publication");
-        date.put(Save.JSON_DATE_TAG_NAME, "gco:Date");
-        conformityJson.put(Save.JSON_DATE, date);
+        if (hasTitle) {
+            addConformityTitleTranslations(conformityJson);
+        }
+
+        addConformityDate(conformityJson);
 
         addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_PASS, "gmd:pass/gco:Boolean");
         addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_EXPLANATION, "gmd:explanation/gco:CharacterString");
         final String scopeCodeXPath = "gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue";
         addValue(getDataQualityEl(conformanceResult), conformityJson, Save.JSON_CONFORMITY_SCOPE_CODE, scopeCodeXPath, "");
+        String levelDescXPath = "gmd:scope/gmd:DQ_Scope/gmd:levelDescription/gmd:MD_ScopeDescription/gmd:other/gco:CharacterString";
+        addValue(getDataQualityEl(conformanceResult), conformityJson, Save.JSON_CONFORMITY_LEVEL_DESC, levelDescXPath, "");
 
         return conformityJson;
+    }
+
+    private void addConformityTitleTranslations(JSONObject conformityJson) throws JSONException {
+        final JSONObject titles = conformityJson.getJSONObject(Save.JSON_TITLE);
+
+        final Iterator keys = titles.keys();
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            final String title = titles.getString(key);
+            final int length = CONFORMITY_TITLE_OPTIONS.length();
+            for (int i = 0; i < length; i++) {
+                final JSONObject titleOption = CONFORMITY_TITLE_OPTIONS.getJSONObject(i);
+                final Iterator optionKeys = titleOption.keys();
+                while (optionKeys.hasNext()) {
+                    String optionKey = (String) optionKeys.next();
+                    String translation = titleOption.getString(optionKey);
+                    if (translation.equalsIgnoreCase(title)) {
+                        conformityJson.put(Save.JSON_TITLE, titleOption);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    static void addConformityDate(JSONObject conformityJson) throws JSONException {
+        JSONObject date = new JSONObject();
+        date.put(Save.JSON_DATE, "2010-12-08");
+        date.put(Save.JSON_DATE_TYPE, "publication");
+        date.put(Save.JSON_DATE_TAG_NAME, "gco:Date");
+        conformityJson.put(Save.JSON_DATE, date);
     }
 
     static Element getDataQualityEl(Element conformityElement) {
@@ -347,17 +467,16 @@ public class GetEditModel implements Service {
     @VisibleForTesting
     protected void addCodeLists(ServiceContext context, JSONObject metadataJson) throws JDOMException, IOException, JSONException {
         GeonetContext geonetContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        final SchemaManager schemaManager = context.getBean(SchemaManager.class);
-        final MetadataSchema iso19139CHESchema = schemaManager.getSchema("iso19139.che");
-        final MetadataSchema iso19139Schema = schemaManager.getSchema("iso19139");
+        final MetadataSchema iso19139CHESchema = geonetContext.getSchemamanager().getSchema("iso19139.che");
+        final MetadataSchema iso19139Schema = geonetContext.getSchemamanager().getSchema("iso19139");
         final Element codelists = cacheManager.get(context, true, iso19139Schema.getSchemaDir() + "/loc", "codelists.xml",
-                context.getLanguage(), "ger", true, false);
+                context.getLanguage(), "ger", true);
         final Element cheCodelistExtensions = cacheManager.get(context, true, iso19139CHESchema.getSchemaDir() + "/loc", "codelists.xml",
-                context.getLanguage(), "ger", true, false);
+                context.getLanguage(), "ger", true);
         final Element labels = cacheManager.get(context, true, iso19139Schema.getSchemaDir() + "/loc", "labels.xml",
-                context.getLanguage(), "ger", true, false);
+                context.getLanguage(), "ger", true);
         final Element labelExtensions = cacheManager.get(context, true, iso19139CHESchema.getSchemaDir() + "/loc", "labels.xml",
-                context.getLanguage(), "ger", true, false);
+                context.getLanguage(), "ger", true);
 
 
         addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:CI_DateTypeCode", "dateTypeOptions", null);
@@ -568,7 +687,7 @@ public class GetEditModel implements Service {
         );
 
         if (identificationInfoEl == null) {
-            identificationInfoEl = new Element("CHE_MD_DataIdentification", GeocatXslUtil.CHE_NAMESPACE).setAttribute("isoType", "gmd:MD_DataIdentification", GCO);
+            identificationInfoEl = new Element("CHE_MD_DataIdentification", XslUtil.CHE_NAMESPACE).setAttribute("isoType", "gmd:MD_DataIdentification", GCO);
         }
 
         JSONObject identificationJSON = new JSONObject();
@@ -644,7 +763,8 @@ public class GetEditModel implements Service {
 
     @VisibleForTesting
     protected List<KeywordBean> findINSPIREKeywordBeans(IsoLanguagesMapper mapper, ServiceContext context) throws IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {
-        ThesaurusManager thesaurusManager = context.getBean(ThesaurusManager.class);
+        final GeonetContext handlerContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        ThesaurusManager thesaurusManager = handlerContext.getThesaurusManager();
         KeywordSearchParamsBuilder paramsBuilder = new KeywordSearchParamsBuilder(mapper).
                 keyword("INSPIRE", KeywordSearchType.MATCH, false).
                 addLang("eng").addLang("ger").addLang("ita").addLang("fre").addThesaurus(KeywordsStrategy.GEOCAT_THESAURUS_NAME);
@@ -814,7 +934,8 @@ public class GetEditModel implements Service {
             metadata = ajaxEditUtils.getMetadataEmbedded(context, id, true, false);
             context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING + id, metadata);
         }
-        SchemaManager schemaManager = context.getBean(SchemaManager.class);
+        GeonetContext geonetContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SchemaManager schemaManager = geonetContext.getSchemamanager();
         EditLib lib = new EditLib(schemaManager);
 
         lib.removeEditingInfo(metadata);
@@ -822,7 +943,7 @@ public class GetEditModel implements Service {
         metadata.removeAttribute("schemaLocation", Geonet.Namespaces.XSI);
 
         Element validationMd = Xml.transform(metadata, context.getAppPath() + "/xsl/add-charstring.xsl");
-        final boolean valid = context.getBean(DataManager.class).validate(validationMd);
+        final boolean valid = geonetContext.getDataManager().validate(validationMd);
         lib.enumerateTree(metadata);
 
         return Pair.read(metadata, valid);
@@ -830,7 +951,7 @@ public class GetEditModel implements Service {
 
     @VisibleForTesting
     protected IsoLanguagesMapper getIsoLanguagesMapper() {
-        return ServiceContext.get().getBean(IsoLanguagesMapper.class);
+        return IsoLanguagesMapper.getInstance();
     }
 
     @VisibleForTesting
@@ -871,7 +992,7 @@ public class GetEditModel implements Service {
 
             final String hRef = XLink.getHRef(node);
             if (hRef != null) {
-                String id = URLDecoder.decode(org.fao.geonet.geocat.kernel.reusable.Utils.id(hRef), "UTF-8");
+                String id = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(hRef), "UTF-8");
                 addValue(node, json, Save.JSON_CONTACT_ID, id);
             }
             addValue(node, json, Save.JSON_CONTACT_FIRST_NAME, "che:CHE_CI_ResponsibleParty/che:individualFirstName");
@@ -916,7 +1037,7 @@ public class GetEditModel implements Service {
                 }
                 if (element != null) {
                     String thesaurus = null;
-                    String code = URLDecoder.decode(org.fao.geonet.geocat.kernel.reusable.Utils.id(hRef), "UTF-8");
+                    String code = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(hRef), "UTF-8");
                     Matcher matcher = THESAURUS_PATTERN.matcher(hRef);
                     if (matcher.find()) {
                         thesaurus = matcher.group(1);
@@ -1080,7 +1201,7 @@ public class GetEditModel implements Service {
     final JsonEncoder extentJsonEncoder = new JsonEncoder() {
         final Pattern typenamePattern = Pattern.compile("typename=([^&]+)");
         /**
-         * don't forget to update {@link org.fao.geonet.geocat.services.metadata.inspire.Save.ExtentHrefBuilder}
+         * don't forget to update {@link org.fao.geonet.services.metadata.inspire.Save.ExtentHrefBuilder}
          */
         Map<String, String> typenameMapper = Maps.newHashMap();
         {
@@ -1107,7 +1228,7 @@ public class GetEditModel implements Service {
             if (href != null) {
                 final Element element = GetEditModel.this.resolveXLink(href, ServiceContext.get());
                 if (element != null) {
-                    String id = URLDecoder.decode(org.fao.geonet.geocat.kernel.reusable.Utils.id(href), "UTF-8");
+                    String id = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(href), "UTF-8");
                     final Matcher matcher = typenamePattern.matcher(href);
                     if (!matcher.find()) {
                         throw new AssertionError("Unable to extract the typename in extent href: " + href);

@@ -1,14 +1,14 @@
-package org.fao.geonet.geocat.services.metadata.inspire;
+package org.fao.geonet.services.metadata.inspire;
 
 import com.google.common.collect.Maps;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Xml;
 import org.apache.jcs.access.exception.CacheException;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.AjaxEditUtils;
-import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -252,7 +252,8 @@ class SaveServiceTestImpl extends Save {
     }
 
     @Override
-    protected void saveMetadata(ServiceContext context, String id, DataManager dataManager, Element metadata) throws Exception {
+    protected void saveMetadata(ServiceContext context, AjaxEditUtils ajaxEditUtils, String id, DataManager dataManager,
+                                Element metadata, boolean finished, boolean commit) throws Exception {
         this.saved = true;
         this.savedMetadata = metadata;
     }

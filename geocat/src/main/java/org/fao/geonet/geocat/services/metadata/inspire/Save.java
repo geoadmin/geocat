@@ -1,4 +1,4 @@
-package org.fao.geonet.geocat.services.metadata.inspire;
+package org.fao.geonet.services.metadata.inspire;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
@@ -7,28 +7,31 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import jeeves.interfaces.Service;
+import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+import jeeves.utils.Util;
+import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.AddElemValue;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataType;
+import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.AjaxEditUtils;
+import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.XslUtil;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
+import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -55,7 +58,7 @@ import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.fao.geonet.constants.Geonet.Namespaces.SRV;
 import static org.fao.geonet.constants.Geonet.Namespaces.XLINK;
 import static org.fao.geonet.constants.Geonet.Namespaces.XSI;
-import static org.fao.geonet.util.GeocatXslUtil.CHE_NAMESPACE;
+import static org.fao.geonet.util.XslUtil.CHE_NAMESPACE;
 
 /**
  * @author Jesse on 5/17/2014.
@@ -67,7 +70,7 @@ public class Save implements Service {
             SRV,
             GEONET,
             Geonet.Namespaces.XLINK,
-            CHE_NAMESPACE);
+            XslUtil.CHE_NAMESPACE);
 
     private static final String PARAM_DATA = "data";
     private static final String PARAM_FINISH = "finish";
@@ -127,6 +130,7 @@ public class Save implements Service {
     public static final String JSON_CONFORMITY_LINEAGE_STATEMENT = "statement";
     public static final String JSON_CONFORMITY_ALL_CONFORMANCE_REPORTS = "allConformanceReports";
     public static final String JSON_CONFORMITY_SCOPE_CODE = "scopeCode";
+    public static final String JSON_CONFORMITY_LEVEL_DESC = "levelDescription";
     public static final String JSON_CONFORMITY_ALL_CONFORMANCE_REPORT_INDEX = "reportIndex";
     public static final String JSON_CONFORMITY_IS_TITLE_SET = "isTitleSet";
     public static final String JSON_VALID_METADATA = "metadataIsXsdValid";
@@ -141,6 +145,12 @@ public class Save implements Service {
     public static final String JSON_IDENTIFICATION_CONTAINS_OPERATIONS = "containsOperations";
     public static final String JSON_IDENTIFICATION_OPERATION_NAME = "operationName";
     public static final String JSON_IDENTIFICATION_DCP_LIST = "dcpList";
+    public static final String JSON_DISTRIBUTION_FORMAT = "distributionFormats";
+    public static final String JSON_DISTRIBUTION_FORMAT_NAME = "name";
+    public static final String JSON_DISTRIBUTION_FORMAT_VERSION = "version";
+    public static final String JSON_DISTRIBUTION_FORMAT_VALIDATED = "validated";
+    public static final String JSON_REF_SYS = "refSys";
+    public static final String JSON_REF_SYS_CODE = "code";
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -152,9 +162,12 @@ public class Save implements Service {
         try {
             final String data = Util.getParam(params, PARAM_DATA);
             final String id = params.getChildText(Params.ID);
+            final boolean finish = Util.getParam(params, Params.FINISHED, false);
+            final boolean commit = Util.getParam(params, Params.START_EDITING_SESSION, false);
 
-            final SchemaManager schemaManager = context.getBean(SchemaManager.class);
-            final DataManager dataManager = context.getBean(DataManager.class);
+            GeonetContext handlerContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+            final SchemaManager schemaManager = handlerContext.getSchemamanager();
+            final DataManager dataManager = handlerContext.getDataManager();
             final EditLib editLib = new EditLib(schemaManager);
 
             final AjaxEditUtils ajaxEditUtils = getAjaxEditUtils(params, context);
@@ -167,15 +180,16 @@ public class Save implements Service {
 
             final Element identificationInfo = updateIdentificationInfo(mainLang, context, editLib, metadata, metadataSchema, jsonObject);
             updateConstraints(editLib, metadataSchema, identificationInfo, jsonObject, mainLang);
+            updateSysRef(editLib, metadataSchema, metadata, jsonObject, mainLang);
 
             updateConformity(editLib, metadata, metadataSchema, jsonObject, mainLang);
 
             updateLinks(editLib, metadataSchema, metadata, jsonObject);
+            updateFormats(editLib, metadataSchema, metadata, jsonObject);
 
             editLib.removeEditingInfo(metadata);
             Element metadataToSave = (Element) metadata.clone();
-            saveMetadata(context, id, dataManager, metadataToSave);
-
+            saveMetadata(context, ajaxEditUtils, id, dataManager, metadataToSave, finish, commit);
 
             return getResponse(params, context, id, editLib, metadata);
         } catch (Throwable t) {
@@ -189,6 +203,109 @@ public class Save implements Service {
         }
     }
 
+    private void updateSysRef(EditLib editLib, MetadataSchema metadataSchema, Element metadata, JSONObject jsonObject, String mainLang) throws JSONException, JDOMException {
+        @SuppressWarnings("unchecked")
+        final List<Element> sysRefsEls = Lists.newArrayList(metadata.getChildren("referenceSystemInfo", GMD));
+        final JSONArray sysRefJson = jsonObject.optJSONArray(JSON_REF_SYS);
+        if (sysRefJson == null) {
+            return ;
+        }
+        Map<String, JSONObject> refs = Maps.newHashMap();
+
+        List<Element> newEls = Lists.newArrayList();
+
+        for (int i = 0; i < sysRefJson.length(); i++) {
+            final JSONObject obj = sysRefJson.getJSONObject(i);
+            String ref = obj.optString(Params.REF, "").trim();
+            if (!ref.trim().isEmpty()) {
+                refs.put(ref, obj);
+            } else {
+                newEls.add(createNewSysRef(obj, mainLang));
+            }
+        }
+
+        for (Element sysRef : sysRefsEls) {
+            final String ref = sysRef.getChild("element", GEONET).getAttributeValue("ref");
+            if (refs.containsKey(ref)) {
+                final JSONObject translationJson = refs.get(ref);
+                Element code = createTranslatedInstance(mainLang, translationJson.getJSONObject(Save.JSON_REF_SYS_CODE), "code", GMD);
+                addElementFromXPath(editLib, metadataSchema, sysRef, "gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code", code);
+            } else {
+                sysRef.detach();
+            }
+        }
+
+        int addIndex = -1;
+        final List infos = metadata.getChildren("referenceSystemInfo", GMD);
+        if (!infos.isEmpty()) {
+            addIndex = metadata.indexOf((Content) infos.get(infos.size() - 1)) + 1;
+        }
+        for (Element newEl : newEls) {
+            if (addIndex == -1) {
+                addElementFromXPath(editLib, metadataSchema, metadata, "gmd:referenceSystemInfo", newEl);
+                addIndex = metadata.indexOf(newEl);
+            } else {
+                metadata.addContent(addIndex, newEl);
+            }
+            addIndex++;
+        }
+    }
+
+    private Element createNewSysRef(JSONObject obj, String mainLang) throws JSONException {
+        final Element code = createTranslatedInstance(mainLang, obj.getJSONObject(JSON_REF_SYS_CODE), "code", GMD);
+        return new Element("referenceSystemInfo", GMD).addContent(
+                new Element("MD_ReferenceSystem", GMD).addContent(
+                        new Element("referenceSystemIdentifier", GMD).addContent(
+                                new Element("RS_Identifier", GMD).addContent(code)
+                        )
+                )
+        );
+    }
+
+    private void updateFormats(EditLib editLib, MetadataSchema metadataSchema, Element metadata, JSONObject jsonObject)
+            throws JSONException, JDOMException {
+        Element distributionInfo = Xml.selectElement(metadata, "gmd:distributionInfo/gmd:MD_Distribution", NS);
+        if (distributionInfo != null) {
+            @SuppressWarnings("unchecked")
+            final List<Element> formats = Lists.newArrayList((List<Element>) distributionInfo.getChildren("distributionFormat", GMD));
+            for (Element format : formats) {
+                format.detach();
+            }
+        }
+
+        JSONArray formatJson = jsonObject.optJSONArray(JSON_DISTRIBUTION_FORMAT);
+        if (formatJson != null) {
+            for (int i = 0; i < formatJson.length(); i++) {
+                JSONObject format = formatJson.getJSONObject(i);
+                String name = format.getString(JSON_DISTRIBUTION_FORMAT_NAME);
+                String version = format.getString(JSON_DISTRIBUTION_FORMAT_VERSION);
+                String id = format.optString(Params.ID, "");
+                if (!id.trim().isEmpty()) {
+                    boolean validated = format.getBoolean(JSON_DISTRIBUTION_FORMAT_VALIDATED);
+                    Element formatEl = new Element("distributionFormat", GMD).addContent(
+                            new Element("MD_Format", GMD).addContent(Arrays.asList(
+                                    new Element("name", GMD).addContent(new Element("CharacterString", GCO).setText(name)),
+                                    new Element("version", GMD).addContent(new Element("CharacterString", GCO).setText(version))
+                            ))
+                    );
+                    formatEl.setAttribute("href", "local://xml.format.get?id=" + id, XLINK);
+                    if (!validated) {
+                        formatEl.setAttribute("role", ReusableObjManager.NON_VALID_ROLE, XLINK);
+                    }
+
+                    if (distributionInfo != null) {
+                        distributionInfo.addContent(i, formatEl);
+                    } else {
+                        addElementFromXPath(editLib, metadataSchema, metadata,
+                                "gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat", formatEl);
+
+                        distributionInfo = formatEl.getParentElement();
+                    }
+                }
+            }
+        }
+    }
+
     private void updateLinks(EditLib editLib, MetadataSchema metadataSchema, Element metadata, JSONObject jsonObject)
             throws JSONException, JDOMException {
         final JSONArray jsonArray = jsonObject.optJSONArray(Save.JSON_LINKS);
@@ -198,7 +315,7 @@ public class Save implements Service {
                 String ref = linkJson.optString(Params.REF);
                 if (Strings.isNullOrEmpty(ref)) {
                     if (linkJson.has(Save.JSON_LINKS_LOCALIZED_URL)) {
-                        addXLink(editLib, metadataSchema, linkJson, metadata, false);
+                        addLink(editLib, metadataSchema, linkJson, metadata, false);
                     }
                 } else {
                     boolean delete = !linkJson.has(Save.JSON_LINKS_LOCALIZED_URL);
@@ -206,28 +323,42 @@ public class Save implements Service {
                     if (delete) {
                         element.detach();
                     } else {
-                        addXLink(editLib, metadataSchema, linkJson, element, true);
+                        addLink(editLib, metadataSchema, linkJson, element, true);
                     }
                 }
             }
         }
     }
 
-    private void addXLink(EditLib editLib, MetadataSchema metadataSchema, JSONObject linkJson, Element element, boolean replace) throws JSONException {
+    private void addLink(EditLib editLib, MetadataSchema metadataSchema, JSONObject linkJson, Element element, boolean replace) throws JSONException {
         final JSONObject localizedURL = linkJson.optJSONObject(JSON_LINKS_LOCALIZED_URL);
+        JSONObject description = linkJson.optJSONObject(JSON_LINKS_DESCRIPTION);
         if (localizedURL != null) {
             final String xpath = linkJson.getString(JSON_LINKS_XPATH);
             final String specialTag = replace ? EditLib.SpecialUpdateTags.REPLACE : EditLib.SpecialUpdateTags.ADD;
-            final Element buildLocalizedElem = buildLocalizedElem(localizedURL);
+            final Element buildLocalizedElem = buildLocalizedURLElem(localizedURL);
             AddElemValue value = new AddElemValue(new Element(specialTag).addContent(buildLocalizedElem));
 
             final boolean result = editLib.addElementOrFragmentFromXpath(element, metadataSchema, xpath, value, true);
             assert result;
-            buildLocalizedElem.getParentElement().setAttribute("type", "che:PT_FreeURL_PropertyType", XSI);
+            final Element parentElement = buildLocalizedElem.getParentElement();
+            parentElement.setAttribute("type", "che:PT_FreeURL_PropertyType", XSI);
+            final Element onlineResource = parentElement.getParentElement();
+            final Element descriptionEl = onlineResource.getChild("description", GMD);
+            if (description == null || description.length() == 0) {
+                if (descriptionEl != null) {
+                    descriptionEl.detach();
+                }
+            } else {
+                if (descriptionEl != null) {
+                    final Element freeText = buildLocalizedCharStringElem(description);
+                    descriptionEl.setContent(freeText);
+                }
+            }
         }
     }
 
-    private Element buildLocalizedElem(JSONObject localizedURL) throws JSONException {
+    private Element buildLocalizedURLElem(JSONObject localizedURL) throws JSONException {
         final Iterator keys = localizedURL.keys();
         final Element freeUrl = new Element("PT_FreeURL", CHE_NAMESPACE);
         ArrayList<Element> translations = Lists.newArrayList();
@@ -237,6 +368,22 @@ public class Save implements Service {
             String code = "#" + getIsoLanguagesMapper().iso639_2_to_iso639_1(lang.toLowerCase()).toUpperCase();
             translations.add(new Element("URLGroup", CHE_NAMESPACE).addContent(
                     new Element("LocalisedURL", CHE_NAMESPACE).setAttribute("locale", code).setText(url)
+            ));
+        }
+        freeUrl.addContent(translations);
+        return freeUrl;
+    }
+
+    private Element buildLocalizedCharStringElem(JSONObject description) throws JSONException {
+        final Iterator keys = description.keys();
+        final Element freeUrl = new Element("PT_FreeText", GMD);
+        ArrayList<Element> translations = Lists.newArrayList();
+        while (keys.hasNext()) {
+            String lang = (String) keys.next();
+            final String text = description.getString(lang);
+            String code = "#" + getIsoLanguagesMapper().iso639_2_to_iso639_1(lang.toLowerCase()).toUpperCase();
+            translations.add(new Element("textGroup", GMD).addContent(
+                    new Element("LocalisedCharacterString", GMD).setAttribute("locale", code).setText(text)
             ));
         }
         freeUrl.addContent(translations);
@@ -501,7 +648,7 @@ public class Save implements Service {
                         new Element(EditLib.SpecialUpdateTags.ADD, GEONET).addContent(conformanceResult));
             } else {
                 final Element gmdDQ_DataQuality = resultEl.getParentElement().getParentElement().getParentElement();
-                final Element gmdReport = editLib.addElement(metadataSchema, gmdDQ_DataQuality, "gmd:report");
+                final Element gmdReport = editLib.addElement(metadataSchema.getName(), gmdDQ_DataQuality, "gmd:report");
                 addElementFromXPath(editLib, metadataSchema, gmdReport, "gmd:DQ_DomainConsistency/gmd:result",
                         new Element(EditLib.SpecialUpdateTags.ADD, GEONET).addContent(conformanceResult));
             }
@@ -522,6 +669,9 @@ public class Save implements Service {
                 "gmd:specification/gmd:CI_Citation/gmd:title", title);
 
         Element citationEl = title.getParentElement();
+        if (!conformityJson.has(JSON_DATE)) {
+            GetEditModel.addConformityDate(conformityJson);
+        }
         updateDate(editLib, metadataSchema, citationEl, "gmd:date", conformityJson);
 
         Element pass = new Element(JSON_CONFORMITY_PASS, GMD).addContent(
@@ -530,15 +680,15 @@ public class Save implements Service {
         addElementFromXPath(editLib, metadataSchema, conformanceResult,
                 "gmd:pass", pass);
 
-
         Element explanation = new Element("explanation", GMD).addContent(
                 new Element("CharacterString", GCO).setText(conformityJson.optString(JSON_CONFORMITY_EXPLANATION, ""))
         );
         addElementFromXPath(editLib, metadataSchema, conformanceResult,
                 "gmd:explanation", explanation);
 
+        final Element dataQualityEl = GetEditModel.getDataQualityEl(conformanceResult);
         updateCodeList(editLib,
-                GetEditModel.getDataQualityEl(conformanceResult),
+                dataQualityEl,
                 metadataSchema,
                 new Element("MD_ScopeCode", GMD),
                 conformityJson.getString(JSON_CONFORMITY_SCOPE_CODE),
@@ -547,6 +697,11 @@ public class Save implements Service {
                 true
         );
 
+        if (conformityJson.has(JSON_CONFORMITY_LEVEL_DESC)) {
+            updateCharString(editLib, dataQualityEl, metadataSchema,
+                    "gmd:scope/gmd:DQ_Scope/gmd:levelDescription/gmd:MD_ScopeDescription/gmd:other",
+                    conformityJson.getString(JSON_CONFORMITY_LEVEL_DESC));
+        }
         JSONObject lineageJSON = conformityJson.getJSONObject(JSON_CONFORMITY_LINEAGE);
         String lineageRef = lineageJSON.optString(Params.REF);
 
@@ -577,10 +732,12 @@ public class Save implements Service {
 
         updateDate(editLib, metadataSchema, identification, "gmd:citation/gmd:CI_Citation/gmd:date", identificationJson);
 
-        String citationIdentifier = identificationJson.optString(JSON_IDENTIFICATION_IDENTIFIER, "");
-        updateCharString(editLib, identification, metadataSchema,
-                "gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code", citationIdentifier);
-
+        final String identificationType = identificationJson.optString(JSON_IDENTIFICATION_TYPE, JSON_IDENTIFICATION_TYPE_DATA_VALUE);
+        if (identificationType.equals(JSON_IDENTIFICATION_TYPE_DATA_VALUE)) {
+            String citationIdentifier = identificationJson.optString(JSON_IDENTIFICATION_IDENTIFIER, "");
+            updateCharString(editLib, identification, metadataSchema,
+                    "gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code", citationIdentifier);
+        }
         updateTranslatedInstance(mainLang, editLib, metadataSchema, identification, identificationJson.optJSONObject(JSON_IDENTIFICATION_ABSTRACT),
                 "gmd:abstract", "abstract", GMD);
 
@@ -590,7 +747,6 @@ public class Save implements Service {
         updateCharString(editLib, identification, metadataSchema, "gmd:language", identificationJson.optString(JSON_LANGUAGE));
 
         updateKeywords(context, editLib, metadataSchema, identification, identificationJson);
-        final String identificationType = identificationJson.optString(JSON_IDENTIFICATION_TYPE, JSON_IDENTIFICATION_TYPE_DATA_VALUE);
         if (identificationType.equals(JSON_IDENTIFICATION_TYPE_DATA_VALUE)) {
             updateTopicCategory(editLib, metadataSchema, identification, identificationJson);
         }
@@ -854,7 +1010,7 @@ public class Save implements Service {
                                       JSONObject identificationJson) throws Exception {
         Element identificationInfo = metadata.getChild("identificationInfo", Geonet.Namespaces.GMD);
         if (identificationInfo == null) {
-            identificationInfo = editLib.addElement(metadataSchema, metadata, "gmd:identificationInfo");
+            identificationInfo = editLib.addElement(metadataSchema.getName(), metadata, "gmd:identificationInfo");
         }
 
         final String requiredInfoTagName;
@@ -951,7 +1107,7 @@ public class Save implements Service {
 
         if (previousEls.isEmpty()) {
             // if there are no contacts then we need to add one to know where to insert all of the new ones.
-            Element newEl = editLib.addElement(metadataSchema, metadata, tagName);
+            Element newEl = editLib.addElement(metadataSchema.getName(), metadata, tagName);
             previousEls = Arrays.asList(newEl);
         }
 
@@ -998,6 +1154,39 @@ public class Save implements Service {
             return;
         }
 
+        JSONArray nonEmptyContacts = new JSONArray();
+        for (int i = 0; i < contacts.length(); i++) {
+            JSONObject contact = contacts.getJSONObject(i);
+            final Iterator keys = contact.keys();
+            while (keys.hasNext()) {
+                String next = (String) keys.next();
+                if (!next.equals(Save.JSON_VALIDATED)) {
+                    final Object property = contact.get(next);
+                    if (property instanceof JSONObject) {
+                        JSONObject jsonObject = (JSONObject) property;
+                        if (jsonObject.length() > 0) {
+                            nonEmptyContacts.put(contact);
+                            break;
+                        }
+                    } else if (property instanceof String) {
+                        String s = (String) property;
+                        if (!s.trim().isEmpty()) {
+                            nonEmptyContacts.put(contact);
+                            break;
+                        }
+
+                    } else if (property != null) {
+                        nonEmptyContacts.put(contact);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (nonEmptyContacts.length() == 0) {
+            return;
+        }
+
         String tagName = xpath;
         if (xpath.contains("/")) {
             tagName = xpath.substring(xpath.indexOf("/") + 1);
@@ -1006,8 +1195,8 @@ public class Save implements Service {
 
         int insertIndex = result.one();
 
-        for (int i = 0; i < contacts.length(); i++) {
-            JSONObject contact = contacts.getJSONObject(i);
+        for (int i = 0; i < nonEmptyContacts.length(); i++) {
+            JSONObject contact = nonEmptyContacts.getJSONObject(i);
             String contactId = contact.optString(JSON_CONTACT_ID, null);
             boolean validated = contact.getBoolean(JSON_VALIDATED);
             String role = contact.optString(JSON_CONTACT_ROLE, "pointOfContact");
@@ -1112,9 +1301,21 @@ public class Save implements Service {
     }
 
     @VisibleForTesting
-    protected void saveMetadata(ServiceContext context, String id, DataManager dataManager, Element metadata) throws Exception {
-        dataManager.updateMetadata(context, id, metadata, false, true, true, context.getLanguage(), null, true, true);
+    protected void saveMetadata(ServiceContext context, AjaxEditUtils ajaxEditUtils, String id, DataManager dataManager, Element metadata,
+                                boolean finished, boolean commitChange) throws Exception {
+        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        dataManager.updateMetadata(context, dbms, id, metadata, false, true, true, context.getLanguage(), null, true, true);
         context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING + id, metadata);
+
+        if (finished) {
+            final UserSession session = context.getUserSession();
+            ajaxEditUtils.removeMetadataEmbedded(session, id);
+
+            dataManager.endEditingSession(id, session);
+        } else if (commitChange) {
+            dataManager.startEditingSession(context, id);
+        }
+
     }
 
     @VisibleForTesting
@@ -1131,7 +1332,7 @@ public class Save implements Service {
 
     @VisibleForTesting
     protected IsoLanguagesMapper getIsoLanguagesMapper() {
-        return ServiceContext.get().getBean(IsoLanguagesMapper.class);
+        return IsoLanguagesMapper.getInstance();
     }
 
     @VisibleForTesting
@@ -1193,7 +1394,7 @@ public class Save implements Service {
 
     static class ExtentHrefBuilder implements HrefBuilder {
         /**
-         * Don't forget to update {@link org.fao.geonet.geocat.services.metadata.inspire.GetEditModel#extentJsonEncoder}
+         * Don't forget to update {@link org.fao.geonet.services.metadata.inspire.GetEditModel#extentJsonEncoder}
          */
         Map<String, String> typenameMapping = Maps.newHashMap();
 

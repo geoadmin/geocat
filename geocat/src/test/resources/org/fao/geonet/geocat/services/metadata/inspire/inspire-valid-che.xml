@@ -163,6 +163,36 @@
             </gmd:characterEncoding>
         </gmd:PT_Locale>
     </gmd:locale>
+    <gmd:referenceSystemInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gmd:MD_ReferenceSystem>
+            <gmd:referenceSystemIdentifier>
+                <gmd:RS_Identifier>
+                    <gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">http://www.opengis.net/def/crs/EPSG/0/4936</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:code>
+                </gmd:RS_Identifier>
+            </gmd:referenceSystemIdentifier>
+        </gmd:MD_ReferenceSystem>
+    </gmd:referenceSystemInfo>
+    <gmd:referenceSystemInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gmd:MD_ReferenceSystem>
+            <gmd:referenceSystemIdentifier>
+                <gmd:RS_Identifier>
+                    <gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">EPSG:4936</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:code>
+                </gmd:RS_Identifier>
+            </gmd:referenceSystemIdentifier>
+        </gmd:MD_ReferenceSystem>
+    </gmd:referenceSystemInfo>
     <gmd:identificationInfo xmlns:xalan="http://xml.apache.org/xalan" xmlns:java="java:org.fao.geonet.util.XslUtil" xmlns:fra="http://www.cnig.gouv.fr/2005/fra">
         <che:CHE_MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
             <gmd:citation>
@@ -585,6 +615,13 @@
                     <gmd:level>
                         <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode" codeListValue="dataset" />
                     </gmd:level>
+                    <gmd:levelDescription>
+                        <gmd:MD_ScopeDescription>
+                            <gmd:other>
+                                <gco:CharacterString>DataSet</gco:CharacterString>
+                            </gmd:other>
+                        </gmd:MD_ScopeDescription>
+                    </gmd:levelDescription>
                 </gmd:DQ_Scope>
             </gmd:scope>
             <gmd:report>
@@ -596,7 +633,7 @@
                                     <gmd:title xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
                                         <gmd:PT_FreeText>
                                             <gmd:textGroup>
-                                                <gmd:LocalisedCharacterString locale="#DE">VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten</gmd:LocalisedCharacterString>
+                                                <gmd:LocalisedCharacterString locale="#DE">verordnung (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten</gmd:LocalisedCharacterString>
                                             </gmd:textGroup>
                                         </gmd:PT_FreeText>
                                     </gmd:title>

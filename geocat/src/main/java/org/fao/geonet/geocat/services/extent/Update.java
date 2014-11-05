@@ -41,6 +41,7 @@ import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.util.LangUtils;
+import org.fao.geonet.utils.Log;
 import org.geotools.data.FeatureStore;
 import org.geotools.util.logging.Logging;
 import org.jdom.Element;
@@ -77,7 +78,7 @@ public class Update implements Service
     {
     }
 
-    public Element exec(Element params, ServiceContext context) throws Exception
+    public Element exec(Element params, final ServiceContext context) throws Exception
     {
 
         final GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -187,12 +188,27 @@ public class Update implements Service
         final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, strategy, fields, id, null, false,
                 Functions.<String>identity());
 
-        DataManager dm = context.getBean(DataManager.class);
+        gc.getThreadPool().runTask(new Runnable() {
+            @Override
+            public void run() {
+                DataManager dm = context.getBean(DataManager.class);
 
-        for (MetadataRecord metadataRecord : referencingMetadata) {
-            dm.indexMetadata(""+metadataRecord.id, false, true, false, true);
-        }
-
+                try {
+                    for (MetadataRecord metadataRecord : referencingMetadata) {
+                        try {
+                            dm.indexMetadata(String.valueOf(metadataRecord.id), false, true, false, true);
+                        } catch (Exception e) {
+                            // we want to continue indexing so log and continue on
+                            Log.error("Error indexing metadata after updating extent:\n\tMetadata Id: " + metadataRecord.id
+                                      + "\n\tExtent Id: " + id + "\n\tExtent typename: " + typename, e);
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.error("Error opening database when trying to index metadata after updating extent"
+                              + "\n\tExtent Id: " + id + "\n\tExtent typename: " + typename, e);
+                }
+            }
+        });
 
         return responseElem;
     }
