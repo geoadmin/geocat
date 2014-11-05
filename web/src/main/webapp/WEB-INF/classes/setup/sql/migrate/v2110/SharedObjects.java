@@ -41,13 +41,13 @@ public class SharedObjects implements DatabaseMigrationTask {
 
     private final static Pattern ID_PATTERN = Pattern.compile(".*id=(\\d+).*");
     private final static Pattern ROLE_PATTERN = Pattern.compile(".*role=([^&]+).*");
-    protected static final String PREPARED_STATEMENT_SQL = "INSERT INTO public.metadata("
-                                                           + "            id, uuid, schemaid, istemplate, isharvested, createdate, " +
-                                                           "changedate, \n"
-                                                           + "            data, source, title, root, extra, owner, groupowner, \n"
-                                                           + "            rating, popularity, displayorder)\n"
-                                                           + "    VALUES (?, ?, 'iso19139.che', 's', 'n', ?, ?, ?, ?, ?, ?, ?, 1, 2, 0," +
-                                                           " 0, 0)";
+    protected static final String PREPARED_STATEMENT_SQL = "INSERT INTO public.metadata(" +
+                                                           "              id, uuid, schemaid, istemplate, isharvested, createdate, \n" +
+                                                           "              changedate,  data, source, title, root, extra, owner, \n" +
+                                                           "              groupowner, rating, popularity, displayorder)\n" +
+                                                           "    VALUES (" +
+                                                           "              ?, ?, 'iso19139.che', 's', 'n', ?, ?, ?, ?, ?, ?, ?, " +
+                                                           "              1, 2, 0, 0, 0)";
 
     @Override
     public void update(Connection connection) throws SQLException {
@@ -63,6 +63,13 @@ public class SharedObjects implements DatabaseMigrationTask {
             Map<String, String> contactIdMap = migrateContacts(idIndex, source, connection);
 
             updateMetadata(connection, formatIdMap, contactIdMap);
+
+            try (Statement statement = connection.createStatement()) {
+                statement.execute("DELETE FROM useraddress WHERE userid IN (SELECT id FROM users WHERE profile = 'Shared');");
+                statement.execute("DELETE FROM email WHERE user_id IN (SELECT id FROM users WHERE profile = 'Shared');");
+                statement.execute("DELETE FROM users where profile='Shared'");
+                statement.execute("DROP TABLE Formats");
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

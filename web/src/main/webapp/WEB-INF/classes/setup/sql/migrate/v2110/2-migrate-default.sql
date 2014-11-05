@@ -7,6 +7,9 @@ ALTER TABLE operations DROP COLUMN reserved;
 
 
 ALTER TABLE Settings ALTER name TYPE varchar(512);
+-- GEOCAT
+ALTER TABLE Settings ALTER value TYPE text;
+-- END GEOCAT
 
 -- 0 is char, 1 is number, 2 is boolean
 ALTER TABLE Settings ADD datatype int;
