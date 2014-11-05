@@ -1601,7 +1601,7 @@ public class DataManager {
 
         newMetadata.getCategories().addAll(filteredCategories);
 
-        final int finalId = insertMetadata(context, newMetadata, xml, false, true, true, UpdateDatestamp.YES,
+        final int finalId = insertMetadata(context, newMetadata, xml, false, true, false, UpdateDatestamp.NO,
                 fullRightsForGroup, true).getId();
 
         return String.valueOf(finalId);

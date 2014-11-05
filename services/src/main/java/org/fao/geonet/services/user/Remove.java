@@ -27,127 +27,87 @@ import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroupId_;
-import org.fao.geonet.geocat.SharedObjectApi;
-import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
 
-import java.util.*;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
-import static org.springframework.data.jpa.domain.Specifications.*;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * Removes a user from the system. It removes the relationship to a group too.
  */
 public class Remove extends NotInReadOnlyModeService {
-	private Type type;
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    public void init(String appPath, ServiceConfig params) throws Exception {}
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
-	       this.type = Type.valueOf(params.getValue("type", "NORMAL"));
-	}
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
+    {
+        String id = Util.getParam(params, Params.ID);
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		String id = Util.getParam(params, Params.ID);
+        UserSession usrSess = context.getUserSession();
+        Profile myProfile = usrSess.getProfile();
+        String      myUserId  = usrSess.getUserId();
 
-        Element rejectResult = handleSharedUser(id, params, context);
-        if(rejectResult != null) {
-            return rejectResult;
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dataMan = gc.getBean(DataManager.class);
+
+        if (myUserId.equals(id)) {
+            throw new IllegalArgumentException("You cannot delete yourself from the user database");
         }
-
-		UserSession usrSess = context.getUserSession();
-		Profile myProfile = usrSess.getProfile();
-		String      myUserId  = usrSess.getUserId();
-
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dataMan = gc.getBean(DataManager.class);
-
-		if (myUserId.equals(id)) {
-			throw new IllegalArgumentException("You cannot delete yourself from the user database");
-		}
 
         final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
         int iId = Integer.parseInt(id);
 
-		if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin)  {
+        if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin)  {
 
-			if (myProfile ==  Profile.UserAdmin) {
+            if (myProfile ==  Profile.UserAdmin) {
                 final Integer iMyUserId = Integer.valueOf(myUserId);
                 final List<Integer> groupIds = userGroupRepository.findGroupIds(where(hasUserId(iMyUserId)).or(hasUserId(iId)));
                 if (groupIds.isEmpty()) {
-				  throw new IllegalArgumentException("You don't have rights to delete this user because the user is not part of your group");
-				}
-			}
+                    throw new IllegalArgumentException("You don't have rights to delete this user because the user is not part of your group");
+                }
+            }
 
-			// Before processing DELETE check that the user is not referenced 
-			// elsewhere in the GeoNetwork database - an exception is thrown if
-			// this is the case
-			if (dataMan.isUserMetadataOwner(iId)) {
-				throw new IllegalArgumentException("Cannot delete a user that is also a metadata owner");
-			}
+            // Before processing DELETE check that the user is not referenced
+            // elsewhere in the GeoNetwork database - an exception is thrown if
+            // this is the case
+            if (dataMan.isUserMetadataOwner(iId)) {
+                throw new IllegalArgumentException("Cannot delete a user that is also a metadata owner");
+            }
 
-			if (dataMan.isUserMetadataStatus(iId)) {
-				throw new IllegalArgumentException("Cannot delete a user that has set a metadata status");
-			}
+            if (dataMan.isUserMetadataStatus(iId)) {
+                throw new IllegalArgumentException("Cannot delete a user that has set a metadata status");
+            }
 
             userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId, Arrays.asList(iId));
             context.getBean(UserRepository.class).delete(iId);
-		} else {
-			throw new IllegalArgumentException("You don't have rights to delete this user");
-		}
-
-		return new Element(Jeeves.Elem.RESPONSE);
-	}
-
-    // GEOCAT
-    @SuppressWarnings("unchecked")
-    private Element handleSharedUser(String id, Element params, ServiceContext context) throws Exception {
-    	boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
-
-        final User user = context.getBean(UserRepository.class).findOne(Integer.parseInt(id));
-
-        if(user != null) {
-            if( type == Type.NORMAL && Profile.Shared == user.getProfile()) {
-                throw new IllegalArgumentException("This remove user service instance cannot remove shared objects");
-            }
-
-            if(type != Type.NORMAL && !Boolean.parseBoolean(Util.getParam(params, "forceDelete", "false"))) {
-                String msg = LangUtils.loadString("reusable.rejectDefaultMsg", context.getAppPath(), context.getLanguage());
-                boolean isValidated = user.getGeocatUserInfo().isValidated();
-                final SharedObjectApi bean = context.getBean(SharedObjectApi.class);
-                return bean.reject(context, ReusableTypes.contacts, new String[]{id}, msg, null, isValidated, testing);
-            }
+        } else {
+            throw new IllegalArgumentException("You don't have rights to delete this user");
         }
 
-        return null;
+        return new Element(Jeeves.Elem.RESPONSE);
     }
-    // END GEOCAT
 }
-
-//=============================================================================
-
