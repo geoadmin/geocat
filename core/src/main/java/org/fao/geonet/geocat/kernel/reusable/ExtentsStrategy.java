@@ -93,7 +93,7 @@ import static org.fao.geonet.geocat.kernel.reusable.Utils.gml2Conf;
 import static org.fao.geonet.geocat.kernel.reusable.Utils.gml3Conf;
 import static org.fao.geonet.util.LangUtils.FieldType.STRING;
 
-public final class ExtentsStrategy extends ReplacementStrategy {
+public final class ExtentsStrategy extends SharedObjectStrategy {
 
     public static final ElementFinder BBOX_FINDER = new ElementFinder("EX_GeographicBoundingBox",
             Geonet.Namespaces.GMD, "geographicElement");

@@ -168,7 +168,7 @@ public final class FormatsStrategy extends AbstractSubtemplateStrategy {
     protected String getEmptyTemplate() {
         return "<gmd:MD_Format>\n"
                + "          <gmd:name gco:nilReason=\"missing\">\n"
-               + "            <gco:CharacterString/>\n"
+               + "            <gco:CharacterString gco:nilReason=\"missing\"/>\n"
                + "          </gmd:name>\n"
                + "          <gmd:version gco:nilReason=\"missing\">\n"
                + "            <gco:CharacterString/>\n"

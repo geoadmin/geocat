@@ -33,7 +33,7 @@ import jeeves.xlink.XLink;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
-import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -66,7 +66,7 @@ public class Validate implements Service
                                           + " \n(" + Arrays.toString(ids) + ")");
 
         String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));
-        ReplacementStrategy strategy = Utils.strategy(ReusableTypes.valueOf(page), context);
+        SharedObjectStrategy strategy = Utils.strategy(ReusableTypes.valueOf(page), context);
 
         Element results = new Element("results");
         if (strategy != null) {
@@ -80,7 +80,7 @@ public class Validate implements Service
         return results;
     }
 
-    private List<Element> performValidation(String[] ids, ReplacementStrategy strategy, ServiceContext context,
+    private List<Element> performValidation(String[] ids, SharedObjectStrategy strategy, ServiceContext context,
             String baseUrl) throws Exception
     {
         Map<String, String> idMapping = strategy.markAsValidated(ids, context.getUserSession());
@@ -99,7 +99,7 @@ public class Validate implements Service
     {
     }
 
-	private Element updateXLink(ReplacementStrategy strategy, ServiceContext context, Map<String, String> idMapping, String id,
+	private Element updateXLink(SharedObjectStrategy strategy, ServiceContext context, Map<String, String> idMapping, String id,
 	        boolean validated ) throws Exception {
 	
 	    UserSession session = context.getUserSession();

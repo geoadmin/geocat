@@ -6,7 +6,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
@@ -74,8 +74,8 @@ public abstract class AbstractSharedObjectTest extends AbstractServiceIntegratio
         String root = sharedObjTmp.getQualifiedName();
         Metadata metadata = new Metadata().setUuid(uuid);
         metadata.setData(Xml.getString(sharedObjTmp).replace("{{uuid}}", uuid));
-        final String categoryName = validated ? ReplacementStrategy.LUCENE_EXTRA_VALIDATED :
-                ReplacementStrategy.LUCENE_EXTRA_NON_VALIDATED;
+        final String categoryName = validated ? SharedObjectStrategy.LUCENE_EXTRA_VALIDATED :
+                SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED;
         MetadataDataInfo dataInfo = new MetadataDataInfo().
                 setSchemaId("iso19139.che").
                 setRoot(root).

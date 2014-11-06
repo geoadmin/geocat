@@ -346,8 +346,8 @@ public final class Utils {
         }
     }
 
-    public static ReplacementStrategy strategy( ReusableTypes reusableType, ServiceContext context ) throws Exception {
-        ReplacementStrategy strategy = null;
+    public static SharedObjectStrategy strategy( ReusableTypes reusableType, ServiceContext context ) throws Exception {
+        SharedObjectStrategy strategy = null;
         String appPath = context.getAppPath();
 
         String baseUrl = mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));

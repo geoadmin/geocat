@@ -329,8 +329,7 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
                + "          <gmd:address>\n"
                + "            <che:CHE_CI_Address gco:isoType=\"gmd:CI_Address\">\n"
                + "              <gmd:electronicMailAddress>\n"
-               + "                <gco:CharacterString>51b78987-eebf-4f1e-a84f-5596a94f125c@generated" +
-               ".org</gco:CharacterString>\n"
+               + "                <gco:CharacterString gco:nilReason=\"missing\"></gco:CharacterString>\n"
                + "              </gmd:electronicMailAddress>\n"
                + "            </che:CHE_CI_Address>\n"
                + "          </gmd:address>\n"

@@ -69,10 +69,10 @@ public final class DeletedObjects {
         final List<RejectedSharedObject> all = repo.findAll(sort);
 
 
-        Element deleted = new Element(ReplacementStrategy.REPORT_ROOT);
+        Element deleted = new Element(SharedObjectStrategy.REPORT_ROOT);
 
         for (RejectedSharedObject obj : all) {
-            Element delete = new Element(ReplacementStrategy.REPORT_ELEMENT);
+            Element delete = new Element(SharedObjectStrategy.REPORT_ELEMENT);
             String desc = obj.getDescription();
             String date = obj.getDeletionDate().getDateAndTime();
 
@@ -84,9 +84,9 @@ public final class DeletedObjects {
                 }
             }
             String id = "" + obj.getId();
-            Utils.addChild(delete, ReplacementStrategy.REPORT_ID, id);
+            Utils.addChild(delete, SharedObjectStrategy.REPORT_ID, id);
             if (desc != null) {
-                Utils.addChild(delete, ReplacementStrategy.REPORT_DESC, desc);
+                Utils.addChild(delete, SharedObjectStrategy.REPORT_DESC, desc);
                 delete.setAttribute("desc", desc + " - " + date);
             }
             if (date != null) {

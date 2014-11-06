@@ -36,7 +36,7 @@ import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.FormatsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
-import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -79,7 +79,7 @@ public class DeleteUnused implements Service {
         }
     }
 
-    private void process(ReplacementStrategy strategy, ServiceContext context) throws Exception {
+    private void process(SharedObjectStrategy strategy, ServiceContext context) throws Exception {
         UserSession userSession = context.getUserSession();
         @SuppressWarnings("unchecked")
         List<Element> nonValidated = strategy.list(userSession, false, context.getLanguage()).getChildren();
@@ -90,7 +90,7 @@ public class DeleteUnused implements Service {
 	    luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
 
         for (Element element : nonValidated) {
-            String objId = element.getChildTextTrim(ReplacementStrategy.REPORT_ID);
+            String objId = element.getChildTextTrim(SharedObjectStrategy.REPORT_ID);
 
             Set<MetadataRecord> md = Utils.getReferencingMetadata(context, strategy, luceneFields, objId, false, false, idConverter);
             if (md.isEmpty()) {
@@ -106,12 +106,12 @@ public class DeleteUnused implements Service {
         @SuppressWarnings("unchecked")
         List<Element> nonValidated = DeletedObjects.list(context.getBean(RejectedSharedObjectRepository.class)).getChildren();
         List<Integer> toDelete = new ArrayList<Integer>();
-        final Function<String, String> idConverter = ReplacementStrategy.ID_FUNC;
+        final Function<String, String> idConverter = SharedObjectStrategy.ID_FUNC;
 
         List<String> fields = Arrays.asList(DeletedObjects.getLuceneIndexField());
 
         for (Element element : nonValidated) {
-            String objId = element.getChildTextTrim(ReplacementStrategy.REPORT_ID);
+            String objId = element.getChildTextTrim(SharedObjectStrategy.REPORT_ID);
 
 			Set<MetadataRecord> md = Utils.getReferencingMetadata(context, DeletedObjects.createFindMetadataReferences(), fields, objId,
                     false, false, idConverter);
