@@ -1,4 +1,4 @@
-package org.fao.geonet.services.metadata.inspire;
+package org.fao.geonet.geocat.services.metadata.inspire;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
@@ -10,28 +10,27 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
 import org.apache.jcs.access.exception.CacheException;
-import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
+import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
-import org.fao.geonet.kernel.reusable.KeywordsStrategy;
-import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchType;
-import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.AjaxEditUtils;
-import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.json.JSONArray;
@@ -60,7 +59,9 @@ import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GEONET;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.fao.geonet.constants.Geonet.Namespaces.XLINK;
-import static org.fao.geonet.services.metadata.inspire.Save.NS;
+import static org.fao.geonet.geocat.services.metadata.inspire.Save.JSON_VALID_METADATA;
+import static org.fao.geonet.geocat.services.metadata.inspire.Save.NS;
+import static org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces.CHE;
 
 /**
  * @author Jesse on 5/17/2014.
@@ -180,7 +181,7 @@ public class GetEditModel implements Service {
 
     protected Element createModel(ServiceContext context, boolean pretty, Element metadataEl, Boolean valid) throws Exception {
         JSONObject metadataJson = new JSONObject();
-        metadataJson.put(Save.JSON_VALID_METADATA, valid);
+        metadataJson.put(JSON_VALID_METADATA, valid);
         addCodeLists(context, metadataJson);
         metadataJson.append("metadataTypeOptions", "data");
         metadataJson.append("metadataTypeOptions", "service");
@@ -262,7 +263,7 @@ public class GetEditModel implements Service {
             }
             final String href = format.getParentElement().getAttributeValue("href", XLINK, "");
             final String validated = format.getParentElement().getAttributeValue("role", XLINK, "");
-            String id = org.fao.geonet.kernel.reusable.Utils.id(href);
+            String id = org.fao.geonet.geocat.kernel.reusable.Utils.id(href);
 
             formatJson.put(createDistributionFormat(name, version, id, !ReusableObjManager.NON_VALID_ROLE.equals(validated)));
         }
@@ -466,17 +467,17 @@ public class GetEditModel implements Service {
 
     @VisibleForTesting
     protected void addCodeLists(ServiceContext context, JSONObject metadataJson) throws JDOMException, IOException, JSONException {
-        GeonetContext geonetContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        final MetadataSchema iso19139CHESchema = geonetContext.getSchemamanager().getSchema("iso19139.che");
-        final MetadataSchema iso19139Schema = geonetContext.getSchemamanager().getSchema("iso19139");
+        final SchemaManager schemaManager = context.getBean(SchemaManager.class);
+        final MetadataSchema iso19139CHESchema = schemaManager.getSchema("iso19139.che");
+        final MetadataSchema iso19139Schema = schemaManager.getSchema("iso19139");
         final Element codelists = cacheManager.get(context, true, iso19139Schema.getSchemaDir() + "/loc", "codelists.xml",
-                context.getLanguage(), "ger", true);
+                context.getLanguage(), "ger", true, true);
         final Element cheCodelistExtensions = cacheManager.get(context, true, iso19139CHESchema.getSchemaDir() + "/loc", "codelists.xml",
-                context.getLanguage(), "ger", true);
+                context.getLanguage(), "ger", true, true);
         final Element labels = cacheManager.get(context, true, iso19139Schema.getSchemaDir() + "/loc", "labels.xml",
-                context.getLanguage(), "ger", true);
+                context.getLanguage(), "ger", true, true);
         final Element labelExtensions = cacheManager.get(context, true, iso19139CHESchema.getSchemaDir() + "/loc", "labels.xml",
-                context.getLanguage(), "ger", true);
+                context.getLanguage(), "ger", true, true);
 
 
         addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:CI_DateTypeCode", "dateTypeOptions", null);
@@ -626,7 +627,8 @@ public class GetEditModel implements Service {
         for (Element genericConstraint : genericConstraints) {
             JSONObject json = new JSONObject();
             addRef(genericConstraint, json);
-            addArray(mainLanguage, genericConstraint, getIsoLanguagesMapper(), json, "gmd:useLimitation", Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
+            addArray(mainLanguage, genericConstraint, getIsoLanguagesMapper(), json, "gmd:useLimitation",
+                    Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
                     translatedElemEncoder);
             constraintsJson.append(Save.JSON_CONSTRAINTS_GENERIC, json);
         }
@@ -640,7 +642,8 @@ public class GetEditModel implements Service {
         for (Element securityConstraint : securityConstraints) {
             JSONObject json = new JSONObject();
             addRef(securityConstraint, json);
-            addArray(mainLanguage, securityConstraint, getIsoLanguagesMapper(), json, "gmd:useLimitation", Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
+            addArray(mainLanguage, securityConstraint, getIsoLanguagesMapper(), json, "gmd:useLimitation",
+                    Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
                     translatedElemEncoder);
             addArray(mainLanguage, securityConstraint, getIsoLanguagesMapper(), json, "gmd:classification/gmd:MD_ClassificationCode",
                     Save.JSON_CONSTRAINTS_CLASSIFICATION, codeListJsonEncoder);
@@ -658,13 +661,15 @@ public class GetEditModel implements Service {
     }
     private void processLegalConstraint(String mainLanguage, Element constraint, JSONObject legalJson, ConstraintTracker tracker) throws Exception {
         addRef(constraint, legalJson);
-        addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson, "gmd:useLimitation", Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
+        addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson, "gmd:useLimitation",
+                Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
                 translatedElemEncoder, new JSONArray());
         tracker.access |= addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson, "gmd:accessConstraints/gmd:MD_RestrictionCode",
                 Save.JSON_CONSTRAINTS_ACCESS_CONSTRAINTS, noDefaultJsonEncoder);
         tracker.use |= addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson, "gmd:useConstraints/gmd:MD_RestrictionCode",
                 Save.JSON_CONSTRAINTS_USE_CONSTRAINTS, noDefaultJsonEncoder);
-        addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson, "gmd:otherConstraints", Save.JSON_CONSTRAINTS_OTHER_CONSTRAINTS,
+        addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson, "gmd:otherConstraints",
+                Save.JSON_CONSTRAINTS_OTHER_CONSTRAINTS,
                 translatedElemEncoder, new JSONArray());
         addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson,
                 "che:legislationConstraints/che:CHE_MD_Legislation",
@@ -687,7 +692,7 @@ public class GetEditModel implements Service {
         );
 
         if (identificationInfoEl == null) {
-            identificationInfoEl = new Element("CHE_MD_DataIdentification", XslUtil.CHE_NAMESPACE).setAttribute("isoType", "gmd:MD_DataIdentification", GCO);
+            identificationInfoEl = new Element("CHE_MD_DataIdentification", CHE).setAttribute("isoType", "gmd:MD_DataIdentification", GCO);
         }
 
         JSONObject identificationJSON = new JSONObject();
@@ -698,7 +703,8 @@ public class GetEditModel implements Service {
         identificationJSON.put(Save.JSON_IDENTIFICATION_TYPE, isDataType ? "data" : "service");
 
         String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
-        addTranslatedElement(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, Save.JSON_TITLE,
+        addTranslatedElement(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON,
+                Save.JSON_TITLE,
                 "gmd:citation/gmd:CI_Citation/gmd:title");
 
         addValue(identificationInfoEl, identificationJSON, Save.JSON_IDENTIFICATION_IDENTIFIER,
@@ -763,8 +769,7 @@ public class GetEditModel implements Service {
 
     @VisibleForTesting
     protected List<KeywordBean> findINSPIREKeywordBeans(IsoLanguagesMapper mapper, ServiceContext context) throws IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {
-        final GeonetContext handlerContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        ThesaurusManager thesaurusManager = handlerContext.getThesaurusManager();
+        ThesaurusManager thesaurusManager = context.getBean(ThesaurusManager.class);
         KeywordSearchParamsBuilder paramsBuilder = new KeywordSearchParamsBuilder(mapper).
                 keyword("INSPIRE", KeywordSearchType.MATCH, false).
                 addLang("eng").addLang("ger").addLang("ita").addLang("fre").addThesaurus(KeywordsStrategy.GEOCAT_THESAURUS_NAME);
@@ -792,7 +797,7 @@ public class GetEditModel implements Service {
         }
 
         if (needsNewKeyword) {
-            keywords.put(new JSONObject("{"+Save.JSON_IDENTIFICATION_KEYWORD_WORD+":{}}"));
+            keywords.put(new JSONObject("{"+ Save.JSON_IDENTIFICATION_KEYWORD_WORD+":{}}"));
         }
     }
 
@@ -934,8 +939,7 @@ public class GetEditModel implements Service {
             metadata = ajaxEditUtils.getMetadataEmbedded(context, id, true, false);
             context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING + id, metadata);
         }
-        GeonetContext geonetContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SchemaManager schemaManager = geonetContext.getSchemamanager();
+        SchemaManager schemaManager = context.getBean(SchemaManager.class);
         EditLib lib = new EditLib(schemaManager);
 
         lib.removeEditingInfo(metadata);
@@ -943,7 +947,7 @@ public class GetEditModel implements Service {
         metadata.removeAttribute("schemaLocation", Geonet.Namespaces.XSI);
 
         Element validationMd = Xml.transform(metadata, context.getAppPath() + "/xsl/add-charstring.xsl");
-        final boolean valid = geonetContext.getDataManager().validate(validationMd);
+        final boolean valid = context.getBean(DataManager.class).validate(validationMd);
         lib.enumerateTree(metadata);
 
         return Pair.read(metadata, valid);
@@ -951,7 +955,7 @@ public class GetEditModel implements Service {
 
     @VisibleForTesting
     protected IsoLanguagesMapper getIsoLanguagesMapper() {
-        return IsoLanguagesMapper.getInstance();
+        return ServiceContext.get().getBean(IsoLanguagesMapper.class);
     }
 
     @VisibleForTesting
@@ -992,7 +996,7 @@ public class GetEditModel implements Service {
 
             final String hRef = XLink.getHRef(node);
             if (hRef != null) {
-                String id = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(hRef), "UTF-8");
+                String id = URLDecoder.decode(org.fao.geonet.geocat.kernel.reusable.Utils.id(hRef), "UTF-8");
                 addValue(node, json, Save.JSON_CONTACT_ID, id);
             }
             addValue(node, json, Save.JSON_CONTACT_FIRST_NAME, "che:CHE_CI_ResponsibleParty/che:individualFirstName");
@@ -1037,7 +1041,7 @@ public class GetEditModel implements Service {
                 }
                 if (element != null) {
                     String thesaurus = null;
-                    String code = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(hRef), "UTF-8");
+                    String code = URLDecoder.decode(org.fao.geonet.geocat.kernel.reusable.Utils.id(hRef), "UTF-8");
                     Matcher matcher = THESAURUS_PATTERN.matcher(hRef);
                     if (matcher.find()) {
                         thesaurus = matcher.group(1);
@@ -1201,7 +1205,7 @@ public class GetEditModel implements Service {
     final JsonEncoder extentJsonEncoder = new JsonEncoder() {
         final Pattern typenamePattern = Pattern.compile("typename=([^&]+)");
         /**
-         * don't forget to update {@link org.fao.geonet.services.metadata.inspire.Save.ExtentHrefBuilder}
+         * don't forget to update {@link Save.ExtentHrefBuilder}
          */
         Map<String, String> typenameMapper = Maps.newHashMap();
         {
@@ -1228,7 +1232,7 @@ public class GetEditModel implements Service {
             if (href != null) {
                 final Element element = GetEditModel.this.resolveXLink(href, ServiceContext.get());
                 if (element != null) {
-                    String id = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(href), "UTF-8");
+                    String id = URLDecoder.decode(org.fao.geonet.geocat.kernel.reusable.Utils.id(href), "UTF-8");
                     final Matcher matcher = typenamePattern.matcher(href);
                     if (!matcher.find()) {
                         throw new AssertionError("Unable to extract the typename in extent href: " + href);

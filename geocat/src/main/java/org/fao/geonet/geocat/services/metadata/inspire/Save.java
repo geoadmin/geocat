@@ -1,4 +1,4 @@
-package org.fao.geonet.services.metadata.inspire;
+package org.fao.geonet.geocat.services.metadata.inspire;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
@@ -7,30 +7,27 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
 import org.apache.jcs.access.exception.CacheException;
-import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.AddElemValue;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataType;
-import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.AjaxEditUtils;
-import org.fao.geonet.util.ISODate;
-import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -58,7 +55,7 @@ import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.fao.geonet.constants.Geonet.Namespaces.SRV;
 import static org.fao.geonet.constants.Geonet.Namespaces.XLINK;
 import static org.fao.geonet.constants.Geonet.Namespaces.XSI;
-import static org.fao.geonet.util.XslUtil.CHE_NAMESPACE;
+import static org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces.CHE;
 
 /**
  * @author Jesse on 5/17/2014.
@@ -70,7 +67,7 @@ public class Save implements Service {
             SRV,
             GEONET,
             Geonet.Namespaces.XLINK,
-            XslUtil.CHE_NAMESPACE);
+            CHE);
 
     private static final String PARAM_DATA = "data";
     private static final String PARAM_FINISH = "finish";
@@ -165,9 +162,8 @@ public class Save implements Service {
             final boolean finish = Util.getParam(params, Params.FINISHED, false);
             final boolean commit = Util.getParam(params, Params.START_EDITING_SESSION, false);
 
-            GeonetContext handlerContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-            final SchemaManager schemaManager = handlerContext.getSchemamanager();
-            final DataManager dataManager = handlerContext.getDataManager();
+            final SchemaManager schemaManager = context.getBean(SchemaManager.class);
+            final DataManager dataManager = context.getBean(DataManager.class);
             final EditLib editLib = new EditLib(schemaManager);
 
             final AjaxEditUtils ajaxEditUtils = getAjaxEditUtils(params, context);
@@ -360,14 +356,14 @@ public class Save implements Service {
 
     private Element buildLocalizedURLElem(JSONObject localizedURL) throws JSONException {
         final Iterator keys = localizedURL.keys();
-        final Element freeUrl = new Element("PT_FreeURL", CHE_NAMESPACE);
+        final Element freeUrl = new Element("PT_FreeURL", CHE);
         ArrayList<Element> translations = Lists.newArrayList();
         while (keys.hasNext()) {
             String lang = (String) keys.next();
             final String url = localizedURL.getString(lang);
             String code = "#" + getIsoLanguagesMapper().iso639_2_to_iso639_1(lang.toLowerCase()).toUpperCase();
-            translations.add(new Element("URLGroup", CHE_NAMESPACE).addContent(
-                    new Element("LocalisedURL", CHE_NAMESPACE).setAttribute("locale", code).setText(url)
+            translations.add(new Element("URLGroup", CHE).addContent(
+                    new Element("LocalisedURL", CHE).setAttribute("locale", code).setText(url)
             ));
         }
         freeUrl.addContent(translations);
@@ -442,7 +438,7 @@ public class Save implements Service {
             }
 
             if (legalConstraintEl == null) {
-                legalConstraintEl = new Element("CHE_MD_LegalConstraints", CHE_NAMESPACE).setAttribute("isoType", "gmd:MD_LegalConstraints", GCO);
+                legalConstraintEl = new Element("CHE_MD_LegalConstraints", CHE).setAttribute("isoType", "gmd:MD_LegalConstraints", GCO);
             }
 
 
@@ -648,7 +644,7 @@ public class Save implements Service {
                         new Element(EditLib.SpecialUpdateTags.ADD, GEONET).addContent(conformanceResult));
             } else {
                 final Element gmdDQ_DataQuality = resultEl.getParentElement().getParentElement().getParentElement();
-                final Element gmdReport = editLib.addElement(metadataSchema.getName(), gmdDQ_DataQuality, "gmd:report");
+                final Element gmdReport = editLib.addElement(metadataSchema, gmdDQ_DataQuality, "gmd:report");
                 addElementFromXPath(editLib, metadataSchema, gmdReport, "gmd:DQ_DomainConsistency/gmd:result",
                         new Element(EditLib.SpecialUpdateTags.ADD, GEONET).addContent(conformanceResult));
             }
@@ -1010,7 +1006,7 @@ public class Save implements Service {
                                       JSONObject identificationJson) throws Exception {
         Element identificationInfo = metadata.getChild("identificationInfo", Geonet.Namespaces.GMD);
         if (identificationInfo == null) {
-            identificationInfo = editLib.addElement(metadataSchema.getName(), metadata, "gmd:identificationInfo");
+            identificationInfo = editLib.addElement(metadataSchema, metadata, "gmd:identificationInfo");
         }
 
         final String requiredInfoTagName;
@@ -1028,14 +1024,14 @@ public class Save implements Service {
         if (!identificationInfo.getChildren().isEmpty()) {
             finalInfo = (Element) identificationInfo.getChildren().get(0);
         } else {
-            finalInfo = new Element(requiredInfoTagName, CHE_NAMESPACE).setAttribute("isoType", isoType, GCO);
+            finalInfo = new Element(requiredInfoTagName, CHE).setAttribute("isoType", isoType, GCO);
             identificationInfo.addContent(finalInfo);
         }
 
         if (!finalInfo.getName().equals(requiredInfoTagName)) {
             finalInfo.detach();
             Element oldInfo = finalInfo;
-            finalInfo = new Element(requiredInfoTagName, CHE_NAMESPACE);
+            finalInfo = new Element(requiredInfoTagName, CHE);
             identificationInfo.addContent(finalInfo);
 
             final MetadataType elementType = metadataSchema.getTypeInfo("che:" + requiredInfoTagName + "_Type");
@@ -1107,7 +1103,7 @@ public class Save implements Service {
 
         if (previousEls.isEmpty()) {
             // if there are no contacts then we need to add one to know where to insert all of the new ones.
-            Element newEl = editLib.addElement(metadataSchema.getName(), metadata, tagName);
+            Element newEl = editLib.addElement(metadataSchema, metadata, tagName);
             previousEls = Arrays.asList(newEl);
         }
 
@@ -1234,9 +1230,9 @@ public class Save implements Service {
                         new Element("CharacterString", GCO).setText(contact.getString(JSON_CONTACT_EMAIL))
                 );
 
-                Element firstNameEl = new Element("individualFirstName", CHE_NAMESPACE).addContent(
+                Element firstNameEl = new Element("individualFirstName", CHE).addContent(
                         new Element(EL_CHARACTER_STRING, GCO).setText(contact.getString(JSON_CONTACT_FIRST_NAME)));
-                Element lastNameEl = new Element("individualLastName", CHE_NAMESPACE).addContent(
+                Element lastNameEl = new Element("individualLastName", CHE).addContent(
                         new Element(EL_CHARACTER_STRING, GCO).setText(contact.getString(JSON_CONTACT_LAST_NAME)));
                 Element roleEl = new Element("role", GMD).addContent(
                         new Element("CI_RoleCode", GMD).
@@ -1303,8 +1299,7 @@ public class Save implements Service {
     @VisibleForTesting
     protected void saveMetadata(ServiceContext context, AjaxEditUtils ajaxEditUtils, String id, DataManager dataManager, Element metadata,
                                 boolean finished, boolean commitChange) throws Exception {
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        dataManager.updateMetadata(context, dbms, id, metadata, false, true, true, context.getLanguage(), null, true, true);
+        dataManager.updateMetadata(context, id, metadata, false, true, true, context.getLanguage(), null, true, true);
         context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING + id, metadata);
 
         if (finished) {
@@ -1332,7 +1327,7 @@ public class Save implements Service {
 
     @VisibleForTesting
     protected IsoLanguagesMapper getIsoLanguagesMapper() {
-        return IsoLanguagesMapper.getInstance();
+        return ServiceContext.get().getBean(IsoLanguagesMapper.class);
     }
 
     @VisibleForTesting
@@ -1394,7 +1389,7 @@ public class Save implements Service {
 
     static class ExtentHrefBuilder implements HrefBuilder {
         /**
-         * Don't forget to update {@link org.fao.geonet.services.metadata.inspire.GetEditModel#extentJsonEncoder}
+         * Don't forget to update {@link org.fao.geonet.geocat.services.metadata.inspire.GetEditModel#extentJsonEncoder}
          */
         Map<String, String> typenameMapping = Maps.newHashMap();
 

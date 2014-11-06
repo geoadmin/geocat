@@ -1,35 +1,25 @@
-package org.fao.geonet.services.metadata.inspire;
+package org.fao.geonet.geocat.services.metadata.inspire;
 
-import com.google.common.collect.Lists;
 import com.google.common.io.Files;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.TransformerFactoryFactory;
-import jeeves.utils.Xml;
 import jeeves.xlink.XLink;
-import org.apache.commons.io.FileUtils;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.GeonetworkDataDirectory;
+import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
-import org.fao.geonet.kernel.EditLibTest;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.search.spatial.Pair;
-import org.fao.geonet.resources.Resources;
-import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.json.JSONObject;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,57 +27,30 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
-import javax.servlet.ServletContext;
 
-import static org.fao.geonet.Assert.getWebappDir;
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GEONET;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.fao.geonet.constants.Geonet.Namespaces.SRV;
 import static org.fao.geonet.constants.Geonet.Namespaces.XLINK;
 import static org.fao.geonet.constants.Geonet.Namespaces.XSI;
-import static org.fao.geonet.kernel.search.spatial.Pair.read;
-import static org.fao.geonet.services.metadata.inspire.Save.NS;
+import static org.fao.geonet.domain.Pair.read;
+import static org.fao.geonet.geocat.services.metadata.inspire.Save.NS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class SaveTest {
+public class SaveTest extends AbstractCoreIntegrationTest {
 
-    public static TemporaryFolder _schemaCatalogContainer = new TemporaryFolder();
-    private static SchemaManager _schemaManager;
+    @Autowired
+    private SchemaManager _schemaManager;
+    @Autowired
+    private DataManager _dataManager;
+    
     private Element testMetadata;
     private SaveServiceTestImpl service;
-    private GeonetContext geonetContext;
     private ServiceContext context;
-    private DataManager _dataManager;
-
-    @BeforeClass
-    public static void initSchemaManager() throws Exception {
-        _schemaCatalogContainer.create();
-
-        final ServiceConfig serviceConfig = new ServiceConfig(Lists.<Element>newArrayList());
-        final String webappDir = getWebappDir(EditLibTest.class);
-        new GeonetworkDataDirectory("geonetwork", webappDir, serviceConfig, null);
-
-        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
-        final String resourcePath = Resources.locateResourcesDir((ServletContext) null);
-        final String schemaPluginsCat = _schemaCatalogContainer.getRoot() + "/" + Geonet.File.SCHEMA_PLUGINS_CATALOG;
-        final String schemaPluginsDir = webappDir + "/WEB-INF/data/config/schema_plugins";
-
-        FileUtils.copyFile(new File(webappDir, "WEB-INF/" + Geonet.File.SCHEMA_PLUGINS_CATALOG), new File(schemaPluginsCat));
-
-        SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCat);
-
-        _schemaManager = SchemaManager.getInstance(webappDir, resourcePath, schemaPluginsCat, schemaPluginsDir, "eng", "iso19139");
-    }
-
-    @AfterClass
-    public static void cleanUpSchemaCatalogFile() {
-        _schemaCatalogContainer.delete();
-        _schemaManager = null;
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -98,15 +61,8 @@ public class SaveTest {
 
 
         this.service = new SaveServiceTestImpl(testMetadata);
-        this._dataManager = Mockito.mock(DataManager.class);
-        Mockito.when(_dataManager.validate(Mockito.any(Element.class))).thenReturn(true);
 
-        this.geonetContext = Mockito.mock(GeonetContext.class);
-        Mockito.when(geonetContext.getSchemamanager()).thenReturn(this._schemaManager);
-        Mockito.when(geonetContext.getDataManager()).thenReturn(this._dataManager);
-
-        this.context = Mockito.mock(ServiceContext.class);
-        Mockito.when(context.getHandlerContext(Mockito.anyString())).thenReturn(geonetContext);
+        this.context = createServiceContext();
     }
 
     @Test
@@ -676,11 +632,11 @@ public class SaveTest {
     @Test
     public void testService_SetCouplingInformation() throws Exception {
         service.addXLink("local://xml.user.get?id=15&amp;amp;schema=iso19139.che&amp;amp;role=pointOfContact&#xD",
-                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+                new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
         service.addXLink("local://xml.user.get?id=15&amp;schema=iso19139.che&amp;role=pointOfContact",
-                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+                new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
         service.addXLink("local://xml.user.get?id=10&amp;schema=iso19139.che&amp;role=pointOfContact",
-                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+                new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
         final String jsonString = loadTestJson("updateServiceCouplingInformation.json");
         JSONObject json = new JSONObject(jsonString);
 
@@ -712,16 +668,16 @@ public class SaveTest {
 
         service.setTestMetadata(testMetadata);
         service.addXLink("local://xml.user.get?id=7&amp;amp;schema=iso19139.che&amp;amp;role=pointOfContact&#xD;",
-                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+                new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
         service.addXLink("local://xml.user.get?id=7&amp;schema=iso19139.che&amp;role=pointOfContact",
-                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+                new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
         service.addXLink("local://xml.user.get?id=5&amp;amp;schema=iso19139.che&amp;amp;role=pointOfContact&#xD;",
-                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+                new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
         service.addXLink("local://xml.user.get?id=5&amp;schema=iso19139.che&amp;role=pointOfContact",
-                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+                new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
         service.addXLink("local://che.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&amp;" +
                          "id=urn%3Ainspire%3Aservice%3Ataxonomy%3AcomGeographicCompressionService&amp;locales=fr,en,de,it",
-                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+                new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
         service.addXLink("local://xml.extent.get?id=0&amp;wfs=default&amp;typename=gn:countries&amp;format=gmd_complete&amp;extentTypeCode=true",
                 new Element("extent", SRV));
         final String jsonString = loadTestJson("updateContainsOperation/request2.json");
@@ -751,11 +707,11 @@ public class SaveTest {
         service.setTestMetadata(testMetadata);
 
         service.addXLink("local://xml.user.get?id=15&amp;amp;schema=iso19139.che&amp;amp;role=pointOfContact&#xD",
-                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+                new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
         service.addXLink("local://xml.user.get?id=15&amp;schema=iso19139.che&amp;role=pointOfContact",
-                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+                new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
         service.addXLink("local://xml.user.get?id=10&amp;schema=iso19139.che&amp;role=pointOfContact",
-                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+                new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
         final String jsonString = loadTestJson("updateContainsOperation/request.json");
         JSONObject json = new JSONObject(jsonString);
 

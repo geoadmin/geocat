@@ -1,18 +1,18 @@
-package org.fao.geonet.services.metadata.inspire;
+package org.fao.geonet.geocat.services.metadata.inspire;
 
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.AjaxEditUtils;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.json.JSONArray;
@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.fao.geonet.kernel.search.spatial.Pair.read;
+import static org.fao.geonet.domain.Pair.read;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -563,7 +563,7 @@ public class GetEditModelTest {
         private final Map<String, Element> sharedObjects = Maps.newHashMap();
 
 
-        KeywordBean inspireBean = new KeywordBean().
+        KeywordBean inspireBean = new KeywordBean(SaveServiceTestImpl.LANGUAGES_MAPPER).
                 setUriCode("http://test.com/INSPIRE").
                 setDefaultLang("ger").
                 setValue("ger", "INSPIRE").
