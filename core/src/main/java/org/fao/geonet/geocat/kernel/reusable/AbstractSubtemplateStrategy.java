@@ -68,7 +68,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  *
  * @author Jesse on 10/27/2014.
  */
-public abstract class AbstractSubtemplateStrategy extends ReplacementStrategy {
+public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
     protected final SearchManager searchManager;
     protected final IsoLanguagesMapper mapper;
     protected final MetadataRepository metadataRepository;
@@ -309,7 +309,7 @@ public abstract class AbstractSubtemplateStrategy extends ReplacementStrategy {
     }
     protected final Element listFromIndex(SearchManager searchManager, String root, boolean validated, String language,
                                           UserSession session,
-                                          ReplacementStrategy strategy,
+                                          SharedObjectStrategy strategy,
                                           Function<DescData, String> describer) throws Exception {
 
         final IndexAndTaxonomy newIndexReader = searchManager.getNewIndexReader(language);

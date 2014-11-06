@@ -3,7 +3,7 @@ package org.fao.geonet.geocat.services.reusable;
 import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import org.apache.lucene.document.Document;
-import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -104,12 +104,12 @@ public class ListSharedContactsTest extends AbstractSharedObjectTest {
 
     private void validList(Element response, String uuid, int i) {
         final Element el1 = (Element) response.getChildren().get(i);
-        assertEquals(uuid, el1.getChildText(ReplacementStrategy.REPORT_ID));
+        assertEquals(uuid, el1.getChildText(SharedObjectStrategy.REPORT_ID));
         assertEquals(uuid + "firstname " + uuid + "lastname (" + uuid + "email1@gmail.com)",
-                el1.getChildText(ReplacementStrategy.REPORT_DESC));
-        assertEquals("local://subtemplate?uuid=" + uuid, el1.getChildText(ReplacementStrategy.REPORT_XLINK));
-        final String search1 = el1.getChildText(ReplacementStrategy.REPORT_SEARCH);
+                el1.getChildText(SharedObjectStrategy.REPORT_DESC));
+        assertEquals("local://subtemplate?uuid=" + uuid, el1.getChildText(SharedObjectStrategy.REPORT_XLINK));
+        final String search1 = el1.getChildText(SharedObjectStrategy.REPORT_SEARCH);
         assertTrue(search1, search1.contains(uuid) && search1.contains(uuid + "firstname") && search1.contains(uuid + "lastname"));
-        assertTrue(el1.getChild(ReplacementStrategy.REPORT_URL) != null);
+        assertTrue(el1.getChild(SharedObjectStrategy.REPORT_URL) != null);
     }
 }

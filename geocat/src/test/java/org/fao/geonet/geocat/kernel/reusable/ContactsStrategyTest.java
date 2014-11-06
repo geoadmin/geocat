@@ -30,9 +30,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy.LUCENE_EXTRA_FIELD;
-import static org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy.LUCENE_EXTRA_NON_VALIDATED;
-import static org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy.LUCENE_UUID_FIELD;
+import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_EXTRA_FIELD;
+import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED;
+import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_UUID_FIELD;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces.CHE;
@@ -300,7 +300,7 @@ public class ContactsStrategyTest extends AbstractSharedObjectStrategyTest {
         return "author";
     }
 
-    protected ReplacementStrategy createReplacementStrategy() {
+    protected SharedObjectStrategy createReplacementStrategy() {
         return new ContactsStrategy(_applicationContext);
     }
 

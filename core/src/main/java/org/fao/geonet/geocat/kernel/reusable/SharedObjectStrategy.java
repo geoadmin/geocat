@@ -38,7 +38,7 @@ import java.util.Map;
 
 import static org.apache.lucene.search.WildcardQuery.WILDCARD_STRING;
 
-public abstract class ReplacementStrategy implements FindMetadataReferences {
+public abstract class SharedObjectStrategy implements FindMetadataReferences {
     public static final String LUCENE_ROOT_FIELD = "_root";
     static final Pair<Collection<Element>, Boolean> NULL = Pair.read((Collection<Element>) Collections.<Element>emptySet(), false);
     public static final String REPORT_ROOT = "records";

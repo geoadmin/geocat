@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-import static org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy.LUCENE_UUID_FIELD;
+import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_UUID_FIELD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
@@ -57,9 +57,9 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
         linkedElement.setAttribute(XLink.SHOW, "embed", XLink.NAMESPACE_XLINK);
         linkedElement.setAttribute(XLink.TITLE, "rejected", XLink.NAMESPACE_XLINK);
 
-        final ReplacementStrategy replacementStrategy = createReplacementStrategy();
+        final SharedObjectStrategy sharedObjectStrategy = createReplacementStrategy();
 
-        assertSame(ReplacementStrategy.NULL, replacementStrategy.find(new Element("placeholder"), linkedElement, "en"));
+        assertSame(SharedObjectStrategy.NULL, sharedObjectStrategy.find(new Element("placeholder"), linkedElement, "en"));
 
         long numMd = this.metadataRepository.count();
 
@@ -79,22 +79,22 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
 
         final MetadataRepository bean = _applicationContext.getBean(MetadataRepository.class);
         long count = bean.count();
-        final ReplacementStrategy replacementStrategy = createReplacementStrategy();
+        final SharedObjectStrategy sharedObjectStrategy = createReplacementStrategy();
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
 
-        int numberFormats = replacementStrategy.list(serviceContext.getUserSession(), validated, "eng").getChildren().size();
+        int numberFormats = sharedObjectStrategy.list(serviceContext.getUserSession(), validated, "eng").getChildren().size();
 
         final String mdUUID = sharedObj.getUuid();
-        replacementStrategy.performDelete(new String[]{mdUUID}, serviceContext.getUserSession(), null);
+        sharedObjectStrategy.performDelete(new String[]{mdUUID}, serviceContext.getUserSession(), null);
 
         assertEquals(count - 1, bean.count());
 
-        final List formats = replacementStrategy.list(serviceContext.getUserSession(), validated, "eng").getChildren();
+        final List formats = sharedObjectStrategy.list(serviceContext.getUserSession(), validated, "eng").getChildren();
 
         assertEquals(numberFormats  - 1 , formats.size());
 
-        final Element list = replacementStrategy.list(serviceContext.getUserSession(), validated, "eng");
+        final Element list = sharedObjectStrategy.list(serviceContext.getUserSession(), validated, "eng");
         assertEquals(0, list.getChildren().size());
     }
 
@@ -102,7 +102,7 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
     public void testCreateFindMetadataQuery() throws Exception {
         final Metadata sharedObj = createDefaultSubtemplate(true);
 
-        final ReplacementStrategy replacementStrategy = createReplacementStrategy();
+        final SharedObjectStrategy sharedObjectStrategy = createReplacementStrategy();
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
 
@@ -113,8 +113,8 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
 
         final IndexAndTaxonomy indexAndTaxonomy = this.searchManager.getNewIndexReader("eng");
         final IndexSearcher searcher = new IndexSearcher(indexAndTaxonomy.indexReader);
-        String field = replacementStrategy.getValidXlinkLuceneField();
-        final Query query = replacementStrategy.createFindMetadataQuery(field, sharedObj.getUuid(), true);
+        String field = sharedObjectStrategy.getValidXlinkLuceneField();
+        final Query query = sharedObjectStrategy.createFindMetadataQuery(field, sharedObj.getUuid(), true);
         final TopDocs mdFound = searcher.search(query, 1000);
         assertEquals(1, mdFound.totalHits);
         assertEquals(String.valueOf(mdId), searcher.doc(mdFound.scoreDocs[0].doc).get("_id"));
@@ -125,27 +125,27 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
     public void testMarkAsValidated() throws Exception {
         final boolean validated = false;
         final Metadata sharedObj = createDefaultSubtemplate(validated);
-        assertEquals(ReplacementStrategy.LUCENE_EXTRA_NON_VALIDATED, sharedObj.getDataInfo().getExtra());
+        assertEquals(SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED, sharedObj.getDataInfo().getExtra());
 
-        final ReplacementStrategy replacementStrategy = createReplacementStrategy();
+        final SharedObjectStrategy sharedObjectStrategy = createReplacementStrategy();
 
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
 
-        Element list = replacementStrategy.list(serviceContext.getUserSession(), validated, "eng");
+        Element list = sharedObjectStrategy.list(serviceContext.getUserSession(), validated, "eng");
         assertEquals(1, list.getChildren().size());
         assertEqualsText(sharedObj.getUuid(), list, "record/id");
-        replacementStrategy.markAsValidated(new String[]{sharedObj.getUuid()}, serviceContext.getUserSession());
+        sharedObjectStrategy.markAsValidated(new String[]{sharedObj.getUuid()}, serviceContext.getUserSession());
 
         final MetadataRepository bean = _applicationContext.getBean(MetadataRepository.class);
         final Metadata updated = bean.findOne(sharedObj.getId());
-        assertEquals(ReplacementStrategy.LUCENE_EXTRA_VALIDATED, updated.getDataInfo().getExtra());
+        assertEquals(SharedObjectStrategy.LUCENE_EXTRA_VALIDATED, updated.getDataInfo().getExtra());
 
 
-        list = replacementStrategy.list(serviceContext.getUserSession(), validated, "eng");
+        list = sharedObjectStrategy.list(serviceContext.getUserSession(), validated, "eng");
         assertEquals(0, list.getChildren().size());
 
-        list = replacementStrategy.list(serviceContext.getUserSession(), true, "eng");
+        list = sharedObjectStrategy.list(serviceContext.getUserSession(), true, "eng");
         assertEquals(1, list.getChildren().size());
         assertEqualsText(sharedObj.getUuid(), list, "record/id");
     }
@@ -153,7 +153,7 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
 
     @Test
     public void testIsValidated() throws Exception {
-        final ReplacementStrategy strategy = createReplacementStrategy();
+        final SharedObjectStrategy strategy = createReplacementStrategy();
         final Metadata sharedObj1 = createDefaultSubtemplate(false);
         final Metadata sharedObj2 = createDefaultSubtemplate(true);
 
@@ -178,16 +178,16 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
         final UserSession userSession = serviceContext.getUserSession();
-        final ReplacementStrategy replacementStrategy = createReplacementStrategy();
-        String href = replacementStrategy.createXlinkHref("", userSession, null);
-        final String updatedHref = replacementStrategy.createAsNeeded(href, userSession);
+        final SharedObjectStrategy sharedObjectStrategy = createReplacementStrategy();
+        String href = sharedObjectStrategy.createXlinkHref("", userSession, null);
+        final String updatedHref = sharedObjectStrategy.createAsNeeded(href, userSession);
         String uuid = Utils.id(updatedHref);
 
         assertEquals(count + 1, bean.count());
 
         assertNotNull(bean.findOneByUuid(uuid));
 
-        final String updatedHref2 = replacementStrategy.createAsNeeded(updatedHref, userSession);
+        final String updatedHref2 = sharedObjectStrategy.createAsNeeded(updatedHref, userSession);
 
         assertEquals(updatedHref, updatedHref2);
     }
@@ -222,7 +222,7 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
 
     protected abstract String getIsValidatedSpecificData();
 
-    protected abstract ReplacementStrategy createReplacementStrategy();
+    protected abstract SharedObjectStrategy createReplacementStrategy();
 
     protected abstract Element createMetadata(Element formatXml);
 

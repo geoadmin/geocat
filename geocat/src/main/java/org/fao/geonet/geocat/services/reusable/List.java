@@ -34,7 +34,7 @@ import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.FormatsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
-import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -65,7 +65,7 @@ public class List implements Service {
             return DeletedObjects.list(context.getBean(RejectedSharedObjectRepository.class));
         }
 
-        ReplacementStrategy strategy;
+        SharedObjectStrategy strategy;
         switch( ReusableTypes.valueOf(type) ) {
             case extents:
                 strategy = new ExtentsStrategy(baseUrl, appPath, context.getBean(ExtentManager.class), language);

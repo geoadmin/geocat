@@ -32,7 +32,7 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
-import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.SendEmailParameter;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.DataManager;
@@ -81,7 +81,7 @@ public class Delete implements Service
 
         for (String id : sIds) {
             Set<MetadataRecord> md = Utils.getReferencingMetadata(context, DeletedObjects.createFindMetadataReferences(),
-                    Arrays.asList(DeletedObjects.getLuceneIndexField()), id, false, false, ReplacementStrategy.ID_FUNC);
+                    Arrays.asList(DeletedObjects.getLuceneIndexField()), id, false, false, SharedObjectStrategy.ID_FUNC);
             for (MetadataRecord metadataRecord : md) {
                 metadataIds.add(metadataRecord.id);
 

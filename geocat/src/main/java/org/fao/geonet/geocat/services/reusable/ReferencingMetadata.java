@@ -32,7 +32,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
 import org.fao.geonet.geocat.kernel.reusable.FindMetadataReferences;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
-import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.repository.UserRepository;
@@ -70,16 +70,16 @@ public class ReferencingMetadata implements Service
         if (type.equalsIgnoreCase("deleted")) {
             findResources = DeletedObjects.createFindMetadataReferences();
             fields.addAll(Arrays.asList(DeletedObjects.getLuceneIndexField()));
-            idConverter= ReplacementStrategy.ID_FUNC;
+            idConverter= SharedObjectStrategy.ID_FUNC;
         } else {
-            final ReplacementStrategy replacementStrategy = Utils.strategy(ReusableTypes.valueOf(type), context);
+            final SharedObjectStrategy sharedObjectStrategy = Utils.strategy(ReusableTypes.valueOf(type), context);
             if (validated) {
-                fields.addAll(Arrays.asList(replacementStrategy.getValidXlinkLuceneField()));
+                fields.addAll(Arrays.asList(sharedObjectStrategy.getValidXlinkLuceneField()));
             } else {
-                fields.addAll(Arrays.asList(replacementStrategy.getInvalidXlinkLuceneField()));
+                fields.addAll(Arrays.asList(sharedObjectStrategy.getInvalidXlinkLuceneField()));
             }
-            idConverter=replacementStrategy.numericIdToConcreteId(context.getUserSession());
-            findResources = replacementStrategy;
+            idConverter= sharedObjectStrategy.numericIdToConcreteId(context.getUserSession());
+            findResources = sharedObjectStrategy;
         }
 
         Set<MetadataRecord> md = Utils.getReferencingMetadata(context, findResources, fields, id, validated, true, idConverter);

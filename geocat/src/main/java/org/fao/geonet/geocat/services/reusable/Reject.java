@@ -39,7 +39,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
-import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
 import org.fao.geonet.geocat.kernel.reusable.SendEmailParameter;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
@@ -95,7 +95,7 @@ public class Reject implements Service
         UserSession session = context.getUserSession();
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));
-        ReplacementStrategy strategy = Utils.strategy(reusableType, context);
+        SharedObjectStrategy strategy = Utils.strategy(reusableType, context);
 
         Element results = new Element("results");
         if (strategy != null) {
@@ -108,7 +108,7 @@ public class Reject implements Service
         return results;
     }
 
-    private List<Element> performReject(String[] ids, final ReplacementStrategy strategy, ServiceContext context,
+    private List<Element> performReject(String[] ids, final SharedObjectStrategy strategy, ServiceContext context,
                                         GeonetContext gc, final UserSession session, String baseURL, String msg,
                                         String strategySpecificData, boolean isValidObject, boolean testing) throws Exception
     {
@@ -156,7 +156,7 @@ public class Reject implements Service
 
     }
 
-    private Element updateHrefs(final ReplacementStrategy strategy, ServiceContext context,
+    private Element updateHrefs(final SharedObjectStrategy strategy, ServiceContext context,
             final UserSession session, String id, Set<MetadataRecord> results, String baseURL,
             String strategySpecificData) throws Exception {
         Element newIds = new Element("newIds");
@@ -214,7 +214,7 @@ public class Reject implements Service
         }
     }
 
-    private void emailNotifications(final ReplacementStrategy strategy, ServiceContext context,
+    private void emailNotifications(final SharedObjectStrategy strategy, ServiceContext context,
             final UserSession session, String msg, Multimap<Integer, Integer> emailInfo, String baseURL,
             String strategySpecificData, boolean testing) throws Exception
     {

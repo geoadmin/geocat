@@ -269,7 +269,7 @@ public class ReusableObjManager {
     }
 
     private boolean performReplace(Element xml, String defaultMetadataLang, String placeholderElemName,
-                                   String originalElementName, ReusableObjectLogger logger, ReplacementStrategy strategy, boolean addOnly,
+                                   String originalElementName, ReusableObjectLogger logger, SharedObjectStrategy strategy, boolean addOnly,
                                    ServiceContext srvContext)
             throws Exception {
 
@@ -308,7 +308,7 @@ public class ReusableObjManager {
     }
 
     private boolean updateXLinkAsRequired(String defaultMetadataLang,
-                                          ReplacementStrategy strategy, HashSet<String> updatedElements,
+                                          SharedObjectStrategy strategy, HashSet<String> updatedElements,
                                           Map<String, Element> currentXLinkElements, boolean changed,
                                           Element placeholder, Element originalElem,
                                           ServiceContext srvContext, String originalElementName,
@@ -379,7 +379,7 @@ public class ReusableObjManager {
         return current;
     }
 
-    private boolean replaceSingleElement(Element placeholder, Element originalElem, ReplacementStrategy strategy,
+    private boolean replaceSingleElement(Element placeholder, Element originalElem, SharedObjectStrategy strategy,
                                          String defaultMetadataLang, boolean addOnly, String originalElementName,
                                          ReusableObjectLogger logger) throws Exception {
 
@@ -466,7 +466,7 @@ public class ReusableObjManager {
             }
             String baseUrl = params.baseURL;
 
-            ReplacementStrategy strategy;
+            SharedObjectStrategy strategy;
 
             final String language = params.srvContext.getLanguage();
             if (xlink.getName().equals("contact") || xlink.getName().equals("pointOfContact")
