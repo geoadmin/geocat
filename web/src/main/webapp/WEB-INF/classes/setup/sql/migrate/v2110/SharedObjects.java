@@ -44,10 +44,10 @@ public class SharedObjects implements DatabaseMigrationTask {
     protected static final String PREPARED_STATEMENT_SQL = "INSERT INTO public.metadata(" +
                                                            "              id, uuid, schemaid, istemplate, isharvested, createdate, \n" +
                                                            "              changedate,  data, source, title, root, extra, owner, \n" +
-                                                           "              groupowner, rating, popularity, displayorder)\n" +
+                                                           "              rating, popularity, displayorder)\n" +
                                                            "    VALUES (" +
                                                            "              ?, ?, 'iso19139.che', 's', 'n', ?, ?, ?, ?, ?, ?, ?, " +
-                                                           "              1, 2, 0, 0, 0)";
+                                                           "              1, 0, 0, 0)";
 
     @Override
     public void update(Connection connection) throws SQLException {
