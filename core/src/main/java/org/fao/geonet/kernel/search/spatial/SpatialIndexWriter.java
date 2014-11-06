@@ -163,7 +163,7 @@ public class SpatialIndexWriter implements FeatureListener
                 SimpleFeature template = SimpleFeatureBuilder.template(schema,
                         SimpleFeatureBuilder.createDefaultFeatureId());
                 template.setAttribute(schema.getGeometryDescriptor().getName(), geometry);
-                if (_idColumn == null && _featureStore != null) {
+                if (_idColumn == null) {
                     _idColumn = findIdColumn(_featureStore);
                 }
                 template.setAttribute(_idColumn == null? _IDS_ATTRIBUTE_NAME : _idColumn.toString(), id);
@@ -422,7 +422,7 @@ public class SpatialIndexWriter implements FeatureListener
             features = _featureStore.getFeatures().features();
             while (features.hasNext()) {
                 SimpleFeature feature = features.next();
-                if (_idColumn == null && _featureStore != null) {
+                if (_idColumn == null) {
                     _idColumn = findIdColumn(_featureStore);
                 }
                 Pair<FeatureId, Object> data = Pair.read(feature.getIdentifier(), feature.getAttribute(_idColumn == null ? _IDS_ATTRIBUTE_NAME : _idColumn.toString()));

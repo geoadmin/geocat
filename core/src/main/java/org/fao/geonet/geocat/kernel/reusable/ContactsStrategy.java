@@ -216,6 +216,9 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
     protected Element getSubtemplate(Element originalElem, String metadataLang) throws Exception {
 
         Element responsibleParty = originalElem.getChild("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE);
+        if (responsibleParty == null) {
+            return null;
+        }
         final Element parent = responsibleParty.getChild("parentResponsibleParty", ISO19139cheNamespaces.CHE);
 
         processParent(responsibleParty, parent, metadataLang);
@@ -233,7 +236,11 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
 
             if (!findResult.two()) {
                 UpdateResult afterQuery = updateSubtemplate(parentInfo, null, false, metadataLang);
-                parent.addContent(xlinkIt(parentInfo, afterQuery.uuid, false));
+                if (afterQuery != null) {
+                    parent.addContent(xlinkIt(parentInfo, afterQuery.uuid, false));
+                } else {
+                    parent.addContent(findResult.one());
+                }
             } else {
                 parent.addContent(findResult.one());
             }
