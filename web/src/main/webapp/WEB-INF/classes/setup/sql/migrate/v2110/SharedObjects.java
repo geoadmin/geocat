@@ -3,9 +3,7 @@ package v2110;
 import com.google.common.collect.Maps;
 import jeeves.xlink.XLink;
 import org.fao.geonet.DatabaseMigrationTask;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -313,8 +311,6 @@ public class SharedObjects implements DatabaseMigrationTask {
 
         final String xml = "<description>" + basicValue.replaceAll("(<\\w+>)\\s*(\\<!\\[CDATA\\[)*\\s*(.*?)\\s*(\\]\\]\\>)*(</\\w+>)",
                 "$1<![CDATA[$3]]>$5") + "</description>";
-
-        Log.debug(Geonet.GEONETWORK, "Parsing xml to get languages: \n" + xml);
 
         Element desc;
         try {
