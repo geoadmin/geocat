@@ -446,6 +446,7 @@ public class SpatialIndexWriter implements FeatureListener
     }
 
     private FeatureStore<SimpleFeatureType, SimpleFeature> createFeatureStore(DataStore datastore) throws Exception {
+        Log.debug(Geonet.SPATIAL, "Configuring SpatialIndexWriter.");
         FeatureStore<SimpleFeatureType, SimpleFeature> featureSource = null;
 
         featureSource = findSpatialIndexStore(datastore);
@@ -466,8 +467,12 @@ public class SpatialIndexWriter implements FeatureListener
      * Find the spatialindex featureStore or return null
      */
     public static FeatureStore<SimpleFeatureType, SimpleFeature> findSpatialIndexStore(DataStore datastore) throws IOException {
+        Log.debug(Geonet.SPATIAL, "Attempting to find FeatureType");
         for (String name : datastore.getTypeNames()) {
+            Log.debug(Geonet.SPATIAL, "Found FeatureType: " + name);
+
             if (_SPATIAL_INDEX_TYPENAME.equalsIgnoreCase(name)) {
+                Log.debug(Geonet.SPATIAL, "Found the spatial index FeatureType: " +  name);
                 return (FeatureStore<SimpleFeatureType, SimpleFeature>) datastore.getFeatureSource(name);
             }
         }
@@ -488,9 +493,13 @@ public class SpatialIndexWriter implements FeatureListener
     }
 
     public static Name findIdColumn(FeatureSource<SimpleFeatureType, SimpleFeature> featureSource) {
+
+        Log.debug(Geonet.SPATIAL, "Trying to find " + _IDS_ATTRIBUTE_NAME + " attribute in " + featureSource.getSchema());
         for (AttributeDescriptor descriptor : featureSource.getSchema().getAttributeDescriptors()) {
+            Log.debug(Geonet.SPATIAL, "Found attribute " + descriptor.getLocalName());
 
             if (_IDS_ATTRIBUTE_NAME.equalsIgnoreCase(descriptor.getLocalName())) {
+                Log.debug(Geonet.SPATIAL, "Found the id attribute of the spatial index: " + descriptor.getLocalName());
                 return descriptor.getName();
             }
         }
