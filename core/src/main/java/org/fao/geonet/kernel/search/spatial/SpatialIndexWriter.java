@@ -451,7 +451,11 @@ public class SpatialIndexWriter implements FeatureListener
         featureSource = findSpatialIndexStore(datastore);
         if (featureSource != null) {
             _idColumn = findIdColumn(featureSource);
-
+            if (_idColumn == null) {
+                throw new IllegalArgumentException(
+                        "ERROR, unable to find _idColumn!!! in \n    DataStore: " + featureSource.getDataStore() +
+                        "\n    FeatureType: " + featureSource.getSchema());
+            }
             return featureSource;
 
         }
