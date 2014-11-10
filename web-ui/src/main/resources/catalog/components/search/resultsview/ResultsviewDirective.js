@@ -215,7 +215,7 @@
     }]);
 
   module.directive('gnMetadataOpen',
-    [ '$http', '$sanitize',  '$compile', function($http, $sanitize, $compile) {
+    [ '$http', '$sanitize',  '$compile', '$sce', function($http, $sanitize, $compile, $sce) {
       return {
         restrict: 'A',
         scope: {
@@ -228,11 +228,16 @@
             var URI = '/geonetwork/srv/fre/view?currTab=simple&uuid=';
             // var URI = 'http://localhost:8080/geonetwork/srv/fre/view?currTab=simple&uuid='
             $http.get(URI + scope.md.getUuid()).then(function(response) {
-              scope.fragment = response.data.replace('<?xml version="1.0" encoding="UTF-8"?>', '');
+              scope.fragment = $sce.trustAsHtml(response.data);
               var el = document.createElement('div');
               el.setAttribute('gn-metadata-display', '');
               $(scope.selector).append(el);
               $compile(el)(scope);
+              $('.toggler').on('click', function() {
+                $(this).toggleClass('closed');
+                $(this).parent().nextAll('.target').first().toggle();
+              });
+
             });
           });
         }
