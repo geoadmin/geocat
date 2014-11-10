@@ -1,16 +1,37 @@
 package org.fao.geonet.domain;
 
-import org.fao.geonet.domain.geocat.GeocatUserInfo;
-import org.fao.geonet.domain.geocat.Phone;
 import org.fao.geonet.entitylistener.UserEntityListenerManager;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.persistence.*;
-import java.util.*;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * A user entity. A user is used in spring security, controlling access to metadata as well as in the {@link jeeves.server.UserSession}.
@@ -470,26 +491,4 @@ public class User extends GeonetEntity implements UserDetails {
         result = 31 * result + (_lastLoginDate != null ? _lastLoginDate.hashCode() : 0);
         return result;
     }
-    // GEOCAT
-    private GeocatUserInfo geocatUserInfo = new GeocatUserInfo();
-    private List<Phone> phones = new ArrayList<Phone>();
-
-    public GeocatUserInfo getGeocatUserInfo() {
-        return geocatUserInfo;
-    }
-    protected void setGeocatUserInfo (GeocatUserInfo info) {
-        this.geocatUserInfo = info;
-    }
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "phone")
-    @Column(name = "phone")
-    public List<Phone> getPhones() {
-        return phones;
-    }
-
-    public void setPhones(List<Phone> phones) {
-        this.phones = phones;
-    }
-    // END GEOCAT
 }
