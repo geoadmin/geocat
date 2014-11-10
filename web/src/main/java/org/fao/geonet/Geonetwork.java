@@ -24,10 +24,10 @@
 package org.fao.geonet;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
-import jeeves.server.JeevesEngine;
-import jeeves.server.JeevesProxyInfo;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.interfaces.ApplicationHandler;
+import jeeves.server.JeevesEngine;
+import jeeves.server.JeevesProxyInfo;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
@@ -48,14 +48,12 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.lib.DbLib;
-import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
-import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
 import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.util.ThreadUtils;
@@ -78,8 +76,6 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.servlet.ServletContext;
-import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URI;
@@ -91,6 +87,8 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import javax.servlet.ServletContext;
+import javax.sql.DataSource;
 
 /**
  * This is the main class, it handles http connections and inits the system.
@@ -141,9 +139,9 @@ public class Geonetwork implements ApplicationHandler {
         if (context.getServlet() != null) {
             servletContext = context.getServlet().getServletContext();
         }
-        ServerLib sl = new ServerLib(servletContext, appPath);
-        String version = sl.getVersion();
-        String subVersion = sl.getSubVersion();
+        final SystemInfo systemInfo = _applicationContext.getBean(SystemInfo.class);
+        String version = systemInfo.getVersion();
+        String subVersion = systemInfo.getSubVersion();
 
         logger.info("Initializing GeoNetwork " + version + "." + subVersion + " ...");
 

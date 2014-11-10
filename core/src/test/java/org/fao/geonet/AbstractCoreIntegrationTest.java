@@ -56,14 +56,14 @@ import org.springframework.test.context.ContextConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.sql.Connection;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -125,7 +125,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         }
         final String initializedString = "initialized";
         final String webappDir = getWebappDir(getClass());
-        _applicationContext.getBean(GeonetMockServletContext.class).setResourcePath(webappDir);
+        _applicationContext.getBean(GeonetMockServletContext.class).setTestClass(getClass());
 
         LanguageDetector.init(webappDir + _applicationContext.getBean(Geonet.Config.LANGUAGE_PROFILES_DIR, String.class));
 
