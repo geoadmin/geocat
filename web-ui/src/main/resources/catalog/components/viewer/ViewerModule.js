@@ -36,20 +36,27 @@
   module.controller('gnViewerController', [
     '$scope',
     '$timeout',
-    'gnNcWms',
-    'goDecorateLayer',
-    'gnMap',
-    'gnMapConfig',
-      function($scope, $timeout, gnNcWms, goDecorateLayer, gnMap, gnMapConfig) {
+      function($scope, $timeout) {
+
+        var map = $scope.searchObj.viewerMap;
+
+        // Display pop up on feature over
+        var div = document.createElement('div');
+        div.className = 'overlay';
+        var overlay = new ol.Overlay({
+          element: div,
+          positioning: 'bottom-left'
+        });
+        map.addOverlay(overlay);
 
         var hidetimer;
         var hovering = false;
-        $($scope.map.getViewport()).on('mousemove', function(e) {
+        $(map.getViewport()).on('mousemove', function(e) {
           if (hovering) { return; }
           var f;
-          var pixel = $scope.map.getEventPixel(e.originalEvent);
-          var coordinate = $scope.map.getEventCoordinate(e.originalEvent);
-          $scope.map.forEachFeatureAtPixel(pixel, function(feature, layer) {
+          var pixel = map.getEventPixel(e.originalEvent);
+          var coordinate = map.getEventCoordinate(e.originalEvent);
+          map.forEachFeatureAtPixel(pixel, function(feature, layer) {
             if (!layer) { return; }
             $timeout.cancel(hidetimer);
             if (f != feature) {
@@ -87,18 +94,6 @@
           hovering = false;
         });
       }]);
-
-  var source = new ol.source.TileWMS({
-    params: {
-      LAYERS: 'ETOPO1_BATHY_R_3857,continent'
-    },
-    url: 'http://www.ifremer.fr/services/wms/wmsproxy_double.cgi?'
-  });
-  var sxtLayer = new ol.layer.Tile({
-    type: 'WMS',
-    source: source,
-    title: 'Sextant'
-  });
 
   module.controller('toolsController',
       ['$scope', 'gnMeasure',
