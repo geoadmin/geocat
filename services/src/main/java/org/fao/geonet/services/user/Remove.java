@@ -27,43 +27,35 @@ import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroupId_;
-import org.fao.geonet.geocat.SharedObjectApi;
-import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
 
-import java.util.*;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
-import static org.springframework.data.jpa.domain.Specifications.*;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * Removes a user from the system. It removes the relationship to a group too.
  */
 public class Remove extends NotInReadOnlyModeService {
-	private Type type;
-
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
-	       this.type = Type.valueOf(params.getValue("type", "NORMAL"));
-	}
+	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -74,11 +66,6 @@ public class Remove extends NotInReadOnlyModeService {
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		String id = Util.getParam(params, Params.ID);
-
-        Element rejectResult = handleSharedUser(id, params, context);
-        if(rejectResult != null) {
-            return rejectResult;
-        }
 
 		UserSession usrSess = context.getUserSession();
 		Profile myProfile = usrSess.getProfile();
@@ -123,31 +110,4 @@ public class Remove extends NotInReadOnlyModeService {
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}
-
-    // GEOCAT
-    @SuppressWarnings("unchecked")
-    private Element handleSharedUser(String id, Element params, ServiceContext context) throws Exception {
-    	boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
-
-        final User user = context.getBean(UserRepository.class).findOne(Integer.parseInt(id));
-
-        if(user != null) {
-            if( type == Type.NORMAL && Profile.Shared == user.getProfile()) {
-                throw new IllegalArgumentException("This remove user service instance cannot remove shared objects");
             }
-
-            if(type != Type.NORMAL && !Boolean.parseBoolean(Util.getParam(params, "forceDelete", "false"))) {
-                String msg = LangUtils.loadString("reusable.rejectDefaultMsg", context.getAppPath(), context.getLanguage());
-                boolean isValidated = user.getGeocatUserInfo().isValidated();
-                final SharedObjectApi bean = context.getBean(SharedObjectApi.class);
-                return bean.reject(context, ReusableTypes.contacts, new String[]{id}, msg, null, isValidated, testing);
-            }
-        }
-
-        return null;
-    }
-    // END GEOCAT
-}
-
-//=============================================================================
-
