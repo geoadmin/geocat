@@ -38,8 +38,6 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
     <bean id="relatedMetadata" class="org.fao.geonet.RelatedMetadataTestImpl" lazy-init="true"/>
     <bean id="httpRequestFactory" class="org.fao.geonet.utils.GeonetHttpRequestFactory" />
 
-    <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext"/>
-
     <bean id="stagingProfile" class="java.lang.String">
         <constructor-arg value="development" />
     </bean>
