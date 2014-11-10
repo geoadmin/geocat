@@ -60,7 +60,7 @@
         var layers = context.resourceList.layer;
         var i, j, olLayer, bgLayers = [];
         var self = this;
-        var re = /{.*type\s*=\s*(.*)\s*}/;
+        var re = /type\s*=\s*([^,|^}|^\s]*)/;
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
           if (layer.group == 'Background layers' && layer.name.match(re)) {
@@ -84,13 +84,18 @@
         // if there's at least one valid bg layer in the context use them for
         // the application otherwise use the defaults from config
         if (bgLayers.length > 0) {
+          // make sure we remove any existing bglayer
+          map.getLayers().removeAt(0);
           // first clear settings bgLayers
           gnViewerSettings.bgLayers.length = 0;
+
+          var firstVisibleBgLayer = true;
           $.each(bgLayers, function(index, item) {
             gnViewerSettings.bgLayers.push(item);
-            if (item.getVisible()) {
-              map.getLayers().removeAt(0);
+            // the first visible bg layer wins and get displayed in the map
+            if (item.getVisible() && firstVisibleBgLayer) {
               map.getLayers().insertAt(0, item);
+              firstVisibleBgLayer = false;
             }
           });
         }
@@ -148,6 +153,8 @@
             name = "{type=mapquest}";
           } else if (source instanceof ol.source.BingMaps) {
             name = "{type=bing_aerial}";
+          } else if (source instanceof ol.source.WMTS) {
+            name = "{type=wmts}";
           } else {
             return;
           }
@@ -215,6 +222,10 @@
        * Saves the map context to local storage
        */
       this.saveToLocalStorage = function(map) {
+        if (map.getSize()[0] == 0 || map.getSize()[1] == 0){
+          // don't save a map which has not been rendered yet
+          return;
+        }
         var xml = this.writeContext(map);
         var xmlString = (new XMLSerializer()).serializeToString(xml);
         window.localStorage.setItem("owsContext", xmlString);
@@ -230,12 +241,11 @@
         var res = server.onlineResource[0];
         gnOwsCapabilities.getCapabilities(res.href).then(function(capObj) {
           var info = gnOwsCapabilities.getLayerInfoFromCap(obj.name, capObj);
+          info.group = obj.group;
           var layer = gnMap.addWmsToMapFromCap(map, info);
 
           layer.setOpacity(obj.opacity);
           layer.setVisible(!obj.hidden);
-          // TODO test this
-          layer.set('group', obj.group);
         });
       };
     }

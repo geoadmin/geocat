@@ -95,7 +95,7 @@
               var extent = gnMap.getBboxFromMd(rec[i]);
               if(extent) {
                 var proj = scope.map.getView().getProjection();
-                extent = ol.extent.containsExtent(proj.getExtent(), extent) ?
+                extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
                     ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
                     proj.getExtent();
                 var coords = gnMap.getPolygonFromExtent(extent);
@@ -145,12 +145,12 @@
    * function, we have to load them once into the scope on rendering.
    */
   module.directive('gnFixMdlinks', [
-    function($compile, gnMap, gnSearchSettings) {
+    function() {
 
       return {
         restrict: 'A',
         scope: false,
-        link: function (scope, element, attrs, controller) {
+        link: function (scope) {
           scope.links = scope.md.getLinksByType('LINK');
           scope.downloads = scope.md.getLinksByType('DOWNLOAD');
           scope.layers = scope.md.getLinksByType('OGC', 'kml');
@@ -175,7 +175,7 @@
             var extent = gnMap.getBboxFromMd(scope.md);
             if(extent) {
               var proj = scope.map.getView().getProjection();
-              extent = ol.extent.containsExtent(proj.getExtent(), extent) ?
+              extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
                   ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
                   proj.getExtent();
               var coords = gnMap.getPolygonFromExtent(extent);
@@ -204,7 +204,7 @@
             var extent = gnMap.getBboxFromMd(scope.md);
             if(extent) {
               var proj = scope.map.getView().getProjection();
-              extent = ol.extent.containsExtent(proj.getExtent(), extent) ?
+              extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
                   ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
                   proj.getExtent();
               scope.map.getView().fitExtent(extent, scope.map.getSize());
@@ -213,4 +213,52 @@
         }
       };
     }]);
+
+  module.directive('gnMetadataOpen',
+    [ '$http', '$sanitize',  '$compile', '$sce', function($http, $sanitize, $compile, $sce) {
+      return {
+        restrict: 'A',
+        scope: {
+          md: '=gnMetadataOpen',
+          selector: '@gnMetadataOpenSelector'
+        },
+
+        link: function(scope, element, attrs, controller) {
+          element.on('click', function() {
+            var URI = '/geonetwork/srv/fre/view?currTab=simple&uuid=';
+            // var URI = 'http://localhost:8080/geonetwork/srv/fre/view?currTab=simple&uuid='
+            $http.get(URI + scope.md.getUuid()).then(function(response) {
+              scope.fragment = $sce.trustAsHtml(response.data);
+              var el = document.createElement('div');
+              el.setAttribute('gn-metadata-display', '');
+              $(scope.selector).append(el);
+              $compile(el)(scope);
+              $('.toggler').on('click', function() {
+                $(this).toggleClass('closed');
+                $(this).parent().nextAll('.target').first().toggle();
+              });
+
+            });
+          });
+        }
+
+      };
+    }]
+  );
+
+  module.directive('gnMetadataDisplay', [ function() {
+      return {
+        templateUrl: '../../catalog/components/search/resultsview/partials/' +
+            'metadata.html',
+
+        link: function(scope, element, attrs, controller) {
+          scope.dismiss = function() {
+            element.remove();
+          };
+        }
+
+      };
+    }]
+  );
+
 })();
