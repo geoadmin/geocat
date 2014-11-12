@@ -62,6 +62,9 @@ public class Env implements Service {
         // of settings
         Element system = response.getChild("system");
         system.addContent(readOnly);
+        if (response.getChild("map") != null) {
+            system.addContent(response.getChild("map").detach());
+        }
         return (Element) system.clone();
 	}
 }
