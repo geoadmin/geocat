@@ -55,6 +55,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public final class ContactsStrategy extends AbstractSubtemplateStrategy {
@@ -196,7 +197,11 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
     private Collection<Element> xlinkIt(Element originalElem, String role, String id, boolean validated) {
         originalElem.removeContent();
         // param order is important, id param must be first
-        originalElem.setAttribute(XLink.HREF, baseHref(id) + "&process=*//gmd:CI_RoleCode/@codeListValue~" + role, XLink.NAMESPACE_XLINK);
+        String href = baseHref(id);
+        if (role != null && !role.trim().isEmpty()) {
+            href += "&process=*//gmd:CI_RoleCode/@codeListValue~" + role;
+        }
+        originalElem.setAttribute(XLink.HREF, href, XLink.NAMESPACE_XLINK);
 
         if (!validated) {
             originalElem.setAttribute(XLink.ROLE, ReusableObjManager.NON_VALID_ROLE, XLink.NAMESPACE_XLINK);
@@ -244,7 +249,7 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
                 new Function<DescData, String>() {
                     @Nullable
                     @Override
-                    public String apply(@Nullable DescData data) {
+                    public String apply(@Nonnull DescData data) {
                         String email = safeField(data.doc, LUCENE_EMAIL);
                         String name = safeField(data.doc, LUCENE_FIRST_NAME);
                         String surname = safeField(data.doc, LUCENE_LAST_NAME);
@@ -273,7 +278,7 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
 
     public String createXlinkHref(String uuid, UserSession session, String role) {
         String href = XLink.LOCAL_PROTOCOL + "subtemplate?" + Params.UUID + "=" + uuid;
-        if (role != null) {
+        if (role != null && !role.trim().isEmpty()) {
             href = href + "&process=*//gmd:CI_RoleCode/@codeListValue~"+role;
         }
         return href;
@@ -307,13 +312,13 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
     }
 
     @Override
-    public String[] getInvalidXlinkLuceneField() {
-        return new String[]{"invalid_xlink_contact"};
+    public String getInvalidXlinkLuceneField() {
+        return "invalid_xlink_contact";
     }
 
     @Override
-    public String[] getValidXlinkLuceneField() {
-        return new String[]{"valid_xlink_contact"};
+    public String getValidXlinkLuceneField() {
+        return "valid_xlink_contact";
     }
 
     @Override
@@ -324,8 +329,7 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
                + "          <gmd:address>\n"
                + "            <che:CHE_CI_Address gco:isoType=\"gmd:CI_Address\">\n"
                + "              <gmd:electronicMailAddress>\n"
-               + "                <gco:CharacterString>51b78987-eebf-4f1e-a84f-5596a94f125c@generated" +
-               ".org</gco:CharacterString>\n"
+               + "                <gco:CharacterString gco:nilReason=\"missing\"></gco:CharacterString>\n"
                + "              </gmd:electronicMailAddress>\n"
                + "            </che:CHE_CI_Address>\n"
                + "          </gmd:address>\n"

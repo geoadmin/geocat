@@ -24,7 +24,6 @@
 package org.fao.geonet.geocat.kernel.extent;
 
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
 
 import java.util.Collections;
 import java.util.HashSet;

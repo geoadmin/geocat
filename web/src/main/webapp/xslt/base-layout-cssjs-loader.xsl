@@ -22,13 +22,13 @@
     </xsl:if>
     
     <link rel="shortcut icon" type="image/x-icon" href="../../images/logos/favicon.ico" />
-    
+
     <xsl:choose>
       <xsl:when test="$angularApp = 'gn_search'">
         <link href="{/root/gui/url}/catalog/tmp/{$searchView}.css" rel="stylesheet" media="screen" />
     </xsl:when>
     <xsl:otherwise>
-    <link href="{/root/gui/url}/static/{$angularApp}.css{$minimizedParam}" rel="stylesheet" media="screen" />
+      <link href="{/root/gui/url}/static/{$angularApp}.css{$minimizedParam}" rel="stylesheet" media="screen" />
     </xsl:otherwise>
     </xsl:choose>
 
@@ -44,7 +44,7 @@
 
         <script src="{$uiResourcesPath}lib/modernizr.js"></script>
         <script src="{$uiResourcesPath}lib/closure/base.js"></script>
-        
+
         <script src="{$uiResourcesPath}lib/base64.js"></script>
         
         <script src="{$uiResourcesPath}lib/jquery-2.0.3.js"></script>
@@ -55,7 +55,7 @@
         <script src="{$uiResourcesPath}lib/angular/angular-resource.js"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-route.js"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-sanitize.js"></script>
-        
+
         <script src="{$uiResourcesPath}lib/angular-translate.js"></script>
         <script src="{$uiResourcesPath}lib/angular-md5.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/datetimepicker.js"></script>
@@ -65,7 +65,7 @@
         <script src="{$uiResourcesPath}lib/angular.ext/bindHtml.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/tabs.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/slider.js"></script>
-        
+
         <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.js"></script>
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js"></script>
         <script src="{$uiResourcesPath}lib/proj4js-compressed.js"></script>
@@ -81,7 +81,7 @@
             zip.workerScriptsPath = "../../catalog/lib/zip/";
           </script>
         </xsl:if>
-        
+
         <!-- Jsonix resources (OWS Context) -->
         <script src="{$uiResourcesPath}lib/jsonix/jsonix/Jsonix-min.js"></script>
         <script src="{$uiResourcesPath}lib/jsonix/w3c-schemas/XLink_1_0.js"></script>

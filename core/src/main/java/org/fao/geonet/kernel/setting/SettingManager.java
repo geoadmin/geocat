@@ -103,13 +103,11 @@ public class SettingManager {
         Element env = new Element("settings");
         List<Setting> settings = _repo.findAll(SortUtils.createSort(Setting_.name));
 
-        Map<String, Element> pathElements = new HashMap<String, Element>();
+        Map<String, Element> pathElements = new HashMap<>();
 
         for (Setting setting : settings) {
             if (asTree) {
-                if (setting.getName().startsWith("system")) {
-                    buildXmlTree(env, pathElements, setting);
-                }
+                buildXmlTree(env, pathElements, setting);
             } else {
                 Element settingEl = new Element("setting");
                 settingEl.setAttribute("name", setting.getName());

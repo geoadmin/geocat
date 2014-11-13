@@ -46,6 +46,7 @@
     else if ($service = 'catalog.edit') then 'gn_editor'
     else if ($service = 'catalog.viewer') then 'gn_viewer'
     else if ($service = 'catalog.search') then 'gn_search'
+    else if ($service = 'admin.shared.objects') then 'geocat_shared_objects_app'
     else 'gn'"/>
   
   <!-- Catalog settings -->

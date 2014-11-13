@@ -60,7 +60,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public final class KeywordsStrategy extends ReplacementStrategy
+public final class KeywordsStrategy extends SharedObjectStrategy
 {
     private static final String NAMESPACE = "http://custom.shared.obj.ch/concept#";
     public static final String GEOCAT_THESAURUS_NAME = "local._none_.geocat.ch";
@@ -425,13 +425,13 @@ public final class KeywordsStrategy extends ReplacementStrategy
     }
 
     @Override
-    public String[] getInvalidXlinkLuceneField() {
-        return new String[]{"invalid_xlink_keyword"};
+    public String getInvalidXlinkLuceneField() {
+        return "invalid_xlink_keyword";
     }
     
     @Override
-    public String[] getValidXlinkLuceneField() {
-    	return new String[]{"valid_xlink_keyword"};
+    public String getValidXlinkLuceneField() {
+    	return "valid_xlink_keyword";
     }
 
     @Override

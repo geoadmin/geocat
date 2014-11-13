@@ -19,7 +19,6 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.geometry.BoundingBox;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
-import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -128,7 +127,7 @@ public enum ExtentFormat
 
 
     private static Element gmdFormat(GMLConfiguration gmlConfiguration, String appPath, SimpleFeature feature, ExtentFormat format,
-                                     Source.FeatureType featureType, String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision)
+                                     FeatureType featureType, String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision)
             throws Exception
     {
 

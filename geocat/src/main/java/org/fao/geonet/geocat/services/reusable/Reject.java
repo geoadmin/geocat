@@ -39,12 +39,13 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
-import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
 import org.fao.geonet.geocat.kernel.reusable.SendEmailParameter;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.geocat.kernel.reusable.Utils.FindXLinks;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.geocat.RejectedSharedObjectRepository;
 import org.fao.geonet.utils.Log;
@@ -83,9 +84,7 @@ public class Reject implements Service
             specificData = ExtentsStrategy.XLINK_TYPE;
         }
 
-        Element results = reject(context, ReusableTypes.valueOf(page), ids, msg, specificData, isValidObject, testing);
-
-        return results;
+        return reject(context, ReusableTypes.valueOf(page), ids, msg, specificData, isValidObject, testing);
     }
 
     public Element reject(ServiceContext context, ReusableTypes reusableType, String[] ids, String msg,
@@ -96,7 +95,7 @@ public class Reject implements Service
         UserSession session = context.getUserSession();
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));
-        ReplacementStrategy strategy = Utils.strategy(reusableType, context);
+        SharedObjectStrategy strategy = Utils.strategy(reusableType, context);
 
         Element results = new Element("results");
         if (strategy != null) {
@@ -109,7 +108,7 @@ public class Reject implements Service
         return results;
     }
 
-    private List<Element> performReject(String[] ids, final ReplacementStrategy strategy, ServiceContext context,
+    private List<Element> performReject(String[] ids, final SharedObjectStrategy strategy, ServiceContext context,
                                         GeonetContext gc, final UserSession session, String baseURL, String msg,
                                         String strategySpecificData, boolean isValidObject, boolean testing) throws Exception
     {
@@ -143,21 +142,23 @@ public class Reject implements Service
             result.add(e);
         }
 
+        strategy.performDelete(ids, session, strategySpecificData);
+
+        final DataManager dataManager = context.getBean(DataManager.class);
+        dataManager.indexMetadata(allAffectedMdIds, true, false, true);
+        context.getBean(SearchManager.class).forceIndexChanges();
+
         if (!emailInfo.isEmpty()) {
             emailNotifications(strategy, context, session, msg, emailInfo, baseURL, strategySpecificData, testing);
         }
-        strategy.performDelete(ids, session, strategySpecificData);
-
-        context.getBean(DataManager.class).indexMetadata(allAffectedMdIds, true, false, true);
 
         return result;
 
     }
 
-    private Element updateHrefs(final ReplacementStrategy strategy, ServiceContext context,
+    private Element updateHrefs(final SharedObjectStrategy strategy, ServiceContext context,
             final UserSession session, String id, Set<MetadataRecord> results, String baseURL,
-            String strategySpecificData) throws Exception
-    {
+            String strategySpecificData) throws Exception {
         Element newIds = new Element("newIds");
         // Move the reusable object to the DeletedObjects table and update
         // the xlink attribute information so that the objects are obtained from that table
@@ -165,27 +166,19 @@ public class Reject implements Service
         for (MetadataRecord metadataRecord : results) {
             for (String href : metadataRecord.xlinks) {
                 @SuppressWarnings("unchecked")
-				Iterator<Element> xlinks = metadataRecord.xml.getDescendants(new FindXLinks(href));
+                Iterator<Element> xlinks = metadataRecord.xml.getDescendants(new FindXLinks(href));
                 while (xlinks.hasNext()) {
                     Element xlink = xlinks.next();
                     String oldHRef = xlink.getAttributeValue(XLink.HREF, XLink.NAMESPACE_XLINK);
                     String newHref;
                     if (!updatedHrefs.containsKey(oldHRef)) {
-                        Element fragment = Processor.resolveXLink(oldHRef,context);
-                        
-                        @SuppressWarnings("unchecked")
-						Iterator<Content> iter = fragment.getDescendants();
-                        while(iter.hasNext()) {
-                        	Object next = iter.next();
-                        	if (next instanceof Element) {
-								Element e = (Element) next;
-								e.removeAttribute("href", XLink.NAMESPACE_XLINK);
-								e.removeAttribute("show", XLink.NAMESPACE_XLINK);
-								e.removeAttribute("role", XLink.NAMESPACE_XLINK);
-							}
-                        }
+                        Element fragment = Processor.resolveXLink(oldHRef, context);
+
+                        updateChildren(fragment);
                         // update xlink service
-                        int newId = DeletedObjects.insert(context.getBean(RejectedSharedObjectRepository.class), Xml.getString(fragment), href);
+                        int newId = DeletedObjects.insert(
+                                context.getBean(RejectedSharedObjectRepository.class),
+                                Xml.getString(fragment), href);
                         newIds.addContent(new Element("id").setText(String.valueOf(newId)));
                         newHref = DeletedObjects.href(newId);
                         updatedHrefs.put(oldHRef, newHref);
@@ -203,11 +196,25 @@ public class Reject implements Service
 
             metadataRecord.commit(context);
         }
-        
+
         return newIds;
     }
 
-    private void emailNotifications(final ReplacementStrategy strategy, ServiceContext context,
+    private void updateChildren(Element fragment) {
+        @SuppressWarnings("unchecked")
+        Iterator<Content> iter = fragment.getDescendants();
+        while (iter.hasNext()) {
+            Object next = iter.next();
+            if (next instanceof Element) {
+                Element e = (Element) next;
+                e.removeAttribute("href", XLink.NAMESPACE_XLINK);
+                e.removeAttribute("show", XLink.NAMESPACE_XLINK);
+                e.removeAttribute("role", XLink.NAMESPACE_XLINK);
+            }
+        }
+    }
+
+    private void emailNotifications(final SharedObjectStrategy strategy, ServiceContext context,
             final UserSession session, String msg, Multimap<Integer, Integer> emailInfo, String baseURL,
             String strategySpecificData, boolean testing) throws Exception
     {

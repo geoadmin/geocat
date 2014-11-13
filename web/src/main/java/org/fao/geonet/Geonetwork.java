@@ -31,19 +31,22 @@ import jeeves.server.JeevesProxyInfo;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
-import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Setting;
-import org.fao.geonet.geocat.kernel.extent.ExtentManager;
-import org.fao.geonet.kernel.*;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectUriMapper;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.SvnManager;
+import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.XmlSerializerSvn;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.LuceneConfig;
-import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
-import org.fao.geonet.geocat.kernel.reusable.SharedObjectUriMapper;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.setting.SettingInfo;
@@ -79,7 +82,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URI;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.util.List;
@@ -236,10 +238,6 @@ public class Geonetwork implements ApplicationHandler {
         lc.configure(luceneConfigXmlFile);
         logger.info("  - Lucene configuration is:");
         logger.info(lc.toString());
-
-        List<Element> extentConfig = handlerConfig.getChildren(Geocat.Config.EXTENT_CONFIG);
-
-        _applicationContext.getBean(ExtentManager.class).init(extentConfig);
 
         try {
             _applicationContext.getBean(DataStore.class);

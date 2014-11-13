@@ -251,13 +251,18 @@ public final class Utils {
     private static boolean equalIds( String value, String id2 ) {
         // ids are normally ints bug some (like keywords) are strings
 
-        String id1 = Utils.id(value);
-        try {
-            double id1Double = parseDouble(id1);
-            double id2Double = parseDouble(id2);
-            return Math.abs(id1Double - id2Double) < 0.1;
-        } catch (NumberFormatException e) {
+        if (value.contains("uuid")) {
+            String id1 = Utils.uuid(value);
             return id1.equals(id2);
+        } else {
+            String id1 = Utils.id(value);
+            try {
+                double id1Double = parseDouble(id1);
+                double id2Double = parseDouble(id2);
+                return Math.abs(id1Double - id2Double) < 0.1;
+            } catch (NumberFormatException e) {
+                return id1.equals(id2);
+            }
         }
     }
 
@@ -341,8 +346,8 @@ public final class Utils {
         }
     }
 
-    public static ReplacementStrategy strategy( ReusableTypes reusableType, ServiceContext context ) throws Exception {
-        ReplacementStrategy strategy = null;
+    public static SharedObjectStrategy strategy( ReusableTypes reusableType, ServiceContext context ) throws Exception {
+        SharedObjectStrategy strategy = null;
         String appPath = context.getAppPath();
 
         String baseUrl = mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));

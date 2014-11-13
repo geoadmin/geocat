@@ -42,5 +42,4 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
         <constructor-arg value="development" />
     </bean>
 
-    <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext"/>
 </beans>

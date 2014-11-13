@@ -54,8 +54,7 @@ public class Resource extends AbstractFormatService {
             @RequestParam(Params.ID) String xslid,
             @RequestParam(Params.FNAME) String fileName,
             @RequestParam(value = Params.SCHEMA, required = false) String schema,
-            HttpServletResponse response
-            ) throws Exception {
+            HttpServletResponse response) throws Exception {
         File schemaDir = null;
         if (schema != null) {
             schemaDir = new File(schemaManager.getSchemaDir(schema));

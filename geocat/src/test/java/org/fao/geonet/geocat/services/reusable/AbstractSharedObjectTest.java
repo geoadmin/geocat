@@ -1,14 +1,12 @@
 package org.fao.geonet.geocat.services.reusable;
 
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.lucene.document.Document;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.geocat.kernel.reusable.ContactsStrategy;
-import org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
@@ -16,19 +14,16 @@ import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
-import java.util.UUID;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author Jesse on 10/7/2014.
  */
-public class AbstractSharedObjectTest extends AbstractServiceIntegrationTest {
+public abstract class AbstractSharedObjectTest extends AbstractServiceIntegrationTest {
 
     protected static final String SHARED_USER_XML = "shared-user.xml";
     protected static final String SHARED_FORMAT_XML = "shared-format.xml";
@@ -79,8 +74,8 @@ public class AbstractSharedObjectTest extends AbstractServiceIntegrationTest {
         String root = sharedObjTmp.getQualifiedName();
         Metadata metadata = new Metadata().setUuid(uuid);
         metadata.setData(Xml.getString(sharedObjTmp).replace("{{uuid}}", uuid));
-        final String categoryName = validated ? ReplacementStrategy.LUCENE_EXTRA_VALIDATED :
-                ReplacementStrategy.LUCENE_EXTRA_NON_VALIDATED;
+        final String categoryName = validated ? SharedObjectStrategy.LUCENE_EXTRA_VALIDATED :
+                SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED;
         MetadataDataInfo dataInfo = new MetadataDataInfo().
                 setSchemaId("iso19139.che").
                 setRoot(root).

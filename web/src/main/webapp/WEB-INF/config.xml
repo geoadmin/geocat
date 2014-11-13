@@ -121,10 +121,6 @@
 	<!-- ====================================================================== -->
 
 	<services package="org.fao.geonet">
-		<service name="strings.js">
-			<output sheet="strings.xsl" contentType="application/json"/>
-		</service>
-
 
         <!-- Ext GUIs -->
         <service name="feedback.send">

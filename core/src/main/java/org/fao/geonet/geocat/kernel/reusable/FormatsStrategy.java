@@ -32,8 +32,6 @@ import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
-import org.fao.geonet.domain.geocat.Format;
-import org.fao.geonet.repository.geocat.FormatRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -41,13 +39,11 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.springframework.context.ApplicationContext;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public final class FormatsStrategy extends AbstractSubtemplateStrategy {
@@ -75,15 +71,24 @@ public final class FormatsStrategy extends AbstractSubtemplateStrategy {
 
         String docName = doc.get(LUCENE_FORMAT_NAME);
         String docVersion = doc.get(LUCENE_FORMAT_VERSION);
-        int rating = 0;
 
-        if (docName.equalsIgnoreCase(name)) {
-            rating = 10;
-        }
-        if(docVersion.equalsIgnoreCase(version)) {
-            rating += 5;
-        }
+        int rating = rate(name, docName, 10, 5);
+        rating += rate(version, docVersion, 5, 2);
+
         return new FindResult(rating == 15, rating);
+    }
+
+    private int rate(String name, String docName, int perfectMatch, int nullMatch) {
+        if (docName != null) {
+            if (docName.equalsIgnoreCase(name)) {
+                return perfectMatch;
+            }
+        } else {
+            if (name == null || name.trim().isEmpty()) {
+                return nullMatch;
+            }
+        }
+        return 0;
     }
 
     @Override
@@ -105,7 +110,7 @@ public final class FormatsStrategy extends AbstractSubtemplateStrategy {
                 new Function<DescData, String>() {
                     @Nullable
                     @Override
-                    public String apply(@Nullable DescData data) {
+                    public String apply(@Nonnull DescData data) {
                         String name = data.doc.get("name");
                         if (name == null || name.length() == 0) {
                             name = data.uuid;
@@ -149,51 +154,21 @@ public final class FormatsStrategy extends AbstractSubtemplateStrategy {
         return "Reusable Format";
     }
 
-    public static final class Formats implements Iterable<Format> {
-        List<Format> formats = new ArrayList<Format>();
-
-        public Formats(FormatRepository repo) throws SQLException {
-            this.formats = repo.findAll();
-        }
-
-        public Iterator<Format> iterator() {
-            return formats.iterator();
-        }
-
-        public List<Format> matches(Format format) {
-            List<Format> matches = new ArrayList<Format>();
-            for (Format other : this) {
-                if(other.match(format)) {
-                    if(other.isValidated()) {
-                        matches.add(0, other);
-                    } else {
-                        matches.add(other);
-                    }
-                }
-            }
-            return matches;
-        }
-
-        public int size() {
-            return formats.size();
-        }
-    }
-
     @Override
-    public String[] getInvalidXlinkLuceneField() {
-        return new String[]{"invalid_xlink_format"};
+    public String getInvalidXlinkLuceneField() {
+        return "invalid_xlink_format";
     }
     
     @Override
-    public String[] getValidXlinkLuceneField() {
-    	return new String[]{"valid_xlink_format"};
+    public String getValidXlinkLuceneField() {
+    	return "valid_xlink_format";
     }
 
     @Override
     protected String getEmptyTemplate() {
         return "<gmd:MD_Format>\n"
                + "          <gmd:name gco:nilReason=\"missing\">\n"
-               + "            <gco:CharacterString/>\n"
+               + "            <gco:CharacterString gco:nilReason=\"missing\"/>\n"
                + "          </gmd:name>\n"
                + "          <gmd:version gco:nilReason=\"missing\">\n"
                + "            <gco:CharacterString/>\n"

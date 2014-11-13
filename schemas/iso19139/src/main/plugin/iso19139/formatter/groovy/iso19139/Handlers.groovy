@@ -156,8 +156,7 @@ public class Handlers {
 
             def bboxData = handlers.fileResult("html/bbox.html", replacements)
             return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: bboxData])
-    }
-
+}
     def addPackageNav() {
         def navBar = '''
             <ul class="nav nav-pills">

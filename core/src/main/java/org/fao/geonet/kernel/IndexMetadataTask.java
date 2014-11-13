@@ -7,10 +7,10 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.utils.Log;
 import org.springframework.transaction.TransactionStatus;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * A runnable for indexing multiple metadata in a separate thread.

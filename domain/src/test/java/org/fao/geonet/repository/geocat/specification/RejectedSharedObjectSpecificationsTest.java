@@ -8,10 +8,12 @@ import org.fao.geonet.repository.geocat.RejectedSharedObjectRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Nullable;
 import java.util.List;
+import javax.annotation.Nullable;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for
@@ -25,9 +27,9 @@ public class RejectedSharedObjectSpecificationsTest extends AbstractSpringDataTe
 
     @Test
     public void testHasId() throws Exception {
-        final RejectedSharedObject obj1 = _repo.save(new RejectedSharedObject());
-        final RejectedSharedObject obj2 = _repo.save(new RejectedSharedObject());
-        final RejectedSharedObject obj3 = _repo.save(new RejectedSharedObject());
+        final RejectedSharedObject obj1 = _repo.save(createRejectedObj());
+        final RejectedSharedObject obj2 = _repo.save(createRejectedObj());
+        final RejectedSharedObject obj3 = _repo.save(createRejectedObj());
 
         final List<RejectedSharedObject> all = _repo.findAll(RejectedSharedObjectSpecifications.hasId(obj1.getId(), obj2.getId()));
 
@@ -44,5 +46,9 @@ public class RejectedSharedObjectSpecificationsTest extends AbstractSpringDataTe
         assertTrue(ids.contains(obj1.getId()));
         assertTrue(ids.contains(obj2.getId()));
         assertFalse(ids.contains(obj3.getId()));
+    }
+
+    private RejectedSharedObject createRejectedObj() {
+        return new RejectedSharedObject().setXml("<d>data</d>");
     }
 }

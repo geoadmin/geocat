@@ -131,7 +131,8 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
 
-        final SyncReport syncReport = synchronizeDataDirectory(new File(webappDir, "WEB-INF/data"));
+        final SyncReport syncReport = synchronizeDataDirectory(
+                new File(webappDir, "WEB-INF/data"));
 
         final ArrayList<Element> params = getServiceConfigParameterElements();
 
@@ -536,7 +537,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
      * @throws Exception
      */
     public int importMetadataXML(ServiceContext context, String uuid, InputStream xmlInputStream, MetadataType metadataType,
-                                    int groupId, String uuidAction) throws Exception {
+                                 int groupId, String uuidAction) throws Exception {
         final Element metadata = Xml.loadStream(xmlInputStream);
         final DataManager dataManager = _applicationContext.getBean(DataManager.class);
         String schema = dataManager.autodetectSchema(metadata);
@@ -558,6 +559,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
                 "" + groupId, metadataType);
 
         dataManager.indexMetadata(id.get(0), true);
+
         return Integer.parseInt(id.get(0));
     }
 

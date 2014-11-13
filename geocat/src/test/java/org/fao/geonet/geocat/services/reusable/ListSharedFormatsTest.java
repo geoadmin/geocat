@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Set;
 
 import static org.fao.geonet.domain.Pair.read;
-import static org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy.REPORT_DESC;
-import static org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy.REPORT_ID;
-import static org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy.REPORT_SEARCH;
-import static org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy.REPORT_URL;
-import static org.fao.geonet.geocat.kernel.reusable.ReplacementStrategy.REPORT_XLINK;
+import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.REPORT_DESC;
+import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.REPORT_ID;
+import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.REPORT_SEARCH;
+import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.REPORT_URL;
+import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.REPORT_XLINK;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

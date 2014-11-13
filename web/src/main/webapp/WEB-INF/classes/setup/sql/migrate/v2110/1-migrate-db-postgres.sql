@@ -43,6 +43,8 @@ CREATE TABLE Email
 );
 
 
-ALTER TABLE Requests ALTER COLUMN query TYPE text;
-ALTER TABLE Requests ALTER COLUMN type TYPE text;
-ALTER TABLE Requests ALTER COLUMN spatialfilter TYPE text;
+-- GEOCAT
+-- ALTER TABLE Requests ALTER COLUMN query TYPE text;
+-- ALTER TABLE Requests ALTER COLUMN type TYPE text;
+-- ALTER TABLE Requests ALTER COLUMN spatialfilter TYPE text;
+-- END GEOCAT

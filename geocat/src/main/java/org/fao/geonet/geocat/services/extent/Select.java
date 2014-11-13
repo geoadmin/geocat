@@ -29,7 +29,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.geocat.kernel.extent.ExtentSelection;
-import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
+import org.fao.geonet.geocat.kernel.extent.FeatureType;
 import org.jdom.Element;
 
 import java.util.Set;
@@ -63,15 +63,13 @@ public class Select implements Service
                     Element elem = (Element) next;
                     if (elem.getName().equalsIgnoreCase("add")) {
                         String typename = elem.getAttributeValue("typename");
-                        String wfs = elem.getAttributeValue("wfs");
                         String id = elem.getAttributeValue("id");
-                        FeatureType ft = extentMan.getSource(wfs).getFeatureType(typename);
+                        FeatureType ft = extentMan.getSource().getFeatureType(typename);
                         selectionIds.add(Pair.read(ft, id));
                     } else if (elem.getName().equalsIgnoreCase("remove")) {
                         String typename = elem.getAttributeValue("typename");
-                        String wfs = elem.getAttributeValue("wfs");
                         String id = elem.getAttributeValue("id");
-                        FeatureType ft = extentMan.getSource(wfs).getFeatureType(typename);
+                        FeatureType ft = extentMan.getSource().getFeatureType(typename);
                         selectionIds.remove(Pair.read(ft, id));
                     }
                 }

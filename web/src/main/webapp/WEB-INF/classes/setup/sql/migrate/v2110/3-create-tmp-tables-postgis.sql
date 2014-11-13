@@ -10,23 +10,50 @@ CREATE TABLE USERGROUPS_TMP
 );
 
 -- Convert Profile column to the profile enumeration ordinal
-
+-- GEOCAT
 CREATE TABLE USERS_TMP
   (
-    id            int         ,
-    username      varchar(256),
-    password      varchar(120),
-    surname       varchar(32),
-    name          varchar(32),
-    profile       int,
-    organisation  varchar(128),
-    kind          varchar(16),
-    security      varchar(128),
-    authtype      varchar(32),
-	
-    primary key(id),
-    unique(username)
+    id integer NOT NULL,
+    username text NOT NULL,
+    password character varying(120) NOT NULL,
+    surname text,
+    name text,
+    profile character varying(32) NOT NULL,
+    address text,
+    city text,
+    state text,
+    zip text,
+    country text,
+    email text,
+    organisation text,
+    kind character varying(16),
+    security character varying(128) DEFAULT ''::character varying,
+    authtype character varying(32),
+    streetnumber text,
+    streetname text,
+    postbox text,
+    positionname text,
+    onlineresource text,
+    onlinename text,
+    onlinedescription text,
+    hoursofservice text,
+    contactinstructions text,
+    publicaccess character(1) DEFAULT 'y'::bpchar,
+    orgacronym text,
+    directnumber text,
+    mobile text,
+    phone text,
+    facsimile text,
+    email1 text,
+    phone1 text,
+    facsimile1 text,
+    email2 text,
+    phone2 text,
+    facsimile2 text,
+    parentinfo integer,
+    validated character(1) DEFAULT 'n'::bpchar
   );
+-- END GEOCAT
 
 -- ----  Change notifier actions column to map to the MetadataNotificationAction enumeration
 

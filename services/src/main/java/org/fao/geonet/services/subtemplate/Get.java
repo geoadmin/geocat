@@ -81,7 +81,7 @@ public class Get implements Service {
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         final Metadata metadata = metadataRepository.findOneByUuid(uuid);
 
-        if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
+        if (metadata == null || metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
             throw new IllegalArgumentException("Metadata uuid="+uuid+" is not a subtemplate");
         }
 

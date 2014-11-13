@@ -9,5 +9,70 @@
 
     <context:component-scan base-package="org.fao.geonet.geocat.component, org.fao.geonet.geocat.kernel"/>
     <bean id="cgp" class="org.fao.geonet.geocat.cgp.CGPHarvester" scope="prototype"/>
+    <bean id="extent" class="org.fao.geonet.geocat.kernel.extent.ExtentManager">
+        <property name="source" ref="extentSource"/>
+    </bean>
+    <bean id="extentSource" class="org.fao.geonet.geocat.kernel.extent.Source">
+        <property name="wfsId" value="default"/>
+        <property name="modifiable">
+            <set>
+                <ref bean="gn:xlinks" />
+                <ref bean="gn:non_validated" />
+            </set>
+        </property>
+        <property name="types">
+            <map>
+                <entry key="gn:countries" value-ref="gn:countries"/>
+                <entry key="gn:gemeindenBB" value-ref="gn:gemeindenBB"/>
+                <entry key="gn:kantoneBB" value-ref="gn:kantoneBB"/>
+                <entry key="gn:xlinks" value-ref="gn:xlinks"/>
+                <entry key="gn:non_validated" value-ref="gn:non_validated"/>
+            </map>
+        </property>
+    </bean>
 
+    <bean id="gn:countries" class="org.fao.geonet.geocat.kernel.extent.FeatureType">
+        <property name="idColumn" value="ID"/>
+        <property name="descColumn" value="LAND"/>
+        <property name="searchColumn" value="SEARCH"/>
+        <property name="geoIdColumn" value="LAND"/>
+        <property name="srs" value="EPSG:21781"/>
+        <property name="typename" value="gn:countries"/>
+    </bean>
+
+    <bean id="gn:gemeindenBB" class="org.fao.geonet.geocat.kernel.extent.FeatureType">
+        <property name="idColumn" value="OBJECTVAL"/>
+        <property name="descColumn" value="DESC"/>
+        <property name="searchColumn" value="SEARCH"/>
+        <property name="geoIdColumn" value="GEMNAME"/>
+        <property name="srs" value="EPSG:21781"/>
+        <property name="typename" value="gn:gemeindenBB"/>
+    </bean>
+
+    <bean id="gn:kantoneBB" class="org.fao.geonet.geocat.kernel.extent.FeatureType">
+        <property name="idColumn" value="KANTONSNR"/>
+        <property name="descColumn" value="NAME"/>
+        <property name="searchColumn" value="SEARCH"/>
+        <property name="geoIdColumn" value="KUERZEL"/>
+        <property name="srs" value="EPSG:21781"/>
+        <property name="typename" value="gn:kantoneBB"/>
+    </bean>
+
+    <bean id="gn:xlinks" class="org.fao.geonet.geocat.kernel.extent.FeatureType">
+        <property name="idColumn" value="ID"/>
+        <property name="descColumn" value="DESC"/>
+        <property name="searchColumn" value="SEARCH"/>
+        <property name="geoIdColumn" value="GEO_ID"/>
+        <property name="srs" value="EPSG:21781"/>
+        <property name="typename" value="gn:xlinks"/>
+    </bean>
+
+    <bean id="gn:non_validated" class="org.fao.geonet.geocat.kernel.extent.FeatureType">
+        <property name="idColumn" value="ID"/>
+        <property name="descColumn" value="DESC"/>
+        <property name="searchColumn" value="SEARCH"/>
+        <property name="geoIdColumn" value="GEO_ID"/>
+        <property name="srs" value="EPSG:21781"/>
+        <property name="typename" value="gn:non_validated"/>
+    </bean>
 </beans>

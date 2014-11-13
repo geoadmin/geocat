@@ -667,23 +667,30 @@ public class SearchManager {
 	}
 	
 	// indexing methods
+    /**
+     * Force the index to wait until all changes are processed and the next reader obtained will get the latest data.
+     * @throws IOException
+     */
+    public void forceIndexChanges() throws IOException {
+        _tracker.maybeRefreshBlocking();
+    }
 
-	/**
-	 * Indexes a metadata record.
+    /**
+     * Indexes a metadata record.
      *
-	 * @param schemaDir
-	 * @param metadata
-	 * @param id
-	 * @param moreFields
+     * @param schemaDir
+     * @param metadata
+     * @param id
+     * @param moreFields
      * @param forceRefreshReaders if true then block all searches until they can obtain a up-to-date reader
-	 * @throws Exception
-	 */
-	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields,
+     * @throws Exception
+     */
+    public void index(String schemaDir, Element metadata, String id, List<Element> moreFields,
                       MetadataType metadataType, String root, boolean forceRefreshReaders)
             throws Exception {
         // Update spatial index first and if error occurs, record it to Lucene index
         indexGeometry(schemaDir, metadata, id, moreFields);
-        
+
         // Update Lucene index
         List<IndexInformation> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, metadataType, root);
         _tracker.deleteDocuments(new Term("_id", id));
@@ -691,10 +698,10 @@ public class SearchManager {
             _tracker.addDocument(document);
         }
         if (forceRefreshReaders) {
-            _tracker.maybeRefreshBlocking();
+            forceIndexChanges();
         }
-	}
-	
+    }
+
     private void indexGeometry(String schemaDir, Element metadata, String id,
             List<Element> moreFields) throws Exception {
         try {

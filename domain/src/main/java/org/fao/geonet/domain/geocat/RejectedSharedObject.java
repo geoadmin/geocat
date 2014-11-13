@@ -3,13 +3,24 @@ package org.fao.geonet.domain.geocat;
 import org.fao.geonet.domain.GeonetEntity;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.utils.Xml;
+import org.hibernate.annotations.Type;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
-import javax.persistence.*;
 import java.io.IOException;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 /**
  * Represents a rejected shared object.
@@ -28,7 +39,7 @@ public class RejectedSharedObject extends GeonetEntity {
     private int id;
     private String description;
     private String xml;
-    private ISODate deletionDate;
+    private ISODate deletionDate = new ISODate();
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
@@ -48,20 +59,27 @@ public class RejectedSharedObject extends GeonetEntity {
         this.description = description;
     }
 
+    @Column(nullable = false)
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Type(type="org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
     public String getXml() {
         return xml;
     }
 
-    public void setXml(String xml) {
+    public RejectedSharedObject setXml(String xml) {
         this.xml = xml;
+        return this;
     }
 
+    @Column(nullable = false)
     public ISODate getDeletionDate() {
         return deletionDate;
     }
 
-    public void setDeletionDate(ISODate deletionDate) {
+    public RejectedSharedObject setDeletionDate(ISODate deletionDate) {
         this.deletionDate = deletionDate;
+        return this;
     }
 
     public Element getXmlElement(boolean validate) throws IOException, JDOMException {

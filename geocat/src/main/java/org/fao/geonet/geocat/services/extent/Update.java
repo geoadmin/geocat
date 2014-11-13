@@ -34,6 +34,7 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
+import org.fao.geonet.geocat.kernel.extent.FeatureType;
 import org.fao.geonet.geocat.kernel.extent.Source;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
@@ -60,7 +61,6 @@ import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.FORMAT;
 import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.GEOM;
 import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.GEO_ID;
 import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.ID;
-import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.SOURCE;
 import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.TYPENAME;
 
 /**
@@ -84,15 +84,14 @@ public class Update implements Service
         final ExtentManager extentMan = context.getBean(ExtentManager.class);
 
         final String id = Util.getParamText(params, ID);
-        final String wfsParam = Util.getParamText(params, SOURCE);
         final String typename = Util.getParamText(params, TYPENAME);
         final String geomParam = Util.getParamText(params, GEOM);
         final String desc = LangUtils.createDescFromParams(params, DESC);
         final String geoId = LangUtils.createDescFromParams(params, GEO_ID);
         final String requestCrsCode = Util.getParamText(params, ExtentHelper.CRS_PARAM);
 
-        final Source wfs = extentMan.getSource(wfsParam);
-        final Source.FeatureType featureType = wfs.getFeatureType(typename);
+        final Source wfs = extentMan.getSource();
+        final FeatureType featureType = wfs.getFeatureType(typename);
         if (featureType == null) {
             return ExtentHelper.error(typename + " does not exist, acceptable types are: " + wfs.listModifiable());
         }

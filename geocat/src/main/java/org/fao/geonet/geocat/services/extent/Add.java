@@ -23,30 +23,19 @@
 
 package org.fao.geonet.geocat.services.extent;
 
-import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.*;
-
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.Arrays;
-
-import javax.xml.parsers.ParserConfigurationException;
-
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.geocat.kernel.extent.Source;
-import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
+import org.fao.geonet.geocat.kernel.extent.FeatureType;
 import org.fao.geonet.util.LangUtils;
 import org.geotools.data.FeatureStore;
-import org.geotools.feature.FeatureCollection;
-import org.geotools.feature.FeatureCollections;
-import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.gml2.GMLConfiguration;
 import org.geotools.xml.Parser;
 import org.jdom.Element;
@@ -54,9 +43,17 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.xml.sax.SAXException;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Arrays;
+import javax.xml.parsers.ParserConfigurationException;
+
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.DESC;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.FORMAT;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.GEOM;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.GEO_ID;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.ID;
+import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.TYPENAME;
 
 /**
  * Service for adding new Geometries to a the updateable wfs featuretype
@@ -152,7 +149,6 @@ public class Add implements Service
         final ExtentManager extentMan = context.getBean(ExtentManager.class);
 
         String id = Util.getParamText(params, ID);
-        final String wfsParam = Util.getParamText(params, SOURCE);
         final String typename = Util.getParamText(params, TYPENAME);
         final String geomParam = Util.getParamText(params, GEOM);
         final String geomId = LangUtils.createDescFromParams(params, GEO_ID);
@@ -160,7 +156,7 @@ public class Add implements Service
         final Format format = Format.lookup(Util.getParamText(params, FORMAT));
         final String requestCrsCode = Util.getParamText(params, ExtentHelper.CRS_PARAM);
 
-        final Source wfs = extentMan.getSource(wfsParam);
+        final Source wfs = extentMan.getSource();
         final FeatureType featureType = wfs.getFeatureType(typename);
 
         if (featureType == null) {
@@ -190,7 +186,7 @@ public class Add implements Service
         return responseElem;
     }
 
-    static boolean idExists(FeatureStore<SimpleFeatureType, SimpleFeature> store, String id, Source.FeatureType featureType)
+    static boolean idExists(FeatureStore<SimpleFeatureType, SimpleFeature> store, String id, FeatureType featureType)
             throws IOException
     {
         return !store.getFeatures(featureType.createQuery(id, new String[] { featureType.idColumn })).isEmpty();

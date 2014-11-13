@@ -27,7 +27,7 @@ public class MetadataDataInfo implements Serializable {
     private String _root;
     private String _doctype;
     private String _extra;
-    private Integer _displayOrder;
+    private Integer _displayOrder = 0;
     private int _rating;
     private int _popularity;
 

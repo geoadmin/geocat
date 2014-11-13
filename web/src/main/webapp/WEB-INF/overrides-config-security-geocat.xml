@@ -2,135 +2,135 @@
            xsi:noNamespaceSchemaLocation="overrides/config-overrides.xsd">
 
     <spring>
-        <addInterceptUrl pattern="/srv/.*/strings.js!?" access="permitAll"/>
+        <addInterceptUrl pattern="/srv/\w\w\w/admin.shared.objects!?\??.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl pattern="/srv/\w\w\w/strings.js!?" access="permitAll"/>
 
-        <addInterceptUrl  pattern="/srv/.*/metadata.xlink.add!?.*" access="hasRole('Editor')"/>
-        <addInterceptUrl  pattern="/srv/.*/csw-publication!?.*" access="hasRole('Editor')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.xlink.add!?.*" access="hasRole('Editor')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/csw-publication!?.*" access="hasRole('Editor')"/>
 
         <!-- Search for metadata that has not recently been updated -->
-        <addInterceptUrl  pattern="/srv/.*/metadata.expired.email!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/metadata.expired.unpublish!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/metadata.expired.form!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.expired.email!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.expired.unpublish!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.expired.form!?.*" access="hasRole('Administrator')"/>
 
         <!-- Format facilities -->
-        <addInterceptUrl  pattern="/srv/.*/format.admin!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/format!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/format.admin!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/format!?.*" access="hasRole('Administrator')"/>
 
         <!-- Unpublish facilities -->
-        <addInterceptUrl  pattern="/srv/.*/unpublish.invalid.metadata!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/unpublish.report.xml!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/unpublish.report.csv!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/unpublish.invalid.metadata!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/unpublish.report.xml!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/unpublish.report.csv!?.*" access="hasRole('Administrator')"/>
 
         <!-- Extent facilities -->
-        <addInterceptUrl  pattern="/srv/.*/xml.extent.add!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/xml.extent.delete!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/xml.extent.update!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/extent.admin!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/extent.edit!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/extent.select!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/xml.extent.add!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/xml.extent.delete!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/xml.extent.update!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/extent.admin!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/extent.edit!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/extent.select!?.*" access="hasRole('Administrator')"/>
 
         <!-- Reusable object admin facilities -->
-        <addInterceptUrl  pattern="/srv/.*/metadata.reusable.replace!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/reusable.non_validated.admin!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/reusable.non_validated.list!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/reusable.validate!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/reusable.reject!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/reusable.delete!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/reusable.references!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/reusable.duplicates.find!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/reusable.object.process!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/reusable.object.update!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/reusable.object.deleteUnused!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.reusable.replace!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/reusable.non_validated.admin!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/reusable.non_validated.list!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/reusable.validate!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/reusable.reject!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/reusable.delete!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/reusable.references!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/reusable.duplicates.find!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/reusable.object.process!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/reusable.object.update!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/reusable.object.deleteUnused!?.*" access="hasRole('Administrator')"/>
 
         <!-- Allow a user to specify a XSL -->
-        <addInterceptUrl  pattern="/srv/.*/metadata.formatter.register!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/metadata.formatter.remove!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/metadata.formatter.download!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/metadata.formatter.admin!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/metadata.formatter.update!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/metadata.formatter.files!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/metadata.formatter.edit!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.formatter.register!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.formatter.remove!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.formatter.download!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.formatter.admin!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.formatter.update!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.formatter.files!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.formatter.edit!?.*" access="hasRole('Administrator')"/>
 
         <!-- shared user services -->
-        <addInterceptUrl  pattern="/srv/.*/shared.user.edit!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/validated.shared.user.admin!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/nonvalidated.shared.user.admin!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/validated.shared.user.remove!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/validated.shared.user.update!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/nonvalidated.shared.user.remove!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/nonvalidated.shared.user.update!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/shared.user.remove!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/shared.user.edit!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/validated.shared.user.admin!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/nonvalidated.shared.user.admin!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/validated.shared.user.remove!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/validated.shared.user.update!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/nonvalidated.shared.user.remove!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/nonvalidated.shared.user.update!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/shared.user.remove!?.*" access="hasRole('Administrator')"/>
 
-        <addInterceptUrl  pattern="/srv/.*/thesaurus.editelement!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/geocat.thesaurus.updateelement!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/geocat.thesaurus.editelement!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/keywords.duplicate!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/thesaurus.editelement!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/geocat.thesaurus.updateelement!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/geocat.thesaurus.editelement!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/keywords.duplicate!?.*" access="hasRole('Administrator')"/>
 
 
-        <addInterceptUrl  pattern="/srv/.*/mapfish!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/geocat!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/oldgeocat!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/cgp!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/gm03.xml!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/gm03small.xml!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/monitoring.csv!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/mapfish!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/geocat!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/oldgeocat!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/cgp!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/gm03.xml!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/gm03small.xml!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/monitoring.csv!?.*" access="permitAll"/>
 
-        <addInterceptUrl  pattern="/srv/.*/sources.get!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/sources.get!?.*" access="permitAll"/>
 
         <!-- Extent services -->
-        <addInterceptUrl  pattern="/srv/.*/xml.extent.get!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/xml.extent.list!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/xml.extent.search!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/extent.search.list!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/extent.search.paging!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/xml.extent.get!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/xml.extent.list!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/xml.extent.search!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/extent.search.list!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/extent.search.paging!?.*" access="permitAll"/>
 
         <!-- service for resolving xlinks that are pending deletion -->
-        <addInterceptUrl  pattern="/srv/.*/xml.reusable.deleted!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/xml.reusable.deleted!?.*" access="permitAll"/>
 
-        <addInterceptUrl  pattern="/srv/.*/status!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/status!?.*" access="permitAll"/>
 
         <!-- Metadata formatter -->
-        <addInterceptUrl  pattern="/srv/.*/metadata.formatter.html!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/metadata.formatter.xml!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/metadata.formatter.resource!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/metadata.formatter.list!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.formatter.html!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.formatter.xml!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.formatter.resource!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.formatter.list!?.*" access="permitAll"/>
 
-        <addInterceptUrl  pattern="/srv/.*/xml.format.get!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/xml.format.list!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/xml.user.get!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/shared.user.list!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/che.keyword.get!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/metadata.show.xml!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/csw.pdf!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/csw.csv!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/geocat.keywords.list!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/download.backup!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/trigger.backup!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/xml.format.get!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/xml.format.list!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/xml.user.get!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/che.keyword.get!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.show.xml!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/csw.pdf!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/csw.csv!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/geocat.keywords.list!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/download.backup!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/trigger.backup!?.*" access="hasRole('Administrator')"/>
 
         <!-- Notification on selection -->
-        <addInterceptUrl  pattern="/srv/.*/metadata.select.notifybymail!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/metadata.select.unpublish!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/metadata.select.info!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.select.notifybymail!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.select.unpublish!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.select.info!?.*" access="hasRole('Administrator')"/>
 
-        <addInterceptUrl  pattern="/srv/.*/csw-.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/monitoring.indexing!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*/metadata.selection.index!?.*" access="hasRole('Administrator')" />
+        <addInterceptUrl  pattern="/srv/\w\w\w/csw-.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/monitoring.indexing!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.selection.index!?.*" access="hasRole('Administrator')" />
 
 
-        <addInterceptUrl  pattern="/srv/.*/metadata.validation.status!?.*" access="permitAll" />
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.validation.status!?.*" access="permitAll" />
 
-        <addInterceptUrl  pattern="/srv/.*/json.format.get!?.*" access="permitAll" />
-        <addInterceptUrl  pattern="/srv/.*/json.keyword.get!?.*" access="permitAll" />
+        <addInterceptUrl  pattern="/srv/\w\w\w/json.format.get!?.*" access="permitAll" />
+        <addInterceptUrl  pattern="/srv/\w\w\w/json.keyword.get!?.*" access="permitAll" />
 
-        <addInterceptUrl  pattern="/srv/.*/header-template.xml!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/.*/reusable.list.js!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/header-template.xml!?.*" access="permitAll"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/reusable.list.js!?.*" access="hasRole('Administrator')"/>
         <addInterceptUrl  pattern="/apps/shared-objects/app/.*" access="hasRole('Administrator')"/>
 
-        <addInterceptUrl  pattern="/srv/.*/metadata.summary.zip!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/.*//srv/.*/inspire.edit!?.*" access="hasRole('Editor')"/>
-        <addInterceptUrl  pattern="/srv/.*//srv/.*/inspire.edit.model!?.*" access="hasRole('Editor')"/>
-        <addInterceptUrl  pattern="/srv/.*//srv/.*/inspire.edit.save!?.*" access="hasRole('Editor')"/>
-        <addInterceptUrl pattern="/srv/.*/plain.xml.user.get!?.*" access="permitAll" />
-        <addInterceptUrl pattern="/srv/.*/geocat.search.info!?.*" access="permitAll" />
+        <addInterceptUrl  pattern="/srv/\w\w\w/metadata.summary.zip!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w//srv/\w\w\w/inspire.edit!?.*" access="hasRole('Editor')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w//srv/\w\w\w/inspire.edit.model!?.*" access="hasRole('Editor')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w//srv/\w\w\w/inspire.edit.save!?.*" access="hasRole('Editor')"/>
+        <addInterceptUrl pattern="/srv/\w\w\w/plain.xml.user.get!?.*" access="permitAll" />
+        <addInterceptUrl pattern="/srv/\w\w\w/geocat.search.info!?.*" access="permitAll" />
     </spring>
 </overrides>

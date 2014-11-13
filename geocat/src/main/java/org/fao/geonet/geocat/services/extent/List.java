@@ -24,6 +24,7 @@
 package org.fao.geonet.geocat.services.extent;
 
 
+import com.google.common.collect.Sets;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -34,7 +35,7 @@ import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.geocat.kernel.extent.ExtentSelection;
 import org.fao.geonet.geocat.kernel.extent.Source;
-import org.fao.geonet.geocat.kernel.extent.Source.FeatureType;
+import org.fao.geonet.geocat.kernel.extent.FeatureType;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
 import org.fao.geonet.utils.Xml;
 import org.geotools.data.DataStore;
@@ -53,7 +54,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.Map;
 
 import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.DESC;
 import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.DESC_COLUMN;
@@ -150,18 +150,13 @@ public class List implements Service
         }
         final ExtentManager extentMan = context.getBean(ExtentManager.class);
 
-        final String wfsParam = Util.getParamText(params, SOURCE);
         final String typenameParam = Util.getParamText(params, TYPENAME);
 
         ExtentFormat format = ExtentFormat.lookup(Util.getParamText(params, "format"));
 
-        Collection<String> wfssToShow = extentMan.getSources().keySet();
-        if (wfsParam != null) {
-            wfssToShow = Arrays.asList(wfsParam.split(","));
-        }
         Collection<String> typesToShow = new AllCollection();
         if (typenameParam != null) {
-            typesToShow = new LinkedHashSet<String>(Arrays.asList(typenameParam.split(",")));
+            typesToShow = Sets.newLinkedHashSet(Arrays.asList(typenameParam.split(",")));
         }
         if (this.defaultTypesToShow != null) {
             typesToShow.retainAll(this.defaultTypesToShow);
@@ -170,31 +165,29 @@ public class List implements Service
 
         Page page = new Page(params);
 
-        final Map<String, Source> wfss = extentMan.getSources();
-        for (final String wfsId : wfssToShow) {
-            final Source wfs = wfss.get(wfsId);
-            final Element wfsElem = new Element(SOURCE);
-            wfsElem.setAttribute(ID, wfsId);
+        final Source wfs = extentMan.getSource();
+        final Element wfsElem = new Element(SOURCE);
+        wfsElem.setAttribute(ID, wfs.wfsId);
 
-            boolean hasMore = false;
-            final DataStore ds = wfs.getDataStore();
-            for (final FeatureType featureType : wfs.getFeatureTypes()) {
-                if (typesToShow.contains(featureType.typename)) {
-                    hasMore = listFeatureType(params, context, wfs, wfsElem, ds, featureType, page, format);
-                    if (page.limitReached()) {
-                        break;
-                    }
+        boolean hasMore = false;
+        final DataStore ds = wfs.getDataStore();
+        for (final FeatureType featureType : wfs.getFeatureTypes()) {
+            if (typesToShow.contains(featureType.typename)) {
+                hasMore = listFeatureType(params, context, wfs, wfsElem, ds, featureType, page, format);
+                if (page.limitReached()) {
+                    break;
                 }
             }
-
-            Element hasMoreElem = new Element("hasMore");
-            result.addContent(hasMoreElem);
-            hasMoreElem.setText(String.valueOf(hasMore));
-
-            if (wfsElem.getChildren().size() > 0) {
-                result.addContent(wfsElem);
-            }
         }
+
+        Element hasMoreElem = new Element("hasMore");
+        result.addContent(hasMoreElem);
+        hasMoreElem.setText(String.valueOf(hasMore));
+
+        if (wfsElem.getChildren().size() > 0) {
+            result.addContent(wfsElem);
+        }
+
         return result;
     }
 
