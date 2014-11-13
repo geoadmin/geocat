@@ -179,7 +179,7 @@
                 <span translate>AU</span></button>
               <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'draw'" uncheckable>
                 <span class="fa" ng-class="(restrictArea=='draw') ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
-                <span translate>drawOnMap</span></button>
+                <span translate>drawOnMap</span><span class="pull-right fa fa-refresh" ng-click="refreshDraw($event)"></span></button>
             </div>
           </div>
         </div>

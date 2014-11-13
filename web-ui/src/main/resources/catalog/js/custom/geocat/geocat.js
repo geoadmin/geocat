@@ -145,6 +145,16 @@
       });
       goDecorateInteraction(drawInteraction, map);
 
+      /**
+       * On refresh 'Draw on Map' click
+       * Clear the drawing and activate the drawing Interaction again.
+       */
+      $scope.refreshDraw = function(e) {
+        featureOverlay.getFeatures().clear();
+        drawInteraction.active = true;
+        e.stopPropagation();
+      };
+
       $scope.$watch('restrictArea', function(v){
         if(angular.isDefined(v)) {
           if($scope.restrictArea == 'draw') {
