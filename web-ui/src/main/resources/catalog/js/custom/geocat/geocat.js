@@ -180,6 +180,19 @@
         source: cantonSource,
         style: gnSearchSettings.olStyles.drawBbox
       });
+
+      var getRegionOptions = function(type) {
+        return {
+          mode: 'prefetch',
+          promise: gnRegionService.loadRegion({id:type}, 'fre')
+        };
+      };
+      $scope.regionOptions = {
+        kantone: getRegionOptions('kantone'),
+        country: getRegionOptions('country'),
+        gemeinden: getRegionOptions('gemeinden')
+      };
+
       var addCantonFeature = function(id) {
         nbCantons++;
 
@@ -189,7 +202,6 @@
         }).success(function(wkt) {
           var parser = new ol.format.WKT();
           var feature = parser.readFeature(wkt);
-          feature.setGeometry(feature.getGeometry().transform('EPSG:21781', 'EPSG:3857'));
           cantonSource.addFeature(feature);
         });
       };

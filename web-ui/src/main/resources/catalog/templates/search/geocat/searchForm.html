@@ -13,14 +13,6 @@
           </select>
         </div>
       </div>
-
-      <div class="form-group">
-        <label for="cantonF" class="col-md-4 col-sm-12 control-label" translate>Cantons</label>
-        <div class="col-sm-8">
-          <input type="text" id="cantonF" value="" class="form-control input-sm"
-                 data-ng-model="searchObj.params.cantons" gn-region-multiselect="kantone"/>
-        </div>
-      </div>
     </div>
 
     <div class="form-group row">
@@ -189,19 +181,19 @@
           <div class="form-group">
             <label for="countryAF" class="col-md-4 col-sm-12 control-label" translate>country</label>
             <div class="col-sm-8">
-              <input type="text" id="countryAF" class="form-control input-sm" data-ng-model="searchObj.params.countries" gn-region-multiselect="country"/>
+              <input type="text" id="countryAF" class="form-control input-sm" data-ng-model="searchObj.params.countries" gn-typeahead="regionOptions.country"/>
             </div>
           </div>
           <div class="form-group">
             <label for="cantonAF" class="col-md-4 col-sm-12 control-label" translate>cantons</label>
             <div class="col-sm-8">
-              <input type="text" id="cantonAF" class="form-control input-sm" data-ng-model="searchObj.params.cantons" gn-region-multiselect="kantone"/>
+              <input type="text" id="cantonAF" class="form-control input-sm" data-ng-model="searchObj.params.cantons" gn-typeahead="regionOptions.kantone"/>
             </div>
           </div>
           <div class="form-group">
             <label for="cityAF" class="col-md-4 col-sm-12 control-label" translate>city</label>
             <div class="col-sm-8">
-              <input type="text" id="cityAF" class="form-control input-sm" data-ng-model="searchObj.params.cities" gn-region-multiselect="gemeinden"/>
+              <input type="text" id="cityAF" class="form-control input-sm" data-ng-model="searchObj.params.cities" gn-typeahead="regionOptions.gemeinden"/>
             </div>
           </div>
 
