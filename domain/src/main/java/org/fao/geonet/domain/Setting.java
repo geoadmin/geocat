@@ -107,5 +107,8 @@ public class Setting extends GeonetEntity {
       return this;
     }
 
-
+    @Override
+    public String toString() {
+        return "Setting{'" + name + "' = '" + value + "'}";
+    }
 }

@@ -111,7 +111,7 @@ public class Get implements Service {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
 
-    }
+	}
 }
 
 //=============================================================================

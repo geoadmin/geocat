@@ -7,3 +7,6 @@ ALTER TABLE schematron ALTER displaypriority SET NOT NULL;
 
 ALTER TABLE requests RENAME TO requests_v2;
 ALTER TABLE params RENAME TO params_v2;
+
+DROP TABLE spatialindex CASCADE;
+DROP TABLE "spatialIndex";

@@ -194,6 +194,8 @@ INSERT INTO Email (SELECT id, email FROM Users);
 
 -- GEOCAT
 CREATE SEQUENCE HIBERNATE_SEQUENCE START WITH 4000 INCREMENT BY 1;
+INSERT INTO Settings VALUES ('system/site/svnUuid', '45f2b8d2-9ff9-40d2-b759-47ffa5383226', 0, 0, 'y');
+
 --ALTER TABLE ServiceParameters DROP COLUMN id;
 
 -- Update Requests column type (integer > boolean)

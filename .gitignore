@@ -63,3 +63,6 @@ e2e-tests/node_modules
 web-ui-docs/node
 web-ui-docs/node_modules
 out/
+web/*.log*
+docs/*/users/source/admin/*/
+*.css.map

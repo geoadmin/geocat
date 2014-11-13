@@ -22,8 +22,9 @@ ALTER TABLE groups DROP CONSTRAINT IF EXISTS groups_referrer_fkey;
 TRUNCATE TABLE Users;
 
 -- Convert Profile column to the profile enumeration ordinal
-
-INSERT INTO USERS SELECT * FROM USERS_TMP;
+-- GEOCAT
+INSERT INTO USERS(id, username, password, surname, name, profile, organisation, kind, security, authtype) SELECT id, username, password, surname, name, profile, organisation, kind, security, authtype FROM USERS_TMP;
+-- END GEOCAT
 DROP TABLE USERS_TMP;
 
 
