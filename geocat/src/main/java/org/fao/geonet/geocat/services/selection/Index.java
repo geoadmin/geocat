@@ -23,14 +23,18 @@
 
 package org.fao.geonet.geocat.services.selection;
 
+import com.google.common.collect.Lists;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 //=============================================================================
@@ -58,7 +62,7 @@ public class Index implements Service {
     //---
     //--------------------------------------------------------------------------
 
-    public Element exec(Element params, ServiceContext context) throws Exception {
+    public Element exec(Element params, final ServiceContext context) throws Exception {
         final SelectionManager manager = SelectionManager.getManager(context.getUserSession());
         final Set<String> selection = manager.getSelection(SelectionManager.SELECTION_METADATA);
 
@@ -68,7 +72,18 @@ public class Index implements Service {
                 return new Element("error").setText("Attempted to index " + selection.size() + ".  The maximum allowed elements: " + maxToIndex);
             }
             index = selection.size();
-            context.getBean(DataManager.class).indexMetadata(new ArrayList<>(selection));
+            final List<String> finalSelection = Lists.newArrayList(selection);
+            final GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+            gc.getThreadPool().runTask(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        context.getBean(DataManager.class).indexMetadata(finalSelection);
+                    } catch (Exception e) {
+                        Log.error(Geonet.INDEX_ENGINE, "Exception thrown during indexing", e);
+                    }
+                }
+            });
         }
 
         return new Element("results").setAttribute("numberIndexed", "" + index);

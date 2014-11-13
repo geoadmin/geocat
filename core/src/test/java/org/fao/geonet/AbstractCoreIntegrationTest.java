@@ -30,6 +30,7 @@ import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Log;
@@ -448,8 +449,12 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         final HashMap<String, Object> contexts = new HashMap<String, Object>();
         final Constructor<?> constructor = GeonetContext.class.getDeclaredConstructors()[0];
         constructor.setAccessible(true);
-        GeonetContext gc = (GeonetContext) constructor.newInstance(_applicationContext, false, null, null);
-
+        GeonetContext gc = (GeonetContext) constructor.newInstance(_applicationContext, false, null, new ThreadPool(){
+            @Override
+            public void runTask(Runnable task, int delayBeforeStart, TimeUnit unit) {
+                task.run();
+            }
+        });
 
         contexts.put(Geonet.CONTEXT_NAME, gc);
         final ServiceContext context = new ServiceContext("mockService", _applicationContext, contexts, _entityManager);
