@@ -40,7 +40,7 @@ import java.util.Set;
  */
 
 public class Index implements Service {
-    private Integer maxToIndex;
+    private Integer maxToIndex = 500;
 
     //--------------------------------------------------------------------------
     //---
@@ -67,7 +67,8 @@ public class Index implements Service {
             if (selection.size() > maxToIndex) {
                 return new Element("error").setText("Attempted to index " + selection.size() + ".  The maximum allowed elements: " + maxToIndex);
             }
-            context.getBean(DataManager.class).indexMetadata(new ArrayList<String>(selection));
+            index = selection.size();
+            context.getBean(DataManager.class).indexMetadata(new ArrayList<>(selection));
         }
 
         return new Element("results").setAttribute("numberIndexed", "" + index);
