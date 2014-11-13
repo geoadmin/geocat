@@ -580,7 +580,7 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
 
     public String updateHrefId(String oldHref, String id, UserSession session) {
         String xlinkhref = oldHref.replace(NON_VALIDATED_TYPE, XLINK_TYPE);
-        String updatedId = xlinkhref.replaceFirst("&id=[^&]+", "&id=" + id);
+        String updatedId = xlinkhref.replaceFirst("([?&])id=[^&]+", "$1id=" + id);
         return updatedId;
     }
 

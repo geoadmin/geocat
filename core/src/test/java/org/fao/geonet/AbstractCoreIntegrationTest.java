@@ -30,6 +30,7 @@ import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Log;
@@ -56,14 +57,14 @@ import org.springframework.test.context.ContextConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.net.URL;
-import java.sql.Connection;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -448,8 +449,12 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         final HashMap<String, Object> contexts = new HashMap<String, Object>();
         final Constructor<?> constructor = GeonetContext.class.getDeclaredConstructors()[0];
         constructor.setAccessible(true);
-        GeonetContext gc = (GeonetContext) constructor.newInstance(_applicationContext, false, null, null);
-
+        GeonetContext gc = (GeonetContext) constructor.newInstance(_applicationContext, false, null, new ThreadPool(){
+            @Override
+            public void runTask(Runnable task, int delayBeforeStart, TimeUnit unit) {
+                task.run();
+            }
+        });
 
         contexts.put(Geonet.CONTEXT_NAME, gc);
         final ServiceContext context = new ServiceContext("mockService", _applicationContext, contexts, _entityManager);
@@ -537,7 +542,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
      * @throws Exception
      */
     public int importMetadataXML(ServiceContext context, String uuid, InputStream xmlInputStream, MetadataType metadataType,
-                                 int groupId, String uuidAction) throws Exception {
+                                    int groupId, String uuidAction) throws Exception {
         final Element metadata = Xml.loadStream(xmlInputStream);
         final DataManager dataManager = _applicationContext.getBean(DataManager.class);
         String schema = dataManager.autodetectSchema(metadata);

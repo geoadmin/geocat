@@ -91,7 +91,6 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
             this.context = context;
             this.testClass = testClass;
             mefFilesToLoad.add("mef1-example.mef");
-
         }
 
         public List<String> getMetadataIds() {

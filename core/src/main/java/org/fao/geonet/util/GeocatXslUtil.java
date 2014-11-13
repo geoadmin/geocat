@@ -20,6 +20,13 @@ import net.sf.saxon.om.SingletonIterator;
 import net.sf.saxon.om.UnfailingIterator;
 import net.sf.saxon.type.Type;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.impl.client.HttpClients;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
@@ -688,5 +695,34 @@ public class GeocatXslUtil {
         }
 
         return "{}";
+    }
+
+
+    public static boolean validateURL(String urlString) {
+        try {
+            System.out.println("Testing url : " + urlString);
+            HttpHead method = new HttpHead(urlString);
+
+            HttpClient client = HttpClients.createDefault();
+
+            String proxyHost = System.getProperty("http.proxyHost");
+            String proxyPort = System.getProperty("http.proxyPort");
+
+            final RequestConfig.Builder requestConfig = RequestConfig.custom();
+            requestConfig.setRedirectsEnabled(true);
+            requestConfig.setConnectTimeout(10000);
+
+            // Added support for proxy
+            if (proxyHost != null && proxyPort != null) {
+                requestConfig.setProxy(new HttpHost(proxyHost, Integer.valueOf(proxyPort)));
+            }
+            method.setConfig(requestConfig.build());
+
+            final HttpResponse response = client.execute(method);
+
+            return response.getStatusLine().getStatusCode() != HttpStatus.SC_NOT_FOUND;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

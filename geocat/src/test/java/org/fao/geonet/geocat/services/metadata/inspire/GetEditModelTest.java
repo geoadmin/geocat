@@ -47,7 +47,7 @@ public class GetEditModelTest {
         final Element testMetadata = Xml.loadFile(GetEditModelTest.class.getResource("conformity/metadata.xml"));
 
 
-        org.fao.geonet.geocat.services.metadata.inspire.GetEditModel service = new TestGetEditModel(testMetadata);
+        GetEditModel service = new TestGetEditModel(testMetadata);
 
         Element params = new Element("params").addContent(new Element("id").setText("2"));
         ServiceContext context = Mockito.mock(ServiceContext.class);
@@ -71,7 +71,7 @@ public class GetEditModelTest {
                                                     "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
                                                     "gco:isoType=\"gmd:MD_Metadata\"></che:CHE_MD_Metadata>", false);
 
-        org.fao.geonet.geocat.services.metadata.inspire.GetEditModel service = new TestGetEditModel(testMetadata);
+        GetEditModel service = new TestGetEditModel(testMetadata);
 
         Element params = new Element("params").addContent(new Element("id").setText("2"));
         ServiceContext context = Mockito.mock(ServiceContext.class);
@@ -99,7 +99,7 @@ public class GetEditModelTest {
     public void testAddConstraintWhenRequired() throws Exception {
         final Element testMetadata = Xml.loadFile(GetEditModelTest.class.getResource("stackoverflow/metadata.xml"));
 
-        org.fao.geonet.geocat.services.metadata.inspire.GetEditModel service = new TestGetEditModel(testMetadata);
+        GetEditModel service = new TestGetEditModel(testMetadata);
         Element params = new Element("params").addContent(new Element("id").setText("2"));
         ServiceContext context = Mockito.mock(ServiceContext.class);
 
@@ -198,7 +198,7 @@ public class GetEditModelTest {
         assertEquals("patent", legalConstraint.getJSONArray(Save.JSON_CONSTRAINTS_ACCESS_CONSTRAINTS).getString(1));
         assertEquals(1, legalConstraint.getJSONArray(Save.JSON_CONSTRAINTS_USE_CONSTRAINTS).length());
         assertEquals("license", legalConstraint.getJSONArray(Save.JSON_CONSTRAINTS_USE_CONSTRAINTS).getString(0));
-        assertEquals("222", legalConstraint.getString(Params.REF));
+        assertEquals("238", legalConstraint.getString(Params.REF));
 
         assertEquals(1, legalConstraint.getJSONArray(Save.JSON_CONSTRAINTS_OTHER_CONSTRAINTS).length());
         assertJsonObjectHasProperties(legalConstraint.getJSONArray(Save.JSON_CONSTRAINTS_OTHER_CONSTRAINTS).getJSONObject(0),
@@ -212,14 +212,14 @@ public class GetEditModelTest {
         JSONArray genericConstraints = inspireModel.getJSONObject(Save.JSON_CONSTRAINTS).getJSONArray(Save.JSON_CONSTRAINTS_GENERIC);
         assertEquals(1, genericConstraints.length());
         JSONObject genericConstraint = genericConstraints.getJSONObject(0);
-        assertEquals("266", genericConstraint.getString(Params.REF));
+        assertEquals("282", genericConstraint.getString(Params.REF));
         assertJsonObjectHasProperties(genericConstraint.getJSONArray(Save.JSON_CONSTRAINTS_USE_LIMITATIONS).getJSONObject(0),
                 Pair.read("ger", "test use limitation for INSPIRE"));
 
         JSONArray securityConstraints = inspireModel.getJSONObject(Save.JSON_CONSTRAINTS).getJSONArray(Save.JSON_CONSTRAINTS_SECURITY);
         assertEquals(1, securityConstraints.length());
         JSONObject securityConstraint = securityConstraints.getJSONObject(0);
-        assertEquals("258", securityConstraint.getString(Params.REF));
+        assertEquals("274", securityConstraint.getString(Params.REF));
         assertJsonObjectHasProperties(securityConstraint.getJSONArray(Save.JSON_CONSTRAINTS_USE_LIMITATIONS).getJSONObject(0),
                 Pair.read("ger", "test security constraints for INSPIRE"));
 
@@ -229,7 +229,7 @@ public class GetEditModelTest {
         assertEquals(0, conformity.getInt(Save.JSON_CONFORMITY_ALL_CONFORMANCE_REPORT_INDEX));
 
         final JSONObject conformityJSONObject = conformity.getJSONObject(Save.JSON_CONFORMITY_LINEAGE);
-        assertEquals("376", conformityJSONObject.getString(Params.REF));
+        assertEquals("396", conformityJSONObject.getString(Params.REF));
         assertTranslations(conformityJSONObject, Save.JSON_CONFORMITY_LINEAGE_STATEMENT,
                 read("ger", "INSPIRE Testdaten"));
 
@@ -238,12 +238,31 @@ public class GetEditModelTest {
         assertTranslations(conformityResult, Save.JSON_TITLE,
                 read("ger", "VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung " +
                             "der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität " +
-                            "von Geodatensätzen und -diensten"));
-        assertEquals("358", conformityResult.getString(Save.JSON_CONFORMITY_RESULT_REF));
+                            "von Geodatensätzen und -diensten"),
+                read("eng", "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing " +
+                            "Directive 2007/2/EC of the European Parliament and of the Council as regards " +
+                            "interoperability of spatial data sets and services"),
+                read("fre", "Règlement (UE) n o 1089/2010 de la commission du 23 novembre 2010 portant modalités d'application " +
+                            "de la directive 2007/2/ce du Parlement Européen et du conseil en ce qui concerne l'interopérabilité " +
+                            "des séries et des services de données géographiques"),
+                read("ita", "REGOLAMENTO (UE) N. 1089/2010 DELLA COMMISSIONE del 23 novembre 2010 recante " +
+                            "attuazione della direttiva 2007/2/CE del Parlamento europeo e del Consiglio per quanto riguarda " +
+                            "l'interoperabilità dei set di dati territoriali e dei servizi di dati territoriali"));
+        assertEquals("378", conformityResult.getString(Save.JSON_CONFORMITY_RESULT_REF));
+        assertEquals("dataset", conformityResult.getString(Save.JSON_CONFORMITY_SCOPE_CODE));
+        assertEquals("DataSet", conformityResult.getString(Save.JSON_CONFORMITY_LEVEL_DESC));
 
         assertEquals("false", conformityResult.getString(Save.JSON_CONFORMITY_PASS));
         assertEquals("INSPIRE Implementing rules", conformityResult.getString(Save.JSON_CONFORMITY_EXPLANATION));
 
+
+        JSONArray refSys = inspireModel.getJSONArray(Save.JSON_REF_SYS);
+        assertEquals(2, refSys.length());
+        assertEquals("102", refSys.getJSONObject(0).getString(Params.REF));
+        assertEquals("http://www.opengis.net/def/crs/EPSG/0/4936", refSys.getJSONObject(0).getJSONObject(Save.JSON_REF_SYS_CODE).getString("ger"));
+
+        assertEquals("110", refSys.getJSONObject(1).getString(Params.REF));
+        assertEquals("EPSG:4936", refSys.getJSONObject(1).getJSONObject(Save.JSON_REF_SYS_CODE).getString("ger"));
 
         JSONArray links = inspireModel.getJSONArray(Save.JSON_LINKS);
         assertEquals(1, links.length());
@@ -256,6 +275,14 @@ public class GetEditModelTest {
             assertTrue(!link.optString(Save.JSON_LINKS_DESCRIPTION, "").isEmpty());
             assertTrue(!link.optString(Save.JSON_LINKS_PROTOCOL, "").isEmpty());
         }
+
+        final JSONArray formats = inspireModel.getJSONArray(Save.JSON_DISTRIBUTION_FORMAT);
+        assertEquals(1, formats.length());
+        JSONObject format = formats.getJSONObject(0);
+        assertEquals("INTERLIS", format.getString(Save.JSON_DISTRIBUTION_FORMAT_NAME));
+        assertEquals("2", format.getString(Save.JSON_DISTRIBUTION_FORMAT_VERSION));
+        assertEquals("1", format.getString(Params.ID));
+        assertEquals(false, format.getBoolean(Save.JSON_DISTRIBUTION_FORMAT_VALIDATED));
     }
 
     @Test
@@ -377,12 +404,31 @@ public class GetEditModelTest {
 
         JSONObject conformityResult = conformity.getJSONArray(Save.JSON_CONFORMITY_ALL_CONFORMANCE_REPORTS).getJSONObject(0);
         assertTranslations(conformityResult, Save.JSON_TITLE,
-                read("fre", "règlement (ue) n o 1089/2010 de la commission du 23 novembre 2010 portant modalités " +
-                            "d'application de la directive 2007/2/ce du parlement européen et du conseil en ce qui concerne" +
-                            " l'interopérabilité des séries et des services de données géographiques"));
+                read("ger", "VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung " +
+                            "der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität " +
+                            "von Geodatensätzen und -diensten"),
+                read("eng", "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing " +
+                            "Directive 2007/2/EC of the European Parliament and of the Council as regards " +
+                            "interoperability of spatial data sets and services"),
+                read("fre", "Règlement (UE) n o 1089/2010 de la commission du 23 novembre 2010 portant modalités d'application " +
+                            "de la directive 2007/2/ce du Parlement Européen et du conseil en ce qui concerne l'interopérabilité " +
+                            "des séries et des services de données géographiques"),
+                read("ita", "REGOLAMENTO (UE) N. 1089/2010 DELLA COMMISSIONE del 23 novembre 2010 recante " +
+                            "attuazione della direttiva 2007/2/CE del Parlamento europeo e del Consiglio per quanto riguarda " +
+                            "l'interoperabilità dei set di dati territoriali e dei servizi di dati territoriali"));
         assertEquals("529", conformityResult.getString(Save.JSON_CONFORMITY_RESULT_REF));
         assertEquals("false", conformityResult.getString(Save.JSON_CONFORMITY_PASS));
+
+
         assertEquals("INSPIRE Implementing rules", conformityResult.getString(Save.JSON_CONFORMITY_EXPLANATION));
+
+        final JSONArray formats = inspireModel.getJSONArray(Save.JSON_DISTRIBUTION_FORMAT);
+        assertEquals(1, formats.length());
+        JSONObject format = formats.getJSONObject(0);
+        assertEquals("INTERLIS", format.getString(Save.JSON_DISTRIBUTION_FORMAT_NAME));
+        assertEquals("2", format.getString(Save.JSON_DISTRIBUTION_FORMAT_VERSION));
+        assertEquals("1", format.getString(Params.ID));
+        assertEquals(false, format.getBoolean(Save.JSON_DISTRIBUTION_FORMAT_VALIDATED));
 
     }
 

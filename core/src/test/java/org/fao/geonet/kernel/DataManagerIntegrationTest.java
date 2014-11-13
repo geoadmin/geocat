@@ -127,7 +127,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         metadata.getSourceInfo().setSourceId(source.getUuid()).setOwner(1);
 
         final Metadata templateMd = _metadataRepository.save(metadata);
-        final String newMetadataId = _dataManager.createMetadata(serviceContext, "" + metadata.getId(), "" + group.getId(), source.getUuid(),
+       final String newMetadataId = _dataManager.createMetadata(serviceContext, "" + metadata.getId(), "" + group.getId(), source.getUuid(),
                 principal.getId(), templateMd.getUuid(), MetadataType.METADATA.codeString, true);
 
         Metadata newMetadata = _metadataRepository.findOne(newMetadataId);

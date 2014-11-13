@@ -98,6 +98,7 @@ public class GetAdminOper implements Service
         DataManager dm = context.getBean(DataManager.class);
         Element md = dm.getGeocatMetadata(context, metadataId, false, false);
         md.removeChild("info", Edit.NAMESPACE);
+        md = Xml.transform(md, context.getAppPath() + "/xsl/characterstring-to-localisedcharacterstring.xsl");  // HACK I thin
         dm.doValidate(context, info.getDataInfo().getSchemaId(), metadataId,md,context.getLanguage(), false);
         // END GEOCAT
 
