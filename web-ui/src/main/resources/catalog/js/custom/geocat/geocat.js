@@ -40,6 +40,15 @@
         }, 300);
       };
 
+      $scope.searchMapExpanded = false;
+      $scope.toggleSearchMap = function() {
+        $scope.searchMapExpanded = !$scope.searchMapExpanded;
+        $timeout(function(){
+          gnSearchSettings.searchMap.updateSize();
+        }, 1);
+      };
+
+
       $('#anySearchField').focus();
     }]);
 

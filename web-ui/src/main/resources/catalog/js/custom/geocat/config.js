@@ -107,5 +107,6 @@
         tooltip: 'Geocat',
         icon: 'fa-th-list'
       }];
+
     }]);
 })();
