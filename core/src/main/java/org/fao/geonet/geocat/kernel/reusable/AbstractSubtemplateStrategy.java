@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import javax.annotation.Nullable;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 
@@ -222,7 +223,9 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
     public final Collection<Element> add(Element placeholder, Element originalElem, String metadataLang)
             throws Exception {
         UpdateResult result = updateSubtemplate(originalElem, null, false, metadataLang);
-
+        if (result == null) {
+            return Collections.singleton(originalElem);
+        }
         return xlinkIt(originalElem, result.uuid, false);
     }
 
@@ -259,7 +262,9 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
     protected final UpdateResult updateSubtemplate(Element originalElem, String uuid, boolean validated,
                                              String metadataLang) throws Exception {
         Element responsibleParty = getSubtemplate(originalElem, metadataLang);
-
+        if (responsibleParty == null) {
+            return null;
+        }
         Metadata metadata = null;
         if (uuid != null) {
             metadata = this.metadataRepository.findOneByUuid(uuid);
@@ -281,6 +286,7 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
         return result;
     }
 
+    @Nullable
     protected abstract Element getSubtemplate(Element originalElem, String metadataLang) throws Exception;
 
     protected abstract String getEmptyTemplate();

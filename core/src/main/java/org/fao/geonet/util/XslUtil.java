@@ -472,6 +472,10 @@ public final class XslUtil
         return GeocatXslUtil.writeXml(doc);
     }
 
+    public static boolean validateURL(String urlString) {
+        return GeocatXslUtil.validateURL(urlString);
+    }
+
     /**
      * For all text split the lines to a specified size and add hyperlinks when appropriate
      */

@@ -44,7 +44,7 @@
                     <xsl:copy-of select="gmd:parentIdentifier"/>
                 </xsl:when>
             </xsl:choose>
-            <xsl:apply-templates select="node()[not(self::gmd:language) and not(self::gmd:characterSet)]"/>
+            <xsl:apply-templates select="node()[not(self::gmd:language) and not(self::gmd:characterSet) and not(self::gmd:parentIdentifier)]"/>
 		</che:CHE_MD_Metadata>
 	</xsl:template>
 

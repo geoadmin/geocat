@@ -10,7 +10,7 @@
 <div class="container-fluid gn-search-page" data-ng-controller="GnSearchController">
   <div class="hfull" data-ng-controller="gnsGeocat">
 
-    <form ng-search-form="" runsearch="true" class="hfull">
+    <form ng-search-form="" runsearch="true" class="hfull" ng-class="{'searchMapExpanded': searchMapExpanded}">
       <div class="row hfull">
 
         <div class="col-md-3 maincol hfull" ng-class="{'expanded': searchExpanded}">

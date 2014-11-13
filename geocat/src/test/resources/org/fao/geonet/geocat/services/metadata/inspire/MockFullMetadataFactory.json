@@ -110,6 +110,14 @@
       }
     ]
   },
+  "refSys": [
+    {
+      "ref": "",
+      "code": {
+        "ger": "http://www.opengis.net/def/crs/EPSG/0/4936"
+      }
+    }
+  ],
   "constraints": {
     "legal": [{
       "ref": "211",
@@ -147,6 +155,7 @@
   },
   "conformity": {
     "scopeCode": "feature",
+    "levelDescription": "levelDescription",
     "conformanceResultRef": "",
     "isTitleSet" : true,
     "title": {
@@ -166,5 +175,11 @@
         "ger": "lineage DE"
       }
     }
-  }
+  },
+  "distributionFormats": [{
+    "name": "newname",
+    "version": "newversion",
+    "id": "3",
+    "validated": false
+  }]
 }

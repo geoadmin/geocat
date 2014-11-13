@@ -147,7 +147,7 @@ public class SpatialIndexWriter implements FeatureListener
      *            the metadata
      */
     public void index(String schemaDir, String id,
-                      Element metadata) throws Exception
+            Element metadata) throws Exception
     {
         _lock.lock();
         try {
@@ -159,7 +159,7 @@ public class SpatialIndexWriter implements FeatureListener
             if (geometry != null && !geometry.getEnvelopeInternal().isNull()) {
                 MemoryFeatureCollection features = new MemoryFeatureCollection(_featureStore.getSchema());
                 SimpleFeatureType schema = _featureStore.getSchema();
-
+                
                 SimpleFeature template = SimpleFeatureBuilder.template(schema,
                         SimpleFeatureBuilder.createDefaultFeatureId());
                 template.setAttribute(schema.getGeometryDescriptor().getName(), geometry);
@@ -431,7 +431,10 @@ public class SpatialIndexWriter implements FeatureListener
             features = _featureStore.getFeatures().features();
             while (features.hasNext()) {
                 SimpleFeature feature = features.next();
-                Pair<FeatureId, Object> data = Pair.read(feature.getIdentifier(), feature.getAttribute(_idColumn));
+                if (_idColumn == null) {
+                    _idColumn = findIdColumn(_featureStore);
+                }
+                Pair<FeatureId, Object> data = Pair.read(feature.getIdentifier(), feature.getAttribute(_idColumn == null ? _IDS_ATTRIBUTE_NAME : _idColumn.toString()));
                 Geometry defaultGeometry = (Geometry) feature.getDefaultGeometry();
                 if(defaultGeometry != null) {
                     _index.insert(defaultGeometry.getEnvelopeInternal(), data);

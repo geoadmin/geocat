@@ -7,21 +7,18 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.AttributeImpl;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.search.GeoNetworkAnalyzer;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jdom.filter.Filter;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -349,60 +346,6 @@ public final class LangUtils
         }
         desc = builder.toString();
         return desc;
-    }
-
-    public static void resolveMultiLingualElements(Element elUser, final String[] elementsToResolve) throws IOException, JDOMException
-    {
-        boolean removeTranslation = (elUser.getChild("record")!=null &&
-                                     elUser.getChild("record").getChild("profile") !=null &&
-                                     !elUser.getChild("record").getChild("profile").getTextTrim().equals(Profile.Shared.name())) ||
-                                    (elUser.getChild("profile") != null &&
-                                     !elUser.getChild("profile").getTextTrim().equals(Profile.Shared.name()));
-
-        Filter findMultilingualElements = new Filter()
-        {
-            private static final long serialVersionUID = 1L;
-            Set<String>               toResolve        = new HashSet<String>(Arrays.asList(elementsToResolve));
-
-            public boolean matches(Object arg0)
-            {
-                if (arg0 instanceof Element) {
-                    Element elem = (Element) arg0;
-                    return toResolve.contains(elem.getName());
-                }
-                return false;
-            }
-        };
-        @SuppressWarnings("unchecked")
-        Iterator<Element> iter = elUser.getDescendants(findMultilingualElements);
-        List<Element> toResolve = new ArrayList<Element>();
-        while (iter.hasNext()) {
-            toResolve.add(iter.next());
-        }
-
-        for (Element elem : toResolve) {
-            String text = elem.getText();
-            elem.setText(null);
-            // GEOCAT HACK.
-            text = text.replace("<GE>", "<DE>").replace("</GE>", "</DE>");
-            // GEOCAT END HACK
-            List<Content> translationsAsSimpleXML = loadInternalMultiLingualElemCollection(text);
-            if(removeTranslation) elem.setText(getSingleTranslation(translationsAsSimpleXML));
-            else elem.addContent(translationsAsSimpleXML);
-        }
-    }
-
-    private static String getSingleTranslation(List<Content> translationsAsSimpleXML) {
-
-        for (Content content : translationsAsSimpleXML) {
-            if (content instanceof Element) {
-                Element e = (Element) content;
-                if(!e.getTextTrim().isEmpty()) {
-                    return e.getTextTrim();
-                }
-            }
-        }
-        return "";
     }
 
     public static String loadString(String string, String appPath, String language) throws IOException, JDOMException {

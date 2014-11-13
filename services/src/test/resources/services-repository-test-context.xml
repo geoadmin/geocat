@@ -35,4 +35,5 @@
         <value>tur</value>
     </util:set>
 
+    <bean id="extentManager" class="org.fao.geonet.geocat.kernel.extent.ExtentManager"></bean>
 </beans>

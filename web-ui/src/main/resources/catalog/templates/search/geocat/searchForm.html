@@ -209,6 +209,10 @@
     </div>
 
 
+    <button class="btn btn-default btn-sm map-expander" ng-click="toggleSearchMap()" type="button">
+      <span ng-show="!searchMapExpanded"><span class="fa fa-angle-double-up"></span></span>
+      <span ng-show="searchMapExpanded"><span class="fa fa-angle-double-down"></span></span>
+    </button>
     <div gn-map-field="searchObj.searchMap"></div>
 
 <!-- 

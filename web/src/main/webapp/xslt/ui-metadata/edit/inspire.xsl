@@ -31,13 +31,13 @@
 
                 <link rel="icon" type="image/gif" href="../../images/logos/favicon.gif"/>
                 <!--<link href="rss.search?sortBy=changeDate" rel="alternate" type="application/rss+xml"-->
-                    <!--title="{{concat($env/system/site/name, ' - ', $env/system/site/organization)}}"/>-->
+                <!--title="{{concat($env/system/site/name, ' - ', $env/system/site/organization)}}"/>-->
                 <!--<link href="portal.opensearch" rel="search" type="application/opensearchdescription+xml"-->
-                    <!--title="concat($env/system/site/name, ' - ', $env/system/site/organization)"/>-->
+                <!--title="concat($env/system/site/name, ' - ', $env/system/site/organization)"/>-->
 
                 <xsl:call-template name="css-load"/>
                 <script type="text/javascript">
-                    var translationJson = <xsl:value-of select="java:loadTranslationFile('/catalog/locales/%s-inspire.json', /root/gui/language)"/>
+                    var translationJson = <xsl:value-of select="java:loadTranslationFile('/catalog/locales/%s-inspire.json', /root/gui/language/text())"/>
                 </script>
             </head>
 

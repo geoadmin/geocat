@@ -4,8 +4,10 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.jdom.Element;
 import org.junit.Before;
@@ -53,7 +55,7 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
         importMetadata.getMefFilesToLoad().add("mef2-example-2md.zip");
         importMetadata.invoke();
 
-        assertEquals(4, context.getBean(MetadataRepository.class).count());
+        assertEquals(4, context.getBean(MetadataRepository.class).count(MetadataSpecs.hasType(MetadataType.METADATA)));
     }
 
     @Test
