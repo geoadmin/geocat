@@ -8096,10 +8096,12 @@ body {
 }
 .navbar {
   font-size: 12px;
+  min-height: 27px;
+  height: 27px;
 }
-.navbar .navbar-brand {
-  padding: 0 15px;
-  line-height: 50px;
+.navbar .geocat-toolbar {
+  padding: 0;
+  height: 24px !important;
 }
 .navbar img {
   max-height: 50px;
@@ -8136,9 +8138,31 @@ select[multiple].navbar select {
 .navbar .form-group {
   margin-top: 2px;
 }
-.navbar li a {
+.navbar .navbar-nav > li {
+  margin: 0 1px;
+}
+.navbar .navbar-nav > li > a {
+  background-color: #01669e;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: arial, helvetica, sans-serif;
   padding-left: 8px;
   padding-right: 8px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+.navbar .navbar-nav > li > a:hover {
+  background-color: #01669e;
+  color: white;
+}
+.navbar .navbar-nav > li.active > a {
+  background-color: white;
+  color: #01669e;
+}
+.navbar .navbar-nav > li.active > a:hover {
+  background-color: white;
+  color: #01669e;
 }
 .navbar .navbar-nav-primary > li > a {
   color: #428bca;
