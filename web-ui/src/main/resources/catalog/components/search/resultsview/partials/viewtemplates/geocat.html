@@ -14,7 +14,7 @@
         <a class="pull-left">
           <img ng-src="../../images/logos/{{md.source}}.gif" class="media-object"/>
         </a>
-        <p class="text-justify">{{md.abstract}}</p>
+        <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350" dd-text-collapse-text="{{md.abstract}}"></p>
         <p ng-if="md.getContacts().resource"><em><strong>Contact: </strong> {{md.getContacts().resource}}</em></p>
       </div>
     </div>
