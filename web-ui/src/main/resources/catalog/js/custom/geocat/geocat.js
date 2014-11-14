@@ -117,6 +117,21 @@
         label: 'archiveonly'
       }];
 
+      // data store for valid field
+      $scope.validStore = [{
+        value: '',
+        label: 'anyValue'
+      }, {
+        value: 'y',
+        label: 'yes'
+      }, {
+        value: 'n',
+        label: 'no'
+      },{
+        value: '-1',
+        label: 'unchecked'
+      }];
+
       // data store for topic category
       var topicCats = gnSearchSettings.gnStores.topicCat;
       angular.forEach(topicCats, function(cat, i) {
@@ -134,6 +149,12 @@
             suggestion: Handlebars.compile('<p class="topiccat-{{hierarchy}}">{{name}}</p>')
           }
         }
+      };
+
+      // data store for formats
+      $scope.formatsOptions= {
+        mode: 'local',
+        data: topicCats //TODO
       };
 
 

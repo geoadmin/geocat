@@ -7904,7 +7904,7 @@ select[multiple][hitsperpage-combo] select {
   cursor: pointer;
 }
 .bootstrap-tagsinput .tt-input {
-  width: auto !important;
+  width: 100% !important;
   border: none !important;
 }
 /** Enf of typeahead styles */
@@ -8230,6 +8230,9 @@ textarea.geocat-search select,
 select[multiple].geocat-search input,
 select[multiple].geocat-search select {
   height: auto;
+}
+.geocat-search input[type="checkbox"] {
+  margin: 0;
 }
 .geocat-search .form-group {
   margin-bottom: 10px;
