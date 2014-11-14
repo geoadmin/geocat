@@ -29,6 +29,13 @@
   "homeTitle": "Search for geodata and geoservices",
   "download": "Download",
   "visualize": "View",
-  "links": "Links"
+  "links": "Links",
+  "template": "Template",
+  "valid": "Valid",
+  "toEdit": "To Edit",
+  "toPublish": "To Publish",
+  "format": "Format",
+  "anyValue": "- Any -",
+  "unchecked": "Unchecked"
 
 }
