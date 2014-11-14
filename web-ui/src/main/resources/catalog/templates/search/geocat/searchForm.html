@@ -63,9 +63,8 @@
         <div class="form-group">
           <label for="topiccatF" class="col-md-4 col-sm-12 control-label" translate>topiccat</label>
           <div class="col-sm-8">
-            <select id="topiccatF" class="form-control input-sm" data-ng-model="searchObj.params.topicCat" name="">
-              <option data-ng-repeat="cat in topicCats" value="{{cat[0]}}">{{cat[1]}}</option>
-            </select>
+            <input type="text" id="topiccatF" value="" class="form-control"
+                   data-ng-model="searchObj.params.topicCat" gn-typeahead="topicCatsOptions"/>
           </div>
         </div>
 

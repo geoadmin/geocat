@@ -115,7 +115,24 @@
       }];
 
       // data store for topic category
-      $scope.topicCats = gnSearchSettings.gnStores.topicCat;
+      var topicCats = gnSearchSettings.gnStores.topicCat;
+      angular.forEach(topicCats, function(cat, i) {
+        topicCats[i] = {
+          id: cat[0],
+          name: cat[1],
+          hierarchy: cat[0].indexOf('_') > 0 ? 'second' : 'main'
+        }
+      });
+      $scope.topicCatsOptions= {
+        mode: 'local',
+        data: topicCats,
+        config: {
+          templates: {
+            suggestion: Handlebars.compile('<p class="topiccat-{{hierarchy}}">{{name}}</p>')
+          }
+        }
+      };
+
 
       var map = $scope.searchObj.searchMap;
 

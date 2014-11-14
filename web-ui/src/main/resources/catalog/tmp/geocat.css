@@ -6442,6 +6442,7 @@ button.close {
   background-color: transparent;
   padding: 0;
   margin: 0;
+  width: auto !important;
   max-width: inherit;
 }
 .bootstrap-tagsinput input:focus {
@@ -7881,7 +7882,7 @@ select[multiple][hitsperpage-combo] select {
   width: inherit;
 }
 .tt-suggestion {
-  padding: 3px 20px;
+  padding: 3px 10px;
 }
 .tt-suggestion.tt-is-under-cursor {
   color: #fff;
@@ -7903,7 +7904,7 @@ select[multiple][hitsperpage-combo] select {
   cursor: pointer;
 }
 .bootstrap-tagsinput .tt-input {
-  width: 100% !important;
+  width: auto !important;
   border: none !important;
 }
 /** Enf of typeahead styles */
@@ -8474,5 +8475,11 @@ select[multiple].geocat-search .geotype {
   .searchMapExpanded [go-map] {
     height: 400px;
   }
+}
+.tt-suggestion p.topiccat-main {
+  font-weight: bold;
+}
+.tt-suggestion p.topiccat-second {
+  padding-left: 40px;
 }
 /*# sourceMappingURL=geocat.css.map */
