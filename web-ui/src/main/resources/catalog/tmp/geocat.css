@@ -8381,12 +8381,9 @@ select[multiple].geocat-search .geotype {
   }
   .maincol.expanded {
     width: 50%;
-    position: absolute;
-    top: 0;
-    z-index: 2050;
   }
   .maincol.expanded + .maincol {
-    margin-left: 25%;
+    width: 50%;
   }
 }
 .map-expander {
