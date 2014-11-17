@@ -159,24 +159,26 @@
 
 
       var map = $scope.searchObj.searchMap;
+      var wktFormat = new ol.format.WKT();
 
+      // Set the geometry field of the indexed search in WKT
+      // draw polygon or bbox set the field (not AU ones).
       var setSearchGeometry = function(geometry) {
-        $scope.searchObj.params.geometry = format.writeGeometry(
-          geometry.clone().transform('EPSG:3857', 'EPSG:4326')
+        $scope.searchObj.params.geometry = wktFormat.writeGeometry(
+          geometry.clone().transform(map.getView().getProjection(), 'EPSG:4326')
         );
       };
 
       /** Manage draw area on search map */
-      var feature = new ol.Feature();
       var featureOverlay = new ol.FeatureOverlay({
         style: gnSearchSettings.olStyles.drawBbox
       });
       featureOverlay.setMap(map);
-      featureOverlay.addFeature(feature);
 
       var cleanDraw = function() {
         featureOverlay.getFeatures().clear();
-        drawInteraction.active = false
+        drawInteraction.active = false;
+        dragboxInteraction.active = false;
       };
 
       var drawInteraction = new ol.interaction.Draw({
@@ -195,20 +197,56 @@
       });
       goDecorateInteraction(drawInteraction, map);
 
+      var dragboxInteraction = new ol.interaction.DragBox({
+        style: gnSearchSettings.olStyles.drawBbox
+      });
+      dragboxInteraction.on('boxend', function(){
+        var f = new ol.Feature();
+        var g = dragboxInteraction.getGeometry();
+
+        f.setGeometry(g);
+        setSearchGeometry(g);
+        featureOverlay.addFeature(f);
+        setTimeout(function() {
+          dragboxInteraction.active = false;
+        }, 0);
+      });
+      dragboxInteraction.on('drawstart', function(){
+        featureOverlay.getFeatures().clear();
+      });
+      goDecorateInteraction(dragboxInteraction, map);
+
       /**
        * On refresh 'Draw on Map' click
        * Clear the drawing and activate the drawing Interaction again.
        */
       $scope.refreshDraw = function(e) {
-        featureOverlay.getFeatures().clear();
-        drawInteraction.active = true;
-        e.stopPropagation();
+        if($scope.restrictArea == 'draw') {
+          featureOverlay.getFeatures().clear();
+          drawInteraction.active = true;
+          e.stopPropagation();
+        }
+      };
+      $scope.refreshDrag = function(e) {
+        if($scope.restrictArea == 'bbox') {
+          featureOverlay.getFeatures().clear();
+          dragboxInteraction.active = true;
+          e.stopPropagation();
+        }
       };
 
       $scope.$watch('restrictArea', function(v){
+        $scope.searchObj.params.geometry = '';
+        $scope.searchObj.params.countries = '';
+        $scope.searchObj.params.cantons = '';
+        $scope.searchObj.params.cities = '';
+
         if(angular.isDefined(v)) {
           if($scope.restrictArea == 'draw') {
             drawInteraction.active = true;
+          }
+          else if($scope.restrictArea == 'bbox') {
+            dragboxInteraction.active = true;
           }
           else {
             cleanDraw();
@@ -216,7 +254,14 @@
         }
       });
 
-      /** When we switch between simple and advanced form*/
+      // Remove geometry on map if geometry field is reset from url or from model
+      $scope.$watch('searchObj.params.geometry', function(v) {
+        if(!v || v =='') {
+          featureOverlay.getFeatures().clear();
+        }
+      });
+
+        /** When we switch between simple and advanced form*/
       $scope.$watch('advanced', function(v){
         if(v == false) {
           $scope.restrictArea = '';
@@ -277,23 +322,6 @@
       $scope.$watch('searchObj.params.cantons', onRegionSelect);
       $scope.$watch('searchObj.params.cities', onRegionSelect);
 
-      var key;
-      var format = new ol.format.WKT();
-      var setSearchGeometryFromMapExtent = function() {
-        if (!map.getSize()) { return; }
-        var geometry = new ol.geom.Polygon(gnMap.getPolygonFromExtent(
-            map.getView().calculateExtent(map.getSize())));
-        setSearchGeometry(geometry);
-      };
-      $scope.$watch('restrictArea', function(v) {
-          setSearchGeometryFromMapExtent();
-        if (v == 'bbox') {
-          key = map.getView().on('propertychange', setSearchGeometryFromMapExtent);
-        } else {
-          $scope.searchObj.params.geometry = '';
-          map.getView().unByKey(key);
-        }
-      });
 
       $scope.searchObj.params.relation = 'within';
 
