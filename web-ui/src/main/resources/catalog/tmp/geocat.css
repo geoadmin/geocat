@@ -8141,7 +8141,7 @@ select[multiple].navbar select {
   margin: 0 1px;
 }
 .navbar .navbar-nav > li > a {
-  background-color: #01669e;
+  background-color: #428bca;
   color: white;
   font-size: 14px;
   font-weight: bold;
@@ -8152,7 +8152,7 @@ select[multiple].navbar select {
   padding-bottom: 2px;
 }
 .navbar .navbar-nav > li > a:hover {
-  background-color: #01669e;
+  background-color: #428bca;
   color: white;
 }
 .navbar .navbar-nav > li.active > a {
