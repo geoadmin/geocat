@@ -51,6 +51,9 @@
         }, 1);
       };
 
+      // To access CatController $scope (gnsGeocat > GnSearchController > GnCatController)
+      $scope.$parent.$parent.langs = {'fre': 'fr', 'eng': 'en', 'ger': 'ge', 'ita': 'it'};
+
 
       $('#anySearchField').focus();
     }]);
