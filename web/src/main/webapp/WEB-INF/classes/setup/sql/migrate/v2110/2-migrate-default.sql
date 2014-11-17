@@ -166,7 +166,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 -- INSERT INTO Settings (name, value, datatype, position, internal) VALUES
 --  ('map/backgroundChoices', '{"contextList": []}', 0, 9590, false);
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES
-  ('map/config', '{"useOSM":false,"context":"","layer":{"url":"http://www2.demis.nl/mapserver/wms.asp?","layers":"Countries","version":"1.1.1"},"projection":"EPSG:4326","projectionList":["EPSG:4326","EPSG:2154","EPSG:3857"]}', 0, 9590, 'n');
+  ('map/config', '{"useOSM":false,"context":"","layer":{"url":"http://wmts{5-9}.geo.admin.ch/1.0.0/{Layer}/default/20140520/21781/{TileMatrix}/{TileRow}/{TileCol}.jpeg","layers":"Countries","version":"1.1.1"},"projection":"EPSG:4326","projectionList":["EPSG:4326","EPSG:2154","EPSG:3857"]}', 0, 9590, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES 
   ('map/proj4js', '[{"code":"EPSG:2154","value":"+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"}]', 0, 9591, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES

@@ -142,7 +142,7 @@
         module.config(['gnSearchSettings', function(gnSearchSettings) {
           gnSearchSettings.geoserverUrl = '<xsl:value-of select="/root/gui/config/geoserver.url"/>';
           gnSearchSettings.permlink = '<xsl:value-of select="/root/gui/strings/permlink"/>';
-
+          gnSearchSettings.mapConfig = <xsl:value-of select="/root/gui/env/map/config"/>;
           gnSearchSettings.gnStores = {
             'topicCat': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/schemas/iso19139/codelists/codelist[@name='gmd:MD_TopicCategoryCode']/entry" mode="js-translations-topicCat"/>],
             'sources_groups': [<xsl:apply-templates select="/root/gui/groups/record" mode="js-translations-sources-groups"><xsl:sort select="label/*[name()=/root/gui/language]"/><xsl:sort select="name"/></xsl:apply-templates><xsl:if

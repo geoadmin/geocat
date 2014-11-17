@@ -4,7 +4,7 @@
 
   var module = angular.module('gn_search_geocat_config', []);
 
-  module.config(['gnSearchSettings',
+  module.run(['gnSearchSettings',
 
     function(searchSettings) {
 
@@ -55,12 +55,15 @@
         matrixIds: matrixIds
       });
 
+      var defaultUrl = 'http://wmts{5-9}.geo.admin.ch/1.0.0/{Layer}/default/'+
+          '20140520/21781/' +
+          '{TileMatrix}/{TileRow}/{TileCol}.jpeg';
+      var url = angular.isDefined(searchSettings.mapConfig) ? searchSettings.mapConfig.url || defaultUrl : defaultUrl;
+
       var chLayer = new ol.layer.Tile({
         source: new ol.source.WMTS(({
           crossOrigin: 'anonymous',
-          url: 'http://wmts{5-9}.geo.admin.ch/1.0.0/{Layer}/default/'+
-              '20140520/21781/' +
-              '{TileMatrix}/{TileRow}/{TileCol}.jpeg',
+          url: url,
           tileGrid: tileGrid,
           layer: 'ch.swisstopo.pixelkarte-farbe',
           requestEncoding: 'REST',
