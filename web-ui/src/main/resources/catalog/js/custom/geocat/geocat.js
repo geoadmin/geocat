@@ -43,7 +43,7 @@
         }, 300);
       };
 
-      $scope.searchMapExpanded = false;
+      $scope.searchMapExpanded = true;
       $scope.toggleSearchMap = function() {
         $scope.searchMapExpanded = !$scope.searchMapExpanded;
         $timeout(function(){
