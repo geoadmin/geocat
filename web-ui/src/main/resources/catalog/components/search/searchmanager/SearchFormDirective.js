@@ -226,14 +226,16 @@
             }
           };
 
+          // get permalink params on page load
+          if(scope.searchObj.permalink) {
+            angular.extend(scope.searchObj.params, $location.search());
+          }
+
+          var initial = jQuery.isEmptyObject(scope.searchObj.params);
+          scope.initial = initial;
+
           if (attrs.runsearch) {
 
-            // get permalink params on page load
-            if(scope.searchObj.permalink) {
-              angular.extend(scope.searchObj.params, $location.search());
-            }
-
-            var initial = jQuery.isEmptyObject(scope.searchObj.params);
 
             // wait for pagination to be set before triggering search
             if (element.find('[data-gn-pagination]').length > 0) {
