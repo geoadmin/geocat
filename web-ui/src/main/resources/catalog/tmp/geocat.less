@@ -64,13 +64,21 @@ body {
     }
 
   }
+  .navbar-text {
+    margin-top: 4px;
+  }
   .navbar-right {
     input, button, select {
       height:24px;
+    }
+    select {
       padding-top: 3px;
     }
     .form-group, &.form-group {
       margin-top: 0;
+    }
+    &.form-group {
+      margin-right: @grid-gutter-width/2;
     }
     button, select {
       line-height: 1;

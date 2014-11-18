@@ -88,12 +88,13 @@
     'suggestService',
     '$http',
     'gnSearchSettings',
+    'gnSearchManagerService',
     'goDecorateInteraction',
     'gnMap',
 
     function($scope, gnHttp, gnHttpServices, gnRegionService,
              $timeout, suggestService,$http, gnSearchSettings,
-             goDecorateInteraction, gnMap) {
+             gnSearchManagerService, goDecorateInteraction, gnMap) {
 
 
       // data store for types field
@@ -334,6 +335,15 @@
           elem.scrollTop = elem.scrollHeight;
         }, 0);
       };
+
+      if ($scope.initial) {
+        var url = 'qi@json?summaryOnly=true';
+        gnSearchManagerService.search(url).then(function(data) {
+          $scope.searchResults.facet = data.facet;
+        });
+      } else {
+        $scope.triggerSearch(true);
+      }
 
 /*
       $('#categoriesF').tagsinput({
