@@ -510,4 +510,15 @@
         }
       };
     }]);
+
+    module.directive('gnTooltip', [ '$translate',  function($translate) {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          element.attr('title', $translate(element.attr('title')));
+          element.tooltip();
+        }
+      }
+    }]);
+
 })();

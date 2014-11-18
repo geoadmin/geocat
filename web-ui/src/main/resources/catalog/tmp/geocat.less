@@ -236,6 +236,19 @@ body {
       margin-right: .8em;
     }
   }
+
+  h4 .fa {
+    font-size: 14px;
+    color: lighten(@gray, 15);
+  }
+
+  .md-links {
+    margin-top: .5em;
+    .dropdown-menu {
+      font-size: 90%;
+    }
+  }
+
 }
 
 .submit {
@@ -244,45 +257,6 @@ body {
     color: @gray-light;
   }
 }
-
-.aside {
-  font-size: 90%;
-  .well {
-    margin-bottom: .5em;
-    .fa {
-      font-size: 110%;
-      margin-left: .5em;
-    }
-  }
-  .btn-group {
-    clear: both;
-    display: block;
-    width: 100%;
-    .fa {
-      color: @brand-primary;
-    }
-    .btn-default {
-      border-color: transparent;
-      background: inherit;
-      width: 100%;
-      text-align: left;
-      &:hover {
-        border-color: @dropdown-border;
-        background-color: white;
-      }
-      .caret {
-        position: absolute;
-        top: 1.1em;
-        right: 1em;
-      }
-    }
-    .dropdown-menu {
-      right: 0;
-      left: auto;
-    }
-  }
-}
-
 [data-gn-facet-list] {
   font-size: 90%;
 }
