@@ -8395,10 +8395,18 @@ select[multiple].geocat-search .geotype {
 }
 [search-results] .list-group-item.row .pull-left {
   margin-right: .8em;
+  clear: right;
+}
+[search-results] .media,
+[search-results] .media-body {
+  overflow: visible;
 }
 [search-results] h4 .fa {
   font-size: 14px;
   color: #7c7c7c;
+}
+[search-results] .md-actions {
+  margin-top: -0.35em;
 }
 [search-results] .md-links {
   margin-top: .5em;
