@@ -236,7 +236,6 @@
 
           if (attrs.runsearch) {
 
-
             // wait for pagination to be set before triggering search
             if (element.find('[data-gn-pagination]').length > 0) {
               var unregisterFn = scope.$watch('hasPagination', function() {
