@@ -110,6 +110,7 @@
             if(!ol.extent.isEmpty(extent)) {
               scope.map.getView().fitExtent(extent, scope.map.getSize());
             }
+
           });
 
           scope.$watch('resultTemplate', function(templateUrl) {

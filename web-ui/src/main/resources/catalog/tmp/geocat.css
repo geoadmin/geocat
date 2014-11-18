@@ -8396,48 +8396,21 @@ select[multiple].geocat-search .geotype {
 [search-results] .list-group-item.row .pull-left {
   margin-right: .8em;
 }
+[search-results] h4 .fa {
+  font-size: 14px;
+  color: #7c7c7c;
+}
+[search-results] .md-links {
+  margin-top: .5em;
+}
+[search-results] .md-links .dropdown-menu {
+  font-size: 90%;
+}
 .submit {
   text-align: right;
 }
 .submit .btn-link {
   color: #999999;
-}
-.aside {
-  font-size: 90%;
-}
-.aside .well {
-  margin-bottom: .5em;
-}
-.aside .well .fa {
-  font-size: 110%;
-  margin-left: .5em;
-}
-.aside .btn-group {
-  clear: both;
-  display: block;
-  width: 100%;
-}
-.aside .btn-group .fa {
-  color: #428bca;
-}
-.aside .btn-group .btn-default {
-  border-color: transparent;
-  background: inherit;
-  width: 100%;
-  text-align: left;
-}
-.aside .btn-group .btn-default:hover {
-  border-color: rgba(0, 0, 0, 0.15);
-  background-color: white;
-}
-.aside .btn-group .btn-default .caret {
-  position: absolute;
-  top: 1.1em;
-  right: 1em;
-}
-.aside .btn-group .dropdown-menu {
-  right: 0;
-  left: auto;
 }
 [data-gn-facet-list] {
   font-size: 90%;

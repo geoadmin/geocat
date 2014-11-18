@@ -2,12 +2,15 @@
   <li class="list-group-item row" data-ng-repeat="md in searchResults.records" gn-displayextent-onhover="" gn-zoomto-onclick
           gn-fix-mdlinks="" gn-metadata-open="md" gn-metadata-open-selector=".gn-resultview">
 
-    <div class="media col-md-8 col-sm-12">
+    <div class="media">
 
 
       <div class="media-body">
         <h4>
           <input gn-selection-md type="checkbox" ng-model="md['geonet:info'].selected" ng-change="change()"/>
+          <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('dataset')>=0" class="fa fa-database" title="dataset"></span>
+          <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('software')>=0" class="fa fa-hdd-o" title="software"></span>
+          <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('basicgeodata')>=0" class="fa fa-globe" title="geodata"></span>
           {{md.title || md.defaultTitle}}
         </h4>
 
@@ -19,7 +22,7 @@
       </div>
     </div>
 
-    <div class="col-md-4 aside">
+    <div class="md-links">
 
       <div class="well well-sm" ng-if="md.category.length > 0 && md.category[0]">
         Categories:
@@ -27,7 +30,7 @@
       </div>
 
       <div class="btn-group clearfix" ng-if="links.length > 0">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
           <span class="fa fa-link"></span>
           {{links.length}}
           <ng-pluralize count="links.length" when="{'one': 'link', 'other': 'links'}"></ng-pluralize>
@@ -40,7 +43,7 @@
       </div>
 
       <div class="btn-group clearfix" ng-if="downloads.length > 0">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
           <span class="fa fa-download"></span>
           {{downloads.length}}
           <ng-pluralize count="downloads.length" when="{'one': 'download', 'other': 'downloads'}"></ng-pluralize>
@@ -55,7 +58,7 @@
       </div>
 
       <div class="btn-group clearfix" ng-if="layers.length > 0">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
           <span class="fa fa-globe"></span>
           {{layers.length}}
           <ng-pluralize count="layers.length" when="{'one': 'layer', 'other': 'layers'}"></ng-pluralize>
