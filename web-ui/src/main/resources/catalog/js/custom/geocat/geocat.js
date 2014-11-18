@@ -24,8 +24,9 @@
   module.controller('gnsGeocat', [
       '$scope',
       '$timeout',
+      'gnMap',
       'gnSearchSettings',
-    function($scope, $timeout, gnSearchSettings) {
+    function($scope, $timeout, gnMap, gnSearchSettings) {
 
       angular.extend($scope.searchObj, {
         advancedMode: false,
@@ -49,6 +50,16 @@
         $timeout(function(){
           gnSearchSettings.searchMap.updateSize();
         }, 1);
+      };
+
+      $scope.resultviewFns = {
+        addMdLayerToMap: function (link) {
+          gnMap.addWmsToMap(gnSearchSettings.searchMap,{
+                LAYERS:link.name
+              },{
+                url: link.url
+              });
+        }
       };
 
       // To access CatController $scope (gnsGeocat > GnSearchController > GnCatController)
