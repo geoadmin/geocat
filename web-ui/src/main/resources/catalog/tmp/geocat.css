@@ -8163,15 +8163,23 @@ select[multiple].navbar select {
   background-color: white;
   color: #01669e;
 }
+.navbar .navbar-text {
+  margin-top: 4px;
+}
 .navbar .navbar-right input,
 .navbar .navbar-right button,
 .navbar .navbar-right select {
   height: 24px;
+}
+.navbar .navbar-right select {
   padding-top: 3px;
 }
 .navbar .navbar-right .form-group,
 .navbar .navbar-right.form-group {
   margin-top: 0;
+}
+.navbar .navbar-right.form-group {
+  margin-right: 15px;
 }
 .navbar .navbar-right button,
 .navbar .navbar-right select {
