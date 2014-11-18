@@ -336,10 +336,14 @@
         }, 0);
       };
 
-      var url = 'qi@json?summaryOnly=true';
-      gnSearchManagerService.search(url).then(function(data) {
-        $scope.searchResults.facet = data.facet;
-      });
+      if ($scope.initial) {
+        var url = 'qi@json?summaryOnly=true';
+        gnSearchManagerService.search(url).then(function(data) {
+          $scope.searchResults.facet = data.facet;
+        });
+      } else {
+        $scope.triggerSearch(true);
+      }
 
 /*
       $('#categoriesF').tagsinput({
