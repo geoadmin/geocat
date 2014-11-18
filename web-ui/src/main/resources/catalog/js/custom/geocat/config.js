@@ -84,13 +84,28 @@
       });
 
       /** Facets configuration */
-      searchSettings.facetsConfig = {
-        keyword: 'keywords',
-        orgName: 'orgNames',
-        denominator: 'denominator',
-        format: 'formats',
-        createDateYear: 'createDateYears'
-      };
+      searchSettings.facetsConfig = [{
+        key: 'topicCat',
+        value: 'topicCats'
+      },{
+        key: 'spatialRepresentationType',
+        value: 'spatialRepresentationTypes'
+      },{
+        key: 'keyword',
+        value: 'keywords'
+      },{
+        key: 'denominator',
+        value: 'denominators'
+      },{
+        key: 'serviceType',
+        value: 'serviceTypes'
+      },{
+        key: 'type',
+        value: 'types'
+      },{
+        key: 'orgName',
+        value: 'orgNames'
+      }];
 
       /* Pagination configuration */
       searchSettings.paginationInfo = {
