@@ -8429,6 +8429,9 @@ select[multiple].geocat-search .geotype {
 [search-results] .md-actions {
   margin-top: -0.35em;
 }
+[search-results] .md-contact {
+  color: #7c7c7c;
+}
 [search-results] .md-links {
   margin-top: .5em;
 }
