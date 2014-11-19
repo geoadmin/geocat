@@ -8408,6 +8408,10 @@ select[multiple].geocat-search .geotype {
   border-radius: 1em;
   padding: .2em;
 }
+[sortby-combo] select,
+[hitsperpage-combo] select {
+  height: 34px;
+}
 [search-results] .list-group-item.result {
   margin: 0 15px;
   padding: 10px 0 10px 13px;
