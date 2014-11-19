@@ -38,7 +38,6 @@
       $scope.searchExpanded = false;
       $scope.toggleSearch = function() {
         $scope.searchExpanded = !$scope.searchExpanded;
-        $scope.collapsed = $scope.searchExpanded;
         $timeout(function(){
           gnSearchSettings.searchMap.updateSize();
         }, 300);

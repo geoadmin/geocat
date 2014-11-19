@@ -13,10 +13,10 @@
     <form ng-search-form="" class="hfull" ng-class="{'searchMapExpanded': searchMapExpanded}">
       <div class="row hfull">
 
-        <div class="col-md-3 maincol hfull" ng-class="{'expanded': searchExpanded}">
+        <div class="maincol hfull" ng-class="(searchExpanded) ? 'col-md-6' : 'col-md-3'">
           <button class="btn btn-default btn-sm expander" ng-click="toggleSearch()" type="button">
             <span ng-show="!searchExpanded">»</span>
-            <span ng-show="searchExpanded">&times;</span>
+            <span ng-show="searchExpanded">«</span>
           </button>
           <div class="panel panel-default hfull">
             <div class="panel-heading search-top">
@@ -40,7 +40,7 @@
           </div>
         </div>
 
-        <div ng-class="(!collapsed) ? 'col-md-7' : 'col-md-9'" class="maincol hfull">
+        <div ng-class="{ 'col-md-7': !searchExpanded && !collapsed , 'col-md-9': !searchExpanded && collapsed, 'col-md-6': searchExpanded && collapsed , 'col-md-4': searchExpanded && !collapsed}" class="maincol hfull">
           <div class="panel panel-default hfull" ng-if="initial" ng-controller="gnsGeocatHome">
             <div class="panel-heading" translate>
               <h3 class="panel-title" translate>homeTitle</h3>
