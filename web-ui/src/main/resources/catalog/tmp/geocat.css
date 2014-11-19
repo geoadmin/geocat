@@ -8232,6 +8232,7 @@ select[multiple].navbar select {
 [ng-search-form] .search-top {
   position: relative;
   padding-top: .65em;
+  background: #f77f0f;
 }
 [ng-search-form] .inner-spinner {
   position: absolute;
@@ -8483,6 +8484,7 @@ select[multiple].geocat-search .geotype {
   margin-left: -15px;
   border-radius: 0;
   background: #fff;
+  border-width: 1px 0 0;
 }
 [gn-map-field] .btn {
   padding: 5px 10px;
@@ -8533,6 +8535,7 @@ select[multiple].geocat-search .geotype {
     width: 100%;
     margin-left: -15px;
     border-radius: 0;
+    border-width: 1px 0 0;
   }
   .searchMapExpanded .maincol .panel .geocat-search {
     height: calc(100% - 4.4em - 400px);
