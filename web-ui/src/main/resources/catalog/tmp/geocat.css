@@ -8271,8 +8271,10 @@ select[multiple].navbar select {
 .geocat-search .backtonormal {
   margin-bottom: -20px;
 }
-.geocat-search label {
+.geocat-search .form-horizontal label {
   font-weight: normal;
+  text-align: left;
+  padding-left: 2.5em;
 }
 .geocat-search input,
 .geocat-search select {
