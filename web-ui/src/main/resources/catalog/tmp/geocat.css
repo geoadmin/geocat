@@ -8316,6 +8316,7 @@ select[multiple].geocat-search select {
   font-weight: bold;
   padding-top: .4em;
   margin-bottom: 12px;
+  border-bottom: 1px dotted #D3D3D3;
 }
 .geocat-search .bootstrap-tagsinput .label {
   background-color: #428bca;
@@ -8407,12 +8408,13 @@ select[multiple].geocat-search .geotype {
   border-radius: 1em;
   padding: .2em;
 }
-[search-results] .list-group-item.row {
-  margin-left: 0;
-  margin-right: 0;
-  padding-left: 13px;
+[search-results] .list-group-item.result {
+  margin: 0 15px;
+  padding: 10px 0 10px 13px;
+  border-bottom: 1px dotted #D3D3D3;
+  border-top: none;
 }
-[search-results] .list-group-item.row .pull-left {
+[search-results] .list-group-item.result .pull-left {
   margin-right: .8em;
   clear: right;
 }
