@@ -15,10 +15,12 @@
     <div class="form-group row">
       <div class="col-md-4">
         <button type="button" data-ng-click="resetSearch('#anySearchField');" class="btn btn-link" >
+          <span class="fa fa-undo"></span>
           <span translate>Reset</span></button>
       </div>
       <div class="col-md-4">
-        <button class="btn btn-link" ng-click="advanced = !advanced" ng-class="{'backtonormal': advanced}" type="button">
+        <button class="btn btn-link backtonormal" ng-click="advanced = !advanced"  type="button">
+          <span class="fa" ng-class="(advanced) ? 'fa-angle-double-up' : 'fa-angle-double-down'"></span>
           <span translate ng-if="!advanced">advancedForm</span>
           <span translate ng-if="advanced">simpleForm</span>
         </button>
