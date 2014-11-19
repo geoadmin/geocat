@@ -8111,6 +8111,8 @@ h6,
   font-size: 12px;
   min-height: 27px;
   height: 27px;
+  background-color: #f5f5f5;
+  border-color: #dddddd;
 }
 .navbar .geocat-toolbar {
   padding: 0;
@@ -8212,8 +8214,8 @@ select[multiple].navbar select {
   top: 1em;
   border-width: 1px 1px 1px 0;
   border-radius: 0 3px 3px 0;
-  padding-left: 4px;
-  padding-right: 5px;
+  padding-left: 3px;
+  padding-right: 4px;
 }
 [ng-search-form] .maincol:first-of-type + .maincol {
   transition-property: width, margin;
