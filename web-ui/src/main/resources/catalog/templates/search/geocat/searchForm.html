@@ -205,14 +205,18 @@
           <div class="col-sm-12">
             <div class="btn-group-vertical restrictArea">
               <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'bbox'" uncheckable>
+                <span class="pull-right fa fa-refresh" ng-click="refreshDrag($event)"></span>
                 <span class="fa" ng-class="(restrictArea=='bbox') ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
-                <span translate>bbox</span><span class="pull-right fa fa-refresh" ng-click="refreshDrag($event)"></span></button>
+                <span translate>bbox</span>
+              </button>
               <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'au'" uncheckable>
                 <span class="fa" ng-class="(restrictArea=='au') ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
                 <span translate>AU</span></button>
               <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'draw'" uncheckable>
+                <span class="pull-right fa fa-refresh" ng-click="refreshDraw($event)"></span>
                 <span class="fa" ng-class="(restrictArea=='draw') ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
-                <span translate>drawOnMap</span><span class="pull-right fa fa-refresh" ng-click="refreshDraw($event)"></span></button>
+                <span translate>drawOnMap</span>
+              </button>
             </div>
           </div>
         </div>
