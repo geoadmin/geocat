@@ -3,6 +3,10 @@ package org.fao.geonet;
 import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.mock.web.MockServletContext;
 
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
+
 /**
  * @author Jesse on 10/17/2014.
  */
@@ -22,6 +26,14 @@ public class GeonetMockServletContext extends MockServletContext {
 
     @Override
     protected String getResourceLocation(String path) {
+        final URL resource = Thread.currentThread().getContextClassLoader().getResource(path);
+        if (resource != null) {
+            try {
+                return Paths.get(resource.toURI()).toString();
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return this.resourcePath + super.getResourceLocation(path);
     }
 }
