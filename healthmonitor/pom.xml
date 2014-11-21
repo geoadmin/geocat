@@ -12,11 +12,6 @@
     	<name>GeoNetwork health monitor</name>
 
 	<dependencies>
-		<dependency>
-			<groupId>ch.geocat</groupId>
-			<artifactId>jeeves</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 
 		<dependency>
 			<groupId>ch.geocat</groupId>

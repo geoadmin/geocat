@@ -26,7 +26,6 @@ package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.GeonetContext;
@@ -49,10 +48,10 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.thumbnail.Set;
-import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
@@ -63,13 +62,22 @@ import org.jdom.xpath.XPath;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 
 //=============================================================================
@@ -271,12 +279,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		String uuid = Sha1Encoder.encodeString (this.capabilitiesUrl); // is the service identifier
 		
 		//--- Loading stylesheet
-		String styleSheet = schemaMan.getSchemaDir(params.outputSchema) + 
-							Geonet.Path.CONVERT_STYLESHEETS
-							+ "/OGCWxSGetCapabilitiesto19119/" 
-							+ "/OGC"
-							+ params.ogctype.substring(0,3)
-							+ "GetCapabilities-to-ISO19119_ISO19139.xsl";
+		Path styleSheet = schemaMan.getSchemaDir(params.outputSchema).
+                resolve(Geonet.Path.CONVERT_STYLESHEETS).
+                resolve("OGCWxSGetCapabilitiesto19119").
+                resolve("OGC" + params.ogctype.substring(0, 3) + "GetCapabilities-to-ISO19119_ISO19139.xsl");
 
          if(log.isDebugEnabled()) log.debug ("  - XSLT transformation using " + styleSheet);
 		
@@ -351,8 +357,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                  addCategories(entity, params.getCategories(), localCateg, context, log, null);
              }
          });
-		
-		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.url));
+
+         dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.url));
 		dataMan.setTemplate(iId, MetadataType.METADATA, null, context);
 
          dataMan.flush();
@@ -498,12 +504,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		String mdXml;
 		String date 		= df.format (dt);
 		//--- Loading stylesheet
-		String styleSheet 	= schemaMan.getSchemaDir(params.outputSchema) + 
-								Geonet.Path.CONVERT_STYLESHEETS +
-								"/OGCWxSGetCapabilitiesto19119/" + 
-								"/OGC" +
-								params.ogctype.substring(0,3) + 
-								"GetCapabilitiesLayer-to-19139.xsl";
+		Path styleSheet 	= schemaMan.getSchemaDir(params.outputSchema).
+                resolve(Geonet.Path.CONVERT_STYLESHEETS).
+                resolve("OGCWxSGetCapabilitiesto19119").
+                resolve("OGC" + params.ogctype.substring(0, 3) + "GetCapabilitiesLayer-to-19139.xsl");
 		Element xml 		= null;
 		
 		boolean exist;
@@ -771,8 +775,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         if(log.isDebugEnabled()) log.debug("  - Removing thumbnail for layer metadata: " + id);
 
 		try {
-			String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
-			FileCopyMgr.removeDirectoryOrFile(new File(file));
+			Path file = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
+            IO.deleteFileOrDirectory(file);
 		} catch (Exception e) {
 			log.warning("  - Failed to remove thumbnail for metadata: " + id + ", error: " + e.getMessage());
 		}
@@ -790,7 +794,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
      */
 	private String getMapThumbnail (WxSLayerRegistry layer) {
 		String filename = layer.uuid + ".png";
-		String dir = context.getUploadDir();
+		Path dir = context.getUploadDir();
 		Double r = WIDTH / 
 						(layer.maxx - layer.minx) * 
 						(layer.maxy - layer.miny);
@@ -852,18 +856,12 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			if (httpResponse.getStatusCode() == HttpStatus.OK) {
 			    // Save image document to temp directory
 				// TODO: Check OGC exception
-                OutputStream fo = null;
-                InputStream in = null;
-                
-                try {
-                    fo = new FileOutputStream (dir + filename);
-                    in = httpResponse.getBody();
-                    BinaryFile.copy (in,fo);
-                } finally {
-                    IOUtils.closeQuietly(in);
-                    IOUtils.closeQuietly(fo);
+
+                try (OutputStream fo = Files.newOutputStream(dir.resolve(filename));
+                     InputStream in = httpResponse.getBody()) {
+                    BinaryFile.copy(in, fo);
                 }
-			} else {
+            } else {
 				log.info (" Http error connecting");
 				return null;
 			}

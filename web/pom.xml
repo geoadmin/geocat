@@ -79,10 +79,6 @@
       </dependency>
       <dependency>
           <groupId>org.springframework</groupId>
-          <artifactId>spring-aop</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>org.springframework</groupId>
           <artifactId>spring-orm</artifactId>
       </dependency>
       <dependency>
@@ -301,11 +297,6 @@
     <!-- Generated dependencies -->
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>jeeves</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>cachingxslt</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -495,11 +486,11 @@
           <groupId>ro.isdc.wro4j</groupId>
           <artifactId>wro4j-maven-plugin</artifactId>
           <version>${wro.version}</version>
-          <scope>provided</scope>
+          <scope>test</scope>
       </dependency>
 
-      <!-- Add dependencies to schema plugin
-      having a custom Bean to be loaded. -->
+    <!-- Add dependencies to schema plugin
+    having a custom Bean to be loaded. -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19139</artifactId>

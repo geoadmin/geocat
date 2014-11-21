@@ -22,10 +22,10 @@
 //==============================================================================
 
 package org.fao.geonet.kernel.setting;
+import org.fao.geonet.NodeInfo;
+import jeeves.server.sources.http.ServletPathFinder;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.server.sources.http.ServletPathFinder;
-import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting;
@@ -340,7 +340,7 @@ public class SettingManager {
         String protocol = getValue(Geonet.Settings.SERVER_PROTOCOL);
         String host    = getValue(Geonet.Settings.SERVER_HOST);
         String port    = getValue(Geonet.Settings.SERVER_PORT);
-        String locServ = baseURL +"/"+ this.nodeInfo.getId() +"/" + language;
+        String locServ = baseURL +"/"+ this.nodeInfo.getId() +"/" + language + "/";
 
         return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;
     }

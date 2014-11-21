@@ -3,19 +3,22 @@ package org.fao.geonet.util;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import org.apache.lucene.analysis.TokenStream;
+import org.fao.geonet.utils.IO;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.AttributeImpl;
-import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.GeoNetworkAnalyzer;
+import org.fao.geonet.Util;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Content;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.io.Reader;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -383,20 +386,26 @@ public final class LangUtils
      * @return
      */
     public static Map<String, String> translate(ServiceContext context, String type, String key) throws JDOMException, IOException {
-        String appPath = context.getAppPath();
+        Path appPath = context.getAppPath();
         XmlCacheManager cacheManager = context.getXmlCacheManager();
-        File loc = new File(appPath, "loc");
-        String typeWithExtension = "xml"+File.separator+type+".xml";
-        Map<String, String> translations = new HashMap<String, String>();
-        
-        for (File file : loc.listFiles()) {
-            if(file.isDirectory() && new File(file, typeWithExtension).exists()) {
-                Element xml = cacheManager.get(context, true, loc.getAbsolutePath(), typeWithExtension, file.getName(),
-                        file.getName(), true, false);
-                String translation = Xml.selectString(xml, key);
-                if(translation != null && !translation.trim().isEmpty()) {
-                    translations.put(file.getName(), translation);
+        Path loc = appPath.resolve("loc");
+        String typeWithExtension = "xml/" + type + ".xml";
+        Map<String, String> translations = new HashMap<>();
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(loc, IO.DIRECTORIES_FILTER)) {
+            for (Path path : paths) {
+                if (Files.exists(path.resolve(typeWithExtension))) {
+                    final String filename = path.getFileName().toString();
+                    Element xml = cacheManager.get(context, true, loc, typeWithExtension, filename, filename, false);
+                    String translation;
+                    if (key.contains("/") || key.contains("[") || key.contains(":") ) {
+                        translation = Xml.selectString(xml, key);
+                    } else {
+                        translation = xml.getChildText(key);
                 }
+                    if (translation != null && !translation.trim().isEmpty()) {
+                        translations.put(filename, translation);
+            }
+        }
             }
         }
         

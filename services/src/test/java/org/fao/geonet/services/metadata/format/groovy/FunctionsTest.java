@@ -5,21 +5,24 @@ import groovy.util.XmlSlurper;
 import groovy.util.slurpersupport.GPathResult;
 import jeeves.constants.ConfigFile;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.dispatchers.guiservices.XmlFile;
+import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.services.metadata.format.Format;
 import org.fao.geonet.services.metadata.format.FormatterParams;
 import org.fao.geonet.services.metadata.format.SchemaLocalization;
+import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
@@ -44,7 +47,7 @@ public class FunctionsTest {
         fparams.schema = schema;
         fparams.context = new ServiceContext(null, null, Maps.<String, Object>newHashMap(), null);
         fparams.context.setLanguage("eng");
-        fparams.config = new org.fao.geonet.services.metadata.format.ConfigFile(new File("."), false, null);
+        fparams.config = new org.fao.geonet.services.metadata.format.ConfigFile(IO.toPath("."), false, null);
 
         fparams.format = new Format() {
             @Override
@@ -74,7 +77,7 @@ public class FunctionsTest {
             }
 
             @Override
-            protected synchronized Element getPluginLocResources(ServiceContext context, File formatDir, String lang) throws Exception {
+            protected synchronized Element getPluginLocResources(ServiceContext context, Path formatDir, String lang) throws Exception {
                 return new Element("loc"); // todo tests
             }
         };
@@ -156,6 +159,17 @@ public class FunctionsTest {
         assertEquals("String Two Part Two", functions.schemaString("string2", "part2"));
     }
 
+    @Test
+    public void testTranslate() throws Exception {
+        ServiceContext context = Mockito.mock(ServiceContext.class);
+        Mockito.doCallRealMethod().when(context).setAsThreadLocal();
+        context.setAsThreadLocal();
+        Mockito.when(context.getAppPath()).thenReturn(AbstractCoreIntegrationTest.getWebappDir(FunctionsTest.class));
+        Mockito.when(context.getXmlCacheManager()).thenReturn(new XmlCacheManager());
+
+        assertEquals("Abstract", functions.translate("abstract"));
+    }
+
     private static Object[] sort(Object[] sort) {
         Arrays.sort(sort);
         return sort;
@@ -193,4 +207,5 @@ public class FunctionsTest {
                 return xml;
             }
         };
-    }}
+    }
+}

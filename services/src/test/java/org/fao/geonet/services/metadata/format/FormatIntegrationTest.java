@@ -2,7 +2,6 @@ package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.log4j.Level;
-import org.eclipse.jetty.util.IO;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
@@ -11,6 +10,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.services.metadata.format.groovy.EnvironmentProxy;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -21,8 +21,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +34,7 @@ import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
@@ -77,14 +79,16 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         final String formatterName = "groovy-illegal-env-access-formatter";
         final URL testFormatterViewFile = FormatIntegrationTest.class.getResource(formatterName+"/view.groovy");
-        final File testFormatter = new File(testFormatterViewFile.getFile()).getParentFile();
-        IO.copy(testFormatter, new File(this.dataDirectory.getFormatterDir(), formatterName));
+        final Path testFormatter = IO.toPath(testFormatterViewFile.toURI()).getParent();
+        final Path formatterDir = this.dataDirectory.getFormatterDir();
+        IO.copyDirectoryOrFile(testFormatter, formatterDir.resolve(formatterName), false);
         final String functionsXslName = "functions.xsl";
-        IO.copy(new File(testFormatter.getParentFile(), functionsXslName), new File(this.dataDirectory.getFormatterDir(), functionsXslName));
+        IO.copyDirectoryOrFile(testFormatter.getParent().resolve(functionsXslName), formatterDir.resolve(functionsXslName), false);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request, new MockHttpServletResponse());
     }
+
     @Test
     public void testLoggingNullPointerBug() throws Exception {
         final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Geonet.FORMATTER);
@@ -100,10 +104,11 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
             final String formatterName = "logging-null-pointer";
             final URL testFormatterViewFile = FormatIntegrationTest.class.getResource(formatterName + "/view.groovy");
-            final File testFormatter = new File(testFormatterViewFile.getFile()).getParentFile();
-            IO.copy(testFormatter, new File(this.dataDirectory.getFormatterDir(), formatterName));
+            final Path testFormatter = IO.toPath(testFormatterViewFile.toURI()).getParent();
+            final Path formatterDir = this.dataDirectory.getFormatterDir();
+            IO.copyDirectoryOrFile(testFormatter, formatterDir.resolve(formatterName), false);
             final String functionsXslName = "functions.xsl";
-            IO.copy(new File(testFormatter.getParentFile(), functionsXslName), new File(this.dataDirectory.getFormatterDir(), functionsXslName));
+            IO.copyDirectoryOrFile(testFormatter.getParent().resolve(functionsXslName), formatterDir.resolve(functionsXslName), false);
 
 
             MockHttpServletRequest request = new MockHttpServletRequest();
@@ -116,8 +121,6 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
     }
     @Test
     public void testExec() throws Exception {
-
-
         final ListFormatters.FormatterDataResponse formatters = listService.exec(null, null, schema, false);
 
         for (ListFormatters.FormatterData formatter : formatters.getFormatters()) {
@@ -125,8 +128,13 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             final MockHttpServletResponse response = new MockHttpServletResponse();
             formatService.exec("eng", "html", "" + id, null, formatter.getId(), "true", false, request, response);
             final String view = response.getContentAsString();
-            Element html = new Element("html").addContent(Xml.loadString(view, false));
-            assertFalse(formatter.getSchema() + "/" + formatter.getId(), html.getChildren().isEmpty());
+            try {
+                Element html = Xml.loadString(view, false);
+                assertFalse(formatter.getSchema() + "/" + formatter.getId(), html.getChildren().isEmpty());
+            } catch (Throwable e) {
+                e.printStackTrace();
+                fail(formatter.getSchema() + " > " + formatter.getId());
+            }
         }
     }
 
@@ -134,10 +142,11 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
     public void testExecXslt() throws Exception {
         final String formatterName = "xsl-test-formatter";
         final URL testFormatterViewFile = FormatIntegrationTest.class.getResource(formatterName+"/view.xsl");
-        final File testFormatter = new File(testFormatterViewFile.getFile()).getParentFile();
-        IO.copy(testFormatter, new File(this.dataDirectory.getFormatterDir(), formatterName));
+        final Path testFormatter = IO.toPath(testFormatterViewFile.toURI()).getParent();
+        final Path formatterDir = this.dataDirectory.getFormatterDir();
+        IO.copyDirectoryOrFile(testFormatter, formatterDir.resolve(formatterName), false);
         final String functionsXslName = "functions.xsl";
-        IO.copy(new File(testFormatter.getParentFile(), functionsXslName), new File(this.dataDirectory.getFormatterDir(), functionsXslName));
+        IO.copyDirectoryOrFile(testFormatter.getParent().resolve(functionsXslName), formatterDir.resolve(functionsXslName), false);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
 
@@ -152,15 +161,17 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
     public void testExecGroovy() throws Exception {
         final String formatterName = "groovy-test-formatter";
         final URL testFormatterViewFile = FormatIntegrationTest.class.getResource(formatterName+"/view.groovy");
-        final File testFormatter = new File(testFormatterViewFile.getFile()).getParentFile();
-        IO.copy(testFormatter, new File(this.dataDirectory.getFormatterDir(), formatterName));
+        final Path testFormatter = IO.toPath(testFormatterViewFile.toURI()).getParent();
+        final Path formatterDir = this.dataDirectory.getFormatterDir();
+        IO.copyDirectoryOrFile(testFormatter, formatterDir.resolve(formatterName), false);
         final String groovySharedClasses = "groovy";
-        IO.copy(new File(testFormatter.getParentFile(), groovySharedClasses), new File(this.dataDirectory.getFormatterDir(), groovySharedClasses));
+        IO.copyDirectoryOrFile(testFormatter.getParent().resolve(groovySharedClasses), formatterDir.resolve(groovySharedClasses), false);
 
 
-        final File dublinCoreSchemaDir = new File(this.schemaManager.getSchemaDir("dublin-core"), "formatter/groovy");
-        dublinCoreSchemaDir.mkdirs();
-        IO.copy(new File(FormatIntegrationTest.class.getResource(formatterName+"/dublin-core-groovy").getFile()), new File(dublinCoreSchemaDir, "DCFunctions.groovy"));
+        final Path dublinCoreSchemaDir = this.schemaManager.getSchemaDir("dublin-core").resolve("formatter/groovy");
+        Files.createDirectories(dublinCoreSchemaDir);
+        IO.copyDirectoryOrFile(IO.toPath(FormatIntegrationTest.class.getResource(formatterName+"/dublin-core-groovy").toURI()),
+                dublinCoreSchemaDir.resolve("DCFunctions.groovy"), false);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("h2IdentInfo", "true");

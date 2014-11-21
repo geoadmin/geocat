@@ -41,6 +41,8 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 /** Retrieves a particular metadata. Access is restricted
@@ -56,7 +58,7 @@ public class Show extends ShowViewBaseService
 
     // GEOCAT
 	private boolean keepXLinks;
-	public void init(String appPath, ServiceConfig params) throws Exception{
+	public void init(Path appPath, ServiceConfig params) throws Exception{
 		super.init(appPath, params);
 		this.keepXLinks = "y".equalsIgnoreCase(params.getValue("keepXLinks", "n"));
 		     // END GEOCAT

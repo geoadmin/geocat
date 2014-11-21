@@ -65,4 +65,4 @@ web-ui-docs/node_modules
 out/
 web/*.log*
 docs/*/users/source/admin/*/
-*.css.map
+*.css.mapweb/src/main/webapp/WEB-INF/data/config/schema_plugins/schemaplugin-uri-catalog.xml

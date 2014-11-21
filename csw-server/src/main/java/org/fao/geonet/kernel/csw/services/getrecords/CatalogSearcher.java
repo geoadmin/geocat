@@ -85,8 +85,10 @@ import org.springframework.context.ApplicationContext;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -287,8 +289,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
 		if (filterExpr == null)
 			return null;
 
-		String styleSheet = context.getAppPath() + Geonet.Path.CSW
-				+ Geonet.File.FILTER_TO_LUCENE;
+		Path styleSheet = context.getAppPath().resolve(Geonet.Path.CSW).resolve(Geonet.File.FILTER_TO_LUCENE);
 
 		try {
 			Element result = Xml.transform(filterExpr, styleSheet);

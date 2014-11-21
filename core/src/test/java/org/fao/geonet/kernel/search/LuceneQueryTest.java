@@ -6,16 +6,17 @@ import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.search.Query;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.junit.Ignore;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
+import org.fao.geonet.utils.IO;
 import org.jdom.DefaultJDOMFactory;
 import org.jdom.Element;
 import org.jdom.JDOMFactory;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -45,11 +46,11 @@ public class LuceneQueryTest {
         _analyzer = new PerFieldAnalyzerWrapper(new GeoNetworkAnalyzer(), analyzers);
 
         final String configFile = "/WEB-INF/config-lucene.xml";
-        final String appDir = new File(LuceneQueryTest.class.getResource(configFile).getFile()).getParentFile().getParent()+"/";
+        final Path appDir = IO.toPath(LuceneQueryTest.class.getResource(configFile).toURI()).getParent().getParent();
         final GeonetworkDataDirectory dataDirectory = new GeonetworkDataDirectory();
         dataDirectory.init("test", appDir, new ServiceConfig(), null);
         LuceneConfig lc = new LuceneConfig();
-        lc._geonetworkDataDirectory = dataDirectory;
+        lc.geonetworkDataDirectory = dataDirectory;
         final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext();
         lc._appContext = context;
         context.refresh();
@@ -1197,26 +1198,26 @@ public class LuceneQueryTest {
         assertEquals("unexpected Lucene query", "+title:humph +_isTemplate:n", query.toString());
     }
 
-    /**
-     * 'altTitle' parameter.	
-     */
-    @Test
-    public void testAltTitle() {
-        // create request object
-        JDOMFactory factory = new DefaultJDOMFactory();
-        Element request = factory.element("request");
-        Element altTitle = factory.element("altTitle");
-        altTitle.addContent("humph");
-        request.addContent(altTitle);
-        // build lucene query input
-        LuceneQueryInput lQI = new LuceneQueryInput(request);
-        // build lucene query
-        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet,
-                _analyzer, null).build(lQI);
-        // verify query
-        assertEquals("unexpected Lucene query", "+altTitle:humph +_isTemplate:n",
-                query.toString());
-    }
+     /**
+      * 'altTitle' parameter.	
+      */
+     @Test
+     public void testAltTitle() {
+         // create request object
+         JDOMFactory factory = new DefaultJDOMFactory();
+         Element request = factory.element("request");
+         Element altTitle = factory.element("altTitle");
+         altTitle.addContent("humph");
+         request.addContent(altTitle);
+         // build lucene query input
+         LuceneQueryInput lQI = new LuceneQueryInput(request);
+         // build lucene query
+         Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet,
+                 _analyzer, null).build(lQI);
+         // verify query
+         assertEquals("unexpected Lucene query", "+altTitle:humph +_isTemplate:n",
+                 query.toString());
+     }
 
     /**
      * 'protocol' parameter.

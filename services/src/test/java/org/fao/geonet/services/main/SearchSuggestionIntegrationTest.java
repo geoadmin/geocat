@@ -9,13 +9,14 @@ import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.HashSet;
+import org.springframework.test.annotation.DirtiesContext;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Nullable;
@@ -37,7 +38,7 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
 
     @BeforeClass
     public static void initService() throws Exception {
-        searchSuggestionService.init("", new ServiceConfig(Lists.newArrayList(
+        searchSuggestionService.init(IO.toPath("."), new ServiceConfig(Lists.newArrayList(
                 createServiceConfigParam(SearchSuggestion.CONFIG_PARAM_DEFAULT_SEARCH_FIELD, "any"),
                 createServiceConfigParam(SearchSuggestion.CONFIG_PARAM_MAX_NUMBER_OF_TERMS, "10000000"),
                 createServiceConfigParam(SearchSuggestion.CONFIG_PARAM_THRESHOLD, "1000")

@@ -37,13 +37,15 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.jdom.Element;
 
 import java.util.Arrays;
+import org.jdom.Element;
+
+import java.nio.file.Path;
+import static org.springframework.data.jpa.domain.Specifications.where;
 import java.util.List;
 
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
-import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * Removes a user from the system. It removes the relationship to a group too.
@@ -55,7 +57,7 @@ public class Remove extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-    public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
