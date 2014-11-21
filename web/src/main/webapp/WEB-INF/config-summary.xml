@@ -77,6 +77,9 @@
 			<item name="orgName" plural="orgNames" indexKey="orgName" max="100"/>
 			<item name="metadataPOC" plural="metadataPOCs" indexKey="metadataPOC"/>
 			<item name="serviceType" plural="serviceTypes" indexKey="serviceType"/>
+            <!-- GEOCAT -->
+			<item name="formatWithVersion" plural="formatWithVersions" indexKey="formatWithVersion"/>
+            <!-- END GEOCAT -->
 			<item name="type" plural="types" indexKey="type" translator="codelist:gmd:MD_ScopeCode"/>
 			<item name="createDateYear" plural="createDateYears" indexKey="createDateYear"
 				sortOrder="asc"/>
