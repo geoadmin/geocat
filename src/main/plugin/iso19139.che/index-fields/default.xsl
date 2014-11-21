@@ -335,6 +335,7 @@
 			
 			<xsl:for-each select="//srv:SV_CouplingType/srv:code/@codeListValue">
 				<Field  name="couplingType" string="{string(.)}" store="true" index="true" token="false"/>
+                <Field name="formatWithVersion" string="{normalize-space(.)} ({normalize-space(../../gmd:version)})" store="true" index="true" token="false"/>
 			</xsl:for-each>
 						
 			<!-- Sibling relationships -->
@@ -346,6 +347,7 @@
 			
             <xsl:for-each select="gmd:resourceFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
                 <Field name="format" string="{string(.)}" store="true" index="true" token="false"/>
+                <Field name="formatWithVersion" string="{normalize-space(.)} ({normalize-space(../../gmd:version)})" store="true" index="true" token="false"/>
             </xsl:for-each>
 
             <xsl:for-each select="gmd:resourceFormat/gmd:MD_Format/gmd:version/gco:CharacterString">
@@ -360,6 +362,7 @@
         <xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
             <xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
                 <Field name="format" string="{string(.)}" store="true" index="true" token="false"/>
+                <Field name="formatWithVersion" string="{normalize-space(.)} ({normalize-space(../../gmd:version)})" store="true" index="true" token="false"/>
             </xsl:for-each>
 
             <xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:version/gco:CharacterString">
@@ -368,9 +371,10 @@
 
             <xsl:for-each select="gmd:distributor/gmd:MD_Distributor/gmd:distributorFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
                 <Field name="format" string="{string(.)}" store="true" index="true"/>
+                <Field name="formatWithVersion" string="{normalize-space(.)} ({normalize-space(../../gmd:version)})" store="true" index="true" token="false"/>
             </xsl:for-each>
             <xsl:for-each select="gmd:distributor/gmd:MD_Distributor/gmd:distributorFormat/gmd:MD_Format/gmd:version/gco:CharacterString">
-                <Field name="format" string="{string(.)}" store="true" index="true"/>
+                <Field name="formatversion" string="{string(.)}" store="true" index="true"/>
             </xsl:for-each>
 
             <!-- index online protocol -->
