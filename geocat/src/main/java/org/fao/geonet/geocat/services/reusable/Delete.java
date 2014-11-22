@@ -40,6 +40,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -119,7 +120,7 @@ public class Delete implements Service
         return null;
     }
 
-    public void init(String appPath, ServiceConfig params) throws Exception
+    public void init(Path appPath, ServiceConfig params) throws Exception
     {
     }
 

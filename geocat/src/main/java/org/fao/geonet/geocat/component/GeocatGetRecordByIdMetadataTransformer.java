@@ -6,15 +6,17 @@ import org.fao.geonet.component.csw.GetRecordByIdMetadataTransformer;
 import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.geocat.services.gm03.ISO19139CHEtoGM03;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.geocat.services.gm03.ISO19139CHEtoGM03;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.DOMBuilder;
 import org.jdom.output.DOMOutputter;
 import org.springframework.stereotype.Component;
+
+import java.nio.file.Path;
 
 /**
  * User: Jesse
@@ -49,7 +51,7 @@ public class GeocatGetRecordByIdMetadataTransformer implements GetRecordByIdMeta
                 // For now leaving it commented out.
 
                 ISO19139CHEtoGM03 toGm03 = new ISO19139CHEtoGM03(null,
-                        context.getAppPath() + "xsl/conversion/import/ISO19139CHE-to-GM03.xsl");
+                        context.getAppPath().resolve("xsl/conversion/import/ISO19139CHE-to-GM03.xsl"));
                 org.w3c.dom.Document domOut = toGm03.convert(domIn);
                 DOMBuilder builder = new DOMBuilder();
                 return Optional.of(builder.build(domOut).getRootElement());
@@ -63,7 +65,7 @@ public class GeocatGetRecordByIdMetadataTransformer implements GetRecordByIdMeta
                 // we then need to convert the MD into real classic iso19139
 
 
-                String styleSheet = context.getBean(SchemaManager.class).getSchemaDir("iso19139.che") + "/convert/to19139.xsl";
+                Path styleSheet = context.getBean(SchemaManager.class).getSchemaDir("iso19139.che").resolve("convert/to19139.xsl");
                 //String styleSheet =  context.getAppPath() + Geonet.Path.CONV_STYLESHEETS + "/export/xml_iso19139.xsl";
 
                 Document doc = new Document(new Element("MD_Metadata", "gmd", "http://www.isotc211.org/2005/gmd"));

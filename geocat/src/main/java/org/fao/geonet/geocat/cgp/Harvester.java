@@ -41,6 +41,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -232,8 +233,8 @@ class Harvester
 
 		// Loading stylesheet
 
-		String styleSheet = context.getAppPath() + Geonet.Path.IMPORT_STYLESHEETS +
-			(envirocat?"/GM03SMALL-to-ISO19139CHE.xsl":"/GM03-to-ISO19139CHE.xsl");
+		Path styleSheet = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS).resolve(
+			(envirocat?"/GM03SMALL-to-ISO19139CHE.xsl":"/GM03-to-ISO19139CHE.xsl"));
 
 		// log.info("  - XSLT transformation using /GM03-to-ISO19139CHE.xsl");
 

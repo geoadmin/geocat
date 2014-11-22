@@ -1,24 +1,24 @@
 package org.fao.geonet.geocat.services.metadata;
 
-import java.io.File;
-
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import java.io.File;
+import java.nio.file.Path;
 
 public class CharacterStringToLocalizedCharacterString implements Service {
     private static final String SEP = File.separator;
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        String xsl = context.getAppPath() + SEP + "xsl" + SEP + "characterstring-to-localisedcharacterstring.xsl";
+        Path xsl = context.getAppPath().resolve("xsl/characterstring-to-localisedcharacterstring.xsl");
         
         String id = Util.getParam(params, "id", null);
         String uuid = Util.getParam(params, "uuid", null);

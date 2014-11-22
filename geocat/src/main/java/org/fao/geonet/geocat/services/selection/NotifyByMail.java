@@ -1,19 +1,9 @@
 package org.fao.geonet.geocat.services.selection;
 
-import java.text.MessageFormat;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -27,7 +17,12 @@ import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
-import javax.annotation.Nullable;
+import java.nio.file.Path;
+import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Select a list of elements stored in session For all the MD stored in the
@@ -51,7 +46,7 @@ public class NotifyByMail implements Service {
     // ---
     // --------------------------------------------------------------------------
 
-    public void init(String appPath, ServiceConfig config) throws Exception {
+    public void init(Path appPath, ServiceConfig config) throws Exception {
     }
 
     // --------------------------------------------------------------------------

@@ -1,7 +1,5 @@
 package org.fao.geonet.geocat;
 
-import java.io.File;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -11,10 +9,13 @@ import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
+import java.io.File;
+import java.nio.file.Path;
+
 public class DownloadBackup implements Service {
 
 	@Override
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	@Override
@@ -31,7 +32,7 @@ public class DownloadBackup implements Service {
 		if(files == null || files.length == 0) {
 			throw404();
 		}
-		return BinaryFile.encode(200, files[0].getPath(), false);
+		return BinaryFile.encode(200, files[0].toPath(), false).getElement();
 	}
 
 	private void throw404() throws JeevesException {

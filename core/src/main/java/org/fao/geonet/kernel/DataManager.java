@@ -224,7 +224,7 @@ public class DataManager {
     public static void reindex(ServiceContext context, String newid, ThesaurusManager manager) throws Exception {
         Processor.clearCache();
 
-        final String appPath1 = context.getAppPath();
+        final Path appPath1 = context.getAppPath();
         final String baseUrl = context.getBaseUrl();
         final String language = context.getLanguage();
         final IsoLanguagesMapper isolangMapper = context.getBean(IsoLanguagesMapper.class);
@@ -542,7 +542,7 @@ public class DataManager {
                      * Geocat doesn't permit multilingual elements to have characterString elements only LocalizedString elements.
                      * This transformation ensures this property
                      */
-                metadataEl = Xml.transform(metadataEl, stylePath + "characterstring-to-localisedcharacterstring.xsl");
+                metadataEl = Xml.transform(metadataEl, stylePath.resolve("characterstring-to-localisedcharacterstring.xsl"));
                 String parentUuid = null;
                 metadataEl = updateFixedInfo(schemaId, Optional.of(Integer.parseInt(metadataId)), uuid, metadataEl, parentUuid,
                         UpdateDatestamp.NO, servContext);
@@ -1779,7 +1779,7 @@ public class DataManager {
             if (doXLinks) Processor.processXLink(metadataXml, srvContext);
             String schema = getMetadataSchema(id);
             //GEOCAT
-            metadataXml = Xml.transform(metadataXml, stylePath+"characterstring-to-localisedcharacterstring.xsl");
+            metadataXml = Xml.transform(metadataXml, stylePath.resolve("characterstring-to-localisedcharacterstring.xsl"));
             // END GEOCAT
             if (withEditorValidationErrors) {
                 version = doValidate(srvContext, schema, id, metadataXml, srvContext.getLanguage(), forEditing).two();
@@ -1800,7 +1800,7 @@ public class DataManager {
         // GEOCAT
 
         if( getMetadataSchema(id).equals("iso19139.che")) {
-            metadataXml = Xml.transform(metadataXml, stylePath+"add-charstring.xsl");
+            metadataXml = Xml.transform(metadataXml, stylePath.resolve("add-charstring.xsl"));
         }
         // END GEOCAT
         metadataXml.addNamespaceDeclaration(Edit.NAMESPACE);
@@ -2094,7 +2094,7 @@ public class DataManager {
             md = metadata;
         }
         // GEOCAT
-        md = Xml.transform(md, this.servContext.getAppPath() + "/xsl/characterstring-to-localisedcharacterstring.xsl");
+        md = Xml.transform(md, this.servContext.getAppPath().resolve("xsl/characterstring-to-localisedcharacterstring.xsl"));
         UserSession session = null;
         if (context != null && context.getUserSession() != null) {
             session = context.getUserSession();
@@ -3141,7 +3141,7 @@ public class DataManager {
             // apply update-fixed-info.xsl
 
             // GEOCAT
-            String styleSheet;
+            Path styleSheet;
             if(metadata != null && metadata.getDataInfo().getType() == MetadataType.TEMPLATE) {
                 styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_TEMPLATE_FIXED_INFO);
             } else {

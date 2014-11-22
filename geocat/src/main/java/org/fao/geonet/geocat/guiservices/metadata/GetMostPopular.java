@@ -23,19 +23,19 @@
 
 package org.fao.geonet.geocat.guiservices.metadata;
 
-import java.util.List;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
+
+import java.nio.file.Path;
+import java.util.List;
 
 //=============================================================================
 
@@ -50,7 +50,7 @@ public class GetMostPopular implements Service {
 	private long _timeBetweenUpdates;
 	private long _lastUpdateTime;
 	
-	public void init(String appPath, ServiceConfig config) throws Exception {
+	public void init(Path appPath, ServiceConfig config) throws Exception {
 		_config = config;
 
 		String sMaxItems = config.getValue("maxItems", "10");

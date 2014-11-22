@@ -26,12 +26,12 @@ package org.fao.geonet.geocat.services.reusable;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
 import org.fao.geonet.repository.geocat.RejectedSharedObjectRepository;
 import org.jdom.Element;
+
+import java.nio.file.Path;
 
 /**
  * Service for resolving an deleted reusable xlink reference
@@ -60,7 +60,7 @@ public class Deleted implements Service
         return DeletedObjects.get(context.getBean(RejectedSharedObjectRepository.class), id);
     }
 
-    public void init(String appPath, ServiceConfig params) throws Exception
+    public void init(Path appPath, ServiceConfig params) throws Exception
     {
     }
 

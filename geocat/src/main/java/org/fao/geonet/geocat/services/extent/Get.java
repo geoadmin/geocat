@@ -47,6 +47,7 @@ import org.opengis.filter.FilterFactory2;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -66,7 +67,7 @@ public class Get implements Service
 		Set<Object> props = gmlConfiguration.getProperties();
     	props.add(GMLConfiguration.NO_SRS_DIMENSION);
     }
-    private String                 _appPath;
+    private Path _appPath;
 
     public Element exec(Element params, ServiceContext context) throws Exception
     {
@@ -165,7 +166,7 @@ public class Get implements Service
         return ExtentHelper.error(msg);
     }
 
-    public void init(String appPath, ServiceConfig params) throws Exception
+    public void init(Path appPath, ServiceConfig params) throws Exception
     {
         this._appPath = appPath;
     }

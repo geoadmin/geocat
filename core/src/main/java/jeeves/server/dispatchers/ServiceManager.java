@@ -45,7 +45,6 @@ import jeeves.server.sources.http.HttpServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
-import org.jdom.filter.Filter;
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NotAllowedEx;
@@ -59,9 +58,9 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.SOAPUtil;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
-import java.io.OutputStream;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.file.Files;
@@ -831,10 +830,6 @@ public class ServiceManager {
 
 		return null;
 	}
-    private String toStyleSheetFile(String styleSheet)
-    {
-        return appPath + Jeeves.Path.XSL + styleSheet;
-    }
 	//---------------------------------------------------------------------------
 	//--- Dispatch error
 	//---------------------------------------------------------------------------

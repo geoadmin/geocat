@@ -27,9 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.KeywordBean;
@@ -38,6 +36,7 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +48,7 @@ import java.util.Map;
  */
 
 public class GeocatUpdateElement implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	// --------------------------------------------------------------------------
@@ -63,8 +62,6 @@ public class GeocatUpdateElement implements Service {
 	 */
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		String ref = Util.getParam(params, Params.REF);
 		String oldid = Util.getParam(params, "oldid");

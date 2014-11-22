@@ -486,6 +486,7 @@ public class SpatialIndexWriter implements FeatureListener
 
         typeBuilder.setCRS(DefaultGeographicCRS.WGS84);
         typeBuilder.add("geom", MultiPolygon.class);
+        typeBuilder.add(_IDS_ATTRIBUTE_NAME, String.class);
 
         SimpleFeatureType type = typeBuilder.buildFeatureType();
         datastore.createSchema(type);

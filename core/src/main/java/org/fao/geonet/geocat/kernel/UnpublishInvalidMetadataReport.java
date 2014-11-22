@@ -1,18 +1,17 @@
 package org.fao.geonet.geocat.kernel;
 
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.geocat.PublishRecord;
+import org.jdom.Element;
+
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.geocat.PublishRecord;
-import org.jdom.Element;
 
 public class UnpublishInvalidMetadataReport implements Service {
 
@@ -22,7 +21,7 @@ public class UnpublishInvalidMetadataReport implements Service {
     private static final Set<String> INCLUDE_OPTIONS = new HashSet<String>(Arrays.asList(ALL,AUTO,MANUAL));
 
     @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         
     }
 

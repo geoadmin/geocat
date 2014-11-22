@@ -44,6 +44,7 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.FilterFactory2;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -62,7 +63,7 @@ import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.getSelection;
 public class Delete implements Service
 {
 
-    public void init(String appPath, ServiceConfig params) throws Exception
+    public void init(Path appPath, ServiceConfig params) throws Exception
     {
     }
 

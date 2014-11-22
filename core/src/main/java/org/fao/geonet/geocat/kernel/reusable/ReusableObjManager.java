@@ -33,6 +33,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -67,10 +68,10 @@ public class ReusableObjManager {
     @Autowired
     private GeonetworkDataDirectory dataDirectory;
 
-    public String getStyleSheet() {
-        return dataDirectory.getWebappDir() + "/xsl/reusable-objects-extractor.xsl";
+    public Path getStyleSheet() {
+        return dataDirectory.getWebappDir().resolve("xsl/reusable-objects-extractor.xsl");
     }
-    public String getAppPath() {
+    public Path getAppPath() {
         return dataDirectory.getWebappDir();
     }
 
@@ -244,7 +245,7 @@ public class ReusableObjManager {
         String baseURL = params.baseURL;
         ExtentManager extentMan = params.srvContext.getBean(ExtentManager.class);
 
-        ExtentsStrategy strategy = new ExtentsStrategy(baseURL, getAppPath(), extentMan, null);
+        ExtentsStrategy strategy = new ExtentsStrategy(getAppPath(), extentMan, null);
 
         @SuppressWarnings("unchecked")
         Iterator<Element> iter = xml.getChild(EXTENTS).getChildren().iterator();
@@ -482,7 +483,7 @@ public class ReusableObjManager {
                 strategy = new KeywordsStrategy(isoLanguagesMapper, thesaurusManager, getAppPath(), baseUrl, language);
             } else {
                 ExtentManager extentManager = params.srvContext.getBean(ExtentManager.class);
-                strategy = new ExtentsStrategy(baseUrl, getAppPath(), extentManager, language);
+                strategy = new ExtentsStrategy(getAppPath(), extentManager, language);
             }
 
             Log.info(Geocat.Module.REUSABLE, "Updating a " + strategy + " in metadata id="

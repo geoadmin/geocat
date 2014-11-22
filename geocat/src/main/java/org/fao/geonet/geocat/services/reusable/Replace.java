@@ -23,18 +23,18 @@
 
 package org.fao.geonet.geocat.services.reusable;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Metadata_;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
@@ -42,6 +42,10 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.services.metadata.IndexRebuild;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -133,7 +137,7 @@ public class Replace implements Service
         return context.getEntityManager().createQuery(query).getResultList();
     }
 
-    public void init(String appPath, ServiceConfig params) throws Exception
+    public void init(Path appPath, ServiceConfig params) throws Exception
     {
     }
 

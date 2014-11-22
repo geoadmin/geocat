@@ -9,7 +9,6 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ScheduleContext;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
@@ -20,38 +19,39 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.annotation.Nullable;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.annotation.Nullable;
 
 public class ArchiveAllMetadataJob implements Schedule, Service {
 
 	static final String BACKUP_FILENAME = "geocat_backup";
 	static final String BACKUP_DIR = "geocat_backups";
 	public static final String BACKUP_LOG  = Geonet.GEONETWORK + ".backup";
-	private String stylePath;
+	private Path stylePath;
 	private AtomicBoolean backupIsRunning = new AtomicBoolean(false);
 
 	@Override
-	public void init(String appPath, ServiceConfig params) throws Exception {
-		this.stylePath = appPath + Geonet.Path.SCHEMAS;
+	public void init(Path appPath, ServiceConfig params) throws Exception {
+		this.stylePath = appPath.resolve(Geonet.Path.SCHEMAS);
 	}
 
 	@Override
 	public void exec(ScheduleContext context) throws Exception {
         ConfigurableApplicationContext appContext = context.getApplicationContext();
 		ServiceContext serviceContext = new ServiceContext("none", appContext , context.allContexts(), context.getEntityManager());
-		serviceContext.setAppPath(context.getAppPath());
 		serviceContext.setBaseUrl(context.getBaseUrl());
 		serviceContext.setAsThreadLocal();
 		createBackup(serviceContext);
@@ -91,16 +91,17 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
     		boolean resolveXlink = true;
     		boolean removeXlinkAttribute = false;
             boolean skipOnError = true;
-            File srcFile = new File(MEFLib.doMEF2Export(serviceContext, new HashSet<String>(uuids), format, false, stylePath, resolveXlink , removeXlinkAttribute, skipOnError));
-		
-    		String datadir = System.getProperty(GeonetworkDataDirectory.GEONETWORK_DIR_KEY);
-    		File backupDir = new File(datadir, BACKUP_DIR);
+            Path srcFile = MEFLib.doMEF2Export(serviceContext, new HashSet<>(uuids), format, false, stylePath,
+                    resolveXlink , removeXlinkAttribute, skipOnError);
+
+            Path datadir = IO.toPath(System.getProperty(GeonetworkDataDirectory.GEONETWORK_DIR_KEY));
+            Path backupDir = datadir.resolve(BACKUP_DIR);
     		String today = new SimpleDateFormat("-yyyy-MM-dd").format(new Date());
-    		File destFile = new File(backupDir, BACKUP_FILENAME+today+".zip");
-    		FileUtils.deleteDirectory(backupDir);
-    		destFile.getParentFile().mkdirs();
-    		FileUtils.moveFile(srcFile, destFile);
-    		if(!destFile.exists()) {
+    		Path destFile = backupDir.resolve(BACKUP_FILENAME+today+".zip");
+    		IO.deleteFileOrDirectory(backupDir);
+            Files.createDirectories(destFile.getParent());
+    		Files.move(srcFile, destFile);
+    		if(!Files.exists(destFile)) {
     			throw new Exception("Moving backup file failed!");
     		}
     		Log.info(BACKUP_LOG, "Backup finished.  Backup file: "+destFile);

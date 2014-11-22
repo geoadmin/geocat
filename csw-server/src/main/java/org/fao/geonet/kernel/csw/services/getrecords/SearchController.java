@@ -24,24 +24,24 @@
 package org.fao.geonet.kernel.csw.services.getrecords;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
-import org.apache.lucene.search.Sort;
 import jeeves.server.dispatchers.ServiceManager;
-import org.fao.geonet.constants.Params;
 import org.apache.commons.lang.StringUtils;
+import org.apache.lucene.search.Sort;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.ResultType;
-import org.fao.geonet.geocat.kernel.RelatedMetadata;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.RelatedMetadata;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneSearcher;
@@ -67,17 +67,17 @@ import java.util.Set;
  * TODO javadoc.
  */
 public class SearchController {
-    
-	private final Set<String> _selector;
-	private final Set<String> _uuidselector;
+
+    private final Set<String> _selector;
+    private final Set<String> _uuidselector;
     private GMLConfiguration _gmlConfig;
     private ApplicationContext _applicationContext;
 
-	public SearchController(ApplicationContext applicationContext) {
-		_selector = Collections.singleton("_id");
-		_uuidselector = Collections.singleton("_uuid");
-		_gmlConfig = new GMLConfiguration();
-		this._applicationContext = applicationContext;
+    public SearchController(ApplicationContext applicationContext) {
+        _selector = Collections.singleton("_id");
+        _uuidselector = Collections.singleton("_uuid");
+        _gmlConfig = new GMLConfiguration();
+        this._applicationContext = applicationContext;
     }
 
     //---------------------------------------------------------------------------
@@ -207,25 +207,25 @@ public class SearchController {
      * @param resultType      requested ResultType
      * @param strategy        ElementNames strategy
      * @param displayLanguage
-     * @throws CatalogException hmm
      * @return The XML metadata record if the record could be converted to the required output schema. Null if no
      * conversion available for the schema (eg. fgdc record can not be converted to ISO).
+     * @throws CatalogException hmm
      */
-  public static Element retrieveMetadata(ServiceContext context, String id, ElementSetName setName, OutputSchema
-          outSchema, Set<String> elemNames, String typeName, ResultType resultType, String strategy, String displayLanguage) throws CatalogException {
+    public static Element retrieveMetadata(ServiceContext context, String id, ElementSetName setName, OutputSchema
+            outSchema, Set<String> elemNames, String typeName, ResultType resultType, String strategy, String displayLanguage) throws CatalogException {
 
 
         try {
-		//--- get metadata from DB
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-        Element res = gc.getBean(DataManager.class).getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
-		SchemaManager scm = gc.getBean(SchemaManager.class);
+            //--- get metadata from DB
+            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+            Element res = gc.getBean(DataManager.class).getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+            SchemaManager scm = gc.getBean(SchemaManager.class);
             if (res == null) {
-            return null;
-        }
-		Element info = res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
-		String schema = info.getChildText(Edit.Info.Elem.SCHEMA);
+                return null;
+            }
+            Element info = res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+            String schema = info.getChildText(Edit.Info.Elem.SCHEMA);
 
             // GEOCAT
             String fullSchema = schema;
@@ -234,52 +234,52 @@ public class SearchController {
             if (schema.contains("iso19139")) schema = "iso19139";
             //END GEOCAT
 
-		// --- transform iso19115 record to iso19139
-		// --- If this occur user should probably migrate the catalogue from iso19115 to iso19139.
-		// --- But sometimes you could harvest remote node in iso19115 and make them available through CSW
-		if (schema.equals("iso19115")) {
-            Path styleSheetPath =
-                    context.getAppPath().resolve("xsl").resolve("conversion").resolve("import").resolve("ISO19115-to-ISO19139.xsl");
-            res = Xml.transform(res, styleSheetPath);
-			schema = "iso19139";
-		}
-		
-		//--- skip metadata with wrong schemas
-		if (schema.equals("fgdc-std") || schema.equals("dublin-core"))
+            // --- transform iso19115 record to iso19139
+            // --- If this occur user should probably migrate the catalogue from iso19115 to iso19139.
+            // --- But sometimes you could harvest remote node in iso19115 and make them available through CSW
+            if (schema.equals("iso19115")) {
+                Path styleSheetPath =
+                        context.getAppPath().resolve("xsl").resolve("conversion").resolve("import").resolve("ISO19115-to-ISO19139.xsl");
+                res = Xml.transform(res, styleSheetPath);
+                schema = "iso19139";
+            }
+
+            //--- skip metadata with wrong schemas
+            if (schema.equals("fgdc-std") || schema.equals("dublin-core"))
                 if (outSchema != OutputSchema.OGC_CORE)
-		    	return null;
-        
+                    return null;
+
             // GEOCAT
             if (outSchema != OutputSchema.OWN && !isCHE) {
                 res = geocatConversions(context, schema, res, outSchema, fullSchema, resultType, id, gc, isCHE);
 
                 // END GEOCAT
 
-		// apply stylesheet according to setName and schema
-        //
-        // OGC 07-045 :
-        // Because for this application profile it is not possible that a query includes more than one
-        // typename, any value(s) of the typeNames attribute of the elementSetName element are ignored.
-        res = applyElementSetName(context, scm, schema, res, outSchema, setName, resultType, id, displayLanguage);
-		//
-	    // apply elementnames
-        //
-        res = applyElementNames(context, elemNames, typeName, scm, schema, res, resultType, info, strategy);
+                // apply stylesheet according to setName and schema
+                //
+                // OGC 07-045 :
+                // Because for this application profile it is not possible that a query includes more than one
+                // typename, any value(s) of the typeNames attribute of the elementSetName element are ignored.
+                res = applyElementSetName(context, scm, schema, res, outSchema, setName, resultType, id, displayLanguage);
+                //
+                // apply elementnames
+                //
+                res = applyElementNames(context, elemNames, typeName, scm, schema, res, resultType, info, strategy);
             }
 
             if (res != null) {
                 if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                Log.debug(Geonet.CSW_SEARCH, "SearchController returns\n" + Xml.getString(res));
+                    Log.debug(Geonet.CSW_SEARCH, "SearchController returns\n" + Xml.getString(res));
             } else {
                 if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                Log.debug(Geonet.CSW_SEARCH, "SearchController returns null");
-        }
-		return res;
+                    Log.debug(Geonet.CSW_SEARCH, "SearchController returns null");
+            }
+            return res;
         } catch (Exception e) {
             context.error("Error while getting metadata with id : " + id);
             context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
             throw new NoApplicableCodeEx("Raised exception while getting metadata :" + e);
-	}
+        }
     }
 
     /**
@@ -313,20 +313,20 @@ public class SearchController {
             throw new InvalidParameterValueEx("outputSchema not supported for metadata " + id + " schema.", schema);
         }
 
-		Path schemaDir  = schemaManager.getSchemaCSWPresentDir(schema);
-		Path styleSheet = schemaDir.resolve(prefix +"-"+ elementSetName +".xsl");
+        Path schemaDir = schemaManager.getSchemaCSWPresentDir(schema);
+        Path styleSheet = schemaDir.resolve(prefix + "-" + elementSetName + ".xsl");
 
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("lang", displayLanguage);
-		params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("lang", displayLanguage);
+        params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
 
-		try {
+        try {
             // issue #133730 : MDs harvested as Dublin-Core
             // format are not well detected here.
             // we add a check to ensure that no extra xsl transformation
             // would not be applied.
             if (!result.getName().equals("simpledc"))
-		    result = Xml.transform(result, styleSheet, params);
+                result = Xml.transform(result, styleSheet, params);
             else {
                 // we still need to do some transformation
                 // in order to ensure csw response compliance
@@ -334,12 +334,12 @@ public class SearchController {
                 Element tempElem = new Element("Record", "csw", "http://www.opengis.net/cat/csw/2.0.2");
                 tempElem.setContent(result.cloneContent());
                 result = tempElem;
-		}
+            }
         } catch (Exception e) {
-		    context.error("Error while transforming metadata with id : " + id + " using " + styleSheet);
-	        context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
-		    return null;
-		}
+            context.error("Error while transforming metadata with id : " + id + " using " + styleSheet);
+            context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
+            return null;
+        }
         return result;
     }
 
@@ -588,8 +588,6 @@ public class SearchController {
     private static Element geocatConversions(ServiceContext context, String schema, Element res, OutputSchema outSchema, String fullSchema,
                                              ResultType resultType, String id, GeonetContext gc, boolean isCHE) throws Exception {
 
-        String FS = File.separator;
-
         // --- transform iso19115 record to iso19139
         // --- If this occur user should probably migrate the catalogue
         // from
@@ -598,7 +596,7 @@ public class SearchController {
         // and
         // make them available through CSW
         if (schema.equals("iso19115")) {
-            res = Xml.transform(res, context.getAppPath() + "xsl" + FS + "conversion" + FS + "import" + FS + "ISO19115-to-ISO19139.xsl");
+            res = Xml.transform(res, context.getAppPath().resolve("xsl/conversion/import/ISO19115-to-ISO19139.xsl"));
             schema = "iso19139";
         }
 
@@ -607,7 +605,7 @@ public class SearchController {
             params.put("lang", context.getLanguage());
             params.put("includeInfo", "true");
 
-            res = Xml.transform(res, context.getAppPath() + "xsl" + FS + "conversion" + FS + "export" + FS + "xml_iso19139.xsl", params);
+            res = Xml.transform(res, context.getAppPath().resolve("xsl/conversion/export/xml_iso19139.xsl"), params);
         }
         // --- skip metadata with wrong schemas
         if (schema.equals("fgdc-std") || schema.equals("dublin-core") || schema.equals("iso19110"))
@@ -642,4 +640,7 @@ public class SearchController {
                 throw new InvalidParameterValueEx("outputSchema not supported for metadata " + id + " schema.", schema);
             }
             return res;
-    
+        }
+        return res;
+    }
+}

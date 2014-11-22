@@ -26,11 +26,13 @@ package jeeves.interfaces;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ScheduleContext;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 public interface Schedule
 {
-	public void init(String appPath, ServiceConfig params) throws Exception;
+	public void init(Path appPath, ServiceConfig params) throws Exception;
 
 	public void exec(ScheduleContext context) throws Exception;
 }

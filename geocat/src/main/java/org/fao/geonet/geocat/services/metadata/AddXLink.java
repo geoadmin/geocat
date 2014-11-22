@@ -25,15 +25,14 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.XLink;
-
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.services.metadata.AjaxEditUtils;
 import org.jdom.Element;
+
+import java.nio.file.Path;
 
 //=============================================================================
 
@@ -51,7 +50,7 @@ import org.jdom.Element;
  *  @author fxprunayre
  */
 public class AddXLink implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	// --------------------------------------------------------------------------

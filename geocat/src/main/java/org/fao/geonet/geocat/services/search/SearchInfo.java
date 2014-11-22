@@ -9,6 +9,7 @@ import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public class SearchInfo implements Service {
     @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
 
     }
 

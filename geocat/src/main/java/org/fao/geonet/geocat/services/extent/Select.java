@@ -32,6 +32,7 @@ import org.fao.geonet.geocat.kernel.extent.ExtentSelection;
 import org.fao.geonet.geocat.kernel.extent.FeatureType;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.Set;
 
 import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.getSelection;
@@ -80,7 +81,7 @@ public class Select implements Service
         return success;
     }
 
-    public void init(String appPath, ServiceConfig params) throws Exception
+    public void init(Path appPath, ServiceConfig params) throws Exception
     {
     }
 

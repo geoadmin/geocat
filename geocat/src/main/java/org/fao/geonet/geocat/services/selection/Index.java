@@ -34,6 +34,7 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
@@ -52,7 +53,7 @@ public class Index implements Service {
     //---
     //--------------------------------------------------------------------------
 
-    public void init(String appPath, ServiceConfig config) throws Exception {
+    public void init(Path appPath, ServiceConfig config) throws Exception {
         this.maxToIndex = Integer.valueOf(config.getValue("maxToIndex"));
     }
 

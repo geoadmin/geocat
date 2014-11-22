@@ -23,25 +23,6 @@
 
 package org.fao.xsl;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.channels.FileChannel;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-
-
-
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -50,14 +31,30 @@ import org.fao.geonet.geocat.services.gm03.ISO19139CHEtoGM03;
 import org.fao.geonet.geocat.services.gm03.ISO19139CHEtoGM03Base;
 import org.fao.geonet.geocat.services.gm03.TranslateAndValidate;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.schema.SchemaLoader;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Text;
 import org.jdom.filter.Filter;
 import org.xml.sax.SAXException;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.channels.FileChannel;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Methods that support transformation and validation tests
@@ -84,8 +81,10 @@ public final class TransformationTestSupport {
             params.put("debugFileName", outputDir.getAbsolutePath()+File.separator+src.getName());
             params.put("webappDir", TransformationTestSupport.geonetworkWebapp.getAbsolutePath());
             
-            Element xml = Xml.loadFile(src);
-			Xml.transform(xml, TransformationTestSupport.geonetworkWebapp+"/xsl/conversion/import/GM03-to-ISO19139CHE.xsl", params );
+            Element xml = Xml.loadFile(src.toPath());
+            final Path styleSheetPath = new File(TransformationTestSupport.geonetworkWebapp,
+                    "xsl/conversion/import/GM03-to-ISO19139CHE.xsl").toPath();
+            Xml.transform(xml, styleSheetPath, params );
 
         } catch (AssertionError e) {
             if (testValidity) throw e;
@@ -100,8 +99,8 @@ public final class TransformationTestSupport {
     static File transformIsoToGM03( File src, File outputDir, boolean testValidity ) throws SAXException,
             TransformerConfigurationException, ISO19139CHEtoGM03Base.FlattenerException, IOException, TransformerException {
         try {
-            ISO19139CHEtoGM03 otherway = new ISO19139CHEtoGM03(TransformationTestSupport.gm03Xsd,
-                    TransformationTestSupport.toGm03StyleSheet.getAbsolutePath());
+            ISO19139CHEtoGM03 otherway = new ISO19139CHEtoGM03(TransformationTestSupport.gm03Xsd.toPath(),
+                    TransformationTestSupport.toGm03StyleSheet.toPath().toAbsolutePath());
             otherway.convert(src.getAbsolutePath(), "TransformationTestSupport");
         } catch (AssertionError e) {
             if (testValidity) throw e;
@@ -155,7 +154,7 @@ public final class TransformationTestSupport {
 
     public static Element transform( Class<?> root, String pathToXsl, String testData ) throws IOException, JDOMException, Exception {
         Element xml = getXML(root, testData);
-        String sSheet = new File(pathToXsl).getAbsolutePath();
+        Path sSheet = IO.toPath(pathToXsl).toAbsolutePath();
         Element transform = Xml.transform(xml, sSheet);
         return transform;
     }
@@ -168,7 +167,7 @@ public final class TransformationTestSupport {
 
     public static void schematronValidation( File metadataFile ) throws Exception {
 
-        Element metadata = Xml.loadFile(metadataFile);
+        Element metadata = Xml.loadFile(metadataFile.toPath());
         String chePath = "/WEB-INF/data/config/schema_plugins/iso19139.che/";
 
         Element env = new Element("env");
@@ -185,7 +184,7 @@ public final class TransformationTestSupport {
         root.addContent(env);
 
         String fixedDataSheet = geonetworkWebapp + chePath + Geonet.File.UPDATE_FIXED_INFO;
-        root = Xml.transform(root, fixedDataSheet);
+        root = Xml.transform(root, new File(fixedDataSheet).toPath());
         String path = geonetworkWebapp + chePath;
 
         String name = "iso19139.che";

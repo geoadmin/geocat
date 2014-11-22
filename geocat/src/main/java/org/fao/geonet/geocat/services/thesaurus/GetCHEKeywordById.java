@@ -36,6 +36,7 @@ import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -45,7 +46,7 @@ import java.util.Map;
 public class GetCHEKeywordById implements Service {
     private volatile Map<String, KeywordBean> gemetWords;
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	// --------------------------------------------------------------------------

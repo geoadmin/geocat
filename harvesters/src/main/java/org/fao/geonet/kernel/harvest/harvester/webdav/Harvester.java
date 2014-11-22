@@ -27,26 +27,36 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.*;
-import org.fao.geonet.kernel.HarvestValidationEnum;
+import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.IHarvester;
+import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
+import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.services.harvesting.Util;
 import org.fao.geonet.repository.Updater;
+import org.fao.geonet.services.harvesting.Util;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import javax.annotation.Nonnull;
+import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import javax.annotation.Nonnull;
 
 //=============================================================================
 
@@ -282,9 +292,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             try {
                 schema = dataMan.autodetectSchema(md);
             } catch (NoSchemaMatchesException e) {
-                if (md.getName() == "TRANSFER") {
+                if ("TRANSFER".equals(md.getName())) {
                     // we need to convert to CHE
-                    String styleSheetPath = context.getAppPath() + "xsl/conversion/import/GM03-to-ISO19139CHE.xsl";
+                    Path styleSheetPath = context.getAppPath().resolve("xsl/conversion/import/GM03-to-ISO19139CHE.xsl");
                     Element tmp = Xml.transform(md, styleSheetPath);
                     md = tmp;
                 }

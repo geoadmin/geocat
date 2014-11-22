@@ -221,7 +221,10 @@ public class ConfigurationOverrides {
             }
         }
         if (logOverides.size() > 0) {
-            PropertyConfigurator.configure(p);
+            LoggerRepository loggerRepo = Logger.getRootLogger().getLoggerRepository();
+            loggerRepo.resetConfiguration();
+            PropertyConfigurator configurator = new PropertyConfigurator();
+            configurator.doConfigure(p, loggerRepo);
         }
     }
 
@@ -311,9 +314,7 @@ public class ConfigurationOverrides {
                 if (match instanceof Element) {
                     Element element = (Element) match;
                     debug("Adding xml to " + XPath.getXPath(element));
-                    for (Content content : newXml) {
-                        element.addContent((Content) content.clone());
-                    }
+                    element.addContent(newXml);
                 } else {
                     throw new IllegalArgumentException("the xpath of an Add XML overrides must select elements only");
                 }
@@ -873,6 +874,7 @@ public class ConfigurationOverrides {
                         	} else {
                         		throw new IllegalArgumentException("The resource file " + resource + " is not a file and not a web resource.  Perhaps a leading / was forgotten?");
                         	}
+                        }
                     } else {
                         in = url.openStream();
                     }

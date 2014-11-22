@@ -1,21 +1,21 @@
 package org.fao.geonet.geocat.services.gm03;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-
 import org.apache.commons.lang.ArrayUtils;
+import org.fao.geonet.utils.IO;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+
 public class ISO19139CHEtoGM03small extends ISO19139CHEtoGM03Base {
     private static final String GML = "http://www.geocat.ch/2003/05/gateway/GML";
 
-    public ISO19139CHEtoGM03small(File schemaLocation, String xslFilename) throws SAXException, TransformerConfigurationException {
+    public ISO19139CHEtoGM03small(Path schemaLocation, Path xslFilename) throws SAXException, TransformerConfigurationException {
         super(schemaLocation, xslFilename);
     }
 
@@ -52,11 +52,11 @@ public class ISO19139CHEtoGM03small extends ISO19139CHEtoGM03Base {
         final String schemaFilename = args[1];
         final String[] xmlFilenames = (String[]) ArrayUtils.subarray(args, 2, args.length);
 
-        File schemaLocation = null;
+        Path schemaLocation = null;
         if (!schemaFilename.equalsIgnoreCase("no")) {
-            schemaLocation = new File(schemaFilename);
+            schemaLocation = IO.toPath(schemaFilename);
         }
-        ISO19139CHEtoGM03small converter = new ISO19139CHEtoGM03small(schemaLocation, xslFilename);
+        ISO19139CHEtoGM03small converter = new ISO19139CHEtoGM03small(schemaLocation, IO.toPath(xslFilename));
 
         converter.convert(xmlFilenames, "ISO19139CHEtoGM03small.main");
     }

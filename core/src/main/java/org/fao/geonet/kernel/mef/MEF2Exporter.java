@@ -67,25 +67,26 @@ class MEF2Exporter {
 	 * @return MEF2 File
 	 * @throws Exception
 	 */
-	public static String doExport(ServiceContext context, Set<String> uuids,
+	public static Path doExport(ServiceContext context, Set<String> uuids,
             Format format, boolean skipUUID, Path stylePath, boolean resolveXlink, boolean removeXlinkAttribute,
             boolean skipError) throws Exception {
 
 		Path file = Files.createTempFile("mef-", ".mef");
         try (FileSystem zipFs = ZipUtil.createZipFs(file)) {
-        for (Object uuid1 : uuids) {
-            String uuid = (String) uuid1;
-            try {
-                createMetadataFolder(context, uuid, zipFs, skipUUID, stylePath,
-                    format, resolveXlink, removeXlinkAttribute);
-            } catch (Throwable t) {
-                if (skipError) {
-                    Log.error(Geonet.MEF, "Error exporting metadata to MEF file: " + uuid1, t);
-                } else {
-                    if (t instanceof RuntimeException) {
-                        throw (RuntimeException) t;
-        }
-                    throw new RuntimeException(t);
+            for (Object uuid1 : uuids) {
+                String uuid = (String) uuid1;
+                try {
+                    createMetadataFolder(context, uuid, zipFs, skipUUID, stylePath,
+                            format, resolveXlink, removeXlinkAttribute);
+                } catch (Throwable t) {
+                    if (skipError) {
+                        Log.error(Geonet.MEF, "Error exporting metadata to MEF file: " + uuid1, t);
+                    } else {
+                        if (t instanceof RuntimeException) {
+                            throw (RuntimeException) t;
+                        }
+                        throw new RuntimeException(t);
+                    }
                 }
             }
         }

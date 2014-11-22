@@ -1,12 +1,25 @@
 package org.fao.geonet.geocat.services.gm03;
 
+import jeeves.server.context.ServiceContext;
+import net.sf.saxon.om.Axis;
+import net.sf.saxon.om.AxisIterator;
+import net.sf.saxon.om.NodeInfo;
+import net.sf.saxon.pattern.NodeKindTest;
+import org.apache.commons.lang.ArrayUtils;
+import org.fao.geonet.Constants;
+import org.fao.geonet.util.GeocatXslUtil;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.TransformerFactoryFactory;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -15,9 +28,9 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -29,21 +42,6 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-
-import jeeves.constants.Jeeves;
-import jeeves.server.context.ServiceContext;
-import net.sf.saxon.om.Axis;
-import net.sf.saxon.om.AxisIterator;
-import net.sf.saxon.om.NodeInfo;
-import net.sf.saxon.pattern.NodeKindTest;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.fao.geonet.Constants;
-import org.fao.geonet.util.GeocatXslUtil;
-import org.fao.geonet.utils.TransformerFactoryFactory;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 public class TranslateAndValidate {
 	public static final SchemaFactory SCHEMA_FACTORY = SchemaFactory
@@ -316,11 +314,11 @@ public class TranslateAndValidate {
     			append("GM03to19139CHE" ).
     			append( SEP);
     	
-    	String finalWebappDir;
+    	Path finalWebappDir;
 		if(webappDir == null || webappDir.isEmpty()) {
     		finalWebappDir = ServiceContext.get().getAppPath();
     	} else {
-    		finalWebappDir = webappDir;
+    		finalWebappDir = IO.toPath(webappDir);
     	}
 		
 		if(finalWebappDir.endsWith(SEP)) {

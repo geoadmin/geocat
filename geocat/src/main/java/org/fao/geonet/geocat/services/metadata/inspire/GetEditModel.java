@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -165,7 +166,7 @@ public class GetEditModel implements Service {
     };
 
     @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
 
     }
 
@@ -470,14 +471,14 @@ public class GetEditModel implements Service {
         final SchemaManager schemaManager = context.getBean(SchemaManager.class);
         final MetadataSchema iso19139CHESchema = schemaManager.getSchema("iso19139.che");
         final MetadataSchema iso19139Schema = schemaManager.getSchema("iso19139");
-        final Element codelists = cacheManager.get(context, true, iso19139Schema.getSchemaDir() + "/loc", "codelists.xml",
-                context.getLanguage(), "ger", true, true);
-        final Element cheCodelistExtensions = cacheManager.get(context, true, iso19139CHESchema.getSchemaDir() + "/loc", "codelists.xml",
-                context.getLanguage(), "ger", true, true);
-        final Element labels = cacheManager.get(context, true, iso19139Schema.getSchemaDir() + "/loc", "labels.xml",
-                context.getLanguage(), "ger", true, true);
-        final Element labelExtensions = cacheManager.get(context, true, iso19139CHESchema.getSchemaDir() + "/loc", "labels.xml",
-                context.getLanguage(), "ger", true, true);
+        final Element codelists = cacheManager.get(context, true, iso19139Schema.getSchemaDir().resolve("loc"), "codelists.xml",
+                context.getLanguage(), "ger", true);
+        final Element cheCodelistExtensions = cacheManager.get(context, true, iso19139CHESchema.getSchemaDir().resolve("loc"), "codelists.xml",
+                context.getLanguage(), "ger", true);
+        final Element labels = cacheManager.get(context, true, iso19139Schema.getSchemaDir().resolve("loc"), "labels.xml",
+                context.getLanguage(), "ger", true);
+        final Element labelExtensions = cacheManager.get(context, true, iso19139CHESchema.getSchemaDir().resolve("loc"), "labels.xml",
+                context.getLanguage(), "ger", true);
 
 
         addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:CI_DateTypeCode", "dateTypeOptions", null);
@@ -946,7 +947,7 @@ public class GetEditModel implements Service {
         Processor.processXLink(metadata, context);
         metadata.removeAttribute("schemaLocation", Geonet.Namespaces.XSI);
 
-        Element validationMd = Xml.transform(metadata, context.getAppPath() + "/xsl/add-charstring.xsl");
+        Element validationMd = Xml.transform(metadata, context.getAppPath().resolve("xsl/add-charstring.xsl"));
         final boolean valid = context.getBean(DataManager.class).validate(validationMd);
         lib.enumerateTree(metadata);
 

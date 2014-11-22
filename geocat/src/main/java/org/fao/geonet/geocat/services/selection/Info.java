@@ -3,32 +3,34 @@ package org.fao.geonet.geocat.services.selection;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Info implements Service {
 
     private static final String EMAIL_TEMPLATES = "emailTemplates.xml";
-    private String appPath;
+    private Path appPath;
 
     @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         this.appPath = appPath;
     }
 
     @Override
     public Element exec(Element params, ServiceContext context) throws Exception {
         synchronized (this) {
-            File templates = new File(Resources.locateResourcesDir(context), EMAIL_TEMPLATES);
-            if (!templates.exists()) {
-                File base = new File(new File(appPath, "resources"), EMAIL_TEMPLATES);
-                FileUtils.copyFile(base, templates);
+            Path templates = Resources.locateResourcesDir(context).resolve(EMAIL_TEMPLATES);
+            if (!Files.exists(templates)) {
+                Path base = appPath.resolve("resources").resolve(EMAIL_TEMPLATES);
+                IO.copyDirectoryOrFile(base, templates, false);
             }
         }
-        return context.getXmlCacheManager().get(context, false, Resources.locateResourcesDir(context), EMAIL_TEMPLATES, "eng", "eng", true, false);
+        return context.getXmlCacheManager().get(context, false, Resources.locateResourcesDir(context), EMAIL_TEMPLATES, "eng",
+                "eng", true);
     }
 
 }

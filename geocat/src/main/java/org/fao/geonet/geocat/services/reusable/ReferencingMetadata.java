@@ -40,6 +40,7 @@ import org.fao.geonet.util.GeocatXslUtil;
 import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -114,7 +115,7 @@ public class ReferencingMetadata implements Service
         return response;
     }
 
-    public void init(String appPath, ServiceConfig params) throws Exception
+    public void init(Path appPath, ServiceConfig params) throws Exception
     {
     }
 

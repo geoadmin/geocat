@@ -32,8 +32,8 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
-import org.fao.geonet.geocat.kernel.extent.Source;
 import org.fao.geonet.geocat.kernel.extent.FeatureType;
+import org.fao.geonet.geocat.kernel.extent.Source;
 import org.fao.geonet.util.LangUtils;
 import org.geotools.data.FeatureStore;
 import org.geotools.gml2.GMLConfiguration;
@@ -45,6 +45,7 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.file.Path;
 import java.util.Arrays;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -140,7 +141,7 @@ public class Add implements Service
         public abstract Geometry parse(String geomParam) throws Exception;
     }
 
-    public void init(String appPath, ServiceConfig params) throws Exception
+    public void init(Path appPath, ServiceConfig params) throws Exception
     {
     }
 

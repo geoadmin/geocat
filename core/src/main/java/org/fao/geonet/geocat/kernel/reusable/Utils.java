@@ -63,6 +63,7 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -348,14 +349,14 @@ public final class Utils {
 
     public static SharedObjectStrategy strategy( ReusableTypes reusableType, ServiceContext context ) throws Exception {
         SharedObjectStrategy strategy = null;
-        String appPath = context.getAppPath();
+        Path appPath = context.getAppPath();
 
         String baseUrl = mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));
         String language = context.getLanguage();
 
         switch( reusableType ) {
         case extents:
-            strategy = new ExtentsStrategy(baseUrl, appPath, context.getBean(ExtentManager.class), language);
+            strategy = new ExtentsStrategy(appPath, context.getBean(ExtentManager.class), language);
             break;
         case keywords:
             final ThesaurusManager thesaurusMan = context.getBean(ThesaurusManager.class);
@@ -412,7 +413,7 @@ public final class Utils {
         }
     }
 
-    public static String translate( String appPath, String langCode, String key, String separator ) throws IOException, JDOMException {
+    public static String translate(Path appPath, String langCode, String key, String separator ) throws IOException, JDOMException {
         String[] translations = {LangUtils.translate(appPath, "ger", key, ""), LangUtils.translate(appPath, "fre", key, ""),
                 LangUtils.translate(appPath, "eng", key, ""), LangUtils.translate(appPath, "ita", key, "")};
 

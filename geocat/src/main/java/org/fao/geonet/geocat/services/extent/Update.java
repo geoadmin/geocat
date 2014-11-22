@@ -51,6 +51,7 @@ import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.feature.type.Name;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
@@ -74,7 +75,7 @@ public class Update implements Service
 
     private static final Logger LOGGER = Logging.getLogger("org.geotools.data.communication");
 
-	public void init(String appPath, ServiceConfig params) throws Exception
+	public void init(Path appPath, ServiceConfig params) throws Exception
     {
     }
 
@@ -179,7 +180,7 @@ public class Update implements Service
         responseElem.setText("Updated features with id= " + id);
         responseElem.addContent(changes);
 
-        final ExtentsStrategy strategy = new ExtentsStrategy (context.getBaseUrl(), context.getAppPath(),
+        final ExtentsStrategy strategy = new ExtentsStrategy (context.getAppPath(),
                 extentMan, context.getLanguage());
         ArrayList<String> fields = new ArrayList<String>();
 

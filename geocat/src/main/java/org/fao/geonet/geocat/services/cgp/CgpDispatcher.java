@@ -36,12 +36,15 @@ import org.fao.geonet.geocat.services.gm03.ISO19139CHEtoGM03small;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.input.DOMBuilder;
 import org.jdom.output.DOMOutputter;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,27 +59,27 @@ public class CgpDispatcher implements Service
 	public static final Namespace NAMESPACE_GM03SMALL = Namespace.getNamespace("gm03s", "http://www.geocat.ch/2003/05/gateway/GM03Small");
 	public static final String MD_ATTR_CATEGORY = "/MD_Metadata/identificationInfo/topicCategory";
 
-	private File xsl19139CHEtoGM03;
-	private String appPath;
+	private Path xsl19139CHEtoGM03;
+	private Path appPath;
 
-	public void init(String appPath, ServiceConfig params) throws Exception
+	public void init(Path appPath, ServiceConfig params) throws Exception
 	{
 		this.appPath = appPath;
 
 		xsl19139CHEtoGM03 = initFile(params.getValue("xsl19139CHEtoGM03"));
 	}
 
-	public File initFile(String path)
+	public Path initFile(String path)
 	{
-		File file = new File(path);
+		Path file = IO.toPath(path);
 		if (!file.isAbsolute())
 		{
-			file = new File(appPath + path);
+			file = appPath.resolve(path);
 		}
 
-		if (!file.exists() || !file.canRead())
+		if (!Files.exists(file) || !Files.isReadable(file))
 		{
-			throw new IllegalArgumentException("Cannot find or read file: " + file.getAbsolutePath());
+			throw new IllegalArgumentException("Cannot find or read file: " + file.toAbsolutePath());
 		}
 
 		return file;
@@ -312,7 +315,7 @@ public class CgpDispatcher implements Service
 	private List<Element> iso19139CHEtoGM03(List<Element> iso19139Elms) throws Exception
 	{
 		// Setup XSL transform helper
-		ISO19139CHEtoGM03Base toGm03 = new ISO19139CHEtoGM03small(null, xsl19139CHEtoGM03.getAbsolutePath());
+		ISO19139CHEtoGM03Base toGm03 = new ISO19139CHEtoGM03small(null, xsl19139CHEtoGM03.toAbsolutePath());
 
 		// We need w3c XML DOM Documents for XSL transform
 		org.w3c.dom.Document domIn, domOut;

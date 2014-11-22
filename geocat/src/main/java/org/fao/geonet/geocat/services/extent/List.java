@@ -48,6 +48,7 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.AbstractCollection;
 import java.util.Arrays;
 import java.util.Collection;
@@ -119,7 +120,7 @@ public class List implements Service
     private Collection<String>  defaultTypesToShow;
     private int                 maxFeatures;
 
-    public void init(String appPath, ServiceConfig params) throws Exception
+    public void init(Path appPath, ServiceConfig params) throws Exception
     {
         java.util.List<Element> types = params.getChildren("typename");
         if (types != null) {

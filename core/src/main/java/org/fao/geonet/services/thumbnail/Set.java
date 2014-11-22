@@ -221,50 +221,6 @@ public class Set {
 		return response;
 	}
 
-	public void addHarvested(Element params, ServiceContext context, DataManager dataMan) throws Exception
-        {
-            String  id            = Util.getParam     (params, Params.ID);
-            String dataDir = createDataDir(id, context);
-            String  type          = Util.getParam     (params, Params.TYPE);
-//            String  version       = Util.getParam     (params, Params.VERSION);
-            String  file          = Util.getParam     (params, Params.FNAME);
-            String  scalingDir    = Util.getParam     (params, Params.SCALING_DIR, "width");
-            boolean scaling       = Util.getParam     (params, Params.SCALING, false);
-            int     scalingFactor = Util.getParam     (params, Params.SCALING_FACTOR, 1);
-
-            boolean createSmall        = Util.getParam(params, Params.CREATE_SMALL,        false);
-            String  smallScalingDir    = Util.getParam(params, Params.SMALL_SCALING_DIR,   "");
-            int     smallScalingFactor = Util.getParam(params, Params.SMALL_SCALING_FACTOR, 0);
-
-
-
-            //-----------------------------------------------------------------------
-            //--- create the small thumbnail, removing the old one
-
-            if (createSmall) {
-                String smallFile = getFileName(file, true);
-                String inFile    = context.getUploadDir() + file;
-                String outFile   = dataDir + smallFile;
-                removeOldThumbnail(context , id, "small", false);
-                createThumbnail(inFile, outFile, smallScalingFactor, smallScalingDir);
-                dataMan.setThumbnail(context, id, true, smallFile, false);
-            }
-
-            //-----------------------------------------------------------------------
-            //--- create the requested thumbnail
-            
-            removeOldThumbnail(context, id, type, false);
-            saveThumbnail(scaling, file, type, dataDir, scalingDir, scalingFactor, dataMan, id, context);
-
-            dataMan.indexMetadata(id, false);
-        }
-        
-        public void removeHarvested(Element params, ServiceContext context) throws Exception {
-            String  id   = Util.getParam(params, Params.ID);
-            String  type = Util.getParam(params, Params.TYPE);
-            removeOldThumbnail(context,id,type, true);
-        }
-
 	//--------------------------------------------------------------------------
 	//---
 	//--- Private methods

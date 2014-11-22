@@ -22,6 +22,7 @@ import org.opengis.referencing.operation.MathTransform;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,7 +43,7 @@ public enum ExtentFormat
     {
         @SuppressWarnings("unchecked")
         @Override
-        public Element format(GMLConfiguration gmlConfiguration, String appPath, SimpleFeature feature, FeatureType featureType, Source wfs,
+        public Element format(GMLConfiguration gmlConfiguration, Path appPath, SimpleFeature feature, FeatureType featureType, Source wfs,
                 String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision) throws Exception
         {
             Element fullObject = gmdFormat(gmlConfiguration, appPath, feature, GMD_POLYGON, featureType, extentTypeCode, crs,
@@ -77,7 +78,7 @@ public enum ExtentFormat
     GMD_BBOX
     {
         @Override
-        public Element format(GMLConfiguration gmlConfiguration, String appPath, SimpleFeature feature, FeatureType featureType, Source wfs,
+        public Element format(GMLConfiguration gmlConfiguration, Path appPath, SimpleFeature feature, FeatureType featureType, Source wfs,
                 String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision) throws Exception
         {
             return gmdFormat(gmlConfiguration, appPath, feature, this, featureType, extentTypeCode, crs, coordPrecision);
@@ -86,7 +87,7 @@ public enum ExtentFormat
     GMD_POLYGON
     {
         @Override
-        public Element format(GMLConfiguration gmlConfiguration, String appPath, SimpleFeature feature, FeatureType featureType, Source wfs,
+        public Element format(GMLConfiguration gmlConfiguration, Path appPath, SimpleFeature feature, FeatureType featureType, Source wfs,
                 String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision) throws Exception
         {
             return gmdFormat(gmlConfiguration, appPath, feature, this, featureType, extentTypeCode, crs, coordPrecision);
@@ -95,7 +96,7 @@ public enum ExtentFormat
     GMD_COMPLETE
     {
         @Override
-        public Element format(GMLConfiguration gmlConfiguration, String appPath, SimpleFeature feature, FeatureType featureType, Source wfs,
+        public Element format(GMLConfiguration gmlConfiguration, Path appPath, SimpleFeature feature, FeatureType featureType, Source wfs,
                 String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision) throws Exception
         {
             return gmdFormat(gmlConfiguration, appPath, feature, this, featureType, extentTypeCode, crs, coordPrecision);
@@ -104,14 +105,14 @@ public enum ExtentFormat
     WKT
     {
         @Override
-        public Element format(GMLConfiguration gmlConfiguration, String appPath, SimpleFeature feature, FeatureType featureType, Source wfs,
+        public Element format(GMLConfiguration gmlConfiguration, Path appPath, SimpleFeature feature, FeatureType featureType, Source wfs,
                 String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision) throws Exception
         {
             return formatWKT(feature, featureType, wfs, crs, coordPrecision);
         }
     };
 
-    public abstract Element format(GMLConfiguration gmlConfiguration, String appPath, SimpleFeature feature, FeatureType featureType, Source wfs,
+    public abstract Element format(GMLConfiguration gmlConfiguration, Path appPath, SimpleFeature feature, FeatureType featureType, Source wfs,
             String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision) throws Exception;
 
     public static ExtentFormat lookup(String formatParam)
@@ -126,7 +127,7 @@ public enum ExtentFormat
     }
 
 
-    private static Element gmdFormat(GMLConfiguration gmlConfiguration, String appPath, SimpleFeature feature, ExtentFormat format,
+    private static Element gmdFormat(GMLConfiguration gmlConfiguration, Path appPath, SimpleFeature feature, ExtentFormat format,
                                      FeatureType featureType, String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision)
             throws Exception
     {
@@ -213,7 +214,7 @@ public enum ExtentFormat
     }
 
     @SuppressWarnings("unchecked")
-    private static Element createGeoIdElem(String appPath, String attribute) throws Exception
+    private static Element createGeoIdElem(Path appPath, String attribute) throws Exception
     {
 
         Element geoEl = new Element("geographicElement", ExtentManager.GMD_NAMESPACE);

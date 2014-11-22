@@ -1,14 +1,9 @@
 package org.fao.geonet.geocat.services.selection;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.geocat.PublishRecord;
@@ -20,6 +15,11 @@ import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
+
+import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * Select a list of elements stored in session For all the MD stored in the
@@ -38,7 +38,7 @@ public class Unpublish implements Service {
     // ---
     // --------------------------------------------------------------------------
 
-    public void init(String appPath, ServiceConfig config) throws Exception {
+    public void init(Path appPath, ServiceConfig config) throws Exception {
     }
 
     // --------------------------------------------------------------------------

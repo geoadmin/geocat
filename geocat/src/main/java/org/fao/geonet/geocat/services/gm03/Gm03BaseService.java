@@ -1,15 +1,9 @@
 package org.fao.geonet.geocat.services.gm03;
 
-import java.io.File;
-
-import javax.xml.transform.TransformerConfigurationException;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -17,34 +11,37 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.exceptions.MissingParameterEx;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 import org.jdom.input.DOMBuilder;
 import org.jdom.output.DOMOutputter;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-public abstract class Gm03BaseService implements Service {
-    protected File xsl;
-    private File xsd;
+import java.nio.file.Path;
+import javax.xml.transform.TransformerConfigurationException;
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+public abstract class Gm03BaseService implements Service {
+    protected Path xsl;
+    private Path xsd;
+
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         final String xslTxt = params.getValue("xsl");
-        xsl = new File(xslTxt);
+        xsl = IO.toPath(xslTxt);
         if (!xsl.isAbsolute())
-            xsl = new File(appPath + xslTxt);
+            xsl = appPath.resolve(xslTxt);
 
         final String xsdTxt = params.getValue("xsd");
-        xsd = new File(xsdTxt);
+        xsd = IO.toPath(xsdTxt);
         if (!xsd.isAbsolute())
-            xsd = new File(appPath + xsdTxt);
+            xsd = appPath.resolve(xsdTxt);
     }
 
     public Element exec(Element params, ServiceContext context) throws Exception {
         boolean validate = Util.getParam(params, "validate", false);
-        final File xsdFile;
+        final Path xsdFile;
         if (validate) {
             xsdFile = xsd;
         } else {
@@ -122,5 +119,5 @@ public abstract class Gm03BaseService implements Service {
         }
     }
 
-    protected abstract ISO19139CHEtoGM03Base createConverter(File xsdFile) throws SAXException, TransformerConfigurationException;
+    protected abstract ISO19139CHEtoGM03Base createConverter(Path xsdFile) throws SAXException, TransformerConfigurationException;
 }

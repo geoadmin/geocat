@@ -1,25 +1,23 @@
 package org.fao.geonet.geocat.services.thesaurus;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.fao.geonet.GeonetContext;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.jdom.Element;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Duplicate implements Service {
 
     @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         
     }
 

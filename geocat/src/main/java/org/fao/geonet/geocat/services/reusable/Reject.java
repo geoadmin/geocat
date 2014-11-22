@@ -53,6 +53,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -229,7 +230,7 @@ public class Reject implements Service
         Utils.sendEmail(new SendEmailParameter(context, msg, emailInfo, baseURL, msgHeader, subject, testing));
     }
 
-    public void init(String appPath, ServiceConfig params) throws Exception
+    public void init(Path appPath, ServiceConfig params) throws Exception
     {
     }
 

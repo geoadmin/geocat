@@ -20,7 +20,7 @@ import java.nio.file.Path;
 
 public abstract class AbstractThesaurusBasedTest {
 	protected static final String THESAURUS_KEYWORD_NS = "http://abstract.thesaurus.test#";
-    protected static final IsoLanguagesMapper isoLangMapper = new IsoLanguagesMapper() {
+    public static final IsoLanguagesMapper isoLangMapper = new IsoLanguagesMapper() {
 		{
             iso639_2_to_iso639_1IsoLanguagesMap.put("eng", "en");
             iso639_2_to_iso639_1IsoLanguagesMap.put("deu", "de");

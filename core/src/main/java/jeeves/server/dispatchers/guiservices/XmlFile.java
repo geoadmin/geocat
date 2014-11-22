@@ -51,7 +51,6 @@ public class XmlFile implements GuiService
 	private final String  language;
 	private final String  defaultLang;
 	private final boolean localized;
-	private boolean isExternal;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -84,7 +83,6 @@ public class XmlFile implements GuiService
         base = basePath;
 
 		language = config.getAttributeValue(ConfigFile.Xml.Attr.LANGUAGE);
-		this.isExternal = isEternal;
 
 		//--- handle localized attrib
 
@@ -111,7 +109,7 @@ public class XmlFile implements GuiService
         if(localized || preferedLanguage  == null) preferedLanguage = lang;
         if(preferedLanguage == null) preferedLanguage = defaultLang;
 
-        Element element = context.getXmlCacheManager().get(context, localized, base, file, preferedLanguage, defaultLang, makeCopy, isExternal);
+        Element element = context.getXmlCacheManager().get(context, localized, base, file, preferedLanguage, defaultLang, makeCopy);
         element.setName(name);
         return element;
 	}

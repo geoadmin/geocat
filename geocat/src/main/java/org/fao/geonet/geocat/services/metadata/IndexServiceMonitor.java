@@ -26,21 +26,19 @@ package org.fao.geonet.geocat.services.metadata;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
+
+import java.nio.file.Path;
 
 /**
  * Test if system is indexing
  */
 public class IndexServiceMonitor implements Service {
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	public Element exec(Element params, ServiceContext context) throws Exception {
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
 	    return new Element("IndexReport").setText(""+context.getBean(DataManager.class).isIndexing());
     }
 }

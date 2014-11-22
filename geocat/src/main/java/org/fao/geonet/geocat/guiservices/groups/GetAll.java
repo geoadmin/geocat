@@ -31,6 +31,8 @@ import org.fao.geonet.repository.specification.GroupSpecs;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specifications;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 /** Service used to return all groups in the system
@@ -38,7 +40,7 @@ import org.springframework.data.jpa.domain.Specifications;
 
 public class GetAll implements Service
 {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

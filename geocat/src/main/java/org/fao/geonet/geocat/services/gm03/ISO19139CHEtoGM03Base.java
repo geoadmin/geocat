@@ -3,9 +3,22 @@ package org.fao.geonet.geocat.services.gm03;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.fao.geonet.utils.TransformerFactoryFactory;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.regex.Pattern;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -17,14 +30,6 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.regex.Pattern;
 
 public abstract class ISO19139CHEtoGM03Base {
     protected static final String NS = "http://www.interlis.ch/INTERLIS2.3";
@@ -33,13 +38,13 @@ public abstract class ISO19139CHEtoGM03Base {
     protected final Schema schema;
     protected Transformer xslt;
 
-    public ISO19139CHEtoGM03Base(File schemaLocation, String xslFilename) throws SAXException, TransformerConfigurationException {
+    public ISO19139CHEtoGM03Base(Path schemaLocation, Path xslFilename) throws SAXException, TransformerConfigurationException {
         if (schemaLocation != null) {
-            schema = SCHEMA_FACTORY.newSchema(schemaLocation);
+            schema = SCHEMA_FACTORY.newSchema(schemaLocation.toFile());
         } else {
             schema = null;
         }
-        xslt = TransformerFactoryFactory.getTransformerFactory().newTransformer(new StreamSource(xslFilename));
+        xslt = TransformerFactoryFactory.getTransformerFactory().newTransformer(new StreamSource(xslFilename.toFile()));
     }
 
     protected void convert(String[] xmlFilenames, String group) {
