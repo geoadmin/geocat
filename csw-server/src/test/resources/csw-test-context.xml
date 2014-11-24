@@ -7,6 +7,4 @@
         http://www.springframework.org/schema/context/spring-context-3.2.xsd
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="reusableObjectMaanger" class="org.fao.geonet.component.csw.MockReusableObjManager"/>
-
 </beans>

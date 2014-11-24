@@ -1,4 +1,4 @@
-package org.fao.geonet.component.csw;
+package org.fao.geonet.geocat.kernel.reusable;
 
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.geocat.kernel.reusable.ProcessParams;
