@@ -38,7 +38,7 @@ public class GeonetMockServletContext extends MockServletContext {
         String resourceLocation = super.getResourceLocation(path);
         if (resourceLocation.startsWith("/") || resourceLocation.startsWith("\\")) {
             resourceLocation = resourceLocation.substring(1);
-    }
+        }
         return this.resourcePath.resolve(resourceLocation).toString();
     }
 }

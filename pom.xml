@@ -433,11 +433,11 @@
         <artifactId>jts</artifactId>
         <version>1.13</version>
       </dependency>
-      <dependency>
-        <groupId>com.github.lookfirst</groupId>
-        <artifactId>sardine</artifactId>
-        <version>5.1-GEONETWORK</version>
-      </dependency>
+        <dependency>
+            <groupId>com.github.lookfirst</groupId>
+            <artifactId>sardine</artifactId>
+            <version>5.1-GEONETWORK</version>
+        </dependency>
 
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
@@ -445,7 +445,7 @@
             <version>2.3.7</version>
         </dependency>
 
-        <!-- universal character set detector -->
+      <!-- universal character set detector -->
       <dependency>
         <groupId>com.googlecode.juniversalchardet</groupId>
         <artifactId>juniversalchardet</artifactId>
@@ -1076,12 +1076,12 @@
       <url>http://download.osgeo.org/webdav/geotools/</url>
     </repository>
     <repository>
-        <snapshots>
-            <enabled>false</enabled>
-        </snapshots>
-        <id>boundless</id>
-        <name>Boundless repository</name>
-        <url>http://repo.boundlessgeo.com/main/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>boundless</id>
+      <name>Boundless repository</name>
+      <url>http://repo.boundlessgeo.com/main/</url>
     </repository>
 <!--
      <repository>
