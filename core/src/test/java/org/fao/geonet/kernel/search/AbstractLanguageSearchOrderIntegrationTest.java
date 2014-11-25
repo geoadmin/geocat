@@ -226,7 +226,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
                 "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"}, titles);
     }
 
-    @Test
+    @Test  //@Ignore
     public void freAutoDetect_RequestLangNotSorted_OnlyResultsContainingDataInSearchLanguageAllowed_UseDisplayLanguageAsPreferredLanguage() throws Exception {
         importMetadata("comment allez-vous aujourd'hui");
         setSearchSettings(ONLY_UI_LOCALE, false, true);
