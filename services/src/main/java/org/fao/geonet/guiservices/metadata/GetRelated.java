@@ -24,16 +24,20 @@
 package org.fao.geonet.guiservices.metadata;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Sets;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
@@ -45,6 +49,7 @@ import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.Show;
 import org.fao.geonet.services.relations.Get;
@@ -175,6 +180,8 @@ public class GetRelated implements Service, org.fao.geonet.kernel.RelatedMetadat
     private GeonetworkDataDirectory dataDirectory;
     @Autowired
     private DataManager dataManager;
+    @Autowired
+    MetadataRepository metadataRepository;
 
     public void init(Path appPath, ServiceConfig config) throws Exception {
         _config = config;
@@ -195,30 +202,57 @@ public class GetRelated implements Service, org.fao.geonet.kernel.RelatedMetadat
 
         final ServiceContext context = serviceManager.createServiceContext("xml.relation", lang, request);
 
-        if (id == null) {
-            id = Integer.valueOf(dataManager.getMetadataId(uuid));
+        Metadata md;
+        if (id != null) {
+             md = metadataRepository.findOne(id);
+
+            if (md == null) {
+                throw new IllegalArgumentException("No Metadata found with id " + id);
+            }
+        } else {
+            md = metadataRepository.findOneByUuid(uuid);
+
+            if (md == null) {
+                throw new IllegalArgumentException("No Metadata found with uuid " + uuid);
+            }
         }
+        id = md.getId();
+        uuid = md.getUuid();
+
         Element raw = new Element("root").addContent(getRelated(context, id, uuid, type, from, to, fast));
         Path relatedXsl = dataDirectory.getWebappDir().resolve("xsl/metadata/relation.xsl");
 
         final Element transform = Xml.transform(raw, relatedXsl);
+        final Set<String> acceptContentType = Sets.newHashSet(Iterators.forEnumeration(request.getHeaders("Accept")));
 
         byte[] response;
         String contentType;
-        if (request.getContentType() == null || request.getContentType().contains("xml")) {
-            response = Xml.getString(transform).getBytes(request.getCharacterEncoding());
+        if (acceptContentType == null ||
+            acceptsType(acceptContentType, "xml") ||
+            acceptContentType.contains("*/*")||
+            acceptContentType.contains("text/plain")) {
+            response = Xml.getString(transform).getBytes(Constants.CHARSET);
             contentType = "application/xml";
-        } else if (request.getContentType().contains("json")) {
-            response = Xml.getJSON(transform).getBytes(request.getCharacterEncoding());
+        } else if (acceptsType(acceptContentType, "json")) {
+            response = Xml.getJSON(transform).getBytes(Constants.CHARSET);
             contentType = "application/json";
         } else {
-            throw new IllegalArgumentException(request.getContentType() + " is not supported");
+            throw new IllegalArgumentException(acceptContentType + " is not supported");
         }
 
         MultiValueMap<String, String> headers = new HttpHeaders();
         headers.add("Content-Type", contentType);
 
         return new HttpEntity<>(response, headers);
+    }
+
+    private boolean acceptsType(Set<String> acceptContentType, String toCheck) {
+        for (String acceptable : acceptContentType) {
+            if (acceptable.contains(toCheck)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Element exec(Element params, ServiceContext context) throws Exception {

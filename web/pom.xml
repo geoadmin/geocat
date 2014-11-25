@@ -39,7 +39,7 @@
           <version>3.2.0</version>
       </dependency>
 
-    <dependency>
+      <dependency>
           <groupId>org.antlr</groupId>
           <artifactId>antlr-runtime</artifactId>
           <version>3.5.2</version>
@@ -489,8 +489,8 @@
           <scope>test</scope>
       </dependency>
 
-    <!-- Add dependencies to schema plugin
-    having a custom Bean to be loaded. -->
+      <!-- Add dependencies to schema plugin
+      having a custom Bean to be loaded. -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19139</artifactId>
