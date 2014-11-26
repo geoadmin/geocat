@@ -388,7 +388,7 @@ public class Aligner extends BaseAligner
 			// issue #133730 : CSW getting remote MD as dc format
 			String schema = dataMan.autodetectSchema(response);
 
-			if (schema.equals("csw-record") && params.outputSchema != null &&
+			if (schema != null && schema.equals("csw-record") && params.outputSchema != null &&
 					params.outputSchema.equals("http://www.opengis.net/cat/csw/2.0.2"))
 			{
 				schema = "dublin-core";

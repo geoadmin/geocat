@@ -39,14 +39,12 @@ import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.getSelection;
 
 /**
  * Allows for selecting one or more extents for operations such as deletion
- * 
+ *
  * @author jeichar
  */
-public class Select implements Service
-{
+public class Select implements Service {
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         final ExtentManager extentMan = context.getBean(ExtentManager.class);
 
         final ExtentSelection selection = getSelection(context);
@@ -57,7 +55,7 @@ public class Select implements Service
         synchronized (selectionIds) {
 
             @SuppressWarnings("unchecked")
-			java.util.Iterator<Object> iter = params.getChildren().iterator();
+            java.util.Iterator<Object> iter = params.getChildren().iterator();
             while (iter.hasNext()) {
                 Object next = iter.next();
                 if (next instanceof Element) {
@@ -81,8 +79,7 @@ public class Select implements Service
         return success;
     }
 
-    public void init(Path appPath, ServiceConfig params) throws Exception
-    {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
 }

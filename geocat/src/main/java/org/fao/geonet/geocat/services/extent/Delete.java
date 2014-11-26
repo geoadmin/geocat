@@ -31,8 +31,8 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.geocat.kernel.extent.ExtentSelection;
-import org.fao.geonet.geocat.kernel.extent.Source;
 import org.fao.geonet.geocat.kernel.extent.FeatureType;
+import org.fao.geonet.geocat.kernel.extent.Source;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
 import org.fao.geonet.geocat.services.reusable.Reject;
 import org.fao.geonet.util.LangUtils;
@@ -57,18 +57,15 @@ import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.getSelection;
 
 /**
  * Service for deleting extent objects from the WMS
- * 
+ *
  * @author jeichar
  */
-public class Delete implements Service
-{
+public class Delete implements Service {
 
-    public void init(Path appPath, ServiceConfig params) throws Exception
-    {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         final ExtentManager extentMan = context.getBean(ExtentManager.class);
         boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
         final String selection = Util.getParamText(params, SELECTION);
@@ -77,7 +74,7 @@ public class Delete implements Service
             return deleteSelection(params, getSelection(context), extentMan, context);
         }
 
-        if(!Boolean.parseBoolean(Util.getParam(params, "forceDelete", "false"))) {
+        if (!Boolean.parseBoolean(Util.getParam(params, "forceDelete", "false"))) {
             final String id = Util.getParamText(params, ID);
             String msg = LangUtils.loadString("reusable.rejectDefaultMsg", context.getAppPath(), context.getLanguage());
             boolean isValidated = !Util.getParamText(params, TYPENAME).contains("non_validated");
@@ -87,11 +84,10 @@ public class Delete implements Service
         }
     }
 
-    private Element deleteSingle(Element params, final ExtentManager extentMan) throws Exception
-    {
+    private Element deleteSingle(Element params, final ExtentManager extentMan) throws Exception {
         final String id = Util.getParamText(params, ID);
         final String typename = Util.getParamText(params, TYPENAME);
-        
+
         final Source wfs = extentMan.getSource();
         final FeatureType featureType = wfs.getFeatureType(typename);
         if (featureType == null) {
@@ -110,32 +106,28 @@ public class Delete implements Service
         return responseElem;
     }
 
-    private Element errorNotModifiable(FeatureType ft)
-    {
+    private Element errorNotModifiable(FeatureType ft) {
         return ExtentHelper.error(ft.typename + " is not a modifiable type, modifiable types are: "
-                + ft.wfs().listModifiable());
+                                  + ft.wfs().listModifiable());
     }
 
     private Element deleteSelection(Element params, ExtentSelection selection, ExtentManager extentMan,
-            ServiceContext context) throws Exception
-    {
-    	boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
+                                    ServiceContext context) throws Exception {
+        boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
         Element element = new Element("success");
 
         FilterFactory2 filterFactory = CommonFactoryFinder.getFilterFactory2(GeoTools.getDefaultHints());
         Set<String> ids = new HashSet<String>();
-        
+
         FeatureType currentType = null;
 
         final Set<Pair<FeatureType, String>> selectionIds = selection.getIds();
         synchronized (selectionIds) {
             @SuppressWarnings("unchecked")
-			Pair<FeatureType, String>[] array = selectionIds.toArray(new Pair[selectionIds.size()]);
-            Arrays.sort(array, new Comparator<Pair<FeatureType, String>>()
-            {
+            Pair<FeatureType, String>[] array = selectionIds.toArray(new Pair[selectionIds.size()]);
+            Arrays.sort(array, new Comparator<Pair<FeatureType, String>>() {
 
-                public int compare(Pair<FeatureType, String> o1, Pair<FeatureType, String> o2)
-                {
+                public int compare(Pair<FeatureType, String> o1, Pair<FeatureType, String> o2) {
                     return o1.one().typename.compareTo(o2.two());
                 }
 
@@ -169,8 +161,7 @@ public class Delete implements Service
     }
 
     private void doDelete(FilterFactory2 filterFactory, FeatureType currentType, Set<String> ids, ServiceContext context, boolean testing)
-            throws Exception
-    {
+            throws Exception {
 
         String msg = "";// TODO
         boolean isValidated = !currentType.typename.contains("non_validated");

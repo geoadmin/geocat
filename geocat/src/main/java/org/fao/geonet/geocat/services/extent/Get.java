@@ -29,8 +29,8 @@ import org.fao.geonet.Util;
 import org.fao.geonet.geocat.kernel.extent.ExtentFormat;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
-import org.fao.geonet.geocat.kernel.extent.Source;
 import org.fao.geonet.geocat.kernel.extent.FeatureType;
+import org.fao.geonet.geocat.kernel.extent.Source;
 import org.fao.geonet.kernel.region.Region;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Query;
@@ -58,19 +58,19 @@ import java.util.Set;
  *
  * @author jeichar
  */
-public class Get implements Service
-{
+public class Get implements Service {
 
     private final GMLConfiguration gmlConfiguration = new GMLConfiguration();
+
     {
-    	@SuppressWarnings("unchecked")
-		Set<Object> props = gmlConfiguration.getProperties();
-    	props.add(GMLConfiguration.NO_SRS_DIMENSION);
+        @SuppressWarnings("unchecked")
+        Set<Object> props = gmlConfiguration.getProperties();
+        props.add(GMLConfiguration.NO_SRS_DIMENSION);
     }
+
     private Path _appPath;
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         Util.toLowerCase(params);
         final ExtentManager extentMan = context.getBean(ExtentManager.class);
 
@@ -81,10 +81,10 @@ public class Get implements Service
         final String epsgCode = Util.getParamText(params, ExtentHelper.CRS_PARAM);
         CoordinateReferenceSystem crs = DefaultGeographicCRS.WGS84;
         int coordDigits = ExtentHelper.COORD_DIGITS;
-        if(epsgCode != null) {
+        if (epsgCode != null) {
             crs = Region.decodeCRS(epsgCode);
-            if(epsgCode.contains("21781")) {
-        	coordDigits = 0;
+            if (epsgCode.contains("21781")) {
+                coordDigits = 0;
             }
         }
 
@@ -103,7 +103,7 @@ public class Get implements Service
             return errorTypename(extentMan, typename);
         }
 
-        if (id==null || id.equals("SKIP") || id.length() == 0) {
+        if (id == null || id.equals("SKIP") || id.length() == 0) {
             final Element response = new Element("response");
             ExtentFormat.formatFeatureType(featureType, wfs, response);
             return response;
@@ -112,11 +112,11 @@ public class Get implements Service
         final FeatureSource<SimpleFeatureType, SimpleFeature> featureSource = featureType.getFeatureSource();
 
         String[] properties;
-        if(featureSource.getSchema().getDescriptor(featureType.showNativeColumn) != null) {
-            properties = new String[]{ featureType.idColumn, featureSource.getSchema().getGeometryDescriptor().getLocalName(),
-                    featureType.descColumn, featureType.geoIdColumn, featureType.showNativeColumn };
+        if (featureSource.getSchema().getDescriptor(featureType.showNativeColumn) != null) {
+            properties = new String[]{featureType.idColumn, featureSource.getSchema().getGeometryDescriptor().getLocalName(),
+                    featureType.descColumn, featureType.geoIdColumn, featureType.showNativeColumn};
         } else {
-            properties = new String[]{ featureType.idColumn, featureSource.getSchema().getGeometryDescriptor().getLocalName(),
+            properties = new String[]{featureType.idColumn, featureSource.getSchema().getGeometryDescriptor().getLocalName(),
                     featureType.descColumn, featureType.geoIdColumn};
         }
 
@@ -124,27 +124,28 @@ public class Get implements Service
         Class<?> idBinding = featureType.getFeatureSource().getSchema().getDescriptor(featureType.idColumn).getType().getBinding();
         String finalId = id;
         try {
-	        if(id.contains(".") && (Short.class.isAssignableFrom(idBinding) || Integer.class.isAssignableFrom(idBinding) || Long.class.isAssignableFrom(idBinding))) {
-        		finalId = id.substring(0, id.indexOf('.'));
-	        }
+            if (id.contains(".") && (Short.class.isAssignableFrom(idBinding) || Integer.class.isAssignableFrom(idBinding) || Long.class
+                    .isAssignableFrom(idBinding))) {
+                finalId = id.substring(0, id.indexOf('.'));
+            }
         } catch (Exception e) {
-        	e.printStackTrace();
+            e.printStackTrace();
         }
         final Filter filter = filterFactory2.equals(filterFactory2.property(featureType.idColumn), filterFactory2
-        		.literal(finalId));
+                .literal(finalId));
 
-        final Query q = featureType.createQuery(filter,properties);
+        final Query q = featureType.createQuery(filter, properties);
 
         final Element xml = resolve(format, id, featureSource, q, featureType, wfs, extentTypeCode, crs, coordDigits);
         return xml;
     }
 
     private Element resolve(ExtentFormat format, String id, FeatureSource<SimpleFeatureType, SimpleFeature> featureSource,
-            Query q, FeatureType featureType, Source wfs, String extentTypeCode, CoordinateReferenceSystem crs, int coordDigits) throws Exception, Exception
-    {
+                            Query q, FeatureType featureType, Source wfs, String extentTypeCode, CoordinateReferenceSystem crs,
+                            int coordDigits) throws Exception, Exception {
         FeatureIterator<SimpleFeature> features = null;
         try {
-        	features = featureSource.getFeatures(q).features();
+            features = featureSource.getFeatures(q).features();
             if (features.hasNext()) {
                 final SimpleFeature feature = features.next();
 
@@ -153,21 +154,19 @@ public class Get implements Service
                 return ExtentHelper.error("no features founds with ID=" + id);
             }
         } finally {
-        	if (features != null) {
-        		features.close();
-        	}
+            if (features != null) {
+                features.close();
+            }
         }
     }
 
-    private Element errorTypename(ExtentManager extentMan, String typename) throws IOException
-    {
+    private Element errorTypename(ExtentManager extentMan, String typename) throws IOException {
         final String options = Arrays.toString(extentMan.getDataStore().getTypeNames());
         final String msg = "Typename: " + typename + " does not exist.  Available options are: " + options;
         return ExtentHelper.error(msg);
     }
 
-    public void init(Path appPath, ServiceConfig params) throws Exception
-    {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         this._appPath = appPath;
     }
 

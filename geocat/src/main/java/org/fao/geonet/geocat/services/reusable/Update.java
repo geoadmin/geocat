@@ -3,9 +3,7 @@ package org.fao.geonet.geocat.services.reusable;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.reusable.ProcessParams;
 import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.geocat.kernel.reusable.log.ReusableObjectLogger;
@@ -30,15 +28,15 @@ public class Update implements Service {
 
         Element xml = Xml.loadString(xmlString, false);
         Element wrapped = new Element("wrapped").addContent(xml);
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-        ProcessParams processParams = new ProcessParams(ReusableObjectLogger.THREAD_SAFE_LOGGER, null, xml, wrapped, false,defaultLang,context);
+        ProcessParams processParams = new ProcessParams(ReusableObjectLogger.THREAD_SAFE_LOGGER, null, xml, wrapped, false,
+                defaultLang, context);
         Collection<Element> newElements = context.getBean(ReusableObjManager.class).updateXlink(xml, processParams);
-        
+
         ArrayList<Element> updated = new ArrayList<Element>(newElements);
-        updated.add(0,xml);
+        updated.add(0, xml);
         xml.detach();
-        
+
         return new Element("updated").addContent(updated);
     }
 }

@@ -1122,11 +1122,12 @@
     <module>oaipmh</module>
     <module>schemas</module>
     <module>core</module>
+    <module>geocat</module>
     <module>csw-server</module>
     <module>harvesters</module>
     <module>healthmonitor</module>
     <module>services</module>
-    <module>geocat</module>
+    <module>geocat-services</module>
     <module>schemas-test</module>
     <module>web-client</module>
     <module>wro4j</module>

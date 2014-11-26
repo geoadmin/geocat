@@ -86,9 +86,9 @@ public class Util
 
     // GEOCAT
     public static void warnAdminByMail(ServiceContext context, String mailBody, String server, String UUID, String filePath) {
-        String fServer = (server == null ? "" : String.format("\n\t- Server : %s", server));
-        String fUUID = (UUID == null ? "" : String.format("\n\t- UUID : %s", UUID));
-        String fFile = (filePath == null ? "" : String.format("\n\t- File : %s", filePath));
+        String fServer = (server == null ? "" : String.format("%n\t- Server : %s", server));
+        String fUUID = (UUID == null ? "" : String.format("%n\t- UUID : %s", UUID));
+        String fFile = (filePath == null ? "" : String.format("%n\t- File : %s", filePath));
 
         String emailBody = String.format(mailBody, fServer, fUUID, fFile);
 
@@ -97,24 +97,24 @@ public class Util
         gc.getEmail().sendToAdmin("[geocat.ch] Harvesting error", emailBody, false);
 
     }
-    private static String SKEL_MAIL_UUID_CLASH = "Hello,\n\n" +
-                                                 "This e-mail was sent automatically in order to warn you that the current harvested metadata :\n"+
+    private static String SKEL_MAIL_UUID_CLASH = "Hello,%n%n" +
+                                                 "This e-mail was sent automatically in order to warn you that the current harvested metadata :%n"+
                                                  "%s" +
                                                  "%s" +
                                                  "%s" +
-                                                 "\n\nis entering in conflict with an already in-base Metadata. Therefore, it has not been " +
-                                                 "imported.\n" +
-                                                 "Sincerely yours,\n" +
-                                                 "-- \nGeoCatalogue automatic mail system";
+                                                 "%n%nis entering in conflict with an already in-base Metadata. Therefore, it has not been " +
+                                                 "imported.%n" +
+                                                 "Sincerely yours,%n" +
+                                                 "-- %nGeoCatalogue automatic mail system";
 
-    public static final String SKEL_MAIL_WEBDAV_ERROR = "Hello,\n\n" +
-                                                        "This e-mail was sent automatically in order to warn you that the current harvested metadata :\n"+
+    public static final String SKEL_MAIL_WEBDAV_ERROR = "Hello,%n%n" +
+                                                        "This e-mail was sent automatically in order to warn you that the current harvested metadata :%n"+
                                                         "%s" +
                                                         "%s" +
                                                         "%s" +
-                                                        "\n\ncould not be imported.\n\n" +
-                                                        "Sincerely yours,\n" +
-                                                        "-- \nGeoCatalogue automatic mail system";
+                                                        "%n%ncould not be imported.%n%n" +
+                                                        "Sincerely yours,%n" +
+                                                        "-- %nGeoCatalogue automatic mail system";
 
     public static String uuid(ServiceContext context, String url, Element md, Logger log,
                               String resource, HarvestResult tracker, String schema) throws Exception {

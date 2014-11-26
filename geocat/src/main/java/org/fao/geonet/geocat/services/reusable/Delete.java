@@ -32,8 +32,8 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
-import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.SendEmailParameter;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -49,16 +49,14 @@ import java.util.Set;
 /**
  * Deletes the objects from deleted reusable object table and unpublishes the
  * referencing metadata
- * 
+ *
  * @author jeichar
  */
-public class Delete implements Service
-{
+public class Delete implements Service {
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
-    	boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
-    	String[] sIds = Util.getParamText(params, "id").split(",");
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
+        String[] sIds = Util.getParamText(params, "id").split(",");
 
         // PMT c2c : fixing potential security flaw by
         // sanitazing user inputs : every entries here should
@@ -67,11 +65,11 @@ public class Delete implements Service
         // passed to the DB server).
         Integer[] ids = new Integer[sIds.length];
         // TODO : check if it was possible before to pass UUIDs
-        for (int i = 0 ; i < ids.length ; i++) {
-        	ids[i] = Integer.parseInt(sIds[i]);
+        for (int i = 0; i < ids.length; i++) {
+            ids[i] = Integer.parseInt(sIds[i]);
         }
-        	
-        
+
+
         Log.debug(Geocat.Module.REUSABLE, "Starting to delete following rejected objects: ("
                                           + Arrays.toString(ids) + ")");
 
@@ -106,22 +104,21 @@ public class Delete implements Service
 
         Utils.unpublish(metadataIds, context);
         for (Integer metadataId : metadataIds) {
-            context.getBean(DataManager.class).indexMetadata(""+metadataId, false, true, false, true);
+            context.getBean(DataManager.class).indexMetadata("" + metadataId, false, true, false, true);
         }
         DeletedObjects.delete(context, ids);
 
         Log.debug(Geocat.Module.REUSABLE, "Successfully deleted following rejected objects: \n("
-                + Arrays.toString(ids) + ")");
+                                          + Arrays.toString(ids) + ")");
 
         Log.debug(Geocat.Module.REUSABLE,
                 "Unpublished following metadata a result of deleting rejected objects: \n("
-                        + Arrays.toString(metadataIds.toArray()) + ")");
+                + Arrays.toString(metadataIds.toArray()) + ")");
 
         return null;
     }
 
-    public void init(Path appPath, ServiceConfig params) throws Exception
-    {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
 }

@@ -71,8 +71,7 @@ public abstract class Gm03BaseService implements Service {
             String uuid = Util.getParam(params, Params.UUID);
             // lookup ID by UUID
             id = dm.getMetadataId(uuid);
-        }
-        catch (MissingParameterEx x) {
+        } catch (MissingParameterEx x) {
             // request does not contain UUID; use ID from request
             try {
                 id = Util.getParam(params, Params.ID);

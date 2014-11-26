@@ -71,7 +71,7 @@ public class ISO19139CHEtoGM03 extends ISO19139CHEtoGM03Base {
 
         final Document doc = cur.getOwnerDocument();
         Node backRef = doc.createElementNS(NS, backRefName);
-        final Attr ref = doc.createAttributeNS(null,"REF");
+        final Attr ref = doc.createAttributeNS(null, "REF");
         ref.setTextContent(tid);
         backRef.getAttributes().setNamedItem(ref);
 
@@ -175,7 +175,8 @@ public class ISO19139CHEtoGM03 extends ISO19139CHEtoGM03Base {
         return coordNode;
     }
 
-    public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException, FlattenerException, TransformerException {
+    public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException, FlattenerException,
+            TransformerException {
         final String xslFilename = args[0];
         final String schemaFilename = args[1];
         final String[] xmlFilenames = (String[]) ArrayUtils.subarray(args, 2, args.length);

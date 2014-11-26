@@ -55,7 +55,7 @@ import java.util.Set;
 /**
  * Deletes the objects from deleted reusable object table and unpublishes the
  * referencing metadata
- * 
+ *
  * @author jeichar
  */
 public class DeleteUnused implements Service {
@@ -86,9 +86,9 @@ public class DeleteUnused implements Service {
         List<Element> nonValidated = strategy.list(userSession, false, context.getLanguage()).getChildren();
         List<String> toDelete = new ArrayList<String>();
         final Function<String, String> idConverter = strategy.numericIdToConcreteId(userSession);
-        
-	    List<String> luceneFields = new LinkedList<String>();
-	    luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
+
+        List<String> luceneFields = new LinkedList<String>();
+        luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
 
         for (Element element : nonValidated) {
             String objId = element.getChildTextTrim(SharedObjectStrategy.REPORT_ID);
@@ -114,7 +114,7 @@ public class DeleteUnused implements Service {
         for (Element element : nonValidated) {
             String objId = element.getChildTextTrim(SharedObjectStrategy.REPORT_ID);
 
-			Set<MetadataRecord> md = Utils.getReferencingMetadata(context, DeletedObjects.createFindMetadataReferences(), fields, objId,
+            Set<MetadataRecord> md = Utils.getReferencingMetadata(context, DeletedObjects.createFindMetadataReferences(), fields, objId,
                     false, false, idConverter);
             if (md.isEmpty()) {
                 toDelete.add(Integer.parseInt(objId));

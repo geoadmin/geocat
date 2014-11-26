@@ -16,8 +16,7 @@ import java.util.List;
 /**
  * Process xml and create shared objects from it
  */
-public class Process implements Service
-{
+public class Process implements Service {
 
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
@@ -25,13 +24,14 @@ public class Process implements Service
     public Element exec(Element params, ServiceContext context) throws Exception {
 
         boolean addOnly = Boolean.parseBoolean(Util.getParam(params, "addOnly", "false").trim());
-        String defaultLang = Util.getParam(params,"defaultLang","EN").trim();
+        String defaultLang = Util.getParam(params, "defaultLang", "EN").trim();
         String xmlString = Util.getChild(params, "xml").getText();
 
         Element xml = Xml.loadString(xmlString, false);
         Element wrapped = new Element("wrapped").addContent(xml);
 
-        ProcessParams processParams = new ProcessParams(ReusableObjectLogger.THREAD_SAFE_LOGGER, null, xml, wrapped,addOnly,defaultLang,context);
+        ProcessParams processParams = new ProcessParams(ReusableObjectLogger.THREAD_SAFE_LOGGER, null, xml, wrapped, addOnly,
+                defaultLang, context);
         List<Element> updated = context.getBean(ReusableObjManager.class).process(processParams);
 
         return new Element("updated").addContent(updated);

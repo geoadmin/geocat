@@ -38,7 +38,7 @@ public class ISO19139CHEtoGM03small extends ISO19139CHEtoGM03Base {
         StringBuffer coords = new StringBuffer();
         for (int k = 0; k < vals.length; k++) {
             String val = vals[k];
-            if(k>0) {
+            if (k > 0) {
                 coords.append(" ");
             }
             coords.append(val);
@@ -47,7 +47,8 @@ public class ISO19139CHEtoGM03small extends ISO19139CHEtoGM03Base {
         return coordNode;
     }
 
-    public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException, FlattenerException, TransformerException {
+    public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException, FlattenerException,
+            TransformerException {
         final String xslFilename = args[0];
         final String schemaFilename = args[1];
         final String[] xmlFilenames = (String[]) ArrayUtils.subarray(args, 2, args.length);

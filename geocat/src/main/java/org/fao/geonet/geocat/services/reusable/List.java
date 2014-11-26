@@ -34,8 +34,8 @@ import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.FormatsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
-import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -53,7 +53,6 @@ import java.nio.file.Path;
 public class List implements Service {
 
 
-
     public Element exec(Element params, ServiceContext context) throws Exception {
         String type = Util.getParam(params, "type", "contacts");
         boolean validated = Boolean.parseBoolean(Util.getParam(params, "validated", "false"));
@@ -68,7 +67,7 @@ public class List implements Service {
         }
 
         SharedObjectStrategy strategy;
-        switch( ReusableTypes.valueOf(type) ) {
+        switch (ReusableTypes.valueOf(type)) {
             case extents:
                 strategy = new ExtentsStrategy(appPath, context.getBean(ExtentManager.class), language);
                 break;
@@ -89,8 +88,7 @@ public class List implements Service {
         return strategy.list(session, validated, language);
     }
 
-    public void init(Path appPath, ServiceConfig params) throws Exception
-    {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
 }

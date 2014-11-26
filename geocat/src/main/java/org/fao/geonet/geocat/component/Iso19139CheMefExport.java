@@ -24,7 +24,7 @@ public class Iso19139CheMefExport extends ExportFormat {
     @Override
     public Iterable<Pair<String, String>> getFormats(ServiceContext context, Metadata metadata) throws Exception {
         String schema = metadata.getDataInfo().getSchemaId();
-        if(schema.equals("iso19139.che")) {
+        if (schema.equals("iso19139.che")) {
             Path appPath = context.getAppPath();
             ISO19139CHEtoGM03 togm03 = new ISO19139CHEtoGM03(null, appPath.resolve("xsl/conversion/import/ISO19139CHE-to-GM03.xsl"));
             final StreamSource source = new StreamSource(formatData(metadata, false, null));

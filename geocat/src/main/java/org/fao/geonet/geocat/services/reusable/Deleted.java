@@ -35,33 +35,30 @@ import java.nio.file.Path;
 
 /**
  * Service for resolving an deleted reusable xlink reference
- * 
+ *
  * @author jeichar
  */
-public class Deleted implements Service
-{
+public class Deleted implements Service {
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         String id = Util.getParamText(params, "id");
-        if(id == null || id.trim().isEmpty()){
-        	return new Element("none");
+        if (id == null || id.trim().isEmpty()) {
+            return new Element("none");
         }
-        
+
         // PMT c2c : fixing potential SQL injection, user input sanitization
 
         // Note : this has also been prevented later (pre-statement 
         // query in the DeletedObjects.get method)
         // but it is even more secure to potentially throw 
         // an exception (and stop the service execution) now as well.
-        
+
         id = Integer.toString(Integer.parseInt(id));
-        
+
         return DeletedObjects.get(context.getBean(RejectedSharedObjectRepository.class), id);
     }
 
-    public void init(Path appPath, ServiceConfig params) throws Exception
-    {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
 }
