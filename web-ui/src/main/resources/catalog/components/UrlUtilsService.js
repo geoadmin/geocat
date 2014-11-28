@@ -73,9 +73,18 @@
         this.toKeyValue = function(obj) {
           var parts = [], this_ = this;
           angular.forEach(obj, function(value, key) {
-            parts.push(this_.encodeUriQuery(key, true) +
-                (value === true ? '' : '=' +
-                    this_.encodeUriQuery(value, true)));
+            if(angular.isArray(value)) {
+              angular.forEach(value, function(v) {
+                parts.push(this_.encodeUriQuery(key, true) +
+                    (v === true ? '' : '=' +
+                        this_.encodeUriQuery(v, true)));
+              });
+            }
+            else {
+              parts.push(this_.encodeUriQuery(key, true) +
+                  (value === true ? '' : '=' +
+                      this_.encodeUriQuery(value, true)));
+            }
           });
           return parts.length ? parts.join('&') : '';
         };
