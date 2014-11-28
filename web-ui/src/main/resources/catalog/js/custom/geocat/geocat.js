@@ -100,11 +100,11 @@
     'gnSearchSettings',
     'gnSearchManagerService',
     'goDecorateInteraction',
-    'gnMap',
+    '$q',
 
     function($scope, gnHttp, gnHttpServices, gnRegionService,
              $timeout, suggestService,$http, gnSearchSettings,
-             gnSearchManagerService, goDecorateInteraction, gnMap) {
+             gnSearchManagerService, goDecorateInteraction, $q) {
 
 
       // data store for types field
@@ -169,6 +169,31 @@
       $scope.formatsOptions= {
         mode: 'local',
         data: topicCats //TODO
+      };
+
+      // config for sources option (sources and groups)
+      $scope.sourcesOptions = {
+        mode: 'prefetch',
+        promise: (function(){
+          var defer = $q.defer();
+          $http.get(suggestService.getInfoUrl('sources', 'groups')).success(function(data) {
+            var res = [];
+            var parseBlock = function(block) {
+              var a = data[block];
+              for(var i=0; i<a.length;i++) {
+                res.push({
+                  id: a[i]['@id'],
+                  name : a[i].name
+                });
+              }
+            };
+            parseBlock('sources');
+            parseBlock('group');
+
+            defer.resolve(res);
+          });
+          return defer.promise;
+        })()
       };
 
 
