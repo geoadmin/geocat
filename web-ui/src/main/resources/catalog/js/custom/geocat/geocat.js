@@ -99,12 +99,12 @@
     '$http',
     'gnSearchSettings',
     'gnSearchManagerService',
-    'goDecorateInteraction',
+    'ngeoDecorateInteraction',
     '$q',
 
     function($scope, gnHttp, gnHttpServices, gnRegionService,
              $timeout, suggestService,$http, gnSearchSettings,
-             gnSearchManagerService, goDecorateInteraction, $q) {
+             gnSearchManagerService, ngeoDecorateInteraction, $q) {
 
 
       // data store for types field
@@ -234,7 +234,7 @@
       drawInteraction.on('drawstart', function(){
         featureOverlay.getFeatures().clear();
       });
-      goDecorateInteraction(drawInteraction, map);
+      ngeoDecorateInteraction(drawInteraction, map);
 
       var dragboxInteraction = new ol.interaction.DragBox({
         style: gnSearchSettings.olStyles.drawBbox
@@ -253,7 +253,7 @@
       dragboxInteraction.on('drawstart', function(){
         featureOverlay.getFeatures().clear();
       });
-      goDecorateInteraction(dragboxInteraction, map);
+      ngeoDecorateInteraction(dragboxInteraction, map);
 
       /**
        * On refresh 'Draw on Map' click
