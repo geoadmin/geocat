@@ -11,6 +11,9 @@
   <div class="hfull" data-ng-controller="gnsGeocat">
 
     <form ng-search-form="" class="hfull" ng-class="{'searchMapExpanded': searchMapExpanded}">
+      <button ng-show="collapsed" class="btn btn-default btn-sm expander" ng-click="collapsed=!collapsed" type="button">
+        <span>«</span>
+      </button>
       <div class="row hfull">
 
         <div class="maincol hfull" ng-class="(searchExpanded) ? 'col-md-6' : 'col-md-3'">
@@ -41,6 +44,9 @@
         </div>
 
         <div ng-class="{ 'col-md-7': !searchExpanded && !collapsed , 'col-md-9': !searchExpanded && collapsed, 'col-md-6': searchExpanded && collapsed , 'col-md-4': searchExpanded && !collapsed}" class="maincol hfull">
+          <button ng-show="!collapsed" class="btn btn-default btn-sm expander" ng-click="collapsed=!collapsed" type="button">
+            <span>»</span>
+          </button>
           <div class="panel panel-default hfull" ng-if="initial" ng-controller="gnsGeocatHome">
             <div class="panel-heading" translate>
               <h3 class="panel-title" translate>homeTitle</h3>
@@ -58,8 +64,6 @@
 
           <div class="panel panel-default hfull" ng-show="!initial">
             <div class="panel-heading">
-              <button class="btn btn-default filter" ng-class="{ active: !collapsed }"
-                ng-click="collapsed=!collapsed"><i class="fa fa-filter"></i></button>
               <div gn-results-tpl-switcher template-url="resultTemplate" class="pull-right"></div>
               <div gn-selection-widget results="searchResults"></div>
               <div sortby-combo params="searchObj.params"></div>

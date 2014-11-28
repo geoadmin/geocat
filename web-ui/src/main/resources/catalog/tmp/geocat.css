@@ -8307,7 +8307,7 @@ select[multiple].navbar select {
 .twitter-typeahead {
   width: 100%;
 }
-[ng-search-form] .expander {
+.expander {
   position: absolute;
   right: 0px;
   z-index: 4;
@@ -8652,4 +8652,3 @@ select[multiple].geocat-search .geotype {
 .tt-suggestion p.topiccat-second {
   padding-left: 40px;
 }
-/*# sourceMappingURL=geocat.css.map */
