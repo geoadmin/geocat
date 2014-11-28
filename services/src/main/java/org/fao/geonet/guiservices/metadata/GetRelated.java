@@ -24,19 +24,24 @@
 package org.fao.geonet.guiservices.metadata;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Sets;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
+import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.geocat.kernel.RelatedMetadata;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
@@ -44,14 +49,27 @@ import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.Show;
 import org.fao.geonet.services.relations.Get;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.nio.file.Path;
 import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Perform a search and return all children metadata record for current record.
@@ -149,31 +167,108 @@ import java.util.Set;
  * on how specific schema plugin implement relations extraction.
  *
  */
-public class GetRelated implements Service, RelatedMetadata {
+@Controller
+@Qualifier("getRelated")
+public class GetRelated implements Service, org.fao.geonet.kernel.RelatedMetadata {
 
-    private ServiceConfig _config;
-    private static String maxRecords = "1000";
+    private ServiceConfig _config = new ServiceConfig();
+    private static int maxRecords = 1000;
     private static boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-    
-    public void init(String appPath, ServiceConfig config) throws Exception {
+    @Autowired
+    private ServiceManager serviceManager;
+    @Autowired
+    private GeonetworkDataDirectory dataDirectory;
+    @Autowired
+    private DataManager dataManager;
+    @Autowired
+    MetadataRepository metadataRepository;
+
+    public void init(Path appPath, ServiceConfig config) throws Exception {
         _config = config;
     }
 
-    public Element exec(Element params, ServiceContext context)
-            throws Exception {
+    @RequestMapping(value="/{lang}/xml.relation")
+    public HttpEntity<byte[]> exec(@PathVariable String lang,
+                       @RequestParam (required = false) Integer id,
+                       @RequestParam (required = false) String uuid,
+                       @RequestParam (defaultValue = "") String type,
+                       @RequestParam (defaultValue = "1") int from,
+                       @RequestParam (defaultValue = "-1") int to,
+                       boolean fast,
+                       HttpServletRequest request) throws Exception {
+        if (to < 0) {
+            to = maxRecords;
+        }
+
+        final ServiceContext context = serviceManager.createServiceContext("xml.relation", lang, request);
+
+        Metadata md;
+        if (id != null) {
+             md = metadataRepository.findOne(id);
+
+            if (md == null) {
+                throw new IllegalArgumentException("No Metadata found with id " + id);
+            }
+        } else {
+            md = metadataRepository.findOneByUuid(uuid);
+
+            if (md == null) {
+                throw new IllegalArgumentException("No Metadata found with uuid " + uuid);
+            }
+        }
+        id = md.getId();
+        uuid = md.getUuid();
+
+        Element raw = new Element("root").addContent(getRelated(context, id, uuid, type, from, to, fast));
+        Path relatedXsl = dataDirectory.getWebappDir().resolve("xsl/metadata/relation.xsl");
+
+        final Element transform = Xml.transform(raw, relatedXsl);
+        final Set<String> acceptContentType = Sets.newHashSet(Iterators.forEnumeration(request.getHeaders("Accept")));
+
+        byte[] response;
+        String contentType;
+        if (acceptContentType == null ||
+            acceptsType(acceptContentType, "xml") ||
+            acceptContentType.contains("*/*")||
+            acceptContentType.contains("text/plain")) {
+            response = Xml.getString(transform).getBytes(Constants.CHARSET);
+            contentType = "application/xml";
+        } else if (acceptsType(acceptContentType, "json")) {
+            response = Xml.getJSON(transform).getBytes(Constants.CHARSET);
+            contentType = "application/json";
+        } else {
+            throw new IllegalArgumentException(acceptContentType + " is not supported");
+        }
+
+        MultiValueMap<String, String> headers = new HttpHeaders();
+        headers.add("Content-Type", contentType);
+
+        return new HttpEntity<>(response, headers);
+    }
+
+    private boolean acceptsType(Set<String> acceptContentType, String toCheck) {
+        for (String acceptable : acceptContentType) {
+            if (acceptable.contains(toCheck)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Element exec(Element params, ServiceContext context) throws Exception {
         String type = Util.getParam(params, "type", "");
         String fast = Util.getParam(params, "fast", "true");
-        String from = Util.getParam(params, "from", "1");
-        String to = Util.getParam(params, "to", maxRecords);
+        int from = Util.getParam(params, "from", 1);
+        int to = Util.getParam(params, "to", maxRecords);
 
         Log.info(Geonet.SEARCH_ENGINE,
                 "GuiService param is " + _config.getValue("guiService"));
 
         Element info = params.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
-        int id;
+        int iId;
         String uuid;
-        GeonetContext gc = (GeonetContext) context
-                .getHandlerContext(Geonet.CONTEXT_NAME);
+
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
 
         if (info == null) {
@@ -185,19 +280,19 @@ public class GetRelated implements Service, RelatedMetadata {
             if (uuid == null)
                 throw new MetadataNotFoundEx("Metadata not found.");
 
-            id = Integer.parseInt(mdId);
+            iId = Integer.parseInt(mdId);
         } else {
             uuid = info.getChildText(Params.UUID);
-            id = Integer.parseInt(info.getChildText(Params.ID));
+            iId = Integer.parseInt(info.getChildText(Params.ID));
         }
 
-        return getRelated(context, id, uuid, type, Integer.parseInt(from), Integer.parseInt(to), Boolean.parseBoolean(fast));
+        return getRelated(context, iId, uuid, type, from, to, Boolean.parseBoolean(fast));
     }
 
     @Override
-    public Element getRelated(ServiceContext context, int id, String uuid, String type, int from_, int to_, boolean fast_)
+    public Element getRelated(ServiceContext context, int iId, String uuid, String type, int from_, int to_, boolean fast_)
             throws Exception {
-        final String sId = String.valueOf(id);
+        final String sId = String.valueOf(iId);
         final String from = "" + from_;
         final String to = "" + to_;
         final String fast = "" + fast_;
@@ -303,7 +398,7 @@ public class GetRelated implements Service, RelatedMetadata {
         // Relation table is preserved for backward compatibility but should not be used anymore.
         if (type.equals("") || type.contains("related")) {
             // Related records could be feature catalogue defined in relation table
-            relatedRecords.addContent(new Element("related").addContent(Get.getRelation(id, "full", context)));
+            relatedRecords.addContent(new Element("related").addContent(Get.getRelation(iId, "full", context)));
             // Or feature catalogue define in feature catalogue citation
             relatedRecords.addContent(search(uuid, "hasfeaturecat", context, from, to, fast));
 

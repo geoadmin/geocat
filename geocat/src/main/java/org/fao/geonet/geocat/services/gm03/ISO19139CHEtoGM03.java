@@ -1,14 +1,7 @@
 package org.fao.geonet.geocat.services.gm03;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Iterator;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-
 import org.apache.commons.lang.ArrayUtils;
+import org.fao.geonet.utils.IO;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -17,8 +10,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Iterator;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+
 public class ISO19139CHEtoGM03 extends ISO19139CHEtoGM03Base {
-    public ISO19139CHEtoGM03(File schemaLocation, String xslFilename) throws SAXException, TransformerConfigurationException {
+    public ISO19139CHEtoGM03(Path schemaLocation, Path xslFilename) throws SAXException, TransformerConfigurationException {
         super(schemaLocation, xslFilename);
     }
 
@@ -71,7 +71,7 @@ public class ISO19139CHEtoGM03 extends ISO19139CHEtoGM03Base {
 
         final Document doc = cur.getOwnerDocument();
         Node backRef = doc.createElementNS(NS, backRefName);
-        final Attr ref = doc.createAttributeNS(null,"REF");
+        final Attr ref = doc.createAttributeNS(null, "REF");
         ref.setTextContent(tid);
         backRef.getAttributes().setNamedItem(ref);
 
@@ -175,16 +175,17 @@ public class ISO19139CHEtoGM03 extends ISO19139CHEtoGM03Base {
         return coordNode;
     }
 
-    public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException, FlattenerException, TransformerException {
+    public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException, FlattenerException,
+            TransformerException {
         final String xslFilename = args[0];
         final String schemaFilename = args[1];
         final String[] xmlFilenames = (String[]) ArrayUtils.subarray(args, 2, args.length);
 
-        File schemaLocation = null;
+        Path schemaLocation = null;
         if (!schemaFilename.equalsIgnoreCase("no")) {
-            schemaLocation = new File(schemaFilename);
+            schemaLocation = IO.toPath(schemaFilename);
         }
-        ISO19139CHEtoGM03 converter = new ISO19139CHEtoGM03(schemaLocation, xslFilename);
+        ISO19139CHEtoGM03 converter = new ISO19139CHEtoGM03(schemaLocation, IO.toPath(xslFilename));
 
         converter.convert(xmlFilenames, "ISO19139CHEtoGM03.main");
     }

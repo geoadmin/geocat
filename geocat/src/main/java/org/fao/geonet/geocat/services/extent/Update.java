@@ -51,6 +51,7 @@ import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.feature.type.Name;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
@@ -66,20 +67,17 @@ import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.TYPENAME;
 
 /**
  * Service for updating extent information
- * 
+ *
  * @author jeichar
  */
-public class Update implements Service
-{
+public class Update implements Service {
 
     private static final Logger LOGGER = Logging.getLogger("org.geotools.data.communication");
 
-	public void init(String appPath, ServiceConfig params) throws Exception
-    {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
-    public Element exec(Element params, final ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, final ServiceContext context) throws Exception {
 
         final GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         final ExtentManager extentMan = context.getBean(ExtentManager.class);
@@ -103,7 +101,7 @@ public class Update implements Service
 
         if (!featureType.isModifiable()) {
             return ExtentHelper.error(typename + " is not a modifiable type, modifiable types are: "
-                    + wfs.listModifiable());
+                                      + wfs.listModifiable());
         }
         final FeatureStore<SimpleFeatureType, SimpleFeature> store = (FeatureStore<SimpleFeatureType, SimpleFeature>) featureType
                 .getFeatureSource();
@@ -167,7 +165,7 @@ public class Update implements Service
 
         if (attributes.isEmpty()) {
             return ExtentHelper.error("No updates were requested.  One or both of geom and " + DESC
-                    + " must be defined for an update");
+                                      + " must be defined for an update");
         }
         LOGGER.setLevel(Level.FINEST);
         store.modifyFeatures(attributes.toArray(new Name[attributes.size()]), newValues.toArray(),
@@ -179,7 +177,7 @@ public class Update implements Service
         responseElem.setText("Updated features with id= " + id);
         responseElem.addContent(changes);
 
-        final ExtentsStrategy strategy = new ExtentsStrategy (context.getBaseUrl(), context.getAppPath(),
+        final ExtentsStrategy strategy = new ExtentsStrategy(context.getAppPath(),
                 extentMan, context.getLanguage());
         ArrayList<String> fields = new ArrayList<String>();
 

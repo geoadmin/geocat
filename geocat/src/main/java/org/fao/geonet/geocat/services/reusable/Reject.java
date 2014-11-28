@@ -39,9 +39,9 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
-import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
 import org.fao.geonet.geocat.kernel.reusable.SendEmailParameter;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.geocat.kernel.reusable.Utils.FindXLinks;
 import org.fao.geonet.kernel.DataManager;
@@ -53,6 +53,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -64,14 +65,12 @@ import java.util.Set;
 
 /**
  * Makes a list of all the non-validated elements
- * 
+ *
  * @author jeichar
  */
-public class Reject implements Service
-{
+public class Reject implements Service {
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         String page = Util.getParamText(params, "type");
         String[] ids = Util.getParamText(params, "id").split(",");
         String msg = Util.getParamText(params, "msg");
@@ -88,8 +87,7 @@ public class Reject implements Service
     }
 
     public Element reject(ServiceContext context, ReusableTypes reusableType, String[] ids, String msg,
-                          String strategySpecificData, boolean isValidObject, boolean testing) throws Exception
-    {
+                          String strategySpecificData, boolean isValidObject, boolean testing) throws Exception {
         Log.debug(Geocat.Module.REUSABLE, "Starting to reject following reusable objects: \n"
                                           + reusableType + " (" + Arrays.toString(ids) + ")\nRejection message is:\n" + msg);
         UserSession session = context.getUserSession();
@@ -103,19 +101,18 @@ public class Reject implements Service
                     strategySpecificData, isValidObject, testing));
         }
         Log.info(Geocat.Module.REUSABLE, "Successfully rejected following reusable objects: \n"
-                + reusableType + " (" + Arrays.toString(ids) + ")\nRejection message is:\n" + msg);
+                                         + reusableType + " (" + Arrays.toString(ids) + ")\nRejection message is:\n" + msg);
 
         return results;
     }
 
     private List<Element> performReject(String[] ids, final SharedObjectStrategy strategy, ServiceContext context,
                                         GeonetContext gc, final UserSession session, String baseURL, String msg,
-                                        String strategySpecificData, boolean isValidObject, boolean testing) throws Exception
-    {
+                                        String strategySpecificData, boolean isValidObject, boolean testing) throws Exception {
 
-        final Function<String,String> idConverter = strategy.numericIdToConcreteId(session);
+        final Function<String, String> idConverter = strategy.numericIdToConcreteId(session);
 
-	    List<String> luceneFields = new LinkedList<String>();
+        List<String> luceneFields = new LinkedList<String>();
         if (isValidObject) {
             luceneFields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
         } else {
@@ -126,7 +123,8 @@ public class Reject implements Service
         List<Element> result = new ArrayList<Element>();
         List<String> allAffectedMdIds = new ArrayList<String>();
         for (String id : ids) {
-            Set<MetadataRecord> results = Utils.getReferencingMetadata(context, strategy, luceneFields, id, isValidObject, true, idConverter);
+            Set<MetadataRecord> results = Utils.getReferencingMetadata(context, strategy, luceneFields, id, isValidObject, true,
+                    idConverter);
 
             // compile a list of email addresses for notifications
             for (MetadataRecord record : results) {
@@ -157,8 +155,8 @@ public class Reject implements Service
     }
 
     private Element updateHrefs(final SharedObjectStrategy strategy, ServiceContext context,
-            final UserSession session, String id, Set<MetadataRecord> results, String baseURL,
-            String strategySpecificData) throws Exception {
+                                final UserSession session, String id, Set<MetadataRecord> results, String baseURL,
+                                String strategySpecificData) throws Exception {
         Element newIds = new Element("newIds");
         // Move the reusable object to the DeletedObjects table and update
         // the xlink attribute information so that the objects are obtained from that table
@@ -215,9 +213,8 @@ public class Reject implements Service
     }
 
     private void emailNotifications(final SharedObjectStrategy strategy, ServiceContext context,
-            final UserSession session, String msg, Multimap<Integer, Integer> emailInfo, String baseURL,
-            String strategySpecificData, boolean testing) throws Exception
-    {
+                                    final UserSession session, String msg, Multimap<Integer, Integer> emailInfo, String baseURL,
+                                    String strategySpecificData, boolean testing) throws Exception {
         if (msg == null) {
             msg = "";
         }
@@ -229,8 +226,7 @@ public class Reject implements Service
         Utils.sendEmail(new SendEmailParameter(context, msg, emailInfo, baseURL, msgHeader, subject, testing));
     }
 
-    public void init(String appPath, ServiceConfig params) throws Exception
-    {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
 }

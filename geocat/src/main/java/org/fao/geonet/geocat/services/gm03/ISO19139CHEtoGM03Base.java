@@ -3,9 +3,22 @@ package org.fao.geonet.geocat.services.gm03;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.fao.geonet.utils.TransformerFactoryFactory;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.regex.Pattern;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -17,14 +30,6 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.regex.Pattern;
 
 public abstract class ISO19139CHEtoGM03Base {
     protected static final String NS = "http://www.interlis.ch/INTERLIS2.3";
@@ -33,13 +38,13 @@ public abstract class ISO19139CHEtoGM03Base {
     protected final Schema schema;
     protected Transformer xslt;
 
-    public ISO19139CHEtoGM03Base(File schemaLocation, String xslFilename) throws SAXException, TransformerConfigurationException {
+    public ISO19139CHEtoGM03Base(Path schemaLocation, Path xslFilename) throws SAXException, TransformerConfigurationException {
         if (schemaLocation != null) {
-            schema = SCHEMA_FACTORY.newSchema(schemaLocation);
+            schema = SCHEMA_FACTORY.newSchema(schemaLocation.toFile());
         } else {
             schema = null;
         }
-        xslt = TransformerFactoryFactory.getTransformerFactory().newTransformer(new StreamSource(xslFilename));
+        xslt = TransformerFactoryFactory.getTransformerFactory().newTransformer(new StreamSource(xslFilename.toFile()));
     }
 
     protected void convert(String[] xmlFilenames, String group) {
@@ -50,7 +55,7 @@ public abstract class ISO19139CHEtoGM03Base {
             } catch (Throwable e) {
                 System.out.println("Error while converting " + xmlFilename);
                 e.printStackTrace();
-                System.exit(-1);
+                throw new Error(e);
             }
         }
     }
@@ -65,14 +70,14 @@ public abstract class ISO19139CHEtoGM03Base {
         return doc;
     }
 
-    private Document doTransform(String group, final Source source, String intermediateFile) throws TransformerException, FlattenerException, IOException
-    {
+    private Document doTransform(String group, final Source source, String intermediateFile) throws TransformerException,
+            FlattenerException, IOException {
         DOMResult transformed = new DOMResult();
         xslt.setParameter("group", group);
         xslt.transform(source, transformed);
         final Document doc = (Document) transformed.getNode();
 
-        if (wantIntermediate() && intermediateFile!=null) {
+        if (wantIntermediate() && intermediateFile != null) {
             OutputStream outputStream = new FileOutputStream(intermediateFile);
             saveDom(doc, outputStream);
         }
@@ -85,61 +90,62 @@ public abstract class ISO19139CHEtoGM03Base {
     }
 
     private static final String[] TID_LESS_ELEMS = {
-    	"GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat",
-    	"GM03_2_1Core.Core.MD_DistributiondistributionFormat",
-    	"GM03_2_1Comprehensive.Comprehensive.MD_Distributiondistributor",
-    	"GM03_2_1Core.Core.CI_ResponsiblePartyparentinfo",
-    	"GM03_2_1Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor",
-    	"GM03_2_1Core.Core.CI_ResponsiblePartyparentinfoGM03_2_1Core.Core.referenceSystemInfoMD_Metadata",
-    	"GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty",
-    	"GM03_2_1Comprehensive.Comprehensive.CI_Citationidentifier",
-    	"GM03_2_1Core.Core.MD_IdentificationpointOfContact",
-    	"GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription",
-    	"GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationcontact",
-    	"GM03_2_1Comprehensive.Comprehensive.resourceFormatMD_Identification",
-    	"GM03_2_1Core.Core.descriptiveKeywordsMD_Identification",
-    	"GM03_2_1Comprehensive.Comprehensive.MD_UsageuserContactInfo",
-    	"GM03_2_1Comprehensive.Comprehensive.resourceConstraintsMD_Identification",
-    	"GM03_2_1Comprehensive.Comprehensive.aggregationInfo_MD_Identification",
-    	"GM03_2_1Core.Core.EX_ExtentgeographicElement",
-    	"GM03_2_1Comprehensive.Comprehensive.revisionMD_Identification",
-    	"GM03_2_1Comprehensive.Comprehensive.dimensionMD_CoverageDescription",
-    	"GM03_2_1Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription",
-    	"GM03_2_1Comprehensive.Comprehensive.MD_AttributenamedType",
-    	"GM03_2_1Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription",
-    	"GM03_2_1Comprehensive.Comprehensive.CI_Citationidentifier",
-    	"GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty",
-    	"GM03_2_1Comprehensive.Comprehensive.DQ_Scopeextent",
-    	"GM03_2_1Core.Core.EX_ExtentgeographicElement",
-    	"GM03_2_1Comprehensive.Comprehensive.reportDQ_DataQuality",
-    	"GM03_2_1Comprehensive.Comprehensive.sourceLI_Lineage",
-    	"GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty",
-    	"GM03_2_1Comprehensive.Comprehensive.CI_Citationidentifier",
-    	"GM03_2_1Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata",
-    	"GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription",
-    	"GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationcontact",
-    	"GM03_2_1Comprehensive.Comprehensive.MD_MetadatalegislationInformation",
-    	"GM03_2_1Core.Core.referenceSystemInfoMD_Metadata",
-    	"GM03_2_1Comprehensive.Comprehensive.distributorTransferOptionsMD_Distributor",
-    	"GM03_2_1Comprehensive.Comprehensive.extentSV_ServiceIdentification",
-    	"GM03_2_1Comprehensive.Comprehensive.containsOperationsSV_ServiceIdentification",
-    	"GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadataconnectPoint"
+            "GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat",
+            "GM03_2_1Core.Core.MD_DistributiondistributionFormat",
+            "GM03_2_1Comprehensive.Comprehensive.MD_Distributiondistributor",
+            "GM03_2_1Core.Core.CI_ResponsiblePartyparentinfo",
+            "GM03_2_1Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor",
+            "GM03_2_1Core.Core.CI_ResponsiblePartyparentinfoGM03_2_1Core.Core.referenceSystemInfoMD_Metadata",
+            "GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty",
+            "GM03_2_1Comprehensive.Comprehensive.CI_Citationidentifier",
+            "GM03_2_1Core.Core.MD_IdentificationpointOfContact",
+            "GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription",
+            "GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationcontact",
+            "GM03_2_1Comprehensive.Comprehensive.resourceFormatMD_Identification",
+            "GM03_2_1Core.Core.descriptiveKeywordsMD_Identification",
+            "GM03_2_1Comprehensive.Comprehensive.MD_UsageuserContactInfo",
+            "GM03_2_1Comprehensive.Comprehensive.resourceConstraintsMD_Identification",
+            "GM03_2_1Comprehensive.Comprehensive.aggregationInfo_MD_Identification",
+            "GM03_2_1Core.Core.EX_ExtentgeographicElement",
+            "GM03_2_1Comprehensive.Comprehensive.revisionMD_Identification",
+            "GM03_2_1Comprehensive.Comprehensive.dimensionMD_CoverageDescription",
+            "GM03_2_1Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription",
+            "GM03_2_1Comprehensive.Comprehensive.MD_AttributenamedType",
+            "GM03_2_1Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription",
+            "GM03_2_1Comprehensive.Comprehensive.CI_Citationidentifier",
+            "GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty",
+            "GM03_2_1Comprehensive.Comprehensive.DQ_Scopeextent",
+            "GM03_2_1Core.Core.EX_ExtentgeographicElement",
+            "GM03_2_1Comprehensive.Comprehensive.reportDQ_DataQuality",
+            "GM03_2_1Comprehensive.Comprehensive.sourceLI_Lineage",
+            "GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty",
+            "GM03_2_1Comprehensive.Comprehensive.CI_Citationidentifier",
+            "GM03_2_1Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata",
+            "GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription",
+            "GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationcontact",
+            "GM03_2_1Comprehensive.Comprehensive.MD_MetadatalegislationInformation",
+            "GM03_2_1Core.Core.referenceSystemInfoMD_Metadata",
+            "GM03_2_1Comprehensive.Comprehensive.distributorTransferOptionsMD_Distributor",
+            "GM03_2_1Comprehensive.Comprehensive.extentSV_ServiceIdentification",
+            "GM03_2_1Comprehensive.Comprehensive.containsOperationsSV_ServiceIdentification",
+            "GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadataconnectPoint"
     };
-    private void removeUnwantedTID(Document doc) {
-    	for (String tagname : TID_LESS_ELEMS) {
-    		NodeList elementsByTagName = doc.getElementsByTagName(tagname);
-    		for(int i = elementsByTagName.getLength()-1; i >= 0; i -- ){
-    			Node item = elementsByTagName.item(i);
-    			NamedNodeMap attributes = item.getAttributes();
-    			if(attributes.getNamedItem("TID") != null) {
-    				attributes.removeNamedItem("TID");
-    			}
-    		}
-		}
-		
-	}
 
-	public void convert(String xmlFilename, String group) throws FlattenerException, IOException, TransformerException, SAXException {
+    private void removeUnwantedTID(Document doc) {
+        for (String tagname : TID_LESS_ELEMS) {
+            NodeList elementsByTagName = doc.getElementsByTagName(tagname);
+            for (int i = elementsByTagName.getLength() - 1; i >= 0; i--) {
+                Node item = elementsByTagName.item(i);
+                NamedNodeMap attributes = item.getAttributes();
+                if (attributes.getNamedItem("TID") != null) {
+                    attributes.removeNamedItem("TID");
+                }
+            }
+        }
+
+    }
+
+    public void convert(String xmlFilename, String group) throws FlattenerException, IOException, TransformerException, SAXException {
         File xmlFile = new File(xmlFilename);
         String parent = xmlFile.getParent();
         if (parent == null) parent = ".";
@@ -154,12 +160,13 @@ public abstract class ISO19139CHEtoGM03Base {
 
     }
 
-    public void convert(Source source, String group, OutputStream outputStream) throws FlattenerException, IOException, TransformerException, SAXException {
-        
+    public void convert(Source source, String group, OutputStream outputStream) throws FlattenerException, IOException,
+            TransformerException, SAXException {
+
         Document doc = doTransform(group, source, null);
-        
+
         saveDom(doc, outputStream);
-        
+
     }
 
     protected abstract boolean wantIntermediate();
@@ -242,9 +249,9 @@ public abstract class ISO19139CHEtoGM03Base {
     }
 
     public static class FlattenerException extends Exception {
-		private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
-		public FlattenerException(String message) {
+        public FlattenerException(String message) {
             super(message);
         }
     }
@@ -253,7 +260,7 @@ public abstract class ISO19139CHEtoGM03Base {
      * A DOM child node iterator that takes a snapshot of the list of child nodes
      * at construction. It is therefore not impacted by the modifications while iterating
      */
-    protected class ChildIterator implements Iterator<Node> {
+    protected static class ChildIterator implements Iterator<Node> {
         private final List<Node> childs;
         private int pos = 0;
 

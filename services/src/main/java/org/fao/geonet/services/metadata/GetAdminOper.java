@@ -53,6 +53,7 @@ import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
@@ -72,7 +73,7 @@ public class GetAdminOper implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -98,7 +99,7 @@ public class GetAdminOper implements Service
         DataManager dm = context.getBean(DataManager.class);
         Element md = dm.getGeocatMetadata(context, metadataId, false, false);
         md.removeChild("info", Edit.NAMESPACE);
-        md = Xml.transform(md, context.getAppPath() + "/xsl/characterstring-to-localisedcharacterstring.xsl");  // HACK I thin
+        md = Xml.transform(md, context.getAppPath().resolve("xsl/characterstring-to-localisedcharacterstring.xsl"));  // HACK I thin
         dm.doValidate(context, info.getDataInfo().getSchemaId(), metadataId,md,context.getLanguage(), false);
         // END GEOCAT
 

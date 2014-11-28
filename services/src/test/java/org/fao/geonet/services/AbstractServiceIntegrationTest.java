@@ -5,11 +5,8 @@ import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-
-import java.io.IOException;
 
 /**
  * Adds extra bean required for services tests.
@@ -37,11 +34,11 @@ public abstract class AbstractServiceIntegrationTest extends AbstractCoreIntegra
     public Element transformServiceResult(Element serviceResponse, String xsltWebappBase, String language) throws Exception {
         Element withExtraData = new Element(Jeeves.Elem.ROOT);
         Element gui = new Element(Jeeves.Elem.GUI);
-        gui.addContent(Xml.loadFile(_dataDir.getWebappDir() + "/loc/" + language + "/xml/strings.xml"));
+        gui.addContent(Xml.loadFile(_dataDir.getWebappDir().resolve("loc/" + language + "/xml/strings.xml")));
 
         withExtraData.addContent(gui);
         withExtraData.addContent(serviceResponse);
 
-        return Xml.transform(withExtraData, _dataDir.getWebappDir()+xsltWebappBase);
+        return Xml.transform(withExtraData, _dataDir.getWebappDir().resolve(xsltWebappBase));
     }
 }

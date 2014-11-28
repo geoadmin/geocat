@@ -22,28 +22,35 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.HarvestValidationEnum;
-import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.harvest.BaseAligner;
+import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.IHarvester;
+import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
+import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.services.harvesting.Util;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import javax.annotation.Nonnull;
+import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -228,40 +235,41 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 		//
         // insert metadata
         //
-        String group = null, isTemplate = null, docType = null, title = null, category = null;
-        boolean ufo = false, indexImmediate = false;
 
         // Get the change date from the metadata content. If not possible, get it from the file change date if available
         // and if not possible use current date
-        String date = null;
+        ISODate date = null;
 
         try {
-            date = dataMan.extractDateModified(schema, md);
+            date = new ISODate(dataMan.extractDateModified(schema, md));
         } catch (Exception ex) {
             log.error("WebDavHarvester - addMetadata - Can't get metadata modified date for metadata uuid= " + uuid +
                     ", using current date for modified date");
             // WAF harvester, rf.getChangeDate() returns null
-        if (rf.getChangeDate() != null) {
-            date = rf.getChangeDate().getDateAndTime();
+            if (rf.getChangeDate() != null) {
+                date = rf.getChangeDate();
+            }
         }
-        }
+        Metadata metadata = new Metadata().setUuid(uuid);
+        metadata.getDataInfo().
+                setSchemaId(schema).
+                setRoot(md.getQualifiedName()).
+                setChangeDate(date).
+                setCreateDate(date).
+                setType(MetadataType.METADATA);
+        metadata.getSourceInfo().
+                setSourceId(params.uuid).
+                setOwner(Integer.parseInt(params.ownerId));
+        metadata.getHarvestInfo().
+                setHarvested(true).
+                setUuid(params.uuid).
+                setUri(rf.getPath());
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null);
 
-        String id = dataMan.insertMetadata(context, schema, md, uuid, Integer.parseInt(params.ownerId), group, params.uuid,
-                isTemplate, docType, category, date, date, ufo, indexImmediate);
-
-
-		int iId = Integer.parseInt(id);
-
-		dataMan.setTemplateExt(iId, MetadataType.METADATA);
-		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(rf.getPath()));
+        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
-            @Override
-            public void apply(@Nonnull Metadata entity) {
-                addCategories(entity, params.getCategories(), localCateg, context, log, null);
-            }
-        });
 
         dataMan.flush();
 
@@ -282,9 +290,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             try {
                 schema = dataMan.autodetectSchema(md);
             } catch (NoSchemaMatchesException e) {
-                if (md.getName() == "TRANSFER") {
+                if ("TRANSFER".equals(md.getName())) {
                     // we need to convert to CHE
-                    String styleSheetPath = context.getAppPath() + "xsl/conversion/import/GM03-to-ISO19139CHE.xsl";
+                    Path styleSheetPath = context.getAppPath().resolve("xsl/conversion/import/GM03-to-ISO19139CHE.xsl");
                     Element tmp = Xml.transform(md, styleSheetPath);
                     md = tmp;
                 }
@@ -292,13 +300,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             }
             if (params.validate == HarvestValidationEnum.NOVALIDATION || validates(schema, md)) {
                 return (Element) md.detach();
-            } else {
-
-                if (params.validate == HarvestValidationEnum.NOVALIDATION || validates(schema, md)) {
-                    return (Element) md.detach();
-                }
-                log.warning("Skipping metadata that does not validate. Path is : "+ rf.getPath());
-                result.doesNotValidate++;
             }
             // END GEOCAT
 

@@ -34,14 +34,16 @@ import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.FormatsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
-import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.geocat.RejectedSharedObjectRepository;
 import org.jdom.Element;
+
+import java.nio.file.Path;
 
 /**
  * Makes a list of all the shared elements of the given type (parameter validated selects if validated are listed)
@@ -51,13 +53,12 @@ import org.jdom.Element;
 public class List implements Service {
 
 
-
     public Element exec(Element params, ServiceContext context) throws Exception {
         String type = Util.getParam(params, "type", "contacts");
         boolean validated = Boolean.parseBoolean(Util.getParam(params, "validated", "false"));
 
         UserSession session = context.getUserSession();
-        String appPath = context.getAppPath();
+        Path appPath = context.getAppPath();
         String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));
         String language = context.getLanguage();
 
@@ -66,9 +67,9 @@ public class List implements Service {
         }
 
         SharedObjectStrategy strategy;
-        switch( ReusableTypes.valueOf(type) ) {
+        switch (ReusableTypes.valueOf(type)) {
             case extents:
-                strategy = new ExtentsStrategy(baseUrl, appPath, context.getBean(ExtentManager.class), language);
+                strategy = new ExtentsStrategy(appPath, context.getBean(ExtentManager.class), language);
                 break;
             case keywords:
                 strategy = new KeywordsStrategy(context.getBean(IsoLanguagesMapper.class), context.getBean(ThesaurusManager.class),
@@ -87,8 +88,7 @@ public class List implements Service {
         return strategy.list(session, validated, language);
     }
 
-    public void init(String appPath, ServiceConfig params) throws Exception
-    {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
 }

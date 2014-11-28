@@ -50,6 +50,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -67,15 +68,15 @@ public final class KeywordsStrategy extends SharedObjectStrategy
     public static final String NON_VALID_THESAURUS_NAME = "local._none_.non_validated";
 
     private final ThesaurusManager   _thesaurusMan;
-    private final String             _styleSheet;
+    private final Path             _styleSheet;
     private final String             _currentLocale;
     private final IsoLanguagesMapper _isoLanguagesMapper;
 
-    public KeywordsStrategy(IsoLanguagesMapper isoLanguagesMapper, ThesaurusManager thesaurusMan, String appPath, String baseURL, String currentLocale)
+    public KeywordsStrategy(IsoLanguagesMapper isoLanguagesMapper, ThesaurusManager thesaurusMan, Path appPath, String baseURL, String currentLocale)
     {
         this._thesaurusMan = thesaurusMan;
         this._isoLanguagesMapper = isoLanguagesMapper;
-        _styleSheet = appPath + Utils.XSL_REUSABLE_OBJECT_DATA_XSL;
+        _styleSheet = appPath.resolve(Utils.XSL_REUSABLE_OBJECT_DATA_XSL);
 
         _currentLocale = currentLocale;
     }

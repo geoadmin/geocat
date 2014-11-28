@@ -8,22 +8,24 @@ import org.apache.lucene.util.AttributeImpl;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.GeoNetworkAnalyzer;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URLEncoder;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,34 +37,6 @@ import java.util.Set;
  */
 public final class LangUtils
 {
-
-    public static List<Element> loadCodeListFile(String schemaDir, String langCode, String codeListName)
-            throws IOException, JDOMException
-    {
-        List<Element> codeList = new LinkedList<Element>();
-        File file = new File(schemaDir + "/loc/" + langCode + "/codelists.xml");
-        addCodeLists(codeListName, codeList, file);
-
-        file = new File(schemaDir +"/../iso19139/loc/"+langCode + "/codelists.xml");
-        addCodeLists(codeListName, codeList, file);
-        return codeList;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static void addCodeLists(String codeListName, List<Element> codeList, File file) throws IOException, JDOMException {
-        if (file.exists()) {
-            Element xmlDoc = Xml.loadFile(file);
-
-            List<Element> codelists = xmlDoc.getChildren("codelist");
-            for (Element element : codelists) {
-                if (element.getAttributeValue("name").equals(codeListName)) {
-                    codeList.addAll(element.getChildren("entry"));
-                    break;
-                }
-            }
-        }
-    }
-
     private static String translate(String[] path, String defaultVal, List<Element> children)
     {
         for (Element e : children) {
@@ -83,17 +57,17 @@ public final class LangUtils
     }
 
     @SuppressWarnings("unchecked")
-    public static List<Element> loadStrings(String appDir, String langCode) throws IOException, JDOMException
+    public static List<Element> loadStrings(Path appDir, String langCode) throws IOException, JDOMException
     {
-        File file = new File(appDir + "/loc/" + langCode + "/xml/strings.xml");
-        if (file.exists()) {
+        Path file = appDir.resolve("loc").resolve(langCode).resolve("xml/strings.xml");
+        if (Files.exists(file)) {
             return Xml.loadFile(file).getChildren();
 
         }
         return Collections.emptyList();
     }
 
-    public static String translate(String appDir, String langCode, String key, String defaultVal) throws IOException,
+    public static String translate(Path appDir, String langCode, String key, String defaultVal) throws IOException,
             JDOMException
     {
         String[] path = key.split("/");
@@ -227,11 +201,11 @@ public final class LangUtils
         return String.format("<DE>%s</DE><FR>%s</FR><IT>%s</IT><EN>%s</EN><RM>%s</RM>", descDe, descFr, descIt, descEn, descRm);
     }
 
-    public static Element toIsoMultiLingualElem(String appPath, String basicValue) throws Exception
+    public static Element toIsoMultiLingualElem(Path appPath, String basicValue) throws Exception
     {
 
         final Element desc = loadInternalMultiLingualElem(basicValue);
-        return Xml.transform(desc, appPath+"xsl/iso-internal-multilingual-conversion.xsl");
+        return Xml.transform(desc, appPath.resolve("xsl/iso-internal-multilingual-conversion.xsl"));
     }
 
     public static Element loadInternalMultiLingualElem(String basicValue) throws IOException
@@ -255,12 +229,11 @@ public final class LangUtils
         }
         return desc;
     }
-    public static List<Content> loadInternalMultiLingualElemCollection(String basicValue) throws IOException, JDOMException
-    {
+    public static List<Content> loadInternalMultiLingualElemCollection(String basicValue) throws IOException, JDOMException {
         Element multiLingualElem = loadInternalMultiLingualElem(basicValue);
         @SuppressWarnings("unchecked")
         List<Content> content = multiLingualElem.getContent();
-        List<Content> nodes = new ArrayList<Content>(content);
+        List<Content> nodes = new ArrayList<>(content);
         Set<String> locales = new HashSet<String>();
 
         for (Iterator<Content> iter = nodes.iterator(); iter.hasNext(); ) {
@@ -309,7 +282,7 @@ public final class LangUtils
     }
 
     public enum FieldType { URL, STRING }
-    public static String toInternalMultilingual(String metadataLang, String appPath, Element descElem2, FieldType fieldType) throws Exception
+    public static String toInternalMultilingual(String metadataLang, Path appPath, Element descElem2, FieldType fieldType) throws Exception
     {
         if( descElem2==null ){
             return null;
@@ -335,7 +308,7 @@ public final class LangUtils
                 throw new IllegalArgumentException(fieldType+" needs to be supported");
         }
 
-        Element converted = Xml.transform(descElem, appPath+styleSheet, params);
+        Element converted = Xml.transform(descElem, appPath.resolve(styleSheet), params);
 
         @SuppressWarnings("unchecked")
         List<Element> allTranslations = converted.getChildren();
@@ -348,7 +321,7 @@ public final class LangUtils
         return desc;
     }
 
-    public static String loadString(String string, String appPath, String language) throws IOException, JDOMException {
+    public static String loadString(String string, Path appPath, String language) throws IOException, JDOMException {
         String[] keys = string.split(".",2);
         List<Element> strings = loadStrings(appPath,language);
         for (Element element : strings) {
@@ -383,20 +356,26 @@ public final class LangUtils
      * @return
      */
     public static Map<String, String> translate(ServiceContext context, String type, String key) throws JDOMException, IOException {
-        String appPath = context.getAppPath();
+        Path appPath = context.getAppPath();
         XmlCacheManager cacheManager = context.getXmlCacheManager();
-        File loc = new File(appPath, "loc");
-        String typeWithExtension = "xml"+File.separator+type+".xml";
-        Map<String, String> translations = new HashMap<String, String>();
-        
-        for (File file : loc.listFiles()) {
-            if(file.isDirectory() && new File(file, typeWithExtension).exists()) {
-                Element xml = cacheManager.get(context, true, loc.getAbsolutePath(), typeWithExtension, file.getName(),
-                        file.getName(), true, false);
-                String translation = Xml.selectString(xml, key);
-                if(translation != null && !translation.trim().isEmpty()) {
-                    translations.put(file.getName(), translation);
+        Path loc = appPath.resolve("loc");
+        String typeWithExtension = "xml/" + type + ".xml";
+        Map<String, String> translations = new HashMap<>();
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(loc, IO.DIRECTORIES_FILTER)) {
+            for (Path path : paths) {
+                if (Files.exists(path.resolve(typeWithExtension))) {
+                    final String filename = path.getFileName().toString();
+                    Element xml = cacheManager.get(context, true, loc, typeWithExtension, filename, filename, false);
+                    String translation;
+                    if (key.contains("/") || key.contains("[") || key.contains(":") ) {
+                        translation = Xml.selectString(xml, key);
+                    } else {
+                        translation = xml.getChildText(key);
                 }
+                    if (translation != null && !translation.trim().isEmpty()) {
+                        translations.put(filename, translation);
+            }
+        }
             }
         }
         

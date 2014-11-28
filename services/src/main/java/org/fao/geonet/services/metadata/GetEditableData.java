@@ -34,6 +34,8 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 /** Retrieves a particular metadata with editing information. Access is restricted
@@ -49,7 +51,7 @@ public class GetEditableData implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
         useEditTab = params.getValue("editTab", "false").equals("true");
 	}
 

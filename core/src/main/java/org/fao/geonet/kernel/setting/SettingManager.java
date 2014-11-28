@@ -142,6 +142,7 @@ public class SettingManager {
                     }
                     currentElement.setAttribute("datatype", String.valueOf(dataType.ordinal()));
                     currentElement.setAttribute("datatypeName", dataType.name());
+
                     currentElement.setText(setting.getValue());
                 }
                 parent.addContent(currentElement);
@@ -340,7 +341,7 @@ public class SettingManager {
         String protocol = getValue(Geonet.Settings.SERVER_PROTOCOL);
         String host    = getValue(Geonet.Settings.SERVER_HOST);
         String port    = getValue(Geonet.Settings.SERVER_PORT);
-        String locServ = baseURL +"/"+ this.nodeInfo.getId() +"/" + language;
+        String locServ = baseURL +"/"+ this.nodeInfo.getId() +"/" + language + "/";
 
         return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;
     }

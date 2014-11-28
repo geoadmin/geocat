@@ -1,7 +1,7 @@
 package org.fao.geonet;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.geocat.kernel.RelatedMetadata;
+import org.fao.geonet.kernel.RelatedMetadata;
 import org.jdom.Element;
 
 /**

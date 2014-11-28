@@ -52,18 +52,15 @@ import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.getSelection;
 
 /**
  * Searches for matching extents. It is either a Like search or a XML filter
- * 
+ *
  * @author jeichar
  */
-public class Search extends List
-{
+public class Search extends List {
 
-    private enum SearchMethod
-    {
+    private enum SearchMethod {
         LOOSE, STRICT, STARTS_WITH, ENDS_WITH;
 
-        public static SearchMethod lookup(String method)
-        {
+        public static SearchMethod lookup(String method) {
             for (final SearchMethod sm : values()) {
                 if (sm.name().equalsIgnoreCase(method)) {
                     return sm;
@@ -73,9 +70,10 @@ public class Search extends List
         }
     }
 
-    private final Parser         filter11Parser = new Parser(new org.geotools.filter.v1_1.OGCConfiguration());
-    private final Parser         filter10Parser = new Parser(new org.geotools.filter.v1_0.OGCConfiguration());
-    private final FilterFactory2 filterFactory  = CommonFactoryFinder.getFilterFactory2(GeoTools.getDefaultHints());
+    private final Parser filter11Parser = new Parser(new org.geotools.filter.v1_1.OGCConfiguration());
+    private final Parser filter10Parser = new Parser(new org.geotools.filter.v1_0.OGCConfiguration());
+    private final FilterFactory2 filterFactory = CommonFactoryFinder.getFilterFactory2(GeoTools.getDefaultHints());
+
     {
         filter10Parser.setFailOnValidationError(false);
         filter10Parser.setStrict(false);
@@ -86,8 +84,7 @@ public class Search extends List
     }
 
     @Override
-    protected String validateParams(Element params)
-    {
+    protected String validateParams(Element params) {
         final String xml = Util.getParamText(params, "xml");
         if (xml != null) {
             final String version = Util.getParamText(params, "version");
@@ -112,8 +109,7 @@ public class Search extends List
     }
 
     @Override
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
 
         final String clearSelection = Util.getParamText(params, CLEAR_SELECTION);
         if (clearSelection != null && Boolean.parseBoolean(clearSelection)) {
@@ -127,8 +123,7 @@ public class Search extends List
 
     @Override
     protected Query createQuery(Element params, FeatureType featureType, String[] properties, int maxFeatures)
-            throws Exception
-    {
+            throws Exception {
         final String xml = Util.getParamText(params, "xml");
         Query query;
         if (xml != null) {
@@ -154,8 +149,7 @@ public class Search extends List
 
     }
 
-    private Filter geomFilter(String wkt, FeatureType featureType) throws Exception
-    {
+    private Filter geomFilter(String wkt, FeatureType featureType) throws Exception {
         Geometry geometry = new WKTReader().read(wkt);
         PropertyName geomAtt = filterFactory.property(featureType.getFeatureSource().getSchema()
                 .getGeometryDescriptor().getLocalName());
@@ -163,8 +157,7 @@ public class Search extends List
     }
 
     private Query xmlFilterQuery(String xml, String version, FeatureType featureType, String[] properties)
-            throws Exception
-    {
+            throws Exception {
         Filter filter;
         if (version.startsWith("1.0")) {
             filter = (Filter) filter10Parser.parse(new StringReader(xml));
@@ -174,8 +167,7 @@ public class Search extends List
         return featureType.createQuery(filter, properties);
     }
 
-    private Query likeQuery(Element params, FeatureType featureType, String[] properties) throws IOException
-    {
+    private Query likeQuery(Element params, FeatureType featureType, String[] properties) throws IOException {
         String pattern = Util.getParamText(params, "pattern") + "";
         final String method = Util.getParamText(params, "method");
         String propertyText = Util.getParamText(params, "property");
@@ -211,21 +203,19 @@ public class Search extends List
         }
     }
 
-    private String updatePattern(String method, String pattern)
-    {
-        switch (SearchMethod.lookup(method))
-        {
-        case LOOSE:
-            return "*" + pattern + "*";
+    private String updatePattern(String method, String pattern) {
+        switch (SearchMethod.lookup(method)) {
+            case LOOSE:
+                return "*" + pattern + "*";
 
-        case STARTS_WITH:
-            return pattern + "*";
+            case STARTS_WITH:
+                return pattern + "*";
 
-        case ENDS_WITH:
-            return "*" + pattern;
+            case ENDS_WITH:
+                return "*" + pattern;
 
-        default:
-            return "*" + pattern + "*";
+            default:
+                return "*" + pattern + "*";
         }
 
     }

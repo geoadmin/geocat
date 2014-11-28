@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns="http://www.fao.org/geonetwork"
-				xmlns:util="xalan://org.fao.geonet.services.gm03.TranslateAndValidate"
+				xmlns:util="xalan://org.fao.geonet.geocat.services.gm03.TranslateAndValidate"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 exclude-result-prefixes="util">
 

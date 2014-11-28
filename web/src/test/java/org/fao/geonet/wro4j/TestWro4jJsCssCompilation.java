@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 import javax.servlet.FilterConfig;
@@ -39,7 +38,7 @@ public class TestWro4jJsCssCompilation {
     public static void createModel() throws IOException {
 
         GeonetworkMavenWrojManagerFactory managerFactory = new GeonetworkMavenWrojManagerFactory();
-        Path webDir = Paths.get(AbstractCoreIntegrationTest.getWebappDir(TestWro4jJsCssCompilation.class));
+        Path webDir = AbstractCoreIntegrationTest.getWebappDir(TestWro4jJsCssCompilation.class);
         final Charset cs = Charset.forName(Constants.ENCODING);
         final List<String> configuration = Files.readAllLines(webDir.resolve("../webResources/WEB-INF/wro.properties"), cs);
 
@@ -54,21 +53,19 @@ public class TestWro4jJsCssCompilation {
         }
 
         managerFactory.setExtraConfigFile(wroProperties.toFile());
-        final GeonetWroModelFactory wroModelFactory = (GeonetWroModelFactory) managerFactory.newModelFactory();
         final Context context = Context.standaloneContext();
-        wroModelFactory.setContext(context);
         Context.set(context);
 
         managerFactory.initialize(new StandaloneContext());
         wro4jManager = managerFactory.create();
-        wro4jModel = wroModelFactory.create();
+//
+//        final GeonetWroModelFactory wroModelFactory = (GeonetWroModelFactory) ((DefaultWroModelFactoryDecorator) wro4jManager.getModelFactory()).getOriginalDecoratedObject();
+//        wroModelFactory.setContext(context);
+
+        wro4jModel = wro4jManager.getModelFactory().create();
     }
 
-//
-//    @Test
-//    public void testGnCssCompilation() throws Exception {
-//        testResourcesOfType(ResourceType.CSS, Predicates.equalTo("gn"));
-//    }
+
     @Test
     public void testCssCompilation() throws Exception {
         testResourcesOfType(ResourceType.CSS, Predicates.<String>alwaysTrue());
@@ -96,7 +93,7 @@ public class TestWro4jJsCssCompilation {
 
 
                 Context.set(Context.webContext(request, response, config));
-                System.out.println("Processing: " + requestURI);
+//                System.out.println("Processing: " + requestURI);
                 wro4jManager.process();
 
             }

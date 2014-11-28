@@ -20,6 +20,7 @@ import org.jdom.Element;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -31,7 +32,7 @@ import java.util.zip.ZipOutputStream;
  */
 public class ExportMetadataSummary implements Service {
     @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
 
     }
 
@@ -141,7 +142,7 @@ public class ExportMetadataSummary implements Service {
             }
 
             out.closeEntry();
-            return BinaryFile.encode(200, summaryFile.getPath(), true);
+            return BinaryFile.encode(200, summaryFile.toPath(), true).getElement();
         } finally {
             IOUtils.closeQuietly(out);
             searchManager.releaseIndexReader(newIndexReader);

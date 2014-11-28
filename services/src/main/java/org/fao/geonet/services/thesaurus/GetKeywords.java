@@ -24,6 +24,7 @@
 package org.fao.geonet.services.thesaurus;
 
 import com.google.common.collect.Lists;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -40,6 +41,8 @@ import org.fao.geonet.kernel.search.keyword.KeywordSort;
 import org.fao.geonet.kernel.search.keyword.SortDirection;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 import java.util.ArrayList;
 
 /**
@@ -47,7 +50,7 @@ import java.util.ArrayList;
  */
 
 public class GetKeywords implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	// --------------------------------------------------------------------------

@@ -32,14 +32,15 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
 import org.fao.geonet.geocat.kernel.reusable.FindMetadataReferences;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
-import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.GeocatXslUtil;
 import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,25 +53,23 @@ import static org.fao.geonet.util.LangUtils.iso19139DefaultLang;
  *
  * @author jeichar
  */
-public class ReferencingMetadata implements Service
-{
+public class ReferencingMetadata implements Service {
 
     @SuppressWarnings("unchecked")
-	public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
 
         String id = Util.getParam(params, "id");
         String type = Util.getParam(params, "type");
         boolean validated = Util.getParam(params, "validated", false);
 
         List<String> fields = new LinkedList<String>();
-        Function<String,String> idConverter;
+        Function<String, String> idConverter;
         FindMetadataReferences findResources;
 
         if (type.equalsIgnoreCase("deleted")) {
             findResources = DeletedObjects.createFindMetadataReferences();
             fields.addAll(Arrays.asList(DeletedObjects.getLuceneIndexField()));
-            idConverter= SharedObjectStrategy.ID_FUNC;
+            idConverter = SharedObjectStrategy.ID_FUNC;
         } else {
             final SharedObjectStrategy sharedObjectStrategy = Utils.strategy(ReusableTypes.valueOf(type), context);
             if (validated) {
@@ -78,7 +77,7 @@ public class ReferencingMetadata implements Service
             } else {
                 fields.addAll(Arrays.asList(sharedObjectStrategy.getInvalidXlinkLuceneField()));
             }
-            idConverter= sharedObjectStrategy.numericIdToConcreteId(context.getUserSession());
+            idConverter = sharedObjectStrategy.numericIdToConcreteId(context.getUserSession());
             findResources = sharedObjectStrategy;
         }
 
@@ -86,11 +85,11 @@ public class ReferencingMetadata implements Service
         UserRepository userRepository = context.getBean(UserRepository.class);
         Element response = new Element("response");
         for (MetadataRecord metadataRecord : md) {
-            
+
             Element record = new Element("record");
             response.addContent(record);
 
-            Utils.addChild(record, "id", ""+metadataRecord.id);
+            Utils.addChild(record, "id", "" + metadataRecord.id);
 
             try {
                 Element titleElement = metadataRecord.xml.getChild("identificationInfo", Geonet.Namespaces.GMD).getChild(
@@ -114,8 +113,7 @@ public class ReferencingMetadata implements Service
         return response;
     }
 
-    public void init(String appPath, ServiceConfig params) throws Exception
-    {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
 }

@@ -45,6 +45,7 @@ import org.fao.geonet.repository.geocat.RejectedSharedObjectRepository;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -54,13 +55,13 @@ import java.util.Set;
 /**
  * Deletes the objects from deleted reusable object table and unpublishes the
  * referencing metadata
- * 
+ *
  * @author jeichar
  */
 public class DeleteUnused implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        String appPath = context.getAppPath();
+        Path appPath = context.getAppPath();
         String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));
         String language = context.getLanguage();
         try {
@@ -68,7 +69,7 @@ public class DeleteUnused implements Service {
             final ThesaurusManager thesaurusMan = context.getBean(ThesaurusManager.class);
 
             process(new ContactsStrategy(context.getApplicationContext()), context);
-            process(new ExtentsStrategy(baseUrl, appPath, context.getBean(ExtentManager.class), language), context);
+            process(new ExtentsStrategy(appPath, context.getBean(ExtentManager.class), language), context);
             process(new FormatsStrategy(context.getApplicationContext()), context);
             process(new KeywordsStrategy(isoLanguagesMapper, thesaurusMan, appPath, baseUrl, language), context);
             processDeleted(context);
@@ -85,9 +86,9 @@ public class DeleteUnused implements Service {
         List<Element> nonValidated = strategy.list(userSession, false, context.getLanguage()).getChildren();
         List<String> toDelete = new ArrayList<String>();
         final Function<String, String> idConverter = strategy.numericIdToConcreteId(userSession);
-        
-	    List<String> luceneFields = new LinkedList<String>();
-	    luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
+
+        List<String> luceneFields = new LinkedList<String>();
+        luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
 
         for (Element element : nonValidated) {
             String objId = element.getChildTextTrim(SharedObjectStrategy.REPORT_ID);
@@ -113,7 +114,7 @@ public class DeleteUnused implements Service {
         for (Element element : nonValidated) {
             String objId = element.getChildTextTrim(SharedObjectStrategy.REPORT_ID);
 
-			Set<MetadataRecord> md = Utils.getReferencingMetadata(context, DeletedObjects.createFindMetadataReferences(), fields, objId,
+            Set<MetadataRecord> md = Utils.getReferencingMetadata(context, DeletedObjects.createFindMetadataReferences(), fields, objId,
                     false, false, idConverter);
             if (md.isEmpty()) {
                 toDelete.add(Integer.parseInt(objId));
@@ -123,7 +124,7 @@ public class DeleteUnused implements Service {
             DeletedObjects.delete(context, toDelete.toArray(new Integer[toDelete.size()]));
     }
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
 }

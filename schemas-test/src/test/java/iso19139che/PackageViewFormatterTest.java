@@ -1,6 +1,5 @@
 package iso19139che;
 
-import com.google.common.io.Files;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.IsoLanguageRepository;
@@ -11,6 +10,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.File;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * @author Jesse on 10/17/2014.
@@ -30,17 +32,19 @@ public class PackageViewFormatterTest extends AbstractFormatterTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("html", "true");
 
-        final File iso19139Dir = new File(manager.getSchemaDir("iso19139.che"), "formatter/package");
-        final Iterable<File> packages = Files.fileTreeTraverser().children(iso19139Dir);
-        for (File aPackage : packages) {
-            // just check that the formatter works
+        final Path iso19139Dir = manager.getSchemaDir("iso19139.che").resolve("formatter/package");
+        try (DirectoryStream<Path> packages = Files.newDirectoryStream(iso19139Dir)) {
+            for (Path aPackage : packages) {
 
-            String formatterId = iso19139Dir.getName() + "/" + aPackage.getName();
-            final MockHttpServletResponse response = new MockHttpServletResponse();
-            formatService.exec("eng", "html", "" + id, null, formatterId, "true", false, request, response);
-            final String view = response.getContentAsString();
+                // just check that the formatter works
 
-            // for now the fact that there was no error is good enough
+                String formatterId = iso19139Dir.getFileName() + "/" + aPackage.getFileName();
+                final MockHttpServletResponse response = new MockHttpServletResponse();
+                formatService.exec("eng", "html", "" + id, null, formatterId, "true", false, request, response);
+                final String view = response.getContentAsString();
+
+                // for now the fact that there was no error is good enough
+            }
         }
 
 

@@ -6,6 +6,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.AbstractThesaurusBasedTest;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.util.GeocatXslUtil;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.fao.xsl.support.Attribute;
 import org.fao.xsl.support.Count;
@@ -18,6 +19,7 @@ import org.jdom.Namespace;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
@@ -58,7 +60,7 @@ public class CharacterStringToLocalisedTest {
                                 + "<che:PT_FreeURL> <che:URLGroup> <che:LocalisedURL locale=\"#DE\">http://www.meineseite.ch</che:LocalisedURL> </che:URLGroup> </che:PT_FreeURL> "
                                 + "</gmd:linkage> " + "</che:CHE_MD_Metadata>", false);
 
-        Element transformed = Xml.transform(testData, pathToXsl);
+        Element transformed = Xml.transform(testData, new File(pathToXsl).toPath());
         findAndAssert(transformed, new Count(1, new Finder("linkage/PT_FreeURL")));
         findAndAssert(transformed, new Count(0, new Finder("linkage/LocalisedURL")));
         findAndAssert(transformed, new Count(2, new Finder("LocalisedURL")));
@@ -89,13 +91,13 @@ public class CharacterStringToLocalisedTest {
                             + "</gmd:CI_OnlineResource>\n" + "</che:CHE_MD_Metadata>";
         Element testData = Xml.loadString(String.format(xml, "DE"), false);
 
-        Element transformed = Xml.transform(testData, pathToXsl);
+        Element transformed = Xml.transform(testData, IO.toPath(pathToXsl));
         findAndAssert(transformed, new Count(1, new Finder("CI_OnlineResource/name/CharacterString")));
         findAndAssert(transformed, new Count(0, new Finder("CI_OnlineResource/name/PT_FreeText/textGroup/LocalisedCharacterString")));
 
         testData = Xml.loadString(String.format(xml, "FR"), false);
 
-        transformed = Xml.transform(testData, pathToXsl);
+        transformed = Xml.transform(testData, IO.toPath(pathToXsl));
         findAndAssert(transformed, new Count(1, new Finder("CI_OnlineResource/name/CharacterString")));
         findAndAssert(transformed, new Count(0, new Finder("CI_OnlineResource/name/PT_FreeText/textGroup/LocalisedCharacterString")));
 
@@ -111,7 +113,7 @@ public class CharacterStringToLocalisedTest {
                                   + "  </gmd:name>\n"
                                   + "</gmd:CI_OnlineResource>\n" + "</che:CHE_MD_Metadata>", false);
 
-        transformed = Xml.transform(testData, pathToXsl);
+        transformed = Xml.transform(testData, IO.toPath(pathToXsl));
         findAndAssert(transformed, new Count(1, new Finder("CI_OnlineResource/name/CharacterString")));
         findAndAssert(transformed, new Count(0, new Finder("CI_OnlineResource/name/PT_FreeText/textGroup/LocalisedCharacterString")));
 
@@ -126,7 +128,7 @@ public class CharacterStringToLocalisedTest {
                                   + "  </gmd:name>\n"
                                   + "</gmd:CI_OnlineResource>\n" + "</che:CHE_MD_Metadata>", false);
 
-        transformed = Xml.transform(testData, pathToXsl);
+        transformed = Xml.transform(testData, IO.toPath(pathToXsl));
         findAndAssert(transformed, new Count(0, new Finder("CI_OnlineResource/name")));
     }
 
@@ -138,7 +140,7 @@ public class CharacterStringToLocalisedTest {
                 .loadString(
                         "<descriptiveKeywords xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"local://che.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A//geocat.ch/concept%23154&amp;amp;locales=DE,FR,IT,EN\"/>",
                         false);
-        Element transformed = Xml.transform(testData, pathToXsl);
+        Element transformed = Xml.transform(testData, IO.toPath(pathToXsl));
         String expected = "local://che.keyword.get?thesaurus=local._none_.geocat.ch&id=http%3A//geocat.ch/concept%23154&locales=DE,FR,IT,EN";
         assertEquals(expected, transformed.getAttributeValue("href", XLink.NAMESPACE_XLINK));
         assertFalse(Xml.getString(transformed).contains("&amp;amp;"));
@@ -161,7 +163,7 @@ public class CharacterStringToLocalisedTest {
                                 + "<che:language><gmd:LanguageCode codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode\" codeListValue=\"fra\" /></che:language>"
                                 + "</che:CHE_MD_Legislation></che:legislationInformation>" + "</che:CHE_MD_Metadata>",
                         false);
-        Element transformed = Xml.transform(testData, pathToXsl);
+        Element transformed = Xml.transform(testData, IO.toPath(pathToXsl));
         findAndAssert(transformed, new Count(1, new Finder("language/CharacterString", new EqualText("ger"))));
         findAndAssert(transformed, new Count(4, new Finder("locale/PT_Locale/languageCode")));
         findAndAssert(transformed, new Count(1, new Finder("locale/PT_Locale/languageCode/LanguageCode",
@@ -227,7 +229,7 @@ public class CharacterStringToLocalisedTest {
                                 + "<che:PT_FreeURL><che:URLGroup><che:LocalisedURL locale=\"#FR\">http://wms.geo.admin.ch/?lang=fr&amp;</che:LocalisedURL></che:URLGroup></che:PT_FreeURL>"
                                 + "</gmd:linkage>", false);
 
-        Element transformed = Xml.transform(testData, pathToXsl);
+        Element transformed = Xml.transform(testData, IO.toPath(pathToXsl));
 
         assertEquals(1, transformed.getChildren("PT_FreeURL", GeocatXslUtil.CHE_NAMESPACE).size());
         assertEquals(1, transformed.getChildren().size());
@@ -257,9 +259,9 @@ public class CharacterStringToLocalisedTest {
                         + "   <gmd:contactInstructions><gco:CharacterString>Kundencenter</gco:CharacterString></gmd:contactInstructions>"
                         + "</che:CHE_MD_Metadata>", false);
 
-        Element transformed1 = Xml.transform(testData1, pathToXsl).getChild("contactInstructions",
+        Element transformed1 = Xml.transform(testData1, IO.toPath(pathToXsl)).getChild("contactInstructions",
                 Geonet.Namespaces.GMD);
-        Element transformed2 = Xml.transform(testData2, pathToXsl).getChild("contactInstructions",
+        Element transformed2 = Xml.transform(testData2, IO.toPath(pathToXsl)).getChild("contactInstructions",
                 Geonet.Namespaces.GMD);
 
         assertNotNull(transformed1.getAttribute("type", Geonet.Namespaces.XSI));
@@ -322,7 +324,7 @@ public class CharacterStringToLocalisedTest {
                                 + "   </gmd:contactInstructions>"
                                 + "</che:CHE_MD_Metadata>", false);
 
-        Element transformed1 = Xml.transform(testData1, pathToXsl).getChild("contactInstructions",
+        Element transformed1 = Xml.transform(testData1, IO.toPath(pathToXsl)).getChild("contactInstructions",
                 Geonet.Namespaces.GMD);
 
         assertNotNull(transformed1.getAttribute("type", Geonet.Namespaces.XSI));
@@ -404,7 +406,7 @@ public class CharacterStringToLocalisedTest {
         String pathToXsl = TransformationTestSupport.geonetworkWebapp
                            + "/xsl/characterstring-to-localisedcharacterstring.xsl";
 
-        final Element afterTransform = Xml.transform(data, pathToXsl);
+        final Element afterTransform = Xml.transform(data, IO.toPath(pathToXsl));
 
         assertNull(Xml.selectElement(afterTransform, "gmd:referenceSystemInfo//gmd:code/gco:CharacterString",
                 Lists.newArrayList(GMD, GCO)));

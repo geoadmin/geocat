@@ -3,7 +3,6 @@ package org.fao.geonet.geocat.services.gm03;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.fao.geonet.geocat.services.gm03.ISO19139CHEtoGM03;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +23,7 @@ public class UnDuplifier {
      */
     public boolean addNode(Node root, Node node) throws ISO19139CHEtoGM03.FlattenerException {
         // extents should not be removed because of reusable objects.  A real corner case but possible
-        if(node.getNodeName().equals("GM03_2Core.Core.EX_Extent")) return false;
+        if (node.getNodeName().equals("GM03_2Core.Core.EX_Extent")) return false;
 
         int hash = computeNodeHash(node);
         List<Node> curSlot = nodesByHash.get(hash);
@@ -54,7 +53,6 @@ public class UnDuplifier {
      *
      * @param node
      * @throws ISO19139CHEtoGM03.FlattenerException
-     *
      */
     public void translateRefs(Node node) throws ISO19139CHEtoGM03.FlattenerException {
         switch (node.getNodeType()) {

@@ -32,8 +32,8 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
-import org.fao.geonet.geocat.kernel.extent.Source;
 import org.fao.geonet.geocat.kernel.extent.FeatureType;
+import org.fao.geonet.geocat.kernel.extent.Source;
 import org.fao.geonet.util.LangUtils;
 import org.geotools.data.FeatureStore;
 import org.geotools.gml2.GMLConfiguration;
@@ -45,6 +45,7 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.file.Path;
 import java.util.Arrays;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -57,30 +58,23 @@ import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.TYPENAME;
 
 /**
  * Service for adding new Geometries to a the updateable wfs featuretype
- * 
+ *
  * @author jeichar
- * 
  */
-public class Add implements Service
-{
+public class Add implements Service {
 
-    enum Format
-    {
-        WKT
-        {
-
+    enum Format {
+        WKT {
             @Override
-            public Geometry parse(String geomParam) throws ParseException
-            {
+            public Geometry parse(String geomParam) throws ParseException {
                 final WKTReader reader = new WKTReader();
                 return reader.read(geomParam);
             }
 
         },
-        GML2
-        {
+        GML2 {
 
-            Parser parser = new Parser(new GMLConfiguration());
+            transient Parser parser = new Parser(new GMLConfiguration());
             {
                 parser.setFailOnValidationError(false);
                 parser.setStrict(false);
@@ -88,16 +82,14 @@ public class Add implements Service
             }
 
             @Override
-            public Geometry parse(String geomParam) throws Exception
-            {
+            public Geometry parse(String geomParam) throws Exception {
                 return gmlParsing(parser, geomParam);
             }
 
         },
-        GML3
-        {
+        GML3 {
 
-            Parser parser = new Parser(new org.geotools.gml3.GMLConfiguration());
+            transient Parser parser = new Parser(new org.geotools.gml3.GMLConfiguration());
             {
                 parser.setFailOnValidationError(false);
                 parser.setStrict(false);
@@ -105,27 +97,24 @@ public class Add implements Service
             }
 
             @Override
-            public Geometry parse(String geomParam) throws Exception
-            {
+            public Geometry parse(String geomParam) throws Exception {
                 return gmlParsing(parser, geomParam);
             }
 
         };
 
-        public static Format lookup(String param)
-        {
+        public static Format lookup(String param) {
             for (final Format format : values()) {
                 if (format.name().equals(param)) {
                     return format;
                 }
             }
             throw new IllegalArgumentException(param + " is not a recognized format.  Choices include: "
-                    + Arrays.toString(values()));
+                                               + Arrays.toString(values()));
         }
 
         protected static Geometry gmlParsing(Parser parser, String gml) throws IOException, SAXException,
-                ParserConfigurationException
-        {
+                ParserConfigurationException {
             Object obj = parser.parse(new StringReader(gml));
 
             if (obj instanceof Geometry) {
@@ -140,12 +129,10 @@ public class Add implements Service
         public abstract Geometry parse(String geomParam) throws Exception;
     }
 
-    public void init(String appPath, ServiceConfig params) throws Exception
-    {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         final ExtentManager extentMan = context.getBean(ExtentManager.class);
 
         String id = Util.getParamText(params, ID);
@@ -169,7 +156,7 @@ public class Add implements Service
 
         if (!featureType.isModifiable()) {
             return ExtentHelper.error(typename + " is not a modifiable type, modifiable types are: "
-                    + wfs.listModifiable());
+                                      + wfs.listModifiable());
         }
         final FeatureStore<SimpleFeatureType, SimpleFeature> store = (FeatureStore<SimpleFeatureType, SimpleFeature>) featureType
                 .getFeatureSource();
@@ -187,9 +174,8 @@ public class Add implements Service
     }
 
     static boolean idExists(FeatureStore<SimpleFeatureType, SimpleFeature> store, String id, FeatureType featureType)
-            throws IOException
-    {
-        return !store.getFeatures(featureType.createQuery(id, new String[] { featureType.idColumn })).isEmpty();
+            throws IOException {
+        return !store.getFeatures(featureType.createQuery(id, new String[]{featureType.idColumn})).isEmpty();
     }
 
 

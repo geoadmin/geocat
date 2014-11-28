@@ -42,8 +42,8 @@ import org.fao.geonet.geocat.kernel.extent.ExtentFormat;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper.ExtentTypeCode;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
-import org.fao.geonet.geocat.kernel.extent.Source;
 import org.fao.geonet.geocat.kernel.extent.FeatureType;
+import org.fao.geonet.geocat.kernel.extent.Source;
 import org.fao.geonet.util.ElementFinder;
 import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.utils.Log;
@@ -75,6 +75,7 @@ import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.spatial.Within;
 
 import java.io.StringReader;
+import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -109,15 +110,15 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
     //private final String _baseURL;
     private final ExtentManager _extentMan;
 
-    private final String _gmlConvertStyleSheet;
+    private final Path _gmlConvertStyleSheet;
     private final String _currentLocale;
-    private final String _appPath;
-    private final String _flattenStyleSheet;
+    private final Path _appPath;
+    private final Path _flattenStyleSheet;
 
 
-    public ExtentsStrategy(String baseURL, String appDir, ExtentManager extentMan, String currentLocale) {
-        this._gmlConvertStyleSheet = appDir + "xsl/reusable-object-gml-convert.xsl";
-        this._flattenStyleSheet = appDir + "xsl/reusable-object-snippet-flatten.xsl";
+    public ExtentsStrategy(Path appDir, ExtentManager extentMan, String currentLocale) {
+        this._gmlConvertStyleSheet = appDir.resolve("xsl/reusable-object-gml-convert.xsl");
+        this._flattenStyleSheet = appDir.resolve("xsl/reusable-object-snippet-flatten.xsl");
 //        this._baseURL = baseURL;
         this._appPath = appDir;
         this._extentMan = extentMan;
@@ -814,7 +815,7 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
 
 
     @SuppressWarnings("rawtypes")
-    private String findDesc(Element originalElem, String metadataLang, String appPath) throws Exception {
+    private String findDesc(Element originalElem, String metadataLang, Path appPath) throws Exception {
         Element descElem = null;
         Iterator idIter = originalElem.getDescendants(new ElementFinder("description", Geonet.Namespaces.GMD, "*"));
 

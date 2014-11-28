@@ -40,8 +40,8 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.geocat.kernel.RelatedMetadata;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.RelatedMetadata;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneSearcher;
@@ -55,7 +55,7 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.context.ApplicationContext;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -207,9 +207,9 @@ public class SearchController {
      * @param resultType      requested ResultType
      * @param strategy        ElementNames strategy
      * @param displayLanguage
-     * @throws CatalogException hmm
      * @return The XML metadata record if the record could be converted to the required output schema. Null if no
      * conversion available for the schema (eg. fgdc record can not be converted to ISO).
+     * @throws CatalogException hmm
      */
     public static Element retrieveMetadata(ServiceContext context, String id, ElementSetName setName, OutputSchema
             outSchema, Set<String> elemNames, String typeName, ResultType resultType, String strategy, String displayLanguage) throws CatalogException {
@@ -238,9 +238,9 @@ public class SearchController {
             // --- If this occur user should probably migrate the catalogue from iso19115 to iso19139.
             // --- But sometimes you could harvest remote node in iso19115 and make them available through CSW
             if (schema.equals("iso19115")) {
-                res = Xml.transform(res, new StringBuilder().append(context.getAppPath()).append("xsl")
-                        .append(File.separator).append("conversion").append(File.separator).append("import")
-                        .append(File.separator).append("ISO19115-to-ISO19139.xsl").toString());
+                Path styleSheetPath =
+                        context.getAppPath().resolve("xsl").resolve("conversion").resolve("import").resolve("ISO19115-to-ISO19139.xsl");
+                res = Xml.transform(res, styleSheetPath);
                 schema = "iso19139";
             }
 
@@ -313,8 +313,8 @@ public class SearchController {
             throw new InvalidParameterValueEx("outputSchema not supported for metadata " + id + " schema.", schema);
         }
 
-        String schemaDir = schemaManager.getSchemaCSWPresentDir(schema) + File.separator;
-        String styleSheet = schemaDir + prefix + "-" + elementSetName + ".xsl";
+        Path schemaDir = schemaManager.getSchemaCSWPresentDir(schema);
+        Path styleSheet = schemaDir.resolve(prefix + "-" + elementSetName + ".xsl");
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("lang", displayLanguage);
@@ -588,8 +588,6 @@ public class SearchController {
     private static Element geocatConversions(ServiceContext context, String schema, Element res, OutputSchema outSchema, String fullSchema,
                                              ResultType resultType, String id, GeonetContext gc, boolean isCHE) throws Exception {
 
-        String FS = File.separator;
-
         // --- transform iso19115 record to iso19139
         // --- If this occur user should probably migrate the catalogue
         // from
@@ -598,7 +596,7 @@ public class SearchController {
         // and
         // make them available through CSW
         if (schema.equals("iso19115")) {
-            res = Xml.transform(res, context.getAppPath() + "xsl" + FS + "conversion" + FS + "import" + FS + "ISO19115-to-ISO19139.xsl");
+            res = Xml.transform(res, context.getAppPath().resolve("xsl/conversion/import/ISO19115-to-ISO19139.xsl"));
             schema = "iso19139";
         }
 
@@ -607,7 +605,7 @@ public class SearchController {
             params.put("lang", context.getLanguage());
             params.put("includeInfo", "true");
 
-            res = Xml.transform(res, context.getAppPath() + "xsl" + FS + "conversion" + FS + "export" + FS + "xml_iso19139.xsl", params);
+            res = Xml.transform(res, context.getAppPath().resolve("xsl/conversion/export/xml_iso19139.xsl"), params);
         }
         // --- skip metadata with wrong schemas
         if (schema.equals("fgdc-std") || schema.equals("dublin-core") || schema.equals("iso19110"))

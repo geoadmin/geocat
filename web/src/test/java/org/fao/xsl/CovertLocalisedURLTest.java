@@ -1,17 +1,18 @@
 package org.fao.xsl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.filter.Filter;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-import org.jdom.filter.Filter;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 
@@ -36,7 +37,7 @@ public class CovertLocalisedURLTest
 
         data.setName("description");
 
-        Element isoData = Xml.transform(data, pathToXsl);
+        Element isoData = Xml.transform(data, IO.toPath(pathToXsl));
 
         Map<String, String> langMap = findUrls(isoData);
 
@@ -50,7 +51,7 @@ public class CovertLocalisedURLTest
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+
                 "<description>http://camptocamp.com/main</description>", false);
 
-        isoData = Xml.transform(noTranslation, pathToXsl);
+        isoData = Xml.transform(noTranslation, IO.toPath(pathToXsl));
 
         langMap = findUrls(isoData);
 
@@ -62,7 +63,7 @@ public class CovertLocalisedURLTest
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+
                 "<description><EN>EN</EN><EN>EN2</EN></description>", false);
 
-        isoData = Xml.transform(duplicateTranslation, pathToXsl);
+        isoData = Xml.transform(duplicateTranslation, IO.toPath(pathToXsl));
         @SuppressWarnings("unchecked")
 		Iterator<Element> textGroups = isoData.getDescendants(new Filter()
         {

@@ -1,7 +1,6 @@
 package org.fao.xsl;
 
-import static org.junit.Assert.assertTrue;
-
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.fao.xsl.support.Count;
 import org.fao.xsl.support.EqualTrimText;
@@ -9,6 +8,8 @@ import org.fao.xsl.support.Finder;
 import org.fao.xsl.support.Requirement;
 import org.jdom.Element;
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 public class UpdateFixedInfoTest {
 	
@@ -34,10 +35,10 @@ public class UpdateFixedInfoTest {
 				"     </che:CHE_MD_DataIdentification>" +
 				"   </gmd:identificationInfo>" +
 				"</che:CHE_MD_Metadata>", false);
-		Element transformed = Xml.transform(testData, pathToXsl);
+		Element transformed = Xml.transform(testData, IO.toPath(pathToXsl));
 		assertCorrectElements(transformed);
 		
-		transformed = Xml.transform(transformed, pathToXsl);
+		transformed = Xml.transform(transformed, IO.toPath(pathToXsl));
 //		System.out.println(Xml.getString(transformed));
 		assertCorrectElements(transformed);
 	}

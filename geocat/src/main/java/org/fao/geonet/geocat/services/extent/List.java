@@ -34,8 +34,8 @@ import org.fao.geonet.geocat.kernel.extent.ExtentFormat;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.geocat.kernel.extent.ExtentSelection;
-import org.fao.geonet.geocat.kernel.extent.Source;
 import org.fao.geonet.geocat.kernel.extent.FeatureType;
+import org.fao.geonet.geocat.kernel.extent.Source;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
 import org.fao.geonet.utils.Xml;
 import org.geotools.data.DataStore;
@@ -48,6 +48,7 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.AbstractCollection;
 import java.util.Arrays;
 import java.util.Collection;
@@ -74,19 +75,16 @@ import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.getSelection;
 
 /**
  * List all the available extents
- * 
+ *
  * @author jeichar
  */
-public class List implements Service
-{
+public class List implements Service {
 
-    private static final class AllCollection extends AbstractCollection<String>
-    {
+    private static final class AllCollection extends AbstractCollection<String> {
         private Collection<?> restricted;
 
         @Override
-        public boolean contains(Object o)
-        {
+        public boolean contains(Object o) {
             if (restricted == null) {
                 return true;
             } else {
@@ -96,31 +94,27 @@ public class List implements Service
         }
 
         @Override
-        public Iterator<String> iterator()
-        {
+        public Iterator<String> iterator() {
             return null;
         }
 
         @Override
-        public boolean retainAll(Collection<?> c)
-        {
+        public boolean retainAll(Collection<?> c) {
             restricted = c;
             return true;
         }
 
         @Override
-        public int size()
-        {
+        public int size() {
             return 0;
         }
     }
 
     private static final String HREF = "href";
-    private Collection<String>  defaultTypesToShow;
-    private int                 maxFeatures;
+    private Collection<String> defaultTypesToShow;
+    private int maxFeatures;
 
-    public void init(String appPath, ServiceConfig params) throws Exception
-    {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         java.util.List<Element> types = params.getChildren("typename");
         if (types != null) {
             defaultTypesToShow = new LinkedHashSet<String>();
@@ -136,13 +130,11 @@ public class List implements Service
      * Returns a string if the parameters are not acceptable. This version
      * returns null (no error)
      */
-    protected String validateParams(Element params)
-    {
+    protected String validateParams(Element params) {
         return null;
     }
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         Util.toLowerCase(params);
         final String paramError = validateParams(params);
         if (paramError != null) {
@@ -192,8 +184,7 @@ public class List implements Service
     }
 
     private final boolean listFeatureType(Element params, ServiceContext context, Source wfs, Element wfsElem,
-            DataStore ds, FeatureType featureType, Page page, ExtentFormat format) throws Exception
-    {
+                                          DataStore ds, FeatureType featureType, Page page, ExtentFormat format) throws Exception {
         final FeatureSource<SimpleFeatureType, SimpleFeature> featureSource = featureType.getFeatureSource();
         final String modifiable = String.valueOf(featureType.isModifiable());
 
@@ -239,9 +230,8 @@ public class List implements Service
     }
 
     private void createFeatureElem(Source wfs, FeatureType featureType, final String baseURL, final String langCode,
-            final Element typeElem, final ExtentSelection selection, final SimpleFeature next, ExtentFormat format)
-            throws IOException, JDOMException
-    {
+                                   final Element typeElem, final ExtentSelection selection, final SimpleFeature next, ExtentFormat format)
+            throws IOException, JDOMException {
         final Element featureElem = new Element(FEATURE);
         String id = next.getAttribute(featureType.idColumn).toString();
         try {
@@ -254,11 +244,11 @@ public class List implements Service
 
         final boolean selected;
         synchronized (selection.getIds()) {
-            selected = selection != null && selection.getIds().contains(Pair.read(featureType, id));
+            selected = selection.getIds().contains(Pair.read(featureType, id));
         }
         featureElem.setAttribute(SELECTED, String.valueOf(selected));
 
-        final String href = ExtentsStrategy.baseHref(id, wfs.wfsId, featureType.typename)+"&format=" + format;
+        final String href = ExtentsStrategy.baseHref(id, wfs.wfsId, featureType.typename) + "&format=" + format;
         featureElem.setAttribute(HREF, href);
         if (featureType.descColumn != null) {
             String descAt = ExtentHelper.decodeDescription((String) next.getAttribute(featureType.descColumn));
@@ -277,20 +267,17 @@ public class List implements Service
     }
 
     protected Query createQuery(Element params, FeatureType featureType, String[] properties, int maxFeatures)
-            throws Exception
-    {
+            throws Exception {
         final Query defaultQuery = featureType.createQuery(properties);
         defaultQuery.setMaxFeatures(maxFeatures);
         return defaultQuery;
     }
 
-    private final class Page
-    {
+    private final class Page {
         final int startOfPage, endOfPage;
-        int       currentCount = 0;
+        int currentCount = 0;
 
-        public Page(Element params)
-        {
+        public Page(Element params) {
             final String maxParam = Util.getParamText(params, NUM_RESULTS);
 
             final int maxFeatures;
@@ -312,18 +299,15 @@ public class List implements Service
             endOfPage = page * maxFeatures;
         }
 
-        public void inc()
-        {
+        public void inc() {
             currentCount++;
         }
 
-        public boolean canAddFeature(SimpleFeature next)
-        {
+        public boolean canAddFeature(SimpleFeature next) {
             return startOfPage <= currentCount && currentCount < endOfPage;
         }
 
-        public boolean limitReached()
-        {
+        public boolean limitReached() {
             return endOfPage <= currentCount;
         }
     }

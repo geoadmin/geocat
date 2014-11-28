@@ -33,14 +33,15 @@ import jeeves.xlink.XLink;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
-import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -51,14 +52,12 @@ import java.util.Set;
 
 /**
  * Makes a list of all the non-validated elements
- * 
+ *
  * @author jeichar
  */
-public class Validate implements Service
-{
+public class Validate implements Service {
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         String page = Util.getParamText(params, "type");
         String[] ids = Util.getParamText(params, "id").split(",");
 
@@ -75,14 +74,13 @@ public class Validate implements Service
         context.getBean(SearchManager.class).forceIndexChanges();
 
         Log.info(Geocat.Module.REUSABLE, "Successfully validated following reusable objects: " + page
-                + " \n(" + Arrays.toString(ids) + ")");
+                                         + " \n(" + Arrays.toString(ids) + ")");
 
         return results;
     }
 
     private List<Element> performValidation(String[] ids, SharedObjectStrategy strategy, ServiceContext context,
-            String baseUrl) throws Exception
-    {
+                                            String baseUrl) throws Exception {
         Map<String, String> idMapping = strategy.markAsValidated(ids, context.getUserSession());
 
         List<Element> result = new ArrayList<Element>();
@@ -95,47 +93,46 @@ public class Validate implements Service
         return result;
     }
 
-    public void init(String appPath, ServiceConfig params) throws Exception
-    {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
-	private Element updateXLink(SharedObjectStrategy strategy, ServiceContext context, Map<String, String> idMapping, String id,
-	        boolean validated ) throws Exception {
-	
-	    UserSession session = context.getUserSession();
-	    List<String> luceneFields = new LinkedList<String>();
-	    luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
+    private Element updateXLink(SharedObjectStrategy strategy, ServiceContext context, Map<String, String> idMapping, String id,
+                                boolean validated) throws Exception {
 
-	    final Function<String, String> idConverter = strategy.numericIdToConcreteId(session);
+        UserSession session = context.getUserSession();
+        List<String> luceneFields = new LinkedList<String>();
+        luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
+
+        final Function<String, String> idConverter = strategy.numericIdToConcreteId(session);
         Set<MetadataRecord> results = Utils.getReferencingMetadata(context, strategy, luceneFields, id, false, true, idConverter);
-	
-	    for( MetadataRecord metadataRecord : results ) {
-	
-	        for( String xlinkHref : metadataRecord.xlinks ) {
-	
-	            @SuppressWarnings("unchecked")
-	            Iterator<Element> xlinks = metadataRecord.xml.getDescendants(new Utils.FindXLinks(xlinkHref));
-	            while( xlinks.hasNext() ) {
-	                Element xlink = xlinks.next();
-	                xlink.removeAttribute(XLink.ROLE, XLink.NAMESPACE_XLINK);
-	
-	                String oldHref = xlink.getAttributeValue(XLink.HREF, XLink.NAMESPACE_XLINK);
-	                String newId = idMapping.get(id);
-	                if (newId == null) {
-	                    newId = id;
-	                }
-	                String validateHRef = strategy.updateHrefId(oldHref, newId, session);
-	                if (validated) {
-	                    xlink.setAttribute(XLink.HREF, validateHRef, XLink.NAMESPACE_XLINK);
-	                }
-	            }
-	
-	        }
-	        metadataRecord.commit(context);
-	    }
-	    Element e = new Element("id");
-	    e.setText(id);
-	    return e;
-	}
+
+        for (MetadataRecord metadataRecord : results) {
+
+            for (String xlinkHref : metadataRecord.xlinks) {
+
+                @SuppressWarnings("unchecked")
+                Iterator<Element> xlinks = metadataRecord.xml.getDescendants(new Utils.FindXLinks(xlinkHref));
+                while (xlinks.hasNext()) {
+                    Element xlink = xlinks.next();
+                    xlink.removeAttribute(XLink.ROLE, XLink.NAMESPACE_XLINK);
+
+                    String oldHref = xlink.getAttributeValue(XLink.HREF, XLink.NAMESPACE_XLINK);
+                    String newId = idMapping.get(id);
+                    if (newId == null) {
+                        newId = id;
+                    }
+                    String validateHRef = strategy.updateHrefId(oldHref, newId, session);
+                    if (validated) {
+                        xlink.setAttribute(XLink.HREF, validateHRef, XLink.NAMESPACE_XLINK);
+                    }
+                }
+
+            }
+            metadataRecord.commit(context);
+        }
+        Element e = new Element("id");
+        e.setText(id);
+        return e;
+    }
 
 }

@@ -1,9 +1,11 @@
 package common
 
+import org.fao.geonet.services.metadata.format.groovy.Environment
+
 public class Handlers {
-    private def handlers;
-    private def f
-    private def env
+    private org.fao.geonet.services.metadata.format.groovy.Handlers handlers;
+    private org.fao.geonet.services.metadata.format.groovy.Functions f
+    private Environment env
 
     common.Matchers matchers
     common.Functions func
@@ -124,29 +126,35 @@ public class Handlers {
             }
         }
     }
+
     def htmlOrXmlStart = {
         if (func.isHtmlOutput()) {
-            return '''
+            def libJs = '../../static/lib.js'
+            if (env.param("debug").toBool()) {
+                libJs += '?minimize=false'
+            }
+            return """
 <!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8"/>
     <link rel="stylesheet" href="../../static/metadata_formatter.css"/>
+    <script src="$libJs"></script>
 </head>
 <body>
 <div class="container gn-metadata-view">
-'''
+"""
         } else {
             return '''
 <div class="gn-metadata-view">
 '''
         }
     }
+
     def htmlOrXmlEnd = {
         if (func.isHtmlOutput()) {
             return '''
 </div>
-<script src="../../static/lib.js"></script>
 <script>
     $('.toggler').on('click', function() {
         $(this).toggleClass('closed');

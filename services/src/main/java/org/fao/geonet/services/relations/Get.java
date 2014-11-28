@@ -38,13 +38,14 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.*;
 
 //=============================================================================
 
 public class Get implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	// --------------------------------------------------------------------------

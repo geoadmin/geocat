@@ -14,11 +14,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>ch.geocat</groupId>
-			<artifactId>jeeves</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>ch.geocat</groupId>
 			<artifactId>core</artifactId>
 			<version>${project.version}</version>
 		</dependency>

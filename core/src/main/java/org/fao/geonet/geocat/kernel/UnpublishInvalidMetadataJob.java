@@ -31,6 +31,7 @@ import org.joda.time.DateTime;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -44,7 +45,7 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
     AtomicBoolean running = new AtomicBoolean(false);
 
     @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
 
     }
 
