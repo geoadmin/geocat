@@ -276,8 +276,8 @@ public class SearchManager {
             // create hardcoded default PerFieldAnalyzerWrapper w/o stopwords
             _defaultAnalyzer = SearchManager.createHardCodedPerFieldAnalyzerWrapper(null, ignoreChars);
         }
-        if (!Files.isDirectory(_stopwordsDir)) {
-            Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir.toAbsolutePath() +
+        if (_stopwordsDir == null || !Files.isDirectory(_stopwordsDir)) {
+            Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir +
                                               ", not using any stopwords.");
         } else {
             if (Log.isDebugEnabled(Geonet.LUCENE)) {
@@ -394,8 +394,8 @@ public class SearchManager {
 		} else {
             // there is an analyzer defined in lucene config
 
-            if (!Files.isDirectory(_stopwordsDir)) {
-                Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir.toAbsolutePath() +
+            if (_stopwordsDir == null || !Files.isDirectory(_stopwordsDir)) {
+                Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir +
                                                   ", not using any stopwords.");
             } else {
                 if (Log.isDebugEnabled(Geonet.LUCENE)) {
@@ -528,7 +528,7 @@ public class SearchManager {
 
          _stylesheetsDir = _geonetworkDataDirectory.resolveWebResource(SEARCH_STYLESHEETS_DIR_PATH);
 
-         if (!Files.isDirectory(_stylesheetsDir)) {
+         if (_stylesheetsDir == null || !Files.isDirectory(_stylesheetsDir)) {
              throw new Exception("directory " + _stylesheetsDir + " not found");
          }
 

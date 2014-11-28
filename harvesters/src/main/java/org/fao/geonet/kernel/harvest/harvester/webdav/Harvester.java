@@ -264,7 +264,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 setHarvested(true).
                 setUuid(params.uuid).
                 setUri(rf.getPath());
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
         metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
         String id = String.valueOf(metadata.getId());
@@ -408,7 +408,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context, log);
 
             metadata.getCategories().clear();
-            addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+            addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
 
             dataMan.flush();
 

@@ -254,7 +254,7 @@ public class Aligner extends BaseAligner
                 setHarvested(true).
                 setUuid(params.uuid);
 
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
         metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
@@ -315,7 +315,7 @@ public class Aligner extends BaseAligner
                 addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
                 metadata.getCategories().clear();
-                addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+                addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
 
                 dataMan.flush();
 

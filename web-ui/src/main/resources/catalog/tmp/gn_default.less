@@ -31,13 +31,20 @@
   }
 }
 
+.gn-resultview {
+  .img-thumbnail {
+    margin-left: 1em;
+    max-height: 140px;
+  }
+}
 [data-ng-search-form] {
   .gn-top-search {
     text-align: center;
     background: @panel-default-heading-bg;
     border: 1px solid @panel-default-border;
-    padding: 1em;
+    padding: 8px;
     margin: 0 15px;
+    margin-bottom: 10px;
     vertical-align: middle;
     border-radius: 3px;
     position: relative;
@@ -59,16 +66,6 @@
   }
 }
 
-.gn-advanced-searchform {
-  label {
-    font-weight: normal;
-  }
-  .col-md-4 {
-    padding-top: 1.3em;
-    padding-bottom: 1.3em;
-  }
-}
-
 [gn-main-viewer] {
   position: absolute;
   left: 0;
@@ -76,7 +73,7 @@
   bottom: 0;
   top: ~"calc(98px + 1.6em)";
   border: 1px solid @panel-default-border;
-  [go-map] {
+  [ngeo-map] {
     height: 100%;
   }
 }
