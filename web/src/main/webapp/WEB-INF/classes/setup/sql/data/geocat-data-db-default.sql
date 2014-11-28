@@ -29,9 +29,9 @@ INSERT INTO GroupsDes (IDDES, LANGID, LABEL) VALUES (42,'ger','Test Group');
 INSERT INTO GroupsDes (IDDES, LANGID, LABEL) VALUES (42,'ita','Test Group');
 INSERT INTO GroupsDes (IDDES, LANGID, LABEL) VALUES (42,'roh','Test Group');
 
-INSERT INTO public.schematron (id, file, schemaname, displaypriority) VALUES (1, 'schematron-rules-inspire-strict.disabled.xsl', 'iso19139.che', 0);
-INSERT INTO public.schematron (id, file, schemaname, displaypriority) VALUES (2, 'schematron-rules-bgdi.required.xsl', 'iso19139.che', 1);
-INSERT INTO public.schematron (id, file, schemaname, displaypriority) VALUES (3, 'schematron-rules-geobasisdatensatz.required.xsl', 'iso19139.che', 2);
+INSERT INTO public.schematron (id, filename, schemaname, displaypriority) VALUES (1, 'schematron-rules-inspire-strict.disabled.xsl', 'iso19139.che', 0);
+INSERT INTO public.schematron (id, filename, schemaname, displaypriority) VALUES (2, 'schematron-rules-bgdi.required.xsl', 'iso19139.che', 1);
+INSERT INTO public.schematron (id, filename, schemaname, displaypriority) VALUES (3, 'schematron-rules-geobasisdatensatz.required.xsl', 'iso19139.che', 2);
 
 INSERT INTO public.schematroncriteriagroup (name, schematronid, requirement) VALUES ('Lichtenstein', 1, 'REQUIRED');
 INSERT INTO public.schematroncriteriagroup (name, schematronid, requirement) VALUES ('DefaultInspireStrict', 1, 'REPORT_ONLY');
