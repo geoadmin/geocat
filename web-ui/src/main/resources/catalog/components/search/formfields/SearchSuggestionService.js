@@ -22,13 +22,14 @@
           /**
            * Return info service url, depending on the type.
            * Exemple : `geonetwork/srv/eng/info@json?type=categories`
-           * @param type
+           * @param types
            * @returns {*}
            */
-          this.getInfoUrl = function(type) {
+          this.getInfoUrl = function() {
+            var types = Array.prototype.splice.call(arguments, 0);
             return gnUrlUtils.append(gnHttpServices.info,
                 gnUrlUtils.toKeyValue({
-                  type: type
+                  type: types
                 })
             );
           };
