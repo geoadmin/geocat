@@ -19,6 +19,7 @@ import org.jdom.filter.Filter;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 
@@ -1010,7 +1011,12 @@ public class ConfigurationOverrides {
                 Log.info(Log.JEEVES, "ConfigurationOverrides: importing spring file into application context: "+importFile);
                 Path file = loader.resolveFile(importFile);
                 if(file != null) {
-                    Resource inputSource = new InputStreamResource(Files.newInputStream(file));
+                    Resource inputSource;
+                    try {
+                        inputSource = new FileSystemResource(file.toFile());
+                    } catch (UnsupportedOperationException uoe) {
+                        inputSource = new InputStreamResource(Files.newInputStream(file));
+                    }
                     reader.loadBeanDefinitions(inputSource);
                 } else {
                     InputStream inputStream = loader.loadInputStream(importFile);
