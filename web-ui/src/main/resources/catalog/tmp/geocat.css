@@ -8316,6 +8316,10 @@ select[multiple].navbar select {
   border-radius: 0 3px 3px 0;
   padding-left: 3px;
   padding-right: 4px;
+  transition: right ease .25s;
+}
+.expander.collapsed {
+  right: 16.6667%;
 }
 [ng-search-form] .maincol:first-of-type + .maincol {
   transition-property: width, margin;

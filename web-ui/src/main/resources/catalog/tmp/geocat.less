@@ -101,14 +101,18 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .expander {
-position: absolute;
-right: 0px;
-z-index: 4;
-top: 1em;
-border-width: 1px 1px 1px 0;
-border-radius: 0 3px 3px 0;
-padding-left: 3px;
-padding-right: 4px;
+  position: absolute;
+  right: 0px;
+  z-index: 4;
+  top: 1em;
+  border-width: 1px 1px 1px 0;
+  border-radius: 0 3px 3px 0;
+  padding-left: 3px;
+  padding-right: 4px;
+  transition: right ease .25s;
+  &.collapsed {
+    right: 16.6667%;
+  }
 }
 
 [ng-search-form] {

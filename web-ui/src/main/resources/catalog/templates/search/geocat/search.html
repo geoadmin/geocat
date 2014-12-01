@@ -11,7 +11,7 @@
   <div class="hfull" data-ng-controller="gnsGeocat">
 
     <form ng-search-form="" class="hfull" ng-class="{'searchMapExpanded': searchMapExpanded}">
-      <button ng-show="collapsed" class="btn btn-default btn-sm expander" ng-click="collapsed=!collapsed" type="button">
+      <button ng-class="{'collapsed': !collapsed}" class="btn btn-default btn-sm expander" ng-click="collapsed=!collapsed" type="button">
         <span>«</span>
       </button>
       <div class="row hfull">
