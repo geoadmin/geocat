@@ -318,17 +318,6 @@ h1, h2, h3, h4, h5, h6,
     bottom: 374px;
   }
 }
-[gn-map-field] {
-  width: 100%;
-  margin-left: -15px;
-  border-radius: 0;
-  background: #fff;
-  border-width: 1px 0 0;
-  .btn {
-    .btn-sm;
-    opacity: .85;
-  }
-}
 
 @media (min-width: @screen-lg-min) {
   html, body,
@@ -365,13 +354,26 @@ h1, h2, h3, h4, h5, h6,
     .geocat-search {
       height: ~"calc(100% - 4.4em - 200px)";
     }
-    [gn-map-field] {
+    .gn-map-field {
+      background: #fff;
       position: absolute;
       bottom: 0;
       width: 100%;
       margin-left: -15px;
-      border-radius: 0;
       border-width: 1px 0 0;
+      .btn-group-vertical {
+        position: absolute;
+        top: 4px;
+        z-index: 10;
+      }
+      .btn-group-vertical {
+        right: 4px;
+      }
+      .btn {
+        .btn-sm;
+        opacity: .85;
+        border-radius: 0;
+      }
     }
   }
   .searchMapExpanded {

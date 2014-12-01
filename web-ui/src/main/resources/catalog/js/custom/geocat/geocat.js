@@ -101,10 +101,11 @@
     'gnSearchManagerService',
     'ngeoDecorateInteraction',
     '$q',
+    'gnMap',
 
     function($scope, gnHttp, gnHttpServices, gnRegionService,
              $timeout, suggestService,$http, gnSearchSettings,
-             gnSearchManagerService, ngeoDecorateInteraction, $q) {
+             gnSearchManagerService, ngeoDecorateInteraction, $q, gnMap) {
 
 
       // data store for types field
@@ -196,8 +197,21 @@
         })()
       };
 
-
+      $scope.gnMap = gnMap;
       var map = $scope.searchObj.searchMap;
+
+      $scope.removeLayers = function() {
+        var toRemove = [];
+        map.getLayers().forEach(function(l) {
+          if(l.getSource() instanceof ol.source.TileWMS) {
+            toRemove.push(l);
+          }
+        });
+        angular.forEach(toRemove, function(l) {
+          map.getLayers().remove(l);
+        });
+      };
+
       var wktFormat = new ol.format.WKT();
 
       // Set the geometry field of the indexed search in WKT
@@ -379,45 +393,34 @@
       } else {
         $scope.triggerSearch(true);
       }
+    }]);
 
-/*
-      $('#categoriesF').tagsinput({
-        itemValue: 'id',
-        itemText: 'label'
-      });
-      $('#categoriesF').tagsinput('input').typeahead({
-        valueKey: 'label',
-        prefetch: {
-          url :suggestService.getInfoUrl('categories'),
-          filter: function(data) {
-            var res = [];
-            for(var i=0; i<data.metadatacategory.length;i++) {
-              res.push({
-                id: data.metadatacategory[i]['@id'],
-                label : data.metadatacategory[i].label.eng
-              })
-            }
-            return res;
+  module.directive('gcFixMdlinks', [
+    function() {
+
+      return {
+        restrict: 'A',
+        scope: false,
+        link: function (scope) {
+          scope.links = scope.md.getLinksByType('LINK');
+          scope.downloads = scope.md.getLinksByType('DOWNLOAD', 'FILE');
+
+          if(scope.md.type.indexOf('service') >= 0) {
+            scope.layers = [];
+            angular.forEach(scope.md.wmsuri, function(uri) {
+              var e = uri.split('###');
+              scope.layers.push({
+                uuid: e[0],
+                name: e[1],
+                desc: e[1],
+                url: e[2]
+              });
+            })
+          } else {
+            scope.layers = scope.md.getLinksByType('OGC', 'kml');
           }
         }
-      }).bind('typeahead:selected', $.proxy(function (obj, datum) {
-        this.tagsinput('add', datum);
-        this.tagsinput('input').typeahead('setQuery', '');
-      }, $('#categoriesF')));
-*/
-
-
-      // Keywords input list
-      /*
-       gnHttpServices.geocatKeywords = 'geocat.keywords.list';
-       gnHttp.callService('geocatKeywords').success(function(data) {
-       var xmlDoc = $.parseXML(data);
-       var $xml = $(xmlDoc);
-       var k = $xml.find('keyword');
-       var n = $xml.find('name');
-       });
-       */
-
+      }
     }]);
 
 })();

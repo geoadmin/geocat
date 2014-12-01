@@ -248,7 +248,26 @@
       <span ng-show="!searchMapExpanded"><span class="fa fa-angle-double-up"></span></span>
       <span ng-show="searchMapExpanded"><span class="fa fa-angle-double-down"></span></span>
     </button>
-    <div gn-map-field="searchObj.searchMap"></div>
+
+    <div class="gn-map-field">
+      <div ngeo-map="searchObj.searchMap" >
+        <div class="btn-group-vertical">
+          <button class="btn btn-default" data-ng-click="removeLayers()">
+            <i class="fa fa-trash-o"></i>
+          </button>
+          <button class="btn btn-default" data-ng-click="gnMap.zoom(map, 1)">
+            <i class="fa fa-plus"></i>
+          </button>
+          <button class="btn btn-default" data-ng-click="maxExtent()">
+            <i class="fa fa-globe"></i>
+          </button>
+          <button class="btn btn-default"  data-ng-click="gnMap.zoom(map, -1)">
+            <i class="fa fa-minus"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
 
 <!-- 
     <input type="text" name="region-picker-input" class="form-control bootstrap-tagsinput"

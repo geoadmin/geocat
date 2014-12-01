@@ -69,7 +69,7 @@
           requestEncoding: 'REST',
           projection: 'EPSG:21781'
         })),
-        extent: [420000, 30000, 900000, 350000],
+        extent: [434250, 37801.909073720046, 894750, 337801.90907372005],
         useInterimTilesOnError: false
       });
       searchSettings.searchMap = new ol.Map({
