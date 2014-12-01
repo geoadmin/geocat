@@ -8583,6 +8583,27 @@ select[multiple].geocat-search .geotype {
 .searchMapExpanded .map-expander {
   bottom: 374px;
 }
+.gn-map-field {
+  width: 100%;
+  margin-left: -15px;
+  border-radius: 0;
+  background: #fff;
+  border-top: 1px solid #dddddd;
+}
+.gn-map-field .btn {
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+  opacity: .85;
+}
+.container-fluid {
+  padding: 0;
+  position: relative;
+}
+[ng-search-form] {
+  margin: 0 15px;
+}
 @media (min-width: 1200px) {
   html,
   body,
