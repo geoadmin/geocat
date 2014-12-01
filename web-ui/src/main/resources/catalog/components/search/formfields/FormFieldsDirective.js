@@ -28,8 +28,8 @@
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             limit: 10000000,
             sorter: function(a,b) {
-              if(a.name< b.name) return -1;
-              else if(a.name>b.name) return 1;
+              if(a.name.toLowerCase()< b.name.toLowerCase()) return -1;
+              else if(a.name.toLowerCase()>b.name.toLowerCase()) return 1;
               else return 0;
             }
           };
