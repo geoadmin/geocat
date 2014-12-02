@@ -18,14 +18,18 @@
 
 package org.fao.geonet.services.metadata;
 
+import com.google.common.collect.Lists;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.util.ThreadUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Class that extends MetadataIndexerProcessor to reindex the metadata
@@ -34,67 +38,77 @@ import java.util.concurrent.*;
 public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 
     public static final class BatchOpsCallable implements Callable<Void> {
-		private final int ids[];
-		private final int beginIndex, count;
-		private final DataManager dm;
+        private final int ids[];
+        private final int beginIndex, count;
+        private final DataManager dm;
 
-		BatchOpsCallable(int ids[], int beginIndex, int count, DataManager dm) {
-			this.ids = ids;
-			this.beginIndex = beginIndex;
-			this.count = count;
-			this.dm = dm;
-		}
-		
-		public Void call() throws Exception {
-			for(int i=beginIndex; i<beginIndex+count; i++) {
-                dm.indexMetadata(ids[i]+"", false);
-			}
-			return null;
-		}
-	}
-	
-  Set<Integer> metadata;
+        BatchOpsCallable(int ids[], int beginIndex, int count, DataManager dm) {
+            this.ids = ids;
+            this.beginIndex = beginIndex;
+            this.count = count;
+            this.dm = dm;
+        }
 
-  public BatchOpsMetadataReindexer(DataManager dm, Set<Integer> metadata) {
-      super(dm);
-      this.metadata = metadata;
-  }
+        public Void call() throws Exception {
+            for (int i = beginIndex; i < beginIndex + count; i++) {
+                dm.indexMetadata(ids[i] + "", true);
+            }
+            return null;
+        }
+    }
+
+    Set<Integer> metadata;
+
+    public BatchOpsMetadataReindexer(DataManager dm, Set<Integer> metadata) {
+        super(dm);
+        this.metadata = metadata;
+    }
 
     public void process() throws Exception {
         int threadCount = ThreadUtils.getNumberOfThreads();
+        ExecutorService executor = null;
+        try {
+            executor = Executors.newFixedThreadPool(threadCount);
 
-        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+            int[] ids = new int[metadata.size()];
+            int i = 0;
+            for (Integer id : metadata) ids[i++] = id;
 
-        int[] ids = new int[metadata.size()];
-        int i = 0;
-        for (Integer id : metadata) ids[i++] = id;
+            int perThread;
+            if (ids.length < threadCount) perThread = ids.length;
+            else perThread = ids.length / threadCount;
+            int index = 0;
 
-        int perThread;
-        if (ids.length < threadCount) perThread = ids.length;
-        else perThread = ids.length / threadCount;
-        int index = 0;
+            List<BatchOpsCallable> jobs = Lists.newArrayList();
+            while (index < ids.length) {
+                int start = index;
+                int count = Math.min(perThread, ids.length - start);
+                // create threads to process this chunk of ids
+                jobs.add(new BatchOpsCallable(ids, start, count, getDataManager()));
 
-        List<Future<Void>> submitList = new ArrayList<Future<Void>>();
-        while (index < ids.length) {
-            int start = index;
-            int count = Math.min(perThread, ids.length - start);
-            // create threads to process this chunk of ids
-			Callable<Void> worker = new BatchOpsCallable(ids, start, count, getDataManager());
-            Future<Void> submit = executor.submit(worker);
-            submitList.add(submit);
-            index += count;
-        }
+                index += count;
+            }
+            List<Future<Void>> submitList = Lists.newArrayList();
+            for (i = 1; i < jobs.size(); i++) {
+                Future<Void> submit = executor.submit(jobs.get(i));
+                submitList.add(submit);
+            }
 
-        for (Future<Void> future : submitList) {
-            try {
-                future.get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+            if (jobs.size() > 0) {
+                jobs.get(0).call();
+                for (Future<Void> future : submitList) {
+                    try {
+                        future.get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } finally {
+            if (executor != null) {
+                executor.shutdown();
             }
         }
-        executor.shutdown();
     }
 }
 

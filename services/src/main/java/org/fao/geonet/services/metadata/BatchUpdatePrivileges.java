@@ -42,7 +42,11 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
 
@@ -60,98 +64,99 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
         super.init(appPath, params);
     }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getBean(DataManager.class);
-		AccessManager accessMan = gc.getBean(AccessManager.class);
-		UserSession   us = context.getUserSession();
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dm = gc.getBean(DataManager.class);
+        AccessManager accessMan = gc.getBean(AccessManager.class);
+        UserSession us = context.getUserSession();
 
-		context.info("Get selected metadata");
-		SelectionManager sm = SelectionManager.getManager(us);
+        context.info("Get selected metadata");
+        SelectionManager sm = SelectionManager.getManager(us);
 
-		Set<Integer> metadata = new HashSet<Integer>();
-		Set<String> notFound = new HashSet<String>();
-		Set<Integer> notOwner = new HashSet<Integer>();
+        Set<Integer> metadata = new HashSet<>();
+        Set<String> notFound = new HashSet<>();
+        Set<Integer> notOwner = new HashSet<>();
 
-		synchronized(sm.getSelection(SELECTION_METADATA)) {
-		for (Iterator<String> iter = sm.getSelection(SELECTION_METADATA).iterator(); iter.hasNext();) {
-			String uuid = iter.next();
+        synchronized (sm.getSelection(SELECTION_METADATA)) {
+            for (Iterator<String> iter = sm.getSelection(SELECTION_METADATA).iterator(); iter.hasNext(); ) {
+                String uuid = iter.next();
 
-			//--- check access
+                //--- check access
 
-			Metadata info = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
-			if (info == null) {
-				notFound.add(uuid);
-			} else if (!accessMan.isOwner(context, String.valueOf(info.getId()))) {
-				notOwner.add(info.getId());
-			} else {
+                Metadata info = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
+                if (info == null) {
+                    notFound.add(uuid);
+                } else if (!accessMan.isOwner(context, String.valueOf(info.getId()))) {
+                    notOwner.add(info.getId());
+                } else {
 
-				//--- remove old operations
-				boolean skip = false;
+                    //--- remove old operations
+                    boolean skip = false;
 
-				//--- in case of owner, privileges for groups 0,1 and GUEST are 
-				//--- disabled and are not sent to the server. So we cannot remove them
-				boolean isAdmin = Profile.Administrator == us.getProfile();
-				boolean isReviewer= Profile.Reviewer == us.getProfile();
+                    //--- in case of owner, privileges for groups 0,1 and GUEST are
+                    //--- disabled and are not sent to the server. So we cannot remove them
+                    boolean isAdmin = Profile.Administrator == us.getProfile();
+                    boolean isReviewer = Profile.Reviewer == us.getProfile();
 
-				if (us.getUserIdAsInt() == info.getSourceInfo().getOwner() && !isAdmin && !isReviewer) {
-                    skip = true;
-                }
+                    if (us.getUserIdAsInt() == info.getSourceInfo().getOwner() && !isAdmin && !isReviewer) {
+                        skip = true;
+                    }
 
-                // GEOCAT
-                final boolean published = UnpublishInvalidMetadataJob.isPublished(""+info.getId(), context);
-                boolean publishedAgain = false;
-                // END GEOCAT
+                    dm.deleteMetadataOper(context, "" + info.getId(), skip);
 
-				dm.deleteMetadataOper(context, "" + info.getId(), skip);
+                    // GEOCAT
+                    final boolean published = UnpublishInvalidMetadataJob.isPublished(""+info.getId(), context);
+                    boolean publishedAgain = false;
+                    // END GEOCAT
 
-				//--- set new ones
-				@SuppressWarnings("unchecked")
-                List<Element> list = params.getChildren();
+                    dm.deleteMetadataOper(context, "" + info.getId(), skip);
 
-				for (Element el : list) {
-					String name  = el.getName();
+                    //--- set new ones
+                    @SuppressWarnings("unchecked")
+                    List<Element> list = params.getChildren();
 
-					if (name.startsWith("_")) {
-						StringTokenizer st = new StringTokenizer(name, "_");
+                    for (Element el : list) {
+                        String name  = el.getName();
 
-						String groupId = st.nextToken();
-						String operId  = st.nextToken();
-                        // GEOCAT
-                        if(Integer.parseInt(groupId) == 1 && Integer.parseInt(operId) == 0) {
-                            publishedAgain = true;
+                        if (name.startsWith("_")) {
+                            StringTokenizer st = new StringTokenizer(name, "_");
+
+                            String groupId = st.nextToken();
+                            String operId  = st.nextToken();
+                            // GEOCAT
+                            if(Integer.parseInt(groupId) == 1 && Integer.parseInt(operId) == 0) {
+                                publishedAgain = true;
+                            }
+                            // END GEOCAT
+
+                            dm.setOperation(context, "" + info.getId(), groupId, operId);
                         }
-                        // END GEOCAT
+                    }
+                    metadata.add(info.getId());
 
-						dm.setOperation(context, "" + info.getId(), groupId, operId);
-					}
-				}
-				metadata.add(info.getId());
-
-                // GEOCAT
-                final PublishRecord record = new PublishRecord();
-                record.setEntity(context.getUserSession().getUsername());
-                record.setFailurereasons("Manually unpublished by user");
-                record.setFailurerule("");
-                record.setUuid(uuid);
-                record.setValidated(PublishRecord.Validity.UNKNOWN);
-                if(published && !publishedAgain) {
-                    record.setPublished(false);
-                    context.getBean(PublishRecordRepository.class).save(record);
-                } else if (!published && publishedAgain) {
-                    record.setPublished(true);
-                    context.getBean(PublishRecordRepository.class).save(record);
+                    // GEOCAT
+                    final PublishRecord record = new PublishRecord();
+                    record.setEntity(context.getUserSession().getUsername());
+                    record.setFailurereasons("Manually unpublished by user");
+                    record.setFailurerule("");
+                    record.setUuid(uuid);
+                    record.setValidated(PublishRecord.Validity.UNKNOWN);
+                    if(published && !publishedAgain) {
+                        record.setPublished(false);
+                        context.getBean(PublishRecordRepository.class).save(record);
+                    } else if (!published && publishedAgain) {
+                        record.setPublished(true);
+                        context.getBean(PublishRecordRepository.class).save(record);
+                    }
+                    //  END GEOCAT
                 }
-                //  END GEOCAT
-			}
-		}
+            }
 		}
 
 		//--- reindex metadata
