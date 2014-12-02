@@ -36,6 +36,8 @@
   "toPublish": "To Publish",
   "format": "Format",
   "anyValue": "- Any -",
-  "unchecked": "Unchecked"
+  "unchecked": "Unchecked",
+  "createDate": "created",
+  "changeDate": "modified"
 
 }

@@ -25,7 +25,8 @@
           <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('dataset')>=0" class="fa fa-database" title="dataset"></span>
           <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('software')>=0" class="fa fa-hdd-o" title="software"></span>
           <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('basicgeodata')>=0" class="fa fa-globe" title="geodata"></span>
-          {{md.title || md.defaultTitle}}
+          <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('service')>=0" class="fa fa-globe" title="service"></span>
+          <a href="" gn-metadata-open="md" gn-metadata-open-selector=".gn-resultview">{{md.title || md.defaultTitle}}</a>
         </h4>
 
         <a class="pull-left">
@@ -33,6 +34,7 @@
         </a>
         <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350" dd-text-collapse-text="{{md.abstract}}"></p>
         <p class="md-contact" ng-if="md.getContacts().resource">{{md.getContacts().resource}}</p>
+        <p class="md-date" data-ng-if="::showDate.date">(<i translate>{{::showDate.type}}</i> : {{::showDate.date}})</p>
       </div>
     </div>
 

@@ -37,6 +37,8 @@
   "toPublish": "À publier",
   "format": "Format",
   "anyValue": "- Tous -",
-  "unchecked": "Non controlée"
+  "unchecked": "Non controlée",
+  "createDate": "créée",
+  "changeDate": "modifiée"
 
 }

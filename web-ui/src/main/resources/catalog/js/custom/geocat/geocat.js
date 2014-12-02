@@ -419,6 +419,30 @@
           } else {
             scope.layers = scope.md.getLinksByType('OGC', 'kml');
           }
+
+          var d;
+          if(scope.md['geonet:info'].changeDate) {
+            d = {
+              date: scope.md['geonet:info'].changeDate,
+              type: 'changeDate'
+            }
+          }
+          else if (scope.md['geonet:info'].publishedDate) {
+            d = {
+              date: scope.md['geonet:info'].publishedDate,
+              type: 'changeDate'
+            }
+          }
+          else if (scope.md['geonet:info'].createDate) {
+            d = {
+              date: scope.md['geonet:info'].createDate,
+              type: 'createDate'
+            }
+          }
+          scope.showDate = {
+            date: moment(d).format('YYYY-mm-DD'),
+            type: d.type
+          };
         }
       }
     }]);
