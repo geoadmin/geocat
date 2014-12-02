@@ -33,8 +33,9 @@
           <img ng-src="../../images/logos/{{md.source}}.gif" class="media-object"/>
         </a>
         <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350" dd-text-collapse-text="{{md.abstract}}"></p>
-        <p class="md-contact" ng-if="md.getContacts().resource">{{md.getContacts().resource}}</p>
-        <p class="md-date" data-ng-if="::showDate.date">(<i translate>{{::showDate.type}}</i> : {{::showDate.date}})</p>
+        <p class="md-date" ng-if="::showDate.date">(<i translate>{{::showDate.type}}</i> : {{::showDate.date}})</p>
+        <p class="md-owner" ng-if="md['geonet:info'].owner">
+          (<i translate>owner</i> : <a href="{{pages.admin}}#/organization/users" target="_blank">{{user.username}}</a>)</p>
       </div>
     </div>
 

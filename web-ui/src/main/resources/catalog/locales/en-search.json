@@ -37,7 +37,7 @@
   "format": "Format",
   "anyValue": "- Any -",
   "unchecked": "Unchecked",
-  "createDate": "created",
-  "changeDate": "modified"
+  "createDate": "Created",
+  "changeDate": "Modified"
 
 }
