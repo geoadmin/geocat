@@ -33,11 +33,15 @@
         searchMap: gnSearchSettings.searchMap
       });
 
-      $scope.collapsed = false;
-
-      $scope.searchExpanded = false;
+      $scope.collapsed = {
+        search: true,
+        facet: false
+      };
       $scope.toggleSearch = function() {
-        $scope.searchExpanded = !$scope.searchExpanded;
+        $scope.collapsed.search = !$scope.collapsed.search;
+        if(!$scope.collapsed.search) {
+          $scope.collapsed.facet = true;
+        }
         $timeout(function(){
           gnSearchSettings.searchMap.updateSize();
         }, 300);
@@ -440,7 +444,7 @@
             }
           }
           scope.showDate = {
-            date: moment(d).format('YYYY-mm-DD'),
+            date: moment(d).format('YYYY-MM-DD'),
             type: d.type
           };
         }

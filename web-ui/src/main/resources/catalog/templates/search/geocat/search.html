@@ -11,15 +11,15 @@
   <div class="hfull" data-ng-controller="gnsGeocat">
 
     <form ng-search-form="" class="hfull" ng-class="{'searchMapExpanded': searchMapExpanded}">
-      <button ng-class="{'collapsed': !collapsed}" class="btn btn-default btn-sm expander" ng-click="collapsed=!collapsed" type="button">
+      <button ng-class="{'collapsed': !collapsed.facet}" class="btn btn-default btn-sm expander" ng-click="collapsed.facet=!collapsed.facet" type="button">
         <span>«</span>
       </button>
       <div class="row hfull">
 
-        <div class="maincol hfull" ng-class="(searchExpanded) ? 'col-md-6' : 'col-md-3'">
+        <div class="maincol hfull" ng-class="(collapsed.search) ? 'col-md-3' : 'col-md-6'">
           <button class="btn btn-default btn-sm expander" ng-click="toggleSearch()" type="button">
-            <span ng-show="!searchExpanded">»</span>
-            <span ng-show="searchExpanded">«</span>
+            <span ng-show="collapsed.search">»</span>
+            <span ng-show="!collapsed.search">«</span>
           </button>
           <div class="panel panel-default hfull">
             <div class="panel-heading search-top">
@@ -43,8 +43,8 @@
           </div>
         </div>
 
-        <div ng-class="{ 'col-md-7': !searchExpanded && !collapsed , 'col-md-9': !searchExpanded && collapsed, 'col-md-6': searchExpanded && collapsed , 'col-md-4': searchExpanded && !collapsed}" class="maincol hfull">
-          <button ng-show="!collapsed" class="btn btn-default btn-sm expander" ng-click="collapsed=!collapsed" type="button">
+        <div ng-class="{ 'col-md-7': collapsed.search && !collapsed.facet , 'col-md-9': collapsed.search && collapsed.facet, 'col-md-6': !collapsed.search && collapsed.facet , 'col-md-4': !collapsed.search && !collapsed.facet}" class="maincol hfull">
+          <button ng-show="!collapsed.facet" class="btn btn-default btn-sm expander" ng-click="collapsed.facet=!collapsed.facet" type="button">
             <span>»</span>
           </button>
           <div class="panel panel-default hfull" ng-if="initial" ng-controller="gnsGeocatHome">
@@ -79,7 +79,7 @@
           </div>
         </div>
 
-        <div ng-class="(!collapsed) ? 'col-md-2' : 'whidden'" class="maincol hfull">
+        <div ng-class="(!collapsed.facet) ? 'col-md-2' : 'whidden'" class="maincol hfull">
           <div class="panel panel-default hfull">
             <div class="panel-heading">
               <span data-translate>Refine search</span>
