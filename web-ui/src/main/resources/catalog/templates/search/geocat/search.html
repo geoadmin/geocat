@@ -10,7 +10,7 @@
 <div class="container-fluid gn-search-page" data-ng-controller="GnSearchController">
   <div class="hfull" data-ng-controller="gnsGeocat">
 
-    <form ng-search-form="" class="hfull" ng-class="{'searchMapExpanded': searchMapExpanded}">
+    <form ng-search-form="" class="hfull" ng-class="{'searchMapExpanded': !collapsed.map}">
       <button ng-class="{'collapsed': !collapsed.facet}" class="btn btn-default btn-sm expander" ng-click="collapsed.facet=!collapsed.facet" type="button">
         <span>«</span>
       </button>

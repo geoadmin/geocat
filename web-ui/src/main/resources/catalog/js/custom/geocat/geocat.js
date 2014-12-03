@@ -26,17 +26,30 @@
       '$timeout',
       'gnMap',
       'gnSearchSettings',
-    function($scope, $timeout, gnMap, gnSearchSettings) {
+      '$window',
+    function($scope, $timeout, gnMap, gnSearchSettings, $window) {
+
+      var localStorage = $window.localStorage || {};
 
       angular.extend($scope.searchObj, {
         advancedMode: false,
         searchMap: gnSearchSettings.searchMap
       });
 
-      $scope.collapsed = {
+      $scope.collapsed = localStorage.searchWidgetCollapsed ?
+          JSON.parse(localStorage.searchWidgetCollapsed) : {
         search: true,
-        facet: false
+        facet: false,
+        map: false
       };
+
+      var storeCollapsed = function() {
+        localStorage.searchWidgetCollapsed = JSON.stringify($scope.collapsed);
+      };
+      $scope.$watch('collapsed.search', storeCollapsed);
+      $scope.$watch('collapsed.facet', storeCollapsed);
+      $scope.$watch('collapsed.map', storeCollapsed);
+
       $scope.toggleSearch = function() {
         $scope.collapsed.search = !$scope.collapsed.search;
         if(!$scope.collapsed.search) {
@@ -47,9 +60,8 @@
         }, 300);
       };
 
-      $scope.searchMapExpanded = true;
       $scope.toggleSearchMap = function() {
-        $scope.searchMapExpanded = !$scope.searchMapExpanded;
+        $scope.collapsed.map = !$scope.collapsed.map;
         $timeout(function(){
           gnSearchSettings.searchMap.updateSize();
         }, 1);
