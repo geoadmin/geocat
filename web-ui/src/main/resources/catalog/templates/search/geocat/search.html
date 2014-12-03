@@ -51,14 +51,16 @@
             <div class="panel-heading" translate>
               <h3 class="panel-title" translate>homeTitle</h3>
             </div>
-            <div class="panel-body">
-              <img src="http://www.geocat.ch/geonetwork/images/geocatII-web.jpg" alt=""></p>
-              <h4><span translate>recentChanges</span>  <a href="../../srv/en/rss.latest?georss=simplepoint" class="fa fa-rss-square"></a></h4>
-              <ul>
-                <li ng-repeat="md in lastUpdated">
-                  <a href="">{{md.title || md.defaultTitle}}</a>
-                </li>
-              </ul>
+            <div class="gc-homepage">
+              <div class="panel-body">
+                <img src="http://www.geocat.ch/geonetwork/images/geocatII-web.jpg" alt=""></p>
+                <h4><span translate>recentChanges</span>  <a href="../../srv/en/rss.latest?georss=simplepoint" class="fa fa-rss-square"></a></h4>
+                <ul>
+                  <li ng-repeat="md in lastUpdated">
+                    <a href="" gn-metadata-open="md" gn-metadata-open-selector=".gc-homepage">{{md.title || md.defaultTitle}}</a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
 

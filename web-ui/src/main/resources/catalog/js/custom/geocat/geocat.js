@@ -87,7 +87,8 @@
   module.controller('gnsGeocatHome', [
     '$scope',
     'gnSearchManagerService',
-    function($scope, gnSearchManagerService) {
+    'Metadata',
+    function($scope, gnSearchManagerService, Metadata) {
 
       $scope.mdLists = {};
       var callSearch = function(sortBy, to) {
@@ -101,7 +102,10 @@
 
       // Fill last updated section
       callSearch('changeDate', 15).then(function(data) {
-        $scope.lastUpdated = data.metadata;
+        $scope.lastUpdated = [];
+        for(var i=0;i<data.metadata.length;i++) {
+          $scope.lastUpdated.push(new Metadata(data.metadata[i]));
+        }
       });
   }]);
 
