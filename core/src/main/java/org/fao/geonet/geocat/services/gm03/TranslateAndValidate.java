@@ -358,7 +358,7 @@ public class TranslateAndValidate {
 
         xslFileName.append("CHE03-to-19139.xsl");
 
-        Transformer xslt = TransformerFactoryFactory.getTransformerFactory().newTransformer(new StreamSource(xslFileName.toString()));
+        Transformer xslt = TransformerFactoryFactory.getTransformerFactory().newTransformer(new StreamSource(IO.toPath(xslFileName.toString()).toUri().toASCIIString()));
 
         byte[] bytes = xml.getBytes("UTF-8");
         StreamSource source = new StreamSource(new ByteArrayInputStream(bytes));
