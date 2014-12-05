@@ -130,7 +130,11 @@ public class LocaleRedirects {
         if (headers.length() == 0) {
             queryString = "";
         } else {
-            queryString = "?" + headers;
+            if (service.contains("?")) {
+                queryString = "&" + headers;
+            } else {
+                queryString = "?" + headers;
+            }
         }
         return request.getContextPath() + "/" + node + "/" + lang + "/" + service + queryString;
     }
