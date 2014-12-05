@@ -1143,7 +1143,6 @@
     <module>web-client</module>
     <module>wro4j</module>
     <module>web</module>
-    <module>geocat-services</module>
     <module>e2e-tests</module>
   </modules>
 

@@ -695,6 +695,26 @@ public class DataManager {
             if (logoUUID == null) {
                 logoUUID = source;
             }
+
+            if (logoUUID != null) {
+                final Path logosDir = Resources.locateLogosDir(servContext);
+                final String[] logosExt = {"png", "PNG", "gif", "GIF", "jpg", "JPG", "jpeg", "JPEG", "bmp", "BMP",
+                        "tif", "TIF", "tiff", "TIFF"};
+                boolean added = false;
+                for (String ext : logosExt) {
+                    final Path logoPath = logosDir.resolve(logoUUID + "." + ext);
+                    if (Files.exists(logoPath)) {
+                        added = true;
+                        moreFields.add(SearchManager.makeField("_logo", "/images/logos/" + logoPath.getFileName(), true, false));
+                        break;
+                    }
+                }
+
+                if (!added) {
+                    moreFields.add(SearchManager.makeField("_logo", "/images/logos/" + logoUUID + ".png", true, false));
+                }
+            }
+
             // GEOCAT
             boolean isPublished = false;
             // END GEOCAT
