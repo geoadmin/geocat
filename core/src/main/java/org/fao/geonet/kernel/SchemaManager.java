@@ -244,7 +244,7 @@ public class SchemaManager {
 	}
 
     public static SchemaPlugin getSchemaPlugin(ServiceContext context, String schemaIdentifier) {
-        String schemaBeanIdentifier = schemaIdentifier + "SchemaPlugin";
+        String schemaBeanIdentifier = schemaIdentifier.replace(".", "") + "SchemaPlugin";
         SchemaPlugin schemaPlugin = null;
         try {
             schemaPlugin = (SchemaPlugin) context.getApplicationContext().getBean(schemaBeanIdentifier);
