@@ -1,24 +1,16 @@
 package org.fao.geonet.services.metadata.format;
 
-import com.google.common.collect.Sets;
-import org.fao.geonet.Constants;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.utils.IO;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
-import static com.google.common.io.Files.getNameWithoutExtension;
-import static java.nio.file.Files.getLastModifiedTime;
-import static java.nio.file.Files.readAllBytes;
+import static org.fao.geonet.services.metadata.format.SchemaLocalizations.loadSchemaLocalizations;
 
 /**
  * Strategy for formatting using an xslt based formatter.
@@ -32,20 +24,12 @@ import static java.nio.file.Files.readAllBytes;
  */
 @Component
 public class XsltFormatter implements FormatterImpl {
-    private Set<String> compiledXslt = Sets.newConcurrentHashSet();
-
     @Autowired
     GeonetworkDataDirectory dataDirectory;
 
     public String format(FormatterParams fparams) throws Exception {
 
-        final String viewFilePath = fparams.viewFile.toString();
-        if (fparams.isDevMode() || !this.compiledXslt.contains(viewFilePath)) {
-            compileFunctionsFile(fparams.viewFile, viewFilePath);
-        }
-
         String lang = fparams.config.getLang(fparams.context.getLanguage());
-        Iterable<SchemaLocalization> localization = fparams.format.getSchemaLocalizations(fparams.context).values();
 
         Element root = new Element("root");
 
@@ -67,6 +51,10 @@ public class XsltFormatter implements FormatterImpl {
 
         String schemasToLoad = fparams.config.schemasToLoad();
         if (!"none".equalsIgnoreCase(schemasToLoad)) {
+            SchemaManager schemaManager = fparams.context.getBean(SchemaManager.class);
+            Collection<SchemaLocalization> localization = loadSchemaLocalizations(fparams.context.getApplicationContext(),
+                    schemaManager).values();
+
             for (SchemaLocalization schemaLocalization : localization) {
                 String currentSchema = schemaLocalization.schema.trim();
                 if ("all".equalsIgnoreCase(schemasToLoad) || schemasToLoadList.contains(currentSchema.toLowerCase())) {
@@ -89,20 +77,4 @@ public class XsltFormatter implements FormatterImpl {
         return Xml.getString(response);
     }
 
-
-    private synchronized void compileFunctionsFile(Path viewXslFile,
-                                                   String canonicalPath) throws IOException, JDOMException {
-        this.compiledXslt.add(canonicalPath);
-
-        final String baseName = getNameWithoutExtension(viewXslFile.getFileName().toString());
-        final Path lastUpdateFile = viewXslFile.getParent().resolve(baseName + ".lastUpdate");
-        if (!Files.exists(lastUpdateFile) || getLastModifiedTime(lastUpdateFile).toMillis() < getLastModifiedTime(viewXslFile).toMillis()) {
-            final String xml = new String(readAllBytes(viewXslFile), Constants.CHARSET);
-
-            String updated = xml.replace("@@formatterDir@@", this.dataDirectory.getFormatterDir().toUri().toString());
-
-            Files.write(viewXslFile, updated.getBytes(Constants.CHARSET));
-            IO.touch(lastUpdateFile);
-        }
-    }
 }

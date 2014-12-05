@@ -25,11 +25,9 @@ package org.fao.geonet.services.metadata.format;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
-import com.lowagie.text.DocumentException;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.dispatchers.guiservices.XmlFile;
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
@@ -40,7 +38,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
-import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
@@ -51,18 +48,17 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +66,8 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import static com.google.common.io.Files.getNameWithoutExtension;
 
 /**
  * Allows a user to display a metadata with a particular formatters
@@ -135,7 +133,7 @@ public class Format extends AbstractFormatService {
         }
     }
 
-    private void writerAsPDF(HttpServletResponse response, String htmlContent, String lang) throws IOException, DocumentException {
+    private void writerAsPDF(HttpServletResponse response, String htmlContent, String lang) throws IOException, com.itextpdf.text.DocumentException {
         XslUtil.setNoScript();
         ITextRenderer renderer = new ITextRenderer();
         String siteUrl = this.settingManager.getSiteURL(lang);
@@ -220,8 +218,7 @@ public class Format extends AbstractFormatService {
     }
 
     public Pair<Element, Metadata> getMetadata(ServiceContext context, String id, String uuid, ParamValue skipPopularity,
-                                               Boolean hide_withheld)
-            throws Exception {
+                                               Boolean hide_withheld) throws Exception {
 
         Metadata md = loadMetadata(this.metadataRepository, id, uuid);
         Element metadata = xmlSerializer.removeHiddenElements(false, md);
@@ -264,30 +261,51 @@ public class Format extends AbstractFormatService {
      * Get the localization files from current format plugin.  It will load all xml file in the loc/lang/ directory as children
      * of the returned element.
      */
-    protected synchronized Element getPluginLocResources(ServiceContext context, Path formatDir, String lang) throws Exception {
+    public synchronized Element getPluginLocResources(ServiceContext context, Path formatDir, String lang) throws Exception {
+        final Element pluginLocResources = getPluginLocResources(context, formatDir);
+        Element translations = pluginLocResources.getChild(lang);
+        if (translations == null) {
+            if (pluginLocResources.getChildren().isEmpty()) {
+                translations = new Element(lang);
+            } else {
+                translations = (Element) pluginLocResources.getChildren().get(0);
+            }
+        }
+        return translations;
+    }
+    public synchronized Element getPluginLocResources(ServiceContext context, Path formatDir) throws Exception {
         final String formatDirPath = formatDir.toString();
-        Element resources = this.pluginLocs.get(formatDirPath);
-        if (isDevMode(context) || resources == null) {
-            resources = new Element("loc");
+        Element allLangResources = this.pluginLocs.get(formatDirPath);
+        if (isDevMode(context) || allLangResources == null) {
+            allLangResources = new Element("loc");
             Path baseLoc = formatDir.resolve("loc");
-            Path locDir = findLocDir(lang, baseLoc);
-
-            final String locDirName = locDir.getFileName().toString();
-            resources.addContent(new Element("iso639_2").setAttribute("codeLength", "3").setText(locDirName));
-            String iso639_1 = context.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(locDirName);
-
-            resources.addContent(new Element("iso639_1").setAttribute("codeLength", "2").setText(iso639_1));
-
-            if (Files.exists(locDir)) {
-                try (DirectoryStream<Path> paths = Files.newDirectoryStream(locDir, "*.xml")) {
-                    for (Path file : paths) {
-                        resources.addContent(Xml.loadFile(file));
+            if (Files.exists(baseLoc)) {
+                try (DirectoryStream<Path> locDirs = Files.newDirectoryStream(baseLoc)) {
+                    for (Path locDir : locDirs) {
+                        final String locDirName = getNameWithoutExtension(locDir.getFileName().toString());
+                        Element resources = new Element(locDirName);
+                        if (Files.exists(locDir)) {
+                            try (DirectoryStream<Path> paths = Files.newDirectoryStream(locDir, "*.xml")) {
+                                for (Path file : paths) {
+                                    final Element fileElements = Xml.loadFile(file);
+                                    final String fileName = getNameWithoutExtension(file.getFileName().toString());
+                                    fileElements.setName(fileName);
+                                    if (!fileElements.getChildren().isEmpty()) {
+                                        resources.addContent(fileElements);
+                                    }
+                                }
+                            }
+                        }
+                        if (!resources.getChildren().isEmpty()) {
+                            allLangResources.addContent(resources);
+                        }
                     }
                 }
             }
-            this.pluginLocs.put(formatDirPath, resources);
+
+            this.pluginLocs.put(formatDirPath, allLangResources);
         }
-        return resources;
+        return allLangResources;
     }
 
     private Path findLocDir(String lang, Path baseLoc) throws IOException {
@@ -304,25 +322,6 @@ public class Format extends AbstractFormatService {
             }
         }
         return locDir;
-    }
-
-    /**
-     * Get the strings.xml, codelists.xml and labels.xml for the correct language from the schema plugin
-     *
-     * @return Map(SchemaName, SchemaLocalizations)
-     */
-    protected Map<String, SchemaLocalization> getSchemaLocalizations(ServiceContext context)
-            throws IOException, JDOMException {
-
-        Map<String, SchemaLocalization> localization = Maps.newHashMap();
-        final SchemaManager schemaManager = context.getBean(SchemaManager.class);
-        final Set<String> allSchemas = schemaManager.getSchemas();
-        for (String schema : allSchemas) {
-            Map<String, XmlFile> schemaInfo = schemaManager.getSchemaInfo(schema);
-            localization.put(schema, new SchemaLocalization(context, schema, schemaInfo));
-        }
-
-        return localization;
     }
 
     protected boolean isDevMode(ServiceContext context) {

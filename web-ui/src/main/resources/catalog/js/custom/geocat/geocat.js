@@ -124,7 +124,7 @@
     'gnMap',
 
     function($scope, gnHttp, gnHttpServices, gnRegionService,
-             $timeout, suggestService,$http, gnSearchSettings,
+        $timeout, suggestService, $http, gnSearchSettings,
              gnSearchManagerService, ngeoDecorateInteraction, $q, gnMap) {
 
 
@@ -259,13 +259,13 @@
         type: 'Polygon',
         style: gnSearchSettings.olStyles.drawBbox
       });
-      drawInteraction.on('drawend', function(){
+      drawInteraction.on('drawend', function() {
         setSearchGeometry(featureOverlay.getFeatures().item(0).getGeometry());
         setTimeout(function() {
           drawInteraction.active = false;
         }, 0);
       });
-      drawInteraction.on('drawstart', function(){
+      drawInteraction.on('drawstart', function() {
         featureOverlay.getFeatures().clear();
       });
       ngeoDecorateInteraction(drawInteraction, map);
@@ -334,9 +334,9 @@
         }
       });
 
-        /** When we switch between simple and advanced form*/
-      $scope.$watch('advanced', function(v){
-        if(v == false) {
+      /** When we switch between simple and advanced form*/
+      $scope.$watch('advanced', function(v) {
+        if (v == false) {
           $scope.restrictArea = '';
         }
       });
@@ -379,9 +379,9 @@
       // all requests respond.
       var onRegionSelect = function(v){
         cantonSource.clear();
-        if(angular.isDefined(v) && v != '') {
+        if (angular.isDefined(v) && v != '') {
           var cs = v.split(',');
-          for(var i=0; i<cs.length;i++) {
+          for (var i = 0; i < cs.length; i++) {
             addCantonFeature(cs[i]).then(function(){
               if(--nbCantons == 0) {
                 map.getView().fitExtent(cantonSource.getExtent(), map.getSize());
@@ -409,10 +409,10 @@
         var url = 'qi@json?summaryOnly=true';
         gnSearchManagerService.search(url).then(function(data) {
           $scope.searchResults.facet = data.facet;
-        });
+      });
       } else {
         $scope.triggerSearch(true);
-      }
+            }
     }]);
 
   module.directive('gcFixMdlinks', [
@@ -434,7 +434,7 @@
                 name: e[1],
                 desc: e[1],
                 url: e[2]
-              });
+       });
             })
           } else {
             scope.layers = scope.md.getLinksByType('OGC', 'kml');

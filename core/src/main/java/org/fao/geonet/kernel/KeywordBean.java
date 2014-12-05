@@ -588,7 +588,7 @@ public class KeywordBean {
         Thesaurus thesaurus = finder.getThesaurusByName(getThesaurusKey());
         Element elthesaurus = new Element("thesaurus");
         if(thesaurus != null) {
-            Set<Map.Entry<String, String>> titles = thesaurus.getTitles(context).entrySet();
+            Set<Map.Entry<String, String>> titles = thesaurus.getTitles(context.getApplicationContext()).entrySet();
             for (Map.Entry<String, String> entry : titles) {
                 elthesaurus.addContent(new Element("title").setAttribute("lang", entry.getKey()).setText(entry.getValue()));
             }

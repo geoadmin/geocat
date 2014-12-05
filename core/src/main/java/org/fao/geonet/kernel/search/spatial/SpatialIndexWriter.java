@@ -40,6 +40,7 @@ import org.geotools.data.FeatureListener;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.FeatureStore;
 import org.geotools.data.Transaction;
+import org.geotools.data.memory.MemoryDataStore;
 import org.geotools.data.memory.MemoryFeatureCollection;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
@@ -486,7 +487,9 @@ public class SpatialIndexWriter implements FeatureListener
 
         typeBuilder.setCRS(DefaultGeographicCRS.WGS84);
         typeBuilder.add("geom", MultiPolygon.class);
-//        typeBuilder.add(_IDS_ATTRIBUTE_NAME, String.class);
+        if (datastore instanceof MemoryDataStore) {
+            typeBuilder.add(_IDS_ATTRIBUTE_NAME, String.class);
+        }
 
         SimpleFeatureType type = typeBuilder.buildFeatureType();
         datastore.createSchema(type);

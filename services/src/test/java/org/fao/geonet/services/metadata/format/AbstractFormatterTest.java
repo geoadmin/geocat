@@ -15,7 +15,9 @@ import org.fao.geonet.domain.MetadataHarvestInfo;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
@@ -33,6 +35,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -53,6 +56,8 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
     SchemaManager schemaManager;
     @Autowired
     SettingManager settingManager;
+    @Autowired
+    DataManager dataManager;
 
     protected int id;
     protected String xml;
@@ -80,7 +85,8 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
         MetadataHarvestInfo harvestInfo = new MetadataHarvestInfo().setHarvested(false);
         metadata.setHarvestInfo(harvestInfo);
         metadata.setData(xml);
-        this.id = metadataRepository.save(metadata).getId();
+        this.id = dataManager.insertMetadata(serviceContext, metadata, metadata.getXmlData(false), false, true, false,
+                UpdateDatestamp.NO, false, false).getId();
     }
 
     protected abstract File getTestMetadataFile();
@@ -102,7 +108,7 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
                     "" + id, null, formatterId, "true", false, request);
     }
 
-    protected void measureFormatterPerformance(MockHttpServletRequest request, String formatterId) throws Exception {
+    protected void measureFormatterPerformance(final MockHttpServletRequest request, final String formatterId) throws Exception {
         long start = System.nanoTime();
         final long fiveSec = TimeUnit.SECONDS.toNanos(5);
         systemInfo.setStagingProfile(SystemInfo.STAGE_PRODUCTION);
@@ -153,10 +159,10 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
         final Pair<FormatterImpl, FormatterParams> formatterFormatterParamsPair = getFormatterFormatterParamsPair(request, formatterId);
         try {
             EnvironmentProxy.setCurrentEnvironment(formatterFormatterParamsPair.two(), this.mapper);
-            TransformationContext context = new TransformationContext();
+            TransformationContext context = new TransformationContext(null, null, new EnvironmentProxy());
             context.setThreadLocal();
             StringBuilder result = new StringBuilder();
-            handler.handle(context, elem, result);
+            handler.handle(context, Collections.singletonList(elem), result);
             return result.toString();
         } finally {
             EnvironmentProxy.clearContext();

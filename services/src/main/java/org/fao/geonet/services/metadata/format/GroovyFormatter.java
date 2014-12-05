@@ -18,7 +18,7 @@ import org.fao.geonet.services.metadata.format.groovy.Environment;
 import org.fao.geonet.services.metadata.format.groovy.EnvironmentProxy;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;
-import org.fao.geonet.services.metadata.format.groovy.TemplateCache;
+import org.fao.geonet.services.metadata.format.groovy.template.TemplateCache;
 import org.fao.geonet.services.metadata.format.groovy.Transformer;
 import org.fao.geonet.utils.IO;
 import org.jdom.Namespace;
@@ -91,7 +91,7 @@ public class GroovyFormatter implements FormatterImpl {
 
     private synchronized Transformer createTransformer(FormatterParams fparams) throws Exception {
         Transformer transformer = this.transformers.getIfPresent(fparams.formatDir);
-//        Transformer transformer;
+
         if (fparams.isDevMode() || transformer == null) {
             final Path baseShared = this.dataDirectory.getFormatterDir().resolve(GROOVY_SCRIPT_ROOT);
             final Path schemaFormatterDir = getSchemaPluginFormatterDir(fparams.schema);
@@ -107,7 +107,7 @@ public class GroovyFormatter implements FormatterImpl {
 
             Handlers handlers = new Handlers(fparams, schemaShared.getParent(), baseShared.getParent(), this.templateCache);
             Environment env = new EnvironmentProxy();
-            Functions functions = new Functions(fparams, env, isoLanguageRepository, this.schemaManager);
+            Functions functions = new Functions(fparams, env);
             Binding binding = new Binding();
             binding.setVariable("handlers", handlers);
             binding.setVariable("env", env);
@@ -116,7 +116,7 @@ public class GroovyFormatter implements FormatterImpl {
             final String scriptName = fparams.viewFile.toAbsolutePath().toUri().toString();
             groovyScriptEngine.run(scriptName, binding);
 
-            transformer = new Transformer(handlers, fparams.formatDir.toAbsolutePath());
+            transformer = new Transformer(handlers, functions, env, fparams.formatDir.toAbsolutePath());
             this.transformers.put(fparams.formatDir, transformer);
         }
 

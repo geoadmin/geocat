@@ -87,15 +87,17 @@
           scope.$watchCollection('searchResults.records', function(rec) {
 
             fo.getFeatures().clear();
-            if (!angular.isArray(rec) || angular.isUndefined(scope.map.getTarget())) {
+            if (!angular.isArray(rec) ||
+                angular.isUndefined(scope.map.getTarget())) {
               return;
             }
-            for(var i=0;i<rec.length;i++) {
+            for (var i = 0; i < rec.length; i++) {
               var feat = new ol.Feature();
               var extent = gnMap.getBboxFromMd(rec[i]);
-              if(extent) {
+              if (extent) {
                 var proj = scope.map.getView().getProjection();
-                extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
+                extent = ol.extent.containsExtent(proj.getWorldExtent(),
+                    extent) ?
                     ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
                     proj.getExtent();
                 var coords = gnMap.getPolygonFromExtent(extent);
@@ -107,7 +109,7 @@
             fo.getFeatures().forEach(function(f) {
               ol.extent.extend(extent, f.getGeometry().getExtent());
             });
-            if(!ol.extent.isEmpty(extent)) {
+            if (!ol.extent.isEmpty(extent)) {
               scope.map.getView().fitExtent(extent, scope.map.getSize());
             }
 
@@ -118,7 +120,7 @@
             if (angular.isUndefined(templateUrl)) {
               return;
             }
-            var template = angular.element(document.createElement('div'))
+            var template = angular.element(document.createElement('div'));
             template.attr({
               'ng-include': 'resultTemplate'
             });
@@ -130,7 +132,8 @@
           //TODO: remove this is defined in custom controllers
           scope.addToMap = function(link) {
             gnOwsCapabilities.getCapabilities(link.url).then(function(capObj) {
-              var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(link.name, capObj);
+              var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+                  link.name, capObj);
               scope.$emit('addLayerFromMd', layerInfo);
             });
 
@@ -151,13 +154,13 @@
       return {
         restrict: 'A',
         scope: false,
-        link: function (scope) {
+        link: function(scope) {
           scope.links = scope.md.getLinksByType('LINK');
           scope.downloads = scope.md.getLinksByType('DOWNLOAD');
           scope.layers = scope.md.getLinksByType('OGC', 'kml');
 
         }
-      }
+      };
     }]);
 
           module.directive('gnDisplayextentOnhover', [
@@ -168,13 +171,14 @@
         restrict: 'A',
         link: function(scope, element, attrs, controller) {
 
-          //TODO : change, just apply a style to the feature when featureoverlay is fixed
+          //TODO : change, just apply a style to the feature when
+          // featureoverlay is fixed
           var feat = new ol.Feature();
 
           element.bind('mouseenter', function() {
 
             var extent = gnMap.getBboxFromMd(scope.md);
-            if(extent) {
+            if (extent) {
               var proj = scope.map.getView().getProjection();
               extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
                   ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
@@ -203,7 +207,7 @@
           element.bind('dblclick', function() {
 
             var extent = gnMap.getBboxFromMd(scope.md);
-            if(extent) {
+            if (extent) {
               var proj = scope.map.getView().getProjection();
               extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
                   ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
@@ -216,7 +220,7 @@
     }]);
 
   module.directive('gnMetadataOpen',
-    [ '$http', '$sanitize',  '$compile', '$sce', function($http, $sanitize, $compile, $sce) {
+      ['$http', '$sanitize', '$compile', '$sce', function($http, $sanitize, $compile, $sce) {
       return {
         restrict: 'A',
         scope: {
@@ -227,8 +231,10 @@
         link: function(scope, element, attrs, controller) {
           element.on('click', function() {
             //var URI = '/geonetwork/srv/fre/view?currTab=simple&uuid=';
-            var URI = '/geonetwork/srv/eng/md.format.xml?xsl=full_view&schema=iso19139.che&id=';
-            // var URI = 'http://localhost:8080/geonetwork/srv/fre/view?currTab=simple&uuid='
+              var URI = '/geonetwork/srv/eng/md.format.xml?xsl=full_view&' +
+                  'schema=iso19139.che&id=';
+              // var URI = 'http://localhost:8080/geonetwork/srv/fre/
+              // view?currTab=simple&uuid='
             $http.get(URI + scope.md.getUuid()).then(function(response) {
               scope.fragment = $sce.trustAsHtml(response.data);
               var el = document.createElement('div');
@@ -264,17 +270,17 @@
 
           };
 
-          // We need to wait that the HTML is rendered into ng-bind-html directive.
+        // We need to wait that the HTML is rendered into ng-bind-html directive
           // Angular can't tell us so we must do a timeout
           var callTimeout = function() {
             return $timeout(function() {
               console.log('loop');
-              if(element.find('.toggler').length > 0){
+            if (element.find('.toggler').length > 0) {
                 domRendered = true;
                 addEvents();
               }
             }, 100).then(function() {
-              if(!domRendered) {
+            if (!domRendered) {
                 callTimeout();
               }
             });

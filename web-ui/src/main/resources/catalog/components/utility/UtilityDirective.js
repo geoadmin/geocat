@@ -327,12 +327,13 @@
           date: '=gnBootstrapDatepicker',
           dates: '=dateAvailable'
         },
-        link: function (scope, element, attrs, ngModelCtrl) {
+        link: function(scope, element, attrs, ngModelCtrl) {
 
-          var available = function (date) {
+          var available = function(date) {
             if (scope.dates[date.getFullYear()] &&
                 scope.dates[date.getFullYear()][date.getMonth()] &&
-                $.inArray(date.getDate(), scope.dates[date.getFullYear()][date.getMonth()]) != -1) {
+                $.inArray(date.getDate(),
+                    scope.dates[date.getFullYear()][date.getMonth()]) != -1) {
               return '';
             } else {
               return 'disabled';
@@ -340,18 +341,19 @@
           };
 
           $(element).datepicker({
-            onRender: angular.isUndefined(scope.dates) ? function() {} : function (dt, a, b) {
+            onRender: angular.isUndefined(scope.dates) ? function() {}
+                : function(dt, a, b) {
               return available(dt);
             }
-          }).on('changeDate', function (ev) {
+          }).on('changeDate', function(ev) {
             // view -> model
-            scope.$apply(function () {
+            scope.$apply(function() {
               scope.date = $(element).find('input')[0].value;
             });
           });
 
           // model -> view
-          scope.$watch('date', function (v) {
+          scope.$watch('date', function(v) {
             if (angular.isUndefined(v)) {
               v = '';
             }
@@ -448,7 +450,7 @@
               // Function that returns the reduced items list,
               // to use in ng-repeat
               scope.$parent.pageItems = function() {
-                if (scope.items()) {
+                if (angular.isArray(scope.items())) {
                   var start = scope.paginator.currentPage *
                       scope.paginator.pageSize;
                   var limit = scope.paginator.pageSize;
@@ -484,8 +486,10 @@
               var secondPart = String(text).substring(maxLength, text.length);
               // create some new html elements to hold the separate info
               var firstSpan = $compile('<span>' + firstPart + '</span>')(scope);
-              var secondSpan = $compile('<span ng-if="collapsed">' + secondPart + '</span>')(scope);
-              var moreIndicatorSpan = $compile('<span ng-if="!collapsed">... </span>')(scope);
+            var secondSpan = $compile('<span ng-if="collapsed">' +
+                secondPart + '</span>')(scope);
+            var moreIndicatorSpan = $compile(
+                '<span ng-if="!collapsed">... </span>')(scope);
               var lineBreak = $compile('<br ng-if="collapsed">')(scope);
               var toggleButton = $compile(
                 '<span class="collapse-text-toggle" ng-click="toggle()">' +

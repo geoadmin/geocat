@@ -1,14 +1,11 @@
 package iso19139;
 
 import com.google.common.collect.Lists;
-import com.google.common.io.Files;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Constants;
 import org.fao.geonet.guiservices.metadata.GetRelated;
-import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
+import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterParams;
 import org.fao.geonet.services.metadata.format.groovy.Environment;
 import org.fao.geonet.services.metadata.format.groovy.EnvironmentImpl;
@@ -18,6 +15,7 @@ import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Text;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,34 +32,16 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
 
     @Autowired
     private IsoLanguagesMapper mapper;
-    @Autowired
-    private IsoLanguageRepository langRepo;
-    @Autowired
-    private SchemaManager schemaManager;
 
-    @Test //@Ignore
+    @Test @Ignore
     @SuppressWarnings("unchecked")
     public void testPrintFormat() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addParameter("html", "true");
-
-        GetRelated related = Mockito.mock(GetRelated.class);
-        Element relatedXml = Xml.loadFile(FullViewFormatterTest.class.getResource("relations.xml"));
-        Mockito.when(related.getRelated(Mockito.<ServiceContext>any(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString(),
-                Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean())).thenReturn(relatedXml);
-        _applicationContext.getBeanFactory().registerSingleton("getRelated", related);
-
-        final String formatterId = "full_view";
-        FormatterParams fparams = getFormatterFormatterParamsPair(request, formatterId).two();
-        Environment env = new EnvironmentImpl(fparams, mapper);
-        final Functions functions = new Functions(fparams, env, langRepo, schemaManager);
-
-//        measureFormatterPerformance(request, formatterId);
-
+        final FormatType formatType = FormatType.testpdf;
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        formatService.exec("eng", "pdf", "" + id, null, formatterId, "true", false, request, response);
-        final String view = response.getContentAsString();
-        Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
+
+        Format format = new Format(formatType, response).invoke();
+        Functions functions = format.getFunctions();
+        String view = format.getView();
 
         List<String> excludes = excludes();
 
@@ -120,5 +100,49 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
     protected File getTestMetadataFile() {
         final String mdFile = FullViewFormatterTest.class.getResource("/iso19139/example.xml").getFile();
         return new File(mdFile);
+    }
+
+    private class Format {
+        private FormatType formatType;
+        private MockHttpServletResponse response;
+        private Functions functions;
+        private String view;
+
+        public Format(FormatType formatType, MockHttpServletResponse response) {
+            this.formatType = formatType;
+            this.response = response;
+        }
+
+        public Functions getFunctions() {
+            return functions;
+        }
+
+        public String getView() {
+            return view;
+        }
+
+        public Format invoke() throws Exception {
+            MockHttpServletRequest request = new MockHttpServletRequest();
+
+            GetRelated related = Mockito.mock(GetRelated.class);
+            Element relatedXml = Xml.loadFile(FullViewFormatterTest.class.getResource("relations.xml"));
+            Mockito.when(related.getRelated(Mockito.<ServiceContext>any(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString(),
+                    Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean())).thenReturn(relatedXml);
+            _applicationContext.getBeanFactory().registerSingleton("getRelated", related);
+
+            final String formatterId = "full_view";
+            FormatterParams fparams = getFormatterFormatterParamsPair(request, formatterId).two();
+            Environment env = new EnvironmentImpl(fparams, mapper);
+            functions = new Functions(fparams, env);
+
+//            measureFormatterPerformance(request, formatterId);
+
+//            formatService.exec("eng", FormatType.html.name(), "" + id, null, formatterId, "true", false, request, response);
+            formatService.exec("eng", formatType.name(), "" + id, null, formatterId, "true", false, request, response);
+            view = response.getContentAsString();
+//            Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
+
+            return this;
+        }
     }
 }

@@ -22,8 +22,8 @@
           /**
            * Return info service url, depending on the type.
            * Exemple : `geonetwork/srv/eng/info@json?type=categories`
-           * @param types
-           * @returns {*}
+           * @param {string} type
+           * @return {*}
            */
           this.getInfoUrl = function() {
             var types = Array.prototype.splice.call(arguments, 0);
@@ -36,15 +36,15 @@
 
           /**
            * Return suggestion for field 'any'
-           * @param val
-           * @returns {*}
+           * @param {string} val
+           * @return {*}
            */
           this.getAnySuggestions = function(val) {
             var url = this.getUrl(val, 'anylight',
                 ('STARTSWITHFIRST'));
 
             return $http.get(url, {
-            }).then(function(res){
+            }).then(function(res) {
               return res.data[1];
             });
           };
@@ -54,8 +54,8 @@
            * Must return an array of datum. It is contained
            * in the second element of the json response.
            *
-           * @param data
-           * @return {Array|null}
+           * @param {Array} data
+           * @return {?Array}
            */
           this.filterResponse = function(data) {
             return data[1];
@@ -65,8 +65,8 @@
            * Must return an array of datum objects(id/name). It is contained
            * in the second element of the json response.
            *
-           * @param data
-           * @return {Array|null}
+           * @param {Array} data
+           * @return {?Array}
            */
           this.bhFilter = function(data) {
             var datum = [];

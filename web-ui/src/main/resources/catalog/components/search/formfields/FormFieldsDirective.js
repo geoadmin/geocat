@@ -14,7 +14,7 @@
    * empty.
    */
 
-  .directive('gnTypeahead', [ function() {
+  .directive('gnTypeahead', [function() {
     return {
       restrict: 'A',
       scope: {
@@ -25,30 +25,58 @@
         var config = scope.options.config || {};
         var doLink = function(data, remote) {
 
-          var conf = {
+              var bloodhoundConf = {
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             limit: 10000000,
-            sorter: function(a,b) {
-              if(a.name.toLowerCase()< b.name.toLowerCase()) return -1;
-              else if(a.name.toLowerCase()>b.name.toLowerCase()) return 1;
+            sorter: function(a, b) {
+              if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
+              else if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
               else return 0;
             }
           };
 
           if (data) {
-            conf.local = data;
+                bloodhoundConf.local = data;
           } else if (remote) {
-            conf.remote = remote;
+                bloodhoundConf.remote = remote;
+                // Remove from suggestion values already selected in remote mode
+                if (angular.isFunction(remote.filter)) {
+                  var filterFn = remote.filter;
+                  bloodhoundConf.remote.filter = function(data) {
+                    var filtered = filterFn(data);
+                    var datums = [];
+                    for (var i = 0; i < filtered.length; i++) {
+                      if (stringValues.indexOf(filtered[i].id) < 0) {
+                        datums.push(filtered[i]);
           }
-          var engine = new Bloodhound(conf);
+                    }
+                    return datums;
+                  };
+                }
+              }
+              var engine = new Bloodhound(bloodhoundConf);
           engine.initialize();
 
+              // Remove from suggestion values already selected for local mode
+              var refreshDatum = function() {
+                if (bloodhoundConf.local) {
+                  engine.clear();
+                  for (var i = 0; i < data.length; i++) {
+                    if (stringValues.indexOf(data[i].id) < 0) {
+                      engine.add(data[i]);
+                    }
+                  }
+                }
+              };
+
+              // Initialize tagsinput in the element
           $(element).tagsinput({
-            itemValue:'id',
+                itemValue: 'id',
             itemText: 'name'
           });
 
+              // Initialize typeahead
           var field = $(element).tagsinput('input');
           field.typeahead({
             minLength: 0,
@@ -75,6 +103,7 @@
               scope.gnValues = stringValues.join(' OR ');
               scope.$apply();
             }
+                refreshDatum();
 
           });
           $(element).on('itemRemoved', function(event) {
@@ -85,19 +114,24 @@
               scope.gnValues = stringValues.join(' OR ');
               scope.$apply();
             }
+                refreshDatum();
           });
 
           // model -> ui
-          scope.$watch("gnValues", function() {
-            if(angular.isDefined(scope.gnValues) && scope.gnValues != '') {
+              scope.$watch('gnValues', function() {
+                if (angular.isDefined(scope.gnValues) && scope.gnValues != '') {
               stringValues = scope.gnValues.split(' OR ');
             }
             else {
               stringValues = [];
             }
 
-            var added = stringValues.filter(function(i) {return prev.indexOf(i) === -1;}),
-                removed = prev.filter(function(i) {return stringValues.indexOf(i) === -1;}),
+                var added = stringValues.filter(function(i) {
+                  return prev.indexOf(i) === -1;
+                }),
+                    removed = prev.filter(function(i) {
+                      return stringValues.indexOf(i) === -1;
+                    }),
                 i;
             prev = stringValues.slice();
 
@@ -119,9 +153,11 @@
           }, true);
 
           /** Manage the cross to clear the input */
-          var triggerElt = $('<span class="close tagsinput-trigger fa fa-ellipsis-v"></span>');
+              var triggerElt = $('<span class="close tagsinput-trigger' +
+                  ' fa fa-ellipsis-v"></span>');
           field.parent().after(triggerElt);
-          var resetElt = $('<span class="close tagsinput-clear">&times;</span>')
+              var resetElt = $('<span class="close ' +
+                  'tagsinput-clear">&times;</span>')
               .on('click', function() {
                 scope.gnValues = '';
                 scope.$apply();
@@ -130,7 +166,7 @@
           resetElt.hide();
 
           $(element).on('change', function() {
-            resetElt.toggle($(element).val()!='');
+                resetElt.toggle($(element).val() != '');
           });
         };
 
@@ -143,7 +179,7 @@
         }
 
       }
-    }
+        };
   }])
 
 
@@ -215,7 +251,7 @@
               scope.params.sortBy = scope.params.sortBy || scope.values[0];
               scope.search = function() {
                 searchFormCtrl.triggerSearch(true);
-              }
+              };
 
             }
           };
@@ -236,8 +272,8 @@
               scope.updatePagination = function() {
                 searchFormCtrl.resetPagination();
                 searchFormCtrl.triggerSearch();
+              };
               }
-            }
           };
         }])
 
@@ -268,12 +304,12 @@
             },
             link: function(scope, element, attrs) {
               var remote = {
-                url : suggestService.getUrl('QUERY', scope.field,
-                    (scope.startswith ?'STARTSWITHFIRST' : 'ALPHA')),
+                url: suggestService.getUrl('QUERY', scope.field,
+                    (scope.startswith ? 'STARTSWITHFIRST' : 'ALPHA')),
                 filter: suggestService.filterResponse,
                 wildcard: 'QUERY'
               };
-              if(angular.isUndefined(scope.multi)) {
+              if (angular.isUndefined(scope.multi)) {
                 element.typeahead({
                   remote: remote
                 });
@@ -283,13 +319,13 @@
                 });
                 element.tagsinput('input').typeahead({
                   remote: remote
-                }).bind('typeahead:selected', $.proxy(function (obj, datum) {
+                }).bind('typeahead:selected', $.proxy(function(obj, datum) {
                   this.tagsinput('add', datum.value);
                   this.tagsinput('input').typeahead('setQuery', '');
                 }, element));
               }
             }
-          }
+          };
         }])
 
   /**
@@ -326,7 +362,7 @@
                   function(data) {
 
                     $(element).tagsinput({
-                      itemValue:'id',
+                      itemValue: 'id',
                       itemText: 'name'
                     });
                     var field = $(element).tagsinput('input');
@@ -368,7 +404,8 @@
                               var fullSuggestionList = [];
                               // renderSuggestions expects a
                               // suggestions array not an object
-                              $.each(ttView.datasets[0].itemHash, function(i, item) {
+                              $.each(ttView.datasets[0].itemHash,
+                                  function(i, item) {
                                 fullSuggestionList.push(item);
                               });
 
@@ -386,7 +423,7 @@
 
                   });
             }
-          }
+          };
         }])
 
   /**

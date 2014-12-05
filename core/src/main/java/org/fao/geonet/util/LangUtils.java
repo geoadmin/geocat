@@ -1,19 +1,22 @@
 package org.fao.geonet.util;
 
-import jeeves.server.context.ServiceContext;
+import com.google.common.collect.Maps;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import org.apache.lucene.analysis.TokenStream;
+import org.fao.geonet.SystemInfo;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.apache.lucene.util.AttributeImpl;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.GeoNetworkAnalyzer;
 import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.jdom.Content;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.jdom.Content;
 import org.jdom.JDOMException;
+import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -56,6 +59,36 @@ public final class LangUtils
         return defaultVal;
     }
 
+    private static final class TranslationKey {
+        private String type;
+        private String key;
+
+        private TranslationKey(String type, String key) {
+            this.type = type;
+            this.key = key;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            TranslationKey that = (TranslationKey) o;
+
+            if (!key.equals(that.key)) return false;
+            if (!type.equals(that.type)) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = type.hashCode();
+            result = 31 * result + key.hashCode();
+            return result;
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public static List<Element> loadStrings(Path appDir, String langCode) throws IOException, JDOMException
     {
@@ -66,6 +99,7 @@ public final class LangUtils
         }
         return Collections.emptyList();
     }
+    private static final Map<TranslationKey, Map<String, String>> translationsCache = Maps.newConcurrentMap();
 
     public static String translate(Path appDir, String langCode, String key, String defaultVal) throws IOException,
             JDOMException
@@ -353,38 +387,46 @@ public final class LangUtils
      * 
      * @param type the type of translations file, typically strings
      * @param key the key to look up.  may contain / but cannot start with one.  for example: categories/water
-     * @return
      */
-    public static Map<String, String> translate(ServiceContext context, String type, String key) throws JDOMException, IOException {
-        Path appPath = context.getAppPath();
-        XmlCacheManager cacheManager = context.getXmlCacheManager();
-        Path loc = appPath.resolve("loc");
+    public static Map<String, String> translate(ApplicationContext context, String type, String key) throws JDOMException, IOException {
+        TranslationKey translationKey = new TranslationKey(type, key);
+        Map<String, String> translations = translationsCache.get(translationKey);
+
+        if (translations == null || context.getBean(SystemInfo.class).isDevMode()) {
+            Path webappDir = context.getBean(GeonetworkDataDirectory.class).getWebappDir();
+            XmlCacheManager cacheManager = context.getBean(XmlCacheManager.class);
+            Path loc = webappDir.resolve("loc");
         String typeWithExtension = "xml/" + type + ".xml";
-        Map<String, String> translations = new HashMap<>();
+            translations = new HashMap<>();
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(loc, IO.DIRECTORIES_FILTER)) {
             for (Path path : paths) {
                 if (Files.exists(path.resolve(typeWithExtension))) {
                     final String filename = path.getFileName().toString();
                     Element xml = cacheManager.get(context, true, loc, typeWithExtension, filename, filename, false);
                     String translation;
-                    if (key.contains("/") || key.contains("[") || key.contains(":") ) {
+                        if (key.contains("/") || key.contains("[") || key.contains(":")) {
                         translation = Xml.selectString(xml, key);
                     } else {
                         translation = xml.getChildText(key);
-                }
+                    }
                     if (translation != null && !translation.trim().isEmpty()) {
                         translations.put(filename, translation);
+                    }
+                }
             }
         }
-            }
+        
+            translationsCache.put(translationKey, translations);
         }
         
         return translations;
     }
+
+
     /**
      * same as translate(context, "string", key)
      */
-    public static Map<String, String> translate(ServiceContext context, String key) throws JDOMException, IOException {
+    public static Map<String, String> translate(ApplicationContext context, String key) throws JDOMException, IOException {
         return translate(context, "strings", key);
     }
 

@@ -1,5 +1,7 @@
 package org.fao.geonet.services.metadata.format.groovy.util;
 
+import org.fao.geonet.services.metadata.format.groovy.Functions;
+
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,5 +44,9 @@ public class LinkType {
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    public String getName(Functions functions) throws Exception {
+        return functions.translate(name);
     }
 }

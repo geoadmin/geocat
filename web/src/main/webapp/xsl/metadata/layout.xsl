@@ -1678,10 +1678,9 @@
           <tr>
             <td colspan="3">
               <xsl:apply-templates mode="coordinateElementGUI" select="$nEl/gco:Decimal">
-                <!-- FIXME make it schema generic -->
                 <xsl:with-param name="schema" select="$schema"/>
                 <xsl:with-param name="edit" select="$edit"/>
-                <xsl:with-param name="name" select="'gmd:northBoundLatitude'"/>
+                <xsl:with-param name="name" select="name($nEl)"/>
                 <xsl:with-param name="eltRef" select="concat('n', $eltRef)"/>
                 <xsl:with-param name="tabIndex" select="100"/>
               </xsl:apply-templates>
@@ -1694,7 +1693,7 @@
               <xsl:apply-templates mode="coordinateElementGUI" select="$wEl/gco:Decimal">
                 <xsl:with-param name="schema" select="$schema"/>
                 <xsl:with-param name="edit" select="$edit"/>
-                <xsl:with-param name="name" select="'gmd:westBoundLongitude'"/>
+                <xsl:with-param name="name" select="name($wEl)"/>
                 <xsl:with-param name="eltRef" select="concat('w', $eltRef)"/>
                 <xsl:with-param name="tabIndex" select="101"/>
               </xsl:apply-templates>
@@ -1758,7 +1757,7 @@
               <xsl:apply-templates mode="coordinateElementGUI" select="$eEl/gco:Decimal">
                 <xsl:with-param name="schema" select="$schema"/>
                 <xsl:with-param name="edit" select="$edit"/>
-                <xsl:with-param name="name" select="'gmd:eastBoundLongitude'"/>
+                <xsl:with-param name="name" select="name($eEl)"/>
                 <xsl:with-param name="eltRef" select="concat('e', $eltRef)"/>
                 <xsl:with-param name="tabIndex" select="103"/>
               </xsl:apply-templates>
@@ -1771,7 +1770,7 @@
               <xsl:apply-templates mode="coordinateElementGUI" select="$sEl/gco:Decimal">
                 <xsl:with-param name="schema" select="$schema"/>
                 <xsl:with-param name="edit" select="$edit"/>
-                <xsl:with-param name="name" select="'gmd:southBoundLatitude'"/>
+                <xsl:with-param name="name" select="name($sEl)"/>
                 <xsl:with-param name="eltRef" select="concat('s', $eltRef)"/>
                 <xsl:with-param name="tabIndex" select="102"/>
               </xsl:apply-templates>
