@@ -479,14 +479,14 @@ public class GetEditModel implements Service {
         final SchemaManager schemaManager = context.getBean(SchemaManager.class);
         final MetadataSchema iso19139CHESchema = schemaManager.getSchema("iso19139.che");
         final MetadataSchema iso19139Schema = schemaManager.getSchema("iso19139");
-        final Element codelists = cacheManager.get(context, true, iso19139Schema.getSchemaDir().resolve("loc"), "codelists.xml",
+        final Element codelists = cacheManager.get(context.getApplicationContext(), true, iso19139Schema.getSchemaDir().resolve("loc"), "codelists.xml",
                 context.getLanguage(), "ger", true);
-        final Element cheCodelistExtensions = cacheManager.get(context, true, iso19139CHESchema.getSchemaDir().resolve("loc"),
+        final Element cheCodelistExtensions = cacheManager.get(context.getApplicationContext(), true, iso19139CHESchema.getSchemaDir().resolve("loc"),
                 "codelists.xml",
                 context.getLanguage(), "ger", true);
-        final Element labels = cacheManager.get(context, true, iso19139Schema.getSchemaDir().resolve("loc"), "labels.xml",
+        final Element labels = cacheManager.get(context.getApplicationContext(), true, iso19139Schema.getSchemaDir().resolve("loc"), "labels.xml",
                 context.getLanguage(), "ger", true);
-        final Element labelExtensions = cacheManager.get(context, true, iso19139CHESchema.getSchemaDir().resolve("loc"), "labels.xml",
+        final Element labelExtensions = cacheManager.get(context.getApplicationContext(), true, iso19139CHESchema.getSchemaDir().resolve("loc"), "labels.xml",
                 context.getLanguage(), "ger", true);
 
 
