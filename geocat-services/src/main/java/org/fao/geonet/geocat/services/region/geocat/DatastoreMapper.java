@@ -97,7 +97,7 @@ public abstract class DatastoreMapper {
         ReferencedEnvelope bbox = new ReferencedEnvelope(feature.getBounds());
         Map<String, String> kantonLabels = state.categoryIdMap.get(categoryId);
         if (kantonLabels == null) {
-            kantonLabels = LangUtils.translate(state.context, "geocat", categoryId);
+            kantonLabels = LangUtils.translate(state.context.getApplicationContext(), "geocat", categoryId);
             state.categoryIdMap.put(categoryId, kantonLabels);
         }
         return new Region(id, labels, categoryId, kantonLabels, hasGeom, bbox);
