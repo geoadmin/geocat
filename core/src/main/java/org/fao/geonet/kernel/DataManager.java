@@ -677,17 +677,6 @@ public class DataManager {
                 }
             }
             // GEOCAT
-            if (groupOwner != null) {
-                try {
-                    int groupOwnerId = Integer.valueOf(groupOwner);
-                    moreFields.add(SearchManager.makeField("_groupOwner", groupOwner, true, true));
-                    final Group group = _applicationContext.getBean(GroupRepository.class).findOne(groupOwnerId);
-                    moreFields.add(SearchManager.makeField("groupLogoUuid", group.getLogo(), true, false));
-                    moreFields.add(SearchManager.makeField("groupWebsite", group.getWebsite(), true, false));
-                } catch (NumberFormatException nfe) {
-                    // that's ok, sometime groupOwner is blank
-                }
-            }
             boolean isPublished = false;
             // END GEOCAT
 
