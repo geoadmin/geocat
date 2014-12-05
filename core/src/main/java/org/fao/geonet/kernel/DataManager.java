@@ -1836,14 +1836,13 @@ public class DataManager {
                     Processor.detachXLink(metadataXml,srvContext);
                 }
             }
+            // GEOCAT
+            if( getMetadataSchema(id).equals("iso19139.che")) {
+                metadataXml = Xml.transform(metadataXml, stylePath.resolve("add-charstring.xsl"));
+            }
+            // END GEOCAT
         }
 
-        // GEOCAT
-
-        if( getMetadataSchema(id).equals("iso19139.che")) {
-            metadataXml = Xml.transform(metadataXml, stylePath.resolve("add-charstring.xsl"));
-        }
-        // END GEOCAT
         metadataXml.addNamespaceDeclaration(Edit.NAMESPACE);
         Element info = buildInfoElem(srvContext, id, version);
         metadataXml.addContent(info);
