@@ -164,6 +164,10 @@ h1, h2, h3, h4, h5, h6,
     overflow: visible;
   }
 }
+.advanced.active {
+  padding-bottom: 200px;
+  max-height: 100em;
+}
 .administrative.active {
   max-height: 5em;
 }
@@ -380,7 +384,8 @@ h1, h2, h3, h4, h5, h6,
       overflow: auto;
     }
     .geocat-search {
-      height: ~"calc(100% - 4.4em - 200px)";
+      height: ~"calc(100% - 4.4em)";
+      padding-bottom: 200px;
     }
     .gn-map-field {
       background: #fff;
@@ -389,6 +394,7 @@ h1, h2, h3, h4, h5, h6,
       width: 100%;
       margin-left: -15px;
       border-width: 1px 0 0;
+      z-index: 2;
       .btn-group-vertical {
         position: absolute;
         top: 4px;
@@ -406,7 +412,10 @@ h1, h2, h3, h4, h5, h6,
   }
   .searchMapExpanded {
     .maincol .panel .geocat-search {
-      height: ~"calc(100% - 4.4em - 400px)";
+      padding-bottom: 400px;
+    }
+    .advanced.active {
+      padding-bottom: 400px;
     }
     [ngeo-map] {
       height: 400px;
