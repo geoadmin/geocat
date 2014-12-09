@@ -26,7 +26,7 @@
           <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('software')>=0" class="fa fa-hdd-o" title="software"></span>
           <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('basicgeodata')>=0" class="fa fa-globe" title="geodata"></span>
           <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('service')>=0" class="fa fa-globe" title="service"></span>
-          <a href="" gn-metadata-open="md" gn-metadata-open-selector=".gn-resultview">{{md.title || md.defaultTitle}}</a>
+          <a href="" gn-metadata-open="md" gn-metadata-open-selector=".gn-resultview" title="{{md.title || md.defaultTitle}}">{{md.title || md.defaultTitle}}</a>
         </h4>
 
         <a class="pull-left">
