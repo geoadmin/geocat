@@ -154,7 +154,7 @@
 
           /** Manage the cross to clear the input */
               var triggerElt = $('<span class="close tagsinput-trigger' +
-                  ' fa fa-ellipsis-v"></span>');
+                  ' fa fa-chevron-down"></span>');
           field.parent().after(triggerElt);
               var resetElt = $('<span class="close ' +
                   'tagsinput-clear">&times;</span>')

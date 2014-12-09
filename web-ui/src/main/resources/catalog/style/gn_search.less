@@ -159,7 +159,7 @@
   width: 100%;
   .tag-content {
     display: inline-block;
-    max-width: 10em;
+    max-width: ~"calc(100% - 3em)";
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -219,6 +219,7 @@
       font-size: 12px;
       font-weight: normal;
       margin: 2px;
+      max-width: ~"calc(100% - 20px)";
     }
   }
 }
