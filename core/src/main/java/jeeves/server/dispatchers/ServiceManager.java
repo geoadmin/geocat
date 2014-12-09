@@ -58,7 +58,6 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.SOAPUtil;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -69,6 +68,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
@@ -237,61 +237,44 @@ public class ServiceManager {
         return service;
     }
 
-	//---------------------------------------------------------------------------
 
-	@SuppressWarnings("unchecked")
+    //---------------------------------------------------------------------------
+
+    @SuppressWarnings("unchecked")
     private OutputPage buildOutputPage(String pack, Element output) throws Exception {
         OutputPage outPage = new OutputPage();
 
-        // GEOCAT
-        outPage.setPreStyleSheets(output.getChildren(ConfigFile.Output.Child.PRE_SHEET));
-        // END GEOCAT
-
         outPage.setStyleSheet(output.getAttributeValue(ConfigFile.Output.Attr.SHEET));
         outPage.setForward(output.getAttributeValue(ConfigFile.Output.Attr.FORWARD));
-		outPage.setTestCondition(output.getAttributeValue(ConfigFile.Output.Attr.TEST));
+        outPage.setTestCondition(output.getAttributeValue(ConfigFile.Output.Attr.TEST));
         outPage.setFile(output.getAttributeValue(ConfigFile.Output.Attr.FILE) != null);
         outPage.setBLOB(output.getAttributeValue(ConfigFile.Output.Attr.BLOB) != null);
 
-		//--- set content type
+        //--- set content type
 
-		String contType = output.getAttributeValue(ConfigFile.Output.Attr.CONTENT_TYPE);
+        String contType = output.getAttributeValue(ConfigFile.Output.Attr.CONTENT_TYPE);
 
-		if (contType == null)
-			contType = defaultContType;
+        if (contType == null)
+            contType = defaultContType;
 
-		outPage.setContentType(contType);
+        outPage.setContentType(contType);
 
-		//--- handle children
+        //--- handle children
 
-		//List<Element> guiList = output.getChildren();
+        List<Element> guiList = output.getChildren();
 
-		List<Element> guiList = output.getContent(new Filter()
-        {
-
-            public boolean matches(Object arg0)
-            {
-                if (arg0 instanceof Element) {
-                    Element elem = (Element) arg0;
-                    return !elem.getName().equals(ConfigFile.Output.Child.PRE_SHEET );
-                }
-                return false;
-            }
-        });
-		
-		
         for (Element gui : guiList) {
-			outPage.addGuiService(getGuiService(pack, gui));
-		}
+            outPage.addGuiService(getGuiService(pack, gui));
+        }
 
-		return outPage;
-	}
+        return outPage;
+    }
 
     //---------------------------------------------------------------------------
 
     private GuiService getGuiService(String pack, Element elem) throws Exception {
         if (ConfigFile.Output.Child.XML.equals(elem.getName()))
-			return new XmlFile(elem, defaultLang, defaultLocal, false);
+            return new XmlFile(elem, defaultLang, defaultLocal);
 
         if (ConfigFile.Output.Child.CALL.equals(elem.getName()))
             return new Call(elem, pack, dataDir.getWebappDir());
@@ -447,7 +430,7 @@ public class ServiceManager {
                 }
 
                 // Did we change some header on the service?
-                for (Map.Entry<String, String> entry : context.getResponseHeaders()
+                for (Entry<String, String> entry : context.getResponseHeaders()
                         .entrySet()) {
                     ((HttpServiceRequest) req).getHttpServletResponse()
                             .setHeader(entry.getKey(), entry.getValue());
@@ -521,7 +504,7 @@ public class ServiceManager {
         int code = getErrorCode(e);
 		boolean cache = (srvInfo != null) && srvInfo.isCacheSet();
 
-		error("Raised exception while executing service\n"+ Xml.getString(error));
+        if (isDebug()) debug("Raised exception while executing service\n" + Xml.getString(error));
 
         try {
             InputMethod input = req.getInputMethod();
@@ -699,7 +682,7 @@ public class ServiceManager {
 				}
 
 				
-			} 
+			}
             final BinaryFile binaryFile = new BinaryFile(response);
             String contentType = binaryFile.getContentType();
 
@@ -830,6 +813,7 @@ public class ServiceManager {
 
 		return null;
 	}
+
 	//---------------------------------------------------------------------------
 	//--- Dispatch error
 	//---------------------------------------------------------------------------

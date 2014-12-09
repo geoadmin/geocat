@@ -64,10 +64,9 @@ public class XmlFile implements GuiService
 	 * @param config
 	 * @param defaultLanguage the default language if the localized file doesn't exist
 	 * @param defaultLocalized localize file
-	 * @param isEternal if true then keep in cache always
 	 * @throws BadInputEx
 	 */
-	public XmlFile(Element config, String defaultLanguage, boolean defaultLocalized, boolean isEternal) throws BadInputEx
+	public XmlFile(Element config, String defaultLanguage, boolean defaultLocalized) throws BadInputEx
 	{
 		defaultLang = defaultLanguage;
 

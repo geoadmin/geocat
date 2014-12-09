@@ -176,7 +176,7 @@ public class SchemaLocalizationsTest {
                 setAttribute(jeeves.constants.ConfigFile.Xml.Attr.NAME, "name").
                 setAttribute(jeeves.constants.ConfigFile.Xml.Attr.FILE, "FILE").
                 setAttribute(jeeves.constants.ConfigFile.Xml.Attr.BASE, "loc");
-        return new XmlFile(config, "eng", true, false){
+        return new XmlFile(config, "eng", true){
             @Override
             public Element getXml(ApplicationContext context, String lang, boolean makeCopy) throws JDOMException, IOException {
                 return xml;
