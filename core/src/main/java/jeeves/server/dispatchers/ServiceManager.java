@@ -962,7 +962,7 @@ public class ServiceManager {
 	// GEOCAT
 	
 
-        private static InheritableThreadLocal<Boolean> theadLocalFlag = new InheritableThreadLocal<Boolean>();
+        private static InheritableThreadLocal<Boolean> threadLocalFlag = new InheritableThreadLocal<Boolean>();
 
         /**
          * Check if the thread local for this thread has been set to 
@@ -971,7 +971,7 @@ public class ServiceManager {
          * @return true if logging should continue
          */
         public static boolean searchLoggingEnabled() {
-                Boolean enabled  = theadLocalFlag.get();
+                Boolean enabled  = threadLocalFlag.get();
                 return enabled == null || enabled;
         }
 
@@ -985,7 +985,7 @@ public class ServiceManager {
          * @return
          */
         public static boolean disableSearchLoggingForThisThread() {
-                Boolean enabled  = theadLocalFlag.get();
+                Boolean enabled  = threadLocalFlag.get();
                 return enabled == null || enabled;
         }
         
@@ -993,7 +993,7 @@ public class ServiceManager {
          * Enabled logging again for this thread
          */
         public static boolean enableSearchLoggingForThisThread() {
-                Boolean enabled  = theadLocalFlag.get();
+                Boolean enabled  = threadLocalFlag.get();
                 return enabled == null || enabled;
         }
         
