@@ -711,30 +711,16 @@ public class DataManager {
                 }
 
                 if (!added) {
-                    moreFields.add(SearchManager.makeField("_logo", "/images/logos/" + logoUUID + ".png", true, false));
-                }
-            }
-
-            // GEOCAT
-            boolean isPublished = false;
-            // END GEOCAT
-
-            if (logoUUID != null) {
-                final Path logosDir = Resources.locateLogosDir(servContext);
-                final String[] logosExt = {"png", "PNG", "gif", "GIF", "jpg", "JPG", "jpeg", "JPEG", "bmp", "BMP",
-                        "tif", "TIF", "tiff", "TIFF"};
-
-                for (String ext : logosExt) {
-                    final Path logoPath = logosDir.resolve(logoUUID + "." + ext);
-                    if (Files.exists(logoPath)) {
-                        moreFields.add(SearchManager.makeField("_logo", "/images/logos/" + logoPath.getFileName(), true, false));
-                        break;
-                    }
+                    moreFields.add(SearchManager.makeField("_logo", "/images/logos/" + logoUUID + ".gif", true, false));
                 }
             }
 
             // get privileges
             List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(id$);
+
+            // GEOCAT
+            boolean isPublished = false;
+            // END GEOCAT
 
             for (OperationAllowed operationAllowed : operationsAllowed) {
                 OperationAllowedId operationAllowedId = operationAllowed.getId();
