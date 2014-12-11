@@ -268,7 +268,8 @@
       drawInteraction.on('drawstart', function() {
         featureOverlay.getFeatures().clear();
       });
-      ngeoDecorateInteraction(drawInteraction, map);
+      ngeoDecorateInteraction(drawInteraction);
+      map.addInteraction(drawInteraction);
 
       var dragboxInteraction = new ol.interaction.DragBox({
         style: gnSearchSettings.olStyles.drawBbox
@@ -287,7 +288,8 @@
       dragboxInteraction.on('drawstart', function(){
         featureOverlay.getFeatures().clear();
       });
-      ngeoDecorateInteraction(dragboxInteraction, map);
+      ngeoDecorateInteraction(dragboxInteraction);
+      map.addInteraction(dragboxInteraction);
 
       /**
        * On refresh 'Draw on Map' click
