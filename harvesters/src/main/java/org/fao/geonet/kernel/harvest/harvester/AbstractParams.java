@@ -90,10 +90,9 @@ public abstract class AbstractParams {
 		uuid       = Util.getParam(site, "uuid", UUID.randomUUID().toString());
 
         Element ownerIdE = node.getChild("owner");
-        if(ownerIdE != null) {
-            ownerId = ownerIdE.getChildText("id");
+        if (ownerIdE == null) {
+            ownerIdE = node.getChild("ownerId");
         }
-        ownerIdE = node.getChild("owner");
         if(ownerIdE != null) {
             ownerId = ownerIdE.getChildText("id");
             if (ownerId == null || ownerId.trim().isEmpty()) {
@@ -109,10 +108,15 @@ public abstract class AbstractParams {
         }
 
         Element ownerIdGroupE = site.getChild("ownerGroup");
+        if (ownerIdGroupE == null) {
+            ownerIdGroupE = node.getChild("ownerGroup");
+        }
         if(ownerIdGroupE != null) {
             Element idE = ownerIdGroupE.getChild("id");
             if(idE != null) {
                 ownerIdGroup = idE.getText();
+            } else if (!ownerIdGroupE.getTextTrim().isEmpty()) {
+                ownerIdGroup = ownerIdGroupE.getTextTrim();
             }
         }
 
@@ -156,8 +160,14 @@ public abstract class AbstractParams {
 		name       = Util.getParam(site, "name", name);
 
 		Element ownerIdE = node.getChild("owner");
+        if (ownerIdE == null) {
+            ownerIdE = node.getChild("ownerId");
+        }
         if(ownerIdE != null) {
             ownerId = ownerIdE.getChildText("id");
+            if (ownerId == null || ownerId.isEmpty()) {
+                ownerId = ownerIdE.getTextNormalize();
+            }
         } else {
             Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
         }
@@ -167,6 +177,8 @@ public abstract class AbstractParams {
             Element idE = ownerIdGroupE.getChild("id");
             if(idE != null) {
                 ownerIdGroup = idE.getText();
+            } else {
+                ownerIdGroup = ownerIdGroupE.getText();
             }
         }
 		

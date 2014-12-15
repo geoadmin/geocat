@@ -20,7 +20,7 @@
     '$scope',
     'gnMetadataManager',
     function($scope, gnMetadataManager) {
-      $scope.importMode = 'importFromDir';
+      $scope.importMode = 'uploadFile';
       $scope.file_type = 'single';
       $scope.uuidAction = 'nothing';
       $scope.importing = false;
@@ -79,6 +79,9 @@
 
         if($scope.importMode == 'uploadFile') {
           $scope.submit();
+        } else if($scope.importMode == 'importFromDir') {
+          gnMetadataManager.importFromDir($(formId).serialize()).then(
+            onSuccessFn, onErrorFn);
         } else  {
           gnMetadataManager.importFromXml($(formId).serialize()).then(
               onSuccessFn, onErrorFn);
