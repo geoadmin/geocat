@@ -184,7 +184,7 @@ UPDATE StatusValues SET displayorder = 4 WHERE id = 5;
 
 
 -- Version update
-UPDATE Settings SET value='2.11.0' WHERE name='system/platform/version';
+UPDATE Settings SET value='3.0.0' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
 
 -- Populate new tables from Users
