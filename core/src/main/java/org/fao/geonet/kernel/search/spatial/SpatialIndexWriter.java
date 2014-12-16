@@ -432,7 +432,8 @@ public class SpatialIndexWriter implements FeatureListener
                 if (_idColumn == null) {
                     _idColumn = findIdColumn(_featureStore);
                 }
-                Pair<FeatureId, Object> data = Pair.read(feature.getIdentifier(), feature.getAttribute(_idColumn == null ? _IDS_ATTRIBUTE_NAME : _idColumn.toString()));
+                final Object idAtt = feature.getAttribute(_idColumn == null ? _IDS_ATTRIBUTE_NAME : _idColumn.toString()).toString();
+                Pair<FeatureId, Object> data = Pair.read(feature.getIdentifier(), idAtt);
                 Geometry defaultGeometry = (Geometry) feature.getDefaultGeometry();
                 if(defaultGeometry != null) {
                     _index.insert(defaultGeometry.getEnvelopeInternal(), data);
