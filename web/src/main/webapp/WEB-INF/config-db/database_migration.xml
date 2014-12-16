@@ -90,6 +90,7 @@
                 <value>java:v2110.MoveHarvesterSettings</value>
                 <value>WEB-INF/classes/setup/sql/migrate/v2110/2-migrate-</value>
                 <!-- GEOCAT -->
+                <value>java:v2110.LocalXLink</value>
                 <value>java:v2110.SharedObjects</value>
                 <!-- END GEOCAT -->
                 <value>WEB-INF/classes/setup/sql/migrate/v2110/3-create-tmp-tables-</value>
