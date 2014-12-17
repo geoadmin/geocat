@@ -19,7 +19,7 @@ CREATE TABLE USERS_TMP
     password character varying(120) NOT NULL,
     surname text,
     name text,
-    profile character varying(32) NOT NULL,
+    profile integer NOT NULL,
     address text,
     city text,
     state text,
