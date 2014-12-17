@@ -1,0 +1,92 @@
+<form novalidate data-ng-keypress="updatingHarvester()">
+
+
+    <div class="row">
+        <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected" lang=""/>
+
+        <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
+    </div>
+
+
+    <fieldset>
+        <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+            harvesterSelected['@type']) | translate}}</legend>
+        <div data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
+            <label class="control-label" data-translate="">serviceUrl</label>
+            <input type="text" class="form-control"
+                data-ng-model="harvesterSelected.site.url"/>
+            <p class="help-block" data-translate="">cgp-urlHelp</p>
+        </div>
+
+        <fieldset class="form-horizontal">
+            <legend data-translate="">harvesterFilter</legend>
+
+
+            <div class="form-group">
+                <label class="control-label col-lg-4" data-translate="">cgp-freeText</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control gn-cgp-criteria" id="cgp-freeText"
+                           data-ng-model="harvesterSelected.searches[0].freeText"/>
+                </div>
+                <label class="control-label col-lg-4" data-translate="">cgp-from</label>
+                <div class="col-lg-8">
+                    <input type="date" class="form-control gn-cgp-criteria" id="cgp-from"
+                           data-ng-model="harvesterSelected.searches[0].from"/>
+                </div>
+                <label class="control-label col-lg-4" data-translate="">cgp-until</label>
+                <div class="col-lg-8">
+                    <input type="date" class="form-control gn-cgp-criteria" id="cgp-until"
+                           data-ng-model="harvesterSelected.searches[0].until"/>
+                </div>
+                <div class="thumbnail extent">
+                    <span>
+                      <div class="input-group coord coord-north">
+                          <input pattern="[\d.]*" type="text" class="form-control" data-ng-model="harvesterSelected.searches[0].latNorth"/>
+                          <span class="input-group-addon">N</span>
+                      </div>
+                      <div class="input-group coord coord-west">
+                          <input type="text" class="form-control"  data-ng-model="harvesterSelected.searches[0].lonWest"/>
+                          <span class="input-group-addon">W</span>
+                      </div>
+                      <div class="input-group coord coord-east">
+                          <input type="text" class="form-control"  data-ng-model="harvesterSelected.searches[0].lonEast"/>
+                          <span class="input-group-addon">E</span>
+                      </div>
+                      <div class="input-group coord coord-south">
+                          <input type="text" class="form-control"  data-ng-model="harvesterSelected.searches[0].latSouth"/>
+                          <span class="input-group-addon">S</span>
+                      </div>
+                    </span>
+                    <img src="/geonetwork/catalog/templates/admin/harvest/type/{{'cgp-extent-image' | translate}}" width="242" height="120" alt="">
+                </div>
+            </div>
+        </fieldset>
+    </fieldset>
+
+    <fieldset>
+        <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
+            {{'harvester-' + harvesterSelected['@type'] | translate}}</legend>
+
+        <div data-gn-harvester-account="harvesterSelected"/>
+
+        <div data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
+            data-label="cgp-category"/>
+
+
+        <div>
+            <label class="control-label">
+                <input type="checkbox" data-ng-model="harvesterSelected.content.validate"/>
+                <span data-translate="">harvesterValidate</span>
+            </label>
+            <p class="help-block" data-translate="">harvesterValidateHelp</p>
+        </div>
+        <div>
+            <label class="control-label" data-translate="">applyXSLToRecord</label>
+            <div data-gn-import-xsl="harvesterSelected.content.importxslt"/>
+
+            <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
+        </div>
+    </fieldset>
+
+    <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+</form>

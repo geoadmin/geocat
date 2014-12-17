@@ -12,3 +12,22 @@ UPDATE schematroncriteria SET uitype='Group' where type = 'GROUP';
 
 DROP TABLE spatialindex CASCADE;
 DROP TABLE "spatialIndex";
+
+INSERT INTO Operations (id, name) VALUES (2, 'editing');
+INSERT INTO Operations (id, name) VALUES (5, 'dynamic');
+INSERT INTO Operations (id, name) VALUES (6, 'featured');
+
+INSERT INTO OperationsDes (iddes, label, langid) VALUES (2,'Editing','eng');
+INSERT INTO OperationsDes (iddes, label, langid) VALUES (2,'Editer','fre');
+INSERT INTO OperationsDes (iddes, label, langid) VALUES (2,'Editieren','ger');
+INSERT INTO OperationsDes (iddes, label, langid) VALUES (2,'Modifica','ita');
+
+INSERT INTO OperationsDes (iddes, label, langid) VALUES (5,'Interactive Map','eng');
+INSERT INTO OperationsDes (iddes, label, langid) VALUES (5,'Carte interactive','fre');
+INSERT INTO OperationsDes (iddes, label, langid) VALUES (5,'Interaktive Karte','ger');
+INSERT INTO OperationsDes (iddes, label, langid) VALUES (5,'Mappa interattiva','ita');
+
+INSERT INTO OperationsDes (iddes, label, langid) VALUES (6,'Featured','eng');
+INSERT INTO OperationsDes (iddes, label, langid) VALUES (6,'Epingler','fre');
+INSERT INTO OperationsDes (iddes, label, langid) VALUES (6,'Featured','ger');
+INSERT INTO OperationsDes (iddes, label, langid) VALUES (6,'In rilievo','ita');

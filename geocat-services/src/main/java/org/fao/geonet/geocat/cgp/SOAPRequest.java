@@ -5,6 +5,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.Constants;
@@ -119,7 +120,7 @@ public class SOAPRequest {
         HttpPost postMethod = new HttpPost();
         String postData = Xml.getString(getSOAPDocument());
 
-        postMethod.setEntity(new StringEntity(postData, "application/soap+xml; UTF8"));
+        postMethod.setEntity(new StringEntity(postData, ContentType.create("application/soap+xml", "UTF-8")));
         postMethod.setURI(url.toURI());
 
         return postMethod;

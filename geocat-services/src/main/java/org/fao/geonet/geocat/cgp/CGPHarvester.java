@@ -63,6 +63,7 @@ public class CGPHarvester extends AbstractHarvester {
     @Override
     protected String doAdd(Element node) throws BadInputEx, SQLException {
         params = new CGPParams(dataMan);
+        super.setParams(params);
 
         //--- retrieve/initialize information
         params.create(node);
@@ -119,7 +120,6 @@ public class CGPHarvester extends AbstractHarvester {
 
         settingMan.add("id:" + siteId, "url", params.url);
         settingMan.add("id:" + siteId, "icon", params.icon);
-        settingMan.add("id:" + optionsId, "validate", params.validate);
 
         //--- store search nodes
 

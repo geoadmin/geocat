@@ -58,11 +58,9 @@ public class CGPParams extends AbstractParams {
 
         Element site = node.getChild("site");
         Element searches = node.getChild("searches");
-        Element options = node.getChild("options");
 
         url = Util.getParam(site, "url", "");
         icon = Util.getParam(site, "icon", "");
-        validateBool = Util.getParam(options, "validate", false);
 
         addSearches(searches);
     }
@@ -78,11 +76,9 @@ public class CGPParams extends AbstractParams {
 
         Element site = node.getChild("site");
         Element searches = node.getChild("searches");
-        Element options = node.getChild("options");
 
         url = Util.getParam(site, "url", url);
         icon = Util.getParam(site, "icon", icon);
-        validateBool = Util.getParam(options, "validate", validateBool);
 
         //--- if some search queries are given, we drop the previous ones and
         //--- set these new ones
@@ -121,7 +117,6 @@ public class CGPParams extends AbstractParams {
 
         copy.url = url;
         copy.icon = icon;
-        copy.validateBool = validateBool;
 
         for (Search s : alSearches) {
             copy.alSearches.add(s.copy());
@@ -162,7 +157,6 @@ public class CGPParams extends AbstractParams {
 
     public String url;
     public String icon;
-    public boolean validateBool;
     private List<Search> alSearches = new ArrayList<Search>(2);
 }
 
