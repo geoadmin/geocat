@@ -99,6 +99,8 @@
         when('/reports/:tab', {
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnReportController'}).
+        when('/geocat', {
+          templateUrl: tplFolder + 'geocat.html' }).
         otherwise({templateUrl: tplFolder + 'admin.html'});
   }]);
 
@@ -158,6 +160,16 @@
             classes: 'btn-warning', icon: 'fa-medkit'}]
         // TODO : add other role menu
       };
+
+      // GeoCat specific
+      $scope.menu.Administrator.push({
+        name: 'Geocat',
+        route: '#geocat',
+        classes: 'btn-danger',
+        icon: 'fa-plus'
+      });
+      // /Geocat specific
+
 
       /**
        * Define menu position on the left (nav-stacked)
