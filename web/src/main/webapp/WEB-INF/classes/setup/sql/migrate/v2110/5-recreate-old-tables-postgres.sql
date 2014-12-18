@@ -21,6 +21,39 @@ ALTER TABLE email DROP CONSTRAINT IF EXISTS email_user_id_fkey;
 ALTER TABLE groups DROP CONSTRAINT IF EXISTS groups_referrer_fkey;
 TRUNCATE TABLE Users;
 
+ALTER TABLE Users DROP COLUMN profile;
+ALTER TABLE Users ADD COLUMN profile integer NOT NULL;
+
+ALTER TABLE Users DROP COLUMN address;
+ALTER TABLE Users DROP COLUMN city;
+ALTER TABLE Users DROP COLUMN state;
+ALTER TABLE Users DROP COLUMN zip;
+ALTER TABLE Users DROP COLUMN country;
+ALTER TABLE Users DROP COLUMN email;
+ALTER TABLE Users DROP COLUMN streetnumber;
+ALTER TABLE Users DROP COLUMN streetname;
+ALTER TABLE Users DROP COLUMN postbox;
+ALTER TABLE Users DROP COLUMN positionname;
+ALTER TABLE Users DROP COLUMN onlineresource;
+ALTER TABLE Users DROP COLUMN onlinename;
+ALTER TABLE Users DROP COLUMN onlinedescription;
+ALTER TABLE Users DROP COLUMN hoursofservice;
+ALTER TABLE Users DROP COLUMN contactinstructions;
+ALTER TABLE Users DROP COLUMN publicaccess;
+ALTER TABLE Users DROP COLUMN orgacronym;
+ALTER TABLE Users DROP COLUMN directnumber;
+ALTER TABLE Users DROP COLUMN mobile;
+ALTER TABLE Users DROP COLUMN phone;
+ALTER TABLE Users DROP COLUMN facsimile;
+ALTER TABLE Users DROP COLUMN email1;
+ALTER TABLE Users DROP COLUMN phone1;
+ALTER TABLE Users DROP COLUMN facsimile1;
+ALTER TABLE Users DROP COLUMN email2;
+ALTER TABLE Users DROP COLUMN phone2;
+ALTER TABLE Users DROP COLUMN facsimile2;
+ALTER TABLE Users DROP COLUMN parentinfo;
+ALTER TABLE Users DROP COLUMN validated;
+
 -- Convert Profile column to the profile enumeration ordinal
 -- GEOCAT
 INSERT INTO USERS(id, username, password, surname, name, profile, organisation, kind, security, authtype) SELECT id, username, password, surname, name, profile, organisation, kind, security, authtype FROM USERS_TMP;

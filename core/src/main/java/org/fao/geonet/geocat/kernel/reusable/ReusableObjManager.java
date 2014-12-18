@@ -165,7 +165,7 @@ public class ReusableObjManager {
             defaultMetadataLang = LangUtils.iso19139DefaultLang(parameterObject.metadata);
             if (defaultMetadataLang != null && defaultMetadataLang.length() > 2) {
                 defaultMetadataLang = parameterObject.srvContext.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1
-                        (defaultMetadataLang);
+                        (defaultMetadataLang, "en");
                 defaultMetadataLang = defaultMetadataLang.substring(0, 2).toUpperCase();
             } else {
                 defaultMetadataLang = "EN";

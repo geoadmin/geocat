@@ -75,7 +75,7 @@
                     <xsl:apply-templates mode="copy" select="gmd:PT_FreeText"/>
                 </xsl:copy>
             </xsl:when>
-            <xsl:when test="normalize-space(gmd:PT_FreeText) != ''">
+            <xsl:when test="normalize-space(gmd:PT_FreeText[1]) != ''">
                 <xsl:copy>
                     <xsl:attribute name="xsi:type">gmd:PT_FreeText_PropertyType</xsl:attribute>
                     <gmd:PT_FreeText>

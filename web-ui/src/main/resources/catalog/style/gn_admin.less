@@ -36,6 +36,31 @@
   color: grey;
 }
 
-.ng-invalid {
-  outline-color: #ff0000;
+form .ng-invalid {
+  border: 2px solid #ff0000 !important;
+}
+
+
+.extent {
+  display: inline-block;
+  position: relative;
+  margin: 2em 0 0 90px;
+}
+.coord {
+  @coord-half-width: 75px;
+  @coord-half-height: 1.25em;
+  position: absolute;
+  width: (@coord-half-width * 2);
+  &-north { top: -@coord-half-height; }
+  &-south { bottom: -@coord-half-height; }
+  &-east { right: -@coord-half-width; }
+  &-west { left: -@coord-half-width; }
+  &-north, &-south {
+    left: 50%;
+    margin-left: -@coord-half-width;
+  }
+  &-east, &-west {
+    top: 50%;
+    margin-top: -@coord-half-height;
+  }
 }

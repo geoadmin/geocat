@@ -27,6 +27,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
@@ -201,46 +202,40 @@ class Harvester {
         if (gm03Elm == null) {
             return;
         }
-        /*
-				// ie. detect GM03;
-				String schema = dataMan.autodetectSchema(gm03Elm);
-				if (schema == null)
-				{
-					log.warning("Skipping GM03 metadata with unknown schema.");
-					result.unknownSchema++;
-					return;
-				}
-
-				if (!validates(schema, gm03Elm))
-				{
-					log.warning("Skipping GM03 metadata that does not validate. Remote objectid : " + anObjectId);
-					result.doesNotValidate++;
-					return;
-				} */
 
         // Uuid from unique URL+objId
         String uuid = PasswordUtil.encode(context, params.url + anObjectId);
 
-        // Loading stylesheet
+        // ie. detect GM03;
+        Element md;
+        try {
+            dataMan.autodetectSchema(gm03Elm);
+            md = gm03Elm;
+        } catch (NoSchemaMatchesException e) {
+            // see if it is a GM03 variant
 
-        Path styleSheet = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS).resolve(
-                (envirocat ? "/GM03SMALL-to-ISO19139CHE.xsl" : "/GM03-to-ISO19139CHE.xsl"));
+            // Loading stylesheet
 
-        // log.info("  - XSLT transformation using /GM03-to-ISO19139CHE.xsl");
+            Path styleSheet = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS).resolve(
+                    (envirocat ? "GM03SMALL-to-ISO19139CHE.xsl" : "GM03-to-ISO19139CHE.xsl"));
 
-        Map<String, Object> param = new HashMap<String, Object>();
-        //param.put("lang", params.lang);
-        //param.put("topic", params.topic);
-        param.put("uuid", uuid);
+            // log.info("  - XSLT transformation using /GM03-to-ISO19139CHE.xsl");
 
-        // Hack: transform fails with namespace, so remove all for now.
-        if (!envirocat)
-            removeNamespaces(gm03Elm);
+            Map<String, Object> param = new HashMap<String, Object>();
+            //param.put("lang", params.lang);
+            //param.put("topic", params.topic);
+            param.put("uuid", uuid);
 
-        // String transferElmStr = Xml.getString(gm03Elm);
+            // Hack: transform fails with namespace, so remove all for now.
+            if (!envirocat)
+                removeNamespaces(gm03Elm);
 
-        // Transform into GN native MD format (iso19139)
-        Element md = Xml.transform(gm03Elm, styleSheet, param);
+            // String transferElmStr = Xml.getString(gm03Elm);
+
+            // Transform into GN native MD format (iso19139)
+            md = Xml.transform(gm03Elm, styleSheet, param);
+        }
+
 
         // ie. detect iso19139;
         String schema = dataMan.autodetectSchema(md);
