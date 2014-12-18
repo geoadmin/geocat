@@ -161,19 +161,19 @@ public class Aligner
 	private String addMetadata(Element info) throws Exception
 	{
         String remoteId = info.getChildText("id");
-		String remoteUuid = info.getChildText("uuid");
+        String remoteUuid = info.getChildText("uuid");
         String schema = info.getChildText("schema");
-		String createDate = info.getChildText("createDate");
-		String changeDate = info.getChildText("changeDate");
+        String createDate = info.getChildText("createDate");
+        String changeDate = info.getChildText("changeDate");
 
         if (log.isDebugEnabled()) log.debug("  - Adding metadata with remote id=" + remoteId);
 
-		Element md = getRemoteMetadata(req, remoteId);
+        Element md = getRemoteMetadata(req, remoteId);
 
         if (md == null) {
             log.warning("  - Cannot get metadata (possibly bad XML) with remote id=" + remoteId);
-			return null;
-		}
+            return null;
+        }
 
         //
         //  insert metadata
@@ -391,16 +391,14 @@ public class Aligner
 			if (info != null)
 				info.detach();
 
-            // GEOCAT
-            // validate it here if requested
             try {
                 params.validate.validate(dataMan, context, md);
+                return (Element) md.detach();
             } catch (Exception e) {
-                log.info("Ignoring invalid metadata with id " + id);
-                result.doesNotValidate++;
-                return null;
-            }
-            // END GEOCAT
+                log.info("Ignoring invalid metadata: " + id);
+                    result.doesNotValidate++;
+                }
+
 			return md;
 		}
 		catch(Exception e)

@@ -51,6 +51,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import java.nio.file.Path;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -298,13 +299,22 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 }
                 schema = dataMan.autodetectSchema(md);
             }
-            if (params.validate == HarvestValidationEnum.NOVALIDATION || validates(schema, md)) {
-                return (Element) md.detach();
-            }
             // END GEOCAT
+             try {
+                params.validate.validate(dataMan, context, md);
+                return (Element) md.detach();
+            } catch (Exception e) {
+                log.info("Skipping metadata that does not validate. Path is : "+ rf.getPath());
+                result.doesNotValidate++;
+            }
+
+            }
 
 			log.warning("Skipping metadata that does not validate. Path is : "+ rf.getPath());
+            } catch (Exception e) {
+                log.info("Skipping metadata that does not validate. Path is : "+ rf.getPath());
 			result.doesNotValidate++;
+		}
 		}
 		catch (NoSchemaMatchesException e) {
 				log.warning("Skipping metadata with unknown schema. Path is : "+ rf.getPath());

@@ -1,9 +1,6 @@
 package org.fao.geonet.kernel;
 
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
 public enum HarvestValidationEnum {
@@ -63,3 +60,9 @@ public enum HarvestValidationEnum {
 		return HarvestValidationEnum.NOVALIDATION;
 	}
 }
+
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;

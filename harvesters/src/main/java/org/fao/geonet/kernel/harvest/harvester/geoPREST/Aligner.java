@@ -301,16 +301,13 @@ public class Aligner extends BaseAligner
                 log.debug("Record got:\n" + Xml.getString(response));
             }
 
-            // GEOCAT
-            // validate it here if requested
             try {
                 params.validate.validate(dataMan, context, response);
             } catch (Exception e) {
-                log.info("Ignoring invalid metadata with uuid " + uuid);
-                result.doesNotValidate++;
-                return null;
-            }
-            // END GEOCAT
+					log.info("Ignoring invalid metadata with uuid " + uuid);
+					result.doesNotValidate++;
+					return null;
+				}
 
 			// transform it here if requested
 			if (!params.importXslt.equals("none")) {

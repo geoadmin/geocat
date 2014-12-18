@@ -31,6 +31,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -358,16 +359,18 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 
                 addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-                // GEOCAT
 				// validate it here if requested
-                try {
-                    params.validate.validate(dataMan, context, md);
-                } catch (Exception e) {
-                    log.info("Ignoring invalid metadata with uuid " + uuid);
-                    result.doesNotValidate++;
-                    return null;
-                }
-                // END GEOCAT
+				if (params.validate != HarvestValidationEnum.NOVALIDATION) {
+					Document docVal;
+					if (!transformIt && (doc.getDocType() != null)) {
+						docVal = new Document(md, (DocType)doc.getDocType().detach());
+					} else {
+						docVal = new Document(md);
+					}
+
+					if (!dataMan.doValidate(schema, id, docVal, context.getLanguage())) {
+						result.doesNotValidate++;
+					} 
 
                 dataMan.flush();
 

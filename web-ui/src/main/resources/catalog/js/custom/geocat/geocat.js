@@ -22,10 +22,10 @@
    *
    */
   module.controller('gnsGeocat', [
-      '$scope',
+    '$scope',
       '$timeout',
       'gnMap',
-      'gnSearchSettings',
+    'gnSearchSettings',
       '$window',
     function($scope, $timeout, gnMap, gnSearchSettings, $window) {
 
@@ -107,7 +107,7 @@
           $scope.lastUpdated.push(new Metadata(data.metadata[i]));
         }
       });
-  }]);
+    }]);
 
   module.controller('gocatSearchFormCtrl', [
     '$scope',
@@ -127,6 +127,9 @@
         $timeout, suggestService, $http, gnSearchSettings,
              gnSearchManagerService, ngeoDecorateInteraction, $q, gnMap) {
 
+
+      // Will store regions input values
+      $scope.regions = {};
 
       // data store for types field
       $scope.types = ['any',
@@ -239,7 +242,7 @@
       var setSearchGeometry = function(geometry) {
         $scope.searchObj.params.geometry = wktFormat.writeGeometry(
           geometry.clone().transform(map.getView().getProjection(), 'EPSG:4326')
-        );
+            );
       };
 
       /** Manage draw area on search map */
@@ -269,6 +272,7 @@
         featureOverlay.getFeatures().clear();
       });
       ngeoDecorateInteraction(drawInteraction);
+      drawInteraction.active = false;
       map.addInteraction(drawInteraction);
 
       var dragboxInteraction = new ol.interaction.DragBox({
@@ -289,6 +293,7 @@
         featureOverlay.getFeatures().clear();
       });
       ngeoDecorateInteraction(dragboxInteraction);
+      dragboxInteraction.active = false;
       map.addInteraction(dragboxInteraction);
 
       /**
@@ -312,9 +317,9 @@
 
       $scope.$watch('restrictArea', function(v){
         $scope.searchObj.params.geometry = '';
-        $scope.searchObj.params.countries = '';
-        $scope.searchObj.params.cantons = '';
-        $scope.searchObj.params.cities = '';
+        $scope.regions.countries = '';
+        $scope.regions.cantons = '';
+        $scope.regions.cities = '';
 
         if(angular.isDefined(v)) {
           if($scope.restrictArea == 'draw') {
@@ -382,10 +387,17 @@
       var onRegionSelect = function(v){
         cantonSource.clear();
         if (angular.isDefined(v) && v != '') {
-          var cs = v.split(',');
+          var cs = v.split(' OR ');
+          var geom;
           for (var i = 0; i < cs.length; i++) {
+            if(!geom) {
+              geom = 'region:' + cs[i];
+            } else {
+              geom += ',region:' + cs[i];
+              }
             addCantonFeature(cs[i]).then(function(){
               if(--nbCantons == 0) {
+                $scope.searchObj.params.geometry = geom;
                 map.getView().fitExtent(cantonSource.getExtent(), map.getSize());
               }
             });
@@ -393,9 +405,9 @@
         }
       };
 
-      $scope.$watch('searchObj.params.countries', onRegionSelect);
-      $scope.$watch('searchObj.params.cantons', onRegionSelect);
-      $scope.$watch('searchObj.params.cities', onRegionSelect);
+      $scope.$watch('regions.countries', onRegionSelect);
+      $scope.$watch('regions.cantons', onRegionSelect);
+      $scope.$watch('regions.cities', onRegionSelect);
 
 
       $scope.searchObj.params.relation = 'within';
