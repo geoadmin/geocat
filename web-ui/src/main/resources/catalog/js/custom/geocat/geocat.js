@@ -394,7 +394,7 @@
               geom = 'region:' + cs[i];
             } else {
               geom += ',region:' + cs[i];
-              }
+            }
             addCantonFeature(cs[i]).then(function(){
               if(--nbCantons == 0) {
                 $scope.searchObj.params.geometry = geom;
