@@ -208,7 +208,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     }
 
     public Element getSampleMetadataXml() throws IOException, JDOMException {
-        final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-metadata.iso19139.xml");
+        final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-metadata.iso19139.che.xml");
         return Xml.loadStream(resource.openStream());
     }
 

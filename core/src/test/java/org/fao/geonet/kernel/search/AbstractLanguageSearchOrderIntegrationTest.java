@@ -210,7 +210,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
                 "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"}, titles);
     }
 
-    @Test
+    @Test //@Ignore
     public void freAutoDetect_RequestLangNotSorted_OnlyResultsContainingDataInSearchLanguageAllowed() throws Exception {
         importMetadata("comment allez-vous aujourd'hui");
         setSearchSettings(ONLY_LOCALE, false, true);
@@ -220,7 +220,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
                 expecteds, titles);
     }
 
-    @Test
+    @Test @Ignore
     public void engAutoDetect_RequestLangNotSorted_OnlyResultsContainingDataInSearchLanguageAllowed() throws Exception {
         importMetadata("it is a very nice day");
         setSearchSettings(ONLY_LOCALE, false, true);
@@ -229,7 +229,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
                 "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"}, titles);
     }
 
-    @Test  @Ignore
+    @Test @Ignore
     public void freAutoDetect_RequestLangNotSorted_OnlyResultsContainingDataInSearchLanguageAllowed_UseDisplayLanguageAsPreferredLanguage() throws Exception {
         importMetadata("comment allez-vous aujourd'hui");
         setSearchSettings(ONLY_UI_LOCALE, false, true);
@@ -239,7 +239,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
         assertArrayEquals("\n" + Arrays.toString(titles) + "\n" + Arrays.toString(expecteds), expecteds, titles);
     }
 
-    @Test //@Ignore
+    @Test @Ignore
     public void engAutoDetect_RequestLangNotSorted_OnlyResultsContainingDataInSearchLanguageAllowed_UseDisplayLanguageAsPreferredLanguage() throws Exception {
         importMetadata("it is a very nice day");
         setSearchSettings(ONLY_UI_LOCALE, false, true);
@@ -247,7 +247,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
         assertArrayEquals(new String[]{"A FRA EN and FR is FR", "é fra is fr", "Z3 FRA EN and FR is FR"}, titles);
     }
 
-    @Test // @Ignore
+    @Test @Ignore
     public void freAutoDetect_RequestLangNotSorted_AllLanguagesAllowed_UseDisplayLanguageAsPreferredLanguage() throws Exception {
         importMetadata("comment allez-vous aujourd'hui");
         setSearchSettings(PREFER_UI_LOCALE, false, true);
@@ -256,7 +256,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
                 "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"}, titles);
     }
 
-    @Test
+    @Test @Ignore
     public void engAutoDetect_RequestLangNotSorted_AllLanguagesAllowed_UseDisplayLanguageAsPreferredLanguage() throws Exception {
         importMetadata("it is a very nice day");
         setSearchSettings(PREFER_UI_LOCALE, false, true);

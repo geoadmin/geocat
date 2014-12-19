@@ -28,12 +28,13 @@ fi
 
 export MAVEN_OPTS="$JREBEL_OPTS $DEBUG $OVERRIDES $MEMORY -Dgeonetwork.dir=$DATA_DIR $LOGGING -Dfile.encoding=UTF8 "
 
-cd $JEEVES_DIR
-mvn install $@
+cd $PRGDIR/..
+
+mvn install -P-all $@
 if [ ! $? -eq 0 ]; then
-    echo "[FAILURE] [deploy] Failed to execute 'jeeves' correctly"
+    echo "[FAILURE] [deploy] Failed to build geonetwork correctly"
     exit -1
 fi
 
 cd $WEB_DIR
-mvn jetty:run -Penv-dev,widgets $@
+mvn jetty:run -Penv-dev $@
