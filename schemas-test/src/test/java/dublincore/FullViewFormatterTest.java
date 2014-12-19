@@ -17,7 +17,10 @@ import java.util.List;
  * @author Jesse on 10/17/2014.
  */
 public class FullViewFormatterTest extends AbstractFormatterTest {
-
+    @Override
+    public boolean isHarvested() {
+        return true; // required so it can be imported into geocat
+    }
     @Test
     public void testBasicFormat() throws Exception {
 

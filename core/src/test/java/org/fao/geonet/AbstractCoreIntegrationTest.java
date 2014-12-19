@@ -33,16 +33,13 @@ import org.springframework.test.context.ContextConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.io.StringWriter;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -211,7 +208,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     }
 
     public Element getSampleMetadataXml() throws IOException, JDOMException {
-        final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-metadata.iso19139.che.xml");
+        final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-metadata.iso19139.xml");
         return Xml.loadStream(resource.openStream());
     }
 

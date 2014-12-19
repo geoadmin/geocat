@@ -41,7 +41,9 @@ public class MetadataRegionDAOTest extends AbstractServiceIntegrationTest {
         this.context = createServiceContext();
         loginAsAdmin(this.context);
         String uuid = null;
-        InputStream xmlStream = AbstractCoreIntegrationTest.class.getResourceAsStream("kernel/valid-metadata.iso19139.xml");
+        // GEOCAT
+        InputStream xmlStream = AbstractCoreIntegrationTest.class.getResourceAsStream("kernel/valid-metadata.iso19139.che.xml");
+        // END GEOCAT
         Element xml = Xml.loadStream(xmlStream);
         final Element bbox = Xml.selectElement(xml, "*//gmd:EX_GeographicBoundingBox", NAMESPACES);
         final int i = bbox.getParentElement().indexOf(bbox);
