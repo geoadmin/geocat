@@ -47,6 +47,7 @@ import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.main.Info;
 import org.fao.geonet.utils.Xml;
+import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -361,17 +362,17 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 
 				// validate it here if requested
 				if (params.validate != HarvestValidationEnum.NOVALIDATION) {
-					Document docVal;
-					if (!transformIt && (doc.getDocType() != null)) {
-						docVal = new Document(md, (DocType)doc.getDocType().detach());
-					} else {
-						docVal = new Document(md);
-					}
+                    Document docVal;
+                    if (!transformIt && (doc.getDocType() != null)) {
+                        docVal = new Document(md, (DocType) doc.getDocType().detach());
+                    } else {
+                        docVal = new Document(md);
+                    }
 
-					if (!dataMan.doValidate(schema, id, docVal, context.getLanguage())) {
-						result.doesNotValidate++;
-					} 
-
+                    if (!dataMan.doValidate(schema, id, docVal, context.getLanguage())) {
+                        result.doesNotValidate++;
+                    }
+                }
                 dataMan.flush();
 
                 dataMan.indexMetadata(id, false);

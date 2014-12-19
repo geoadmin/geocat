@@ -1135,8 +1135,8 @@
     <module>csw-server</module>
     <module>harvesters</module>
     <module>healthmonitor</module>
-    <module>geocat-services</module>
     <module>services</module>
+    <module>geocat-services</module>
     <module>wro4j</module>
   </modules>
 
@@ -1155,7 +1155,6 @@
         <module>web-client</module>
         <module>web</module>
         <module>e2e-tests</module>
-        <module>geoserver</module>
       </modules>
     </profile>
     <!-- Python and Latex are required to build the documentation. -->

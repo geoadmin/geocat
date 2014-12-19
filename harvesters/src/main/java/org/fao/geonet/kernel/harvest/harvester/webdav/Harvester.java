@@ -32,7 +32,6 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
@@ -51,7 +50,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import java.nio.file.Path;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -287,9 +285,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             if(log.isDebugEnabled()) log.debug("Record got:\n"+ Xml.getString(md));
 
             // GEOCAT
-            String schema;
             try {
-                schema = dataMan.autodetectSchema(md);
+                dataMan.autodetectSchema(md);
             } catch (NoSchemaMatchesException e) {
                 if ("TRANSFER".equals(md.getName())) {
                     // we need to convert to CHE
@@ -297,7 +294,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                     Element tmp = Xml.transform(md, styleSheetPath);
                     md = tmp;
                 }
-                schema = dataMan.autodetectSchema(md);
+                dataMan.autodetectSchema(md);
             }
             // END GEOCAT
              try {
@@ -307,14 +304,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 log.info("Skipping metadata that does not validate. Path is : "+ rf.getPath());
                 result.doesNotValidate++;
             }
-
-            }
-
-			log.warning("Skipping metadata that does not validate. Path is : "+ rf.getPath());
-            } catch (Exception e) {
-                log.info("Skipping metadata that does not validate. Path is : "+ rf.getPath());
-			result.doesNotValidate++;
-		}
 		}
 		catch (NoSchemaMatchesException e) {
 				log.warning("Skipping metadata with unknown schema. Path is : "+ rf.getPath());

@@ -60,9 +60,3 @@ public enum HarvestValidationEnum {
 		return HarvestValidationEnum.NOVALIDATION;
 	}
 }
-
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
