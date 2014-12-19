@@ -12,6 +12,7 @@ import org.xml.sax.Attributes;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**
@@ -26,8 +27,6 @@ public class TNodeFactoryTransclude extends TNodeFactoryByAttName {
     private static final String EXTRA_MODEL = TRANSCLUDE + "-extra-model";
     private static final String REPLACE = TRANSCLUDE + "-replace";
 
-    private static final TextContentParser TEXT_PARSER = new TextContentParser();
-
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private SystemInfo info;
@@ -36,14 +35,15 @@ public class TNodeFactoryTransclude extends TNodeFactoryByAttName {
         super(TRANSCLUDE);
     }
 
-    public TNodeFactoryTransclude(SystemInfo info) {
+    public TNodeFactoryTransclude(SystemInfo info, TextContentParser contentParser) {
         super(TRANSCLUDE);
         this.info = info;
+        super.textContentParser = contentParser;
     }
 
     @Override
     public TNode create(String localName, String qName, Attributes attributes) throws IOException {
-        Attributes filteredAtts = new FilteredAttributes(attributes, TRANSCLUDE, REPLACE, MODEL_KEY, EXTRA_MODEL);
+        Attributes filteredAtts = new AttributesFiltered(attributes, TRANSCLUDE, REPLACE, MODEL_KEY, EXTRA_MODEL);
         String templatePath = getValue(attributes, TRANSCLUDE);
         String model = getValue(attributes, MODEL_KEY);
         String extraModelAtts = getValue(attributes, EXTRA_MODEL);
@@ -62,7 +62,7 @@ public class TNodeFactoryTransclude extends TNodeFactoryByAttName {
 
         boolean replace = getBooleanAttribute(attributes, REPLACE, false);
 
-        return new TNodeTransclude(info, qName, filteredAtts, templatePath, replace, model, extraModel);
+        return new TNodeTransclude(info, textContentParser, qName, filteredAtts, templatePath, replace, model, extraModel);
     }
 
     private static class TNodeTransclude extends TNode {
@@ -72,9 +72,9 @@ public class TNodeFactoryTransclude extends TNodeFactoryByAttName {
         private final String model;
         private final Map<String, Object> extraModel;
 
-        public TNodeTransclude(SystemInfo info, String qName, Attributes attributes, String templatePath, boolean replace,
+        public TNodeTransclude(SystemInfo info, TextContentParser parser, String qName, Attributes attributes, String templatePath, boolean replace,
                                String model, Map<String, Object> extraModel) throws IOException {
-            super(info, qName, attributes);
+            super(info, parser, qName, attributes);
             this.replace = replace;
             this.templatePath = templatePath;
             this.model = model;
@@ -102,14 +102,32 @@ public class TNodeFactoryTransclude extends TNodeFactoryByAttName {
             fullModel.putAll(context.getModel(true));
             for (Map.Entry<String, Object> entry : this.extraModel.entrySet()) {
                 ByteArrayOutputStream o = new ByteArrayOutputStream();
-                TEXT_PARSER.parse(entry.getValue().toString()).render(new TRenderContext(o, context.getModel(true)));
-                fullModel.put(entry.getKey(), new String(o.toByteArray(), Constants.ENCODING));
+                textContentParser.parse(entry.getValue().toString()).render(new TRenderContext(o, context.getModel(true)));
+                fullModel.put(entry.getKey(), new ByteArrayWrapper(o.toByteArray()));
             }
+
             fullModel.put(this.model, new String(outputStream.toByteArray(), Constants.ENCODING));
             final Handlers handlers = TransformationContext.getContext().getHandlers();
             final FileResult fileResult = handlers.fileResult(this.templatePath, fullModel);
             context.append(fileResult.toString());
+        }
+    }
 
+    /**
+     * This class is needed because strings are automatically escaped by the TextContentReplacement when strings
+     * are retrieved from the model object/map.  Wrapping the bytes/string with an object means that the data will not be
+     * escaped.
+     */
+    private static final class ByteArrayWrapper {
+        private final String string;
+
+        private ByteArrayWrapper(byte[] bytes) throws UnsupportedEncodingException {
+            this.string = new String(bytes, Constants.ENCODING);
+        }
+
+        @Override
+        public String toString() {
+            return string;
         }
     }
 }

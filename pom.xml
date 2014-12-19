@@ -415,11 +415,11 @@
         <artifactId>jts</artifactId>
         <version>1.13</version>
       </dependency>
-      <dependency>
-        <groupId>com.github.lookfirst</groupId>
-        <artifactId>sardine</artifactId>
-        <version>5.1-GEONETWORK</version>
-      </dependency>
+        <dependency>
+            <groupId>com.github.lookfirst</groupId>
+            <artifactId>sardine</artifactId>
+            <version>5.1-GEONETWORK</version>
+        </dependency>
 
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
@@ -427,7 +427,7 @@
             <version>2.3.7</version>
         </dependency>
 
-        <!-- universal character set detector -->
+      <!-- universal character set detector -->
       <dependency>
         <groupId>com.googlecode.juniversalchardet</groupId>
         <artifactId>juniversalchardet</artifactId>
@@ -1127,8 +1127,6 @@
     <module>common</module>
     <module>cachingxslt</module>
     <module>sde</module>
-    <module>web-ui</module>
-    <module>web-ui-docs</module>
     <module>domain</module>
     <module>oaipmh</module>
     <module>schemas</module>
@@ -1139,25 +1137,31 @@
     <module>healthmonitor</module>
     <module>services</module>
     <module>geocat-services</module>
-    <module>schemas-test</module>
-    <module>web-client</module>
     <module>wro4j</module>
-    <module>web</module>
-    <module>e2e-tests</module>
   </modules>
 
   <profiles>
+    <profile>
+      <id>all</id>
+      <activation>
+        <file>
+          <exists>pom.xml</exists>
+        </file>
+      </activation>
+      <modules>
+        <module>schemas-test</module>
+        <module>web-ui</module>
+        <module>web-ui-docs</module>
+        <module>web-client</module>
+        <module>web</module>
+        <module>e2e-tests</module>
+      </modules>
+    </profile>
     <!-- Python and Latex are required to build the documentation. -->
     <profile>
       <id>with-doc</id>
       <modules>
         <module>docs</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>itests</id>
-      <modules>
-        <module>web-itest</module>
       </modules>
     </profile>
     <profile>

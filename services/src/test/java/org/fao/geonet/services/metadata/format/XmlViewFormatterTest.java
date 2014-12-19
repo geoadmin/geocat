@@ -25,13 +25,17 @@ import java.util.List;
  * @author Jesse on 10/17/2014.
  */
 public class XmlViewFormatterTest extends AbstractFormatterTest {
-
     @Autowired
     private IsoLanguagesMapper mapper;
     @Autowired
     private IsoLanguageRepository langRepo;
     @Autowired
     private SchemaManager schemaManager;
+
+    @Override
+    public boolean isHarvested() {
+        return true; // required so it can be imported into geocat
+    }
 
     @Test
     @SuppressWarnings("unchecked")

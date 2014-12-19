@@ -50,7 +50,7 @@ public class ReportUpdatedMetadataTest extends AbstractCoreIntegrationTest {
     @Test
     public void testExec() throws Exception {
 
-        final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-metadata.iso19139.xml");
+        final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-metadata.iso19139.che.xml");
 
         String uuid = UUID.randomUUID().toString();
         ServiceContext importContext = createServiceContext();

@@ -3,6 +3,7 @@ package iso19139
 import groovy.util.slurpersupport.GPathResult
 import org.fao.geonet.services.metadata.format.FormatType
 import org.fao.geonet.services.metadata.format.groovy.Environment
+import org.fao.geonet.services.metadata.format.groovy.MapConfig
 
 public class Handlers {
     protected org.fao.geonet.services.metadata.format.groovy.Handlers handlers;
@@ -13,9 +14,6 @@ public class Handlers {
     common.Handlers commonHandlers
     List<String> packageViews
     String rootEl = 'gmd:MD_Metadata'
-    String extentMapProjection = 'EPSG:3857'
-    String extentMapBackground = 'osm'
-    int extentMapWidth = 500
 
     public Handlers(handlers, f, env) {
         this.handlers = handlers
@@ -126,7 +124,7 @@ public class Handlers {
                         name : isofunc.isoText(link.'gmd:name'),
                         desc : isofunc.isoText(link.'gmd:description')
                 ]
-    }
+            }
         }
 
         handlers.fileResult('html/online-resource.html', [
@@ -260,9 +258,10 @@ public class Handlers {
     }
 
     def polygonEl = { el ->
-        def mapproj = extentMapProjection
-        def background = extentMapBackground
-        def width = extentMapWidth
+        MapConfig mapConfig = env.mapConfiguration
+        def mapproj = mapConfig.mapproj
+        def background = mapConfig.background
+        def width = mapConfig.width
         def mdId = env.getMetadataId();
         def gmlId = null;
         def depthFirstIter = el.depthFirst();
@@ -294,13 +293,12 @@ public class Handlers {
 
     def bbox(el) {
         return [ w: el.'gmd:westBoundLongitude'.'gco:Decimal'.text(),
-                    e: el.'gmd:eastBoundLongitude'.'gco:Decimal'.text(),
-                    s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),
-                    n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text(),
-          width: extentMapWidth,
-          background: extentMapBackground,
+          e: el.'gmd:eastBoundLongitude'.'gco:Decimal'.text(),
+          s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),
+          n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text(),
           geomproj: "EPSG:4326",
-          mapproj: extentMapProjection]
+          mapconfig: env.mapConfiguration
+        ]
     }
     def rootPackageEl = {
         el ->

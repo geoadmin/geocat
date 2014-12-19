@@ -13,10 +13,11 @@ import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.HashSet;
-import org.springframework.test.annotation.DirtiesContext;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Nullable;
@@ -59,7 +60,7 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
         assertEquals(4, context.getBean(MetadataRepository.class).count(MetadataSpecs.hasType(MetadataType.METADATA)));
     }
 
-    @Test
+    @Test @Ignore
     public void testExec_INDEX_TERM_VALUES_sortBy_Frequency() throws Exception {
         final Element params = createParams(
                 read(SearchSuggestion.PARAM_FIELD, "any"),

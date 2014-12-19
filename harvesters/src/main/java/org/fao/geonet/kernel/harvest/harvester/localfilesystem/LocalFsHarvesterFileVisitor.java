@@ -45,6 +45,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
     public LocalFsHarvesterFileVisitor(ServiceContext context, LocalFilesystemParams params, Logger log,
                                        LocalFilesystemHarvester harvester) throws Exception {
+        this.context = context;
         this.thisXslt = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
         if (!params.importXslt.equals("none")) {
             thisXslt = thisXslt.resolve(params.importXslt);
@@ -57,9 +58,6 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         this.dataMan = context.getBean(DataManager.class);
         this.harvester = harvester;
         this.repo = context.getBean(MetadataRepository.class);
-        // GEOCAT
-        this.context = context;
-        // END GEOCAT
     }
 
     @Override
@@ -85,18 +83,13 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                     return FileVisitResult.CONTINUE; // skip this one
                 }
 
-                // validate it here if requested
-
-                // GEOCAT
-                // validate it here if requested
-                try {
+                    try {
                     params.validate.validate(dataMan, context, xml);
-                } catch (Exception e) {
+                    } catch (Exception e) {
                     log.debug("Cannot validate XML from file " + filePath +", ignoring. Error was: "+e.getMessage());
-                    result.doesNotValidate++;
+                        result.doesNotValidate++;
                     return FileVisitResult.CONTINUE;
-                }
-                // END GEOCAT
+                    }
 
                 // transform using importxslt if not none
                 if (transformIt) {
@@ -121,7 +114,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                         if (id == null) {
                             // For new record change date will be the time of metadata xml date change or the date when
                             // the record was harvested (if can't be obtained the metadata xml date change)
-                            String createDate = null;
+                            String createDate;
                             // or the last modified date of the file
                             if (params.checkFileLastModifiedForUpdate) {
                                 createDate = new ISODate(Files.getLastModifiedTime(file).toMillis(), false).getDateAndTime();
@@ -146,7 +139,13 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                                 Date fileDate = new Date(Files.getLastModifiedTime(file).toMillis());
 
                                 final Metadata metadata = repo.findOne(id);
-                                final ISODate modified = metadata.getDataInfo().getChangeDate();
+                                final ISODate modified;
+                                if (metadata != null && metadata.getDataInfo() != null) {
+                                    modified = metadata.getDataInfo().getChangeDate();
+                                } else {
+                                    modified = new ISODate();
+                                }
+
                                 Date recordDate = modified.toDate();
 
                                 String changeDate = new ISODate(fileDate.getTime(), false).getDateAndTime();

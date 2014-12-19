@@ -22,10 +22,10 @@
    *
    */
   module.controller('gnsGeocat', [
-      '$scope',
+    '$scope',
       '$timeout',
       'gnMap',
-      'gnSearchSettings',
+    'gnSearchSettings',
       '$window',
     function($scope, $timeout, gnMap, gnSearchSettings, $window) {
 
@@ -107,7 +107,7 @@
           $scope.lastUpdated.push(new Metadata(data.metadata[i]));
         }
       });
-  }]);
+    }]);
 
   module.controller('gocatSearchFormCtrl', [
     '$scope',
@@ -242,7 +242,7 @@
       var setSearchGeometry = function(geometry) {
         $scope.searchObj.params.geometry = wktFormat.writeGeometry(
           geometry.clone().transform(map.getView().getProjection(), 'EPSG:4326')
-        );
+            );
       };
 
       /** Manage draw area on search map */

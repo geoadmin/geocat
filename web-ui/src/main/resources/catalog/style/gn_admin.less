@@ -58,9 +58,14 @@ form .ng-invalid {
   &-north, &-south {
     left: 50%;
     margin-left: -@coord-half-width;
-  }
-  &-east, &-west {
+}  &-east, &-west {
     top: 50%;
     margin-top: -@coord-half-height;
   }
+}
+fieldset.cswCriteriaInfo {
+  padding-right: 1em;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 40em;
 }

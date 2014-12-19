@@ -374,17 +374,15 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			}
 			else
 			{
-                // GEOCAT
-                // validate it here if requested
+
                 try {
                     params.validate.validate(dataMan, context, md);
-                    return (Element) md.detach();
+					return (Element) md.detach();
                 } catch (Exception e) {
-                    log.info("Ignoring invalid metadata with id " + ri.id);
-                    result.doesNotValidate++;
-                }
-                // END GEOCAT
+                    log.info("Skipping metadata that does not validate. Remote id : "+ ri.id);
+				result.doesNotValidate++;
 			}
+		}
 		}
 
 		catch(JDOMException e)

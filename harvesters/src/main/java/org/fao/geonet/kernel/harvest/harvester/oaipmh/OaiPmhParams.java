@@ -59,14 +59,10 @@ public class OaiPmhParams extends AbstractParams
 		super.create(node);
 
 		Element site     = node.getChild("site");
-		Element options  = node.getChild("options");
 		Element searches = node.getChild("searches");
 
 		url      = Util.getParam(site, "url",  "");
 		icon     = Util.getParam(site, "icon", "");
-
-
-        validate = HarvestValidationEnum.lookup(Util.getParam(options, "validate", HarvestValidationEnum.NOVALIDATION.name()));
 
 		addSearches(searches);
 	}
@@ -82,13 +78,10 @@ public class OaiPmhParams extends AbstractParams
 		super.update(node);
 
 		Element site     = node.getChild("site");
-		Element options  = node.getChild("options");
 		Element searches = node.getChild("searches");
 
 		url      = Util.getParam(site,  "url",  url);
 		icon     = Util.getParam(site,  "icon", icon);
-
-        validate = HarvestValidationEnum.lookup(Util.getParam(options, "validate", HarvestValidationEnum.NOVALIDATION.name()));
 
 		//--- if some search queries are given, we drop the previous ones and
 		//--- set these new ones
