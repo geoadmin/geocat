@@ -459,7 +459,7 @@ public class GetEditModel implements Service {
     }
 
     private static boolean isConformityTitle(String title) throws JSONException {
-        title = title.toLowerCase();
+        title = title.toLowerCase().replaceAll("\\s+", " ");
         for (int i = 0; i < CONFORMITY_TITLE_OPTIONS.length(); i++) {
             JSONObject option = CONFORMITY_TITLE_OPTIONS.getJSONObject(i);
             final Iterator keys = option.keys();
