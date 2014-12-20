@@ -673,6 +673,7 @@ public class SearchManager {
      * @throws IOException
      */
     public void forceIndexChanges() throws IOException {
+        _tracker.commit();
         _tracker.maybeRefreshBlocking();
     }
 
