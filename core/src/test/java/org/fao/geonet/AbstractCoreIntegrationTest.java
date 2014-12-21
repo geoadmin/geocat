@@ -245,7 +245,4 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return Integer.parseInt(id.get(0));
     }
 
-    private class SyncReport {
-        public boolean updateSchemaManager = false;
-    }
 }
