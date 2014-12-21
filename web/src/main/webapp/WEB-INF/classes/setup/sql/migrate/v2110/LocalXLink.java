@@ -46,10 +46,11 @@ public class LocalXLink implements DatabaseMigrationTask {
                 }
             }
 
-            insertStatement.execute();
+            insertStatement.executeBatch();
         } catch (JDOMException | IOException e) {
             throw new RuntimeException(e);
         }
+        connection.commit();
     }
 
     private String updateLinks(String data) throws SQLException, IOException, JDOMException {

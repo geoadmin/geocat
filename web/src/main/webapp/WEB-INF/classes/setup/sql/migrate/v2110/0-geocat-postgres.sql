@@ -1,10 +1,10 @@
 
 ALTER TABLE metadata ADD COLUMN extra character varying(255);
 
-ALTER TABLE schematron ADD COLUMN displaypriority integer;
 ALTER TABLE schematroncriteria ADD COLUMN uitype character varying(255);
 ALTER TABLE schematroncriteria ADD COLUMN uivalue character varying(255);
 
+ALTER TABLE schematron ADD COLUMN displaypriority integer;
 UPDATE schematron SET displaypriority=0;
 ALTER TABLE schematron ALTER displaypriority SET NOT NULL;
 ALTER TABLE schematron RENAME COLUMN file TO filename;
@@ -34,3 +34,13 @@ INSERT INTO OperationsDes (iddes, label, langid) VALUES (6,'Featured','eng');
 INSERT INTO OperationsDes (iddes, label, langid) VALUES (6,'Epingler','fre');
 INSERT INTO OperationsDes (iddes, label, langid) VALUES (6,'Featured','ger');
 INSERT INTO OperationsDes (iddes, label, langid) VALUES (6,'In rilievo','ita');
+
+
+ALTER TABLE publish_tracking ADD COLUMN id integer;
+CREATE SEQUENCE publish_record_id_seq START 1;
+UPDATE publish_tracking SET id=nextval('publish_record_id_seq');
+ALTER TABLE publish_tracking ALTER id SET NOT NULL;
+ALTER TABLE publish_tracking RENAME published TO jpaworkaround_published;
+ALTER TABLE publish_tracking RENAME validated TO jpaworkaround_validated;
+
+truncate statusvaluesdes;

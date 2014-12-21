@@ -76,15 +76,11 @@ public class SharedObjects implements DatabaseMigrationTask {
     private void updateMetadata(Connection conn, Map<String, String> formatIdMap, Map<String, String> contactIdMap) throws
             SQLException, IOException, JDOMException {
         try (
-                PreparedStatement select = conn.prepareStatement("select id, data from metadata where data like ?");
+                Statement select = conn.createStatement();
                 PreparedStatement update = conn.prepareStatement("UPDATE metadata SET data=? WHERE id=?")
         ) {
-            Iterator<Map.Entry<String, String>> entries = formatIdMap.entrySet().iterator();
-            while (entries.hasNext()) {
-                Map.Entry<String, String> entry = entries.next();
-                String pattern = "%xml.format.get?id=" + entry.getKey() + "%";
-                select.setString(1, pattern);
-                try (ResultSet results = select.executeQuery()) {
+                int numInBatch = 0;
+                try (ResultSet results = select.executeQuery("select id, data from metadata where schemaid='iso19139.che' and isharvested='n'")) {
                     while (results.next()) {
                         int id = results.getInt("id");
                         String data = results.getString("data");
@@ -97,7 +93,7 @@ public class SharedObjects implements DatabaseMigrationTask {
                             if (node instanceof Element) {
                                 Element el = (Element) node;
                                 final String atValue = el.getAttributeValue(HREF, NAMESPACE_XLINK);
-                                if (atValue != null && atValue.contains("xml.format.get?id=")) {
+                                if (atValue != null && atValue.contains("xml.format.get")) {
                                     String formatId = extractId(atValue);
                                     final String subtemplateUUID = formatIdMap.get(formatId);
                                     if (subtemplateUUID == null) {
@@ -105,7 +101,7 @@ public class SharedObjects implements DatabaseMigrationTask {
                                     } else {
                                         el.setAttribute(HREF, LOCAL_PROTOCOL + "subtemplate?uuid=" + subtemplateUUID, NAMESPACE_XLINK);
                                     }
-                                } else if (atValue != null && atValue.contains("xml.user.get?id=")) {
+                                } else if (atValue != null && atValue.contains("xml.user.get")) {
                                     String userId = extractId(atValue);
                                     String role = extractRole(atValue);
                                     final String subtemplateUUID = contactIdMap.get(userId);
@@ -126,10 +122,13 @@ public class SharedObjects implements DatabaseMigrationTask {
                         String updatedData = Xml.getString(md);
                         update.setString(1, updatedData);
                         update.setInt(2, id);
-                        update.execute();
+                        update.addBatch();
+                        numInBatch++;
+                        if (numInBatch > 200) {
+                            update.executeBatch();
                     }
-                    entries.remove();
                 }
+                update.executeBatch();
             }
         }
     }
