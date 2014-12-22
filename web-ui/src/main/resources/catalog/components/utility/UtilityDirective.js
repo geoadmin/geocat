@@ -37,25 +37,25 @@
               country.name = country.label[scope.lang];
             });
             if(data) {
-              var source = new Bloodhound({
-                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                local: data,
-                limit: 30
-              });
-              source.initialize();
-              $(element).typeahead({
-                minLength: 0,
-                highlight: true
-              }, {
-                name: 'countries',
-                displayKey: 'name',
-                source: source.ttAdapter()
-              }).on('typeahead:selected', function(event, datum) {
-                if (angular.isFunction(scope.onRegionSelect)) {
-                  scope.onRegionSelect(datum);
-                }
-              });
+            var source = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              local: data,
+              limit: 30
+            });
+            source.initialize();
+            $(element).typeahead({
+              minLength: 0,
+              highlight: true
+            }, {
+              name: 'countries',
+              displayKey: 'name',
+              source: source.ttAdapter()
+            }).on('typeahead:selected', function(event, datum) {
+              if (angular.isFunction(scope.onRegionSelect)) {
+                scope.onRegionSelect(datum);
+              }
+            });
             }
             else {
               console.log('no data for gnCountryPicker');
@@ -326,6 +326,45 @@
   module.directive('gnBootstrapDatepicker', [
     function() {
 
+      var getMaxInProp = function(obj) {
+        var year = {
+          min: 3000,
+          max: -1
+        };
+        var month = {
+          min: 12,
+          max: -1
+        };
+        var day = {
+          min: 32,
+          max: -1
+        };
+
+        for(var k in obj) {
+          if(k < year.min) year.min = k;
+          if(k > year.max) year.max = k;
+        }
+        for(k in obj[year.min]) {
+          if(k < month.min) month.min = k;
+        }
+        for(k in obj[year.max]) {
+          if(k > month.max) month.max = k;
+        }
+        for(k in obj[year.min][month.min]) {
+          if(obj[year.min][month.min][k] < day.min) day.min =
+              obj[year.min][month.min][k];
+        }
+        for(k in obj[year.max][month.max]) {
+          if(obj[year.min][month.min][k] > day.max) day.max =
+              obj[year.min][month.min][k];
+        }
+
+      return {
+          min: month.min + 1 + '/' + day.min + '/' + year.min,
+          max: month.max + 1 + '/' + day.max + '/' + year.max
+        }
+      };
+
       return {
         restrict: 'A',
         scope: {
@@ -339,18 +378,25 @@
                 scope.dates[date.getFullYear()][date.getMonth()] &&
                 $.inArray(date.getDate(),
                     scope.dates[date.getFullYear()][date.getMonth()]) != -1) {
-              return '';
+              return true;
             } else {
-              return 'disabled';
+              return false;
             }
           };
 
-          $(element).datepicker({
-            onRender: angular.isUndefined(scope.dates) ? function() {}
-                : function(dt, a, b) {
+          var limits;
+          if(scope.dates) {
+            limits = getMaxInProp(scope.dates);
+
+                }
+
+          $(element).datepicker(angular.isDefined(scope.dates) ? {
+            beforeShowDay:  function(dt, a, b) {
               return available(dt);
-            }
-          }).on('changeDate', function(ev) {
+            },
+            startDate: limits.min,
+            endDate: limits.max
+          } : {}).on('changeDate', function(ev) {
             // view -> model
             scope.$apply(function() {
               scope.date = $(element).find('input')[0].value;
@@ -470,55 +516,55 @@
       };
     }]);
 
-    module.directive('ddTextCollapse', ['$compile', function($compile) {
-      return {
-        restrict: 'A',
-        scope: true,
-        link: function(scope, element, attrs) {
-          // start collapsed
-          scope.collapsed = false;
-          // create the function to toggle the collapse
-          scope.toggle = function() {
-            scope.collapsed = !scope.collapsed;
-          };
-          // wait for changes on the text
-          attrs.$observe('ddTextCollapseText', function(text) {
-            // get the length from the attributes
-            var maxLength = scope.$eval(attrs.ddTextCollapseMaxLength);
-            if (text.length > maxLength) {
-              // split the text in two parts, the first always showing
-              var firstPart = String(text).substring(0, maxLength);
-              var secondPart = String(text).substring(maxLength, text.length);
-              // create some new html elements to hold the separate info
-              var firstSpan = $compile('<span>' + firstPart + '</span>')(scope);
+  module.directive('ddTextCollapse', ['$compile', function($compile) {
+    return {
+      restrict: 'A',
+      scope: true,
+      link: function(scope, element, attrs) {
+        // start collapsed
+        scope.collapsed = false;
+        // create the function to toggle the collapse
+        scope.toggle = function() {
+          scope.collapsed = !scope.collapsed;
+        };
+        // wait for changes on the text
+        attrs.$observe('ddTextCollapseText', function(text) {
+          // get the length from the attributes
+          var maxLength = scope.$eval(attrs.ddTextCollapseMaxLength);
+          if (text.length > maxLength) {
+            // split the text in two parts, the first always showing
+            var firstPart = String(text).substring(0, maxLength);
+            var secondPart = String(text).substring(maxLength, text.length);
+            // create some new html elements to hold the separate info
+            var firstSpan = $compile('<span>' + firstPart + '</span>')(scope);
             var secondSpan = $compile('<span ng-if="collapsed">' +
                 secondPart + '</span>')(scope);
             var moreIndicatorSpan = $compile(
                 '<span ng-if="!collapsed">... </span>')(scope);
-              var lineBreak = $compile('<br ng-if="collapsed">')(scope);
-              var toggleButton = $compile(
+            var lineBreak = $compile('<br ng-if="collapsed">')(scope);
+            var toggleButton = $compile(
                 '<span class="collapse-text-toggle" ng-click="toggle()">' +
                 '  <span ng-show="collapsed" translate>less</span>' +
                 '  <span ng-show="!collapsed" translate>more</span>' +
                 '</span>'
                 )(scope);
-              // remove the current contents of the element
-              // and add the new ones we created
-              element.empty();
-              element.append(firstSpan);
-              element.append(secondSpan);
-              element.append(moreIndicatorSpan);
-              element.append(lineBreak);
-              element.append(toggleButton);
-            }
-            else {
-              element.empty();
-              element.append(text);
-            }
-          });
-        }
-      };
-    }]);
+            // remove the current contents of the element
+            // and add the new ones we created
+            element.empty();
+            element.append(firstSpan);
+            element.append(secondSpan);
+            element.append(moreIndicatorSpan);
+            element.append(lineBreak);
+            element.append(toggleButton);
+          }
+          else {
+            element.empty();
+            element.append(text);
+          }
+        });
+      }
+    };
+  }]);
 
     module.directive('gnTooltip', [ '$translate',  function($translate) {
       return {
