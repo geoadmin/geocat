@@ -22,7 +22,7 @@ $DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"
 $OVERRIDES="-Dgeonetwork.jeeves.configuration.overrides.file=$WEB_DIR\dev-config\override-config-dev-default.xml"
 
 # The memory settings used when running server
-$MEMORY="-XX:MaxPermSize=256m -Xmx1024M -server"
+$MEMORY="-XX:MaxPermSize=256m -Xmx2048M -server"
 
 # The directory that will be configured by setup scripts to be used as the Geonetwork datadirectory
 # It should be empty (or not yet exist)
