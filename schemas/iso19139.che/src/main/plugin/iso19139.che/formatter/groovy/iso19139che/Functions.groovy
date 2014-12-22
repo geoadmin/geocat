@@ -5,7 +5,7 @@ package iso19139che
  */
 class Functions extends iso19139.Functions{
     Functions() {
-        super.isoUrlText = localizedUrlText;
+        isoUrlText = localizedUrlText;
     }
 
     def localizedUrlText = { el ->

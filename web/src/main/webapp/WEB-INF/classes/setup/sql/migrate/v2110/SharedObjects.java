@@ -353,7 +353,7 @@ public class SharedObjects implements DatabaseMigrationTask {
                 String name = formats.getString("name");
                 String validated = formats.getString("validated");
 
-                Element formatEl = new Element("MD_Format");
+                Element formatEl = new Element("MD_Format", GMD);
                 addCharacterString(formats, formatEl, "name", "name", GMD);
                 addCharacterString(formats, formatEl, "version", "version", GMD);
                 SharedObject obj = new SharedObject(id, formatEl, name, validated, "gmd:MD_Format");

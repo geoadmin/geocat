@@ -4,8 +4,8 @@ public class Handlers extends iso19139.Handlers {
 
     public Handlers(handlers, f, env) {
         super(handlers, f, env);
-        super.isofunc = new Functions(handlers: handlers, f:f, env:env, commonHandlers: commonHandlers)
-        super.matchers = new Matchers(handlers: handlers, f:f, env:env, commonHandlers: commonHandlers)
+        isofunc = new Functions(handlers: handlers, f:f, env:env, commonHandlers: commonHandlers)
+        matchers = new Matchers(handlers: handlers, f:f, env:env)
         this.rootEl = 'che:CHE_MD_Metadata'
         this.packageViews.remove('gmd:MD_Metadata')
         this.packageViews << 'che:legislationInformation'

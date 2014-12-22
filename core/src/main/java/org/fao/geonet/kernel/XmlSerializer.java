@@ -259,9 +259,9 @@ public abstract class XmlSerializer {
 	protected void updateDb(final String id, final Element xml, final String changeDate, final String root,
                             final boolean updateDateStamp,
                             final String uuid) throws SQLException {
-
-		if (resolveXLinks()) Processor.removeXLink(xml);
-
+        // GEOCAT
+//      if (resolveXLinks()) Processor.removeXLink(xml);
+        // END GEOCAT
         int metadataId = Integer.valueOf(id);
         Metadata md = _metadataRepository.findOne(metadataId);
 
