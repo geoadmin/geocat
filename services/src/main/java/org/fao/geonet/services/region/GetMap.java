@@ -182,7 +182,7 @@ public class GetMap implements Service {
         if (background != null) {
 
             if (this._namedBackgrounds.containsKey(background)) {
-                background = this._namedBackgrounds.get(background);
+                    background = this._namedBackgrounds.get(background);
             }
 
             String minx = Double.toString(bboxOfImage.getMinX());

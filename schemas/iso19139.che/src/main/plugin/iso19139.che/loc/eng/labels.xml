@@ -536,4 +536,20 @@
    <option value="100">100 m</option>
   </helper>
  </element>
+    <element name="gmd:Country" id="508.0">
+        <label>Country</label>
+        <description>Country in which the law was issued</description>
+    </element>
+    <element name="gmd:MD_RestrictionCode" context="gmd:useConstraints">
+        <label>Restriction Code</label>
+        <description>Code indicating the type of restriction placed on useage of the data.</description>
+    </element>
+    <element name="srv:SV_CouplingType">
+        <label>Coupling Type</label>
+        <description>Indicates the tightness of the coupling between the service and the related resource.</description>
+    </element>
+    <element name="che:CHE_SV_inspireServiceTypeCode">
+        <label>Inspire Service Type</label>
+        <description></description>
+    </element>
 </labels>
