@@ -28,9 +28,9 @@
   var searchFormController =
       function($scope, $location, gnSearchManagerService,
                gnFacetService, Metadata) {
-    var defaultServiceUrl = 'qi@json';
     var defaultParams = {
-      fast: 'index'
+      fast: 'index',
+      _content_type: 'json'
     };
     var self = this;
 
@@ -107,6 +107,9 @@
         angular.extend(params,
             gnFacetService.getParamsFromFacets($scope.currentFacets));
       }
+      if (angular.isUndefined(params.sortBy)) {
+        angular.extend(params, $scope.searchObj.sortbyDefault);
+      }
 
       gnSearchManagerService.gnSearch(params).then(
           function(data) {
@@ -134,11 +137,11 @@
               paging.to = Math.min(
                   data.count,
                   paging.currentPage * paging.hitsPerPage
-              );
+                  );
               paging.pages = Math.ceil(
                   $scope.searchResults.count /
                   paging.hitsPerPage, 0
-              );
+                  );
               paging.from = (paging.currentPage - 1) * paging.hitsPerPage + 1;
             }
           });
@@ -174,12 +177,29 @@
       };
 
       $scope.$on('$locationChangeSuccess', function() {
-          var params = angular.copy($location.search());
+        var params = angular.copy($location.search());
         for (var o in facetsParams) {
-            delete params[o];
-          }
-          $scope.searchObj.params = params;
-          triggerSearchFn();
+          delete params[o];
+        }
+
+        // Take into account only search parameters.
+        //
+        // TODO: 2 options
+        // 1) prefix search parameters by the form id (eg. in Ext.js
+        // we used to have "s_"
+        // 2) use a single parameter which contains the query
+        // eg. q=_cat:"applications"
+        // 3) Keep only parameters for search parameters. Other params
+        // will be before the #
+        //
+        // For the time being, drop the tab parameter
+        // which defines the tab to open.
+        // This allows to open a search with the search
+        // tab on catalog.search#?tab=search&_cat=applications
+        delete params.tab;
+
+        $scope.searchObj.params = params;
+        triggerSearchFn();
       });
     }
     else {
@@ -200,8 +220,8 @@
       } else {
         $scope.searchObj.params = {};
       }
-      if (angular.isArray($scope.searchObj.sortbyValues)) {
-        $scope.searchObj.params.sortBy = $scope.searchObj.sortbyValues[0];
+      if ($scope.searchObj.sortbyDefault) {
+        angular.extend($scope.searchObj.params, $scope.searchObj.sortbyDefault);
       }
 
       self.resetPagination();
