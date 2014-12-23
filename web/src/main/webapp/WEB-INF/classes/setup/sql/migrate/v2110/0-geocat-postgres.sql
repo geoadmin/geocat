@@ -16,6 +16,33 @@ ALTER TABLE params RENAME TO params_v2;
 DROP TABLE spatialindex CASCADE;
 DROP TABLE "spatialIndex";
 
+CREATE TABLE spatialindex
+(
+  gid serial NOT NULL,
+  fid text,
+  the_geom geometry,
+  CONSTRAINT spatialindex_pkey PRIMARY KEY (gid),
+  CONSTRAINT enforce_dims_the_geom CHECK (ndims(the_geom) = 2),
+  CONSTRAINT enforce_geotype_the_geom CHECK (geometrytype(the_geom) = 'MULTIPOLYGON'::text OR the_geom IS NULL),
+  CONSTRAINT enforce_srid_the_geom CHECK (srid(the_geom) = 4326)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE spatialindex
+  OWNER TO "www-data";
+GRANT ALL ON TABLE spatialindex TO "www-data";
+
+-- Index: "spatialIndex_the_geom_gist"
+
+-- DROP INDEX "spatialIndex_the_geom_gist";
+
+CREATE INDEX spatialindex_the_geom_gist
+  ON spatialindex
+  USING gist
+  (the_geom);
+
+
 INSERT INTO Operations (id, name) VALUES (2, 'editing');
 INSERT INTO Operations (id, name) VALUES (5, 'dynamic');
 INSERT INTO Operations (id, name) VALUES (6, 'featured');
