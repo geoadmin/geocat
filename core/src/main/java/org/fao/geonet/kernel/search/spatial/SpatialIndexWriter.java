@@ -40,7 +40,6 @@ import org.geotools.data.FeatureListener;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.FeatureStore;
 import org.geotools.data.Transaction;
-import org.geotools.data.memory.MemoryDataStore;
 import org.geotools.data.memory.MemoryFeatureCollection;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
@@ -86,7 +85,7 @@ import javax.xml.parsers.ParserConfigurationException;
 public class SpatialIndexWriter implements FeatureListener
 {
 
-    public static final String _IDS_ATTRIBUTE_NAME = "fid";
+    public static final String _IDS_ATTRIBUTE_NAME = "metadataId";
     public static final String _SPATIAL_INDEX_TYPENAME = "spatialindex";
     static final String                                          SPATIAL_FILTER_JCS        = "SpatialFilterCache";
     public static final int                                      MAX_WRITES_IN_TRANSACTION = 1000;

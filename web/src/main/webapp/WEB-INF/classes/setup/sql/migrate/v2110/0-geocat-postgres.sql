@@ -19,7 +19,7 @@ DROP TABLE "spatialIndex";
 CREATE TABLE spatialindex
 (
   gid serial NOT NULL,
-  fid text,
+  metadataId text,
   the_geom geometry,
   CONSTRAINT spatialindex_pkey PRIMARY KEY (gid),
   CONSTRAINT enforce_dims_the_geom CHECK (ndims(the_geom) = 2),
