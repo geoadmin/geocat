@@ -39,6 +39,16 @@
   "anyValue": "- Tous -",
   "unchecked": "Non controlée",
   "createDate": "Créée",
-  "changeDate": "Modifiée"
+  "changeDate": "Modifiée",
+  "links": "Liens",
+  "publish": "Publier",
+  "unpublish": "Dé-publier",
+  "View": "Voir",
+  "exportXML": "Export (XML)",
+  "exportcheXML": "Export (iso19139 XML)",
+  "exportGM03": "Export (GM03)",
+  "exportRDF": "Export (RDF)",
+  "exportPDF": "Export (PDF)",
+  "exportMEF": "Export (ZIP)"
 
 }
