@@ -100,10 +100,10 @@ public class SpatialIndexWriter implements FeatureListener
     private static int                                _writes;
     private Map<String, String> errorMessage;
     public Map<String, String> getErrorMessage() {
-		return errorMessage;
-	}
+        return errorMessage;
+    }
 
-	private Name _idColumn;
+    private Name _idColumn;
     private boolean _autocommit;
 
 
@@ -151,7 +151,7 @@ public class SpatialIndexWriter implements FeatureListener
         _lock.lock();
         try {
             _index = null;
-            errorMessage = new HashMap<String, String>();
+            errorMessage = new HashMap<>();
             Geometry geometry = extractGeometriesFrom(
                     schemaDir, metadata, _parser, errorMessage);
 
@@ -321,7 +321,7 @@ public class SpatialIndexWriter implements FeatureListener
      * testing access.
      */
     static MultiPolygon extractGeometriesFrom(Path schemaDir,
-            Element metadata, Parser parser, Map<String, String> errorMessage) throws Exception
+                                              Element metadata, Parser parser, Map<String, String> errorMessage) throws Exception
     {
         org.geotools.util.logging.Logging.getLogger("org.geotools.xml")
                 .setLevel(Level.SEVERE);
@@ -332,29 +332,29 @@ public class SpatialIndexWriter implements FeatureListener
         }
         List<Polygon> allPolygons = new ArrayList<Polygon>();
         for (Element geom : (List<Element>)transform.getChildren()) {
-					String srs = geom.getAttributeValue("srsName"); 
-					CoordinateReferenceSystem sourceCRS = DefaultGeographicCRS.WGS84;
-          String gml = Xml.getString(geom);
+            String srs = geom.getAttributeValue("srsName");
+            CoordinateReferenceSystem sourceCRS = DefaultGeographicCRS.WGS84;
+            String gml = Xml.getString(geom);
 
-          try {
-						if (srs != null && !(srs.equals(""))) sourceCRS = CRS.decode(srs);
-            MultiPolygon jts = parseGml(parser, gml);
-							
-						// if we have an srs and its not WGS84 then transform to WGS84
-						if (!CRS.equalsIgnoreMetadata(sourceCRS, DefaultGeographicCRS.WGS84)) {
-							MathTransform tform = CRS.findMathTransform(sourceCRS, DefaultGeographicCRS.WGS84);
-							jts = (MultiPolygon)JTS.transform(jts, tform);
-						}
+            try {
+                if (srs != null && !(srs.equals(""))) sourceCRS = CRS.decode(srs);
+                MultiPolygon jts = parseGml(parser, gml);
 
-            for (int i = 0; i < jts.getNumGeometries(); i++) {
-							allPolygons.add((Polygon) jts.getGeometryN(i));
+                // if we have an srs and its not WGS84 then transform to WGS84
+                if (!CRS.equalsIgnoreMetadata(sourceCRS, DefaultGeographicCRS.WGS84)) {
+                    MathTransform tform = CRS.findMathTransform(sourceCRS, DefaultGeographicCRS.WGS84);
+                    jts = (MultiPolygon)JTS.transform(jts, tform);
+                }
+
+                for (int i = 0; i < jts.getNumGeometries(); i++) {
+                    allPolygons.add((Polygon) jts.getGeometryN(i));
+                }
+            } catch (Exception e) {
+                errorMessage.put("PARSE", gml + ". Error is:" + e.getMessage());
+                Log.error(Geonet.INDEX_ENGINE, "Failed to convert gml to jts object: "+gml+"\n\t"+e.getMessage());
+                e.printStackTrace();
+                // continue
             }
-          } catch (Exception e) {
-            errorMessage.put("PARSE", gml + ". Error is:" + e.getMessage());
-            Log.error(Geonet.INDEX_ENGINE, "Failed to convert gml to jts object: "+gml+"\n\t"+e.getMessage());
-						e.printStackTrace();
-            // continue
-          }
         }
 
         if( allPolygons.isEmpty()){
@@ -363,13 +363,13 @@ public class SpatialIndexWriter implements FeatureListener
             try {
                 Polygon[] array = new Polygon[allPolygons.size()];
                 GeometryFactory geometryFactory = allPolygons.get(0).getFactory();
-								return geometryFactory.createMultiPolygon(allPolygons.toArray(array));
+                return geometryFactory.createMultiPolygon(allPolygons.toArray(array));
 
 
             } catch (Exception e) {
                 errorMessage.put("BUILD", allPolygons + ". Error is:" + e.getMessage());
                 Log.error(Geonet.INDEX_ENGINE, "Failed to create a MultiPolygon from: "+allPolygons);
-								e.printStackTrace();
+                e.printStackTrace();
                 // continue
                 return null;
             }
@@ -447,9 +447,9 @@ public class SpatialIndexWriter implements FeatureListener
         }
     }
 
-    private FeatureStore<SimpleFeatureType, SimpleFeature> createFeatureStore(DataStore datastore) throws Exception {
+	private FeatureStore<SimpleFeatureType, SimpleFeature> createFeatureStore(DataStore datastore) throws Exception {
         Log.debug(Geonet.SPATIAL, "Configuring SpatialIndexWriter.");
-        FeatureStore<SimpleFeatureType, SimpleFeature> featureSource = null;
+        FeatureStore<SimpleFeatureType, SimpleFeature> featureSource;
 
         featureSource = findSpatialIndexStore(datastore);
         if (featureSource != null) {
@@ -488,9 +488,7 @@ public class SpatialIndexWriter implements FeatureListener
 
         typeBuilder.setCRS(DefaultGeographicCRS.WGS84);
         typeBuilder.add("geom", MultiPolygon.class);
-        if (datastore instanceof MemoryDataStore) {
-            typeBuilder.add(_IDS_ATTRIBUTE_NAME, String.class);
-        }
+        typeBuilder.add(_IDS_ATTRIBUTE_NAME, String.class);
 
         SimpleFeatureType type = typeBuilder.buildFeatureType();
         datastore.createSchema(type);
