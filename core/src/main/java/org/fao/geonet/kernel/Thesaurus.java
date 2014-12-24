@@ -898,6 +898,6 @@ public class Thesaurus {
         }
 
     public Map<String, String> getTitles(ApplicationContext context) throws JDOMException, IOException {
-        return LangUtils.translate(context, getKey());
+        return LangUtils.translate(context, "geocat", getKey());
     }
 }
