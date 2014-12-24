@@ -14,7 +14,7 @@ ALTER TABLE requests RENAME TO requests_v2;
 ALTER TABLE params RENAME TO params_v2;
 
 DROP TABLE if exists spatialindex CASCADE;
-DROP TABLE DROP TABLE if exists "spatialIndex" CASCADE;
+DROP TABLE if exists "spatialIndex" CASCADE;
 
 CREATE TABLE spatialindex
 (
