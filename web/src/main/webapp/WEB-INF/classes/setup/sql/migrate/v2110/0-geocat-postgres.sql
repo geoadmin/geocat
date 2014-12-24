@@ -13,8 +13,8 @@ UPDATE schematroncriteria SET uitype='Group' where type = 'GROUP';
 ALTER TABLE requests RENAME TO requests_v2;
 ALTER TABLE params RENAME TO params_v2;
 
-DROP TABLE spatialindex CASCADE;
-DROP TABLE "spatialIndex";
+DROP TABLE if exists spatialindex CASCADE;
+DROP TABLE DROP TABLE if exists "spatialIndex" CASCADE;
 
 CREATE TABLE spatialindex
 (
@@ -29,8 +29,7 @@ CREATE TABLE spatialindex
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE spatialindex
-  OWNER TO "www-data";
+ALTER TABLE spatialindex OWNER TO "www-data";
 GRANT ALL ON TABLE spatialindex TO "www-data";
 
 -- Index: "spatialIndex_the_geom_gist"
