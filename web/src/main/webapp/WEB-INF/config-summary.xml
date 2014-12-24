@@ -21,7 +21,7 @@
   <item name="groupOwner" plural="groupOwners" indexKey="_groupOwner"
         max="99" sortBy="value" translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
 
-	When an item is modified or added, the index MUST be rebuild.
+  When an item is modified or added, the index MUST be rebuild.
 -->
 <summary>
 	<def>
