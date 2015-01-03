@@ -32,6 +32,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SearcherType;
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -66,7 +67,7 @@ public class GetMostPopular implements Service {
         if (System.currentTimeMillis() > _lastUpdateTime + _timeBetweenUpdates) {
             DataManager dataMan = context.getBean(DataManager.class);
             SearchManager searchMan = context.getBean(SearchManager.class);
-            MetaSearcher searcher = searchMan.newSearcher(SearchManager.LUCENE,
+            MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE,
                     Geonet.File.SEARCH_LUCENE);
             try {
                 Element searchRequest = new Element(Jeeves.Elem.REQUEST);
