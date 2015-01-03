@@ -21,6 +21,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test MEF.
@@ -75,11 +76,18 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
         private ServiceContext context;
         private List<String> metadataIds = new ArrayList<>();
         private List<String> mefFilesToLoad = new ArrayList<>();
+        private String uuidAction;
 
         public ImportMetadata(AbstractCoreIntegrationTest testClass, ServiceContext context) {
             this.context = context;
             this.testClass = testClass;
             mefFilesToLoad.add("mef1-example.mef");
+            this.uuidAction = Params.NOTHING;
+
+        }
+
+        public void setUuidAction(String uuidAction) {
+            this.uuidAction = uuidAction;
         }
 
         public List<String> getMetadataIds() {
@@ -87,7 +95,14 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
         }
 
         public ImportMetadata invoke() throws Exception {
+            return invoke(1);
+        }
+        public ImportMetadata invoke(int iterations) throws Exception {
+            assertTrue("iterations must be greater than 0 but was: " + iterations, iterations > 0);
             testClass.loginAsAdmin(context);
+
+            int remainingFilesToImport = iterations * mefFilesToLoad.size();
+            int numberOfImported = 0;
 
             for (String mefFile : mefFilesToLoad) {
                 final Path mefTestFile = Files.createTempFile("mefTestFile", ".mef");
@@ -105,7 +120,23 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
                     Files.write(mefTestFile, Files.readAllBytes(srcMefPath));
                 }
                 Element params = new Element("request");
-                metadataIds.addAll(MEFLib.doImport(params, context, mefTestFile, testClass.getStyleSheets()));
+                if (iterations > 1 && !uuidAction.equalsIgnoreCase(Params.GENERATE_UUID)) {
+                    throw new AssertionError("If iterations (the number or times each mef file is imported) is greater than 1"
+                                             + " then uuidAction must be " + Params.GENERATE_UUID);
+                }
+                params.addContent(new Element(Params.UUID_ACTION).setText(uuidAction));
+
+                long start = System.currentTimeMillis();
+                for (int i = 0; i < iterations; i++) {
+                    if (System.currentTimeMillis() - start > 30000) {
+                        System.out.println("Imported " + numberOfImported + " mef files.  " + remainingFilesToImport + " remaining.");
+                        start = System.currentTimeMillis();
+                    }
+                    metadataIds.addAll(MEFLib.doImport(params, context, mefTestFile, testClass.getStyleSheets()));
+
+                    numberOfImported++;
+                    remainingFilesToImport--;
+                }
             }
             return this;
         }

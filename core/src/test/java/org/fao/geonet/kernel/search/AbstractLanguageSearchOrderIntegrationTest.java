@@ -144,7 +144,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
                     MetadataType.METADATA, ReservedGroup.intranet.getId(), Params.GENERATE_UUID);
         }
 
-        this._luceneSearcher = _searchManager.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+        this._luceneSearcher = _searchManager.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
     }
 
     protected abstract String[] doSearch(String lang) throws Exception;
