@@ -203,7 +203,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         if(Log.isDebugEnabled(Geonet.LUCENE)) {
             Log.debug(Geonet.LUCENE, "LuceneSearcher performing query");
         }
-        performQuery(srvContext, getFrom() - 1, getTo(), buildSummary);
+        performQuery(getFrom() - 1, getTo(), buildSummary);
         updateSearchRange(request);
 
         if (_logSearch) {
@@ -287,7 +287,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 			response.addContent((Element)_elSummary.clone());
 
 		if (getTo() > 0) {
-			TopDocs tdocs = performQuery(srvContext, getFrom()-1, getTo(), false); // get enough hits to show a page
+			TopDocs tdocs = performQuery(getFrom()-1, getTo(), false); // get enough hits to show a page
 
 			int nrHits = getTo() - (getFrom()-1);
 			if (tdocs.scoreDocs.length >= nrHits) {
@@ -295,7 +295,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
 				for (int i = 0; i < nrHits; i++) {
 					Document doc;
-                    IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language.presentationLanguage, _versionToken);
+                    IndexAndTaxonomy indexAndTaxonomy = _sm.openIndexReader(_language.presentationLanguage, _versionToken);
                     _versionToken = indexAndTaxonomy.version;
                     try {
                         if (inFastMode) {
@@ -910,7 +910,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             spatialfilter = _sm.getSpatial().filter(_query, Integer.MAX_VALUE, geometry, request);
         }
 
-        Filter duplicateRemovingFilter = new DuplicateDocFilter(_query, 1000000);
+        Filter duplicateRemovingFilter = _sm.createDuplicateDocFilter(_language.presentationLanguage, _query);
         Filter filter;
         if (spatialfilter == null) {
             filter = duplicateRemovingFilter;
@@ -971,15 +971,14 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      *
      *
      *
-     * @param context
      * @param startHit start
 	 * @param endHit end
 	 * @param buildSummary Compute summary. If true, checks if not already generated (by previous search)
      * @return topdocs
      * @throws Exception hmm
      */
-	private TopDocs performQuery(ServiceContext context, int startHit, int endHit, boolean buildSummary) throws Exception {
-		IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language.presentationLanguage, _versionToken);
+	private TopDocs performQuery(int startHit, int endHit, boolean buildSummary) throws Exception {
+		IndexAndTaxonomy indexAndTaxonomy = _sm.openIndexReader(_language.presentationLanguage, _versionToken);
         _versionToken = indexAndTaxonomy.version;
         Pair<TopDocs,Element> results;
         try {
@@ -1704,9 +1703,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 	 */
     public List<String> getAllUuids(int maxHits, ServiceContext context) throws Exception {
         List<String> response = new ArrayList<String>();
-		TopDocs tdocs = performQuery(context, 0, maxHits, false);
+		TopDocs tdocs = performQuery(0, maxHits, false);
 
-        IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language.presentationLanguage, _versionToken);
+        IndexAndTaxonomy indexAndTaxonomy = _sm.openIndexReader(_language.presentationLanguage, _versionToken);
         _versionToken = indexAndTaxonomy.version;
         try {
             for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
@@ -1736,8 +1735,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
     public Map<Integer,Metadata> getAllMdInfo(ServiceContext context, int maxHits) throws Exception {
 
       Map<Integer,Metadata> response = new HashMap<Integer,Metadata>();
-      TopDocs tdocs = performQuery(context, 0, maxHits, false);
-      IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language.presentationLanguage, _versionToken);
+      TopDocs tdocs = performQuery(0, maxHits, false);
+      IndexAndTaxonomy indexAndTaxonomy = _sm.openIndexReader(_language.presentationLanguage, _versionToken);
       _versionToken = indexAndTaxonomy.version;
       try {
           for ( ScoreDoc sdoc : tdocs.scoreDocs ) {
@@ -1823,7 +1822,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         if (context != null) {
             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
             searchmanager = gc.getBean(SearchManager.class);
-            indexAndTaxonomy = searchmanager.getNewIndexReader(priorityLang);
+            indexAndTaxonomy = searchmanager.openNewIndexReader(priorityLang);
             reader = indexAndTaxonomy.indexReader;
         } else {
             throw new IllegalStateException("There needs to be a ServiceContext in the thread local for this thread");

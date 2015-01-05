@@ -18,10 +18,7 @@ import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.jdom.Element;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Utils {
@@ -89,7 +86,7 @@ public class Utils {
 
         SearchManager searchManager = gc.getBean(SearchManager.class);
 
-        IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(null, -1);
+        IndexAndTaxonomy indexAndTaxonomy = searchManager.openIndexReader(null, -1);
 		GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 
         try {

@@ -323,7 +323,7 @@ public class DataManager {
 
         // remove from index metadata not in DBMS
         for (String id : docs.keySet()) {
-            searchMan.delete("_id", id);
+            searchMan.delete(id);
 
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "- removed record (" + id + ") from index");
@@ -2302,7 +2302,7 @@ public class DataManager {
         }
 
         //--- update search criteria
-        searchMan.delete("_id", metadataId + "");
+        searchMan.delete(metadataId);
 //        _entityManager.flush();
 //        _entityManager.clear();
     }
@@ -2316,7 +2316,7 @@ public class DataManager {
     public synchronized void deleteMetadataGroup(ServiceContext context, String metadataId) throws Exception {
         deleteMetadataFromDB(context, metadataId);
         //--- update search criteria
-        searchMan.deleteGroup("_id", metadataId + "");
+        searchMan.delete(metadataId);
     }
 
     /**
@@ -3461,7 +3461,7 @@ public class DataManager {
         }
 
         // Remove records from the index
-        searchMan.delete("_id", Lists.transform(idsOfMetadataToDelete, new Function<Integer, String>() {
+        searchMan.delete(Lists.transform(idsOfMetadataToDelete, new Function<Integer, String>() {
             @Nullable
             @Override
             public String apply(@Nonnull Integer input) {

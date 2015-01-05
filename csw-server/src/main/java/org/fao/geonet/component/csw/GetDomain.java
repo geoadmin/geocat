@@ -207,7 +207,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 			SearchManager sm = gc.getBean(SearchManager.class);
 			
 
-	        IndexAndTaxonomy indexAndTaxonomy= sm.getNewIndexReader(null);
+	        IndexAndTaxonomy indexAndTaxonomy= sm.openNewIndexReader(null);
 			try {
 			    GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 				BooleanQuery groupsQuery = (BooleanQuery) CatalogSearcher.getGroupsQuery(context);

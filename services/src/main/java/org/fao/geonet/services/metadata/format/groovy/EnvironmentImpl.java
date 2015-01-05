@@ -161,7 +161,7 @@ public class EnvironmentImpl implements Environment {
         if (this.indexInfo == null) {
             final SearchManager searchManager = getBean(SearchManager.class);
 
-            try (IndexAndTaxonomy newIndexReader = searchManager.getNewIndexReader(getLang3())) {
+            try (IndexAndTaxonomy newIndexReader = searchManager.openNewIndexReader(getLang3())) {
                 TopFieldCollector collector = TopFieldCollector.create(Sort.RELEVANCE, 1, true, false, false, false);
                 IndexSearcher searcher = new IndexSearcher(newIndexReader.indexReader);
                 Query query = new TermQuery(new Term("_id", String.valueOf(getMetadataId())));
