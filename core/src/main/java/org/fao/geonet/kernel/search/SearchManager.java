@@ -52,7 +52,6 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.Query;
 import org.apache.lucene.util.BytesRef;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
@@ -170,7 +169,6 @@ public class SearchManager {
 
 	private boolean _logAsynch;
 	private LuceneOptimizerManager _luceneOptimizerManager;
-    private final LuceneDocToIdTracker luceneDocToIdTracker = new LuceneDocToIdTracker();
 
     @Autowired
     private LuceneIndexLanguageTracker _tracker;
@@ -701,7 +699,6 @@ public class SearchManager {
         _tracker.deleteDocuments(new Term(Geonet.IndexFieldNames.ID, id));
         for(IndexInformation document : docs ) {
             _tracker.addDocument(document);
-            this.luceneDocToIdTracker.add(this._tracker, id);
         }
         if (forceRefreshReaders) {
             forceIndexChanges();
@@ -727,6 +724,21 @@ public class SearchManager {
         }
 	}
 
+    /**
+     * TODO javadoc.
+     *
+     * @param fld
+     * @param txt
+     * @throws Exception
+     */
+	public void deleteGroup(String fld, String txt) throws Exception {
+		// possibly remove old document
+        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+            Log.debug(Geonet.INDEX_ENGINE,"Deleting document ");
+        _tracker.deleteDocuments(new Term(fld, txt));
+		
+		_spatial.writer().delete(txt);
+	}
 	
     /**
      * TODO javadoc.
@@ -918,26 +930,29 @@ public class SearchManager {
     /**
      *  deletes a document.
      *
+     * @param fld
+     * @param txt
      * @throws Exception
      */
-	public void delete(String mdId) throws Exception {
+	public void delete(String fld, String txt) throws Exception {
 		// possibly remove old document
-		_tracker.deleteDocuments(new Term(Geonet.IndexFieldNames.ID, mdId));
-        this.luceneDocToIdTracker.remove(mdId);
-		_spatial.writer().delete(mdId);
+		_tracker.deleteDocuments(new Term(fld, txt));
+		_spatial.writer().delete(txt);
 	}
 	
     /**
      *  deletes a list of documents.
      *
-     * @param metadataIds
+     * @param fld
+     * @param txts
      * @throws Exception
      */
-    public void delete(List<String> metadataIds) throws Exception {
+    public void delete(String fld, List<String> txts) throws Exception {
         // possibly remove old document
-        for(String mdId : metadataIds) {
-            delete(mdId);
+        for(String txt : txts) {
+            _tracker.deleteDocuments(new Term(fld, txt));
         }
+        _spatial.writer().delete(txts);
     }
 
 
@@ -948,7 +963,7 @@ public class SearchManager {
      * @throws Exception
      */
 	public Set<Integer> getDocsWithXLinks() throws Exception {
-        IndexAndTaxonomy indexAndTaxonomy= openNewIndexReader(null);
+        IndexAndTaxonomy indexAndTaxonomy= getNewIndexReader(null);
         
 		try {
 		    GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
@@ -989,7 +1004,7 @@ public class SearchManager {
      * @throws Exception
      */
 	public Map<String,String> getDocsChangeDate() throws Exception {
-        IndexAndTaxonomy indexAndTaxonomy= openNewIndexReader(null);
+        IndexAndTaxonomy indexAndTaxonomy= getNewIndexReader(null);
 		try {
 		    GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 
@@ -1027,7 +1042,7 @@ public class SearchManager {
 	 */
     public Vector<String> getTerms(String fld) throws Exception {
         Vector<String> foundTerms = new Vector<String>();
-        IndexAndTaxonomy indexAndTaxonomy = openNewIndexReader(null);
+        IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
         try {
             @SuppressWarnings("resource")
             AtomicReader reader = SlowCompositeReaderWrapper.wrap(indexAndTaxonomy.indexReader);
@@ -1067,7 +1082,7 @@ public class SearchManager {
 	public Collection<TermFrequency> getTermsFequency(String fieldName, String searchValue, int maxNumberOfTerms,
 	                                            int threshold, ServiceContext context) throws Exception {
         Collection<TermFrequency> termList = new ArrayList<TermFrequency>();
-        IndexAndTaxonomy indexAndTaxonomy = openNewIndexReader(null);
+        IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
         String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
 
         final Element request = new Element("request").addContent(new Element(Geonet.IndexFieldNames.ANY).setText(searchValue));
@@ -1313,15 +1328,12 @@ public class SearchManager {
 		}
 	}
 
-    public DuplicateDocFilter createDuplicateDocFilter(String preferredLang, Query query) throws IOException {
-        return this.luceneDocToIdTracker.createDuplicateDocFilter(preferredLang, query);
+    public IndexAndTaxonomy getIndexReader(String preferedLang, long versionToken) throws IOException {
+        return _tracker.acquire(preferedLang, versionToken);
     }
-    public IndexAndTaxonomy openIndexReader(String preferredLang, long versionToken) throws IOException {
-        return _tracker.acquire(preferredLang, versionToken);
-    }
-    public IndexAndTaxonomy openNewIndexReader(String preferredLang) throws IOException, InterruptedException {
+    public IndexAndTaxonomy getNewIndexReader(String preferedLang) throws IOException, InterruptedException {
        Log.debug(Geonet.INDEX_ENGINE,"Ask for new reader");
-       return openIndexReader(preferredLang, -1L);
+       return getIndexReader(preferedLang, -1L);
     }
 	public void releaseIndexReader(IndexAndTaxonomy reader) throws InterruptedException, IOException {
 	    reader.indexReader.releaseToNRTManager();
@@ -1359,8 +1371,7 @@ public class SearchManager {
 			}
 			_tracker.open(Geonet.DEFAULT_LANGUAGE);
 		}
-        luceneDocToIdTracker.init(this._tracker);
-    }
+	}
 
     /**
 	 *  Rebuilds the Lucene index. If xlink or from selection parameters

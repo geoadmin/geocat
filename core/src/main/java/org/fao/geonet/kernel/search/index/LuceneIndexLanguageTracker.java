@@ -161,14 +161,11 @@ public class LuceneIndexLanguageTracker {
      * @param versionToken A token indicating which state of search should be obtained
      * @return an index reader for reading from all indices
      */
-    public IndexAndTaxonomy acquire(String preferredLang, final long versionToken) throws IOException {
+    public IndexAndTaxonomy acquire(final String preferredLang, final long versionToken) throws IOException {
         lock.lock();
         try {
             lazyInit();
 
-            if (preferredLang == null) {
-                preferredLang = this.searchManagers.keySet().iterator().next();
-            }
 
             if (!luceneConfig.useNRTManagerReopenThread()
                 || Boolean.parseBoolean(System.getProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD))) {
@@ -188,7 +185,7 @@ public class LuceneIndexLanguageTracker {
                 lastVersionUpToDate = lastVersionUpToDate && result.lastVersionUpToDate;
                 tokenExpired = tokenExpired || result.newSearcher;
 
-                if ((preferredLang.equalsIgnoreCase(manager.language)) || i >= readers.length) {
+                if ((preferredLang != null && preferredLang.equalsIgnoreCase(manager.language)) || i >= readers.length) {
                     readers[0] = result.searcher.getIndexReader();
                 } else {
                     readers[i] = result.searcher.getIndexReader();
@@ -206,7 +203,7 @@ public class LuceneIndexLanguageTracker {
                 }
 
             }
-            return new IndexAndTaxonomy(preferredLang, finalVersion, new GeonetworkMultiReader(_openReaderCounter, readers, searchers),
+            return new IndexAndTaxonomy(finalVersion, new GeonetworkMultiReader(_openReaderCounter, readers, searchers),
                     taxonomyIndexTracker.acquire());
         } finally {
             lock.unlock();
@@ -423,17 +420,6 @@ public class LuceneIndexLanguageTracker {
                     input.deleteDocuments(term);
                 }
             });
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    public Set<String> indices() {
-        lock.lock();
-        try {
-            lazyInit();
-
-            return this.searchManagers.keySet();
         } finally {
             lock.unlock();
         }

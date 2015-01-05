@@ -62,6 +62,7 @@ import org.fao.geonet.exceptions.SearchExpiredEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionsDAO;
+import org.fao.geonet.kernel.search.DuplicateDocFilter;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
@@ -190,7 +191,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
             }
             _lang = LuceneSearcher.determineLanguage(context, filterExpr, sm.getSettingInfo());
 
-            indexAndTaxonomy = sm.openIndexReader(_lang.presentationLanguage, _searchToken);
+            indexAndTaxonomy = sm.getIndexReader(_lang.presentationLanguage, _searchToken);
             Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + indexAndTaxonomy.version + " comparing with " + _searchToken);
             if (_searchToken != -1L && indexAndTaxonomy.version != _searchToken) {
                 throw new SearchExpiredEx("Search has expired/timed out - start a new search");
@@ -236,7 +237,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SearchManager sm = gc.getBean(SearchManager.class);
 		LuceneConfig luceneConfig = getLuceneConfig();
-        IndexAndTaxonomy indexAndTaxonomy = sm.openIndexReader(null, _searchToken);
+        IndexAndTaxonomy indexAndTaxonomy = sm.getIndexReader(null, _searchToken);
 
         try {
             Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + indexAndTaxonomy.version + " comparing with " + _searchToken);
@@ -244,10 +245,9 @@ public class CatalogSearcher implements MetadataRecordSelector {
                 throw new SearchExpiredEx("Search has expired/timed out - start a new search");
             }
             GeonetworkMultiReader _reader = indexAndTaxonomy.indexReader;
-            final Filter searchFilter = wrapSpatialFilter(sm.createDuplicateDocFilter(indexAndTaxonomy.preferredLang, _query));
             Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(maxHits, 0, maxHits, _lang.presentationLanguage,
                     luceneConfig.getTaxonomy().get(ResultType.RESULTS.toString()), luceneConfig.getTaxonomyConfiguration(),
-                    _reader, _query, searchFilter, _sort, null, false,
+                    _reader, _query, wrapSpatialFilter(), _sort, null, false,
                     luceneConfig.isTrackDocScores(), luceneConfig.isTrackMaxScore(), luceneConfig.isDocsScoredInOrder());
             TopDocs tdocs = searchResults.one();
             Element summary = searchResults.two();
@@ -536,7 +536,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
 		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
                 maxRecords, _lang.presentationLanguage,
                 luceneConfig.getTaxonomy().get(resultType.toString()), luceneConfig.getTaxonomyConfiguration(),
-                reader, _query, wrapSpatialFilter(sm.createDuplicateDocFilter(_lang.presentationLanguage, _query)),
+                reader, _query, wrapSpatialFilter(),
                 _sort, taxonomyReader, buildSummary, luceneConfig.isTrackDocScores(), luceneConfig.isTrackMaxScore(),
                 luceneConfig.isDocsScoredInOrder()
 		);
@@ -573,7 +573,8 @@ public class CatalogSearcher implements MetadataRecordSelector {
 	}
     // ---------------------------------------------------------------------------
 
-    private Filter wrapSpatialFilter(Filter duplicateRemovingFilter) {
+    private Filter wrapSpatialFilter() {
+        Filter duplicateRemovingFilter = new DuplicateDocFilter(_query, 1000000);
         Filter cFilter = null;
         if (_filter == null) {
             cFilter = duplicateRemovingFilter;

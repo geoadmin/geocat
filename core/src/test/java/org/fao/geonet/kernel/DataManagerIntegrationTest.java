@@ -243,7 +243,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
     }
 
     private int numDocs(SearchManager searchManager, String lang) throws IOException, InterruptedException {
-        IndexAndTaxonomy indexReader = searchManager.openNewIndexReader(lang);
+        IndexAndTaxonomy indexReader = searchManager.getNewIndexReader(lang);
         final int startIndexDocs = indexReader.indexReader.numDocs();
         indexReader.close();
         return startIndexDocs;

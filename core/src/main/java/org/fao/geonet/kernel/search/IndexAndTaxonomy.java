@@ -10,10 +10,9 @@ public class IndexAndTaxonomy implements Closeable {
     public final TaxonomyReader taxonomyReader;
     public final GeonetworkMultiReader indexReader;
     public final long version;
-    public final String preferredLang;
 
-    public IndexAndTaxonomy(String preferredLang, long version, GeonetworkMultiReader indexReader, TaxonomyReader taxonomyReader) {
-        this.preferredLang = preferredLang;
+    public IndexAndTaxonomy(long version, GeonetworkMultiReader indexReader, TaxonomyReader taxonomyReader) {
+        super();
         this.taxonomyReader = taxonomyReader;
         this.indexReader = indexReader;
         this.version = version;
