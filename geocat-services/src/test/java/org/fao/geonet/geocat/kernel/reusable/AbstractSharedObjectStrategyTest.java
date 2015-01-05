@@ -111,7 +111,7 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
         final int mdId = importMetadataXML(serviceContext, "metadataUUID", mdStream, MetadataType.METADATA,
                 ReservedGroup.all.getId(), "REPLACE");
 
-        final IndexAndTaxonomy indexAndTaxonomy = this.searchManager.getNewIndexReader("eng");
+        final IndexAndTaxonomy indexAndTaxonomy = this.searchManager.openNewIndexReader("eng");
         final IndexSearcher searcher = new IndexSearcher(indexAndTaxonomy.indexReader);
         String field = sharedObjectStrategy.getValidXlinkLuceneField();
         final Query query = sharedObjectStrategy.createFindMetadataQuery(field, sharedObj.getUuid(), true);
@@ -195,7 +195,7 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
     public static void assertCorrectMetadataInLucene(ApplicationContext applicationContext, Query query,
                                                      String... expectedUuids) throws IOException, InterruptedException {
         final SearchManager searchManager = applicationContext.getBean(SearchManager.class);
-        final IndexAndTaxonomy reader = searchManager.getNewIndexReader("eng");
+        final IndexAndTaxonomy reader = searchManager.openNewIndexReader("eng");
 
         try {
             final IndexSearcher searcher = new IndexSearcher(reader.indexReader);

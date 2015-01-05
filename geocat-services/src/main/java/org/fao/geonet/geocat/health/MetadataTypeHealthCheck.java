@@ -29,7 +29,7 @@ public class MetadataTypeHealthCheck implements HealthCheckFactory {
 
                 SearchManager searchMan = context.getBean(SearchManager.class);
 
-                IndexAndTaxonomy indexAndTaxonomy = searchMan.getIndexReader(null, -1);
+                IndexAndTaxonomy indexAndTaxonomy = searchMan.openIndexReader(null, -1);
                 GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 
                 try {

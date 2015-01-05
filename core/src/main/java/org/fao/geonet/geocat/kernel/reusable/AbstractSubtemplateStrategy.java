@@ -98,7 +98,7 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
         String threeCharLangCode = mapper.iso639_1_to_iso639_2(twoCharLangCode);
         Query query = createSearchQuery(originalElem, twoCharLangCode, threeCharLangCode);
 
-        final IndexAndTaxonomy indexAndTaxonomy = this.searchManager.getNewIndexReader(threeCharLangCode);
+        final IndexAndTaxonomy indexAndTaxonomy = this.searchManager.openNewIndexReader(threeCharLangCode);
         try {
 
             TopFieldCollector collector = TopFieldCollector.create(Sort.RELEVANCE, 30000, true, false, false, false);
@@ -318,7 +318,7 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
                                           SharedObjectStrategy strategy,
                                           Function<DescData, String> describer) throws Exception {
 
-        final IndexAndTaxonomy newIndexReader = searchManager.getNewIndexReader(language);
+        final IndexAndTaxonomy newIndexReader = searchManager.openNewIndexReader(language);
         Element results = new Element(REPORT_ROOT);
         try {
             final GeonetworkMultiReader reader = newIndexReader.indexReader;

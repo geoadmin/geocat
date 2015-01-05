@@ -47,7 +47,7 @@ public class ExportMetadataSummary implements Service {
         ZipOutputStream out = null;
         try {
             out = new ZipOutputStream(new FileOutputStream(summaryFile));
-            newIndexReader = searchManager.getNewIndexReader(context.getLanguage());
+            newIndexReader = searchManager.openNewIndexReader(context.getLanguage());
 
             ZipEntry entry = new ZipEntry("summary.csv");
             out.putNextEntry(entry);

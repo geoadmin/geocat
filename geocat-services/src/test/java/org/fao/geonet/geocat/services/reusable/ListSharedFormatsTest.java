@@ -30,7 +30,7 @@ public class ListSharedFormatsTest extends AbstractSharedObjectTest {
     public void testIndexedFormat() throws Exception {
         addFormatSubtemplate("listFormat", true);
 
-        final IndexAndTaxonomy index = searchManager.getNewIndexReader("eng");
+        final IndexAndTaxonomy index = searchManager.openNewIndexReader("eng");
         try {
             Set<String> locales = Sets.newHashSet();
             for (int i = 0; i < index.indexReader.numDocs(); i++) {

@@ -26,7 +26,7 @@ public class ListSharedContactsTest extends AbstractSharedObjectTest {
     public void testIndexedContact() throws Exception {
         addUserSubtemplate("listContacts", true);
 
-        final IndexAndTaxonomy index = searchManager.getNewIndexReader("eng");
+        final IndexAndTaxonomy index = searchManager.openNewIndexReader("eng");
         try {
             Set<String> locales = Sets.newHashSet();
             for (int i = 0; i < index.indexReader.numDocs(); i++) {

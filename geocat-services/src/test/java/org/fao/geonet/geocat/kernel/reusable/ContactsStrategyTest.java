@@ -122,7 +122,7 @@ public class ContactsStrategyTest extends AbstractSharedObjectStrategyTest {
         assertTrue(parentHref.contains("custodian"));
 
         final SearchManager searchManager = _applicationContext.getBean(SearchManager.class);
-        final IndexAndTaxonomy reader = searchManager.getNewIndexReader("eng");
+        final IndexAndTaxonomy reader = searchManager.openNewIndexReader("eng");
 
         try {
             final IndexSearcher searcher = new IndexSearcher(reader.indexReader);
@@ -186,7 +186,7 @@ public class ContactsStrategyTest extends AbstractSharedObjectStrategyTest {
                 GMD);
 
         final SearchManager searchManager = _applicationContext.getBean(SearchManager.class);
-        final IndexAndTaxonomy reader = searchManager.getNewIndexReader("eng");
+        final IndexAndTaxonomy reader = searchManager.openNewIndexReader("eng");
 
         try {
             final IndexSearcher searcher = new IndexSearcher(reader.indexReader);
@@ -246,7 +246,7 @@ public class ContactsStrategyTest extends AbstractSharedObjectStrategyTest {
                 CHE, GCO);
 
         final SearchManager searchManager = _applicationContext.getBean(SearchManager.class);
-        final IndexAndTaxonomy reader = searchManager.getNewIndexReader("eng");
+        final IndexAndTaxonomy reader = searchManager.openNewIndexReader("eng");
 
         try {
             final IndexSearcher searcher = new IndexSearcher(reader.indexReader);
