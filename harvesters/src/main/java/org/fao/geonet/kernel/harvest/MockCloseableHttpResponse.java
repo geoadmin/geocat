@@ -1,4 +1,4 @@
-package org.fao.geonet;
+package org.fao.geonet.kernel.harvest;
 
 import org.apache.http.*;
 import org.apache.http.client.methods.CloseableHttpResponse;
