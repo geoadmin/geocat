@@ -35,7 +35,7 @@ public class LuceneSearcherPresentTest extends AbstractCoreIntegrationTest {
         importMetadata.invoke();
 
         Element info = new Element("info", Geonet.Namespaces.GEONET);
-        IndexAndTaxonomy indexAndTaxonomy = searchManager.getNewIndexReader("eng");
+        IndexAndTaxonomy indexAndTaxonomy = searchManager.openNewIndexReader("eng");
 
         try {
             TopFieldCollector tfc = TopFieldCollector.create(Sort.INDEXORDER, 1000, true, false, false, true);
@@ -62,7 +62,7 @@ public class LuceneSearcherPresentTest extends AbstractCoreIntegrationTest {
         dataManager.unsetOperation(serviceContext, mdId, "" + ReservedGroup.all.getId(), ReservedOperation.editing);
         dataManager.indexMetadata(mdId, true);
 
-        indexAndTaxonomy = searchManager.getNewIndexReader("eng");
+        indexAndTaxonomy = searchManager.openNewIndexReader("eng");
         try {
             TopFieldCollector tfc = TopFieldCollector.create(Sort.INDEXORDER, 1000, true, false, false, true);
             IndexSearcher searcher = new IndexSearcher(indexAndTaxonomy.indexReader);
