@@ -198,7 +198,7 @@ public final class Utils {
         String concreteId = idConverter.apply(id);
         SearchManager searchManager = context.getBean(SearchManager.class);
 
-        IndexAndTaxonomy indexAndTaxonomy = searchManager.openIndexReader(null, -1);
+        IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(null, -1);
 		GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
 
         try {
