@@ -132,7 +132,7 @@
       $scope.regions = {};
 
       // data store for types field
-      $scope.types = ['any',
+      $scope.types = [
         'dataset',
         'basicgeodata',
         'basicgeodata-federal',
