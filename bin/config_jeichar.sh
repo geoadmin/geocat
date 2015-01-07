@@ -1,5 +1,4 @@
-DB=geocat2_trunk
-SQL_DIR=/usr/local/share/postgis/
+SQL_DIR=/usr/share/postgresql/9.3/contrib/postgis-2.1/
 POSTGIS_INSTALL="POSTGIS 2 create"
 LOGFILE="file://$WEB_DIR/dev-config/log4j-jeichar.cfg"
 

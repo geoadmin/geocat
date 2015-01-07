@@ -1,5 +1,16 @@
 #!/bin/sh
+QUICK="no"
+while [ "$#" -gt 0 ]; do
 
+	if [ "$1" = "-q" ]; then
+		QUICK="yes"
+	else 
+		PARAMS="$PARAMS $1"
+	fi
+
+	shift
+
+done
 
 # resolve links - so that script can be called from any dir
 PRG="$0"
@@ -26,15 +37,20 @@ else
   JREBEL_OPTS="-noverify -javaagent:$JREBEL_HOME/jrebel.jar"
 fi
 
-export MAVEN_OPTS="$JREBEL_OPTS $DEBUG $OVERRIDES $MEMORY -Dgeonetwork.dir=$DATA_DIR $LOGGING -Dfile.encoding=UTF8 "
+export MAVEN_OPTS="$OVERRIDES $MEMORY -Dfile.encoding=UTF8 "
 
 cd $PRGDIR/..
 
-mvn install -P-all $@
-if [ ! $? -eq 0 ]; then
-    echo "[FAILURE] [deploy] Failed to build geonetwork correctly"
-    exit -1
+if [ "$QUICK" = "no" ]; then
+    echo "Compiling geonetwork"
+	mvn install -P-all -DskipTests $PARAMS
+	if [ ! $? -eq 0 ]; then
+		echo "[FAILURE] [deploy] Failed to build geonetwork correctly"
+		exit -1
+	fi
 fi
 
+export MAVEN_OPTS="$JREBEL_OPTS $DEBUG $OVERRIDES $MEMORY -Dgeonetwork.dir=$DATA_DIR $LOGGING -Dfile.encoding=UTF8 "
 cd $WEB_DIR
-mvn jetty:run -Penv-dev $@
+echo "Running geonetwork webserver"
+mvn jetty:run -o -Penv-dev $PARAMS

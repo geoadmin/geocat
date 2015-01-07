@@ -16,7 +16,8 @@ done
 # Get standard environment variables
 PRGDIR=`pwd`/`dirname "$PRG"`
 
-. $PRGDIR/config.sh
+. $PRGDIR/update_datadir.sh
+
 dropdb $DB
 
 case $POSTGIS_INSTALL in
@@ -37,11 +38,3 @@ case $POSTGIS_INSTALL in
     ;;
 esac
 
-rm -rf $DATA_DIR
-mkdir $DATA_DIR/config/schema_plugins
-mkdir $DATA_DIR/data
-
-cp -R $WEB_DIR/src/main/webapp/WEB-INF/data/config/codelist $DATA_DIR/config/
-cp -R $WEB_DIR/src/main/webapp/WEB-INF/data/data/formatter $DATA_DIR/data/
-
-find schemas -name plugin -type d -exec echo cp -r {} $DATA_DIR/config/schema_plugins/ \;
