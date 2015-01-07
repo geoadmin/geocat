@@ -20,7 +20,9 @@ PRGDIR=`pwd`/`dirname "$PRG"`
 
 . $PRGDIR/config.sh
 
-rm -rf $DATA_DIR
+rm -rf $DATA_DIR/config
+rm -rf $DATA_DIR/data/formatter
+
 mkdir -p $DATA_DIR/config/schema_plugins
 mkdir -p $DATA_DIR/data
 

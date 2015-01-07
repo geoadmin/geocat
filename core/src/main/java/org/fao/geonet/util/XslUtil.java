@@ -1,8 +1,11 @@
 package org.fao.geonet.util;
-
+import com.google.common.collect.Multimap;
+import com.vividsolutions.jts.geom.Polygon;
 import jeeves.component.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import net.sf.saxon.Configuration;
+import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.UnfailingIterator;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -10,9 +13,11 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.Translator;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.w3c.dom.Node;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -20,24 +25,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import jeeves.component.ProfileManager;
-
-import com.google.common.collect.Multimap;
-import com.vividsolutions.jts.geom.Polygon;
-import jeeves.component.ProfileManager;
-import net.sf.saxon.Configuration;
-import net.sf.saxon.om.NodeInfo;
-import net.sf.saxon.om.UnfailingIterator;
-
 import javax.annotation.Nonnull;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.w3c.dom.Node;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
@@ -89,7 +77,7 @@ public final class XslUtil
 
     /**
      * Return a service handler config parameter
-     * @see org.fao.geonet.constants.Geonet.Config.
+     * @see org.fao.geonet.constants.Geonet.Config
      * @param key
      * @return
      */
@@ -113,6 +101,30 @@ public final class XslUtil
         return "";
     }
 
+    /**
+     * Get a setting value
+     * @param key
+     * @return
+     */
+    public static String getSettingValue(String key) {
+        if (key == null) {
+            return "";
+        }
+
+        final ServiceContext serviceContext = ServiceContext.get();
+        if (serviceContext != null) {
+            SettingManager settingsMan = serviceContext.getBean(SettingManager.class);
+            if (settingsMan != null) {
+                String value = settingsMan.getValue(key);
+                if (value != null) {
+                    return value;
+                } else {
+                    return "";
+                }
+            }
+        }
+        return "";
+    }
     /** 
 	 * Check if bean is defined in the context
 	 * 

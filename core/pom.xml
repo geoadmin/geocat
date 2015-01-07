@@ -464,7 +464,6 @@
             <artifactId>jsoup</artifactId>
             <version>0.2.2</version>
         </dependency>
-
     </dependencies>
 
     <build>

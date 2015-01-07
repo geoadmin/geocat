@@ -16,6 +16,7 @@ done
 # Get standard environment variables
 PRGDIR=`pwd`/`dirname "$PRG"`
 
+rm -rf $DATA_DIR
 . $PRGDIR/update_datadir.sh
 
 dropdb $DB

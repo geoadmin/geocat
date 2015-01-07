@@ -44,7 +44,8 @@
        'gn_import_controller',
        'gn_editorboard_controller', 'gn_share',
        'gn_directory_controller', 'gn_utility_directive',
-       'gn_scroll_spy', 'gn_thesaurus', 'ui.bootstrap.datetimepicker']);
+       'gn_scroll_spy', 'gn_thesaurus', 'ui.bootstrap.datetimepicker',
+       'ngRoute']);
 
   var tplFolder = '../../catalog/templates/editor/';
 
@@ -66,6 +67,9 @@
             templateUrl: tplFolder + 'new-metadata.html',
             controller: 'GnNewMetadataController'}).
           when('/create/from/:id/in/:group', {
+            templateUrl: tplFolder + 'editor.html',
+            controller: 'GnNewMetadataController'}).
+          when('/create/from/:id/in/:group/tab/:tab', {
             templateUrl: tplFolder + 'editor.html',
             controller: 'GnNewMetadataController'}).
           when('/create/from/:id/in/:group/template/:template', {
@@ -148,6 +152,7 @@
           // Check requested metadata exists
           gnSearchManagerService.gnSearch({
             _id: $routeParams.id,
+            _content_type: 'json',
             _isTemplate: 'y or n or s',
             fast: 'index'
           }).then(function(data) {
