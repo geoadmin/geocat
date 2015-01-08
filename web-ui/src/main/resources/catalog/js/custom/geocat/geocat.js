@@ -209,7 +209,8 @@
               for (var i = 0; i < a.length; i++) {
                 res.push({
                   id: a[i]['@id'],
-                  name: a[i].name
+                  name: (a[i].label && a[i].label[$scope.lang]) ?
+                      a[i].label[$scope.lang] : a[i].name
                 });
               }
             };
