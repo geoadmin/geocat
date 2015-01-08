@@ -771,8 +771,7 @@ public class DataManager {
                 for (MetadataValidation vi : validationInfo) {
                     String type = vi.getId().getValidationType();
                     MetadataValidationStatus status = vi.getStatus();
-                    if (/* GEOCAT */ !type.equals(Geocat.INSPIRE_SCHEMATRON_ID) && /* END GEOCAT */
-                                     status == MetadataValidationStatus.INVALID) {
+                    if (status == MetadataValidationStatus.INVALID) {
                         isValid = "0";
                     }
                     moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID + "_" + type, status.getCode(), true, true));
@@ -2761,6 +2760,18 @@ public class DataManager {
      * @return
      */
     public Optional<OperationAllowed> getOperationAllowedToAdd(final ServiceContext context, final int mdId, final int grpId, final int opId) {
+        // GEOCAT
+        if (ReservedGroup.isReserved(grpId) &&
+            (ReservedGroup.lookup(grpId) == ReservedGroup.all || ReservedGroup.lookup(grpId) == ReservedGroup.guest)) {
+            MetadataValidationRepository metadataValidationRepository = _applicationContext.getBean(MetadataValidationRepository.class);
+            List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(mdId);
+            for (MetadataValidation metadataValidation : validationInfo) {
+                if (!metadataValidation.isValid() && metadataValidation.isRequired()) {
+                    return Optional.absent();
+                }
+            }
+        }
+        // END GEOCAT
         OperationAllowedRepository opAllowedRepo = _applicationContext.getBean(OperationAllowedRepository.class);
         UserGroupRepository userGroupRepo = _applicationContext.getBean(UserGroupRepository.class);
         final OperationAllowed operationAllowed = opAllowedRepo
