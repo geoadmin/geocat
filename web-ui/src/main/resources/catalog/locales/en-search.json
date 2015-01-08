@@ -99,10 +99,13 @@
   "addToMap": "Map",
   "addAllLayersToMap": "Map all layers",
   "downloadsAndResources": "Downloads and resources",
-  "sourceCatalog": "Source catalog",
+  "sourceCatalog": "Provided by",
   "tempExtent": "Temporal extent",
+  "more": "more",
+  "less": "less",
   "contact": "Contact",
   "overview": "Overview",
+  "chooseAView": "Display mode",
   "metadataContact": "Contact for the metadata",
   "extent": "Resource extent",
   "aboutThisResource": "About this resource",
@@ -120,5 +123,12 @@
   "sourceDataset": "Source dataset",
   "metadataInXML": "Download metadata",
   "language": "Language",
-  "metadataLanguage": "Metadata language"
+  "metadataLanguage": "Metadata language",
+  "sendMail" : "Send Email",
+  "newOwner": "New Owner",
+  "updateCategories" :"Update categories",
+  "updatePrivileges" :"Update privileges",
+  "exportSummary" :"Export summary",
+  "mdNew" : "New metadata",
+  "mdImport" : "Import metadata"
 }

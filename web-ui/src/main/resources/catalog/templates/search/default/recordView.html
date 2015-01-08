@@ -6,14 +6,41 @@
     <i class="fa fa-search"></i>
     <span data-translate="">backToSearch</span>
   </button>
+  
+  <button class="btn btn-link"
+          data-ng-class="currentRecordIndex === 0 ? 'disabled' : ''"
+          data-ng-show="records"
+          data-ng-click="previousRecord()">
+    <i class="fa fa-angle-left"></i>
+    <span data-translate="">previous</span>
+  </button>
 
-  <ul>
-    <li><a href="" data-ng-click="format()">default</a></li>
-    <li data-ng-repeat="f in formatter.list">
-      <a href="" data-ng-click="format(f)">{{f.label}}</a>
-    </li>
-  </ul>
+  <button class="btn btn-link"
+          data-ng-class="currentRecordIndex === 'TODO' ? 'disabled' : ''"
+          data-ng-show="records"
+          data-ng-click="nextRecord()">
+    <span data-translate="">next</span>
+    <i class="fa fa-angle-right"></i>
+  </button>
 
+  <div class="btn-group pull-right">
+    <button type="button" class="btn btn-link dropdown-toggle"
+            data-toggle="dropdown"
+            aria-expanded="false">
+      <i class="fa fa-eye"></i>&nbsp;
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li class="dropdown-header" data-translate="">chooseAView</li>
+      <li data-ng-class="currentFormatter === undefined ? 'disabled' : ''">
+        <a href="" data-ng-click="format()">default</a>
+      </li>
+      <li data-ng-repeat="f in formatter.list"
+          data-ng-class="f === currentFormatter ? 'disabled' : ''">
+        <a href="" data-ng-click="format(f)">{{f.label}}</a>
+      </li>
+    </ul>
+  </div>
 
 
   <div data-ng-show="usingFormatter"
@@ -116,7 +143,9 @@
       <div>
         <i class="fa fa-calendar"></i>
         <span data-translate="">updatedOn</span>
-        {{currentRecord['geonet:info'].changeDate}}</div>
+        <span data-gn-humanize-time="{{currentRecord['geonet:info'].changeDate}}"
+              data-from-now=""></span>
+      </div>
 
 
 
@@ -211,7 +240,7 @@
         </tr>
         <tr data-ng-if="currentRecord.publicationDate">
           <th data-translate="">publicationDate</th>
-          <td>{{currentRecord.publicationDate}}</td>
+          <td data-gn-humanize-time="">{{currentRecord.publicationDate}}</td>
         </tr>
         <tr data-ng-if="currentRecord.tempExtentBegin">
           <th data-translate="">tempExtent</th>
