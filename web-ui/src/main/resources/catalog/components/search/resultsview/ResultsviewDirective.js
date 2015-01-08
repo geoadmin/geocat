@@ -260,8 +260,11 @@
         scope.dismiss = function() {
           element.remove();
         };
-      }
 
+        scope.$on('closeMdView', function() {
+          scope.dismiss();
+        });
+      }
     };
   }]
   );
