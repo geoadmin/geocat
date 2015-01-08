@@ -15,15 +15,31 @@
    */
 
   .directive('gnTypeahead', [function() {
-    return {
-      restrict: 'A',
-      scope: {
-        options: '=gnTypeahead',
-        gnValues: '='
-      },
-      link: function(scope, element, attrs) {
-        var config = scope.options.config || {};
-        var doLink = function(data, remote) {
+
+        /**
+         * If data are prefetched, get the label from the value
+         * Uses for model -> ui
+         * @param {array} a
+         * @param {string} v
+         * @returns
+         */
+        var findLabel = function(a, v) {
+          for(var i=0;i< a.length;i++) {
+            if(a[i].id == v) {
+              return a[i].name;
+            }
+          };
+        };
+
+        return {
+          restrict: 'A',
+          scope: {
+            options: '=gnTypeahead',
+            gnValues: '='
+          },
+          link: function(scope, element, attrs) {
+            var config = scope.options.config || {};
+            var doLink = function(data, remote) {
 
               var bloodhoundConf = {
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
@@ -147,7 +163,7 @@
             for (i = 0; i < added.length; i++) {
               $(element).tagsinput('add', {
                 id: added[i],
-                name: added[i]
+                name: findLabel(data, added[i])
               });
             }
           }, true);
