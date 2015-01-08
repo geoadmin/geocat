@@ -96,7 +96,8 @@
           sortBy: sortBy,
           fast: 'index',
           from: 1,
-          to: to
+          to: to,
+          _content_type: 'json'
         });
       };
 
