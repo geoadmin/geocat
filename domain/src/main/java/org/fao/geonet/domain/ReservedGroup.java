@@ -52,4 +52,13 @@ public enum ReservedGroup {
         }
         return false;
     }
+
+    public static ReservedGroup lookup(int grpId) {
+        for (ReservedGroup reservedGroup : values()) {
+            if (reservedGroup.getId() == grpId) {
+                return reservedGroup;
+            }
+        }
+        return null;
+    }
 }

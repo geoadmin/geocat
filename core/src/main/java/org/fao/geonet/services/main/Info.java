@@ -401,11 +401,17 @@ public class Info implements Service {
 		String siteId   = sm.getSiteId();
         String siteName = sm.getSiteName();
 
+        Set<String> sourceIds = new HashSet<>();
 		for (Source o : sourceList) {
-            element.addContent(buildRecord(o.getUuid(), o.getName(), null, null));
+            if (!sourceIds.contains(o.getUuid())) {
+                element.addContent(buildRecord(o.getUuid(), o.getName(), null, null));
+                sourceIds.add(o.getUuid());
+            }
 		}
 
-        element.addContent(buildRecord(siteId, siteName, null, null));
+        if (!sourceIds.contains(siteId)) {
+            element.addContent(buildRecord(siteId, siteName, null, null));
+        }
 
 		return element;
 	}
