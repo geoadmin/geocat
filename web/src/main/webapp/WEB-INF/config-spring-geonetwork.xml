@@ -89,6 +89,12 @@
         <value>../../static/gn_admin.js</value>
         <value>../../static/gn_login.css</value>
         <value>../../static/gn_login.js</value>
+        <!-- GEOCAT -->
+        <value>../../static/gn_search_geocat.css</value>
+        <value>../../static/gn_search_geocat.js</value>
+        <value>../../static/geocat_shared_objects_app.css</value>
+        <value>../../static/geocat_shared_objects_app.js</value>
+        <!-- END GEOCAT -->
         <value>md.format.xml?xsl=full_view&amp;id={{mdId}}</value>
         <value>md.format.xml?xsl=xml_view&amp;id={{mdId}}</value>
     </util:list>
