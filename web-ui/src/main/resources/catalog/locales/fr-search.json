@@ -80,6 +80,7 @@
   "all": "Tous",
   "allInPage": "Toute la page",
   "none": "Aucun",
+  "selected": "séléctionné(s)",
   "listOfCategories": "Catégories",
   "formats": "Formats",
   "download": "Télécharger",
@@ -130,5 +131,4 @@
   "hotkeySelectAll": "Sélectionner toutes les fiches",
   "hotkeySelectAllInPage": "Sélectionner toutes les fiches de la page",
   "hotkeyUnSelectAll": "Sélectionner aucune fiche"
-
 }
