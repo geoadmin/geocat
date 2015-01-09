@@ -220,11 +220,14 @@ public class AccessManager {
         if (usrSess.isAuthenticated()) {
             Specification<UserGroup> spec =
                     UserGroupSpecs.hasUserId(usrSess.getUserIdAsInt());
-            spec = Specifications
-                    .where(UserGroupSpecs.hasProfile(Profile.Reviewer))
-                    .and(spec);
 
-            hs.addAll(_userGroupRepository.findGroupIds(spec));
+            final List<UserGroup> userGroups = _userGroupRepository.findAll(spec);
+
+            for (UserGroup userGroup : userGroups) {
+                if (userGroup.getProfile() == Profile.Reviewer) {
+                    hs.add(userGroup.getGroup().getId());
+                }
+            }
         }
         return hs;
     }
