@@ -24,6 +24,7 @@
          * @return {string|undefined}
          */
         var findLabel = function(a, v) {
+          if(!angular.isArray(a)) return v;
           for (var i = 0; i < a.length; i++) {
             if (a[i].id == v) {
               return a[i].name;
