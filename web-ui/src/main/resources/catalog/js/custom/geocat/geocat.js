@@ -228,6 +228,18 @@
         })()
       };
 
+      // config for format suggestion multiselect
+      $scope.formatsOptions = {
+        mode: 'remote',
+        remote: {
+          url: suggestService.getUrl('QUERY', 'formatWithVersion',
+              'STARTSWITHFIRST'),
+          filter: suggestService.bhFilter,
+          wildcard: 'QUERY'
+        }
+      };
+
+
       $scope.gnMap = gnMap;
       var map = $scope.searchObj.searchMap;
 
