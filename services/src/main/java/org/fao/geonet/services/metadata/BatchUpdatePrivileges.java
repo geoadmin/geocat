@@ -29,6 +29,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.geocat.PublishRecord;
@@ -124,7 +125,8 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
                     for (Element el : list) {
                         String name  = el.getName();
 
-                        if (name.startsWith("_")) {
+                        if (name.startsWith("_") &&
+                                !Params.CONTENT_TYPE.equals(name)) {
                             StringTokenizer st = new StringTokenizer(name, "_");
 
                             String groupId = st.nextToken();
