@@ -65,11 +65,15 @@ class SummaryFactory {
 
     def configureKeywords(metadata, summary) {
         def keywords = metadata."**".findAll{it.name() == 'gmd:descriptiveKeywords'}
-        summary.keywords = this.isoHandlers.keywordsEl(keywords).toString()
+        if (!keywords.isEmpty()) {
+            summary.keywords = this.isoHandlers.keywordsEl(keywords).toString()
+        }
     }
     def configureFormats(metadata, summary) {
         def formats = metadata."**".findAll this.isoHandlers.matchers.isFormatEl
-        summary.formats = this.isoHandlers.formatEls(formats).toString()
+        if (!formats.isEmpty()) {
+            summary.formats = this.isoHandlers.formatEls(formats).toString()
+        }
     }
     def configureExtent(metadata, summary) {
         def extents = metadata."**".findAll { this.isoHandlers.matchers.isPolygon(it) || this.isoHandlers.matchers.isBBox(it) }
@@ -90,7 +94,7 @@ class SummaryFactory {
     def configureLinks(Summary summary) {
         Collection<String> links = this.env.indexInfo['link'];
         if (links != null && !links.isEmpty()) {
-            LinkBlock linkBlock = new LinkBlock("links");
+            LinkBlock linkBlock = new LinkBlock("links", "fa fa-link");
             summary.links.add(linkBlock)
             links.each { link ->
                 def linkParts = link.split("\\|")
@@ -101,22 +105,30 @@ class SummaryFactory {
                     title = href;
                 }
 
+                def imagesDir = "../../images/formatter/"
                 def type = "link";
+                def icon = "";
+                def iconClasses = "";
                 if (mimetype.contains("kml")) {
                     type = "kml";
+                    icon = imagesDir + "kml.png";
                 } else if (mimetype.contains("OGC:")) {
                     type = "ogc";
                 } else if (mimetype.contains("wms")) {
                     type = "wms";
+                    icon = imagesDir + "wms.png";
                 } else if (mimetype.contains("download")) {
                     type = "download";
+                    iconClasses = "fa fa-download"
                 } else if (mimetype.contains("link")) {
                     type = "link";
+                    iconClasses = "fa fa-link"
                 } else if (mimetype.contains("wfs")) {
                     type = "wfs";
+                    icon = imagesDir + "wfs.png";
                 }
 
-                def linkType = new LinkType(type, null)
+                def linkType = new LinkType(type, icon, iconClasses)
                 linkBlock.put(linkType, new Link(href, title))
             }
         }
@@ -139,7 +151,7 @@ $js
 <div><i class="fa fa-circle-o-notch fa-spin"></i>&nbsp;Loading...</div>
 """
 
-        LinkBlock linkBlock = new LinkBlock(hierarchy)
+        LinkBlock linkBlock = new LinkBlock(hierarchy, "fa fa-code-fork")
         linkBlock.html = html
         summary.links.add(linkBlock)
     }
