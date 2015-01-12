@@ -204,7 +204,7 @@ public class AccessManager {
 			else {
                 Specification<UserGroup> spec = UserGroupSpecs.hasUserId(usrSess.getUserIdAsInt());
 				if (editingGroupsOnly) {
-                    spec = Specifications.where(UserGroupSpecs.hasProfile(Profile.Editor)).and(spec);
+                    spec = Specifications.where(spec).and(UserGroupSpecs.hasProfile(Profile.Editor));
                 }
 
                 hs.addAll(_userGroupRepository.findGroupIds(spec));
@@ -226,7 +226,7 @@ public class AccessManager {
             for (UserGroup userGroup : userGroups) {
                 if (userGroup.getProfile() == Profile.Reviewer) {
                     hs.add(userGroup.getGroup().getId());
-                }
+        }
             }
         }
         return hs;
