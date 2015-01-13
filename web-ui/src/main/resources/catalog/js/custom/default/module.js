@@ -38,43 +38,6 @@
       };
     }]);
 
-  module.controller('GnMdViewController', [
-    '$scope', '$http', '$compile', 'gnSearchSettings',
-    function($scope, $http, $compile, gnSearchSettings) {
-      $scope.formatter = gnSearchSettings.formatter;
-      $scope.usingFormatter = false;
-      $scope.compileScope = $scope.$new();
-
-      $scope.format = function(f) {
-        $scope.usingFormatter = f !== undefined;
-        $scope.currentFormatter = f;
-        if (f) {
-          $http.get(f.url + $scope.currentRecord.getUuid()).then(
-              function(response) {
-                var snippet = response.data.replace(
-                    '<?xml version="1.0" encoding="UTF-8"?>', '');
-
-                $('#gn-metadata-display').find('*').remove();
-
-                $scope.compileScope.$destroy();
-
-                // Compile against a new scope
-                $scope.compileScope = $scope.$new();
-                var content = $compile(snippet)($scope.compileScope);
-
-                $('#gn-metadata-display').append(content);
-              });
-        }
-      };
-
-      // Reset current formatter to open the next record
-      // in default mode.
-      $scope.$watch('currentRecord', function() {
-        $scope.usingFormatter = false;
-        $scope.currentFormatter = null;
-      });
-    }]);
-
   module.controller('gnsDefault', [
     '$scope',
     '$location',
@@ -85,10 +48,11 @@
     'gnSearchSettings',
     'gnViewerSettings',
     'gnMap',
+    'gnMdView',
     'hotkeys',
     function($scope, $location, suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
-             gnMap, hotkeys) {
+             gnMap, gnMdView, hotkeys) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -159,53 +123,32 @@
 
 
       // TODO: Previous record should be stored on the client side
-      var searchUrl = '';
-      $scope.previousRecords = [];
-      $scope.currentRecord = null;
-      $scope.currentRecordIndex = null;
-      $scope.openRecord = function(mdOrIndex, records) {
-        $scope.records = records;
-        var md = mdOrIndex;
-        if (typeof mdOrIndex === 'number') {
-          md = records[mdOrIndex];
-          $scope.currentRecordIndex = mdOrIndex;
-        } else {
-          $scope.currentRecordIndex = this.$index;
+      var mdView = {
+        previousRecords: [],
+        current: {
+          record: null,
+          index: null
         }
-        $scope.currentRecord = md;
+      };
+      $scope.mdView = mdView;
 
-        //searchUrl = $location.search();
-        //$location.search({uuid: md['geonet:info'].uuid});
-        $scope.currentRecord.links = md.getLinksByType('LINK');
-        $scope.currentRecord.downloads = md.getLinksByType('DOWNLOAD');
-        $scope.currentRecord.layers = md.getLinksByType('OGC', 'kml');
-        var thumbnails = md.getThumbnails();
-        if (thumbnails) {
-          $scope.currentRecord.overviews = thumbnails.list;
-        }
-        $scope.currentRecord.contacts = md.getContacts();
-        $scope.currentRecord.encodedUrl =
-            encodeURIComponent($location.absUrl());
-
+      $scope.openRecord = function(index, md, records) {
+        gnMdView.feedMd(index, md, records, mdView);
         gnUtilityService.scrollTo();
-
-        // TODO: do not add duplicates
-        $scope.previousRecords.push($scope.currentRecord);
       };
 
-      $scope.closeRecord = function(md) {
-        $scope.currentRecord = null;
+      $scope.closeRecord = function() {
+        mdView.current.record = null;
         //$location.search(searchUrl);
         $scope.mainTabs.search.active = true;
       };
       $scope.nextRecord = function() {
-        $scope.openRecord($scope.currentRecordIndex + 1, $scope.records);
+        // TODO: When last record of page reached, go to next page...
+        $scope.openRecord(mdView.current.index + 1);
       };
       $scope.previousRecord = function() {
-        $scope.openRecord($scope.currentRecordIndex - 1, $scope.records);
+        $scope.openRecord(mdView.current.index - 1);
       };
-
-
 
       $scope.infoTabs = {
         lastRecords: {

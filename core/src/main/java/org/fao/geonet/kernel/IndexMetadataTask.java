@@ -3,9 +3,16 @@ package org.fao.geonet.kernel;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.utils.Log;
+import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.TransactionStatus;
 
 import java.io.IOException;
@@ -74,6 +81,8 @@ final class IndexMetadataTask implements Runnable {
                 }
             }
 
+            final MetadataValidationRepository mvRepo = _context.getBean(MetadataValidationRepository.class);
+            final MetadataRepository metadataRepository= _context.getBean(MetadataRepository.class);
             DataManager dataManager = _context.getBean(DataManager.class);
             // servlet up so safe to index all metadata that needs indexing
             for (String metadataId : _metadataIds) {
@@ -87,6 +96,22 @@ final class IndexMetadataTask implements Runnable {
                 }
 
                 try {
+                    // GEOCAT
+                    final Metadata metadata = metadataRepository.findOne(metadataId);
+                    if (metadata == null) {
+                        continue;
+                    }
+                    final Specification<MetadataValidation> mvSpec = MetadataValidationSpecs.hasMetadataId(Integer.valueOf(metadataId));
+                    final String schema = metadata.getDataInfo().getSchemaId();
+
+                    if (schema.equalsIgnoreCase("iso19139.che") &&
+                        !metadata.getHarvestInfo().isHarvested() &&
+                        mvRepo.count(mvSpec) == 0) {
+
+                        final Element mdEl = dataManager.getGeocatMetadata(_context, metadataId, false, false);
+                        dataManager.doValidate(_context, schema, metadataId, mdEl, "eng", false);
+                    }
+                    // END GEOCAT
                     dataManager.indexMetadata(metadataId, false);
                 } catch (Exception e) {
                     Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '" + metadataId + "': " + e.getMessage()

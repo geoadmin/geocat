@@ -737,7 +737,7 @@ public class DataManager {
                     // GEOCAT
                     if (ReservedGroup.all.getId() == groupId) {
                         isPublished = true;
-                }
+                    }
                     // END GEOCAT
             }
             }
@@ -780,10 +780,10 @@ public class DataManager {
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, isValid, true, true));
                 // GEOCAT
                 // toPublish index field: metadata is valid, schema=iso19139.che, not a template and not harvested
-                if (isValid.equals("1") && schema.trim().equals("iso19139.che")
-                    && metadataType == MetadataType.METADATA && fullMd.getHarvestInfo().isHarvested() && !isPublished) {
+                if (isValid.equals("1") && schema.equals("iso19139.che")
+                    && metadataType == MetadataType.METADATA && !fullMd.getHarvestInfo().isHarvested() && !isPublished) {
                     moreFields.add(SearchManager.makeField("toPublish", "y", true, true));
-            }
+                }
                 // END GEOCAT
             }
 

@@ -1,7 +1,5 @@
 package iso19139
-import jeeves.server.context.ServiceContext
-import org.fao.geonet.constants.Geonet
-import org.fao.geonet.guiservices.metadata.GetRelated
+
 import org.fao.geonet.services.metadata.format.FormatType
 import org.fao.geonet.services.metadata.format.groovy.Environment
 import org.fao.geonet.services.metadata.format.groovy.util.*
@@ -43,7 +41,12 @@ class SummaryFactory {
         configureExtent(metadata, summary)
         configureThumbnails(metadata, summary)
         configureLinks(summary)
-        configureHierarchy(summary)
+
+        if (env.formatType == FormatType.pdf || env.formatType == FormatType.testpdf) {
+            summary.links.add(isoHandlers.commonHandlers.loadHierarchyLinkBlocks())
+        } else {
+            createDynamicHierarchyHtml(summary)
+        }
 
         isoHandlers.commonHandlers.configureSummaryActionMenu(summary)
 
@@ -62,11 +65,15 @@ class SummaryFactory {
 
     def configureKeywords(metadata, summary) {
         def keywords = metadata."**".findAll{it.name() == 'gmd:descriptiveKeywords'}
-        summary.keywords = this.isoHandlers.keywordsEl(keywords).toString()
+        if (!keywords.isEmpty()) {
+            summary.keywords = this.isoHandlers.keywordsEl(keywords).toString()
+        }
     }
     def configureFormats(metadata, summary) {
         def formats = metadata."**".findAll this.isoHandlers.matchers.isFormatEl
-        summary.formats = this.isoHandlers.formatEls(formats).toString()
+        if (!formats.isEmpty()) {
+            summary.formats = this.isoHandlers.formatEls(formats).toString()
+        }
     }
     def configureExtent(metadata, summary) {
         def extents = metadata."**".findAll { this.isoHandlers.matchers.isPolygon(it) || this.isoHandlers.matchers.isBBox(it) }
@@ -87,7 +94,7 @@ class SummaryFactory {
     def configureLinks(Summary summary) {
         Collection<String> links = this.env.indexInfo['link'];
         if (links != null && !links.isEmpty()) {
-            LinkBlock linkBlock = new LinkBlock("links");
+            LinkBlock linkBlock = new LinkBlock("links", "fa fa-link");
             summary.links.add(linkBlock)
             links.each { link ->
                 def linkParts = link.split("\\|")
@@ -98,63 +105,46 @@ class SummaryFactory {
                     title = href;
                 }
 
+                if (title != null && title.length() > 60) {
+                    title = title.substring(0, 57) + "...";
+                }
+
+                def imagesDir = "../../images/formatter/"
                 def type = "link";
+                def icon = "";
+                def iconClasses = "";
                 if (mimetype.contains("kml")) {
                     type = "kml";
+                    icon = imagesDir + "kml.png";
                 } else if (mimetype.contains("OGC:")) {
                     type = "ogc";
                 } else if (mimetype.contains("wms")) {
                     type = "wms";
+                    icon = imagesDir + "wms.png";
                 } else if (mimetype.contains("download")) {
                     type = "download";
+                    iconClasses = "fa fa-download"
                 } else if (mimetype.contains("link")) {
                     type = "link";
+                    iconClasses = "fa fa-link"
                 } else if (mimetype.contains("wfs")) {
                     type = "wfs";
+                    icon = imagesDir + "wfs.png";
                 }
-                if (!(env.formatType == FormatType.pdf || env.formatType == FormatType.testpdf)) {
-                    href = "javascript:window.open('${href.replace("'", "\\'")}', '${env.metadataUUID.replace('\'', '_')}_link')"
-                }
-                def linkType = new LinkType(type, null)
+
+                def linkType = new LinkType(type, icon, iconClasses)
                 linkBlock.put(linkType, new Link(href, title))
             }
         }
 
     }
 
-    private void configureHierarchy(Summary summary) {
+    void createDynamicHierarchyHtml(Summary summary) {
+        def hierarchy = "hierarchy"
 
-        def relatedTypes = ["service","children","related","parent","dataset","fcat","siblings","associated","source","hassource"]
-        def uuid = this.env.metadataUUID
-        def id = this.env.metadataId
-
-        def linkBlockName = "hierarchy"
-        if (this.env.formatType == FormatType.pdf || this.env.formatType == FormatType.testpdf) {
-            createStaticHierarchyHtml(relatedTypes, uuid, id, linkBlockName, summary)
-        } else {
-            createDynamicHierarchyHtml(relatedTypes, uuid, id, linkBlockName, summary)
-        }
-
-
-    }
-
-    void createDynamicHierarchyHtml(List<String> relatedTypes, String uuid, int id, String linkBlockName, Summary summary) {
-        def placeholderId = "link-placeholder-" + linkBlockName
-        def typeTranslations = new StringBuilder()
-        relatedTypes.eachWithIndex {type, i ->
-            typeTranslations.append("\t'").append(type).append("': '").append(this.isoHandlers.f.translate(type)).append('\'')
-            if (i != relatedTypes.size() - 1) {
-                typeTranslations.append(",\n");
-            }
-        }
         def jsVars = [
-                typeTranslations: typeTranslations,
-                metadataId: this.env.metadataId,
-                relatedTypes: relatedTypes.join("|"),
-                noUuidInLink: this.f.translate("noUuidInLink"),
-                placeholderId: placeholderId,
-                imagesDir: this.env.localizedUrl + "../../images/",
-                linkBlockClass: LinkBlock.CSS_CLASS_PREFIX + linkBlockName
+                linkBlockClass: LinkBlock.CSS_CLASS_PREFIX + hierarchy,
+                metadataId: this.env.metadataId
         ]
         def js = this.handlers.fileResult("js/dynamic-hierarchy.js", jsVars)
         def html = """
@@ -162,41 +152,12 @@ class SummaryFactory {
 //<![CDATA[
 $js
 //]]></script>
-<div id="$placeholderId"> </div>
+<div><i class="fa fa-circle-o-notch fa-spin"></i>&nbsp;Loading...</div>
 """
-        LinkBlock linkBlock = new LinkBlock(linkBlockName)
+
+        LinkBlock linkBlock = new LinkBlock(hierarchy, "fa fa-code-fork")
         linkBlock.html = html
         summary.links.add(linkBlock)
-    }
-
-    void createStaticHierarchyHtml(relatedTypes, uuid, id, linkBlockName, summary) {
-        LinkBlock hierarchy = new LinkBlock(linkBlockName)
-        summary.links.add(hierarchy);
-        def bean = this.isoHandlers.env.getBean(GetRelated.class)
-        def related = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes.join("|"), 1, 1000, true)
-
-        related.getChildren("relation").each {rel ->
-            def type = rel.getAttributeValue("type")
-            def icon = this.isoHandlers.env.localizedUrl + "../../images/" + type + ".png";
-
-            def linkType = new LinkType(type, icon)
-            rel.getChildren("metadata").each {md ->
-                def href = createShowMetadataHref(md.getChild("info", Geonet.Namespaces.GEONET).getChildText("uuid"))
-                def title = md.getChildText("title")
-                if (title != null) {
-                    title = md.getChildText("defaultTitle")
-                }
-                hierarchy.put(linkType, new Link(href, title))
-            }
-        }
-    }
-
-    private String createShowMetadataHref(String uuid) {
-        if (uuid.trim().isEmpty()) {
-            return "javascript:alert('" + this.f.translate("noUuidInLink") + "');"
-        } else {
-            return this.env.localizedUrl + "md.format.html?xsl=full_view&amp;schema=iso19139&amp;uuid=" + URLEncoder.encode(uuid, "UTF-8")
-        }
     }
 
     private static void configureThumbnails(metadata, header) {
