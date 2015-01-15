@@ -215,7 +215,7 @@
                     res.push({
                       id: a[i]['@id'],
                       name: (a[i].label && a[i].label[$scope.lang]) ?
-                      a[i].label[$scope.lang] : a[i].name
+                        a[i].label[$scope.lang] : a[i].name
                     });
                   }
                 };

@@ -151,7 +151,12 @@ public class Handlers {
             def published = hasIndexValue("_groupPublished", "all")
             def publishAction = new MenuAction(label: "publish", javascript: basicPublicJs(true), iconClasses: "fa fa-unlock", liClasses: "disabled")
             summary.actions << publishAction
-            if (!published && env.indexInfo.get("_valid").contains("1")) {
+
+            def isValid = env.indexInfo.get("_valid")
+            if (isValid == null) {
+                isValid = '-1';
+            }
+            if (!published && isValid.contains("1")) {
                 publishAction.liClasses = ""
             }
             def unpublishAction = new MenuAction(label: "unpublish", javascript: basicPublicJs(false), iconClasses: "fa fa-lock", liClasses: "disabled")
@@ -161,8 +166,9 @@ public class Handlers {
             }
         }
         summary.actions << new MenuAction(label: "export", iconClasses: "fa fa-share-alt", submenu: [
+                new MenuAction(label: "exportRaw", javascript: "window.open('xml.metadata.get?uuid=${this.env.metadataUUID}', '_blank')", iconClasses: "fa fa-file-code-o"),
                 new MenuAction(label: "exportRdf", javascript: "window.location.href = 'rdf.metadata.get?uuid=${this.env.metadataUUID}'", iconClasses: "fa fa-rss"),
-                new MenuAction(label: "exportPdf", javascript: "window.open('md.format.pdf?xsl=full_view&uuid=${this.env.metadataUUID}')", iconClasses: "fa fa-print"),
+                new MenuAction(label: "exportPdf", javascript: "window.open('md.format.pdf?xsl=full_view&uuid=${this.env.metadataUUID}')", iconClasses: "fa fa-file-pdf-o"),
                 new MenuAction(label: "exportZip", javascript: "window.location.href = 'mef.export?version=2&uuid=${this.env.metadataUUID}'", iconClasses: "fa fa-archive")
         ]);
 
@@ -184,7 +190,7 @@ public class Handlers {
         def uuid = this.env.metadataUUID
         def id = this.env.metadataId
 
-        LinkBlock hierarchy = new LinkBlock("hierarchy", "fa fa-code-fork")
+        LinkBlock hierarchy = new LinkBlock("hierarchy", "fa fa-sitemap")
         def bean = this.env.getBean(GetRelated.class)
         def relatedXsl = this.env.getBean(GeonetworkDataDirectory).getWebappDir().resolve("xsl/metadata/relation.xsl");
         def raw = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes.join("|"), 1, 1000, true)
