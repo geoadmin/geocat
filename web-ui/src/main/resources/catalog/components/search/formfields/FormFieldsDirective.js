@@ -117,10 +117,10 @@
             if (stringValues.indexOf(event.item.id) === -1) {
               stringValues.push(event.item.id);
               prev = stringValues.slice();
-              scope.gnValues = stringValues.join(' OR ');
+              scope.gnValues = stringValues.join(' or ');
               scope.$apply();
             }
-                refreshDatum();
+            refreshDatum();
 
           });
           $(element).on('itemRemoved', function(event) {
@@ -128,28 +128,28 @@
             if (idx !== -1) {
               stringValues.splice(idx, 1);
               prev = stringValues.slice();
-              scope.gnValues = stringValues.join(' OR ');
+              scope.gnValues = stringValues.join(' or ');
               scope.$apply();
             }
-                refreshDatum();
+            refreshDatum();
           });
 
           // model -> ui
-              scope.$watch('gnValues', function() {
+          scope.$watch('gnValues', function() {
                 if (angular.isDefined(scope.gnValues) && scope.gnValues != '') {
-              stringValues = scope.gnValues.split(' OR ');
+              stringValues = scope.gnValues.split(' or ');
             }
             else {
               stringValues = [];
             }
 
-                var added = stringValues.filter(function(i) {
-                  return prev.indexOf(i) === -1;
+            var added = stringValues.filter(function(i) {
+              return prev.indexOf(i) === -1;
+            }),
+                removed = prev.filter(function(i) {
+                  return stringValues.indexOf(i) === -1;
                 }),
-                    removed = prev.filter(function(i) {
-                      return stringValues.indexOf(i) === -1;
-                    }),
-                i;
+            i;
             prev = stringValues.slice();
 
             // Remove tags no longer in binded model
