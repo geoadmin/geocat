@@ -4,6 +4,18 @@
 		<codelist name="gmd:CI_DateTypeCode">
 		<entry><code></code><label></label><description></description></entry>
 		</codelist>-->
+    <codelist name="Country">
+        <entry>
+            <code>CH</code>
+            <label>Switzerland</label>
+            <description/>
+        </entry>
+        <entry>
+            <code>LI</code>
+            <label>Liechtenstein</label>
+            <description/>
+        </entry>
+    </codelist>
 	<codelist name="che:CHE_CI_LegislationCode">
 		<entry>
 			<code>cantonalLaw</code>
