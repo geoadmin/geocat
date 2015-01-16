@@ -175,8 +175,8 @@ public class SharedObjects implements DatabaseMigrationTask {
                 Element ciTelephoneEl = new Element("CHE_CI_Telephone", CHE);
                 Element addressEl = new Element("address", GMD);
                 Element cheAddressEl = new Element("CHE_CI_Address", CHE);
-                Element onlineResourceEl = new Element("onlineResource", CHE);
-                Element ciOnlineResourceEl = new Element("CI_OnlineResource", CHE);
+                Element onlineResourceEl = new Element("onlineResource", GMD);
+                Element ciOnlineResourceEl = new Element("CI_OnlineResource", GMD);
 
                 addLocalizedEl(contacts, contactEl, "organisation", "organisationName", GMD);
                 addLocalizedEl(contacts, contactEl, "positionname", "positionName", GMD);
@@ -194,8 +194,8 @@ public class SharedObjects implements DatabaseMigrationTask {
                 addCharacterString(contacts, ciTelephoneEl, "facsimile1", "facsimile", GMD);
                 addCharacterString(contacts, ciTelephoneEl, "facsimile2", "facsimile", GMD);
 
-                addCharacterString(contacts, ciTelephoneEl, "directnumber", "directNumber", GMD);
-                addCharacterString(contacts, ciTelephoneEl, "mobile", "mobile", GMD);
+                addCharacterString(contacts, ciTelephoneEl, "directnumber", "directNumber", CHE);
+                addCharacterString(contacts, ciTelephoneEl, "mobile", "mobile", CHE);
 
                 ciContactEl.addContent(addressEl.addContent(cheAddressEl));
 
@@ -206,10 +206,10 @@ public class SharedObjects implements DatabaseMigrationTask {
                 String email = addCharacterString(contacts, cheAddressEl, "email", "electronicMailAddress", GMD);
                 addCharacterString(contacts, cheAddressEl, "email1", "electronicMailAddress", GMD);
                 addCharacterString(contacts, cheAddressEl, "email2", "electronicMailAddress", GMD);
-                addCharacterString(contacts, cheAddressEl, "streetname", "streetName", GMD);
-                addCharacterString(contacts, cheAddressEl, "streetnumber", "streetNumber", GMD);
-                addCharacterString(contacts, cheAddressEl, "address", "addressLine", GMD);
-                addCharacterString(contacts, cheAddressEl, "postbox", "postBox", GMD);
+                addCharacterString(contacts, cheAddressEl, "streetname", "streetName", CHE);
+                addCharacterString(contacts, cheAddressEl, "streetnumber", "streetNumber", CHE);
+                addCharacterString(contacts, cheAddressEl, "address", "addressLine", CHE);
+                addCharacterString(contacts, cheAddressEl, "postbox", "postBox", CHE);
 
                 ciContactEl.addContent(onlineResourceEl.addContent(ciOnlineResourceEl));
 
@@ -228,10 +228,10 @@ public class SharedObjects implements DatabaseMigrationTask {
                                         setAttribute("codeListValue", "pointOfContact")
                         )
                 );
-                String name = addCharacterString(contacts, contactEl, "name", "individualFirstName", GMD);
-                String surname = addCharacterString(contacts, contactEl, "surname", "individualLastName", GMD);
+                String name = addCharacterString(contacts, contactEl, "name", "individualFirstName", CHE);
+                String surname = addCharacterString(contacts, contactEl, "surname", "individualLastName", CHE);
 
-                addLocalizedEl(contacts, ciContactEl, "orgacronym", "organisationAcronym", GMD);
+                addLocalizedEl(contacts, ciContactEl, "orgacronym", "organisationAcronym", CHE);
 
                 String parentinfo = contacts.getString("parentinfo");
 
