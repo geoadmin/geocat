@@ -821,7 +821,7 @@ INSPIRE – View Service) ;</li>
 (GetCapabilities) du service WFS, ou un lien vers un flux ATOM dans
 le cas d’un service de téléchargement simple avec implémentation
 ATOM (cf. guide technique INSPIRE – Download Service)</li>
-    </ul>
+        </ul>
         <li>Pour les autres services, un lien vers :</li>
         <ul>
           <li>Le document de capacités du service (GetCapabilities) pour les
@@ -2633,7 +2633,7 @@ période de temps couverte par le service.
     <help>Nom du format de transfert de données, par exemple TIFF, ZIP, etc.</help>
     <condition>Obligatoire</condition>
     <!-- commented out as in ch we have this as shared object, so this is confusing for users
-      <helper rel="gmd:version">
+    <helper rel="gmd:version">
       <option value="Texte">Texte</option>
       <option value="ESRI Shapefile" title="1.0">ESRI Shapefile</option>
       <option value="Mapinfo MIF/MID" title="4.5">Mapinfo MIF/MID</option>
@@ -2878,7 +2878,7 @@ période de temps couverte par le service.
     <condition>Condition</condition>
     <!--
       Only relevant for France
-    <helper editorMode="radio_withdesc">
+      <helper editorMode="radio_withdesc">
       <option value="Pas de restriction d’accès public selon INSPIRE" title="Aucun des articles de la loi ne peut être invoqué pour justifier d’une restriction d’accès public.">Pas de restriction d’accès public selon INSPIRE</option>
       <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.a)" 
         title="La confidentialité des travaux des autorités publiques, lorsque cette confidentialité est prévue par la loi.">Confidentialité des travaux des autorités publiques</option>
@@ -3432,7 +3432,7 @@ diffusion restreinte.
     <condition/>
     
   </element>
-  <element name="gmd:spatialResolution" id="38.0">
+   <element name="gmd:spatialResolution" id="38.0">
     <label>Résolution spatiale</label>
     <description>Facteur qui donne une indication générale sur la densité de données spatiales dans le jeu de données</description>
     <help>Facteur donnant une indication générale de la résolution spatiale du jeu de données. Il est indiqué sous forme d'échelle ou d'élément de comparaison au sol. Ces informations sont gérées dans la classe MD_Resolution.
@@ -3580,7 +3580,7 @@ diffusion restreinte.
       <option value="Technical Guidance for the implementation of INSPIRE Download Services – level2 - v3.0">Guide INSPIRE sur les services de téléchargement – classe de conformité 2 (WFS pré-défini)</option>
       <option value="Technical Guidance for the implementation of INSPIRE Download Services – level3 - v3.0">Guide INSPIRE sur les services de téléchargement – classe de conformité 3 (WFS direct)</option>
     </helper>-->
-      
+    
       
     <help for="inspire"><![CDATA[<b>Exigence INSPIRE sur la conformité:</b>
     Les exigences de conformité seront remplies au moyen des éléments 
@@ -4910,5 +4910,35 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <element name="gmx:language">
       <label>Langue des métadonnées</label>
       <description></description>
+    </element>
+    <element name="gmd:MD_CharacterSetCode">
+        <label>Jeu de caractère </label>
+    </element>
+    <element name="gmd:MD_ProgressCode">
+        <label>Progrès</label>
+    </element>
+    <element name="gmd:MD_SpatialRepresentationTypeCode">
+        <label>Type de représentation spatiale</label>
+    </element>
+    <element name="gmd:MD_MaintenanceFrequencyCode">
+        <label>Maintenance Fréquence</label>
+    </element>
+    <element name="gmd:MD_TopologyLevelCode">
+        <label>Topologie de Niveau</label>
+    </element>
+    <element name="gmd:MD_GeometricObjectTypeCode">
+        <label>Type d'objet géométrique</label>
+    </element>
+    <element name="gmd:MD_RestrictionCode" context="gmd:accessConstraints">
+        <label>Restriction d'accès</label>
+    </element>
+    <element name="gmd:MD_RestrictionCode" context="gmd:useConstraints">
+        <label>Restriction d'utilisation</label>
+    </element>
+    <element name="gmd:DS_AssociationTypeCode">
+        <label>Type d'Association</label>
+    </element>
+    <element name="gmd:DS_InitiativeTypeCode">
+        <label>Type d'Initiative</label>
     </element>
 </labels>
