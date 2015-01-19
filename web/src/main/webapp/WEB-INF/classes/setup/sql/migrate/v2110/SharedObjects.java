@@ -169,16 +169,21 @@ public class SharedObjects implements DatabaseMigrationTask {
             while (contacts.next()) {
                 String id = contacts.getString("id");
                 Element contactEl = new Element("CHE_CI_ResponsibleParty", CHE);
+                contactEl.setAttribute("isoType", "gmd:CI_ResponsibleParty", GCO);
+
                 Element contactInfoEl = new Element("contactInfo", GMD);
                 Element ciContactEl = new Element("CI_Contact", GMD);
                 Element phoneEl = new Element("phone", GMD);
                 Element ciTelephoneEl = new Element("CHE_CI_Telephone", CHE);
+                ciTelephoneEl.setAttribute("isoType", "gmd:CI_Telephone", GCO);
+
                 Element addressEl = new Element("address", GMD);
                 Element cheAddressEl = new Element("CHE_CI_Address", CHE);
+                cheAddressEl.setAttribute("isoType", "gmd:CI_Address", GCO);
+
                 Element onlineResourceEl = new Element("onlineResource", GMD);
                 Element ciOnlineResourceEl = new Element("CI_OnlineResource", GMD);
 
-                contactEl.setAttribute("isoType", "gmd:CI_ResponsibleParty", GCO);
 
                 addLocalizedEl(contacts, contactEl, "organisation", "organisationName", GMD);
                 addLocalizedEl(contacts, contactEl, "positionname", "positionName", GMD);
