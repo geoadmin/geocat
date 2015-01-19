@@ -8,7 +8,7 @@
         <help/>
         <condition/>
         <description>Root entity which defines metadata about a resource or resources</description>
-    </element>  
+    </element>
     <element name="che:CHE_MD_DataIdentification" id="36">
         <label>Informazione di base sul set di dati</label>
         <help/>

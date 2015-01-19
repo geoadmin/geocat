@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-    <schematron.title>GeoNetwork Recommendations</schematron.title>
-    <M500>[Language] - la lingua del metadato non è definita e sono dichiarati in altre lingue e la lingua principale per il metadato NON DEVE essere definita nella sezione lingua.</M500>
+	<schematron.title>Empfehlungen GeoNetwork</schematron.title>
+    <M500>[Sprache] - Die Grundsprache des Metadateneintrags ist nicht definiert, gleichzeitig wurden andere Sprachen deklariert. Die Grundsprache des Metadatensatzes DARF jedoch NICHT in anderen Sprachfeldern definiert werden</M500>
     <alert.M500>
-        <div>Verifica se la lingua principale non è impostata quando sono definite più lingue (es. gmd:locale) 
-            (vedi la sezione Vista Avanzata / Metadato). <br/>
-            <span class="validationReportSuggestion">Suggerimento: Definire una lingua principale per il metadato
-		oppure eliminare le altre lingue.</span></div>
+        <div>Definieren Sie eine Grundsprache und überprüfen Sie, dass weitere Sprachen im Bereich Sprachraum definiert sind.(ie.
+            gmd:locale)(s. erweiterte Ansicht / Metadaten). <br/>
+            <span class="validationReportSuggestion">Vorschlag: Definieren Sie eine Grundsprache oder löschen Sie das entsprechende Sprachraum-Feld.</span></div>
     </alert.M500>
-    <report.M500>La lingua principale per il metadato è:</report.M500>
+    <report.M500>Die Grundsprache des Metadatensatzes ist:</report.M500>
     <alert.M501>
-        <div>Dichiarare la lingua principale per il metadato solo una volta (vedi Advanced view / metadata section). <br/>
-            <span class="validationReportSuggestion">Suggerimento: rimuoverlo dalla sezione di lingua.</span></div>
+        <div>Geben Sie die Grundsprache des Metadatensatzes nur einmal an (s. erweiterte Ansicht / Metadaten). <br/>
+            <span class="validationReportSuggestion">Vorschlag: Löschen Sie die Sprache im Sprachraum-Feld.</span></div>
     </alert.M501>
-    <report.M501>Nessuna lingua duplicata trovata</report.M501>
+    <report.M501>Es wurde keine Mehrfachvergabe des Sprachenfeldes im Metadatensatz gefunden.</report.M501>
 </strings>
