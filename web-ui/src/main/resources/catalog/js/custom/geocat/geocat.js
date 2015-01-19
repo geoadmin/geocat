@@ -502,4 +502,16 @@
       };
     }]);
 
+  module.directive('gcClearScroll', [ function() {
+    return {
+      restrict: 'A',
+      scope: false,
+      link: function(scope, element) {
+        element.on('scroll', function() {
+          element.find('input').blur();
+        });
+      }
+    }
+  }]);
+
 })();
