@@ -436,6 +436,7 @@
             scope.$apply(function() {
               scope.date = $(element).find('input')[0].value;
             });
+            $(element).datepicker('hide');
           });
 
           // model -> view
