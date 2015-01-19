@@ -133,9 +133,9 @@ public class Geonetwork implements ApplicationHandler {
      */
     public Object start(Element config, ServiceContext context) throws Exception {
 	    Processor.addUriMapper(new SharedObjectUriMapper());
-	    
 		System.setProperty(GeoTools.FORCE_LONGITUDE_FIRST_AXIS_ORDER, Boolean.toString(true));
-	
+
+        context.setAsThreadLocal();
         logger = context.getLogger();
         this._applicationContext = context.getApplicationContext();
         ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
