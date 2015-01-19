@@ -127,7 +127,7 @@
           <div class="col-sm-8" id="typeAF">
             <select class="form-control" data-ng-model="searchObj.params.type">
               <option value=""><span translate>any</span></option>
-              <option data-ng-repeat="t in types">{{t|translate}}</option>
+              <option data-ng-repeat="t in types" ng-value="t">{{t|translate}}</option>
             </select>
           </div>
         </div>
