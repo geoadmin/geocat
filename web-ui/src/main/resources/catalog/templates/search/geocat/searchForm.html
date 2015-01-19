@@ -264,7 +264,8 @@
           <button class="btn btn-default" data-ng-click="gnMap.zoom(searchObj.searchMap, 1)">
             <i class="fa fa-plus"></i>
           </button>
-          <button class="btn btn-default" data-ng-click="maxExtent()">
+          <button class="btn btn-default"
+            data-ng-click="searchObj.searchMap.getView().fitExtent(searchObj.searchMap.getView().getProjection().getExtent(), searchObj.searchMap.getSize())">
             <i class="fa fa-globe"></i>
           </button>
           <button class="btn btn-default"  data-ng-click="gnMap.zoom(searchObj.searchMap, -1)">
