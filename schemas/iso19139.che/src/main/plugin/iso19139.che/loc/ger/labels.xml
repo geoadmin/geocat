@@ -8,7 +8,7 @@
         <help/>
         <condition/>
         <description>Metadaten über eine Ressource oder Ressourcen</description>
-    </element>  
+    </element>
     <element name="che:CHE_MD_DataIdentification" id="36">
         <label>Basisinformation zum Datenbestand</label>
         <help/>
