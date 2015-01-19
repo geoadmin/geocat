@@ -306,7 +306,7 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Thesaurus...");
 
-        _applicationContext.getBean(ThesaurusManager.class).init(context, thesauriDir);
+        _applicationContext.getBean(ThesaurusManager.class).init(false, context, thesauriDir);
 
 
         //------------------------------------------------------------------------
