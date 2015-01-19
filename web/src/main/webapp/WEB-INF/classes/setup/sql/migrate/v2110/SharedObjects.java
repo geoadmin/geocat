@@ -178,6 +178,8 @@ public class SharedObjects implements DatabaseMigrationTask {
                 Element onlineResourceEl = new Element("onlineResource", GMD);
                 Element ciOnlineResourceEl = new Element("CI_OnlineResource", GMD);
 
+                contactEl.setAttribute("isoType", "gmd:CI_ResponsibleParty", GCO);
+
                 addLocalizedEl(contacts, contactEl, "organisation", "organisationName", GMD);
                 addLocalizedEl(contacts, contactEl, "positionname", "positionName", GMD);
 
