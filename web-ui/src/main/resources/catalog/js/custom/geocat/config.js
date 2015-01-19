@@ -128,7 +128,8 @@
       searchSettings.sortbyValues = [
         {sortBy: 'relevance', sortOrder: ''},
         {sortBy: 'title', sortOrder: 'reverse'},
-        {sortBy: 'rating', sortOrder: ''}];
+        {sortBy: 'rating', sortOrder: ''},
+        {sortBy: 'changeDate', sortOrder: ''}];
       searchSettings.sortbyDefault = searchSettings.sortbyValues[0];
 
       /* Custom templates for search result views */
