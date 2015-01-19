@@ -15,6 +15,7 @@ import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Arrays;
 
@@ -23,6 +24,7 @@ import static org.junit.Assert.assertArrayEquals;
 /**
  * @author Jesse on 10/7/2014.
  */
+@ContextConfiguration(inheritLocations = true, locations = "classpath:shared-object-test-context.xml")
 public abstract class AbstractSharedObjectTest extends AbstractServiceIntegrationTest {
 
     protected static final String SHARED_USER_XML = "shared-user.xml";
@@ -84,7 +86,7 @@ public abstract class AbstractSharedObjectTest extends AbstractServiceIntegratio
                 setType(MetadataType.SUB_TEMPLATE).
                 setExtra(categoryName);
         metadata.setDataInfo(dataInfo);
-        MetadataSourceInfo sourceInfo = new MetadataSourceInfo().setSourceId(getSourceId());
+        MetadataSourceInfo sourceInfo = new MetadataSourceInfo().setSourceId(getSourceId()).setOwner(1);
         metadata.setSourceInfo(sourceInfo);
 
         final Metadata save = metadataRepository.save(metadata);
