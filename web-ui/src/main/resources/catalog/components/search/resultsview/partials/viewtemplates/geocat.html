@@ -44,7 +44,9 @@
           </ul>
         </div>
         <h4>
-          <input gn-selection-md type="checkbox" ng-model="md['geonet:info'].selected" ng-change="change()"/>
+          <span gn-selection-md ng-class="md['geonet:info'].selected ? 'fa-check-square-o' : 'fa-square-o'"
+            class="fa gc-checkbox" ng-click="change()">
+          </span>
           <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('dataset')>=0" class="fa fa-database" title="dataset"></span>
           <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('software')>=0" class="fa fa-hdd-o" title="software"></span>
           <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('basicgeodata')>=0" class="fa fa-globe" title="geodata"></span>
