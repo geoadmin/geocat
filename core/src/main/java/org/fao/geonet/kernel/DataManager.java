@@ -124,6 +124,7 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.MetadataStatusSpecs;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
@@ -535,7 +536,7 @@ public class DataManager {
         final String schemaId = metadata.getDataInfo().getSchemaId();
         final String uuid = metadata.getUuid();
 
-        if (!schemaId.trim().equals("iso19139.che")) {
+        if (!schemaId.trim().equals("iso19139.che") || metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
             return metadataEl;
         }
         if (!fastIndex) {
@@ -588,6 +589,18 @@ public class DataManager {
             List<Attribute> xlinks = Processor.getXLinks(metadataEl);
             if (xlinks.size() > 0) moreFields.add(SearchManager.makeField("_hasxlinks", "1", true, true));
         }
+
+        // GEOCAT
+        final Specification<MetadataValidation> mvSpec = MetadataValidationSpecs.hasMetadataId(Integer.valueOf(metadataId));
+        final String schema = metadata.getDataInfo().getSchemaId();
+
+        final MetadataValidationRepository mvRepo = _applicationContext.getBean(MetadataValidationRepository.class);
+        if (!metadata.getHarvestInfo().isHarvested() && mvRepo.count(mvSpec) == 0) {
+
+            doValidate(servContext, schema, metadataId, metadataEl, "eng", false);
+        }
+        // END GEOCAT
+
 
         return metadataEl;
     }
