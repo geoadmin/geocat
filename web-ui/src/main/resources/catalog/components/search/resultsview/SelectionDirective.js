@@ -135,8 +135,10 @@
       link: function(scope, element, attrs) {
 
         scope.change = function() {
+          element.toggleClass('fa-square-o');
+          element.toggleClass('fa-check-square-o');
           gnHttp.callService('mdSelect', {
-            selected: element[0].checked ? 'add' : 'remove',
+            selected: element.hasClass('fa-check-square-o') ? 'add' : 'remove',
             id: scope.md.getUuid()
           }).success(function(res) {
             scope.searchResults.selectedCount = parseInt(res[0], 10);
