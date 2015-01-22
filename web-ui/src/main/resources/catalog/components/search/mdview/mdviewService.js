@@ -95,7 +95,7 @@
           var uuid = gnSearchLocation.getUuid();
           if (uuid) {
             if (!gnMdViewObj.current.record ||
-                gnMdViewObj.current.record.getUuid() != uuid) {
+              gnMdViewObj.current.record.getUuid() != uuid) {
 
               // Check if the md is in current search
               if (angular.isArray(gnMdViewObj.records)) {
@@ -124,7 +124,7 @@
           else {
             gnMdViewObj.current.record = null;
           }
-      };
+        };
         loadMdView(); // To manage uuid on page loading
         $rootScope.$on('$locationChangeSuccess', loadMdView);
       };
@@ -134,8 +134,8 @@
           var uuid = gnSearchLocation.getUuid();
           if(uuid) {
             gnMdFormatter.load(gnSearchSettings.formatter.defaultUrl + uuid,
-                selector);
-    }
+              selector);
+          }
           else {
             $rootScope.$broadcast('closeMdView');
           }
@@ -145,4 +145,25 @@
       };
     }
   ]);
+
+  module.service('gnMdFormatter', [
+    '$rootScope',
+    '$http',
+    '$compile',
+    '$sce',
+    function($rootScope, $http, $compile, $sce) {
+
+      this.load = function(url, selector) {
+        $http.get(url).then(function(response) {
+          var scope = angular.element($(selector)).scope();
+          scope.fragment = $sce.trustAsHtml(response.data);
+          var el = document.createElement('div');
+          el.setAttribute('gn-metadata-display', '');
+          $(selector).append(el);
+          $compile(el)(scope);
+        });
+      };
+    }
+  ]);
+
 })();
