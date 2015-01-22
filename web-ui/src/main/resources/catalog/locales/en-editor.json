@@ -126,6 +126,10 @@
     "saveAtimeAgo": "Last edit was {{timeAgo}}.",
     "saveMetadataError": "Error while saving metadata. You should reload the editor.",
     "saveMetadataSuccess": "All changes saved.",
+    "saveMetadata": "Save metadata",
+    "saveTemplate": "Save template",
+    "saveAsMetadata": "Save as metadata",
+    "saveAsTemplate": "Save as template",
     "saving": "Saving ...",
     "schematron-rules-geonetwork": "Recommendations",
     "schematron-rules-inspire": "INSPIRE rules",
@@ -164,6 +168,8 @@
     "validate": "Validate",
     "validate-help": "Check record against standard validation rules",
     "validationReport": "Validation",
+    "runValidation": "Run validation check",
+    "whoCanAccess": "Who has access",
     "wmsServiceUrl": "Service URL",
     "xmlSnippet": "XML snippet",
     "xsltToApply": "Apply XSLT conversion",
@@ -173,5 +179,9 @@
     "searchKeyword": "Search ...",
     "searchOrTypeKeyword": "Type or search ...",
     "tagsAllowed": " tag(s) allowed",
-    "suggestionListError": "Oops, something went wrong when retrieving suggestions!"
+    "suggestionListError": "Oops, something went wrong when retrieving suggestions!",
+    "showHideErrors": "Show / hide errors",
+    "showHideSuccess": "Show / hide success",
+    "deleteField": "Delete this field",
+    "deleteFieldSet": "Delete this fields set"
 }

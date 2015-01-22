@@ -23,18 +23,17 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.util.Map;
-
 import jeeves.JeevesCacheManager;
-
 import org.fao.geonet.kernel.SchemaManager;
+
+import java.util.Map;
 
 /**
  * Translates code list keys into a language
  * 
  * @author jesse
  */
-public class CodeListTranslator extends Translator {
+public class CodeListTranslator implements Translator {
     private static final long serialVersionUID = 1L;
     private Map<String, String> _codeList;
 
