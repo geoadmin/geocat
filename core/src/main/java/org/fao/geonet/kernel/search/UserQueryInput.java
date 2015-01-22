@@ -107,6 +107,7 @@ public class UserQueryInput {
     private Map<String, Set<String>> searchCriteria = new HashMap<String, Set<String>>();
     private Map<String, Set<String>> searchPrivilegeCriteria = new HashMap<String, Set<String>>();
     private Map<String, String> searchOption = new HashMap<String, String>();
+    private Set<String> facetQueries = new HashSet<String>();
 
     /**
      * Return all search criteria.
@@ -115,6 +116,10 @@ public class UserQueryInput {
      */
     public Map<String, Set<String>> getSearchCriteria() {
         return searchCriteria;
+    }
+
+    public Set<String> getFacetQueries() {
+        return facetQueries;
     }
 
     /**
@@ -190,8 +195,12 @@ public class UserQueryInput {
                             addValues(searchPrivilegeCriteria, nodeName, nodeValue);
                         } else if (RESERVED_FIELDS.contains(nodeName)) {
                             searchOption.put(nodeName, nodeValue);
+                        // GEOCAT
                         } else if (IGNORE_FIELDS.contains(nodeName)) {
                             // Do nothing
+                        // END GEOCAT
+                        } else if (isFacetQuery(nodeName)) {
+                            facetQueries.add(nodeValue);
                         } else {
                             // addValues(searchCriteria, nodeName, nodeValue);
                             // Rename search parameter to lucene index field
@@ -208,6 +217,15 @@ public class UserQueryInput {
                 }
             }
         }
+    }
+
+    /**
+     * Is node a facet drilldown request
+     *
+     * @param nodeName
+     */
+    private boolean isFacetQuery(String nodeName) {
+        return nodeName.equals(SearchParameter.FACET_QUERY);
     }
 
     /**
@@ -305,12 +323,8 @@ public class UserQueryInput {
     @Override
     public String toString() {
         StringBuilder text = new StringBuilder();
-        Map<String, Set<String>> searchCriteria = getSearchCriteria();
-        for (Map.Entry<String, Set<String>> entry : searchCriteria.entrySet()) {
-            String fieldName = (String) entry.getKey();
-            Set<String> fieldValue = (Set<String>) entry.getValue();
-            text.append(fieldName).append(":").append(fieldValue).append(" ");
-        }
+        addSearchCriteria(text);
+        addFacetQueries(text);
         return text.toString();
     }
 
@@ -335,5 +349,17 @@ public class UserQueryInput {
         return editable;
     }
 
+    private void addSearchCriteria(StringBuilder text) {
+        for (Map.Entry<String, Set<String>> entry : searchCriteria.entrySet()) {
+            String fieldName = (String) entry.getKey();
+            Set<String> fieldValue = (Set<String>) entry.getValue();
+            text.append(fieldName).append(":").append(fieldValue).append(" ");
+        }
+    }
 
+    private void addFacetQueries(StringBuilder text) {
+        for (String facetQuery: facetQueries) {
+            text.append("facetQuery:").append(facetQuery).append(" ");
+        }
+    }
 }

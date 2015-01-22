@@ -19,6 +19,8 @@
 
           var watchers = [];
           scope.checkAll = true;
+          scope.withoutActionMenu =
+              angular.isDefined(attrs.withoutActionMenu) ? true : false;
           scope.mdService = gnMetadataActions;
 
           // initial state
@@ -57,11 +59,10 @@
           scope.getIcon = function() {
             if (scope.searchResults.selectedCount === 0) {
               return 'fa-square-o';
-            } else if (scope.searchResults.selectedCount ==
-                scope.searchResults.count) {
-              return 'fa-check-square-o';
+              // GEOCAT
             } else {
-              return 'fa-minus-square-o';
+              return 'fa-check-square-o';
+              // END GEOCAT
             }
           };
 
@@ -149,12 +150,12 @@
     };
   }]);
 
-  module.directive('gnContributeWidget', [ function() {
+  module.directive('gnContributeWidget', [function() {
 
     return {
       restrict: 'A',
       templateUrl: '../../catalog/components/search/resultsview/partials/' +
           'contribute-widget.html'
-      };
+    };
   }]);
 })();

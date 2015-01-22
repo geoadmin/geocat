@@ -100,6 +100,9 @@ final class IndexMetadataTask implements Runnable {
             if (_user != null && _context.getUserSession().getUserId() == null) {
                 _context.getUserSession().loginAs(_user);
             }
+            searchManager.forceIndexChanges();
+        } catch (IOException e) {
+            Log.error(Geonet.INDEX_ENGINE, "Error occurred indexing metadata", e);
         } finally {
             _batchIndex.remove(this);
         }

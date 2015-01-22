@@ -2,13 +2,20 @@
 
   goog.provide('gn_search_default');
 
+
+
+
+
+  goog.require('cookie_warning');
+  goog.require('gn_related_directive');
   goog.require('gn_search');
   goog.require('gn_search_default_config');
   goog.require('gn_search_default_directive');
 
   var module = angular.module('gn_search_default',
-      ['gn_search', 'gn_search_default_config', 'gn_search_default_directive']);
-
+      ['gn_search', 'gn_search_default_config',
+       'gn_search_default_directive', 'gn_related_directive',
+       'cookie_warning']);
 
 
   module.controller('gnsSearchPopularController', [
@@ -37,7 +44,6 @@
         }
       };
     }]);
-
   module.controller('gnsDefault', [
     '$scope',
     '$location',
@@ -49,43 +55,24 @@
     'gnViewerSettings',
     'gnMap',
     'gnMdView',
+    'gnMdViewObj',
     'hotkeys',
     function($scope, $location, suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
-             gnMap, gnMdView, hotkeys) {
+             gnMap, gnMdView, mdView, hotkeys) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
       $scope.$location = $location;
+      $scope.activeTab = '/home';
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
-
-      $scope.mainTabs = {
-        home: {
-          title: 'Home',
-          titleInfo: '',
-          active: true
-        },
-        search: {
-          title: 'Search',
-          titleInfo: '',
-          active: false
-        },
-        view: {
-          title: 'view',
-          titleInfo: '',
-          active: false
-        },
-        map: {
-          title: 'Map',
-          active: false
-        }};
 
       hotkeys.bindTo($scope)
         .add({
             combo: 'h',
             description: $translate('hotkeyHome'),
             callback: function(event) {
-              $scope.mainTabs.home.active = true;
+              $location.path('/home');
             }
           }).add({
             combo: 't',
@@ -95,7 +82,7 @@
               var anyField = $('#gn-any-field');
               if (anyField) {
                 gnUtilityService.scrollTo();
-                $scope.mainTabs.search.active = true;
+                $location.path('/search');
                 anyField.focus();
               }
             }
@@ -117,38 +104,30 @@
             combo: 'm',
             description: $translate('hotkeyMap'),
             callback: function(event) {
-              $scope.mainTabs.map.active = true;
+              $location.path('/map');
             }
           });
 
 
       // TODO: Previous record should be stored on the client side
-      var mdView = {
-        previousRecords: [],
-        current: {
-          record: null,
-          index: null
-        }
-      };
       $scope.mdView = mdView;
+      gnMdView.initMdView();
 
-      $scope.canEdit = function (record) {
+      $scope.canEdit = function(record) {
         // TODO: take catalog config for harvested records
-        if (record && record["geonet:info"] &&
-            record["geonet:info"].edit == 'true') {
+        if (record && record['geonet:info'] &&
+            record['geonet:info'].edit == 'true') {
           return true;
         }
-        return false
+        return false;
       };
       $scope.openRecord = function(index, md, records) {
-        gnMdView.feedMd(index, md, records, mdView);
-        gnUtilityService.scrollTo();
+        gnMdView.feedMd(index, md, records);
       };
 
       $scope.closeRecord = function() {
         mdView.current.record = null;
-        //$location.search(searchUrl);
-        $scope.mainTabs.search.active = true;
+        gnMdView.removeLocationUuid();
       };
       $scope.nextRecord = function() {
         // TODO: When last record of page reached, go to next page...
@@ -170,16 +149,16 @@
           active: false
         }};
       $scope.addLayerToMap = function(number) {
-        $scope.mainTabs.map.titleInfo = '+' + number;
+        // FIXME $scope.mainTabs.map.titleInfo = '+' + number;
       };
 
       $scope.$on('addLayerFromMd', function(evt, getCapLayer) {
         gnMap.addWmsToMapFromCap(viewerMap, getCapLayer);
       });
 
-
       $scope.displayMapTab = function() {
-        if (viewerMap.getSize()[0] == 0 || viewerMap.getSize()[1] == 0) {
+        if (!angular.isArray(viewerMap.getSize()) ||
+            viewerMap.getSize().indexOf(0) >= 0) {
           setTimeout(function() {
             viewerMap.updateSize();
             if (gnViewerSettings.initialExtent) {
@@ -188,24 +167,19 @@
             }
           }, 0);
         }
-        $scope.mainTabs.map.titleInfo = '';
+        // FIXME $scope.mainTabs.map.titleInfo = '';
       };
 
       // Switch to the location requested tab.
-      $scope.$on('$locationChangeStart', function(next, current) {
-        var params = $location.search();
-        if (params.tab) {
-          var tab = $scope.mainTabs[params.tab];
-          if (tab && tab.active === false) {
-            tab.active = true;
-          }
-        }
-      });
+      //$scope.$on('$locationChangeStart', function(next, current) {
+      //  var params = $location.search();
+      //});
 
-      $scope.$watch('mainTabs.search.active', function(val) {
-        if (val &&
-          (searchMap.getSize()[0] == 0 ||
-          searchMap.getSize()[1] == 0)) {
+      $scope.$on('$locationChangeSuccess', function(next, current) {
+        $scope.activeTab = $location.path().
+            match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
+        if (!angular.isArray(searchMap.getSize()) ||
+            searchMap.getSize().indexOf(0) >= 0) {
           setTimeout(function() {
             searchMap.updateSize();
           }, 0);

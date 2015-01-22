@@ -1,4 +1,7 @@
 {
+    "all": "Tous",
+    "allInPage": "Toute la page",
+    "none": "Aucun",
     "BadParameterEx": "Paramètre incorrect",
     "Editor": "Editeur",
     "Keywords": "Keywords",
@@ -110,12 +113,16 @@
     "scrollTop": "Retourner en haut de la page",
     "selectAll": "Tous",
     "selectNone": "Aucun",
+    "startVersioning": "",
+    "startVersioning-help": "Sauvegarder l'historique des versions (beta)",
     "send": "Envoyer",
     "sendAComment": "Envoyer nous un commentaire",
     "sendPasswordLinkToMyEmail": "Récupérer mon mot de passe",
     "search": "Rechercher",
     "service": "Service",
     "serviceTypes": "Type de service",
+    "setMetadataGroup": "Changer le groupe de la fiche",
+    "setMetadataCategories": "Changer les catégories de la fiche",
     "signIn": "S'identifier",
     "signedInAs": " ",
     "signout": "Se déconnecter",
@@ -149,6 +156,7 @@
     "edit" : "Edit",
     "duplicate": "Duplicate",
     "createChild": "Create a child",
-    "privileges": "Privileges",
+    "privileges": "Partager",
+    "privilegesUpdated": "Les droits d'accès ont été mis à jour",
     "whoCanAccess": "Qui à accès ?"
 }

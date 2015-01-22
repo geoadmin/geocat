@@ -32,9 +32,12 @@
     'gnNcWms',
     '$timeout',
     'gnMdView',
-    function($scope, $location, $window, suggestService, $http, gnSearchSettings,
+    'gnMdViewObj',
+    'gnSearchLocation',
+    function($scope, $location, $window, suggestService,
+             $http, gnSearchSettings,
         gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
-        $timeout, gnMdView) {
+        $timeout, gnMdView, mdView, gnSearchLocation) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -42,6 +45,10 @@
 
       var localStorage = $window.localStorage || {};
 
+      // Manage routing
+      gnSearchLocation.initTabRouting($scope.mainTabs);
+
+      // Manage the collapsed search and facet panels
       $scope.collapsed = localStorage.searchWidgetCollapsed ?
           JSON.parse(localStorage.searchWidgetCollapsed) :
           { search: true,
@@ -68,7 +75,8 @@
       });
 
       $scope.displayMapTab = function() {
-        if (angular.isUndefined(viewerMap.getSize()) || viewerMap.getSize()[0] == 0 ||
+        if (angular.isUndefined(viewerMap.getSize()) ||
+            viewerMap.getSize()[0] == 0 ||
             viewerMap.getSize()[1] == 0) {
           $timeout(function() {
             viewerMap.updateSize();
@@ -124,24 +132,17 @@
       });
 
       /** Manage metadata view */
-      var mdView = {
-        previousRecords: [],
-        current: {
-          record: null,
-          index: null
-        }
-      };
       $scope.mdView = mdView;
+      gnMdView.initMdView();
 
       $scope.openRecord = function(index, md, records) {
-        gnMdView.feedMd(index, md, records, mdView);
-        //gnUtilityService.scrollTo();
+        gnMdView.feedMd(index, md, records);
       };
 
       $scope.closeRecord = function() {
-        mdView.current.record = null;
-        //$location.search(searchUrl);
-        $scope.mainTabs.search.active = true;
+        //mdView.current.record = null;
+        gnMdView.removeLocationUuid();
+        //$scope.mainTabs.search.active = true;
       };
       $scope.nextRecord = function() {
         // TODO: When last record of page reached, go to next page...

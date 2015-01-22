@@ -5,7 +5,7 @@
   <parent>
     <groupId>ch.geocat</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.0-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
   </parent>
 
 
@@ -614,7 +614,7 @@
         <configuration> 
           <timestampFormat>{0,date,MM/dd/yyyy hh:mm:ss a}</timestampFormat> 
           <doCheck>false</doCheck> 
-          <doUpdate>false</doUpdate> 
+          <doUpdate>false</doUpdate>
           <revisionOnScmFailure>true</revisionOnScmFailure>
         </configuration> 
       </plugin>

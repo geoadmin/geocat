@@ -57,10 +57,13 @@ import static org.junit.Assert.assertTrue;
  * Date: 10/12/13
  * Time: 8:31 PM
  */
-@ContextConfiguration(inheritLocations = true, locations = "classpath:core-repository-test-context.xml")
-public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest {
-    @Autowired
-    protected ConfigurableApplicationContext _applicationContext;
+@ContextConfiguration(
+    inheritLocations = true,
+    locations = {"classpath:core-repository-test-context.xml", "classpath:web-test-context.xml"}
+    )
+    public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest {
+        @Autowired
+        protected ConfigurableApplicationContext _applicationContext;
     @PersistenceContext
     protected EntityManager _entityManager;
     @Autowired

@@ -266,11 +266,6 @@
 	
 			<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
 				<Field name="topicCat" string="{string(.)}" store="true" index="true" token="false"/>
-                <Field name="keyword"
-                    string="{java:getCodelistTranslation('gmd:MD_TopicCategoryCode', string(.), string($isoLangId))}"
-                    store="true"
-                    index="true"/>
-                <Field name="subject" string="{string(.)}" store="true" index="true" token="false"/>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
