@@ -182,7 +182,6 @@
           triggerSearchFn(false);
         } else {
           gnSearchLocation.setSearch(params);
-          gnSearchLocation.path('/search');
         }
       };
 
