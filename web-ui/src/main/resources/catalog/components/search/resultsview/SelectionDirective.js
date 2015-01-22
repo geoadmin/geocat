@@ -59,11 +59,10 @@
           scope.getIcon = function() {
             if (scope.searchResults.selectedCount === 0) {
               return 'fa-square-o';
-            } else if (scope.searchResults.selectedCount ==
-                scope.searchResults.count) {
-              return 'fa-check-square-o';
+              // GEOCAT
             } else {
-              return 'fa-minus-square-o';
+              return 'fa-check-square-o';
+              // END GEOCAT
             }
           };
 
