@@ -40,7 +40,7 @@
     /** Object were are stored result search information */
     $scope.searchResults = {
       records: [],
-      count: 0
+      count: -1
     };
 
     $scope.searching = 0;
@@ -182,10 +182,13 @@
           triggerSearchFn(false);
         } else {
           $location.search(params);
+          $location.path('/search');
         }
       };
 
       $scope.$on('$locationChangeSuccess', function() {
+        if ($location.path() != '/search') return;
+        console.log('$locationChangeSuccess');
         var params = angular.copy($location.search());
         for (var o in facetsParams) {
           delete params[o];
@@ -279,6 +282,8 @@
             }
           };
 
+          if (attrs.runsearch && $location.path().indexOf('/metadata/') != 0) {
+
             // get permalink params on page load
             if (scope.searchObj.permalink) {
               angular.extend(scope.searchObj.params, $location.search());
@@ -286,8 +291,6 @@
 
             var initial = jQuery.isEmptyObject(scope.searchObj.params);
           scope.initial = initial;
-
-          if (attrs.runsearch) {
 
             // wait for pagination to be set before triggering search
             if (element.find('[data-gn-pagination]').length > 0) {

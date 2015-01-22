@@ -22,12 +22,13 @@
    *
    */
   module.controller('gnsGeocat', [
-      '$scope',
-      '$timeout',
-      'gnMap',
-      'gnSearchSettings',
-      '$window',
-    function($scope, $timeout, gnMap, gnSearchSettings, $window) {
+    '$scope',
+    '$timeout',
+    'gnMap',
+    'gnSearchSettings',
+    '$window',
+    'gnMdView',
+    function($scope, $timeout, gnMap, gnSearchSettings, $window, gnMdView) {
 
       var localStorage = $window.localStorage || {};
 
@@ -38,10 +39,10 @@
 
       $scope.collapsed = localStorage.searchWidgetCollapsed ?
           JSON.parse(localStorage.searchWidgetCollapsed) : {
-        search: true,
-        facet: false,
-        map: false
-      };
+            search: true,
+            facet: false,
+            map: false
+          };
 
       var storeCollapsed = function() {
         localStorage.searchWidgetCollapsed = JSON.stringify($scope.collapsed);
@@ -71,9 +72,9 @@
         addMdLayerToMap: function(link) {
           gnMap.addWmsToMap(gnSearchSettings.searchMap, {
             LAYERS: link.name
-              },{
-                url: link.url
-              });
+          },{
+            url: link.url
+          });
         }
       };
 
@@ -82,7 +83,7 @@
       $scope.$parent.$parent.langs = {'fre': 'fr', 'eng': 'en',
         'ger': 'ge', 'ita': 'it'};
 
-
+      gnMdView.initFormatter('.gn-resultview');
       $('#anySearchField').focus();
     }]);
 
@@ -110,7 +111,7 @@
           $scope.lastUpdated.push(new Metadata(data.metadata[i]));
         }
       });
-  }]);
+    }]);
 
   module.controller('gocatSearchFormCtrl', [
     '$scope',
@@ -124,11 +125,13 @@
     'gnSearchManagerService',
     'ngeoDecorateInteraction',
     '$q',
+    '$location',
     'gnMap',
 
     function($scope, gnHttp, gnHttpServices, gnRegionService,
         $timeout, suggestService, $http, gnSearchSettings,
-             gnSearchManagerService, ngeoDecorateInteraction, $q, gnMap) {
+             gnSearchManagerService, ngeoDecorateInteraction, $q,
+             $location, gnMap) {
 
 
       // Will store regions input values
@@ -215,7 +218,7 @@
                     res.push({
                       id: a[i]['@id'],
                       name: (a[i].label && a[i].label[$scope.lang]) ?
-                        a[i].label[$scope.lang] : a[i].name
+                          a[i].label[$scope.lang] : a[i].name
                     });
                   }
                 };
@@ -444,10 +447,10 @@
         var url = 'qi@json?summaryOnly=true';
         gnSearchManagerService.search(url).then(function(data) {
           $scope.searchResults.facet = data.facet;
-      });
-      } else {
+        });
+      } else if ($location.path().indexOf('/metadata/') != 0) {
         $scope.triggerSearch(true);
-            }
+      }
     }]);
 
   module.directive('gcFixMdlinks', [
@@ -469,7 +472,7 @@
                 name: e[1],
                 desc: e[1],
                 url: e[2]
-       });
+              });
             });
           } else {
             scope.layers = scope.md.getLinksByType('OGC', 'kml');
@@ -481,19 +484,19 @@
               date: scope.md['geonet:info'].changeDate,
               type: 'changeDate'
             };
-            }
+          }
           else if (scope.md['geonet:info'].publishedDate) {
             d = {
               date: scope.md['geonet:info'].publishedDate,
               type: 'changeDate'
             };
-            }
+          }
           else if (scope.md['geonet:info'].createDate) {
             d = {
               date: scope.md['geonet:info'].createDate,
               type: 'createDate'
             };
-            }
+          }
           scope.showDate = {
             date: moment(d).format('YYYY-MM-DD'),
             type: d.type

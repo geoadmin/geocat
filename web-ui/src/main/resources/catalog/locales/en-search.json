@@ -91,9 +91,6 @@
   "exportRDF": "Export (RDF)",
   "exportPDF": "Export (PDF)",
   "exportMEF": "Export (ZIP)",
-  "all": "all",
-  "allInPage": "all in page",
-  "none": "none",
   "selected": "selected",
   "listOfCategories": "Categories",
   "formats": "Formats",
@@ -109,6 +106,7 @@
   "overview": "Overview",
   "chooseAView": "Display mode",
   "metadataContact": "Contact for the metadata",
+  "metadataRemoved": "{{title}} removed.",
   "extent": "Resource extent",
   "aboutThisResource": "About this resource",
   "preview": "Preview",
@@ -165,6 +163,5 @@
   "mdUnmodified": "Unaffected Metadata",
   "mdDisallowed": "Restricted Metadata",
   "metadataUnchanged": "Metadata unmodified",
-  "accessRestricted": "You do not have permission to change this metadata",
-
+  "accessRestricted": "You do not have permission to change this metadata"
 }

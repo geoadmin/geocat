@@ -526,6 +526,8 @@ public class DataManager {
         for (String metadataId : metadataIds) {
             indexMetadata(metadataId, false);
         }
+
+        searchMan.forceIndexChanges();
     }
 
     // GEOCAT
@@ -1415,7 +1417,7 @@ public class DataManager {
      */
     public void setHarvested(int id, String harvestUuid, ServiceContext context) throws Exception {
         setHarvestedExt(id, harvestUuid);
-        indexMetadata(Integer.toString(id), false);
+        indexMetadata(Integer.toString(id), true);
     }
 
     /**
@@ -1563,7 +1565,7 @@ public class DataManager {
             }
         });
 
-        indexMetadata(Integer.toString(metadataId), false);
+        indexMetadata(Integer.toString(metadataId), true);
 
         return rating;
     }
@@ -1996,7 +1998,7 @@ public class DataManager {
             if(index) {
                 //--- update search criteria
                 boolean processSharedObjects = false;
-                indexMetadata(metadataId, false, processSharedObjects, false, false);
+                indexMetadata(metadataId, true, processSharedObjects, false, false);
             }
         }
         // Return an up to date metadata record

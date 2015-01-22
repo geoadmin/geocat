@@ -38,21 +38,6 @@
   }
 }
 
-.gn-pager {
-  .pager {
-    margin: 0;
-    text-align: left;
-    display: inline-block;
-    li > a {
-      padding: 2px 5px;
-      border-radius: 6px;
-      font-size: 120%;
-    }
-    em {
-      font-style: normal;
-    }
-  }
-}
 
 .gn-select ul.dropdown-menu > li > a:first-letter,
 .gn-sort-by ul.dropdown-menu > li > a:first-letter {
@@ -307,10 +292,23 @@
     z-index: 10;
   }
 }
+
+
 .gn-md-edit-btn {
   .btn();
   .btn-primary();
   .btn-circle();
+}
+.gn-md-delete-btn {
+  .btn();
+  .btn-danger();
+  .btn-circle();
+}
+
+/* Add space between button when pulled right */
+.gn-md-edit-btn.pull-right,
+.gn-md-delete-btn.pull-right {
+  margin-right: 5px;
 }
 
 [data-ng-search-form],
@@ -407,6 +405,7 @@
   .relatedRecord {
     float:left; 
     padding:8px;
+    cursor: pointer;
   }
 }
 
@@ -416,5 +415,6 @@
   span {
     font-weight: bolder;
     font-color: #428bca;
+    cursor: pointer;
   }
 }
