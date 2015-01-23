@@ -242,6 +242,7 @@
         }
       };
 
+      $scope.searchObj.mdLoading = false;
 
       $scope.gnMap = gnMap;
       var map = $scope.searchObj.searchMap;
@@ -451,6 +452,14 @@
       } else if ($location.path().indexOf('/metadata/') != 0) {
         $scope.triggerSearch(true);
       }
+
+      $scope.$on('mdLoadingStart', function() {
+        $scope.searchObj.mdLoading = true;
+      });
+      $scope.$on('mdLoadingEnd', function() {
+        $scope.searchObj.mdLoading = false;
+      });
+
     }]);
 
   module.directive('gcFixMdlinks', [

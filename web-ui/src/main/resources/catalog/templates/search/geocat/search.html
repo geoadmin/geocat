@@ -73,7 +73,7 @@
               <div gn-selection-widget results="searchResults"></div>
               <div sortby-combo params="searchObj.params" gn-sortby-values="searchObj.sortbyValues"></div>
             </div>
-            <span class="loading fa fa-spinner fa-spin" ng-show="searching"></span>
+            <span class="loading fa fa-spinner fa-spin" ng-show="searching || searchObj.mdLoading"></span>
             <div gn-results-container search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap">
             </div>
             <div class="alert alert-warning gn-zarroo" ng-show="searchResults.count == 0 && !searching">

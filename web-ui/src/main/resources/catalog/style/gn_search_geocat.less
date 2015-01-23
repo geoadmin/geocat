@@ -183,7 +183,7 @@ h1, h2, h3, h4, h5, h6,
 }
 .advanced.active {
   padding-bottom: 200px;
-  max-height: 100em;
+  max-height: 120em;
 }
 .administrative.active {
   max-height: 5em;
@@ -402,9 +402,6 @@ h1, h2, h3, h4, h5, h6,
   padding: 0;
   position: relative;
 }
-[ng-search-form] {
-  margin: 0 15px;
-}
 
 @media (min-width: @screen-md-min) {
   html, body,
@@ -464,15 +461,15 @@ h1, h2, h3, h4, h5, h6,
     }
   }
   .searchMapExpanded {
-    .maincol .panel .geocat-search {
-      padding-bottom: 400px;
-    }
     .advanced.active {
       padding-bottom: 400px;
     }
     [ngeo-map] {
       height: 400px;
     }
+  }
+  .ol-overlaycontainer-stopevent {
+    display: none;
   }
 }
 

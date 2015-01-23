@@ -154,7 +154,9 @@
     function($rootScope, $http, $compile, $sce) {
 
       this.load = function(url, selector) {
+        $rootScope.$broadcast('mdLoadingStart');
         $http.get(url).then(function(response) {
+          $rootScope.$broadcast('mdLoadingEnd');
           var scope = angular.element($(selector)).scope();
           scope.fragment = $sce.trustAsHtml(response.data);
           var el = document.createElement('div');
