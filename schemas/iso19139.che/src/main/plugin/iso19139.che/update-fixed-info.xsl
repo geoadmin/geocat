@@ -84,44 +84,6 @@
 		</xsl:copy>
 	</xsl:template>
  -->
-	<!-- ================================================================= -->
-	<!-- Set local identifier to the first 2 letters of iso code. Locale ids
-	are used for multilingual charcterString -->
-	<xsl:template match="gmd:PT_Locale">
-		<xsl:variable name="id" select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
-		<xsl:variable name="charset">
-			<xsl:choose>
-				<xsl:when test="normalize-space(gmd:characterEncoding/gmd:MD_CharacterSetCode/@codeListValue) != ''">
-					<xsl:copy-of select="gmd:characterEncoding"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<gmd:characterEncoding>
-						<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
-					</gmd:characterEncoding>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="langCode">
-			<xsl:choose>
-				<xsl:when test="normalize-space(gmd:languageCode/gmd:LanguageCode/@codeList) != ''">
-					<xsl:copy-of select="gmd:languageCode"/>
-				</xsl:when>
-				<xsl:otherwise>
-				  <gmd:languageCode>
-				    <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="{gmd:languageCode/gmd:LanguageCode/@codeListValue}">
-				    	<xsl:value-of select="gmd:languageCode/gmd:LanguageCode"/>
-				    </gmd:LanguageCode>
-  				</gmd:languageCode>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-
-		<gmd:PT_Locale>
-			<xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
-			<xsl:copy-of select="$langCode"/>
-			<xsl:copy-of select="$charset"/>
-		</gmd:PT_Locale>
-	</xsl:template>
 
 	<!-- ================================================================= -->
 	<!-- Do not allow to expand operatesOn sub-elements
@@ -371,37 +333,37 @@
 	<!-- Set local identifier to the first 3 letters of iso code. Locale ids
 		are used for multilingual charcterString using #iso2code for referencing.
 	-->
-	<xsl:template match="gmd:PT_Locale">
-		<xsl:element name="gmd:{local-name()}">
-			<xsl:variable name="id" select="upper-case(
-				substring(gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 3))"/>
+    <xsl:template match="gmd:PT_Locale">
+        <xsl:element name="gmd:{local-name()}">
+            <xsl:variable name="id" select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
 
-			<xsl:apply-templates select="@*"/>
-			<xsl:if test="normalize-space(@id)='' or normalize-space(@id)!=$id">
-				<xsl:attribute name="id">
-					<xsl:value-of select="$id"/>
-				</xsl:attribute>
-			</xsl:if>
-			<xsl:apply-templates select="node()"/>
-		</xsl:element>
-	</xsl:template>
+            <xsl:apply-templates select="@*"/>
+            <xsl:if test="normalize-space(@id)='' or normalize-space(@id)!=$id">
+                <xsl:attribute name="id">
+                    <xsl:value-of select="$id"/>
+                </xsl:attribute>
+            </xsl:if>
+            <xsl:apply-templates select="node()"/>
+        </xsl:element>
+    </xsl:template>
 
-	<!-- Apply same changes as above to the gmd:LocalisedCharacterString -->
-	<xsl:variable name="language" select="//gmd:PT_Locale" /> <!-- Need list of all locale -->
-	<xsl:template  match="gmd:LocalisedCharacterString">
-		<xsl:element name="gmd:{local-name()}">
-			<xsl:variable name="currentLocale" select="upper-case(java:twoCharLangCode(replace(normalize-space(@locale), '^#', '')))"/>
-			<xsl:variable name="ptLocale" select="$language[upper-case(replace(normalize-space(@id), '^#', ''))=string($currentLocale)]"/>
-			<xsl:variable name="id" select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
-			<xsl:apply-templates select="@*"/>
-			<xsl:if test="$id != '' and ($currentLocale='' or @locale!=concat('#', $id)) ">
-				<xsl:attribute name="locale">
-					<xsl:value-of select="concat('#',$id)"/>
-				</xsl:attribute>
-			</xsl:if>
-			<xsl:apply-templates select="node()"/>
-		</xsl:element>
-	</xsl:template>
+    <!-- Apply same changes as above to the gmd:LocalisedCharacterString -->
+    <xsl:variable name="language" select="//gmd:PT_Locale" /> <!-- Need list of all locale -->
+    <xsl:template  match="gmd:LocalisedCharacterString">
+        <xsl:element name="gmd:{local-name()}">
+            <xsl:variable name="currentLocale" select="upper-case(replace(normalize-space(@locale), '^#', ''))"/>
+            <xsl:variable name="ptLocale" select="$language[upper-case(replace(normalize-space(@id), '^#', ''))=string($currentLocale)]"/>
+            <xsl:variable name="id" select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
+            <xsl:apply-templates select="@*"/>
+            <xsl:if test="$id != '' and ($currentLocale='' or @locale!=concat('#', $id)) ">
+                <xsl:attribute name="locale">
+                    <xsl:value-of select="concat('#',$id)"/>
+                </xsl:attribute>
+            </xsl:if>
+            <xsl:apply-templates select="node()"/>
+        </xsl:element>
+    </xsl:template>
+
 
   <!-- Remove attribute indeterminatePosition having empty
   value which is not a valid facet for it. -->
