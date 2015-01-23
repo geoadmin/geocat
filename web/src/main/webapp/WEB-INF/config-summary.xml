@@ -59,7 +59,10 @@
         <facet name="topicCat" indexKey="topicCat" label="topicCats"/>
         <facet name="formatWithVersion" indexKey="formatWithVersion" label="formatWithVersions" />
         <!-- END GEOCAT -->
-        <facet name="keyword" indexKey="keyword" label="keywords"/>
+        <facet name="keyword_eng" indexKey="keyword_eng" label="keywords"/>
+        <facet name="keyword_ger" indexKey="keyword_ger" label="keywords"/>
+        <facet name="keyword_fre" indexKey="keyword_fre" label="keywords"/>
+        <facet name="keyword_ita" indexKey="keyword_ita" label="keywords"/>
         <facet name="inspireTheme" indexKey="inspiretheme" label="inspireThemes"/>
         <facet name="denominator" indexKey="denominator" label="denominators"/>
         <facet name="spatialRepresentationType" indexKey="spatialRepresentationType"
@@ -80,7 +83,10 @@
             <!-- GEOCAT -->
             <item facet="topicCat" sortBy="label" sortOrder="asc" max="100"  translator="codelist:gmd:MD_TopicCategoryCode"/>
             <!-- END GEOCAT -->
-            <item facet="keyword" max="15"/>
+            <item facet="keyword_eng" max="15"/>
+            <item facet="keyword_ger" max="15"/>
+            <item facet="keyword_fre" max="15"/>
+            <item facet="keyword_ita" max="15"/>
             <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
             <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
             <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
@@ -103,13 +109,19 @@
             <item facet="title" sortOrder="desc" max="100"/>
         </summaryType>
         <summaryType name="results">
-            <item facet="keyword" max="100"/>
+            <item facet="keyword_eng" max="100"/>
+            <item facet="keyword_ger" max="100"/>
+            <item facet="keyword_fre" max="100"/>
+            <item facet="keyword_ita" max="100"/>
         </summaryType>
         <summaryType name="results_with_summary">
             <!-- GEOCAT -->
             <item facet="topicCat" sortBy="label" sortOrder="asc" max="100"  translator="codelist:gmd:MD_TopicCategoryCode"/>
             <!-- END GEOCAT -->
-            <item facet="keyword" max="15"/>
+            <item facet="keyword_eng" max="15"/>
+            <item facet="keyword_ger" max="15"/>
+            <item facet="keyword_fre" max="15"/>
+            <item facet="keyword_ita" max="15"/>
             <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
             <item facet="denominator" sortBy="value" sortOrder="asc" max="20"/>
             <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
@@ -123,7 +135,10 @@
             <!-- END GEOCAT -->
         </summaryType>>
         <summaryType name="suggestions">
-            <item facet="keyword"/>
+            <item facet="keyword_eng" max="15"/>
+            <item facet="keyword_ger" max="15"/>
+            <item facet="keyword_fre" max="15"/>
+            <item facet="keyword_ita" max="15"/>
             <item facet="title" sortOrder="desc" max="100"/>
             <item facet="inspireTheme" sortBy="value" sortOrder="asc"/>
             <item facet="denominator" sortBy="value" sortOrder="asc"/>

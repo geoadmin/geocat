@@ -270,10 +270,19 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         String uuid = UUID.randomUUID().toString();
         String parentUuid = UUID.randomUUID().toString();
         Element md = Xml.loadFile(AbstractCoreIntegrationTest.class.getResource("kernel/valid-metadata.iso19139.che.xml"));
-        final Element updateMd = _dataManager.updateFixedInfo("iso19139.che", Optional.<Integer>absent(), uuid, md, parentUuid,
+        Element updateMd = _dataManager.updateFixedInfo("iso19139.che", Optional.<Integer>absent(), uuid, md, parentUuid,
                 UpdateDatestamp.YES, context);
 
         final List<Namespace> namespaces = _dataManager.getSchema("iso19139.che").getNamespaces();
+        assertEquals(uuid, Xml.selectString(updateMd, "gmd:fileIdentifier/gco:CharacterString", namespaces));
+        assertEquals(parentUuid, Xml.selectString(updateMd, "gmd:parentIdentifier/gco:CharacterString", namespaces));
+        assertEquals(0, Xml.selectNodes(updateMd, "*//node()[string-length(@locale) > 3]").size());
+        assertEquals(0, Xml.selectNodes(updateMd, "*//gmd:PT_Locale[string-length(@id) > 2]").size());
+
+        md = Xml.loadFile(AbstractCoreIntegrationTest.class.getResource("kernel/bug-che-update-info.xml"));
+        updateMd = _dataManager.updateFixedInfo("iso19139.che", Optional.<Integer>absent(), uuid, md, parentUuid,
+                UpdateDatestamp.YES, context);
+
         assertEquals(uuid, Xml.selectString(updateMd, "gmd:fileIdentifier/gco:CharacterString", namespaces));
         assertEquals(parentUuid, Xml.selectString(updateMd, "gmd:parentIdentifier/gco:CharacterString", namespaces));
         assertEquals(0, Xml.selectNodes(updateMd, "*//node()[string-length(@locale) > 3]").size());

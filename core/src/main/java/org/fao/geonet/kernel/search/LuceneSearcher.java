@@ -1381,6 +1381,14 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             Map<String, ArrayIndexOutOfBoundsException> configurationErrors = Maps.newHashMap();
             for (ItemConfig itemConfig : summaryConfigValues.getItems()) {
                 try {
+                    // GEOCAT
+                    final String indexKey = itemConfig.getDimension().getIndexKey();
+                    if (indexKey.startsWith("keyword_")) {
+                        if (!indexKey.endsWith(langCode.toLowerCase())) {
+                            continue;
+                        }
+                    }
+                    // END GEOCAT
                     OrdinalsReader ordsReader = new DocValuesOrdinalsReader(itemConfig.getDimension().getFacetFieldName());
                     Facets facets = new TaxonomyFacetCounts(ordsReader, taxonomyReader, facetConfiguration, facetCollector);
                     ItemBuilder builder = new ItemBuilder(itemConfig, langCode, facets, format);

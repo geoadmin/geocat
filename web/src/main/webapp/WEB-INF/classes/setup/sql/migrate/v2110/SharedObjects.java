@@ -297,9 +297,9 @@ public class SharedObjects implements DatabaseMigrationTask {
 
             addPtFreeText(newEl, translations.getChildText("EN"), "#EN");
             addPtFreeText(newEl, translations.getChildText("DE"), "#DE");
-            addPtFreeText(newEl, translations.getChildText("FR"), "#EN");
-            addPtFreeText(newEl, translations.getChildText("IT"), "#EN");
-            addPtFreeText(newEl, translations.getChildText("RM"), "#EN");
+            addPtFreeText(newEl, translations.getChildText("FR"), "#FR");
+            addPtFreeText(newEl, translations.getChildText("IT"), "#IT");
+            addPtFreeText(newEl, translations.getChildText("RM"), "#RM");
         }
     }
 

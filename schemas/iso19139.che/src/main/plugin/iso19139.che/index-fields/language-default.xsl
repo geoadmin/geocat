@@ -96,6 +96,7 @@
 					select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']"
 					mode="metadata">
 					<xsl:with-param name="langId" select="$poundLangId" />
+					<xsl:with-param name="docLangId" select="$isoLangId" />
 				</xsl:apply-templates>
 	
 			</Document>
@@ -104,6 +105,7 @@
 
 	<xsl:template match="*" mode="metadata">
 		<xsl:param name="langId" />
+		<xsl:param name="docLangId" />
 		<!-- === Data or Service Identification === -->		
 
 		<!-- the double // here seems needed to index MD_DataIdentification when
@@ -246,6 +248,8 @@
 			<xsl:for-each select="*/gmd:MD_Keywords">
 				<xsl:for-each select="gmd:keyword//gmd:LocalisedCharacterString[@locale=$langId]">
 					<Field name="keyword" string="{string(.)}" store="true" index="true" token="false"/>
+                    <Field name="keyword_{$docLangId}" string="{string(.)}" store="true" index="true" token="false"/>
+                    <Field name="subject" string="{string(.)}" store="true" index="true" token="false"/>
 				</xsl:for-each>
 
 				<xsl:for-each select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
@@ -562,14 +566,23 @@
 	
 	<!-- ========================================================================================= -->
 	<!--allText -->
-	
-	<xsl:template match="*" mode="allText">
-		<xsl:param name="langId"/>
-		<xsl:for-each select="@*">
-			<xsl:if test="name(.) != 'codeList' ">
-				<xsl:value-of select="concat(string(.),' ')"/>
-			</xsl:if>	
-		</xsl:for-each>
+
+    <xsl:template match="gmd:polygon |
+		gmd:westBoundLongitude | 
+		gmd:eastBoundLongitude | 
+		gmd:southBoundLatitude | 
+		gmd:northBoundLatitude | 
+		gmd:extentTypeCode" mode="allText" priority="5">
+        <!-- skip this we don't need the geometry in the any field -->
+    </xsl:template>
+
+    <xsl:template match="*" mode="allText">
+        <xsl:param name="langId"/>
+        <xsl:for-each select="@*">
+            <xsl:if test="name(.) != 'codeList' and name(.) != 'locale' and name(.) != 'gco:isoType' and name(.) != 'gco:nilReason' and name(.) != 'xsi:type' and not(starts-with(name(.),'xlink:'))">
+                <xsl:value-of select="concat(string(.),' ')"/>
+            </xsl:if>
+        </xsl:for-each>
 
 		<xsl:choose>
 			<xsl:when test="node()[@locale=$langId]"><xsl:value-of select="concat(string(.),' ')"/></xsl:when>

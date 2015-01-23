@@ -323,8 +323,17 @@ public final class XslUtil
      * @return The related 3 iso lang code
      */
     public static @Nonnull String twoCharLangCode(String iso3LangCode) {
+        return twoCharLangCode(iso3LangCode, twoCharLangCode(Geonet.DEFAULT_LANGUAGE, null));
+    }
+    /**
+     * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".
+     *
+     * @param iso3LangCode   The 2 iso lang code
+     * @return The related 3 iso lang code
+     */
+    public static @Nonnull String twoCharLangCode(String iso3LangCode, String defaultValue) {
     	if(iso3LangCode==null || iso3LangCode.length() == 0) {
-    		return twoCharLangCode(Geonet.DEFAULT_LANGUAGE);
+    		return defaultValue;
     	} else {
 
     	if(iso3LangCode.equalsIgnoreCase("FRA")) {
