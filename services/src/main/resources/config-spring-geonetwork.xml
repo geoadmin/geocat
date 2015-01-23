@@ -12,11 +12,13 @@
 
 	<context:component-scan base-package="org.fao.geonet" />
 
-	<bean id="RegionsDAO" class="org.fao.geonet.services.region.ThesaurusBasedRegionsDAO">
-		<constructor-arg ref="languages" />
-		<property name="cacheAllRegionsInMemory" value="true" />
-		<property name="thesaurusName" value="external.place.regions" />
-	</bean>
+    <!-- GEOCAT -->
+	<!--<bean id="RegionsDAO" class="org.fao.geonet.services.region.ThesaurusBasedRegionsDAO">-->
+		<!--<constructor-arg ref="languages" />-->
+		<!--<property name="cacheAllRegionsInMemory" value="true" />-->
+		<!--<property name="thesaurusName" value="external.place.regions" />-->
+	<!--</bean>-->
+    <!-- END GEOCAT -->
 	<bean id="MetadataRegionsDAO" class="org.fao.geonet.services.region.MetadataRegionDAO">
 		<property name="cacheAllRegionsInMemory" value="false" />
 	</bean>
