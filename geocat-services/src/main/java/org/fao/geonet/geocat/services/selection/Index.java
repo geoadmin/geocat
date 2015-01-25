@@ -23,6 +23,7 @@
 
 package org.fao.geonet.geocat.services.selection;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -37,6 +38,7 @@ import org.jdom.Element;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 //=============================================================================
 
@@ -73,14 +75,25 @@ public class Index implements Service {
                 return new Element("error").setText("Attempted to index " + selection.size() + ".  The maximum allowed elements: " +
                                                     maxToIndex);
             }
+            final DataManager dataManager = context.getBean(DataManager.class);
             index = selection.size();
-            final List<String> finalSelection = Lists.newArrayList(selection);
+            final List<String> finalSelection = Lists.transform(Lists.newArrayList(selection), new Function<String, String>() {
+                @Nullable
+                @Override
+                public String apply(String input) {
+                    try {
+                        return dataManager.getMetadataId(input);
+                    } catch (Exception e) {
+                        return input;
+                    }
+                }
+            });
             final GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
             gc.getThreadPool().runTask(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        context.getBean(DataManager.class).indexMetadata(finalSelection);
+                        dataManager.indexMetadata(finalSelection);
                     } catch (Exception e) {
                         Log.error(Geonet.INDEX_ENGINE, "Exception thrown during indexing", e);
                     }
