@@ -112,6 +112,9 @@
       <field name="_docLocale" tagName="docLocale"/>
       <field name="_locale" tagName="_locale"/>
       <field name="_defaultTitle" tagName="defaultTitle"/>
+      <field name="createDate" tagName="creationDate"/>
+      <field name="revisionDate" tagName="revisionDate"/>
+      <field name="publicationDate" tagName="publicationDate"/>
       <field name="abstract" tagName="abstract"/>
       <field name="_defaultAbstract" tagName="defaultAbstract"/>
       <field name="keyword" tagName="keyword"/>

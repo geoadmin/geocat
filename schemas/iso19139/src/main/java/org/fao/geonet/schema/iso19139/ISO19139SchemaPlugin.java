@@ -65,15 +65,15 @@ public class ISO19139SchemaPlugin
                             .getChildren().get(0);
                     String sibUuid = getChild(agId, "code", ISO19139Namespaces.GMD)
                             .getChildText("CharacterString", ISO19139Namespaces.GCO);
-                    final Element initiativeTypeEl = getChild(sib, "initiativeType", ISO19139Namespaces.GMD);
-                    String initType = getChild(initiativeTypeEl, "DS_InitiativeTypeCode", ISO19139Namespaces.GMD)
+                    final Element associationTypeEl = getChild(sib, "associationType", ISO19139Namespaces.GMD);
+                    String associationType = getChild(associationTypeEl, "DS_AssociationTypeCode", ISO19139Namespaces.GMD)
                             .getAttributeValue("codeListValue");
 
-                    AssociatedResource resource = new AssociatedResource(sibUuid, initType, "");
+                    AssociatedResource resource = new AssociatedResource(sibUuid, "", associationType);
                     listOfResources.add(resource);
                 }
             }
-        } catch (JDOMException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return listOfResources;

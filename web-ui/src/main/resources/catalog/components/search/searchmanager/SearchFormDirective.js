@@ -190,7 +190,7 @@
         if (!gnSearchLocation.isSearch()) return;
 
         // We are getting back to the search, no need to reload it
-        if($location.absUrl() == gnSearchLocation.lastSearchUrl) return;
+        if ($location.absUrl() == gnSearchLocation.lastSearchUrl) return;
 
         var params = angular.copy($location.search());
         for (var o in facetsParams) {
@@ -287,7 +287,11 @@
             }
           };
 
-          if (attrs.runsearch && gnSearchLocation.isSearch()) {
+          // Run a first search on directive rendering if attr is specified
+          // Don't run it on page load if the permalink is 'on' and the
+          // $location is not set to 'search'
+          if (attrs.runsearch &&
+              (!scope.searchObj.permalink || gnSearchLocation.isSearch())) {
 
             // get permalink params on page load
             if (scope.searchObj.permalink) {

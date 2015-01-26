@@ -50,8 +50,10 @@
     else if ($service = 'catalog.search') then 'gn_search'
     else if ($service = 'admin.shared.objects') then 'geocat_shared_objects_app'
     else 'gn'"/>
-  
-  <!-- Catalog settings -->
+
+  <xsl:variable name="customFilename" select="concat($angularApp, '_', $searchView)"></xsl:variable>
+
+    <!-- Catalog settings -->
   <xsl:variable name="env" select="/root/gui/systemConfig"/>
   
   <!-- Only system settings (use for backward compatibility replacing
