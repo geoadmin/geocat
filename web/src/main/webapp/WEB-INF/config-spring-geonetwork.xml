@@ -25,7 +25,7 @@
  	<import resource="config-db/postgres.xml"/>
  	<!--<import resource="config-db/sqlserver.xml"/> -->
 
-    <!-- Uncomment if you want to use a non-shapefile datastore -->
+	<!-- Uncomment if you want to use a non-shapefile datastore -->
 	<!--<import resource="config-db/postgis-shared-datasource.xml"/> -->
     <import resource="config-db/postgis-alternate-datasource.xml"/>
 
@@ -41,23 +41,23 @@
 	<bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory"
 		lazy-init="true" />
 
-    <bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
-        <property name="numberOfConcurrentRequests" value="30" />
-    </bean>
+	<bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
+		<property name="numberOfConcurrentRequests" value="30" />
+	</bean>
 
-    <bean id="defaultLanguage" class="java.lang.String">
-        <constructor-arg index="0" value="eng" />
-    </bean>
+	<bean id="defaultLanguage" class="java.lang.String">
+		<constructor-arg index="0" value="eng" />
+	</bean>
 	<!-- Define the languages in the UI. Seems like these should come from database 
 		at some point but at the moment they are needed here. -->
     <util:set id="languages" value-type="java.lang.String">
-        <value>eng</value>
-        <value>fre</value>
-        <value>ger</value>
-        <value>ita</value>
-    </util:set>
+		<value>eng</value>
+		<value>fre</value>
+		<value>ger</value>
+		<value>ita</value>
+	</util:set>
 
-    <util:map id="jpaPropertyMap">
+	<util:map id="jpaPropertyMap">
 		<entry key="shared-cache-mode" value="ENABLE_SELECTIVE" />
 		<entry key="javax.persistence.lock.timeout" value="30000" />
 		<entry key="org.hibernate.flushMode" value="AUTO" />

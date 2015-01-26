@@ -7,7 +7,6 @@ import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
@@ -59,6 +58,7 @@ public class ISO19139SchemaPlugin
 
 
             for (Object o : sibs) {
+                try {
                 if (o instanceof Element) {
                     Element sib = (Element) o;
                     Element agId = (Element) sib.getChild("aggregateDataSetIdentifier", ISO19139Namespaces.GMD)
@@ -72,9 +72,12 @@ public class ISO19139SchemaPlugin
                     AssociatedResource resource = new AssociatedResource(sibUuid, "", associationType);
                     listOfResources.add(resource);
                 }
+                } catch (Exception e) {
+                    Log.error(Log.JEEVES, "Error getting resources UUIDs", e);
+            }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Log.JEEVES, "Error getting resources UUIDs", e);
         }
         return listOfResources;
     }

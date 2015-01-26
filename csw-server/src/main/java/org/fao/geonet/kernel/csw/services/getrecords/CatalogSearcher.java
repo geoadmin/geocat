@@ -767,7 +767,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
         parser.setNumericConfigMap(numericMap);
         Query q = parser.parse(cswServiceSpecificConstraint, "title");
 
-
+        
 //        GEOCAT: This is commented out so that liechtenstein query will work.  we need to be able to select only for a specific group.
 //        // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
 //        List<String> SECURITY_FIELDS = Arrays.asList(
