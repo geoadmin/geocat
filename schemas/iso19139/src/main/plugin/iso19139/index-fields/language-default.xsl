@@ -217,7 +217,6 @@
 
             <xsl:for-each select="gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName//gmd:LocalisedCharacterString[@locale=$langId]">
                 <Field name="orgName" string="{string(.)}" store="true" index="true"/>
-                <Field name="_orgName" string="{string(.)}" store="true" index="true"/>
             </xsl:for-each>
             <xsl:for-each select="gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString|
 				gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:individualFirstName/gco:CharacterString|

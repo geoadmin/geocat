@@ -59,9 +59,6 @@
 	      <field name="statusProgressCode" tagName="statusProgressCode"/>
 	      <field name="historicalArchive" tagName="historicalArchive"/>
 	    </addXML>
-    	<addXML xpath="tokenized">
-    		<Field name="orgName"/>
-    	</addXML>
     </file>
     <file name=".*/WEB-INF/config-gui.xml">
         <replaceAtt xpath="client" attName="url" value="catalog.search?view=geocat"/>

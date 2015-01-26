@@ -91,7 +91,9 @@
             <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
             <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
             <item facet="orgName" max="15"/>
-            <item facet="metadataPOC" max="15"/>
+            <!-- GEOCAT -->
+            <!--<item facet="metadataPOC" max="15"/>-->
+            <!-- END GEOCAT -->
             <item facet="serviceType"/>
             <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
             <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
@@ -126,7 +128,9 @@
             <item facet="denominator" sortBy="value" sortOrder="asc" max="20"/>
             <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
             <item facet="orgName" max="15"/>
-            <item facet="metadataPOC" max="15"/>
+            <!-- GEOCAT -->
+            <!--<item facet="metadataPOC" max="15"/>-->
+            <!-- END GEOCAT -->
             <item facet="serviceType"/>
             <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
             <item facet="createDateYear" sortOrder="asc" max="40"/>
