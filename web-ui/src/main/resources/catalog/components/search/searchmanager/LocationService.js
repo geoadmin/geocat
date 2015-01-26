@@ -41,6 +41,10 @@
         }
       };
 
+      this.setMap = function() {
+        $location.path(this.MAP);
+      };
+
       this.setSearch = function(params) {
         $location.path(this.SEARCH);
         $location.search(params);
@@ -55,13 +59,13 @@
       this.initTabRouting = function(tabs) {
         var that = this;
         var updateTabs = function() {
-          if(that.isSearch()) {
+          if (that.isSearch()) {
             tabs.search.active = true;
           }
-          else if(that.isMap()) {
+          else if (that.isMap()) {
             tabs.map.active = true;
           }
-          else if(that.isMdView()) {
+          else if (that.isMdView()) {
             tabs.view.active = true;
           }
         };

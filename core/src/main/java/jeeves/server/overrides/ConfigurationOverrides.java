@@ -624,7 +624,7 @@ public class ConfigurationOverrides {
             if(file == null) {
                 return fallbackInputStream(resource);
             } else {
-                return Files.newInputStream(file);
+                return IO.newInputStream(file);
             }
         }
         protected abstract Path resolveFile(String resource) throws IOException;
@@ -867,11 +867,11 @@ public class ConfigurationOverrides {
                     if (url == null) {
                         Path file = IO.toPath(resource);
                         if (Files.exists(file)) {
-                            in = Files.newInputStream(file);
+                            in = IO.newInputStream(file);
                         } else {
                         	file = IO.toPath(resource.replace('/', '\\'));
                         	if(Files.exists(file)) {
-                        		in = Files.newInputStream(file);
+                        		in = IO.newInputStream(file);
                         	} else {
                         		throw new IllegalArgumentException("The resource file " + resource + " is not a file and not a web resource.  Perhaps a leading / was forgotten?");
                         	}
@@ -1015,9 +1015,8 @@ public class ConfigurationOverrides {
                     try {
                         inputSource = new FileSystemResource(file.toFile());
                     } catch (UnsupportedOperationException uoe) {
-                        inputSource = new InputStreamResource(Files.newInputStream(file));
-                    }
-                    reader.loadBeanDefinitions(inputSource);
+                        inputSource = new InputStreamResource(IO.newInputStream(file));
+                    }                    reader.loadBeanDefinitions(inputSource);
                 } else {
                     InputStream inputStream = loader.loadInputStream(importFile);
                     try {

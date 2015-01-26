@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="2.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                exclude-result-prefixes="#all">
   <!-- Template to load CSS and Javascript -->
 
 
@@ -22,16 +25,7 @@
     </xsl:if>
 
     <link rel="shortcut icon" type="image/x-icon" href="../../images/logos/favicon.ico" />
-
-    <xsl:choose>
-      <xsl:when test="$angularApp = 'gn_search'">
-        <link href="{/root/gui/url}/static/{$angularModule}.css{$minimizedParam}" rel="stylesheet" media="screen" />
-        <!--<link href="{/root/gui/url}/catalog/tmp/{$searchView}.css" rel="stylesheet" media="screen" />-->
-    </xsl:when>
-    <xsl:otherwise>
-      <link href="{/root/gui/url}/static/{$angularApp}.css{$minimizedParam}" rel="stylesheet" media="screen" />
-    </xsl:otherwise>
-    </xsl:choose>
+    <link href="{/root/gui/url}/static/{$customFilename}.css{$minimizedParam}" rel="stylesheet" media="screen" />
 
     <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css{$minimizedParam}" rel="stylesheet" media="screen" />
   </xsl:template>
@@ -126,44 +120,43 @@
             <script src="{/root/gui/url}/static/{$angularModule}.js{$minimizedParam}"></script>
         </xsl:otherwise>
     </xsl:choose>
-    <xsl:if test="$owsContext">
-      <script type="text/javascript">
-        var module = angular.module('gn_search');
-        module.config(['gnViewerSettings', function(gnViewerSettings) {
+
+
+    <xsl:variable name="mapConfig"
+                  select="util:getSettingValue('map/config')"/>
+
+    <script type="text/javascript">
+      var module = angular.module('gn_search');
+      module.config(['gnViewerSettings', function(gnViewerSettings) {
+        <xsl:if test="$owsContext">
           gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
-        }]);
-      </script>
-    </xsl:if>
-    <xsl:if test="$wmsUrl and $layerName">
-      <script type="text/javascript">
-        var module = angular.module('gn_search');
-        module.config(['gnViewerSettings', function(gnViewerSettings) {
+        </xsl:if>
+        <xsl:if test="$wmsUrl and $layerName">
           gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
           gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
-        }]);
-      </script>
-    </xsl:if>
-
+        </xsl:if>
+        gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
+      }]);
+    </script>
 
     <!--geocatch specific settings initialization-->
     <xsl:if test="$searchView = 'geocat'">
-
-
       <script type="text/javascript">
         var module = angular.module('gn_search');
         module.config(['gnSearchSettings', function(gnSearchSettings) {
-          gnSearchSettings.geoserverUrl = '<xsl:value-of select="/root/gui/config/geoserver.url"/>';
-          gnSearchSettings.permlink = '<xsl:value-of select="/root/gui/strings/permlink"/>';
-          gnSearchSettings.mapConfig = <xsl:value-of select="/root/gui/env/map/config"/>;
-          gnSearchSettings.gnStores = {
-            'topicCat': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/schemas/iso19139/codelists/codelist[@name='gmd:MD_TopicCategoryCode']/entry" mode="js-translations-topicCat"/>],
-            'sources_groups': [<xsl:apply-templates select="/root/gui/groups/record" mode="js-translations-sources-groups"><xsl:sort select="label/*[name()=/root/gui/language]"/><xsl:sort select="name"/></xsl:apply-templates><xsl:if
-                  test="count(/root/gui/groups/record) > 0 and count(/root/gui/sources/record) > 0">,</xsl:if><xsl:apply-templates select="/root/gui/sources/record[not(./siteid = preceding::record/siteid)]" mode="js-translations-sources-groups"><xsl:sort select="label/*[name()=/root/gui/language]"/><xsl:sort select="name"/></xsl:apply-templates>],
-            'formats': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/formats/record" mode="js-translations-formats"/>]
-          };
+        gnSearchSettings.geoserverUrl = '<xsl:value-of select="/root/gui/config/geoserver.url"/>';
+        gnSearchSettings.permlink = '<xsl:value-of select="/root/gui/strings/permlink"/>';
+        gnSearchSettings.mapConfig = <xsl:value-of select="/root/gui/env/map/config"/>;
+        gnSearchSettings.gnStores = {
+        'topicCat': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/schemas/iso19139/codelists/codelist[@name='gmd:MD_TopicCategoryCode']/entry" mode="js-translations-topicCat"/>],
+        'sources_groups': [<xsl:apply-templates select="/root/gui/groups/record" mode="js-translations-sources-groups"><xsl:sort select="label/*[name()=/root/gui/language]"/><xsl:sort select="name"/></xsl:apply-templates><xsl:if
+              test="count(/root/gui/groups/record) > 0 and count(/root/gui/sources/record) > 0">,</xsl:if><xsl:apply-templates select="/root/gui/sources/record[not(./siteid = preceding::record/siteid)]" mode="js-translations-sources-groups"><xsl:sort select="label/*[name()=/root/gui/language]"/><xsl:sort select="name"/></xsl:apply-templates>],
+        'formats': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/formats/record" mode="js-translations-formats"/>]
+        };
         }]);
       </script>
     </xsl:if>
+    <!--enf of geocatch specific settings initialization-->
 
   </xsl:template>
 
