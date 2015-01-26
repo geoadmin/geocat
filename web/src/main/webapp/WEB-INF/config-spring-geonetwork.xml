@@ -50,7 +50,7 @@
     </bean>
 	<!-- Define the languages in the UI. Seems like these should come from database 
 		at some point but at the moment they are needed here. -->
-    <util:set id="languages">
+    <util:set id="languages" value-type="java.lang.String">
         <value>eng</value>
         <value>fre</value>
         <value>ger</value>

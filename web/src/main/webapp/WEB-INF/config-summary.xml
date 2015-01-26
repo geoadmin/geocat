@@ -59,15 +59,12 @@
         <facet name="topicCat" indexKey="topicCat" label="topicCats"/>
         <facet name="formatWithVersion" indexKey="formatWithVersion" label="formatWithVersions" />
         <!-- END GEOCAT -->
-        <facet name="keyword_eng" indexKey="keyword_eng" label="keywords"/>
-        <facet name="keyword_ger" indexKey="keyword_ger" label="keywords"/>
-        <facet name="keyword_fre" indexKey="keyword_fre" label="keywords"/>
-        <facet name="keyword_ita" indexKey="keyword_ita" label="keywords"/>
+        <facet name="keyword" indexKey="keyword" label="keywords" localized="true"/>
         <facet name="inspireTheme" indexKey="inspiretheme" label="inspireThemes"/>
         <facet name="denominator" indexKey="denominator" label="denominators"/>
         <facet name="spatialRepresentationType" indexKey="spatialRepresentationType"
             label="spatialRepresentationTypes"/>
-        <facet name="orgName" indexKey="orgName" label="orgNames"/>
+        <facet name="orgName" indexKey="orgName" label="orgNames" localized="true"/>
         <facet name="metadataPOC" indexKey="metadataPOC" label="metadataPOCs"/>
         <facet name="serviceType" indexKey="serviceType" label="serviceTypes"/>
         <facet name="type" indexKey="type" label="types"/>
