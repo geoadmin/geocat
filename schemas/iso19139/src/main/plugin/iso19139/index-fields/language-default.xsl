@@ -205,7 +205,6 @@
             <xsl:for-each select="*/gmd:MD_Keywords">
                 <xsl:for-each select="gmd:keyword//gmd:LocalisedCharacterString[@locale=$langId]">
                     <Field name="keyword" string="{string(.)}" store="true" index="true"/>
-                    <Field name="keyword_{isoLangId}" string="{string(.)}" store="true" index="true" token="false"/>
                 </xsl:for-each>
 
                 <xsl:for-each select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">

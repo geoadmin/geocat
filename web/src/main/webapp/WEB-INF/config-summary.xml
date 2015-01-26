@@ -80,10 +80,7 @@
             <!-- GEOCAT -->
             <item facet="topicCat" sortBy="label" sortOrder="asc" max="100"  translator="codelist:gmd:MD_TopicCategoryCode"/>
             <!-- END GEOCAT -->
-            <item facet="keyword_eng" max="15"/>
-            <item facet="keyword_ger" max="15"/>
-            <item facet="keyword_fre" max="15"/>
-            <item facet="keyword_ita" max="15"/>
+            <item facet="keyword" max="15"/>
             <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
             <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
             <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
@@ -108,19 +105,13 @@
             <item facet="title" sortOrder="desc" max="100"/>
         </summaryType>
         <summaryType name="results">
-            <item facet="keyword_eng" max="100"/>
-            <item facet="keyword_ger" max="100"/>
-            <item facet="keyword_fre" max="100"/>
-            <item facet="keyword_ita" max="100"/>
+            <item facet="keyword" max="100"/>
         </summaryType>
         <summaryType name="results_with_summary">
             <!-- GEOCAT -->
             <item facet="topicCat" sortBy="label" sortOrder="asc" max="100"  translator="codelist:gmd:MD_TopicCategoryCode"/>
             <!-- END GEOCAT -->
-            <item facet="keyword_eng" max="15"/>
-            <item facet="keyword_ger" max="15"/>
-            <item facet="keyword_fre" max="15"/>
-            <item facet="keyword_ita" max="15"/>
+            <item facet="keyword" max="15"/>
             <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
             <item facet="denominator" sortBy="value" sortOrder="asc" max="20"/>
             <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
@@ -136,10 +127,7 @@
             <!-- END GEOCAT -->
         </summaryType>>
         <summaryType name="suggestions">
-            <item facet="keyword_eng" max="15"/>
-            <item facet="keyword_ger" max="15"/>
-            <item facet="keyword_fre" max="15"/>
-            <item facet="keyword_ita" max="15"/>
+            <item facet="keyword" max="15"/>
             <item facet="title" sortOrder="desc" max="100"/>
             <item facet="inspireTheme" sortBy="value" sortOrder="asc"/>
             <item facet="denominator" sortBy="value" sortOrder="asc"/>

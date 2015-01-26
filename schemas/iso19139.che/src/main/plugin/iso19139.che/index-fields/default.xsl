@@ -229,7 +229,6 @@
             <xsl:for-each select="*/gmd:MD_Keywords">
                 <xsl:for-each select="gmd:keyword/gco:CharacterString">
                     <Field name="keyword" string="{string(.)}" store="true" index="true"/>
-                    <Field name="keyword_{$isoLangId}" string="{string(.)}" store="true" index="true"/>
                 </xsl:for-each>
 
                 <xsl:for-each select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
@@ -531,7 +530,7 @@
         </xsl:variable>
 
         <!-- ignore empty downloads -->
-        <xsl:if test="string($linkage)!='' and not(contains($linkage,$download_check))">
+        <xsl:if test="string($linkage[1])!='' and not(contains($linkage,$download_check))">
             <Field name="protocol" string="{string($protocol)}" store="true" index="true"/>
         </xsl:if>
 

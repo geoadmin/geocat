@@ -238,8 +238,7 @@
         <xsl:for-each
             select="$listOfKeywords">
                     <Field name="keyword" string="{string(.)}" store="true" index="true"/>
-                    <Field name="keyword_{isoLangId}" string="{string(.)}" store="true" index="true" token="false"/>
-					
+
           <!-- If INSPIRE is enabled, check if the keyword is one of the 34 themes
           and index annex, theme and theme in english. -->
                     <xsl:if test="$inspire='true'">
