@@ -1,8 +1,8 @@
 <form class="form-horizontal" role="form" >
     <div class="form-group" data-ng-repeat="(lang, obj) in keyword">
-        <label class="col-lg-2" for="{{$index}}Label">{{translate(lang)}}</label>
+        <label class="col-lg-2" for="{{$index}}Label">{{lang | translate}}</label>
         <span class="col-lg-5">
-            <input type="text" class="form-control" data-ng-model="keyword[lang].label" name="{{lang}}Label" id="Text1" placeholder="{{translate('label')}}" />
+            <input type="text" class="form-control" data-ng-model="keyword[lang].label" name="{{lang}}Label" id="Text1" placeholder="{{'label' | translate}}" />
         </span>
         <!--<span class="col-lg-5">
             <textarea class="form-control" data-ng-model="keyword[lang].desc" name="{{lang}}Desc" id="{{lang}}Desc" placeholder="{{translate('description')}}" />

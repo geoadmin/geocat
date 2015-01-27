@@ -8,6 +8,7 @@
   goog.require('geocat_shared_objects_format_controller');
   goog.require('geocat_shared_objects_keyword_controller');
   goog.require('geocat_shared_objects_factories');
+  goog.require('geocat_shared_objects_translate_config');
 
 // Declare app level module which depends on filters, and services
 angular.module('geocat_shared_objects_app', [
@@ -18,6 +19,7 @@ angular.module('geocat_shared_objects_app', [
       'geocat_shared_objects_extent_controller',
       'geocat_shared_objects_format_controller',
       'geocat_shared_objects_keyword_controller',
+      'geocat_shared_objects_translate_config',
       'ngRoute']).
   config(['$routeProvider', function($routeProvider) {
     var partials = '../../catalog/geocat-shared-objects/partials';
