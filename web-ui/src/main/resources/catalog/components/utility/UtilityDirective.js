@@ -453,7 +453,7 @@
                 obj[year.min][month.min][k];
         }
 
-      return {
+        return {
           min: month.min + 1 + '/' + day.min + '/' + year.min,
           max: month.max + 1 + '/' + day.max + '/' + year.max
         };
@@ -482,7 +482,7 @@
           if (scope.dates) {
             limits = getMaxInProp(scope.dates);
 
-                }
+          }
 
           $(element).datepicker(angular.isDefined(scope.dates) ? {
             beforeShowDay: function(dt, a, b) {
@@ -670,4 +670,27 @@
         }
       }
     }]);
+
+  module.directive('gnCollapse', ['$compile', function($compile) {
+    return {
+      restrict: 'A',
+      scope: true,
+      link: function(scope, element, attrs) {
+        scope.collapsed = attrs['gnCollapse'] == 'true';
+        element.on('click', function(e) {
+          var next = element.next();
+          next.collapse('toggle');
+/*
+          if(scope.collapsed) {
+            next.show();
+          }
+          else {
+            next.hide();
+          }
+*/
+        });
+      }
+    };
+  }]);
+
 })();
