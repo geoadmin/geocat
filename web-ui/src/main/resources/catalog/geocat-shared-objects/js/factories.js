@@ -9,9 +9,11 @@
 angular.module('geocat_shared_objects_factories', []).
   factory('commonProperties', ['$window', '$http', function ($window, $http) {
       var loadRecords = function ($scope) {
+          $scope.loading = '-1';
           var validated = $scope.isValidated ? 'true' : 'false';
           $http({ method: 'GET', url: $scope.baseUrl + '/reusable.list.js?validated=' + validated + '&type=' + $scope.type }).
               success(function (data, status, headers, config) {
+                  $scope.loading = undefined;
                   if (data.indexOf("<") != 0) {
                       for (var i = 0; i < data.length; i++) {
                           if (data[i].url) {
@@ -29,6 +31,7 @@ angular.module('geocat_shared_objects_factories', []).
 
               }).
               error(function (data, status, headers, config) {
+                  $scope.loading = undefined;
                   alert("An error occurred when loading shared objects");
               });
       };
@@ -60,7 +63,7 @@ angular.module('geocat_shared_objects_factories', []).
               $scope.selected = null;
               $scope.select = function (row) {
                   $scope.selected = row;
-              }
+              };
               $scope.data = [];
               $scope.metadata = [];
 
@@ -70,14 +73,16 @@ angular.module('geocat_shared_objects_factories', []).
 
               $scope.loadReferencedMetadata = function (id, collapseDiv, containerDivId) {
                   $('.in').collapse('hide');
-
+                  $scope.loading = id;
                   $('#' + collapseDiv).collapse('show');
                   $http({ method: 'GET', url: baseUrl + '/reusable.references?id=' + id + "&type=" + $scope.type + '&validated=' + $scope.isValidated }).
                      success(function (data, status, headers, config) {
-                         $scope.metadata[id] = data;
+                        $scope.loading = undefined;
+                        $scope.metadata[id] = data;
                          $('#' + containerDivId).remove();
                      }).
                      error(function (data, status, headers, config) {
+                         $scope.loading = undefined;
                          alert("An error occurred when loading referenced metadata");
                      });
               };
@@ -106,25 +111,29 @@ angular.module('geocat_shared_objects_factories', []).
                   var executeModal = $('#executingOperation');
 
                   executeModal.modal('show');
-                  var promise = $http(requestObject)
+                  return $http(requestObject)
                   .success(function (data, status, headers, config) {
                       executeModal.modal('hide');
                       loadRecords($scope);
                   })
                   .error(function (data, status, headers, config) {
                       executeModal.modal('hide');
-                      alert('An error occurred during validation');
+                      alert('An error occurred during operation');
                   });
-
-                  return promise;
-              }
+              };
               $scope.reject = { message: '' };
               $scope.performUpdateOperation = function (service) {
-                  var params = { type: $scope.type, id: $scope.selected.id, isValidObject: $scope.isValidated, msg: $scope.reject.message };
+                  var params = {
+                    type: $scope.type,
+                    id: $scope.selected.id,
+                    isValidObject: $scope.isValidated,
+                    msg: $scope.reject.message,
+                    description: $scope.selected.desc
+                  };
 
                   if ($scope.message) {
                       params.msg = $scope.message;
-                  };
+                  }
                   $scope.performOperation({
                       method: 'GET',
                       url: baseUrl + '/' + service,

@@ -11,6 +11,7 @@ import org.jdom.Namespace;
 import java.io.IOException;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -73,6 +74,7 @@ public class RejectedSharedObject extends GeonetEntity {
     }
 
     @Column(nullable = false)
+    @AttributeOverride(name = "dateAndTime", column = @Column(name = "deletiondate", nullable = false, length = 30))
     public ISODate getDeletionDate() {
         return deletionDate;
     }

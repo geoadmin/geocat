@@ -1,3 +1,4 @@
+ALTER TABLE deletedobjects ALTER COLUMN deletiondate SET DATA TYPE character varying(30);
 
 ALTER TABLE metadata ADD COLUMN extra character varying(255);
 

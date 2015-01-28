@@ -78,7 +78,7 @@ public class Delete implements Service {
             final String id = Util.getParamText(params, ID);
             String msg = LangUtils.loadString("reusable.rejectDefaultMsg", context.getAppPath(), context.getLanguage());
             boolean isValidated = !Util.getParamText(params, TYPENAME).contains("non_validated");
-            return new Reject().reject(context, ReusableTypes.extents, new String[]{id}, msg, null, isValidated, testing);
+            return new Reject().reject(context, ReusableTypes.extents, new String[]{id}, msg, "", null, isValidated, testing);
         } else {
             return deleteSingle(params, extentMan);
         }
@@ -165,7 +165,7 @@ public class Delete implements Service {
 
         String msg = "";// TODO
         boolean isValidated = !currentType.typename.contains("non_validated");
-        new Reject().reject(context, ReusableTypes.extents, ids.toArray(new String[0]), msg, currentType.typename, isValidated, testing);
+        new Reject().reject(context, ReusableTypes.extents, ids.toArray(new String[0]), msg, "", currentType.typename, isValidated, testing);
         // java.util.List<Filter> filters = new ArrayList<Filter>();
         // for (String id : ids) {
         // filters.add(currentType.createFilter(id));

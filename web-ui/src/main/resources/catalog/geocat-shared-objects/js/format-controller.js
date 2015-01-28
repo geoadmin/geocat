@@ -21,16 +21,7 @@
         }
 
         $scope.edit = function (row) {
-          $http.get($scope.baseUrl + '/json.format.get?id=' + row.id)
-            .success(function (data) {
-              $scope.format.name = data.name;
-              $scope.format.version = data.version;
-              $('#editModal').modal('show');
-
-              $scope.finishEdit = function () {
-                $scope.doUpdate(row.id, $scope.isValidated ? 'y' : 'n');
-              }
-            });
+          $scope.open(row.url);
         };
         $scope.createNewObject = function () {
           $scope.doUpdate(undefined, 'y');

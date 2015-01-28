@@ -19,6 +19,6 @@ public class SharedObjectApiImpl implements SharedObjectApi {
     @Override
     public Element reject(ServiceContext context, ReusableTypes reusableType, String[] ids, String msg, String strategySpecificData,
                           boolean isValidObject, boolean testing) throws Exception {
-        return new Reject().reject(context, reusableType, ids, msg, strategySpecificData, isValidObject, testing);
+        return new Reject().reject(context, reusableType, ids, msg, "", strategySpecificData, isValidObject, testing);
     }
 }

@@ -93,7 +93,7 @@
 
           $scope.performOperation({
             method: 'POST',
-            url: $scope.baseUrl + '/thesaurus.updateelement',
+            url: $scope.baseUrl + '/geocat.thesaurus.updateelement',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             data: $.param(params)
           });
@@ -105,7 +105,7 @@
           if (!isEmpty) {
             $scope.performOperation({
               method: 'POST',
-              url: $scope.baseUrl + '/thesaurus.addelement',
+              url: $scope.baseUrl + '/thesaurus.keyword.add',
               headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
               data: $.param(params)
             }).

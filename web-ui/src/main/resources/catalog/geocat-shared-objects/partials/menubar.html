@@ -1,6 +1,10 @@
 <ul class="nav nav-pills">
     <li class="dropdown">
-        <a id="breadCrumb1" class="dropdown-toggle capitalized" data-toggle="dropdown">{{validatedTitle | translate}} <b class="caret"></b></a>
+        <a id="breadCrumb1" class="dropdown-toggle capitalized" data-toggle="dropdown">
+            {{validatedTitle | translate}}&nbsp;
+            <span data-ng-show="isDeletePage" class="badge ng-binding">{{data.length}}</span>
+            <b class="caret"></b>
+        </a>
         <ul class="dropdown-menu capitalized">
             <li><a id="nav-validated" ng-href="#/validated/{{type}}" translate>reusable_validated</a></li>
             <li><a id="nav-nonvalidated" ng-href="#/nonvalidated/{{type}}" translate>reusable_nonValidated</a></li>
@@ -8,7 +12,11 @@
         </ul>
     </li>
     <li class="dropdown" data-ng-hide="isDeletePage">
-        <a id="breadCrumb2" class="dropdown-toggle capitalized" data-toggle="dropdown">{{type |  translate}}<b class="caret"></b></a>
+        <a id="breadCrumb2" class="dropdown-toggle capitalized" data-toggle="dropdown">
+            {{type |  translate}}&nbsp;
+            <span class="badge ng-binding">{{data.length}}</span>
+            <b class="caret"></b>
+        </a>
         <ul class="dropdown-menu capitalized">
             <li><a id="nav-contacts" ng-href="#/{{validated}}/contacts" translate>contacts</a></li>
             <li><a id="nav-formats" ng-href="#/{{validated}}/formats" translate>formats</a></li>

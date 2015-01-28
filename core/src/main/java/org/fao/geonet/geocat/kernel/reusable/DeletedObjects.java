@@ -74,7 +74,10 @@ public final class DeletedObjects {
         for (RejectedSharedObject obj : all) {
             Element delete = new Element(SharedObjectStrategy.REPORT_ELEMENT);
             String desc = obj.getDescription();
-            String date = obj.getDeletionDate().getDateAndTime();
+            String date = null;
+            if (obj.getDeletionDate() != null) {
+                date = obj.getDeletionDate().getDateAndTime();
+            }
 
             if (date != null) {
                 if (desc == null) {

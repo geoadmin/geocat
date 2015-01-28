@@ -8,5 +8,18 @@
   "rejected" : "Rejected",
   "noRecords" : "No Records",
   "description" : "Description",
-  "filter": "Filter"
+  "filter": "Filter",
+  "loading": "Loading...",
+  "reusable_confirmValidate": "Validate Object",
+  "reusable_confirmValidateMsg": "Are you certain you wish to validate the Shared Object?",
+  "reusable_rejectDefaultMsg": "<Enter reason for rejecting shared object>",
+  "reusable_rejectTitle": "Rejecting Shared Object",
+  "reload": "Reload",
+  "create": "Create New",
+  "validate": "Validate",
+  "reject": "Reject",
+  "accept": "Accept",
+  "cancel": "Cancel",
+  "createNewSharedObject":"Create New Shared Object",
+  "performingOperation" : "Performing Operation"
 }

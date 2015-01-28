@@ -32,10 +32,8 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geocat;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
@@ -73,6 +71,7 @@ public class Reject implements Service {
     public Element exec(Element params, ServiceContext context) throws Exception {
         String page = Util.getParamText(params, "type");
         String[] ids = Util.getParamText(params, "id").split(",");
+        String description = Util.getParam(params, "description", "");
         String msg = Util.getParamText(params, "msg");
         boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
         boolean isValidObject = Boolean.parseBoolean(Util.getParam(params, "isValidObject", "false"));
@@ -83,21 +82,20 @@ public class Reject implements Service {
             specificData = ExtentsStrategy.XLINK_TYPE;
         }
 
-        return reject(context, ReusableTypes.valueOf(page), ids, msg, specificData, isValidObject, testing);
+        return reject(context, ReusableTypes.valueOf(page), ids, msg, description, specificData, isValidObject, testing);
     }
 
-    public Element reject(ServiceContext context, ReusableTypes reusableType, String[] ids, String msg,
+    public Element reject(ServiceContext context, ReusableTypes reusableType, String[] ids, String msg, String description,
                           String strategySpecificData, boolean isValidObject, boolean testing) throws Exception {
         Log.debug(Geocat.Module.REUSABLE, "Starting to reject following reusable objects: \n"
                                           + reusableType + " (" + Arrays.toString(ids) + ")\nRejection message is:\n" + msg);
         UserSession session = context.getUserSession();
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));
         SharedObjectStrategy strategy = Utils.strategy(reusableType, context);
 
         Element results = new Element("results");
         if (strategy != null) {
-            results.addContent(performReject(ids, strategy, context, gc, session, baseUrl, msg,
+            results.addContent(performReject(ids, strategy, context, session, baseUrl, msg, description,
                     strategySpecificData, isValidObject, testing));
         }
         Log.info(Geocat.Module.REUSABLE, "Successfully rejected following reusable objects: \n"
@@ -107,7 +105,7 @@ public class Reject implements Service {
     }
 
     private List<Element> performReject(String[] ids, final SharedObjectStrategy strategy, ServiceContext context,
-                                        GeonetContext gc, final UserSession session, String baseURL, String msg,
+                                        final UserSession session, String baseURL, String msg, String desc,
                                         String strategySpecificData, boolean isValidObject, boolean testing) throws Exception {
 
         final Function<String, String> idConverter = strategy.numericIdToConcreteId(session);
@@ -131,7 +129,8 @@ public class Reject implements Service {
                 emailInfo.put(record.ownerId, record.id);
             }
 
-            Element newIds = updateHrefs(strategy, context, session, id, results, baseURL, strategySpecificData);
+            Element newIds = updateHrefs(context, desc, results);
+
             for (MetadataRecord metadataRecord : results) {
                 allAffectedMdIds.add(Integer.toString(metadataRecord.id));
             }
@@ -154,9 +153,8 @@ public class Reject implements Service {
 
     }
 
-    private Element updateHrefs(final SharedObjectStrategy strategy, ServiceContext context,
-                                final UserSession session, String id, Set<MetadataRecord> results, String baseURL,
-                                String strategySpecificData) throws Exception {
+    private Element updateHrefs(ServiceContext context, String oldDesc,
+                                Set<MetadataRecord> results) throws Exception {
         Element newIds = new Element("newIds");
         // Move the reusable object to the DeletedObjects table and update
         // the xlink attribute information so that the objects are obtained from that table
@@ -176,7 +174,7 @@ public class Reject implements Service {
                         // update xlink service
                         int newId = DeletedObjects.insert(
                                 context.getBean(RejectedSharedObjectRepository.class),
-                                Xml.getString(fragment), href);
+                                Xml.getString(fragment), oldDesc + " - " + href);
                         newIds.addContent(new Element("id").setText(String.valueOf(newId)));
                         newHref = DeletedObjects.href(newId);
                         updatedHrefs.put(oldHRef, newHref);
