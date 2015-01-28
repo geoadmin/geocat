@@ -96,10 +96,13 @@ public class Insert extends NotInReadOnlyModeService {
         if (!style.equals("_none_"))
             xml = Xml.transform(xml, stylePath.resolve(style));
 
-        String schema = dataMan.autodetectSchema(xml);
-        if (schema == null)
-            throw new BadParameterEx("Can't detect schema for metadata automatically.", "schema is unknown");
-
+        String schema = Util.getParam(params, Params.SCHEMA, null);
+        if (schema == null) {
+            schema = dataMan.autodetectSchema(xml);
+            if (schema == null) {
+                throw new BadParameterEx("Can't detect schema for metadata automatically.", "schema is unknown");
+            }
+        }
         if (validate) DataManager.validateMetadata(schema, xml, context);
 
         //-----------------------------------------------------------------------
@@ -139,7 +142,7 @@ public class Insert extends NotInReadOnlyModeService {
         final String category = Util.getParam(params, Params.CATEGORY, "");
 
         final String extra = Util.getParam(params, "extra", null);
-        final boolean hasCategory = !category.equals("_none_") || !category.equals("");
+        final boolean hasCategory = category.equals("_none_") || category.trim().isEmpty();
 
         if (hasCategory || extra != null) {
             context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
