@@ -25,7 +25,15 @@
 			<xsl:apply-templates/>
 		</xsl:copy>
 	</xsl:template>	
+    
 	<xsl:template match="/">
-			<xsl:apply-templates select="//gmd:EX_Extent"/>
+        <xsl:choose>
+            <xsl:when test="lower-case(root/request/format) = 'wkt'">
+                <xsl:apply-templates select="/root/response" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates select="//gmd:EX_Extent"/>
+            </xsl:otherwise>
+        </xsl:choose>
 	</xsl:template>
 </xsl:stylesheet>
