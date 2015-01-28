@@ -21,5 +21,8 @@
   "accept": "Accept",
   "cancel": "Cancel",
   "createNewSharedObject":"Create New Shared Object",
-  "performingOperation" : "Performing Operation"
+  "performingOperation" : "Performing Operation",
+  "geometry": "Geometry",
+  "projection": "Projection",
+  "geoId": "Geo Id"
 }

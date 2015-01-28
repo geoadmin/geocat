@@ -342,7 +342,7 @@
           dragboxInteraction.active = false;
         }, 0);
       });
-      dragboxInteraction.on('drawstart', function() {
+      dragboxInteraction.on('boxstart', function() {
         featureOverlay.getFeatures().clear();
       });
       ngeoDecorateInteraction(dragboxInteraction);
