@@ -71,3 +71,4 @@ ALTER TABLE publish_tracking RENAME published TO jpaworkaround_published;
 ALTER TABLE publish_tracking RENAME validated TO jpaworkaround_validated;
 
 truncate statusvaluesdes;
+

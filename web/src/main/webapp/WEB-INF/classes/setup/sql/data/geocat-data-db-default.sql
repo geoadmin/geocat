@@ -44,3 +44,17 @@ INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schema
 INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schematronid) VALUES (3, 'XPATH', '*//gmd:keyword/gco:CharacterString/text() = ''Geobasisdatensatz''__OR__*//gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString/text() = ''Geobasisdatensatz''', 'Geobasisdatensatz', 3);
 INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schematronid) VALUES (4, 'GROUP', '42', 'Geobasisdatensatz', 3);
 INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schematronid) VALUES (5, 'ALWAYS_ACCEPT', '', 'DefaultInspireStrict', 1);
+
+INSERT INTO metadata VALUES (-1, 'formatTemplate', 'iso19139.che','s','n','2009-12-09T22:04:36', '2013-11-20T15:36:33', '<gmd:MD_Format xmlns:gmd="http://www.isotc211.org/2005/gmd">
+  <gmd:name>
+    <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco">--</gco:CharacterString>
+  </gmd:name>
+  <gmd:version>
+    <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco">--</gco:CharacterString>
+  </gmd:version>
+</gmd:MD_Format>', '7ea582d4-9ddf-422e-b28f-29760a4c0147', '', 'gmd:MD_Format', NULL, 1, NULL, NULL, 0, 0, 0, NULL, 'nonvalidated');
+
+INSERT INTO metadata VALUES (-2, 'contactTemplate', 'iso19139.che','s','n','2009-12-09T22:04:36', '2013-11-20T15:36:33', '<che:CHE_CI_ResponsibleParty xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" gco:isoType="gmd:CI_ResponsibleParty">
+  <gmd:contactInfo xmlns:gmd="http://www.isotc211.org/2005/gmd">
+  </gmd:contactInfo>
+</che:CHE_CI_ResponsibleParty>', '7ea582d4-9ddf-422e-b28f-29760a4c0147', '', 'che:CHE_CI_ResponsibleParty', NULL, 1, NULL, NULL, 0, 0, 0, NULL, 'nonvalidated');
