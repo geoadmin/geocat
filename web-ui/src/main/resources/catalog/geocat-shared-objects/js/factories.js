@@ -7,7 +7,7 @@
 // Demonstrate how to register services
 // In this case it is a simple value service.
 angular.module('geocat_shared_objects_factories', []).
-  factory('commonProperties', ['$window', '$http', '$translate', function ($window, $http, $translate) {
+  factory('commonProperties', ['$window', '$http', '$translate', '$location', function ($window, $http, $translate, $location) {
       var loadRecords = function ($scope) {
           $scope.loading = '-1';
           var validated = $scope.isValidated ? 'true' : 'false';
@@ -98,7 +98,7 @@ angular.module('geocat_shared_objects_factories', []).
                           finalUrl += "?" + jQuery.param(params);
                       }
                   }
-                  window.open(finalUrl, '_sharedTab');
+                  return window.open(finalUrl, '_blank');
               };
               $scope.editTitle = $translate('createNewSharedObject');
               $scope.startCreateNew = function () {
@@ -143,6 +143,46 @@ angular.module('geocat_shared_objects_factories', []).
 
               $scope.alert = function (name) {
                   alert(name);
+              };
+              $scope.createNewSubtemplate = function(template, validatedUrl) {
+                $scope.loading = '-1';
+                var data = {
+                  insert_mode:0,
+                  template: 's',
+                  fullPrivileges: 'y',
+                  data: template,
+                  group: 0,
+                  extra: 'validated',
+                  schema: 'iso19139.che'
+                };
+                $http({
+                  method: 'POST',
+                  url: 'md.insert?_content_type=json',
+                  headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                  transformRequest: function(obj) {
+                    var str = [];
+                    for(var p in obj) {
+                      if (obj.hasOwnProperty(p))
+                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                    }
+                    return str.join("&");
+                  },
+                  data: data
+                }).
+                  success(function(data) {
+                    $scope.loading = undefined;
+                    var id = data.id;
+                    $scope.reloadOnWindowClosed($scope.open('catalog.edit#/metadata/' + id));
+                    $location.path(validatedUrl);
+                  }).
+                  error(function(data) {
+                    $scope.loading = undefined;
+                    if (data.error) {
+                      alert(data.error.message);
+                    } else {
+                      alert('Error occurred creating a new shared object');
+                    }
+                  });
               };
               $scope.reloadOnWindowClosed = function (win) {
                   var intervalId = setInterval(function() {

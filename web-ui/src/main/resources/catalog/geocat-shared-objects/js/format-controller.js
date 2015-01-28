@@ -8,6 +8,14 @@
   var module = angular.module('geocat_shared_objects_format_controller', []).
     controller('FormatControl', ['$scope', '$routeParams', '$http', '$location', 'commonProperties',
       function ($scope, $routeParams, $http, $location, commonProperties) {
+        var template = '<gmd:MD_Format xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">' +
+        '  <gmd:name>' +
+        '    <gco:CharacterString >-- Template Name --</gco:CharacterString>' +
+        '  </gmd:name>' +
+        '  <gmd:version>' +
+        '    <gco:CharacterString>-- Template Version --</gco:CharacterString>' +
+        '  </gmd:version>' +
+        '</gmd:MD_Format>';
         commonProperties.addValidated($scope, $routeParams);
         commonProperties.add($scope, $routeParams);
         $scope.format = {
@@ -21,30 +29,11 @@
         }
 
         $scope.edit = function (row) {
-          $scope.open(row.url);
-        };
-        $scope.createNewObject = function () {
-          $scope.doUpdate(undefined, 'y');
+          $scope.reloadOnWindowClosed($scope.open(row.url));
         };
 
-        $scope.doUpdate = function (id, validated) {
-          $scope.performOperation({
-            method: 'GET',
-            url: $scope.baseUrl + '/format',
-            params: {
-              action: 'PUT',
-              name: $scope.format.name,
-              version: $scope.format.version,
-              validated: 'y',
-              id: id
-            }
-          }).
-            success(function () {
-              $location.path("/validated/formats");
-              $scope.format.name = '';
-              $scope.format.version = '';
-            });
-          $scope.includeRowPartial = 'row-format.html';
+        $scope.startCreateNew = function () {
+          $scope.createNewSubtemplate(template, "/validated/formats");
         };
 
       }]);

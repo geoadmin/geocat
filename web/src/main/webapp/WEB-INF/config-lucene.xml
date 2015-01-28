@@ -93,6 +93,7 @@
       <field name="_dynamic" tagName="dynamic"/>
       <field name="_featured" tagName="featured"/>
       <field name="_owner" tagName="owner"/>
+      <field name="_owner" tagName="owner"/>
       <!--Swisstopo specific -->
       <field name="_catalog" tagName="catalog"/>
       <field name="_userinfo" tagName="userinfo"/>
@@ -147,6 +148,7 @@
       <field name="_indexingErrorMsg" tagName="idxMsg"/>
       <field name="_op0" tagName="publishedForGroup"/>
       <field name="_groupOwner" tagName="groupOwner"/>
+      <field name="_groupWebsite" tagName="groupWebsite"/>
     </dumpFields>
   </search>
 
