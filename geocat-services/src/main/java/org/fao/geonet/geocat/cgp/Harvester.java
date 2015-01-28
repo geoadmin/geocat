@@ -49,6 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 //=============================================================================
@@ -66,17 +67,20 @@ import java.util.Map;
  * @author justb
  */
 class Harvester {
+    private final AtomicBoolean cancelMonitor;
     DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     DateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * Constructor.
      *
+     * @param cancelMonitor
      * @param log     logger
      * @param context Jeeves context
      * @param params  Information about harvesting configuration for the node
      */
-    public Harvester(Logger log, ServiceContext context, CGPParams params) {
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, CGPParams params) {
+        this.cancelMonitor = cancelMonitor;
         this.log = log;
         this.context = context;
         this.params = params;
@@ -166,6 +170,10 @@ class Harvester {
         // Fetches each record and adds it.
         String objectId;
         for (Element recordElm : recordElms) {
+            if (cancelMonitor.get()) {
+                break;
+            }
+
             objectId = recordElm.getAttributeValue("objid");
 
             log.info("CGP Harvester, addMetadata objid: " + objectId);

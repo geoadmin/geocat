@@ -7,7 +7,7 @@
 // Demonstrate how to register services
 // In this case it is a simple value service.
 angular.module('geocat_shared_objects_factories', []).
-  factory('commonProperties', ['$window', '$http', function ($window, $http) {
+  factory('commonProperties', ['$window', '$http', '$translate', function ($window, $http, $translate) {
       var loadRecords = function ($scope) {
           $scope.loading = '-1';
           var validated = $scope.isValidated ? 'true' : 'false';
@@ -100,8 +100,7 @@ angular.module('geocat_shared_objects_factories', []).
                   }
                   window.open(finalUrl, '_sharedTab');
               };
-              $scope.editTitle = 'createNewSharedObject'; //Geonet.translate('createNewSharedObject').replace(/\%objtype\%/g, Geonet.translate($scope.type))
-              $scope.editTitle = 'createNewSharedObject';// Geonet.translate('createNewSharedObject').replace(/\%objtype\%/g, Geonet.translate($scope.type))
+              $scope.editTitle = $translate('createNewSharedObject');
               $scope.startCreateNew = function () {
                   $scope.finishEdit = $scope.createNewObject;
                   $('#editModal').modal('show');
@@ -118,7 +117,7 @@ angular.module('geocat_shared_objects_factories', []).
                   })
                   .error(function (data, status, headers, config) {
                       executeModal.modal('hide');
-                      alert('An error occurred during operation');
+                      alert('An error occurred during validation');
                   });
               };
               $scope.reject = { message: '' };

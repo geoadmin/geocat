@@ -62,7 +62,6 @@ import java.util.UUID;
 public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 	
 	//FIXME Put on a different file?
-	private BaseAligner aligner = new BaseAligner() {};
 	private LocalFilesystemParams params;
 
 	
@@ -110,17 +109,17 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 	 */
     private HarvestResult align(Path root) throws Exception {
         log.debug("Start of alignment for : " + params.name);
-        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(context, params, log, this);
+        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, log, this);
         if (params.recurse) {
             Files.walkFileTree(root, visitor);
-					    } else {
+        } else {
             try (DirectoryStream<Path> paths = Files.newDirectoryStream(root)) {
                 for (Path path : paths) {
                     if (path != null && Files.isRegularFile(path)) {
                         visitor.visitFile(path, Files.readAttributes(path, BasicFileAttributes.class));
-                            }
-                        }
-    					    }
+                    }
+                }
+            }
                             }
         result = visitor.getResult();
         List<String> idsForHarvestingResult = visitor.getIdsForHarvestingResult();
@@ -131,7 +130,12 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 			//
             List<Metadata> existingMetadata = context.getBean(MetadataRepository.class).findAllByHarvestInfo_Uuid(params.uuid);
             for (Metadata existingId : existingMetadata) {
-				String ex$ = String.valueOf(existingId.getId());
+
+                if (cancelMonitor.get()) {
+                    return this.result;
+                }
+
+                String ex$ = String.valueOf(existingId.getId());
                 if (!idsForHarvestingResult.contains(ex$)) {
 				    log.debug("  Removing: " + ex$);
 					dataMan.deleteMetadata(context, ex$);
@@ -144,7 +148,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 	}
 
 	void updateMetadata(Element xml, final String id, GroupMapper localGroups,
-                                final CategoryMapper localCateg, String changeDate) throws Exception {
+                        final CategoryMapper localCateg, String changeDate, BaseAligner aligner) throws Exception {
 		log.debug("  - Updating metadata with id: "+ id);
 
         //
@@ -179,9 +183,11 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 	 * @param localGroups
 	 * @param localCateg
 	 * @param createDate TODO
-	 * @throws Exception
+	 * @param aligner
+     * @throws Exception
 	 */
-    String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg, String createDate) throws Exception {
+    String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg,
+                       String createDate, BaseAligner aligner) throws Exception {
 		log.debug("  - Adding metadata with remote uuid: "+ uuid);
 
 		

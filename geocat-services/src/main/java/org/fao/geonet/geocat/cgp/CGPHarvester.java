@@ -143,7 +143,7 @@ public class CGPHarvester extends AbstractHarvester {
     //---------------------------------------------------------------------------
     @Override
     protected void doHarvest(Logger log) throws Exception {
-        Harvester h = new Harvester(log, context, params);
+        Harvester h = new Harvester(cancelMonitor, log, context, params);
         result = h.harvest();
     }
 
