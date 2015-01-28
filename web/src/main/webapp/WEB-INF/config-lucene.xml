@@ -148,6 +148,7 @@
       <field name="_indexingErrorMsg" tagName="idxMsg"/>
       <field name="_op0" tagName="publishedForGroup"/>
       <field name="_groupOwner" tagName="groupOwner"/>
+      <field name="_logo" tagName="logo"/>
       <field name="_groupWebsite" tagName="groupWebsite"/>
     </dumpFields>
   </search>
@@ -271,8 +272,8 @@
     * values: A comma separated value of value for each field. Use NOTNULL to check any field values.
     * boost: A comma separated value of boost factor for each field (Float).
     
-    "The boost factor values you should use depend on what youâ€™re trying to achieve; 
-    youâ€™ll need to do some experimentation and
+    "The boost factor values you should use depend on what youâ??re trying to achieve; 
+    youâ??ll need to do some experimentation and
     tuning to achieve the desired effect." source: Lucene In Action 
     
   <boostDocument name="org.fao.geonet.kernel.search.function.ImportantDocument">
