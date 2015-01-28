@@ -24,7 +24,7 @@
         <from>^/srv/(...)/region.getmap.png\?(.*?)id=countries:(\d+?)(.+)$</from>
         <to type="forward" last="true">/srv/$1/region.getmap.png\?$2id=country:$3$4</to>
     </rule>
-    
+
     <!-- Rule to redirect old deprecated @json requests -->
     <rule>
         <from>^(.*)/fra/(.*)$</from>
@@ -136,7 +136,7 @@
       <from>^/(?!home$)(?!monitor$)(?!\w*healthcheck$)([a-zA-Z0-9_\-]+)$</from>
       <to type="permanent-redirect" last="true">%{context-path}/home?node=$1</to>
     </rule>
-    
+
     <!-- Rules for RESTful urls for metadata retrieve -->
     <rule>
         <note>
@@ -209,7 +209,56 @@
         <from>^(.*)/rss.latest(\.*)</from>
         <to type="permanent-redirect" last="true">%{context-path}$1/rss.search?sortBy=changeDate</to>
     </rule>
+
     
+    <rule>
+        <note>
+          INSPIRE Atom OpenSearchDescription
+        </note>
+        <from>^/opensearch/(.*)/(.*)/OpenSearchDescription.xml$</from>
+        <to type="forward">/srv/$1/atom.description?fileIdentifier=$2</to>
+    </rule>
+
+    <rule>
+        <note>
+          INSPIRE Atom search
+        </note>
+        <from>^/opensearch/(.*)/(.*)/search?(.*)$</from>
+        <to type="forward">/srv/$1/atom.search?fileIdentifier=$2</to>
+    </rule>
+
+    <rule>
+        <note>
+          INSPIRE Atom search
+        </note>
+        <from>^/opensearch/(.*)/search?(.*)$</from>
+        <to type="forward">/srv/$1/atom.search</to>
+    </rule>
+
+    <rule>
+        <note>
+          INSPIRE Atom Describe (service)
+        </note>
+        <from>^/opensearch/(.*)/(.*)/describe?(.*)$</from>
+        <to type="forward">/srv/$1/atom.describe?fileIdentifier=$2</to>
+    </rule>
+
+    <rule>
+        <note>
+          INSPIRE Atom DescribeBy
+        </note>
+        <from>^/opensearch/(.*)/describe?(.*)$</from>
+        <to type="forward">/srv/$1/atom.describe</to>
+    </rule>
+
+
+    <rule>
+        <note>
+          INSPIRE Atom GetData
+        </note>
+        <from>^/opensearch/(.*)/download?(.*)$</from>
+        <to type="forward">/srv/$1/atom.download</to>
+    </rule>
     
     <!-- hide jsession id from google bot -->
     <outbound-rule encodefirst="true">

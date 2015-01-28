@@ -166,8 +166,7 @@
       var triggerSearchFn = self.triggerSearchFn;
       var facetsParams;
 
-      self.triggerSearch = function(keepPagination, initial) {
-        $scope.initial = !!initial;
+      self.triggerSearch = function(keepPagination) {
         if (!keepPagination) {
           self.resetPagination();
         }
@@ -299,19 +298,16 @@
                   gnSearchLocation.getParams());
             }
 
-            var initial = jQuery.isEmptyObject(scope.searchObj.params);
-          scope.initial = initial;
-
             // wait for pagination to be set before triggering search
             if (element.find('[data-gn-pagination]').length > 0) {
               var unregisterFn = scope.$watch('hasPagination', function() {
                 if (scope.hasPagination) {
-                  scope.triggerSearch(true, initial);
+                  scope.triggerSearch(true);
                   unregisterFn();
                 }
               });
             } else {
-              scope.triggerSearch(false, initial);
+              scope.triggerSearch(false);
             }
           }
         }
