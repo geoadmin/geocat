@@ -74,7 +74,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
     public static final String TEMPLATE_PATTERN = "directive.js";
     @Inject
     private ReadOnlyContext _context;
-    private Collection<Throwable> errors = Lists.newCopyOnWriteArrayList();
+    private Collection<Throwable> errors = Lists.newArrayList();
 
     private String _geonetworkRootDirectory = "";
 
