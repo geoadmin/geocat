@@ -1,5 +1,6 @@
 package org.fao.geonet.wro4j;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
@@ -52,7 +53,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * Time: 8:28 AM
  */
 public class GeonetWroModelFactory implements WroModelFactory {
-    private static final Logger LOG = Logger.getLogger(GeonetWroModelFactory.class.getName());
+    private static final Logger LOG = Logger.getLogger("org.fao.geonet.wro4j."+GeonetWroModelFactory.class.getSimpleName());
 
     public static final String WRO_SOURCES_KEY = "wroSources";
     public static final String JS_SOURCE_EL = "jsSource";
@@ -73,6 +74,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
     public static final String TEMPLATE_PATTERN = "directive.js";
     @Inject
     private ReadOnlyContext _context;
+    private Collection<Throwable> errors = Lists.newCopyOnWriteArrayList();
 
     private String _geonetworkRootDirectory = "";
 
@@ -103,9 +105,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
                 }
             }
 
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Error e) {
+        } catch (RuntimeException | Error e) {
             throw e;
         } catch (Throwable e) {
             throw new RuntimeException(e);
@@ -163,7 +163,9 @@ public class GeonetWroModelFactory implements WroModelFactory {
                     }
                 }
             } catch (Exception e) {
+                errors.add(e);
                 e.printStackTrace();
+                LOG.log(Level.SEVERE, "Error while loading wro4j model", e);
             } finally {
                 if (streams != null) {
                     for (IncludesStream stream : streams) {
@@ -402,6 +404,13 @@ public class GeonetWroModelFactory implements WroModelFactory {
                 builder.append("\n\n");
             }
             LOG.info(builder.toString());
+        }
+
+        if (!errors.isEmpty()) {
+            LOG.severe("Errors were encountered");
+            for (Throwable error : errors) {
+                LOG.log(Level.SEVERE, "error", error);
+            }
         }
     }
 
