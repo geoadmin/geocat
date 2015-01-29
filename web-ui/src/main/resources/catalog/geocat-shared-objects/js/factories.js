@@ -32,7 +32,7 @@ angular.module('geocat_shared_objects_factories', []).
               }).
               error(function (data, status, headers, config) {
                   $scope.loading = undefined;
-                  alert("An error occurred when loading shared objects");
+                  alert("An error occurred when loading shared objects: " + data.error.message);
               });
       };
 
@@ -47,9 +47,17 @@ angular.module('geocat_shared_objects_factories', []).
                   $scope.validatedTitle = 'reusable_nonValidated'; //Geonet.translate('reusable_nonValidated');
               }
           },
+
           add: function ($scope) {
-              
-              $scope.translate = function(key) {return key;}; //Geonet.translate;
+              $scope.sort = 'desc';
+              $scope.reverseSort = false;
+              $scope.refSort = function(row) {
+                if (row.referenceCount === '?') {
+                  return $scope.reverseSort ? -999999 : 999999;
+                }
+
+                return row.referenceCount;
+              };
               $scope.language = 'eng'; //Geonet.language;
               $scope.search = {
                   search: ''
@@ -70,20 +78,32 @@ angular.module('geocat_shared_objects_factories', []).
               loadRecords($scope);
 
               $scope.reloadData = function () { loadRecords($scope); };
-
-              $scope.loadReferencedMetadata = function (id, collapseDiv, containerDivId) {
+              var referenceMdUrl = function(ids, onlyCount) {
+                var url = baseUrl + '/reusable.references?_content_type=json&type=' + $scope.type + '&validated=' + $scope.isValidated;
+                for (var i = 0; i < ids.length; i ++) {
+                  url += '&id=' + ids[i];
+                }
+                if (onlyCount) {
+                  url += "&count=true";
+                }
+                return url;
+              };
+              $scope.loadReferencedMetadata = function (row, collapseDiv, containerDivId) {
+                  var id = row.id;
                   $('.in').collapse('hide');
                   $scope.loading = id;
                   $('#' + collapseDiv).collapse('show');
-                  $http({ method: 'GET', url: baseUrl + '/reusable.references?id=' + id + "&type=" + $scope.type + '&validated=' + $scope.isValidated }).
+                  $http({ method: 'GET', url: referenceMdUrl([id], false) }).
                      success(function (data, status, headers, config) {
                         $scope.loading = undefined;
-                        $scope.metadata[id] = data;
+                        data = data[0];
+                        row.referenceCount = parseInt(data['@count']);
+                        $scope.metadata[id] = data.records;
                          $('#' + containerDivId).remove();
                      }).
                      error(function (data, status, headers, config) {
                          $scope.loading = undefined;
-                         alert("An error occurred when loading referenced metadata");
+                         alert("An error occurred when loading referenced metadata: " + data.error.message);
                      });
               };
               $scope.edit = function (row) {
@@ -117,7 +137,7 @@ angular.module('geocat_shared_objects_factories', []).
                   })
                   .error(function (data, status, headers, config) {
                       executeModal.modal('hide');
-                      alert('An error occurred during validation');
+                      alert('An error occurred during validation: ' + data.error.message);
                   });
               };
               $scope.reject = { message: '' };
@@ -180,7 +200,7 @@ angular.module('geocat_shared_objects_factories', []).
                     if (data.error) {
                       alert(data.error.message);
                     } else {
-                      alert('Error occurred creating a new shared object');
+                      alert('Error occurred creating a new shared object: ' + data.error.message);
                     }
                   });
               };
@@ -192,6 +212,49 @@ angular.module('geocat_shared_objects_factories', []).
                       }
                   }, 100);
               };
+              $scope.loadReferenceCounts = function(rowIndex) {
+                var ids, idMap, row, i;
+                ids = [];
+                idMap = {};
+
+                if (rowIndex == 0) {
+                  for (i = 0; i < $scope.data.length; i++) {
+                    row = $scope.data[i];
+                    if (row.referenceCount === undefined) {
+                      row.referenceCount = "?";
+                    }
+
+                  }
+                }
+
+                for (i = 0; ids.length < 20 && rowIndex + i < $scope.data.length; i++) {
+                  row = $scope.data[rowIndex + i];
+                  if (row.referenceCount === '?') {
+                    ids.push(row.id);
+                    idMap[row.id] = row;
+                  }
+                }
+
+                if (ids.length > 0) {
+                  row = $scope.data[rowIndex];
+                  $scope.loading = "-1";
+                  $http({method: 'GET', url: referenceMdUrl(ids, true)}).
+                    success(function (data) {
+                      $scope.loading = undefined;
+                      for (var mdIdx = 0; mdIdx < data.length; mdIdx++) {
+                        var md = data[mdIdx];
+                        row = idMap[md['@id']];
+                        row.referenceCount = parseInt(md['@count']);
+                      }
+                      idMap = ids = undefined;
+                      $scope.loadReferenceCounts(rowIndex + i);
+                    }).
+                    error(function (data) {
+                      $scope.loading = undefined;
+                      alert("An error occurred when loading referenced metadata: " + data.error.message);
+                    });
+                }
+              }
           }
 
       }

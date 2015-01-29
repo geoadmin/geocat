@@ -29,6 +29,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
 import org.fao.geonet.geocat.kernel.reusable.FindMetadataReferences;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
@@ -58,11 +59,23 @@ public class ReferencingMetadata implements Service {
     @SuppressWarnings("unchecked")
     public Element exec(Element params, ServiceContext context) throws Exception {
 
-        String id = Util.getParam(params, "id");
+        final List<Element> ids = params.getChildren(Params.ID);
         String type = Util.getParam(params, "type");
         boolean validated = Util.getParam(params, "validated", false);
+        boolean onlyCount = Util.getParam(params, "count", false);
 
-        List<String> fields = new LinkedList<String>();
+        Element finalResponse = new Element("response");
+
+        for (Element id : ids) {
+            Element metadataReferences = loadReferences(context, id.getTextTrim(), type, validated, onlyCount);
+            finalResponse.addContent(metadataReferences);
+        }
+
+        return finalResponse;
+    }
+
+    private Element loadReferences(ServiceContext context, String id, String type, boolean validated, boolean onlyCount) throws Exception {
+        List<String> fields = new LinkedList<>();
         Function<String, String> idConverter;
         FindMetadataReferences findResources;
 
@@ -82,35 +95,42 @@ public class ReferencingMetadata implements Service {
         }
 
         Set<MetadataRecord> md = Utils.getReferencingMetadata(context, findResources, fields, id, validated, true, idConverter);
-        UserRepository userRepository = context.getBean(UserRepository.class);
-        Element response = new Element("response");
-        for (MetadataRecord metadataRecord : md) {
 
-            Element record = new Element("record");
-            response.addContent(record);
+        Element metadataReferences = new Element("metadata").setAttribute("count", "" + md.size()).setAttribute("id", id);
+        Element records = new Element("records");
+        metadataReferences.addContent(records);
+        if (!onlyCount) {
+            UserRepository userRepository = context.getBean(UserRepository.class);
+            for (MetadataRecord metadataRecord : md) {
 
-            Utils.addChild(record, "id", "" + metadataRecord.id);
+                Element record = new Element("record");
+                records.addContent(record);
 
-            try {
-                Element titleElement = metadataRecord.xml.getChild("identificationInfo", Geonet.Namespaces.GMD).getChild(
-                        "CHE_MD_DataIdentification", GeocatXslUtil.CHE_NAMESPACE).getChild("citation", Geonet.Namespaces.GMD).getChild(
-                        "CI_Citation", Geonet.Namespaces.GMD).getChild("title", Geonet.Namespaces.GMD);
+                Utils.addChild(record, "id", "" + metadataRecord.id);
 
-                String translated = LangUtils.iso19139TranslatedText(titleElement, context.getLanguage(),
-                        iso19139DefaultLang(metadataRecord.xml));
+                try {
+                    Element titleElement = metadataRecord.xml.getChild("identificationInfo", Geonet.Namespaces.GMD).getChild(
+                            "CHE_MD_DataIdentification", GeocatXslUtil.CHE_NAMESPACE).getChild("citation", Geonet.Namespaces.GMD)
+                            .getChild(
 
-                Utils.addChild(record, "title", translated);
-            } catch (NullPointerException e) {
-                // the get title code is brittle so catch null pointer and
-                // assume there is no title:
+                            "CI_Citation", Geonet.Namespaces.GMD).getChild("title", Geonet.Namespaces.GMD);
 
-                Utils.addChild(record, "title", "n/a");
+                    String translated = LangUtils.iso19139TranslatedText(titleElement, context.getLanguage(),
+                            iso19139DefaultLang(metadataRecord.xml));
+
+                    Utils.addChild(record, "title", translated);
+                } catch (NullPointerException e) {
+                    // the get title code is brittle so catch null pointer and
+                    // assume there is no title:
+
+                    Utils.addChild(record, "title", "n/a");
+                }
+                Utils.addChild(record, "name", metadataRecord.name(userRepository));
+                Utils.addChild(record, "email", metadataRecord.email(userRepository));
             }
-            Utils.addChild(record, "name", metadataRecord.name(userRepository));
-            Utils.addChild(record, "email", metadataRecord.email(userRepository));
-        }
 
-        return response;
+        }
+        return metadataReferences;
     }
 
     public void init(Path appPath, ServiceConfig params) throws Exception {

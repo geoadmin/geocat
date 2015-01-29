@@ -174,7 +174,6 @@
 
         <service name="reusable.references">
             <class name=".geocat.services.reusable.ReferencingMetadata" />
-            <output sheet="shared-list-json.xsl" contentType="application/json"/>
         </service>
 
         <service name="metadata.ext.edit" type="html">
