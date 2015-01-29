@@ -81,6 +81,8 @@
                 $scope.$broadcast('modalShown', data[0].featureType);
                 $scope.finishEdit = function () {
                   updateExtent($scope.formObj);
+                  $('#editModal').modal('hide');
+                  $scope.reloadData();
                 };
                 for (var lang in $scope.keyword) {
                   $scope.keyword[lang].label = data[lang].label;
