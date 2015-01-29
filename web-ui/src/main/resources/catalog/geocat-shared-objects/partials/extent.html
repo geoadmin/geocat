@@ -1,0 +1,64 @@
+<div class="gc-extent">
+
+  <!--Geo Id field-->
+  <div class="form-group">
+    <label class="col-sm-2 control-label" translate>geoId</label>
+    <div class="col-sm-10" gn-multilingual-field='{"ger":"#DE","eng":"#EN","fre":"#FR","ita":"#IT"}'
+         data-main-language="DE" expanded="false">
+      <input class="form-control input-sm" lang="DE" data-ng-model="formObj.geoId.DE" >
+      <input class="form-control input-sm" lang="EN" data-ng-model="formObj.geoId.EN" >
+      <input class="form-control input-sm" lang="FR" data-ng-model="formObj.geoId.FR" >
+      <input class="form-control input-sm" lang="IT" data-ng-model="formObj.geoId.IT" >
+    </div>
+  </div>
+
+  <!--Description field-->
+  <div class="form-group">
+    <label class="col-sm-2 control-label" translate>description</label>
+    <div class="col-sm-10" gn-multilingual-field='{"ger":"#DE","eng":"#EN","fre":"#FR","ita":"#IT"}'
+         data-main-language="DE" expanded="false">
+      <input class="form-control input-sm" lang="DE" data-ng-model="formObj.desc.DE" >
+      <input class="form-control input-sm" lang="EN" data-ng-model="formObj.desc.EN" >
+      <input class="form-control input-sm" lang="FR" data-ng-model="formObj.desc.FR" >
+      <input class="form-control input-sm" lang="IT" data-ng-model="formObj.desc.IT" >
+    </div>
+  </div>
+
+  <!--Projection combo-->
+  <div class="form-group">
+    <label class="col-sm-2 control-label" translate>projection</label>
+    <div class="col-sm-4">
+      <select class="form-control input-sm" data-ng-model="formObj.proj" ng-change="fillInput()">
+        <option value="EPSG:21781" translate>CHO3 (EPSG:21781)</option>
+        <option value="EPSG:4326" translate>WGS 84 (EPSG:4326)</option>
+      </select>
+    </div>
+  </div>
+
+  <!--Geometry field-->
+  <div class="form-group" >
+    <label for="geomF" class="col-sm-2 control-label">geometry</label>
+    <div class="col-sm-10">
+      <textarea rows="3" data-ng-model="formObj.geomString"
+                class="form-control input-sm" id="geomF"
+                placeholder="Description" name="description" />
+    </div>
+  </div>
+
+  <!--Draw buttons-->
+  <div ngeo-btn-group>
+    <button class="btn btn-default" ng-model="drawInteraction.active"  ngeo-btn>
+      <span class="fa fa-pencil"></span>
+    </button>
+    <button class="btn btn-default" ng-model="dragboxInteraction.active" ngeo-btn>
+      <span class="fa fa-pencil-square-o"></span>
+    </button>
+    <button class="btn btn-default" data-ng-click="clearMap()">
+      <span class="fa fa-trash-o"></span>
+    </button>
+  </div>
+
+  <!--Map panel-->
+  <div ngeo-map="map">
+  </div>
+</div>
