@@ -272,9 +272,9 @@
     * values: A comma separated value of value for each field. Use NOTNULL to check any field values.
     * boost: A comma separated value of boost factor for each field (Float).
     
-    "The boost factor values you should use depend on what youâ??re trying to achieve; 
-    youâ??ll need to do some experimentation and
-    tuning to achieve the desired effect." source: Lucene In Action 
+    "The boost factor values you should use depend on what your're trying to achieve;
+    you'll need to do some experimentation and
+    tuning to achieve the desired effect." source: Lucene In Action
     
   <boostDocument name="org.fao.geonet.kernel.search.function.ImportantDocument">
     <!- - Example to promote series and not promote records part of a series - ->
