@@ -80,4 +80,38 @@
         <property name="typename" value="gn:non_validated"/>
     </bean>
     <bean id="reusableObjectManager" class="org.fao.geonet.geocat.kernel.reusable.ReusableObjManager"/>
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="jobFactory">
+            <bean class="org.fao.geonet.util.spring.AutowiringSpringBeanJobFactory"/>
+        </property>
+        <property name="triggers">
+            <list>
+                <ref bean="unpublishMetadataCronTrigger" />
+                <ref bean="backupMetadataCronTrigger" />
+            </list>
+        </property>
+    </bean>
+
+
+    <bean id="unpublishMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+                <property name="jobClass" value="org.fao.geonet.geocat.kernel.UnpublishInvalidMetadataJob"/>
+            </bean>
+        </property>
+        <!--<property name="cronExpression" value="0 * * * * ?" />-->
+        <property name="cronExpression" value="0 2 10 ? * MON-FRI" />
+    </bean>
+
+    <bean id="backupMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+                <property name="jobClass" value="org.fao.geonet.geocat.ArchiveAllMetadataJob"/>
+            </bean>
+        </property>
+        <!--<property name="cronExpression" value="0 * * * * ?" />-->
+        <property name="cronExpression" value="0 3 10 ? * MON-FRI" />
+    </bean>
+
 </beans>

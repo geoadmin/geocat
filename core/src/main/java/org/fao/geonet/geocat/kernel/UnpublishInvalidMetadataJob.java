@@ -1,15 +1,20 @@
 package org.fao.geonet.geocat.kernel;
 
-import jeeves.interfaces.Schedule;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
-import jeeves.server.context.ScheduleContext;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
+import jeeves.server.dispatchers.ServiceManager;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.geocat.PublishRecord;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.kernel.DataManager;
@@ -27,19 +32,29 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.Filter;
-import org.joda.time.DateTime;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.springframework.data.jpa.domain.Specifications.where;
 
-public class UnpublishInvalidMetadataJob implements Schedule, Service {
+public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Service {
 
+    @Autowired
+    private ConfigurableApplicationContext context;
+    @Autowired
+    private ServiceManager serviceManager;
     static final String AUTOMATED_ENTITY = "Automated";
 
     AtomicBoolean running = new AtomicBoolean(false);
@@ -49,46 +64,45 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
 
     }
 
+
     @Override
-    public void exec(ScheduleContext context) throws Exception {
-        if (new DateTime().getHourOfDay() == 1) {
-            final UserRepository userRepository = context.getBean(UserRepository.class);
+    protected void executeInternal(JobExecutionContext jobContext) throws JobExecutionException {
+        ApplicationContextHolder.set(this.context);
+        final UserRepository userRepository = context.getBean(UserRepository.class);
 
-            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-            int id = 1;
+        int id = 1;
 
-            try {
-                final List<User> allByProfile = userRepository.findAllByProfile(Profile.Administrator);
-                if (!allByProfile.isEmpty()) {
-                    id = allByProfile.get(0).getId();
-                }
-            } catch (Throwable e) {
-                Log.error(Geonet.DATA_MANAGER, "Error during unpublish", e);
+        try {
+            final List<User> allByProfile = userRepository.findAllByProfile(Profile.Administrator);
+            if (!allByProfile.isEmpty()) {
+                id = allByProfile.get(0).getId();
             }
+        } catch (Throwable e) {
+            Log.error(Geonet.DATA_MANAGER, "Error during unpublish", e);
+        }
 
-            ServiceContext serviceContext = new ServiceContext("unpublish.metadata", context.getApplicationContext(),
-                    context.allContexts(),
-                    context.getEntityManager());
-            serviceContext.setAsThreadLocal();
+        ServiceContext serviceContext = serviceManager.createServiceContext("unpublishMetadata", context);
+        serviceContext.setAsThreadLocal();
 
-            final UserSession userSession = new UserSession();
-            User user = new User();
-            user.setId(id);
-            user.setProfile(Profile.Administrator);
-            user.setUsername("admin");
+        final UserSession userSession = new UserSession();
+        User user = new User();
+        user.setId(id);
+        user.setProfile(Profile.Administrator);
+        user.setUsername("admin");
 
-            userSession.loginAs(user);
-            performJob(gc, serviceContext);
+        userSession.loginAs(user);
+        try {
+            performJob(serviceContext);
+        } catch (Exception e) {
+            Log.error(Geonet.GEONETWORK, "Error running " + UnpublishInvalidMetadataJob.class.getSimpleName(), e);
         }
 
     }
 
     @Override
     public Element exec(Element params, ServiceContext context) throws Exception {
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
         try {
-            performJob(gc, context);
+            performJob(context);
             return new Element("status").setText("true");
         } catch (Throwable e) {
             return new Element("status").setText("false");
@@ -97,7 +111,7 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
 
     // --------------------------------------------------------------------------------
 
-    private void performJob(GeonetContext gc, ServiceContext serviceContext) throws SQLException, Exception {
+    private void performJob(ServiceContext serviceContext) throws Exception {
         if (!running.compareAndSet(false, true)) {
             throw new IllegalStateException("Unpublish Job is already running");
         }
@@ -267,6 +281,7 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
 
         return records;
     }
+
 
     static class ErrorFinder implements Filter {
         private static final long serialVersionUID = 1L;

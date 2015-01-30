@@ -3,12 +3,12 @@ package org.fao.geonet.geocat;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.util.Assert;
-import jeeves.interfaces.Schedule;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
-import jeeves.server.context.ScheduleContext;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
@@ -22,7 +22,11 @@ import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -35,7 +39,12 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nullable;
 
-public class ArchiveAllMetadataJob implements Schedule, Service {
+public class ArchiveAllMetadataJob extends QuartzJobBean implements Service {
+
+    @Autowired
+    private ConfigurableApplicationContext context;
+    @Autowired
+    private ServiceManager serviceManager;
 
     static final String BACKUP_FILENAME = "geocat_backup";
     static final String BACKUP_DIR = "geocat_backups";
@@ -49,12 +58,16 @@ public class ArchiveAllMetadataJob implements Schedule, Service {
     }
 
     @Override
-    public void exec(ScheduleContext context) throws Exception {
-        ConfigurableApplicationContext appContext = context.getApplicationContext();
-        ServiceContext serviceContext = new ServiceContext("none", appContext, context.allContexts(), context.getEntityManager());
-        serviceContext.setBaseUrl(context.getBaseUrl());
+    protected void executeInternal(JobExecutionContext jobContext) throws JobExecutionException {
+        ServiceContext serviceContext = serviceManager.createServiceContext("unpublishMetadata", context);
         serviceContext.setAsThreadLocal();
-        createBackup(serviceContext);
+
+        ApplicationContextHolder.set(this.context);
+        try {
+            createBackup(serviceContext);
+        } catch (Exception e) {
+            Log.error(Geonet.GEONETWORK, "Error running " + ArchiveAllMetadataJob.class.getSimpleName(), e);
+        }
     }
 
     @Override
