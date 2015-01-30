@@ -1,4 +1,8 @@
 {
+    "news": "Aktuel",
+    "discoveryService":"Katalog",
+    "documentation":"Dokumentation",
+    "aboutGeocat":"Über geocat.ch",
     "all": "alle",
     "allInPage": "auf einer Seite",
     "none": "keiner",

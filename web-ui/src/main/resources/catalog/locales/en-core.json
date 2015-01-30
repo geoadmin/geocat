@@ -1,4 +1,8 @@
 {
+    "discoveryService":"Discovery service",
+    "documentation":"Documentation",
+    "aboutGeocat":"About geocat.ch",
+    "news": "News",
     "all": "all",
     "allInPage": "all in page",
     "none": "none",

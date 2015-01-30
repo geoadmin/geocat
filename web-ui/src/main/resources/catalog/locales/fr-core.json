@@ -1,4 +1,8 @@
 {
+    "news": "Actualités",
+    "discoveryService":"Catalogue",
+    "documentation":"Documentation",
+    "aboutGeocat":"Autour de geocat",
     "all": "Tous",
     "allInPage": "Toute la page",
     "none": "Aucun",
@@ -23,7 +27,7 @@
     "address": "Adresse",
     "adminConsole": "Console d'admin",
     "any": "Plein texte",
-    "anyPlaceHolder": "Search ...",
+    "anyPlaceHolder": "Rechercher ...",
     "VALID": "Valide",
     "INVALID": "Invalide",
     "NEVER_CALCULATED": "Never validated",
