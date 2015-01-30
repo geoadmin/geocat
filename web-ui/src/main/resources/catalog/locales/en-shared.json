@@ -12,7 +12,7 @@
   "loading": "Loading...",
   "reusable_confirmValidate": "Validate Object",
   "reusable_confirmValidateMsg": "Are you certain you wish to validate the Shared Object?",
-  "reusable_rejectDefaultMsg": "Rejecting Shared Object: {{desc}}\n\nEnter reason for rejecting this object",
+  "reusable_rejectDefaultMsg": "Rejecting Shared Object: {{desc}}\nNumber of Referencing Metadata: {{referenceCount}}\n\nEnter reason for rejecting this object",
   "reusable_rejectTitle": "Rejecting Shared Object",
   "reload": "Reload",
   "create": "Create New",

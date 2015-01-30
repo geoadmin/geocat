@@ -156,6 +156,7 @@ angular.module('geocat_shared_objects_factories', []).
                   if ($scope.selected.referenceCount > 0) {
                     $scope.reject.msg = $translate('reusable_rejectDefaultMsg', {desc: $scope.selected.desc});
                     $scope.reject.description = $scope.selected.desc;
+                    $scope.reject.referenceCount = $scope.selected.referenceCount;
                     $('#rejectModal').modal('show');
                   } else {
                     $('#confirmDeleteModal').modal('show');
@@ -183,7 +184,7 @@ angular.module('geocat_shared_objects_factories', []).
                       alert('An error occurred during validation: ' + data.error.message);
                   });
               };
-              $scope.reject = { msg: '', description: '' };
+              $scope.reject = { msg: '', description: '', referenceCount: 0 };
               $scope.performUpdateOperation = function (service, extraParams) {
                   var params = {
                     type: $scope.type,
