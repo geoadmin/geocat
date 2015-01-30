@@ -12,7 +12,7 @@
   "loading": "Loading...",
   "reusable_confirmValidate": "Validate Object",
   "reusable_confirmValidateMsg": "Are you certain you wish to validate the Shared Object?",
-  "reusable_rejectDefaultMsg": "<Enter reason for rejecting shared object>",
+  "reusable_rejectDefaultMsg": "Rejecting Shared Object: {{desc}}\n\nEnter reason for rejecting this object",
   "reusable_rejectTitle": "Rejecting Shared Object",
   "reload": "Reload",
   "create": "Create New",
@@ -28,5 +28,7 @@
   "loadReferenceCounts": "Load Reference Counts",
   "ordering": "Order by:",
   "mostReferenceCount": "Most References",
-  "fewestReferenceCount": "Fewest References"
+  "fewestReferenceCount": "Fewest References",
+  "reusable_confirmDelete": "Deleting Shared Object",
+  "reusable_confirmDeleteMsg": "<div>Are you sure you want to delete the following shared object?</div> <div>{{desc}}</div><div>Number of References: {{referenceCount}}</div>"
 }

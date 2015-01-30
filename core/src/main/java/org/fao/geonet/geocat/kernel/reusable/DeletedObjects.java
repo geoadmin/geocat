@@ -48,11 +48,12 @@ import static org.apache.lucene.search.WildcardQuery.WILDCARD_STRING;
  */
 public final class DeletedObjects {
 
-    public static int insert(RejectedSharedObjectRepository repo, String fragment, String desc) throws SQLException {
+    public static int insert(RejectedSharedObjectRepository repo, String fragment, String desc, String rejectionMessage) throws SQLException {
         org.fao.geonet.domain.geocat.RejectedSharedObject entity = new org.fao.geonet.domain.geocat.RejectedSharedObject();
         entity.setDeletionDate(new ISODate());
         entity.setDescription(desc);
         entity.setXml(fragment);
+        entity.setRejectionMessage(rejectionMessage);
         return repo.save(entity).getId();
     }
 

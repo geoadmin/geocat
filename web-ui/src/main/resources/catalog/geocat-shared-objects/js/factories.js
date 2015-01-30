@@ -8,6 +8,14 @@
 // In this case it is a simple value service.
 angular.module('geocat_shared_objects_factories', []).
   factory('commonProperties', ['$window', '$http', '$translate', '$location', function ($window, $http, $translate, $location) {
+      var tranformToFormUrlEncoded = function(obj) {
+        var str = [];
+        for(var p in obj) {
+          if (obj.hasOwnProperty(p))
+            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        }
+        return str.join("&");
+      };
       var loadRecords = function ($scope) {
           $scope.loading = '-1';
           var validated = $scope.isValidated ? 'true' : 'false';
@@ -49,6 +57,7 @@ angular.module('geocat_shared_objects_factories', []).
           },
 
           add: function ($scope) {
+
               $scope.sort = 'desc';
               $scope.reverseSort = false;
               $scope.refSort = function(row) {
@@ -125,6 +134,40 @@ angular.module('geocat_shared_objects_factories', []).
                   $scope.finishEdit = $scope.createNewObject;
                   $('#editModal').modal('show');
               };
+              $scope.delete = function () {
+                $scope.performUpdateOperation('reusable.reject')
+              };
+              $scope.updateReferenceCount = function () {
+                $scope.loading = "-1";
+                return $http({method: 'GET', url: referenceMdUrl([$scope.selected.id], true)}).
+                  success(function (data) {
+                    $scope.loading = undefined;
+                    var referenceCount = parseInt(data[0]['@count']);
+                    $scope.selected.referenceCount = referenceCount;
+                  }).
+                  error(function (data) {
+                    $scope.loading = undefined;
+                    alert("An error occurred when loading referenced metadata: " + data.error.message);
+                  });
+
+              };
+              $scope.openRejectModal = function () {
+                var rejectFunc = function() {
+                  if ($scope.selected.referenceCount > 0) {
+                    $scope.reject.msg = $translate('reusable_rejectDefaultMsg', {desc: $scope.selected.desc});
+                    $scope.reject.description = $scope.selected.desc;
+                    $('#rejectModal').modal('show');
+                  } else {
+                    $('#confirmDeleteModal').modal('show');
+                  }
+                };
+
+                if ($scope.selected.referenceCount != undefined) {
+                  rejectFunc();
+                } else {
+                  $scope.updateReferenceCount().then(rejectFunc);
+                }
+              };
               $scope.performOperation = function (requestObject) {
                   $('.modal').modal('hide');
                   var executeModal = $('#executingOperation');
@@ -140,8 +183,8 @@ angular.module('geocat_shared_objects_factories', []).
                       alert('An error occurred during validation: ' + data.error.message);
                   });
               };
-              $scope.reject = { message: '' };
-              $scope.performUpdateOperation = function (service) {
+              $scope.reject = { msg: '', description: '' };
+              $scope.performUpdateOperation = function (service, extraParams) {
                   var params = {
                     type: $scope.type,
                     id: $scope.selected.id,
@@ -150,13 +193,16 @@ angular.module('geocat_shared_objects_factories', []).
                     description: $scope.selected.desc
                   };
 
-                  if ($scope.message) {
-                      params.msg = $scope.message;
+                  if (extraParams) {
+                      angular.extend(params, extraParams);
                   }
+
                   $scope.performOperation({
-                      method: 'GET',
+                      method: 'POST',
                       url: baseUrl + '/' + service,
-                      params: params
+                      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                      transformRequest: tranformToFormUrlEncoded,
+                      data: params
                   });
               };
 
@@ -179,14 +225,7 @@ angular.module('geocat_shared_objects_factories', []).
                   method: 'POST',
                   url: 'md.insert?_content_type=json',
                   headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                  transformRequest: function(obj) {
-                    var str = [];
-                    for(var p in obj) {
-                      if (obj.hasOwnProperty(p))
-                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                    }
-                    return str.join("&");
-                  },
+                  transformRequest: tranformToFormUrlEncoded,
                   data: data
                 }).
                   success(function(data) {

@@ -40,6 +40,7 @@ public class RejectedSharedObject extends GeonetEntity {
     private int id;
     private String description;
     private String xml;
+    private String rejectionMessage;
     private ISODate deletionDate = new ISODate();
 
     @Id
@@ -89,5 +90,13 @@ public class RejectedSharedObject extends GeonetEntity {
         obj.removeAttribute("title", XLINK);
         obj.removeNamespaceDeclaration(XLINK);
         return obj;
+    }
+
+    public String getRejectionMessage() {
+        return rejectionMessage;
+    }
+
+    public void setRejectionMessage(String rejectionMessage) {
+        this.rejectionMessage = rejectionMessage;
     }
 }

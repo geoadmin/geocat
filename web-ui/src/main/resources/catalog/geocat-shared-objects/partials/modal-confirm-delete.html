@@ -5,12 +5,11 @@
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title" translate>reusable_confirmDelete</h4>
         </div>
-        <div class="modal-body" translate>
-          reusable_confirmDeleteMsg
+        <div class="modal-body" ng-bind-html="'reusable_confirmDeleteMsg' | translate:selected">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal" translate>cancel</button>
-          <button type="button" class="btn btn-primary" data-ng-click="delete()" translate>accept</button>
+          <button type="button" class="btn btn-danger" data-ng-click="delete()" translate>delete</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

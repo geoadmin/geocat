@@ -105,7 +105,7 @@ public class Reject implements Service {
     }
 
     private List<Element> performReject(String[] ids, final SharedObjectStrategy strategy, ServiceContext context,
-                                        final UserSession session, String baseURL, String msg, String desc,
+                                        final UserSession session, String baseURL, String rejectionMessage, String desc,
                                         String strategySpecificData, boolean isValidObject, boolean testing) throws Exception {
 
         final Function<String, String> idConverter = strategy.numericIdToConcreteId(session);
@@ -129,7 +129,7 @@ public class Reject implements Service {
                 emailInfo.put(record.ownerId, record.id);
             }
 
-            Element newIds = updateHrefs(context, desc, results);
+            Element newIds = updateHrefs(context, desc, rejectionMessage, results);
 
             for (MetadataRecord metadataRecord : results) {
                 allAffectedMdIds.add(Integer.toString(metadataRecord.id));
@@ -146,14 +146,14 @@ public class Reject implements Service {
         context.getBean(SearchManager.class).forceIndexChanges();
 
         if (!emailInfo.isEmpty()) {
-            emailNotifications(strategy, context, session, msg, emailInfo, baseURL, strategySpecificData, testing);
+            emailNotifications(strategy, context, session, rejectionMessage, emailInfo, baseURL, strategySpecificData, testing);
         }
 
         return result;
 
     }
 
-    private Element updateHrefs(ServiceContext context, String oldDesc,
+    private Element updateHrefs(ServiceContext context, String oldDesc, String msg,
                                 Set<MetadataRecord> results) throws Exception {
         Element newIds = new Element("newIds");
         // Move the reusable object to the DeletedObjects table and update
@@ -174,7 +174,7 @@ public class Reject implements Service {
                         // update xlink service
                         int newId = DeletedObjects.insert(
                                 context.getBean(RejectedSharedObjectRepository.class),
-                                Xml.getString(fragment), oldDesc + " - " + href);
+                                Xml.getString(fragment), oldDesc + " - " + href, msg);
                         newIds.addContent(new Element("id").setText(String.valueOf(newId)));
                         newHref = DeletedObjects.href(newId);
                         updatedHrefs.put(oldHRef, newHref);

@@ -76,10 +76,9 @@
 
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                         <!--<li><a data-ng-click="open('geocat', {s_search:'', customFilter: luceneIndexField + '=' + row.xlink}, '_sharedObject')">{{translate('search')}}</a></li>-->
-                        <li><a class="action-edit" data-ng-click="edit(row)" translate>edit</a></li>
+                        <li><a class="action-edit" data-ng-click="edit(row);$event.stopPropagation()" translate>edit</a></li>
                         <li ng-if="!isValidated"><a class="action-validate" data-toggle="modal" data-target="#confirmValidateModal" translate >validate</a></li>
-                        <li ng-if="!isValidated"><a class="action-non-valid-reject" data-toggle="modal" data-target="#rejectModal" translate >reject</a></li>
-                        <li ng-if="isValidated"><a class="action-valid-reject" data-toggle="modal" data-target="#rejectModal" translate >delete</a></li>
+                        <li><a class="action-non-valid-reject" data-ng-click="openRejectModal();$event.stopPropagation()">{{(!isValidated ? 'reject' : 'delete') | translate}}</a></li>
                         <li ng-if="isDeletePage"><a class="action-delete" data-toggle="modal" data-target="#confirmDeleteModal" translate >delete</a></li>
                     </ul>
 

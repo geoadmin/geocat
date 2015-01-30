@@ -11,7 +11,7 @@ var module = angular.module('geocat_shared_objects_deleted_controller', []).
       $scope.isDeletePage = true;
       $scope.validated = 'validated';
       $scope.isValidated = true;
-      $scope.validatedTitle = 'rejected'//Geonet.translate('rejected');
+      $scope.validatedTitle = 'rejected' //Geonet.translate('rejected');
       commonProperties.add($scope, $routeParams);
       if ($scope.isValidated) {
           $scope.luceneIndexField = 'V_invalid_xlink_keyword';
@@ -20,7 +20,12 @@ var module = angular.module('geocat_shared_objects_deleted_controller', []).
       }
 
       $scope.delete = function () {
+        if ($scope.selected.referenceCount != undefined) {
           $scope.performUpdateOperation('reusable.delete');
+        } else {
+          $scope.updateReferenceCount().then(function(){$scope.performUpdateOperation('reusable.delete');});
+        }
+
       }
 
   }]);

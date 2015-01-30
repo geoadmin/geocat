@@ -6,12 +6,16 @@
           <h4 class="modal-title" translate>reusable_rejectTitle</h4>
         </div>
         <div class="modal-body">
-            <textarea class="form-control" rows="3" data-ng-model="reject.message" data-ng-required="true" data-ng-init="reject.message=translate('reusable_rejectDefaultMsg')">
+            <textarea class="form-control" rows="3" data-ng-model="reject.msg" data-ng-required="true">
             </textarea>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal" translate>cancel</button>
-          <button type="button" class="btn btn-primary" data-ng-click="performUpdateOperation('reusable.reject')" translate>accept</button>
+          <button type="button"
+                  class="btn btn-danger"
+                  data-ng-click="performUpdateOperation('reusable.reject', reject)">
+              {{(!isValidated ? 'reject' : 'delete') | translate}}
+          </button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
