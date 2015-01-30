@@ -154,9 +154,8 @@ angular.module('geocat_shared_objects_factories', []).
               $scope.openRejectModal = function () {
                 var rejectFunc = function() {
                   if ($scope.selected.referenceCount > 0) {
-                    $scope.reject.msg = $translate('reusable_rejectDefaultMsg', {desc: $scope.selected.desc});
+                    $scope.reject.msg = $translate('reusable_rejectDefaultMsg', $scope.selected);
                     $scope.reject.description = $scope.selected.desc;
-                    $scope.reject.referenceCount = $scope.selected.referenceCount;
                     $('#rejectModal').modal('show');
                   } else {
                     $('#confirmDeleteModal').modal('show');
