@@ -5,16 +5,16 @@
             <td>
                 <span translate="">description</span>  {{sort}}
                 <i data-ng-show="loading === '-1'" class="fa fa-spinner fa-spin"></i>
-                <ul class="sortbyList">
+                <ul class="sortbyList" data-ng-class="loading != undefined ? 'disabled' : ''" >
                     <li class="dropdown">
-                        <a class="dropdown-toggle capitalized" data-toggle="dropdown">
+                        <a class="dropdown-toggle capitalized" data-toggle="dropdown" data-ng-disabled="{{loading != undefined}}">
                             <span translate>ordering&nbsp;</span>
                             <span ng-if="sort === 'desc'" translate>description</span>
                             <span ng-if="sort === refSort && reverseSort" translate>mostReferenceCount</span>
                             <span ng-if="sort === refSort && !reverseSort" translate>fewestReferenceCount</span>
                             &nbsp;<b class="caret"></b>
                         </a>
-                        <ul class="dropdown-menu capitalized">
+                        <ul class="dropdown-menu capitalized" data-ng-hide="loading != undefined">
                             <li data-ng-class="sort === 'desc' ? 'active' : ''"
                                 data-ng-click="sort='desc'; reverseSort=false;">
                                 <a id="nav-sort-desc" translate>description</a>
