@@ -24,17 +24,12 @@
 package org.fao.geonet.kernel.search;
 
 import com.google.common.base.Splitter;
-
-import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
-import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.utils.Log;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.facet.DrillDownQuery;
 import org.apache.lucene.facet.FacetsConfig;
-import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanClause.Occur;
@@ -49,16 +44,14 @@ import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.util.automaton.LevenshteinAutomata;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.utils.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
@@ -665,27 +658,19 @@ public class LuceneQueryBuilder {
             BooleanClause.Occur temporalExtentOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
             BooleanClause.Occur temporalRangeQueryOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
 
-            // GEOCAT
             TermRangeQuery temporalRangeQuery;
-            BooleanClause temporalRangeQueryClause;
 
             // temporal extent start is within search extent
-            if (StringUtils.isNotBlank(extFrom) && (StringUtils.isBlank(extTo))) {
-                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom, extTo, true, true);
-                temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
+            temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom, extTo, true, true);
+            BooleanClause temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
 
-                temporalExtentQuery.add(temporalRangeQueryClause);
-            }
-
-
+            temporalExtentQuery.add(temporalRangeQueryClause);
 
             // or temporal extent end is within search extent
-            if (StringUtils.isNotBlank(extTo) && (StringUtils.isBlank(extFrom))) {
-                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, extFrom, extTo, true, true);
-                temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
+            temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_END, extFrom, extTo, true, true);
+            temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalRangeQueryOccur);
 
-                temporalExtentQuery.add(temporalRangeQueryClause);
-            }
+            temporalExtentQuery.add(temporalRangeQueryClause);
 
             // or temporal extent contains search extent
             if (StringUtils.isNotBlank(extTo) && StringUtils.isNotBlank(extFrom)) {
@@ -696,7 +681,7 @@ public class LuceneQueryBuilder {
 
                 tempQuery.add(temporalRangeQueryClause);
 
-                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, extFrom, null, true, true);
+                temporalRangeQuery = TermRangeQuery.newStringRange(LuceneIndexField.TEMPORALEXTENT_BEGIN, null, extFrom, true, true);
                 temporalRangeQueryClause = new BooleanClause(temporalRangeQuery, temporalExtentOccur);
                 tempQuery.add(temporalRangeQueryClause);
 
@@ -707,7 +692,6 @@ public class LuceneQueryBuilder {
                 temporalRangeQueryClause = new BooleanClause(temporalExtentQuery, temporalExtentOccur);
                 query.add(temporalRangeQueryClause);
             }
-            // END GEOCAT
         }
         return true;
     }
