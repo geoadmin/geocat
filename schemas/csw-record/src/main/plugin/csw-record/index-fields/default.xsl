@@ -22,7 +22,10 @@
 	
 	<xsl:template match="/">
 		<Document>
-	
+            <!-- GEOCAT -->
+            <Field name="historicalArchive" string="n" store="true" index="true" />
+            <!-- END GEOCAT -->
+
 			<!-- This index for "coverage" requires significant expansion to 
 				 work well for spatial searches. It now only works for very 
 				 strictly formatted content -->

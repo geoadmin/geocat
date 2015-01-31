@@ -57,6 +57,9 @@
   <!-- ========================================================================================= -->
   <xsl:template match="/">
 		<Document locale="{$isoLangId}">
+            <!-- GEOCAT -->
+            <Field name="historicalArchive" string="n" store="true" index="true" />
+            <!-- END GEOCAT -->
 			<Field name="_locale" string="{$isoLangId}" store="true" index="true"/>
 
 			<Field name="_docLocale" string="{$isoLangId}" store="true" index="true"/>

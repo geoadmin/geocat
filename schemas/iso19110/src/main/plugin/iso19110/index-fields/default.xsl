@@ -20,6 +20,9 @@
 		<!-- TODO I don't know what tag the language is in so this needs to be done -->
 		<xsl:variable name="langCode" select="''"/>
 		<Document locale="{$langCode}">
+            <!-- GEOCAT -->
+            <Field name="historicalArchive" string="n" store="true" index="true" />
+            <!-- END GEOCAT -->
 
 			<!-- locale information -->
 			<Field name="_locale" string="{$langCode}" store="true" index="true"/>

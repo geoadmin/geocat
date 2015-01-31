@@ -17,6 +17,9 @@
 	<xsl:template match="/">
 		<xsl:variable name="langCode" select="string(/Metadata/mdLang/languageCode/@value)"/>
 		<Document locale="{$langCode}">
+            <!-- GEOCAT -->
+            <Field name="historicalArchive" string="n" store="true" index="true" />
+            <!-- END GEOCAT -->
 
 			<!-- locale information -->	
 	        <Field name="_locale" string="{$langCode}" store="true" index="true"/>
