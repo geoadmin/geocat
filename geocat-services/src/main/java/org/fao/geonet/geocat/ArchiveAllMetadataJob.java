@@ -11,6 +11,7 @@ import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -26,12 +27,13 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -78,8 +80,7 @@ public class ArchiveAllMetadataJob extends QuartzJobBean implements Service {
     }
 
 
-    private void createBackup(ServiceContext serviceContext) throws Exception, SQLException,
-            IOException {
+    private void createBackup(ServiceContext serviceContext) throws Exception {
         if (!backupIsRunning.compareAndSet(false, true)) {
             return;
         }
@@ -89,7 +90,9 @@ public class ArchiveAllMetadataJob extends QuartzJobBean implements Service {
             final MetadataRepository metadataRepository = serviceContext.getBean(MetadataRepository.class);
 
             loginAsAdmin(serviceContext);
-            List<String> uuids = Lists.transform(metadataRepository.findAll(MetadataSpecs.isHarvested(false)), new Function<Metadata,
+            final Specification<Metadata> harvested = Specifications.where(MetadataSpecs.isHarvested(false)).
+                    and(Specifications.not(MetadataSpecs.hasType(MetadataType.SUB_TEMPLATE)));
+            List<String> uuids = Lists.transform(metadataRepository.findAll(harvested), new Function<Metadata,
                     String>() {
                 @Nullable
                 @Override
@@ -126,7 +129,8 @@ public class ArchiveAllMetadataJob extends QuartzJobBean implements Service {
     }
 
     private void loginAsAdmin(ServiceContext serviceContext) {
-        final User adminUser = serviceContext.getBean(UserRepository.class).findOne(UserSpecs.hasProfile(Profile.Administrator));
+        final User adminUser = serviceContext.getBean(UserRepository.class).findAll(UserSpecs.hasProfile(Profile.Administrator), new
+                PageRequest(0,1)).getContent().get(0);
         Assert.isTrue(adminUser != null, "The system does not have an admin user");
         UserSession session = new UserSession();
         session.loginAs(adminUser);
