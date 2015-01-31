@@ -29,8 +29,11 @@ public class Handlers extends iso19139.Handlers {
                 party.'gmd:positionName',
                 party.'gmd:role'
         ]
-        def nameString = party.'che:individualFirstName'.text() + party.'che:individualLastName'.text()
-        def name = handlers.fileResult("html/2-level-entry.html", [label: f.nodeLabel('gmd:individualName', null), childData: nameString])
+        def nameString = party.'che:individualFirstName'.text() + " " + party.'che:individualLastName'.text()
+        def name = ""
+        if (name.isEmpty()) {
+            name = commonHandlers.func.textEl(f.nodeLabel('gmd:individualName', null), nameString)
+        }
         def childData = name.toString() + handlers.processElements(generalChildren)
         handlers.fileResult('html/2-level-entry.html', [label: f.translate('general'), childData: childData])
     }
