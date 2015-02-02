@@ -3,11 +3,11 @@
     <thead>
         <tr>
             <td>
-                <span translate="">description</span>  {{sort}}
+                <span translate="">description</span>
                 <i data-ng-show="loading === '-1'" class="fa fa-spinner fa-spin"></i>
                 <ul class="sortbyList" data-ng-class="loading != undefined ? 'disabled' : ''" >
                     <li class="dropdown">
-                        <a class="dropdown-toggle capitalized" data-toggle="dropdown" data-ng-disabled="{{loading != undefined}}">
+                        <a class="dropdown-toggle capitalized" data-toggle="dropdown" data-ng-disabled="loading != undefined">
                             <span translate>ordering&nbsp;</span>
                             <span ng-if="sort === 'desc'" translate>description</span>
                             <span ng-if="sort === refSort && reverseSort" translate>mostReferenceCount</span>
@@ -48,7 +48,7 @@
                             <div class="panel-title">
                                 <a id="load-metadata-link-{{row.id}}" class="accordion-toggle " data-toggle="collapse" data-parent="#accordion"
                                     data-ng-click="loadReferencedMetadata(row, 'collapse-'+row.id, 'collapse-body-'+row.id)">{{row.desc}}</a>
-                                <i class="badge ng-bind">{{row.referenceCount}}</i>
+                                <i class="badge">{{row.referenceCount}}</i>
                                 <i class="fa fa-spinner fa-spin" data-ng-show="loading === row.id"></i>
                             </div>
                         </div>
