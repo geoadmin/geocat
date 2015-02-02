@@ -36,9 +36,9 @@
                               {{md.title || md.defaultTitle}}
                           </a>
 
-                          <a class="pull-right" target="_blank" data-ng-href="catalog.search?view=geocat#/metadata/{{md['geonet:info'].uuid}}">
-                              <i class="fa fa-eye"></i>
-                          </a>
+                          <a class="pull-right" target="_blank" data-ng-href="catalog.search?#/metadata/{{md['geonet:info'].uuid}}">
+                      <i class="fa fa-eye"></i>
+                    </a>
 
                           <ul class="dropdown-menu error-message" role="menu" aria-labelledby="dLabel">
                               <li>
@@ -52,9 +52,9 @@
                                                       <pre data-ng-hide="rawIndexMessageDetail(errorMsg).length == 0">{{indexMessageDetail(errorMsg)}}</pre>
                                                   </dd>
                                               </dl>
-                                          </td>
-                                      </tr>
-                                  </table>
+                  </td>
+                </tr>
+              </table>
                               </li>
                           </ul>
                       </div>
