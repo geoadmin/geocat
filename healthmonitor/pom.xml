@@ -20,8 +20,13 @@
 		</dependency>
 
 		<dependency>
-			<groupId>ch.geocat</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>csw-server</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>harvesters</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

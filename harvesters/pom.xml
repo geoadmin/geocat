@@ -27,11 +27,6 @@
             <artifactId>sardine</artifactId>
         </dependency>
         <dependency>
-			<groupId>ch.geocat</groupId>
-			<artifactId>health-monitor</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
         </dependency>
