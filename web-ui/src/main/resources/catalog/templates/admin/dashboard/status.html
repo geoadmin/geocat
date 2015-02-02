@@ -5,31 +5,31 @@
         data-ng-class="healthy ? 'panel-success' : 'panel-danger'">
         <div class="panel-heading" data-translate="">criticalSystemStatus</div>
 
-        <div class="panel-body">
-            <table class="table table-striped">
-                <tr class="health-check"
-                    data-ng-class="info.status === 'OK' ? '' : 'alert-danger'"
-                    data-ng-repeat="info in criticalhealthcheck">
-                    <td>
-                        <h4 class="list-group-item-heading" ng-show="info.status === 'OK'" translate> {{info.name}} </h4>
+          <div class="panel-body">
+              <table class="table table-striped">
+                  <tr class="health-check"
+                      data-ng-class="info.status === 'OK' ? '' : 'alert-danger'"
+                      data-ng-repeat="info in criticalhealthcheck">
+                      <td>
+                          <h4 class="list-group-item-heading" ng-show="info.status === 'OK'" translate> {{info.name}} </h4>
 
-                        <div ng-hide="info.status === 'OK'" class="dropdown">
-                            <a data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
-                                <h4 class="list-group-item-heading" translate> {{info.name}} </h4>
-                            </a>
-                            <ul class="dropdown-menu error-message" role="menu" aria-labelledby="dLabel">
-                                <li>
-                                    <pre data-ng-hide="!info.msg">{{info.msg}}</pre>
-                                    <pre data-ng-hide="!info.exception">{{info.exception}}</pre>
-                                </li>
-                            </ul>
-                        </div>
-                    </td>
-                <td><span class="badge"
-                          data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-danger'">
-                {{info.status}} </span></td>
-                </table>
-        </div>
+                          <div ng-hide="info.status === 'OK'" class="dropdown">
+                              <a data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" role="button"
+                                 aria-expanded="false">
+                                  <h4 class="list-group-item-heading" translate> {{info.name}} </h4>
+                              </a>
+                              <ul class="dropdown-menu error-message" role="menu" aria-labelledby="dLabel">
+                                  <li>
+                                      <pre data-ng-hide="!info.msg">{{info.msg}}</pre>
+                                      <pre data-ng-hide="!info.exception">{{info.exception}}</pre>
+                                  </li>
+                              </ul>
+                          </div>
+                      </td>
+                      <td><span class="badge"
+                                data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-danger'"> {{info.status}} </span></td>
+              </table>
+          </div>
       </div>
       <div class="panel panel-default" data-ng-hide="nowarnings === undefined"
          data-ng-class="nowarnings ? 'panel-success' : 'panel-warning'">
@@ -44,7 +44,8 @@
                         <h4 class="list-group-item-heading" ng-show="info.status === 'OK'" translate> {{info.name}} </h4>
 
                         <div ng-hide="info.status === 'OK'" class="dropdown">
-                            <a data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                            <a data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" role="button"
+                               aria-expanded="false">
                                 <h4 class="list-group-item-heading" translate> {{info.name}} </h4>
                             </a>
                             <ul class="dropdown-menu error-message" role="menu" aria-labelledby="dLabel">
@@ -56,60 +57,61 @@
                         </div>
                     </td>
                     <td><span class="badge"
-                              data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-warning'">
-                {{info.status}} </span></td>
+                              data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-warning'"> {{info.status}} </span></td>
             </table>
         </div>
       </div>
     </div>
 
-    <div class="col-lg-8">
-      <form class="form-horizontal"
-            role="form"
-            data-ng-search-form=""
-            data-runSearch="true"
-            data-ng-show="searchResults.records.length > 0">
-        <div class="panel panel-default panel-danger">
-          <div class="panel-heading" data-translate="">metadataWithIndexingErrors</div>
-          <div class="panel-body">
-              <table class="table table-striped">
-                <tr data-ng-repeat="md in searchResults.records">
-                  <td>
-                      <div class="dropdown">
-                          <a data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
-                              {{md.title || md.defaultTitle}}
-                          </a>
+      <div class="col-lg-8">
+          <form class="form-horizontal"
+                role="form"
+                data-ng-search-form=""
+                data-runSearch="true"
+                data-ng-show="searchResults.records.length > 0">
+              <div class="panel panel-default panel-danger">
+                  <div class="panel-heading" data-translate="">metadataWithIndexingErrors</div>
+                  <div class="panel-body">
+                      <table class="table table-striped">
+                          <tr data-ng-repeat="md in searchResults.records">
+                              <td>
+                                  <div class="dropdown">
+                                      <a data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true"
+                                         role="button" aria-expanded="false">
+                                          {{md.title || md.defaultTitle}}
+                                      </a>
 
-                          <a class="pull-right" target="_blank" data-ng-href="catalog.search?view=geocat#/metadata/{{md['geonet:info'].uuid}}">
-                      <i class="fa fa-eye"></i>
-                    </a>
+                                      <a class="pull-right" target="_blank"
+                                         data-ng-href="catalog.search?view=geocat#/metadata/{{md['geonet:info'].uuid}}">
+                                          <i class="fa fa-eye"></i>
+                                      </a>
 
-                          <ul class="dropdown-menu error-message" role="menu" aria-labelledby="dLabel">
-                              <li>
-                                  <table class="table">
-                                      <tr data-ng-repeat="errorMsg in indexMessages(md)">
-                                          <td>
-                                              <dl>
-                                                  <dt>{{indexMessageTitle(errorMsg) | translate}}</dt>
-                                                  <dd>
-                                                      <span>Error reason: {{indexMessageReason(errorMsg)}}</span>
-                                                      <pre data-ng-hide="rawIndexMessageDetail(errorMsg).length == 0">{{indexMessageDetail(errorMsg)}}</pre>
-                                                  </dd>
-                                              </dl>
-                  </td>
-                </tr>
-              </table>
-                              </li>
-                          </ul>
-                      </div>
-                  </td>
-                </tr>
-              </table>
-              <div data-gn-pagination="paginationInfo"/>
-          </div>
-        </div>
-      </form>
-    </div>
+                                      <ul class="dropdown-menu error-message" role="menu" aria-labelledby="dLabel">
+                                          <li>
+                                              <table class="table">
+                                                  <tr data-ng-repeat="errorMsg in indexMessages(md)">
+                                                      <td>
+                                                          <dl>
+                                                              <dt>{{indexMessageTitle(errorMsg) | translate}}</dt>
+                                                              <dd>
+                                                                  <span>Error reason: {{indexMessageReason(errorMsg)}}</span>
+                                                                  <pre data-ng-hide="rawIndexMessageDetail(errorMsg).length == 0">{{indexMessageDetail(errorMsg)}}</pre>
+                                                              </dd>
+                                                          </dl>
+                                                      </td>
+                                                  </tr>
+                                              </table>
+                                          </li>
+                                      </ul>
+                                  </div>
+                              </td>
+                          </tr>
+                      </table>
+                      <div data-gn-pagination="paginationInfo"/>
+                  </div>
+              </div>
+          </form>
+      </div>
   </div>
   <div class="row">
     <div class="panel panel-default">
