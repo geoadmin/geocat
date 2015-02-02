@@ -472,6 +472,14 @@
           elem.scrollTop = elem.scrollHeight;
         }, 0);
       };
+
+      $scope.$on('mdLoadingStart', function() {
+        $scope.searchObj.mdLoading = true;
+      });
+      $scope.$on('mdLoadingEnd', function() {
+        $scope.searchObj.mdLoading = false;
+      });
+
     }]);
 
   module.directive('gcFixMdlinks', [
