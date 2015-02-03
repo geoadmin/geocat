@@ -144,7 +144,8 @@
     '$http',
     '$compile',
     '$sce',
-    function($rootScope, $http, $compile, $sce) {
+    'gnAlertService',
+    function($rootScope, $http, $compile, $sce, gnAlertService) {
 
       this.load = function(url, selector) {
         $rootScope.$broadcast('mdLoadingStart');
@@ -156,6 +157,12 @@
           el.setAttribute('gn-metadata-display', '');
           $(selector).append(el);
           $compile(el)(scope);
+        }, function() {
+          $rootScope.$broadcast('mdLoadingEnd');
+          gnAlertService.addAlert({
+            msg: 'Erreur de chargement de la métadonnée.',
+            type: 'danger'
+          });
         });
       };
     }
