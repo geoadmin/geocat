@@ -180,7 +180,7 @@ angular.module('geocat_shared_objects_factories', []).
                   })
                   .error(function (data, status, headers, config) {
                       executeModal.modal('hide');
-                      alert('An error occurred during validation: ' + data.error.message);
+                      alert('An error occurred during validation: ' + data.message);
                   });
               };
               $scope.reject = { msg: '', description: '', referenceCount: 0 };
@@ -239,7 +239,7 @@ angular.module('geocat_shared_objects_factories', []).
                     if (data.error) {
                       alert(data.error.message);
                     } else {
-                      alert('Error occurred creating a new shared object: ' + data.error.message);
+                      alert('Error occurred creating a new shared object: ' + data.message);
                     }
                   });
               };

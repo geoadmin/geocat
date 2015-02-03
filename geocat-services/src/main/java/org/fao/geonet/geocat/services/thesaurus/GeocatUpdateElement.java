@@ -40,6 +40,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 //=============================================================================
 
@@ -64,8 +65,8 @@ public class GeocatUpdateElement implements Service {
             throws Exception {
 
         String ref = Util.getParam(params, Params.REF);
-        String oldid = Util.getParam(params, "oldid");
-        String newid = Util.getParam(params, "newid");
+        String oldid = Util.getParam(params, "oldid", null);
+        String newid = Util.getParam(params, "newid", null);
         String namespace = Util.getParam(params, "namespace");
         String thesaType = Util.getParam(params, "refType");
         Map<String, String> prefLab = lookupLabels(params);
@@ -74,7 +75,9 @@ public class GeocatUpdateElement implements Service {
         ThesaurusManager manager = context.getBean(ThesaurusManager.class);
         Thesaurus thesaurus = manager.getThesaurusByName(ref);
 
-        if (!(oldid.equals(newid))) {
+        if (oldid == null) {
+            newid = UUID.randomUUID().toString();
+        } else if (!(oldid.equals(newid))) {
             if (thesaurus.isFreeCode(namespace, newid)) {
                 thesaurus.updateCode(namespace, oldid, newid);
             } else {
@@ -101,7 +104,12 @@ public class GeocatUpdateElement implements Service {
             bean.setDefinition(definition, entry.getKey());
         }
 
-        thesaurus.updateElement(bean, true);
+        if (oldid != null) {
+            thesaurus.updateElement(bean, true);
+        } else {
+            thesaurus.addElement(bean);
+        }
+
         DataManager.reindex(context, newid, manager);
 
         Element elResp = new Element(Jeeves.Elem.RESPONSE);
@@ -112,12 +120,13 @@ public class GeocatUpdateElement implements Service {
     }
 
     static Map<String, String> lookupLabels(Element params) {
-        final String prefix = "prefLab";
+        final String prefix = "loc_";
 
         HashMap<String, String> mappings = new HashMap<String, String>();
         for (Element e : (Collection<Element>) params.getChildren()) {
             if (e.getName().startsWith(prefix)) {
                 String language = e.getName().substring(prefix.length()).toLowerCase();
+                language = language.substring(0, language.indexOf("_"));
                 mappings.put(language, e.getTextTrim());
             }
         }

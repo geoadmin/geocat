@@ -79,11 +79,14 @@
             }
           }
 
-          return params;
+          return {
+            params: params,
+            isEmpty: isEmpty
+          };
         };
 
         $scope.submitEdit = function (thesaurus, id) {
-          var params = createUpdateParams();
+          var params = createUpdateParams().params;
           var parts = id.split('#', 2);
           params.newid = parts[1];
           params.oldid = parts[1];
@@ -101,13 +104,14 @@
 
         $scope.createNewObject = function () {
           var params = createUpdateParams();
+          params.params.namespace = 'http://geocat.ch/concept#';
 
-          if (!isEmpty) {
+          if (!params.isEmpty) {
             $scope.performOperation({
               method: 'POST',
-              url: $scope.baseUrl + '/thesaurus.keyword.add',
+              url: $scope.baseUrl + '/geocat.thesaurus.updateelement',
               headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-              data: $.param(params)
+              data: $.param(params.params)
             }).
               success(function () {
                 for (var lang in $scope.keyword) {
