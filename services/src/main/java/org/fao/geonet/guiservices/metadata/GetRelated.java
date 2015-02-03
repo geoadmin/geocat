@@ -310,7 +310,7 @@ public class GetRelated implements Service, org.fao.geonet.kernel.RelatedMetadat
         }
 
         String schemaIdentifier = dm.getMetadataSchema(sId);
-        SchemaPlugin instance = SchemaManager.getSchemaPlugin(context, schemaIdentifier);
+        SchemaPlugin instance = SchemaManager.getSchemaPlugin(schemaIdentifier);
         AssociatedResourcesSchemaPlugin schemaPlugin = null;
         if (instance instanceof AssociatedResourcesSchemaPlugin) {
             schemaPlugin = (AssociatedResourcesSchemaPlugin) instance;
@@ -328,7 +328,7 @@ public class GetRelated implements Service, org.fao.geonet.kernel.RelatedMetadat
                 String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
                 relatedRecords.addContent(search(joinedUUIDs, "parent", context, from, to, fast));
             }
-            }
+        }
 
         // Get aggregates from this record
         if (schemaPlugin != null && (type.equals("") || type.contains("siblings"))) {

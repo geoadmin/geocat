@@ -377,7 +377,7 @@
                 projection: projection,
                 tileGrid: new ol.tilegrid.WMTS({
                   origin: ol.extent.getTopLeft(projection.getExtent()),
-                resolutions: resolutions,
+                  resolutions: resolutions,
                   matrixIds: matrixIds
                 }),
                 style: 'default'
@@ -455,19 +455,20 @@
                 });
               case 'wmts':
                 var that = this;
-                  if(opt.name && opt.url) {
+                if (opt.name && opt.url) {
                     gnOwsCapabilities.getWMTSCapabilities(opt.url).
                         then(function(capObj) {
                           var info = gnOwsCapabilities.getLayerInfoFromCap(
                               opt.name, capObj);
                           //info.group = layer.group;
-                          return that.addWmtsToMapFromCap(undefined, info, capObj);
+                        return that.addWmtsToMapFromCap(undefined, info,
+                            capObj);
 /*
                           l.setOpacity(layer.opacity);
                           l.setVisible(!layer.hidden);
 */
-                });
-            }
+                        });
+                  }
                 else {
                     console.warn('cant load wmts, url or name not provided');
                   }
