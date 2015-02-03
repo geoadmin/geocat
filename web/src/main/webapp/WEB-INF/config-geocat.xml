@@ -280,10 +280,6 @@
         <service name="trigger.backup">
             <class name=".geocat.ArchiveAllMetadataJob"/>
         </service>
-        <service name="download.backup">
-            <class name=".geocat.DownloadBackup"/>
-            <output file="true" contentType="application/zip" />
-        </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		

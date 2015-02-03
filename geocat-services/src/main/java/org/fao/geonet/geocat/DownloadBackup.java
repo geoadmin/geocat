@@ -1,25 +1,21 @@
 package org.fao.geonet.geocat;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.File;
-import java.nio.file.Path;
 
-public class DownloadBackup implements Service {
+@Controller
+public class DownloadBackup {
 
-    @Override
-    public void init(Path appPath, ServiceConfig params) throws Exception {
-    }
-
-    @Override
-    public Element exec(Element params, ServiceContext context)
+    @RequestMapping(value="/{lang}/download.backup")
+    public FileSystemResource exec(Element params, ServiceContext context)
             throws Exception {
         Log.info(ArchiveAllMetadataJob.BACKUP_LOG, "User " + context.getUserSession().getUsername() + " from IP: " + context
                 .getIpAddress() + " has started to download backup archive");
@@ -32,7 +28,7 @@ public class DownloadBackup implements Service {
         if (files == null || files.length == 0) {
             throw404();
         }
-        return BinaryFile.encode(200, files[0].toPath(), false).getElement();
+        return new FileSystemResource(files[0]);
     }
 
     private void throw404() throws JeevesException {
