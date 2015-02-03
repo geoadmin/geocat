@@ -81,7 +81,8 @@
     </bean>
     <bean id="reusableObjectManager" class="org.fao.geonet.geocat.kernel.reusable.ReusableObjManager"/>
 
-    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    <bean id="geocatBackgroundJobScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="schedulerName" value="geocatBackgroundJobScheduler"/>
         <property name="jobFactory">
             <bean class="org.fao.geonet.util.spring.AutowiringSpringBeanJobFactory"/>
         </property>
@@ -98,6 +99,8 @@
         <property name="jobDetail">
             <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
                 <property name="jobClass" value="org.fao.geonet.geocat.kernel.UnpublishInvalidMetadataJob"/>
+                <property name="name" value="unpublishInvalidMetadata" />
+                <property name="group" value="geocatBackgroundTasks" />
             </bean>
         </property>
         <!--<property name="cronExpression" value="0 * * * * ?" />-->
@@ -108,6 +111,8 @@
         <property name="jobDetail">
             <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
                 <property name="jobClass" value="org.fao.geonet.geocat.ArchiveAllMetadataJob"/>
+                <property name="name" value="archiveAllMetadata" />
+                <property name="group" value="geocatBackgroundTasks" />
             </bean>
         </property>
         <!--<property name="cronExpression" value="0 * * * * ?" />-->

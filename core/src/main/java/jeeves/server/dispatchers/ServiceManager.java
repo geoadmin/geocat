@@ -343,7 +343,7 @@ public class ServiceManager {
                 entityManager);
 
         context.setBaseUrl(baseUrl);
-        context.setLanguage("?");
+        context.setLanguage(defaultLang);
         context.setUserSession(null);
         context.setIpAddress("?");
         context.setMaxUploadSize(maxUploadSize);

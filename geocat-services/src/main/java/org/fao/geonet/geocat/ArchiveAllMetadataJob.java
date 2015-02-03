@@ -25,6 +25,8 @@ import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.Scheduler;
+import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.domain.PageRequest;
@@ -40,6 +42,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nullable;
+
+import static org.quartz.TriggerBuilder.newTrigger;
 
 public class ArchiveAllMetadataJob extends QuartzJobBean implements Service {
 
@@ -75,7 +79,9 @@ public class ArchiveAllMetadataJob extends QuartzJobBean implements Service {
     @Override
     public Element exec(Element params, ServiceContext context)
             throws Exception {
-        createBackup(context);
+        final Trigger trigger = newTrigger().forJob("archiveAllMetadata", "geocatBackgroundTasks").startNow().build();
+        context.getApplicationContext().getBean("geocatBackgroundJobScheduler", Scheduler.class).scheduleJob(trigger);
+
         return new Element("ok");
     }
 
@@ -86,6 +92,7 @@ public class ArchiveAllMetadataJob extends QuartzJobBean implements Service {
         }
         try {
             Log.info(BACKUP_LOG, "Starting backup of all metadata");
+            System.out.println("Starting backup of all metadata");
 
             final MetadataRepository metadataRepository = serviceContext.getBean(MetadataRepository.class);
 

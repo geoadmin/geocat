@@ -34,6 +34,8 @@ import org.jdom.Namespace;
 import org.jdom.filter.Filter;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.Scheduler;
+import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
@@ -47,9 +49,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.quartz.TriggerBuilder.newTrigger;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Service {
+    public static final String UNPUBLISH_LOG = Geonet.GEONETWORK + ".unpublish";
 
     @Autowired
     private ConfigurableApplicationContext context;
@@ -101,12 +105,9 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
 
     @Override
     public Element exec(Element params, ServiceContext context) throws Exception {
-        try {
-            performJob(context);
-            return new Element("status").setText("true");
-        } catch (Throwable e) {
-            return new Element("status").setText("false");
-        }
+        final Trigger trigger = newTrigger().forJob("unpublishInvalidMetadata", "geocatBackgroundTasks").startNow().build();
+        context.getApplicationContext().getBean("geocatBackgroundJobScheduler", Scheduler.class).scheduleJob(trigger);
+        return new Element("ok");
     }
 
     // --------------------------------------------------------------------------------
@@ -116,6 +117,8 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
             throw new IllegalStateException("Unpublish Job is already running");
         }
         try {
+            Log.info(UNPUBLISH_LOG, "Starting Unpublish Invalid Metadata Job");
+            System.out.println("Starting Unpublish Invalid Metadata Job");
             Integer keepDuration = serviceContext.getBean(SettingManager.class).getValueAsInt("system/publish_tracking_duration");
             if (keepDuration == null) {
                 keepDuration = 100;
