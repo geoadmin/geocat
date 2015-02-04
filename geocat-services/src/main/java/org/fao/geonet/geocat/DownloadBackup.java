@@ -10,6 +10,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ public class DownloadBackup {
     @Autowired
     ServiceManager serviceManager;
     @RequestMapping(value="/{lang}/download.backup")
+    @ResponseBody
     public FileSystemResource exec(@PathVariable String lang, HttpServletRequest request) throws Exception {
         ServiceContext context = serviceManager.createServiceContext("download.backup", lang, request);
         Log.info(ArchiveAllMetadataJob.BACKUP_LOG, "User " + context.getUserSession().getUsername() + " from IP: " + context
