@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.metadata;
 
+import com.google.common.collect.Maps;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -46,6 +47,7 @@ import org.jdom.Element;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 
@@ -65,32 +67,32 @@ public class Insert extends NotInReadOnlyModeService {
         this.stylePath = appPath.resolve(Geonet.Path.IMPORT_STYLESHEETS);
     }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
     public Element serviceSpecificExec(Element params, final ServiceContext context) throws Exception {
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		DataManager dataMan = gc.getBean(DataManager.class);
+        DataManager dataMan = gc.getBean(DataManager.class);
 
         String data = Util.getParam(params, Params.DATA);
         String group = Util.getParam(params, Params.GROUP);
         MetadataType metadataType = MetadataType.lookup(Util.getParam(params, Params.TEMPLATE, "n"));
         String style = Util.getParam(params, Params.STYLESHEET, "_none_");
 
-		boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
+        boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
 
 //      Sub template does not need a title.
 //      if (isTemplate.equals("s") && title.length() == 0)
 //          throw new MissingParameterEx("title");
 
-		//-----------------------------------------------------------------------
-		//--- add the DTD to the input xml to perform validation
+        //-----------------------------------------------------------------------
+        //--- add the DTD to the input xml to perform validation
 
-		Element xml = Xml.loadString(data, false);
+        Element xml = Xml.loadString(data, false);
 
         // Apply a stylesheet transformation if requested
         if (!style.equals("_none_"))
@@ -100,45 +102,46 @@ public class Insert extends NotInReadOnlyModeService {
         if (schema == null) {
             schema = dataMan.autodetectSchema(xml);
             if (schema == null) {
-        	throw new BadParameterEx("Can't detect schema for metadata automatically.", "schema is unknown");
+            throw new BadParameterEx("Can't detect schema for metadata automatically.", "schema is unknown");
             }
         }
-		if (validate) DataManager.validateMetadata(schema, xml, context);
+        if (validate) DataManager.validateMetadata(schema, xml, context);
 
-		//-----------------------------------------------------------------------
-		//--- if the uuid does not exist and is not a template we generate it
+        //-----------------------------------------------------------------------
+        //--- if the uuid does not exist and is not a template we generate it
 
-		String uuid;
+        String uuid;
         if (metadataType == MetadataType.TEMPLATE) {
-			uuid = dataMan.extractUUID(schema, xml);
-			if (uuid.length() == 0) uuid = UUID.randomUUID().toString();
+            uuid = dataMan.extractUUID(schema, xml);
+            if (uuid.length() == 0) uuid = UUID.randomUUID().toString();
         } else uuid = UUID.randomUUID().toString();
 
-		String uuidAction = Util.getParam(params, Params.UUID_ACTION,
-				Params.NOTHING);
+        String uuidAction = Util.getParam(params, Params.UUID_ACTION,
+                Params.NOTHING);
 
-		String date = new ISODate().toString();
+        String date = new ISODate().toString();
 
-		final List<String> id = new ArrayList<String>();
-		final List<Element> md = new ArrayList<Element>();
-		md.add(xml);
-		
+        final List<String> id = new ArrayList<String>();
+        final List<Element> md = new ArrayList<Element>();
+        md.add(xml);
+
 
         DataManager dm = gc.getBean(DataManager.class);
 
-		// Import record
+        // Import record
+        Map<String, String> sourceTranslations = Maps.newHashMap();
         Importer.importRecord(uuid, uuidAction, md, schema, 0,
-                gc.getBean(SettingManager.class).getSiteId(), gc.getBean(SettingManager.class).getSiteName(), context, id, date,
-				date, group, metadataType);
-		
-		int iId = Integer.parseInt(id.get(0));
-		
-		
-		// Set template
+                gc.getBean(SettingManager.class).getSiteId(), gc.getBean(SettingManager.class).getSiteName(),
+                sourceTranslations, context, id, date, date, group, metadataType);
+
+        int iId = Integer.parseInt(id.get(0));
+
+
+        // Set template
         dm.setTemplate(iId, metadataType, null, context);
 
-		
-		// Import category
+
+        // Import category
         final String category = Util.getParam(params, Params.CATEGORY, "");
 
         final String extra = Util.getParam(params, "extra", null);
@@ -149,12 +152,12 @@ public class Insert extends NotInReadOnlyModeService {
                 @Override
                 public void apply(@Nonnull Metadata metadata) {
                     if (hasCategory) {
-			Element categs = new Element("categories");
-			categs.addContent((new Element("category")).setAttribute(
-					"name", category));
+                        Element categs = new Element("categories");
+                        categs.addContent((new Element("category")).setAttribute(
+                                "name", category));
 
                         Importer.addCategoriesToMetadata(metadata, categs, context);
-		} 
+                    }
 
                     if (extra != null) {
                         metadata.getDataInfo().setExtra(extra);
@@ -163,16 +166,16 @@ public class Insert extends NotInReadOnlyModeService {
             });
         }
 
-		// Index
+        // Index
         dm.indexMetadata(id.get(0), true);
 
         // Return response
-		Element response = new Element(Jeeves.Elem.RESPONSE);
-		response.addContent(new Element(Params.ID).setText(String.valueOf(iId)));
-	        response.addContent(new Element(Params.UUID).setText(String.valueOf(dm.getMetadataUuid(id.get(0)))));
+        Element response = new Element(Jeeves.Elem.RESPONSE);
+        response.addContent(new Element(Params.ID).setText(String.valueOf(iId)));
+        response.addContent(new Element(Params.UUID).setText(String.valueOf(dm.getMetadataUuid(id.get(0)))));
 
-		return response;
-	}
+        return response;
+    }
 ;
 
 }

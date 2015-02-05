@@ -54,8 +54,8 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         this.cancelMonitor = cancelMonitor;
         this.context = context;
         this.thisXslt = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
-        if (!params.importXslt.equals("none")) {
-            thisXslt = thisXslt.resolve(params.importXslt);
+        if (!params.getImportXslt().equals("none")) {
+            thisXslt = thisXslt.resolve(params.getImportXslt());
             transformIt = true;
         }
         localCateg = new CategoryMapper(context);
@@ -94,13 +94,13 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                     return FileVisitResult.CONTINUE; // skip this one
                 }
 
-                    try {
-                    params.validate.validate(dataMan, context, xml);
-                    } catch (Exception e) {
-                    log.debug("Cannot validate XML from file " + filePath +", ignoring. Error was: "+e.getMessage());
-                        result.doesNotValidate++;
-                    return FileVisitResult.CONTINUE;
-                    }
+                try {
+                    params.getValidate().validate(dataMan, context, xml);
+                } catch (Exception e) {
+                    log.debug("Cannot validate XML from file " + filePath + ", ignoring. Error was: " + e.getMessage());
+                    result.doesNotValidate++;
+                    return FileVisitResult.CONTINUE; // skip this one
+                }
 
                 // transform using importxslt if not none
                 if (transformIt) {

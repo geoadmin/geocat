@@ -6,7 +6,8 @@
   module.service('gnSearchLocation', [
     '$location',
     '$rootScope',
-    function($location, $rootScope) {
+    'gnGlobalSettings',
+    function($location, $rootScope, gnGlobalSettings) {
 
       this.SEARCH = '/search';
       this.MAP = '/map';
@@ -54,7 +55,9 @@
       };
 
       this.setMap = function() {
-        $location.path(this.MAP);
+        if(gnGlobalSettings.isMapViewerEnabled) {
+          $location.path(this.MAP);
+        }
       };
 
       this.setSearch = function(params) {
@@ -76,21 +79,14 @@
       this.initTabRouting = function(tabs) {
         var that = this;
         var updateTabs = function() {
-          if (that.isSearch()) {
-            tabs.search.active = true;
-          }
-          else if (that.isMap()) {
-            tabs.map.active = true;
-          }
-          else if (that.isMdView()) {
-            tabs.view.active = true;
-          }
+          var tab = $location.path().
+              match(/^\/([a-zA-Z0-9]*)($|\/.*)/)[1];
+
+          tabs[tab].active = true;
         };
         updateTabs();
         $rootScope.$on('$locationChangeSuccess', updateTabs);
       };
     }
   ]);
-
-
 })();

@@ -8,8 +8,8 @@
     <jsSource webappPath="catalog/geocat-shared-objects/js" />
     <cssSource webappPath="catalog/geocat-shared-objects/css" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
       <!-- END GEOCAT -->
-    <cssSource webappPath="catalog/style" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
-    <cssSource webappPath="catalog/views" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
+      <cssSource webappPath="catalog/views" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
+      <cssSource webappPath="catalog/style" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
   </require>
   <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="catalog/lib/modernizr.js"/>

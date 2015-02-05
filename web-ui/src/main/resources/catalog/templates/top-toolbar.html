@@ -14,7 +14,7 @@
 <!-- GEOCAT -->
     <a class="navbar-brand" href="catalog.search?view=geocat">
 <!-- END GEOCAT -->
-        <img class="gn-logo"
+      <img class="gn-logo"
            data-ng-src="../../images/logos/{{info.site.siteId}}.gif?{{info.site.lastUpdate}}"/>
       <span class="visible-lg">{{info.site.name}}</span>
     </a>
@@ -28,13 +28,13 @@
         <i class="fa fa-search"/>
         <span  data-translate="">search</span>
       </a></li>
-      <!--<li><a href="catalog.search#/map"-->
+      <!--<li data-gn-show-map=""><a href="catalog.search#/map"-->
              <!--title="{{'map' | translate}}">-->
         <!--<i class="fa fa-globe"/>-->
         <!--<span  data-translate="">map</span>-->
       <!--</a></li>-->
 <!-- END GEOCAT -->
-        <li><a href="catalog.edit"
+      <li><a href="catalog.edit"
              data-ng-show="authenticated"
              title="{{'editorBoard' | translate}}">
         <i class="fa fa-plus"/>
