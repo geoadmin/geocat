@@ -445,7 +445,7 @@ public class Info implements Service {
 
 		String siteId   = sm.getSiteId();
         if (!sourceIds.contains(siteId)) {
-            String siteName = sm.getSiteName();
+        String siteName = sm.getSiteName();
 
             final SettingRepository settingRepository = context.getBean(SettingRepository.class);
             final List<Setting> labelSettings = settingRepository.findAll(SettingSpec.nameStartsWith(SYSTEM_SITE_LABEL_PREFIX));

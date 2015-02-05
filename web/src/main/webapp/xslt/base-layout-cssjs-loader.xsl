@@ -168,6 +168,24 @@
         }]);
       </script>
     </xsl:if>
+    
+    <xsl:if test="$angularApp = 'gn_editor'">
+      <script type="text/javascript">
+        var module = angular.module('gn_editor');
+        module.config(['gnViewerSettings', 'gnGlobalSettings',
+                function(gnViewerSettings, gnGlobalSettings) {
+          <xsl:if test="$owsContext">
+            gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
+          </xsl:if>
+          <xsl:if test="$wmsUrl and $layerName">
+            gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
+            gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
+          </xsl:if>
+          gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
+          gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
+        }]);
+      </script>
+    </xsl:if>
 
     <!--geocatch specific settings initialization-->
     <xsl:if test="$searchView = 'geocat'">
