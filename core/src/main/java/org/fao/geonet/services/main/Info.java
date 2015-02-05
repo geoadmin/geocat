@@ -422,38 +422,30 @@ public class Info implements Service {
         return result;
 	}
 
-    /**
-     *
-     *
-     * @param context
-     * @param sm
-     * @return
-     * @throws java.sql.SQLException
-     */
 	private Element getSources(ServiceContext context, SettingManager sm) throws SQLException
 	{
         Element element = new Element("results");
         final List<Source> sourceList = context.getBean(SourceRepository.class).findAll(SortUtils.createSort(Source_.name));
 
         Set<String> sourceIds = new HashSet<>();
-        for (Source o : sourceList) {
+		for (Source o : sourceList) {
             if (!sourceIds.contains(o.getUuid())) {
-                element.addContent(buildRecord(o.getUuid(), o.getName(), o.getLabelTranslations(), null, null));
+            element.addContent(buildRecord(o.getUuid(), o.getName(), o.getLabelTranslations(), null, null));
                 sourceIds.add(o.getUuid());
-            }
+		}
 		}
 
-		String siteId   = sm.getSiteId();
+        String siteId   = sm.getSiteId();
         if (!sourceIds.contains(siteId)) {
         String siteName = sm.getSiteName();
 
-            final SettingRepository settingRepository = context.getBean(SettingRepository.class);
-            final List<Setting> labelSettings = settingRepository.findAll(SettingSpec.nameStartsWith(SYSTEM_SITE_LABEL_PREFIX));
-            Map<String, String> labels = Maps.newHashMap();
-            for (Setting setting : labelSettings) {
-                labels.put(setting.getName().substring(SYSTEM_SITE_LABEL_PREFIX.length()), setting.getValue());
-            }
-            element.addContent(buildRecord(siteId, siteName, labels, null, null));
+        final SettingRepository settingRepository = context.getBean(SettingRepository.class);
+        final List<Setting> labelSettings = settingRepository.findAll(SettingSpec.nameStartsWith(SYSTEM_SITE_LABEL_PREFIX));
+        Map<String, String> labels = Maps.newHashMap();
+        for (Setting setting : labelSettings) {
+            labels.put(setting.getName().substring(SYSTEM_SITE_LABEL_PREFIX.length()), setting.getValue());
+        }
+        element.addContent(buildRecord(siteId, siteName, labels, null, null));
         }
 
 		return element;
