@@ -955,7 +955,7 @@ public class SchemaManager {
 
         final String schemaName = schemaDir.getFileName().toString();
         Path locBase = schemaDir.resolve("loc");
-        Map<String, XmlFile> xfMap = new HashMap<String, XmlFile>();
+        Map<String, XmlFile> xfMap = new HashMap<>();
 
         for (String fname : fnames) {
             Path filePath = path.resolve("loc").resolve(defaultLang).resolve(fname);

@@ -2229,7 +2229,7 @@ période de temps couverte par le service.
     <description>Informations de base sur les ressources concernées par les métadonnées</description>
     <help>Informations de base concernant la ressource (voire les ressources) ou le jeu de données auquel se rapportent les métadonnées. Ces informations sont gérées dans la classe MD_IdentificationInformation.</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:identifier" id="365.0">
     <label>Identificateur</label>
@@ -2243,21 +2243,21 @@ période de temps couverte par le service.
       <li>Il est constitué d’un {code} obligatoire (chaîne de caractères libre), éventuellement associé à un {espace de noms} (chaîne de caractères libre).</li>
     </ul>
     <p>
-    Il s’agit d’un identifiant créé pour identifier de manière unique la série de données décrite. 
-    Il n’y a qu’une seule ressource liée à cet identifiant. Aucun organisme dans la Communauté 
-    européenne ne peut utiliser créer un identifiant défini par un autre organisme pour une 
-    ressource différente. 
-    Il peut y avoir plusieurs identificateurs de ressource unique pour une série de données particulière. 
-    Exemple : évolutions (liées à une fusion) dans le nom de l’organisme. 
+    Il s’agit d’un identifiant créé pour identifier de manière unique la série de données décrite.
+    Il n’y a qu’une seule ressource liée à cet identifiant. Aucun organisme dans la Communauté
+    européenne ne peut utiliser créer un identifiant défini par un autre organisme pour une
+    ressource différente.
+    Il peut y avoir plusieurs identificateurs de ressource unique pour une série de données particulière.
+    Exemple : évolutions (liées à une fusion) dans le nom de l’organisme.
     Quels sont les usages de l’identifiant ? Dans INSPIRE, il sert à la traçabilité de la série
-    de données (l’objet conserve le même identifiant tout le long de son cycle de vie et cet identifiant 
-    ne peut jamais être repris pour une autre ressource)  et à la mise en place des services. 
+    de données (l’objet conserve le même identifiant tout le long de son cycle de vie et cet identifiant
+    ne peut jamais être repris pour une autre ressource)  et à la mise en place des services.
     Les gestionnaires de données doivent concevoir et créer cet identifiant dès la création de
      toute nouvelle ressource.</p>
     <p>L’importance de ce point est qu’il permet la liaison entre les métadonnées de service
      et celles de la série de données couplée. A terme, la solution sera la solution en A
-     des recommandations nationales. Si vous êtes en capacité de la mettre en oeuvre 
-     dès maintenant, c’est la meilleure solution. Sinon, nous vous proposons une solution intermédiaire qui 
+     des recommandations nationales. Si vous êtes en capacité de la mettre en oeuvre
+     dès maintenant, c’est la meilleure solution. Sinon, nous vous proposons une solution intermédiaire qui
      garantit néanmoins l’unicité. Ultérieurement, elle pourra permettre la mise en oeuvre
       de la première solution.</p>
       <p>
@@ -2271,10 +2271,10 @@ période de temps couverte par le service.
     <help for="france"><![CDATA[<b>Recommandations :</b>
     <p>
       <b>Une adresse Internet : </b>
-      
+
       L’{espace de noms} permet de s’assurer de l’unicité du {code} en précisant le contexte dans lequel
        il est donné. (Par exemple : la donnée X de l’organisation Y. « Organisation Y » fait ici
-        office d’{espace de noms}.) Il existe des {code} construits ou calculés de manière 
+        office d’{espace de noms}.) Il existe des {code} construits ou calculés de manière
         à être uniques et qui ne nécessitent pas d’{espace de noms}.
      Il est recommandé que :
     <ul>
@@ -2282,19 +2282,19 @@ période de temps couverte par le service.
        <li>cet URI soit également une URL (adresse internet) permettant d’accéder à la ressource (ou à ses métadonnées).</li>
     </ul>
     <b>Exemple : </b>http://www.ign.fr/bloc_identifiant_le_jeu_de_données
-    <p>Commentaire à la recommandation française nationale : 
-     Il s’agit de la fourniture d’une URI au format http, même si le but de l’identificateur n’est pas de localiser la ressource mais de l’identifier. 
+    <p>Commentaire à la recommandation française nationale :
+     Il s’agit de la fourniture d’une URI au format http, même si le but de l’identificateur n’est pas de localiser la ressource mais de l’identifier.
      Les gestionnaires de noms de domaine sur l’internet garantissent l’unicité du bloc organisme.
      Il est de la responsabilité du producteur de veiller à la permanence de cette URL.
     </p>
     </p>
     <p>
       <b>Une solution avec un identifiant non Internet : </b>
-      Mise en oeuvre d’un identifiant basé sur le numéro SIREN de l’INSEE, précédé par le code pays. 
+      Mise en oeuvre d’un identifiant basé sur le numéro SIREN de l’INSEE, précédé par le code pays.
       Le bloc identifiant l’organisme producteur sera constitué du code du pays et du code SIREN de l’organisme. Exemple : FRfr-243500139.
       Le bloc identifiant le jeu de données pourrait être issu d’une nomenclature, porter une date ou une version. Exemples : orthophoto2004, 35206plu20100612.
       Au final, par exemple : FRfr-243500139-35206plu20100612.
-      Il est reconnu qu‘il faut éviter les noms de services dans le bloc identifiant le jeu de données. Plus généralement, toutes les chaînes de caractères signifiantes (nom d’organismes...) sont à éviter car trop susceptibles de changer. De plus, il est recommandé de fournir l’identifiant en minuscule, et d’utiliser le tiret (-) en guise de séparateur. 
+      Il est reconnu qu‘il faut éviter les noms de services dans le bloc identifiant le jeu de données. Plus généralement, toutes les chaînes de caractères signifiantes (nom d’organismes...) sont à éviter car trop susceptibles de changer. De plus, il est recommandé de fournir l’identifiant en minuscule, et d’utiliser le tiret (-) en guise de séparateur.
       En cas d’d’absence de SIREN, une solution parallèle consiste à prendre le nom de domaine (celui de son site internet).
     </p>
     ]]></help>
@@ -2318,35 +2318,35 @@ période de temps couverte par le service.
     <description>Angle d'azimut mesuré en degré dans le sens des aiguilles d'une montre entre le nord géographique et la ligne optique au moment de la prise de vue. Pour les images scannées, le pixel central prend le rôle de la ligne optique</description>
     <help>Azimut d'éclairage mesuré en degrés sexagésimaux dans le sens horaire à compter du nord géographique au moment de la prise de vues. Pour les images scannées, la référence est le pixel central.</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:illuminationElevationAngle" id="244.0">
     <label>Angle d'élévation</label>
     <description>Angle d'élévation mesuré en degré dans le sens des aiguilles d'une montre entre a. l'intersection de la ligne optique et le plan cible et b. la surface terrestre. Pour les images scannées, le pixel central prend le rôle de la ligne optique</description>
     <help>Angle vertical d'éclairage mesuré en degrés sexagésimaux dans le sens horaire à compter du plan cible à l'intersection de la ligne de visée optique avec la surface terrestre. Pour les images scannées, la référence est le pixel central.</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:imageQualityCode" id="247.0">
     <label>Code sur la qualité de l'image</label>
     <description>Connaissances qui spécifient la qualité de l'image</description>
     <help>Identification spécifiant la qualité de l'image</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:imagingCondition" id="246.0">
     <label>Conditions d'image</label>
     <description>Conditions affectant l'image</description>
     <help>Contraintes auxquelles l'image est soumise.</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:includedWithDataset" id="236.0">
     <label>Inclus dans le jeu de données</label>
     <description>Indications si oui ou non le catalogue d'objets est inclus dans le jeu de données</description>
     <help>Indication de la présence ou de l'absence du catalogue d'objets dans le jeu de données.</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:individualName" id="375.0">
     <label>Nom de la personne</label>
@@ -2359,27 +2359,36 @@ période de temps couverte par le service.
     <description>Type d'initiative pour laquelle le jeu de données rassemblé a été produit</description>
     <help>Type de l'initiative ou du projet ayant motivé la saisie des données de rang inférieur (exemple : campagne, collecte, analyse, mission, étude, etc.)</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:issueIdentification" id="405.0">
     <label>Information d'édition</label>
     <description>Information identifiant l'édition des séries</description>
     <help>Informations concernant l'édition ou le numéro d'édition de la série.</help>
     <condition/>
-    
+
   </element>
+
   <element name="gmd:keyword" id="53.0">
     <label>Mot Clé</label>
     <description>Mots, notions ou phrases courants utilisés pour décrire le sujet</description>
     <help>Mots clés du jeu de données par l'intermédiaire desquels il peut être caractérisé et défini. Ces termes sont également utilisés en tant qu''arguments de recherche. Ces informations sont du type PT_FreeText et sont gérées dans la classe du même nom.</help>
     <condition/>
-    
+
+  </element>
+
+  <element name="gmd:descriptiveKeywords">
+    <label>Mot Clé</label>
+    <description>Mots, notions ou phrases courants utilisés pour décrire le sujet</description>
+    <help>Mots clés du jeu de données par l'intermédiaire desquels il peut être caractérisé et défini. Ces termes sont également utilisés en tant qu''arguments de recherche. Ces informations sont du type PT_FreeText et sont gérées dans la classe du même nom.</help>
+    <condition/>
+
   </element>
   <element name="gmd:language" id="3.0" context="gmd:MD_Metadata">
     <label>Langue des métadonnées</label>
     <description>Langue utilisée pour documenter les métadonnées</description>
     <help>La sélection s'opère dans la liste des langues ISO. Exemple : "fr" pour le français, "de" pour l'allemand, "en" pour l'anglais, "it" pour l'italien, "rm" pour le romanche, ...</help>
-    
+
     <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>C’est la langue utilisée dans les métadonnées.
     <ul>
     <li>Les valeurs possibles sont les langues officielles communautaires identifiées dans la norme ISO 639-2.</li>
@@ -2393,7 +2402,7 @@ période de temps couverte par le service.
     <b>Recommandations :</b>
     Cet élément doit être fixé à fre pour les métadonnées du GéoCatalogue utilisée pour le rapportage INSPIRE.
     ]]></help>
-    
+
     <condition>Obligatoire</condition>
   </element>
   <element name="gmd:language" id="39.0" context="gmd:MD_DataIdentification">
@@ -2427,26 +2436,26 @@ période de temps couverte par le service.
     <description>Langues utilisées dans le catalogue</description>
     <help>Langue utilisée dans le catalogue d'objets. La sélection s'opère dans la liste des langues ISO. Exemple : "fr" pour le français, "de" pour l'allemand, "en" pour l'anglais, "it" pour l'italien, "rm" pour le romanche, ...</help>
     <condition/>
-    
+
   </element>
-  
+
   <element name="gmd:language" id="3.0">
     <label>Langue</label>
   </element>
-  
+
   <element name="gmd:lensDistortionInformationAvailability" id="255.0">
     <label>Disponibilité sur la distortion des lentilles</label>
     <description>Indication si oui ou non des informations sur la corrections de fautes dues aux lentilles sont à disposition</description>
     <help>Indication de la présence éventuelle de valeurs de correction de la distorsion de l'objectif ayant servi à la prise de vue.</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:level" id="139.0">
     <label>Niveau</label>
     <description>Niveau hiérarchique des données spécifiées par l'attribut scope (79) du domaine d'applicabilité</description>
     <help>Domaine auquel s'appliquent les informations de qualité. La catégorie à laquelle se rapporte cette information peut être indiquée dans la liste de codes (exemple : attributs, objets géométriques, jeu de données, etc.).</help>
     <condition>Obligatoire</condition>
-    
+
   </element>
   <element name="gmd:levelDescription" id="141.0">
     <label>Description du niveau</label>
@@ -2489,35 +2498,35 @@ période de temps couverte par le service.
     <description>URL ou indication semblable d'une adresse Internet pour un accès on-line , par exemple http://www.isotc211.org</description>
     <help>Lien Internet, par exemple www.cosig.ch.</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:maintenanceAndUpdateFrequency" id="143.0">
     <label>Fréquence de mise à jour</label>
     <description>Fréquence avec laquelle des changements et des ajouts sont fait à la ressource après que la ressource initiale ait été complétée</description>
     <help>Fréquence à laquelle des changements et des ajouts sont apportés à la ressource. La valeur concernée est à sélectionner dans la liste suivante : en permanence, quotidienne, hebdomadaire, bimensuelle, mensuelle, trimestrielle, semestrielle, annuelle, au besoin, irrégulière, non prévue, inconnue, définie par l'utilisateur.</help>
     <condition>Obligatoire</condition>
-    
+
   </element>
   <element name="gmd:maintenanceNote" id="148.0">
     <label>Remarque sur la mise à jour</label>
     <description>Informations ou remarques en ce qui concerne les besoins spécifiques concernant la maintenance des ressources</description>
     <help>Informations ou remarques concernant la prise en compte de besoins spécifiques lors de la mise à jour des ressources.</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:maxValue" id="260.0">
     <label>Valeur maximale</label>
     <description>Longueur d'onde la plus longue que le senseur est capable de collecter à l'intérieur d'une bande donnée</description>
     <help>Longueur d'onde la plus élevée à laquelle le capteur est capable d'effectuer une mesure au sein de la gamme mentionnée.</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:maximumValue" id="356.0">
     <label>Valeur maximale</label>
     <description>Indication de l'altitude du point le plus haut du jeu de données</description>
     <help>Altitude du point le plus élevé du jeu de données</help>
     <condition>Obligatoire</condition>
-    
+
   </element>
   <element name="gmd:measureDescription" id="102.0">
     <label>Descripion du test</label>
@@ -2530,21 +2539,21 @@ période de temps couverte par le service.
     <description>Code identifiant une procédure standard enregistrée</description>
     <help>Identification d'une procédure normalisée enregistrée</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:mediumFormat" id="296.0">
     <label>Format du média</label>
     <description>Méthode utilisée pour écrire dans le média</description>
     <help>Format d'écriture utilisé pour le support considéré. La sélection peut s'effectuer parmi les formats suivants : cpio, tar, highSierra, iso9660, iso9660Rockridge, iso9660AppleHFS.</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:mediumNote" id="297.0">
     <label>Restriction média</label>
     <description>Description d'autres restrictions ou exigences pour l'utilisation du média</description>
     <help>Descriptions complémentaires ou informations importantes concernant le support telles que des restrictions, des exigences, etc.</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:metadataConstraints" id="20.0" context="gmd:MD_Metadata">
     <label>Contraites sur les métadonnées</label>
@@ -2552,7 +2561,7 @@ période de temps couverte par le service.
     <description>Contraintes sur l'accès et l'utilisation des métadonnées</description>
     <help>Restrictions d'accès et d'utilisation des métadonnées (exemple : copyright, conditions d'octroi de licence, etc.). Ces informations sont gérées dans la classe MD_Constraints.</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:metadataConstraints">
     <label>Contraintes sur les métadonnées</label>
@@ -2560,7 +2569,7 @@ période de temps couverte par le service.
     <description>Contraintes sur l’accès et l’utilisation des métadonnées</description>
     <help/>
     <condition/>
-    
+
   </element>
   <element name="gmd:metadataExtensionInfo" id="14.0">
     <label>Information sur l'extension des métadonnées</label>
@@ -2568,7 +2577,7 @@ période de temps couverte par le service.
     <description>Informations décrivant l'extension des métadonnées</description>
     <help>Informations décrivant des extensions de métadonnées</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:metadataMaintenance" id="22.0">
     <label>Mise à jour des métadonnées</label>
@@ -2576,35 +2585,35 @@ période de temps couverte par le service.
     <description>Informations sur la fréquence de mise à jour des métadonnées, ainsi que de leur étendue</description>
     <help>Informations concernant la fréquence, l'étendue, la date et la validité des mises à jour. Ces informations sont gérées dans la classe MD_MaintenanceInformation.</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:metadataStandardName" id="10.0">
     <label>Nom du standard de métadonnées</label>
     <description>Nom du standard (incluant le nom du profil) de métadonnées utilisé</description>
     <help>Nom de la norme sur les métadonnées utilisée, profil inclus (exemple : GM03Core, GM03Profil).</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:metadataStandardVersion" id="11.0">
     <label>Version du standard de métadonnées</label>
     <description>Version (du profil) du standard de métadonnées utilisé.</description>
     <help>Version (du profil) de la norme sur les métadonnées utilisée.</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:minValue" id="261.0">
     <label>Valeur minimum</label>
     <description>Longueur d'onde la plus courte que le senseur est capable de collecter à l'intérieur d'une bande donnée</description>
     <help>Longueur d'onde la plus courte à laquelle le capteur est capable d'effectuer une mesure au sein de la gamme mentionnée.</help>
     <condition/>
-    
+
   </element>
   <element name="gmd:minimumValue" id="355.0">
     <label>Valeur minimale</label>
     <description>Indication de l'altitude du point le plus bas du jeu de données</description>
     <help>Altitude du point le plus bas du jeu de données.</help>
     <condition/>
-    
+
   </element>
   <!--<element name="gmd:name" id="560.0" context="gmd:MD_AbstractClass">
     <label>Nom</label>
@@ -2618,14 +2627,14 @@ période de temps couverte par le service.
     <description>Nom du média sur lequel les données pouvent être obtenues</description>
     <help>Type de support sur lequel les données peuvent être obtenues, par exemple CD-ROM, DVD, DVD-ROM, disquette, etc. (sélection dans une liste).</help>
     <condition>Obligatoire</condition>
-    
+
   </element>
   <element name="gmd:name" id="196.0" context="gmd:RS_ReferenceSystem">
     <label>Nom du système de référence</label>
     <description>Nom du système de référence utilisé</description>
     <help>Nom du système de référence utilisé.</help>
     <condition>Obligatoire</condition>
-    
+
   </element>
   <element name="gmd:name" id="285.0" context="gmd:MD_Format">
     <label>Nom du format</label>
@@ -2657,42 +2666,41 @@ période de temps couverte par le service.
     <description>Nom de l'élément de métadonnée étendu</description>
     <help>Nom de l'élément de métadonnées étendu.</help>
     <condition>Obligatoire</condition>
-    
+
   </element>
   <element name="gmd:name" id="321.0" context="gmd:MD_ApplicationSchemaInformation">
     <label>Nom</label>
     <description>Nom du schéma d'application utilisé</description>
     <help>Nom du schéma d'application utilisé.</help>
     <condition>Obligatoire</condition>
-    
+
   </element>
   <element name="gmd:name" id="400.0" context="gmd:CI_OnlineResource">
     <label>Nom</label>
     <description>Nom de la ressource en ligne</description>
     <help>Nom de la source en ligne.</help>
     <condition>Obligatoire</condition>
-    
+
   </element>
   <element name="gmd:name" id="404.0" context="gmd:CI_Series">
     <label>Nom</label>
     <description>Nom des séries ou du jeu de données global desquels le jeu de donnée est une partie</description>
     <help>Nom de la série ou du jeu de données composé dont émane le jeu de données.</help>
     <condition>Obligatoire</condition>
-    
+
   </element>
   <element name="gmd:name">
     <label>Nom</label>
     <description>Name of the series, or aggregate dataset, of which the dataset is a part</description>
     <help/>
     <condition>Obligatoire</condition>
-    
+
   </element>
   <element name="gmd:nameOfMeasure" id="100.0">
     <label>Nom du test</label>
     <description>Nom des tests qui ont été appliqués aux données</description>
     <help>Nom du test appliqué aux données.</help>
-    <!-- TODO : translate -->
-    <!-- ISO19138 Data quality basic measures Annex C - under revision ISO 19157 http://www.iso.org/iso/fr/catalogue_detail.htm?csnumber=32575 -->
+    ISO19138 Data quality basic measures Annex C - under revision ISO 19157 http://www.iso.org/iso/fr/catalogue_detail.htm?csnumber=32575 -->
     <helper rel="gmd:measureDescription">
       <option value="">-- Exhaustivité --</option>
       <option value="Excess item" title="Indication that an item is incorrectly present in the data" id="ISO19138:2006:measure:1">Elément en excédent</option>

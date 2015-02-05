@@ -3,9 +3,9 @@
     "discoveryService":"Catalogue",
     "documentation":"Documentation",
     "aboutGeocat":"Autour de geocat",
-    "all": "Tous",
-    "allInPage": "Toute la page",
-    "none": "Aucun",
+    "all": "Tout sélectionner",
+    "allInPage": "Tout sélectionner dans la page",
+    "none": "Tout désélectionner",
     "BadParameterEx": "Paramètre incorrect",
     "Editor": "Editeur",
     "Keywords": "Keywords",
@@ -130,7 +130,7 @@
     "service": "Service",
     "serviceTypes": "Type de service",
     "signIn": "S'identifier",
-    "signedInAs": "Signed in as",
+    "signedInAs": "Connecté en tant que",
     "signout": "Se déconnecter",
     "somethingWrong": "Quelque chose s'est mal déroulé!",
     "south": "Sud",
@@ -154,6 +154,7 @@
     "uuid": "Identifiant",
     "url": "URL",
     "updateStatus": "Update record status",
+    "enableWorkflow": "Enable workflow",
     "metadataStatusUpdatedWithNoErrors": "Record status updated.",
     "metadataStatusUpdatedErrors": "Error occurs while updating status",
     "changeCategoryError": "Error occurs while updating category",
@@ -173,5 +174,5 @@
     "whoCanAccess": "Qui à accès ?",
     "actions": "Actions",
     "reset": "Reset",
-    "backToList": "Back To List"
+    "stop": "Stop"
 }
