@@ -53,6 +53,6 @@ public class AllXmlFilesAreSyntacticallyCorrect {
             }
         }
 
-        assertTrue(Joiner.on("\n  * ").join(badXmlFiles), badXmlFiles.isEmpty());
+        assertTrue("\n  *" + Joiner.on("\n  * ").join(badXmlFiles), badXmlFiles.isEmpty());
     }
 }
