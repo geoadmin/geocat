@@ -100,14 +100,14 @@ class Harvester {
      * Start the harvesting of a CGP server.
      */
     public HarvestResult harvest() throws Exception {
-        log.info("Retrieving remote CGP metadata information for: " + params.name);
+        log.info("Retrieving remote CGP metadata information for: " + params.getName());
 
         // Clean all before harvest : Remove/Add mechanism
         // If harvest failed (ie. if node unreachable), metadata will be removed, and
         // the node will not be referenced in the catalogue until next harvesting.
         // TODO : define a rule for UUID in order to be able to do an update operation ?
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-        localUuids = new UUIDMapper(metadataRepository, params.uuid);
+        localUuids = new UUIDMapper(metadataRepository, params.getUuid());
 
         // Try to load capabilities document
         CGPRequest cgpRequest = new CGPRequest(context, params.url);
@@ -179,7 +179,7 @@ class Harvester {
             log.info("CGP Harvester, addMetadata objid: " + objectId);
 
             // Envirocat does not support presentation request.
-            if (params.name.toLowerCase().equals("envirocat")) {
+            if (params.getName().toLowerCase().equals("envirocat")) {
                 log.info("CGP Harvester, envirocat node does not support presentation request, using small to add the record.");
                 addMetadata(objectId, recordElm, true);
             } else {
@@ -257,7 +257,7 @@ class Harvester {
         // String mdStr = Xml.getString(md);
         // Validate if specified
         try {
-            params.validate.validate(dataMan, context, md);
+            params.getValidate().validate(dataMan, context, md);
         } catch (Exception e) {
             log.info("Ignoring invalid metadata with uuid " + uuid);
             result.doesNotValidate++;
@@ -283,7 +283,7 @@ class Harvester {
             String group = null, isTemplate = null, docType = null, title = null, category = null;
             boolean ufo = false, indexImmediate = false;
             String changeDate = DATE_FORMAT.format(date);
-            id = dataMan.insertMetadata(context, schema, md, uuid, userid, group, params.uuid,
+            id = dataMan.insertMetadata(context, schema, md, uuid, userid, group, params.getUuid(),
                     isTemplate, docType, category, changeDate, changeDate, ufo, indexImmediate);
 
             addPrivileges(id);
@@ -291,7 +291,7 @@ class Harvester {
 
             int iId = Integer.parseInt(id);
             dataMan.setTemplateExt(iId, MetadataType.METADATA);
-            dataMan.setHarvestedExt(iId, params.uuid);
+            dataMan.setHarvestedExt(iId, params.getUuid());
         } catch (Throwable t) {
             // This sometimes occurs...
             log.warning("DB insert error: " + t + " msg=" + t.getMessage() + "  Remote objectid : " + anObjectId + " md=" + Xml
@@ -330,7 +330,7 @@ class Harvester {
 
     private int removeOldMetadata() throws Exception {
         // Clean all before harvest : Remove/Add mechanism
-        localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
+        localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
 
         // -----------------------------------------------------------------------
         // --- remove old metadata
