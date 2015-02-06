@@ -3,18 +3,18 @@ package org.fao.geonet.util;
 import com.google.common.collect.Maps;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import org.apache.lucene.analysis.TokenStream;
-import org.fao.geonet.SystemInfo;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.apache.lucene.util.AttributeImpl;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.search.GeoNetworkAnalyzer;
 import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.Log;
-import org.jdom.Element;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
+import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.context.ApplicationContext;
 
@@ -193,7 +193,7 @@ public final class LangUtils
     {
         Element desc = loadInternalMultiLingualElem(descAt);
         if( locale==null ){
-            if( desc.getText()==null ){
+            if( desc.getText() == null && !"null".equalsIgnoreCase(desc.getText())){
                 if( !desc.getChildren().isEmpty() ){
                     return ((Element) desc.getChildren()).getTextTrim();
                 }
@@ -202,15 +202,19 @@ public final class LangUtils
             }
         }else{
             String code = locale.substring(0, 2);
+            String nonEmptyText = null;
             for (Element child : (List<Element>) desc.getChildren()) {
-                if( child.getName().equalsIgnoreCase(code) ){
-                    return child.getTextTrim();
+                final String text = child.getTextTrim();
+                if( child.getName().equalsIgnoreCase(code) && !"null".equalsIgnoreCase(text) && !text.isEmpty()){
+                    return text;
+                } else if (nonEmptyText == null && !text.isEmpty() && !"null".equalsIgnoreCase(text)) {
+                    nonEmptyText = text;
                 }
             }
             if( desc.getText() != null && desc.getTextTrim().length()>0 ){
                 return desc.getTextTrim();
-            } else if (desc.getChildren().size() > 0){
-                return ((Element) desc.getChildren().get(0)).getTextTrim();
+            } else if (nonEmptyText != null){
+                return nonEmptyText;
             }
         }
         return "";
