@@ -18,7 +18,7 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.geocat.PublishRecord;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -27,6 +27,7 @@ import org.fao.geonet.repository.geocat.PublishRecordRepository;
 import org.fao.geonet.repository.geocat.specification.PublishRecordSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
+import org.fao.geonet.schema.iso19139che.ISO19139cheSchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -54,7 +55,8 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 
 public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Service {
     public static final String UNPUBLISH_LOG = Geonet.GEONETWORK + ".unpublish";
-
+    @Autowired
+    XmlSerializer xmlSerializer;
     @Autowired
     private ConfigurableApplicationContext context;
     @Autowired
@@ -154,10 +156,9 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
     private boolean checkIfNeedsUnpublishingAndSavePublishedRecord(ServiceContext context, Metadata metadataRecord,
                                                                    DataManager dataManager) throws Exception {
         String id = "" + metadataRecord.getId();
-        SchemaManager schemaManager = context.getBean(SchemaManager.class);
-        Element md = metadataRecord.getXmlData(false);
-        String schema = schemaManager.autodetectSchema(md);
-        PublishRecord todayRecord = null;
+        Element md   = xmlSerializer.selectNoXLinkResolver(String.valueOf(metadataRecord.getId()), true);
+        String schema = metadataRecord.getDataInfo().getSchemaId();
+        PublishRecord todayRecord;
         boolean published = isPublished(id, context);
 
         if (published) {
@@ -273,16 +274,16 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
     private List<Metadata> lookUpMetadataIds(MetadataRepository repo) throws SQLException {
         final Specification<Metadata> notHarvested = MetadataSpecs.isHarvested(false);
         Specification<Metadata> isMetadata = MetadataSpecs.isType(MetadataType.METADATA);
-        return repo.findAll(where(notHarvested).and(isMetadata));
+        Specification<Metadata> isCHEMetadata = MetadataSpecs.hasSchemaId(ISO19139cheSchemaPlugin.IDENTIFIER);
+        return repo.findAll(where(notHarvested).and(isMetadata).and(isCHEMetadata));
     }
 
     @SuppressWarnings("unchecked")
     static List<PublishRecord> values(ServiceContext context, int startOffset, int endOffset) throws Exception {
         final Specification<PublishRecord> daysOldOrNewer = PublishRecordSpecs.daysOldOrNewer(startOffset);
         final Specification<PublishRecord> daysOldOrOlder = PublishRecordSpecs.daysOldOrOlder(endOffset);
-        final List<PublishRecord> records = context.getBean(PublishRecordRepository.class).findAll(where(daysOldOrNewer).and(daysOldOrOlder));
 
-        return records;
+        return context.getBean(PublishRecordRepository.class).findAll(where(daysOldOrNewer).and(daysOldOrOlder));
     }
 
 
