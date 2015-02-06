@@ -33,31 +33,46 @@
           langs: ['DE', 'EN', 'FR', 'IT']
         };
 
+        var getString = function(val) {
+          if (val && typeof(val) === 'string') {
+            return val;
+          }
+          return null;
+        };
+        var addTranslation = function (params, paramPrefix, obj, field) {
+          var val = getString(obj[field]);
+          if (val) {
+            params.push(paramPrefix+field + "=" + val);
+          }
+        };
+        var encodeTranslation = function(params, paramPrefix, obj) {
+          addTranslation(params, paramPrefix, obj, "DE");
+          addTranslation(params, paramPrefix, obj, "FR");
+          addTranslation(params, paramPrefix, obj, "EN");
+          addTranslation(params, paramPrefix, obj, "IT");
+          addTranslation(params, paramPrefix, obj, "RM");
+        };
         var updateExtent = function(o) {
-          var params = {
-            id: o.id,
-            geoId: o.geoId,
-            typename: o.typename,
-            desc: o.desc,
-            geom: o.geomString,
-            crs: o.proj,
-            format: 'WKT',
-            _content_type: 'json'
-          };
-          angular.forEach($scope.formObj.langs, function(l) {
-            params['geoId'+l] = $scope.formObj.geoId[l];
-            params['desc'+l] = $scope.formObj.desc[l];
-          });
+          var params = [
+            'id='+ o.id,
+            'typename='+ o.typename,
+            'geom='+ o.geomString,
+            'crs='+ o.proj,
+            'format='+ 'WKT',
+            '_content_type='+ 'json'
+          ];
+          encodeTranslation(params, "geoId", o.geoId);
+          encodeTranslation(params, "desc", o.desc);
 
           $http({
-            method: 'GET',
+            method: 'POST',
             url: updateService,
-            params: params
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            data: params.join("&")
           }).success(function(data) {
             console.log('Save extent success');
           });
         };
-
         $scope.edit = function (row) {
 
           angular.extend($scope.formObj, {
@@ -65,6 +80,16 @@
             typename: gnUrlUtils.parseKeyValue(row.url).typename
           });
 
+          var getBestTranslation = function (obj) {
+            var curLang = $scope.lang.substring(0, 2).toUpperCase();
+            var val = getString(obj[curLang]);
+            angular.forEach(['DE', 'FR', 'IT', 'EN', 'RM'], function(lang) {
+              if (!val && curLang !== lang) {
+                val = getString(obj[lang]);
+              }
+            });
+            return val;
+          };
           $http({
             method: 'GET',
             url: getService,
@@ -75,19 +100,31 @@
               crs:'EPSG:21781',
               _content_type: 'json'
             }
-          })
-              .success(function (data) {
-
-                $scope.$broadcast('modalShown', data[0].featureType);
-                $scope.finishEdit = function () {
-                  updateExtent($scope.formObj);
-                  $('#editModal').modal('hide');
-                  $scope.reloadData();
-                };
-                for (var lang in $scope.keyword) {
-                  $scope.keyword[lang].label = data[lang].label;
-                  $scope.keyword[lang].desc = data[lang].definition;
+          }).success(function (data) {
+              $scope.$broadcast('modalShown', data[0].featureType);
+              $scope.finishEdit = function () {
+                updateExtent($scope.formObj);
+                $('#editModal').modal('hide');
+                //$scope.reloadData();
+                var geoId = getBestTranslation($scope.formObj.geoId);
+                var desc = getBestTranslation($scope.formObj.desc);
+                var finalDesc;
+                if (desc) {
+                  finalDesc = desc;
                 }
+                if (geoId) {
+                  if (finalDesc) {
+                    finalDesc += " <"+geoId+">"
+                  } else {
+                    finalDesc = "<"+geoId+">";
+                  }
+                }
+                if (!finalDesc) {
+                  finalDesc = "No Description";
+                }
+                row.desc = finalDesc;
+              };
+
                 $('#editModal').modal('show');
 
               });

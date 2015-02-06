@@ -428,12 +428,14 @@ public enum ExtentFormat
         if (featureType.descColumn != null) {
             String desc = ExtentHelper.decodeDescription((String) next.getAttribute(featureType.descColumn));
             final Element descElem = Xml.loadString("<" + ExtentHelper.DESC + ">" + desc + "</" + ExtentHelper.DESC + ">", false);
+            descElem.setAttribute("class", "object");
             featureElem.addContent(descElem);
         }
 
         if (featureType.geoIdColumn != null) {
             String desc = ExtentHelper.decodeDescription((String) next.getAttribute(featureType.geoIdColumn));
             final Element descElem = Xml.loadString("<" + ExtentHelper.GEO_ID + ">" + desc + "</" + ExtentHelper.GEO_ID + ">", false);
+            descElem.setAttribute("class", "object");
             featureElem.addContent(descElem);
         }
         if (next.getDefaultGeometry() != null) {
