@@ -81,8 +81,7 @@
                */
               scope.fillInput = function() {
                 var geom = featureOverlay.getFeatures().item(0).getGeometry().
-                    clone().transform(
-                    map.getView().getProjection(), scope.formObj.proj)
+                    clone().transform(map.getView().getProjection(), scope.formObj.proj);
                 scope.formObj.geomString = formatWkt.writeGeometry(geom);
               };
 

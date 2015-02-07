@@ -26,6 +26,7 @@
         }
 
         var getService = 'xml.extent.get',
+            addService = 'xml.extent.add',
             updateService = 'xml.extent.update';
 
         // Initiate obj that will be filled by extent form directive
@@ -52,26 +53,54 @@
           addTranslation(params, paramPrefix, obj, "IT");
           addTranslation(params, paramPrefix, obj, "RM");
         };
-        var updateExtent = function(o) {
+        var updateExtent = function(service, o) {
           var params = [
-            'id='+ o.id,
             'typename='+ o.typename,
             'geom='+ o.geomString,
             'crs='+ o.proj,
             'format='+ 'WKT',
             '_content_type='+ 'json'
           ];
+          if (o.id !== undefined) {
+            params.push('id=' + o.id);
+          }
           encodeTranslation(params, "geoId", o.geoId);
           encodeTranslation(params, "desc", o.desc);
 
-          $http({
+          return $http({
             method: 'POST',
-            url: updateService,
+            url: service,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             data: params.join("&")
-          }).success(function(data) {
-            console.log('Save extent success');
           });
+        };
+        var getBestTranslation = function (obj) {
+          var curLang = $scope.lang.substring(0, 2).toUpperCase();
+          var val = getString(obj[curLang]);
+          angular.forEach(['DE', 'FR', 'IT', 'EN', 'RM'], function(lang) {
+            if (!val && curLang !== lang) {
+              val = getString(obj[lang]);
+            }
+          });
+          return val;
+        };
+        var bestDescription = function() {
+          var geoId = getBestTranslation($scope.formObj.geoId);
+          var desc = getBestTranslation($scope.formObj.desc);
+          var finalDesc;
+          if (desc) {
+            finalDesc = desc;
+          }
+          if (geoId) {
+            if (finalDesc) {
+              finalDesc += " <"+geoId+">"
+            } else {
+              finalDesc = "<"+geoId+">";
+            }
+          }
+          if (!finalDesc) {
+            finalDesc = "No Description";
+          }
         };
         $scope.edit = function (row) {
 
@@ -80,16 +109,6 @@
             typename: gnUrlUtils.parseKeyValue(row.url).typename
           });
 
-          var getBestTranslation = function (obj) {
-            var curLang = $scope.lang.substring(0, 2).toUpperCase();
-            var val = getString(obj[curLang]);
-            angular.forEach(['DE', 'FR', 'IT', 'EN', 'RM'], function(lang) {
-              if (!val && curLang !== lang) {
-                val = getString(obj[lang]);
-              }
-            });
-            return val;
-          };
           $http({
             method: 'GET',
             url: getService,
@@ -103,26 +122,9 @@
           }).success(function (data) {
               $scope.$broadcast('modalShown', data[0].featureType);
               $scope.finishEdit = function () {
-                updateExtent($scope.formObj);
+                updateExtent(updateService, $scope.formObj);
                 $('#editModal').modal('hide');
-                //$scope.reloadData();
-                var geoId = getBestTranslation($scope.formObj.geoId);
-                var desc = getBestTranslation($scope.formObj.desc);
-                var finalDesc;
-                if (desc) {
-                  finalDesc = desc;
-                }
-                if (geoId) {
-                  if (finalDesc) {
-                    finalDesc += " <"+geoId+">"
-                  } else {
-                    finalDesc = "<"+geoId+">";
-                  }
-                }
-                if (!finalDesc) {
-                  finalDesc = "No Description";
-                }
-                row.desc = finalDesc;
+                row.desc = bestDescription();
               };
 
                 $('#editModal').modal('show');
@@ -130,8 +132,47 @@
               });
         };
         $scope.startCreateNew = function () {
-          $location.path("/validated/extents");
-          $scope.reloadOnWindowClosed(open($scope.baseUrl + '/extent.edit?crs=EPSG:21781&typename=gn:xlinks&id=&wfs=default&modal', '_sharedObject'));
+          $scope.formObj = {
+            typename: 'gn:xlinks',
+            geomString: '',
+            proj: 'EPSG:21781',
+            geoId: {
+              DE: '',
+              FR: '',
+              EN: '',
+              IT: '',
+              RM: ''
+            },
+            desc: {
+              DE: '',
+              FR: '',
+              EN: '',
+              IT: '',
+              RM: ''
+            },
+            geom: ''
+          };
+
+          $scope.$broadcast('modalShown', {
+            feature: {
+              geoId: {},
+              desc: {},
+              geom: 'POLYGON((481500 88000,481500 297250,832500 297250,832500 88000,481500 88000))'
+            }
+          });
+          $scope.finishEdit = function () {
+            $('#editModal').modal('hide');
+            updateExtent(addService, $scope.formObj).success(function(){
+              if ($location.path().contains("nonvalidated")) {
+                setTimeout(function () {
+                  $location.path('/validated/extents');
+                }, 200);
+              } else {
+                $scope.reloadData();
+              }
+            });
+          };
+          $('#editModal').modal('show');
         };
 
       }]);
