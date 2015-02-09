@@ -7,6 +7,12 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/width', '500', 0, 9590, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/summaryWidth', '500', 0, 9590, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/mapproj', 'EPSG:21781', 0, 9590, 'n');
+INSERT INTO groups(id, name, description, email, referrer, logo, website) VALUES (-1, 'GUEST', 'Reserved Guest Group', '', NULL, '', '');
+INSERT INTO groupsdes(iddes, langid, label) VALUES (-1, 'eng', 'Guest');
+INSERT INTO groupsdes(iddes, langid, label) VALUES (-1, 'fre', 'Invité');
+INSERT INTO groupsdes(iddes, langid, label) VALUES (-1, 'ita', 'Ospite');
+INSERT INTO groupsdes(iddes, langid, label) VALUES (-1, 'ger', 'Gast');
+INSERT INTO groupsdes(iddes, langid, label) VALUES (-1, 'roh', '');
 -- END GEOCAT
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/ignorehostlist', NULL, 0, 560, 'y');
