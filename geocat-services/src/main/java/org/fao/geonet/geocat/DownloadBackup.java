@@ -39,7 +39,7 @@ public class DownloadBackup {
             throw404();
         }
         MultiValueMap<String, String> headers = new HttpHeaders();
-        headers.add("content-disposition", "attachment; filename='" + files[0].getName() + "'");
+        headers.add("content-disposition", "attachment; filename=" + files[0].getName());
 
         final ResponseEntity<FileSystemResource> response = new ResponseEntity<>(new FileSystemResource(files[0]), headers, HttpStatus.OK);
 

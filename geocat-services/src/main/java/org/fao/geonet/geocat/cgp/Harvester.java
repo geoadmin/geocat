@@ -286,12 +286,12 @@ class Harvester {
             id = dataMan.insertMetadata(context, schema, md, uuid, userid, group, params.getUuid(),
                     isTemplate, docType, category, changeDate, changeDate, ufo, indexImmediate);
 
-            addPrivileges(id);
-            addCategories(id);
-
             int iId = Integer.parseInt(id);
             dataMan.setTemplateExt(iId, MetadataType.METADATA);
             dataMan.setHarvestedExt(iId, params.getUuid());
+
+            addPrivileges(id);
+            addCategories(id);
         } catch (Throwable t) {
             // This sometimes occurs...
             log.warning("DB insert error: " + t + " msg=" + t.getMessage() + "  Remote objectid : " + anObjectId + " md=" + Xml
@@ -381,12 +381,13 @@ class Harvester {
             if (name == null) {
                 log.debug("    - Skipping removed group with id:" + priv.getGroupId());
             } else {
+                final int mdId = Integer.parseInt(id);
                 for (int opId : priv.getOperations()) {
                     name = dataMan.getAccessManager().getPrivilegeName(opId);
 
                     //--- allow only: view, dynamic, featured
                     if (opId == 0 || opId == 5 || opId == 6) {
-                        dataMan.setOperation(context, id, priv.getGroupId(), opId + "");
+                        dataMan.setOperation(context, mdId, Integer.parseInt(priv.getGroupId()), opId);
                     } else {
                         log.debug("       --> " + name + " (skipped)");
                     }
