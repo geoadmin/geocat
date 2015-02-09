@@ -200,11 +200,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         // 1.- Look for the file identifier on the metadata xml
         String uuid = dataMan.extractUUID(schema,  md);
-        // GEOCAT
-        if (uuid == null && schema.equals("iso19139.che")) {
-            return;
-        }
-        // END GEOCAT
 
         // 2.- If there is no file identifier, then use the name of the file
         if (uuid == null) {
@@ -297,8 +292,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             if(log.isDebugEnabled()) {
                 log.debug("Record got:\n"+ Xml.getString(md));
             }
-            // check that it is a known schema
-            dataMan.autodetectSchema(md);
 
             // GEOCAT
             try {
@@ -310,9 +303,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                     Element tmp = Xml.transform(md, styleSheetPath);
                     md = tmp;
                 }
-                dataMan.autodetectSchema(md);
             }
             // END GEOCAT
+
+            // check that it is a known schema
+            dataMan.autodetectSchema(md);
              try {
                 params.getValidate().validate(dataMan, context, md);
                 return (Element) md.detach();

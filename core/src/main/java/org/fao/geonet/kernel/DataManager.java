@@ -149,6 +149,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -2807,14 +2808,20 @@ public class DataManager {
         // GEOCAT
         if (ReservedGroup.isReserved(grpId) &&
             (ReservedGroup.lookup(grpId) == ReservedGroup.all || ReservedGroup.lookup(grpId) == ReservedGroup.guest)) {
-            MetadataValidationRepository metadataValidationRepository = _applicationContext.getBean(MetadataValidationRepository.class);
-            List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(mdId);
-            if (validationInfo.isEmpty()) {
-                return Optional.absent();
-            }
-            for (MetadataValidation metadataValidation : validationInfo) {
-                if (!metadataValidation.isValid() && metadataValidation.isRequired()) {
+            final Specifications<Metadata> hasId = Specifications.where(MetadataSpecs.hasMetadataId(mdId));
+            final Specification<Metadata> isHarvested = MetadataSpecs.isHarvested(true);
+
+            if(context.getBean(MetadataRepository.class).findAll(hasId.and(isHarvested)).isEmpty()) {
+                MetadataValidationRepository metadataValidationRepository = _applicationContext.getBean(MetadataValidationRepository.class);
+
+                List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(mdId);
+                if (validationInfo.isEmpty()) {
                     return Optional.absent();
+                }
+                for (MetadataValidation metadataValidation : validationInfo) {
+                    if (!metadataValidation.isValid() && metadataValidation.isRequired()) {
+                        return Optional.absent();
+                    }
                 }
             }
         }
