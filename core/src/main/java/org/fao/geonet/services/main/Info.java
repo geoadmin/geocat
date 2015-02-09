@@ -395,7 +395,11 @@ public class Info implements Service {
         // you're Administrator
         if (Profile.Administrator == session.getProfile()) {
             // return all groups
-            result = groupRepository.findAllAsXml(Specifications.not(GroupSpecs.isReserved()), sort);
+            if (includingSystemGroups) {
+            result = groupRepository.findAllAsXml(null, sort);
+        } else {
+                return groupRepository.findAllAsXml(Specifications.not(GroupSpecs.isReserved()), sort);
+            }
         } else {
             Specifications<UserGroup> spec = Specifications.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
             // you're no Administrator
@@ -422,7 +426,7 @@ public class Info implements Service {
         return result;
 	}
 
-	private Element getSources(ServiceContext context, SettingManager sm) throws SQLException {
+    private Element getSources(ServiceContext context, SettingManager sm) throws SQLException {
         Element element = new Element("results");
         final List<Source> sourceList = context.getBean(SourceRepository.class).findAll(SortUtils.createSort(Source_.name));
 
