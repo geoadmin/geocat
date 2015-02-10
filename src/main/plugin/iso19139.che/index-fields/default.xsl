@@ -551,11 +551,11 @@
         <!-- Add KML link if WMS -->
         <xsl:if test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($title)!=''">
 
-            <Field name="wms_uri" string="{/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString}###{$title}###{$linkage[1]}" store="true" index="true"/>
+            <Field name="wms_uri" string="{/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:fileIdentifier/gco:CharacterString}###{$title}###{$linkage[1]}" store="true" index="true"/>
 
             <!-- FIXME : relative path -->
             <Field name="link" string="{concat($title, '|', $desc, '|',
-				'../../srv/en/google.kml?uuid=', /gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString, '&amp;layers=', $title, 
+				'../../srv/en/google.kml?uuid=', /*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:fileIdentifier/gco:CharacterString, '&amp;layers=', $title,
 				'|application/vnd.google-earth.kml+xml|application/vnd.google-earth.kml+xml')}" store="true" index="false"/>
         </xsl:if>
     </xsl:template>
