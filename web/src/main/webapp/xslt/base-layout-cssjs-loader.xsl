@@ -206,6 +206,16 @@
     </xsl:if>
     <!--enf of geocatch specific settings initialization-->
 
+    
+    <xsl:if test="$angularApp = 'gn_admin'">
+      <script type="text/javascript">
+        var module = angular.module('gn_admin');
+        module.config(['gnGlobalSettings',
+                function(gnGlobalSettings) {
+          gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
+        }]);
+      </script>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="*" mode="js-translations-combo-suite">

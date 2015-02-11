@@ -2,14 +2,16 @@
   goog.provide('gn_cat_controller');
 
   goog.require('gn_search_manager');
+  goog.require('gn_toptoolbar');
 
-  var module = angular.module('gn_cat_controller', ['gn_search_manager']);
+  var module = angular.module('gn_cat_controller', 
+      ['gn_search_manager', 'gnTopToolbar']);
 
 
   module.constant('gnGlobalSettings', {
     proxyUrl: '../../proxy?url=',
     locale: {},
-    isMapViewerEnabled : false
+    isMapViewerEnabled: false
   });
 
   /**
@@ -44,11 +46,11 @@
         home: 'home',
         signin: 'catalog.signin'
       };
-      var adminConsolePath = "admin.console";
-      if (window.location.search.indexOf("debug") !== -1) {
-        adminConsolePath += "?debug";
+      var adminConsolePath = 'admin.console';
+      if (window.location.search.indexOf('debug') !== -1) {
+        adminConsolePath += '?debug';
       }
-      if (window.location.pathname.indexOf("admin.console") !== -1) {
+      if (window.location.pathname.indexOf('admin.console') !== -1) {
         $scope.pages.adminClick = function($event) {
           $event.stopPropagation();
           if ($event.button === 1 || ($event.button === 0 && $event.ctrlKey)) {

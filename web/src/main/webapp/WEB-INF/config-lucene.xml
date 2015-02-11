@@ -274,7 +274,7 @@
     
     "The boost factor values you should use depend on what your're trying to achieve;
     you'll need to do some experimentation and
-    tuning to achieve the desired effect." source: Lucene In Action
+    tuning to achieve the desired effect." source: Lucene In Action 
     
   <boostDocument name="org.fao.geonet.kernel.search.function.ImportantDocument">
     <!- - Example to promote series and not promote records part of a series - ->

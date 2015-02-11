@@ -229,7 +229,6 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
         );
 
         List<Element> items = performQuery(params);
-        assertEquals(1, items.size());
         for (Element item : items) {
             assertTrue(item.getAttributeValue(ATT_TERM).contains("00"));
         }

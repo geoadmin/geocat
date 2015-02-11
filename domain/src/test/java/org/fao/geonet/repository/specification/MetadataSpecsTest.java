@@ -88,7 +88,7 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         Metadata md2 = _repository.save(metadata2);
 
         assertEquals(1, _repository.findAll(hasSchemaId(schemaId1)).size());
-        assertEquals(1, _repository.findAll(hasSchemaId(schemaId2)));
+        assertEquals(1, _repository.findAll(hasSchemaId(schemaId2)).size());
         assertEquals(0, _repository.findAll(hasSchemaId("other")).size());
 
         assertEquals(md1.getId(), _repository.findOne(hasSchemaId(schemaId1)).getId());

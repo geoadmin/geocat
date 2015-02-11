@@ -30,6 +30,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.ObjectNotFoundEx;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.jdom.Element;
 
@@ -62,7 +63,7 @@ public class Get implements Service {
 		@SuppressWarnings("unchecked")
         List<Element> idEls = params.getChildren("id");
 		boolean onlyInfo = org.fao.geonet.Util.getParam(params, "onlyInfo", false);
-        String sortField = org.fao.geonet.Util.getParam(params, "sortField", "site[1]/name[1]");
+		String sortField = org.fao.geonet.Util.getParam(params, "sortField", "site[1]/name[1]");
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
@@ -83,12 +84,14 @@ public class Get implements Service {
         for (String id : ids) {
             Element node = harvestManager.get(id, context, sortField);
 
-            if (result != null) {
+            if (node != null) {
                 if (idEls.isEmpty()) {
                     result = node;
                 } else {
                     result.addContent(node.detach());
                 }
+            } else {
+                throw new ObjectNotFoundEx("No Harvester found with id: " + id);
             }
         }
 
