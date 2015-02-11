@@ -530,7 +530,7 @@
         </xsl:variable>
 
         <!-- ignore empty downloads -->
-        <xsl:if test="string($linkage[1])!='' and not(contains($linkage,$download_check))">
+        <xsl:if test="string($linkage[1])!='' and not(contains($linkage[1],$download_check[1]))">
             <Field name="protocol" string="{string($protocol)}" store="true" index="true"/>
         </xsl:if>
 
