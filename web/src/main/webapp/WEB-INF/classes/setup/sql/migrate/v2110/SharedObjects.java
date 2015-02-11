@@ -329,6 +329,7 @@ public class SharedObjects implements DatabaseMigrationTask {
     private void cleanContact(Element contactEl) {
         if (contactEl.getName().equalsIgnoreCase("CharacterString") ||
             contactEl.getName().equalsIgnoreCase("LocalisedCharacterString") ||
+            contactEl.getName().equalsIgnoreCase("CI_RoleCode") ||
             contactEl.getName().equalsIgnoreCase("LocalisedURL")) {
             if (contactEl.getTextTrim().isEmpty()) {
                 contactEl.detach();
