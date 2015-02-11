@@ -13,6 +13,8 @@ INSERT INTO groupsdes(iddes, langid, label) VALUES (-1, 'fre', 'Invité');
 INSERT INTO groupsdes(iddes, langid, label) VALUES (-1, 'ita', 'Ospite');
 INSERT INTO groupsdes(iddes, langid, label) VALUES (-1, 'ger', 'Gast');
 INSERT INTO groupsdes(iddes, langid, label) VALUES (-1, 'roh', '');
+
+DELETE FROM validation;
 -- END GEOCAT
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/ignorehostlist', NULL, 0, 560, 'y');
