@@ -1,5 +1,6 @@
 package v2110;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import jeeves.xlink.XLink;
 import org.fao.geonet.DatabaseMigrationTask;
@@ -185,48 +186,53 @@ public class SharedObjects implements DatabaseMigrationTask {
                 Element ciOnlineResourceEl = new Element("CI_OnlineResource", GMD);
 
 
-                addLocalizedEl(contacts, contactEl, "organisation", "organisationName", GMD);
-                addLocalizedEl(contacts, contactEl, "positionname", "positionName", GMD);
+                addLocalizedEl(contacts, contactEl, "organisation", "organisationName", GMD, false);
+                addLocalizedEl(contacts, contactEl, "positionname", "positionName", GMD, false);
 
                 contactEl.addContent(
                         contactInfoEl.addContent(
                                 ciContactEl.addContent(
                                         phoneEl.addContent(ciTelephoneEl))));
 
-                addCharacterString(contacts, ciTelephoneEl, "phone", "voice", GMD);
-                addCharacterString(contacts, ciTelephoneEl, "phone1", "voice", GMD);
-                addCharacterString(contacts, ciTelephoneEl, "phone2", "voice", GMD);
+                addCharacterString(contacts, ciTelephoneEl, "phone", "voice", GMD, false);
+                addCharacterString(contacts, ciTelephoneEl, "phone1", "voice", GMD, false);
+                addCharacterString(contacts, ciTelephoneEl, "phone2", "voice", GMD, false);
 
-                addCharacterString(contacts, ciTelephoneEl, "facsimile", "facsimile", GMD);
-                addCharacterString(contacts, ciTelephoneEl, "facsimile1", "facsimile", GMD);
-                addCharacterString(contacts, ciTelephoneEl, "facsimile2", "facsimile", GMD);
+                addCharacterString(contacts, ciTelephoneEl, "facsimile", "facsimile", GMD, false);
+                addCharacterString(contacts, ciTelephoneEl, "facsimile1", "facsimile", GMD, false);
+                addCharacterString(contacts, ciTelephoneEl, "facsimile2", "facsimile", GMD, false);
 
-                addCharacterString(contacts, ciTelephoneEl, "directnumber", "directNumber", CHE);
-                addCharacterString(contacts, ciTelephoneEl, "mobile", "mobile", CHE);
+                addCharacterString(contacts, ciTelephoneEl, "directnumber", "directNumber", CHE, false);
+                addCharacterString(contacts, ciTelephoneEl, "mobile", "mobile", CHE, false);
 
                 ciContactEl.addContent(addressEl.addContent(cheAddressEl));
 
-                addCharacterString(contacts, cheAddressEl, "city", "city", GMD);
-                addCharacterString(contacts, cheAddressEl, "state", "administrativeArea", GMD);
-                addCharacterString(contacts, cheAddressEl, "zip", "postalCode", GMD);
-                addCharacterString(contacts, cheAddressEl, "country", "country", GMD);
-                String email = addCharacterString(contacts, cheAddressEl, "email", "electronicMailAddress", GMD);
-                addCharacterString(contacts, cheAddressEl, "email1", "electronicMailAddress", GMD);
-                addCharacterString(contacts, cheAddressEl, "email2", "electronicMailAddress", GMD);
-                addCharacterString(contacts, cheAddressEl, "streetname", "streetName", CHE);
-                addCharacterString(contacts, cheAddressEl, "streetnumber", "streetNumber", CHE);
-                addCharacterString(contacts, cheAddressEl, "address", "addressLine", CHE);
-                addCharacterString(contacts, cheAddressEl, "postbox", "postBox", CHE);
+                addCharacterString(contacts, cheAddressEl, "city", "city", GMD, false);
+                addCharacterString(contacts, cheAddressEl, "state", "administrativeArea", GMD, false);
+                addCharacterString(contacts, cheAddressEl, "zip", "postalCode", GMD, false);
+                addCharacterString(contacts, cheAddressEl, "country", "country", GMD, false);
+                String email = addCharacterString(contacts, cheAddressEl, "email", "electronicMailAddress", GMD, false);
+                addCharacterString(contacts, cheAddressEl, "email1", "electronicMailAddress", GMD, false);
+                addCharacterString(contacts, cheAddressEl, "email2", "electronicMailAddress", GMD, false);
+                addCharacterString(contacts, cheAddressEl, "streetname", "streetName", CHE, false);
+                addCharacterString(contacts, cheAddressEl, "streetnumber", "streetNumber", CHE, false);
+                addCharacterString(contacts, cheAddressEl, "address", "addressLine", CHE, false);
+                addCharacterString(contacts, cheAddressEl, "postbox", "postBox", CHE, false);
 
                 ciContactEl.addContent(onlineResourceEl.addContent(ciOnlineResourceEl));
 
-                addLocalizedEl(contacts, ciOnlineResourceEl, "onlineresource", "linkage", GMD);
-                addCharacterString(contacts, ciOnlineResourceEl, "postbox", "protocol", GMD); // text/html
-                addLocalizedEl(contacts, ciOnlineResourceEl, "onlinename", "name", GMD);
-                addLocalizedEl(contacts, ciOnlineResourceEl, "onlinedescription", "description", GMD);
+                addLocalizedURL(contacts, ciOnlineResourceEl, "onlineresource", "linkage", GMD, false);
+                addLocalizedEl(contacts, ciOnlineResourceEl, "onlinename", "name", GMD, false);
+                addLocalizedEl(contacts, ciOnlineResourceEl, "onlinedescription", "description", GMD, false);
+                cleanContact(ciOnlineResourceEl);
+                if (!ciOnlineResourceEl.getChildren().isEmpty()) {
+                    ciOnlineResourceEl.addContent(
+                            new Element("protocol", GMD).addContent(
+                                    new Element("CharacterString", GCO).setText("text/html")));
+                }
 
-                addCharacterString(contacts, ciContactEl, "hoursofservice", "hoursOfService", GMD);
-                addLocalizedEl(contacts, ciContactEl, "contactinstructions", "contactInstructions", GMD);
+                addCharacterString(contacts, ciContactEl, "hoursofservice", "hoursOfService", GMD, false);
+                addLocalizedEl(contacts, ciContactEl, "contactinstructions", "contactInstructions", GMD, false);
 
                 contactEl.addContent(
                         new Element("role", GMD).addContent(
@@ -235,10 +241,10 @@ public class SharedObjects implements DatabaseMigrationTask {
                                         setAttribute("codeListValue", "pointOfContact")
                         )
                 );
-                String name = addCharacterString(contacts, contactEl, "name", "individualFirstName", CHE);
-                String surname = addCharacterString(contacts, contactEl, "surname", "individualLastName", CHE);
+                String name = addCharacterString(contacts, contactEl, "name", "individualFirstName", CHE, false);
+                String surname = addCharacterString(contacts, contactEl, "surname", "individualLastName", CHE, false);
 
-                addLocalizedEl(contacts, ciContactEl, "orgacronym", "organisationAcronym", CHE);
+                addLocalizedEl(contacts, contactEl, "orgacronym", "organisationAcronym", CHE, false);
 
                 String parentinfo = contacts.getString("parentinfo");
 
@@ -272,6 +278,7 @@ public class SharedObjects implements DatabaseMigrationTask {
                     uuid = UUID.randomUUID().toString();
                 }
 
+                cleanContact(contactEl);
                 SharedObject obj = new SharedObject(id, contactEl, title, validated, "che:CHE_CI_ResponsibleParty", uuid);
                 registerSubtemplate(idIndex, source, subtemplateStatement, obj);
                 idMap.put(obj.id, uuid);
@@ -281,35 +288,102 @@ public class SharedObjects implements DatabaseMigrationTask {
         return idMap;
     }
 
+    private void addLocalizedURL(ResultSet contacts, Element parentEl, String columnName, String elName, Namespace ns,
+                                 boolean required) throws IOException, SQLException {
+
+        final String value = contacts.getString(columnName);
+        Element newEl = new Element(elName, ns);
+
+        if (value == null || value.trim().isEmpty()) {
+            if (required) {
+                addMissingCharString(newEl);
+            }
+        } else {
+            final Element translations = loadInternalMultiLingualElem(value);
+            if (!translations.getChildren().isEmpty()) {
+                Element ptFreeURL = new Element("PT_FreeURL", CHE);
+                newEl.addContent(ptFreeURL);
+                addPtFreeURL(ptFreeURL, translations.getChildText("EN"), "#EN");
+                addPtFreeURL(ptFreeURL, translations.getChildText("DE"), "#DE");
+                addPtFreeURL(ptFreeURL, translations.getChildText("FR"), "#FR");
+                addPtFreeURL(ptFreeURL, translations.getChildText("IT"), "#IT");
+                addPtFreeURL(ptFreeURL, translations.getChildText("RM"), "#RM");
+            }
+        }
+
+        if (newEl.getContentSize() > 0) {
+            parentEl.addContent(newEl);
+        }
+    }
+
+    private void addPtFreeURL(Element newEl, String translation, String locale) {
+        if (translation != null && !translation.trim().isEmpty()) {
+            newEl.addContent(
+                    new Element("URLGroup", CHE).addContent(
+                            new Element("LocalisedURL", CHE).setAttribute("locale", locale).setText(translation.trim())
+                    )
+            );
+        }
+    }
+
+    private void cleanContact(Element contactEl) {
+        if (contactEl.getName().equalsIgnoreCase("CharacterString") ||
+            contactEl.getName().equalsIgnoreCase("LocalisedCharacterString") ||
+            contactEl.getName().equalsIgnoreCase("LocalisedURL")) {
+            if (contactEl.getTextTrim().isEmpty()) {
+                contactEl.detach();
+            }
+            return;
+        } else {
+            for (Object o : Lists.newArrayList(contactEl.getChildren())) {
+                cleanContact((Element) o);
+            }
+        }
+        if (contactEl.getContentSize() == 0) {
+            contactEl.detach();
+        }
+    }
+
 
     private void addLocalizedEl(ResultSet contacts, Element contactEl,
                                 String columnName, String elName,
-                                Namespace ns) throws
+                                Namespace ns, boolean required) throws
             SQLException, IOException {
         final String value = contacts.getString(columnName);
         Element newEl = new Element(elName, ns);
-        contactEl.addContent(newEl);
 
         if (value == null || value.trim().isEmpty()) {
-            addMissingCharString(newEl);
+            if (required) {
+                addMissingCharString(newEl);
+            }
         } else {
             final Element translations = loadInternalMultiLingualElem(value);
+            if (!translations.getChildren().isEmpty()) {
+                Element ptFreeText = new Element("PT_FreeText", GMD);
+                newEl.addContent(ptFreeText);
+                addPtFreeText(ptFreeText, translations.getChildText("EN"), "#EN");
+                addPtFreeText(ptFreeText, translations.getChildText("DE"), "#DE");
+                if (translations.getChildText("DE") == null || translations.getChildText("DE").trim().isEmpty()) {
+                    addPtFreeText(ptFreeText, translations.getChildText("GE"), "#DE");
+                }
+                addPtFreeText(ptFreeText, translations.getChildText("FR"), "#FR");
+                addPtFreeText(ptFreeText, translations.getChildText("IT"), "#IT");
+                addPtFreeText(ptFreeText, translations.getChildText("RM"), "#RM");
+            }
+        }
 
-            addPtFreeText(newEl, translations.getChildText("EN"), "#EN");
-            addPtFreeText(newEl, translations.getChildText("DE"), "#DE");
-            addPtFreeText(newEl, translations.getChildText("FR"), "#FR");
-            addPtFreeText(newEl, translations.getChildText("IT"), "#IT");
-            addPtFreeText(newEl, translations.getChildText("RM"), "#RM");
+        if (newEl.getContentSize() > 0) {
+            contactEl.addContent(newEl);
         }
     }
 
     private void addPtFreeText(Element newEl, String translation, String locale) {
         if (translation != null && !translation.trim().isEmpty()) {
-            newEl.addContent(new Element("PT_FreeText", GMD).addContent(
+            newEl.addContent(
                     new Element("textGroup", GMD).addContent(
                             new Element("LocalisedCharacterString", GMD).setAttribute("locale", locale).setText(translation.trim())
                     )
-            ));
+            );
         }
     }
 
@@ -361,8 +435,8 @@ public class SharedObjects implements DatabaseMigrationTask {
                 String validated = formats.getString("validated");
 
                 Element formatEl = new Element("MD_Format", GMD);
-                addCharacterString(formats, formatEl, "name", "name", GMD);
-                addCharacterString(formats, formatEl, "version", "version", GMD);
+                addCharacterString(formats, formatEl, "name", "name", GMD, true);
+                addCharacterString(formats, formatEl, "version", "version", GMD, true);
                 SharedObject obj = new SharedObject(id, formatEl, name, validated, "gmd:MD_Format");
 
                 registerSubtemplate(idIndex, source, subtemplateStatement, obj);
@@ -390,17 +464,22 @@ public class SharedObjects implements DatabaseMigrationTask {
         statement.addBatch();
     }
 
-    private String addCharacterString(ResultSet results, Element parent, String columnName, String elemName, Namespace ns) throws
+    private String addCharacterString(ResultSet results, Element parent, String columnName, String elemName, Namespace ns, boolean
+            required) throws
             SQLException {
 
         final Element elem = new Element(elemName, ns);
-        parent.addContent(elem);
 
         final String text = results.getString(columnName);
         if (text == null || text.trim().isEmpty()) {
-            addMissingCharString(elem);
+            if (required) {
+                addMissingCharString(elem);
+            }
         } else {
             elem.addContent(new Element("CharacterString", GCO).setText(text));
+        }
+        if (elem.getContentSize() > 0) {
+            parent.addContent(elem);
         }
         return text;
     }

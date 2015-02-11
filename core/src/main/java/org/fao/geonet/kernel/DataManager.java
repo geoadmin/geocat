@@ -541,9 +541,22 @@ public class DataManager {
         final String schemaId = metadata.getDataInfo().getSchemaId();
         final String uuid = metadata.getUuid();
 
-        if (!schemaId.trim().equals("iso19139.che") || metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
+        if (!schemaId.trim().equals("iso19139.che")) {
             return metadataEl;
         }
+
+        if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
+
+            /*
+             * Geocat doesn't permit multilingual elements to have characterString elements only LocalizedString elements.
+             * This transformation ensures this property
+             */
+            metadataEl = Xml.transform(metadataEl, stylePath.resolve("characterstring-to-localisedcharacterstring.xsl"));
+
+            xmlSerializer.update(metadataId, metadataEl, new ISODate().toString(), false, uuid, servContext);
+            return metadataEl;
+        }
+
         if (!fastIndex) {
             try {
                     /*
