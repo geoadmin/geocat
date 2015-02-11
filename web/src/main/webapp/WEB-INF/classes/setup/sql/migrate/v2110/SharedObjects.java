@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import jeeves.xlink.XLink;
 import org.fao.geonet.DatabaseMigrationTask;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -292,7 +293,7 @@ public class SharedObjects implements DatabaseMigrationTask {
                                  boolean required) throws IOException, SQLException {
 
         final String value = contacts.getString(columnName);
-        Element newEl = new Element(elName, ns);
+        Element newEl = new Element(elName, ns).setAttribute("type","che:PT_FreeURL_PropertyType", Geonet.Namespaces.XSI);
 
         if (value == null || value.trim().isEmpty()) {
             if (required) {
@@ -353,7 +354,7 @@ public class SharedObjects implements DatabaseMigrationTask {
                                 Namespace ns, boolean required) throws
             SQLException, IOException {
         final String value = contacts.getString(columnName);
-        Element newEl = new Element(elName, ns);
+        Element newEl = new Element(elName, ns).setAttribute("type","gmd:PT_FreeText_PropertyType", Geonet.Namespaces.XSI);
 
         if (value == null || value.trim().isEmpty()) {
             if (required) {
