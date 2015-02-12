@@ -34,6 +34,7 @@
     },
     roleCode: {
       'iso19139': 'gmd:CI_RoleCode',
+      'iso19139.che': 'gmd:CI_RoleCode',
       'iso19115-3': 'cit:CI_RoleCode'
     },
     associationType: {
