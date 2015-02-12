@@ -26,7 +26,7 @@
           <img ng-src="../..{{md.logo}}" class="media-object"/>
         </a>
 
-        <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350" dd-text-collapse-text="{{md.abstract}}"></p>
+        <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350" dd-text-collapse-text="{{md.abstract || md.defaultAbstract}}"></p>
         <p class="md-owner">
           (<i translate>owner</i> : <a href="{{pages.admin}}#/organization/users" target="_blank">{{md.getOwnername()}}</a>)</p>
       </div>
