@@ -420,11 +420,6 @@
   <help></help>
  </element> -->
  
- <element name="che:LocalisedURL">
-  <label>Localised URL</label>
-  <description/>
-  <help/>
- </element>
  <!-- codelist: <element name="che:CHE_MD_modelTypeCode">
   <label>Model type code</label>
   <description>Select from codelist</description>
@@ -507,10 +502,6 @@
  <element name="che:CHE_SV_ServiceIdentification" id="40.0">
   <label>Service identification</label>
   <description>description of services according the Swiss GM03_2+ profile of ISO 19119</description>  
- </element>
- <element name="che:inspireServiceType">
-  <label>INSPIRE service type</label>
-  <description></description>  
  </element>
  <!--<element name="che:legislationConstraints">
   <label>Legislation constraints</label>
