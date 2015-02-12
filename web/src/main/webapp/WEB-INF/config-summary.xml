@@ -56,7 +56,6 @@
 -->
     <facets>
         <!-- GEOCAT -->
-        <facet name="topicCat" indexKey="topicCat" label="topicCats"/>
         <facet name="formatWithVersion" indexKey="formatWithVersion" label="formatWithVersions" />
         <!-- END GEOCAT -->
         <facet name="keyword" indexKey="keyword" label="keywords" localized="true"/>
@@ -85,9 +84,6 @@
 
     <summaryTypes>
         <summaryType name="hits">
-            <!-- GEOCAT -->
-            <item facet="topicCat" sortBy="label" sortOrder="asc" max="100"  translator="codelist:gmd:MD_TopicCategoryCode"/>
-            <!-- END GEOCAT -->
             <item facet="keyword" max="15"/>
             <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
             <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
