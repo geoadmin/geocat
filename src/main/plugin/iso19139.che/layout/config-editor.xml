@@ -51,71 +51,49 @@
     <for name="gmd:languageCode" use="data-gn-language-picker"/>
 
     <for name="gmd:country" use="data-gn-country-picker"/>
-    <for name="gmd:geographicElement" use="data-gn-country-picker"/>
 
     <for name="gmd:referenceSystemInfo" addDirective="data-gn-crs-selector"/>
 
 
-    <for name="gmd:contact" addDirective="gc-add-sharedobject">
+    <for name="gmd:contact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="false"
               data-template-type="contact"
               data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
-    <for name="gmd:pointOfContact" addDirective="gc-add-sharedobject">
+    <for name="gmd:pointOfContact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="false"
               data-template-type="contact"
               data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
-    <for name="gmd:distributor" addDirective="gc-add-sharedobject">
+    <for name="gmd:distributor" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="false"
               data-template-type="contact"
               data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
-    <for name="gmd:processor" addDirective="gc-add-sharedobject">
+    <for name="gmd:processor" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="false"
               data-template-type="contact"
               data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
-    <for name="gmd:citedResponsibleParty" addDirective="gc-add-sharedobject">
+    <for name="gmd:citedResponsibleParty" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
-              data-template-add-action="true"
+              data-template-add-action="false"
               data-template-type="contact"
-              data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
-    </for>
-    <for name="srv:extent" addDirective="gc-add-sharedobject">
-      <directiveAttributes
-              data-template-add-action="true"
-              data-template-type="extent"
-              data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
-    </for>
-    <for name="gmd:extent" addDirective="gc-add-sharedobject">
-      <directiveAttributes
-              data-template-add-action="true"
-              data-template-type="extent"
-              data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
-    </for>
-    <for name="gmd:resourceFormat" addDirective="gc-add-sharedobject">
-      <directiveAttributes
-              data-template-add-action="true"
-              data-template-type="format"
               data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
 
 
     <!-- Example configuration: Add onLine source from subtemplate
-    <for name="gmd:onLine" addDirective="gc-add-sharedobject">
+    <for name="gmd:onLine" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
               data-template-add-action="true"
               data-template-type="onLine"
@@ -146,7 +124,6 @@
     <name>gmd:pointOfContact</name>
     <name>gmd:contact</name>
     <name>gmd:citedResponsibleParty</name>
-    <name>che:CHE_CI_ResponsibleParty</name>
     <name>gmd:dataQualityInfo</name>
     <name>gmd:contentInfo</name>
     <name>gmd:distributionFormat</name>
@@ -284,9 +261,6 @@
         <for name="gmd:contact"/>
         <for name="gmd:processor"/>
         <for name="gmd:citedResponsibleParty"/>
-        <for name="gmd:extent"/>
-        <for name="srv:extent"/>
-        <for name="gmd:resourceFormat"/>
       </flatModeExceptions>
 
     </view>
