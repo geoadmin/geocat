@@ -3,6 +3,8 @@
 -- Update UserGroups profiles to be one of the enumerated profiles
 
 TRUNCATE TABLE USERGROUPS;
+ALTER TABLE USERGROUPS DROP COLUMN profile;
+ALTER TABLE USERGROUPS ADD COLUMN profile integer NOT NULL;
 -- Update UserGroups profiles to be one of the enumerated profiles
 
 INSERT INTO USERGROUPS SELECT * FROM USERGROUPS_TMP;
