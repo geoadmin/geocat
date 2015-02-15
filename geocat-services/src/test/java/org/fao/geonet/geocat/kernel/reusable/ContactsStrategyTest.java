@@ -304,7 +304,27 @@ public class ContactsStrategyTest extends AbstractSharedObjectStrategyTest {
     }
 
     protected Element createMetadata(Element formatXml) {
-        return new Element("CHE_MD_Metadata", CHE).addContent(
-                new Element("contact", GMD).addContent(formatXml));
+        final Element md = new Element("CHE_MD_Metadata", CHE).addContent( Arrays.asList(
+                new Element("language", GMD).addContent(new Element("CharacterString", GCO).setText("ger")),
+                new Element("contact", GMD).addContent(formatXml),
+                addLanguage("DE", "ger"),
+                addLanguage("EN", "eng"),
+                addLanguage("IT", "ita"),
+                addLanguage("FR", "fre")
+                ));
+
+        return md;
+    }
+
+    private Element addLanguage(String id, String langCode) {
+        return new Element("locale", GMD).addContent(
+                new Element("PT_Locale", GMD).setAttribute("id", id).addContent(
+                        new Element("languageCode", GMD).addContent(
+                                new Element("LanguageCode", GMD).
+                                        setAttribute("codeList", "#LanguageCode").
+                                        setAttribute("codeListValue", langCode)
+                        )
+                )
+        );
     }
 }
