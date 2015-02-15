@@ -18,7 +18,6 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_EXTRA_FIELD;
 import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED;
@@ -129,8 +128,8 @@ public class FormatsStrategyTest extends AbstractSharedObjectStrategyTest {
         assertCorrectMetadataInLucene(_applicationContext, query, uuid);
     }
 
-    protected Metadata createDefaultSubtemplate(boolean validated) throws Exception {
-        return addFormatSubtemplate("format" + UUID.randomUUID(), validated);
+    protected Metadata createDefaultSubtemplate(String seedData, boolean validated) throws Exception {
+        return addFormatSubtemplate("format" + seedData, validated);
     }
 
     protected String getIsValidatedSpecificData() {

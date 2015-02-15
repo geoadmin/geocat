@@ -100,6 +100,32 @@ public class ListSharedContactsTest extends AbstractSharedObjectTest {
 
         assertEquals(1, response.getChildren().size());
         validList(response, "invalid", 0);
+        response = listSharedObjects.exec(
+                createParams(read("type", "contacts"), read("validated", false)),
+                context);
+
+        assertEquals(1, response.getChildren().size());
+        validList(response, "invalid", 0);
+
+        response = listSharedObjects.exec(
+                createParams(read("type", "contacts")),
+                context);
+        assertEquals(3, response.getChildren().size());
+
+        response = listSharedObjects.exec(
+                createParams(read("type", "contacts"), read("q", "valid")),
+                context);
+        assertEquals(3, response.getChildren().size());
+
+        response = listSharedObjects.exec(
+                createParams(read("type", "contacts"), read("q", "invalid")),
+                context);
+        assertEquals(1, response.getChildren().size());
+
+        response = listSharedObjects.exec(
+                createParams(read("type", "contacts"), read("q", "valid"), read("maxResults", "1")),
+                context);
+        assertEquals(1, response.getChildren().size());
     }
 
     private void validList(Element response, String uuid, int i) {

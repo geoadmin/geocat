@@ -32,7 +32,6 @@ import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
@@ -82,7 +81,7 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
     }
 
     @Override
-    protected Query createSearchQuery(Element originalElem, String twoCharLangCode, String threeCharLangCode) {
+    protected BooleanQuery createSearchQuery(Element originalElem, String twoCharLangCode, String threeCharLangCode) {
         String email = lookupElement(originalElem, "electronicMailAddress", twoCharLangCode);
         String firstname = lookupElement(originalElem, "individualFirstName", twoCharLangCode);
         String lastname = lookupElement(originalElem, "individualLastName", twoCharLangCode);
@@ -251,36 +250,16 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
         }
     }
 
-    public Element list(UserSession session, boolean validated, String language) throws Exception {
+    public Element list(UserSession session, Boolean validated, String language) throws Exception {
         return super.listFromIndex(this.searchManager, LUCENE_ROOT_RESPONSIBLE_PARTY, validated, language, session, this,
-                new Function<DescData, String>() {
-                    @Nullable
-                    @Override
-                    public String apply(@Nonnull DescData data) {
-                        String email = safeField(data.doc, LUCENE_EMAIL);
-                        String name = safeField(data.doc, LUCENE_FIRST_NAME);
-                        String surname = safeField(data.doc, LUCENE_LAST_NAME);
+                30000, new ContactDescFunc(), null);
+    }
 
-                        String desc;
-                        if (email == null || email.length() == 0) {
-                            desc = data.uuid;
-                        } else {
-                            desc = email;
-                        }
-
-                        return name + " " + surname + " (" + desc + ")";
-                    }
-
-                    private String safeField(Document doc, String fieldName) {
-                        final IndexableField field = doc.getField(fieldName);
-                        if (field != null) {
-                            return field.stringValue();
-                        } else {
-                            return "";
-                        }
-                    }
-
-                });
+    @Override
+    public Element search(UserSession session, String search, String language, int maxResults) throws Exception {
+        return super.listFromIndex(this.searchManager, LUCENE_ROOT_RESPONSIBLE_PARTY, null, language, session, this,
+                maxResults, new ContactDescFunc(), search
+        );
     }
 
     public String createXlinkHref(String uuid, UserSession session, String role) {
@@ -347,5 +326,34 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
                ".org/2005/resources/codeList.xml#CI_RoleCode\"/>\n"
                + "      </gmd:role>\n"
                + "    </che:CHE_CI_ResponsibleParty>";
+    }
+
+    private static class ContactDescFunc implements Function<DescData, String> {
+        @Nullable
+        @Override
+        public String apply(@Nonnull DescData data) {
+            String email = safeField(data.doc, LUCENE_EMAIL);
+            String name = safeField(data.doc, LUCENE_FIRST_NAME);
+            String surname = safeField(data.doc, LUCENE_LAST_NAME);
+
+            String desc;
+            if (email == null || email.length() == 0) {
+                desc = data.uuid;
+            } else {
+                desc = email;
+            }
+
+            return name + " " + surname + " (" + desc + ")";
+        }
+
+        private String safeField(Document doc, String fieldName) {
+            final IndexableField field = doc.getField(fieldName);
+            if (field != null) {
+                return field.stringValue();
+            } else {
+                return "";
+            }
+        }
+
     }
 }

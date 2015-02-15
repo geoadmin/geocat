@@ -30,7 +30,6 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.Xml;
@@ -92,7 +91,7 @@ public final class FormatsStrategy extends AbstractSubtemplateStrategy {
     }
 
     @Override
-    protected Query createSearchQuery(Element originalElem, String twoCharLangCode, String threeCharLangCode) throws JDOMException {
+    protected BooleanQuery createSearchQuery(Element originalElem, String twoCharLangCode, String threeCharLangCode) throws JDOMException {
         String name = Xml.selectString(originalElem, "*/gmd:name/gco:CharacterString", NAMESPACES);
         String version = Xml.selectString(originalElem, "*/gmd:version/gco:CharacterString", NAMESPACES);
 
@@ -104,26 +103,16 @@ public final class FormatsStrategy extends AbstractSubtemplateStrategy {
         return query;
     }
 
-    public Element list(UserSession session, boolean validated, String language) throws Exception
+    public Element list(UserSession session, Boolean validated, String language) throws Exception
     {
         return super.listFromIndex(searchManager, "gmd:MD_Format", validated, language, session, this,
-                new Function<DescData, String>() {
-                    @Nullable
-                    @Override
-                    public String apply(@Nonnull DescData data) {
-                        String name = data.doc.get("name");
-                        if (name == null || name.length() == 0) {
-                            name = data.uuid;
-                        }
-                        String version = data.doc.get("version");
-                        if (version == null) {
-                            version = "";
-                        } else {
-                            version = " (" + version + ")";
-                        }
-                        return name + version;
-                    }
-                });
+                30000, new FormatDescFunction(), null);
+    }
+
+    @Override
+    public Element search(UserSession session, String search, String language, int maxResults) throws Exception {
+        return super.listFromIndex(searchManager, "gmd:MD_Format", null, language, session, this,
+                maxResults, new FormatDescFunction(), search);
     }
 
     public String createXlinkHref(String id, UserSession session, String notRequired) {
@@ -174,5 +163,23 @@ public final class FormatsStrategy extends AbstractSubtemplateStrategy {
                + "            <gco:CharacterString/>\n"
                + "          </gmd:version>\n"
                + "        </gmd:MD_Format>";
+    }
+
+    private static class FormatDescFunction implements Function<DescData, String> {
+        @Nullable
+        @Override
+        public String apply(@Nonnull DescData data) {
+            String name = data.doc.get("name");
+            if (name == null || name.length() == 0) {
+                name = data.uuid;
+            }
+            String version = data.doc.get("version");
+            if (version == null) {
+                version = "";
+            } else {
+                version = " (" + version + ")";
+            }
+            return name + version;
+        }
     }
 }

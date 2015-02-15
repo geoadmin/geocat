@@ -55,7 +55,15 @@ public class List implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
         String type = Util.getParam(params, "type", "contacts");
-        boolean validated = Boolean.parseBoolean(Util.getParam(params, "validated", "false"));
+        String validatedParam = Util.getParam(params, "validated", null);
+        String nonValidatedParam = Util.getParam(params, "nonvalidated", null);
+        String searchTerm = Util.getParam(params, "q", null);
+        int maxResults = Util.getParam(params, "maxResults", 5000);
+        Boolean validated = validatedParam == null ? null : Boolean.parseBoolean(validatedParam);
+
+        if (validated == null && nonValidatedParam != null) {
+            validated = !Boolean.parseBoolean(nonValidatedParam);
+        }
 
         UserSession session = context.getUserSession();
         Path appPath = context.getAppPath();
@@ -85,7 +93,11 @@ public class List implements Service {
                 throw new IllegalArgumentException(type + " is not a reusable object type");
         }
 
-        return strategy.list(session, validated, language);
+        if (searchTerm != null) {
+            return strategy.search(session, searchTerm, language, maxResults);
+        } else {
+            return strategy.list(session, validated, language);
+        }
     }
 
     public void init(Path appPath, ServiceConfig params) throws Exception {

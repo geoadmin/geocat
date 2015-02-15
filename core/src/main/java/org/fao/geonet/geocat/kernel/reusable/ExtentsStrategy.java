@@ -62,6 +62,7 @@ import org.geotools.xml.Parser;
 import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.Filter;
 import org.opengis.feature.simple.SimpleFeature;
@@ -70,10 +71,12 @@ import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.Name;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.PropertyIsEqualTo;
+import org.opengis.filter.PropertyIsLike;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.spatial.Within;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Path;
 import java.text.MessageFormat;
@@ -496,7 +499,7 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
 
     }
 
-    public Element list(UserSession session, boolean validated, String language) throws Exception {
+    public Element list(UserSession session, Boolean validated, String language) throws Exception {
         FeatureType featureType;
         if (validated) {
             featureType = _extentMan.getSource().getFeatureType(XLINK_TYPE);
@@ -513,49 +516,54 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
         try {
             Element extents = new Element(REPORT_ROOT);
             while (features.hasNext()) {
-                SimpleFeature feature = features.next();
-                Element e = new Element(REPORT_ELEMENT);
-
-                String id = idAttributeToIdString(featureType, feature);
-                String typeName = validated ? XLINK_TYPE : NON_VALIDATED_TYPE;
-                String url = XLink.LOCAL_PROTOCOL+"extent.edit?closeOnSave&crs=EPSG:21781&wfs=default&typename="
-                        + typeName + "&id=" + id;
-
-                addChild(e, REPORT_URL, url);
-                addChild(e, REPORT_ID, id);
-                addChild(e, REPORT_TYPE, "extent");
-                addChild(e, REPORT_XLINK, createXlinkHref(id, session, featureType.typename) + "*");
-
-                Object att = feature.getAttribute(featureType.descColumn);
-                String desc = "No description";
-
-                if (att != null) {
-                    String descAt = ExtentHelper.decodeDescription(att.toString());
-                    desc = LangUtils.getTranslation(descAt, _currentLocale);
-                }
-
-                att = feature.getAttribute(featureType.geoIdColumn);
-                if (att != null) {
-                    String geoIdAt = ExtentHelper.decodeDescription(att.toString());
-                    String geoId = LangUtils.getTranslation(geoIdAt, _currentLocale);
-                    if (geoId != null && !geoId.isEmpty()) {
-                        desc = desc + " &lt;" + geoId + "&gt;";
-                    }
-                }
-
-                if (desc.isEmpty()) {
-                    desc = "No description";
-                }
-                addChild(e, REPORT_DESC, desc);
-                addChild(e, REPORT_SEARCH, id+desc);
-
-                extents.addContent(e);
+                toXmlDesc(session, validated, featureType, features, extents);
             }
             return extents;
         } finally {
             features.close();
         }
 
+    }
+
+    private void toXmlDesc(UserSession session, boolean validated, FeatureType featureType, FeatureIterator<SimpleFeature> features, Element extents) throws IOException, JDOMException {
+        SimpleFeature feature = features.next();
+        Element e = new Element(REPORT_ELEMENT);
+
+        String id = idAttributeToIdString(featureType, feature);
+        String typeName = validated ? XLINK_TYPE : NON_VALIDATED_TYPE;
+        String url = XLink.LOCAL_PROTOCOL+"extent.edit?closeOnSave&crs=EPSG:21781&wfs=default&typename="
+                + typeName + "&id=" + id;
+
+        addChild(e, REPORT_URL, url);
+        addChild(e, REPORT_ID, id);
+        addChild(e, REPORT_TYPE, "extent");
+        addChild(e, REPORT_VALIDATED, "" + validated);
+        addChild(e, REPORT_XLINK, createXlinkHref(id, session, featureType.typename) + "*");
+
+        Object att = feature.getAttribute(featureType.descColumn);
+        String desc = "No description";
+
+        if (att != null) {
+            String descAt = ExtentHelper.decodeDescription(att.toString());
+            desc = LangUtils.getTranslation(descAt, _currentLocale);
+        }
+
+        att = feature.getAttribute(featureType.geoIdColumn);
+        if (att != null) {
+            String geoIdAt = ExtentHelper.decodeDescription(att.toString());
+            String geoId = LangUtils.getTranslation(geoIdAt, _currentLocale);
+            if (geoId != null && !geoId.isEmpty()) {
+                desc = desc + " &lt;" + geoId + "&gt;";
+            }
+        }
+
+        if (desc.isEmpty()) {
+            desc = "No description";
+        }
+        addChild(e, REPORT_DESC, desc);
+        addChild(e, REPORT_SEARCH, id+desc);
+
+        extents.addContent(e);
     }
 
     public void performDelete(String[] ids, UserSession session, String featureTypeName) throws Exception {
@@ -1093,7 +1101,7 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
     public String getInvalidXlinkLuceneField() {
         return "invalid_xlink_extent";
     }
-    
+
     @Override
     public String getValidXlinkLuceneField() {
     	return "valid_xlink_extent";
@@ -1135,5 +1143,42 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
         finalQuery.add(query, BooleanClause.Occur.SHOULD);
         finalQuery.add(query2, BooleanClause.Occur.SHOULD);
         return finalQuery;
+    }
+
+    @Override
+    public Element search(UserSession session, String search, String language, int maxResults) throws Exception {
+        final FilterFactory2 factory2 = CommonFactoryFinder.getFilterFactory2();
+
+        Element results = new Element(REPORT_ROOT);
+        for (FeatureType featureType : _extentMan.getSource().getFeatureTypes()) {
+            if (results.getContentSize() < maxResults) {
+                if (!featureType.typename.equalsIgnoreCase(NON_VALIDATED_TYPE) && !featureType.typename.equalsIgnoreCase(XLINK_TYPE)) {
+                    searchFeatureStore(session, search, factory2, results, featureType, true);
+                }
+            }
+        }
+
+        searchFeatureStore(session, search, factory2, results, _extentMan.getSource().getFeatureType(XLINK_TYPE), true);
+        searchFeatureStore(session, search, factory2, results, _extentMan.getSource().getFeatureType(NON_VALIDATED_TYPE), true);
+
+        return results;
+    }
+
+    private void searchFeatureStore(UserSession session, String search, FilterFactory2 factory2, Element results, FeatureType
+            featureType, boolean validated) throws IOException, JDOMException {
+        final FeatureSource<SimpleFeatureType, SimpleFeature> source = featureType.getFeatureSource();
+        PropertyIsLike filter = factory2.like(factory2.property(featureType.searchColumn), "*" + search + "*",
+                "*", "?", "\\", false);
+
+        Query query = new Query(featureType.pgTypeName, filter, new String[]{featureType.idColumn, featureType.descColumn});
+        FeatureCollection<SimpleFeatureType, SimpleFeature> features = source.getFeatures(query);
+        final FeatureIterator<SimpleFeature> featureIterator = features.features();
+        try {
+            while(featureIterator.hasNext()) {
+                toXmlDesc(session, validated, featureType, featureIterator, results);
+            }
+        } finally {
+            featureIterator.close();
+        }
     }
 }

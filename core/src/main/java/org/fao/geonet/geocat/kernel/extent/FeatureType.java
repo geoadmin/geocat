@@ -37,7 +37,7 @@ public final class FeatureType {
     private Source              source;
 
     @PostConstruct
-    void init() {
+    public void init() {
         this.pgTypeName = typename.substring(3);
     }
 

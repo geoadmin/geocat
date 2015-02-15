@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_EXTRA_FIELD;
 import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED;
@@ -292,8 +291,8 @@ public class ContactsStrategyTest extends AbstractSharedObjectStrategyTest {
     }
 
 
-    protected Metadata createDefaultSubtemplate(boolean validated) throws Exception {
-        return addUserSubtemplate("contact" + UUID.randomUUID(), validated);
+    protected Metadata createDefaultSubtemplate(String seedData, boolean validated) throws Exception {
+        return addUserSubtemplate("contact" + seedData, validated);
     }
 
     protected String getIsValidatedSpecificData() {

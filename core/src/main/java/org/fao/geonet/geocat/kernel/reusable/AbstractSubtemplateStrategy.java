@@ -13,8 +13,10 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopFieldCollector;
+import org.apache.lucene.search.TopFieldDocs;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
@@ -96,7 +98,8 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
         }
 
         String threeCharLangCode = mapper.iso639_1_to_iso639_2(twoCharLangCode);
-        Query query = createSearchQuery(originalElem, twoCharLangCode, threeCharLangCode);
+        BooleanQuery query = createSearchQuery(originalElem, twoCharLangCode, threeCharLangCode);
+        query.add(new TermQuery(new Term(LUCENE_EXTRA_FIELD, LUCENE_EXTRA_VALIDATED)), BooleanClause.Occur.SHOULD);
 
         final IndexAndTaxonomy indexAndTaxonomy = this.searchManager.getNewIndexReader(threeCharLangCode);
         try {
@@ -292,7 +295,7 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
     protected abstract String getEmptyTemplate();
     protected abstract Collection<Element> xlinkIt(Element originalElem, String uuid, boolean validated);
     protected abstract FindResult calculateFit(Element originalElement, Document doc, String twoCharLangCode, String threeCharLangCode) throws JDOMException;
-    protected abstract Query createSearchQuery(Element originalElem, String twoCharLangCode, String threeCharLangCode) throws
+    protected abstract BooleanQuery createSearchQuery(Element originalElem, String twoCharLangCode, String threeCharLangCode) throws
             JDOMException;
 
     protected static final class FindResult {
@@ -313,10 +316,14 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
             this.doc = doc;
         }
     }
-    protected final Element listFromIndex(SearchManager searchManager, String root, boolean validated, String language,
+    protected final Element listFromIndex(SearchManager searchManager,
+                                          String root,
+                                          @Nullable Boolean validated,
+                                          String language,
                                           UserSession session,
                                           SharedObjectStrategy strategy,
-                                          Function<DescData, String> describer) throws Exception {
+                                          int maxResults, Function<DescData, String> describer,
+                                          @Nullable String searchTerm) throws Exception {
 
         final IndexAndTaxonomy newIndexReader = searchManager.getNewIndexReader(language);
         Element results = new Element(REPORT_ROOT);
@@ -324,17 +331,23 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
             final GeonetworkMultiReader reader = newIndexReader.indexReader;
             IndexSearcher searcher = new IndexSearcher(reader);
             final BooleanQuery booleanQuery = new BooleanQuery();
-            final String validationType = validated ? LUCENE_EXTRA_VALIDATED : LUCENE_EXTRA_NON_VALIDATED;
-            booleanQuery.add(new TermQuery(new Term(LUCENE_EXTRA_FIELD, validationType)), BooleanClause.Occur.MUST);
+            if (validated != null) {
+                final String validationType = validated ? LUCENE_EXTRA_VALIDATED : LUCENE_EXTRA_NON_VALIDATED;
+                booleanQuery.add(new TermQuery(new Term(LUCENE_EXTRA_FIELD, validationType)), BooleanClause.Occur.MUST);
+            }
             booleanQuery.add(new TermQuery(new Term(LUCENE_ROOT_FIELD, root)), BooleanClause.Occur.MUST);
             booleanQuery.add(new TermQuery(new Term(LUCENE_LOCALE_FIELD, language)), BooleanClause.Occur.SHOULD);
             booleanQuery.add(new TermQuery(new Term(LUCENE_SCHEMA_FIELD, ISO19139cheSchemaPlugin.IDENTIFIER)), BooleanClause.Occur.MUST);
-            TopFieldCollector collector = TopFieldCollector.create(Sort.INDEXORDER, 30000, true, false, false, false);
-            searcher.search(booleanQuery, collector);
+            booleanQuery.add(new TermQuery(new Term(LUCENE_SCHEMA_FIELD, ISO19139cheSchemaPlugin.IDENTIFIER)), BooleanClause.Occur.MUST);
 
-            ScoreDoc[] topDocs = collector.topDocs().scoreDocs;
+            final TopFieldDocs topDocs = searcher.search(booleanQuery, 30000, new Sort(new SortField(LUCENE_EXTRA_FIELD,
+                    SortField.Type.STRING, true)));
+
             Set<String> added = Sets.newHashSet();
-            for (ScoreDoc topDoc : topDocs) {
+            for (ScoreDoc topDoc : topDocs.scoreDocs) {
+                if (results.getContentSize() >= maxResults) {
+                    break;
+                }
 
                 final Document doc = searcher.doc(topDoc.doc);
                 String uuid = doc.getField("_uuid").stringValue();
@@ -343,19 +356,22 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
                     continue;
                 }
                 added.add(uuid);
-
-                Element e = new Element(REPORT_ELEMENT);
-                String id = doc.get("_id");
-                String url = XLink.LOCAL_PROTOCOL + "catalog.edit#/metadata/" + id;
                 String desc = describer.apply(new DescData(uuid, doc));
-                Utils.addChild(e, REPORT_URL, url);
-                Utils.addChild(e, REPORT_ID, uuid);
-                Utils.addChild(e, REPORT_TYPE, "contact");
-                Utils.addChild(e, REPORT_XLINK, strategy.createXlinkHref(uuid, session, ""));
-                Utils.addChild(e, REPORT_DESC, desc);
-                Utils.addChild(e, REPORT_SEARCH, uuid + desc);
 
-                results.addContent(e);
+                if (searchTerm == null || (desc != null && desc.toLowerCase().contains(searchTerm.toLowerCase()))) {
+                    Element e = new Element(REPORT_ELEMENT);
+                    String id = doc.get("_id");
+                    String url = XLink.LOCAL_PROTOCOL + "catalog.edit#/metadata/" + id;
+                    Utils.addChild(e, REPORT_URL, url);
+                    Utils.addChild(e, REPORT_ID, uuid);
+                    Utils.addChild(e, REPORT_TYPE, "contact");
+                    Utils.addChild(e, REPORT_XLINK, strategy.createXlinkHref(uuid, session, ""));
+                    Utils.addChild(e, REPORT_DESC, desc);
+                    Utils.addChild(e, REPORT_SEARCH, uuid + desc);
+                    Utils.addChild(e, REPORT_VALIDATED, ""+LUCENE_EXTRA_VALIDATED.equals(doc.getField(LUCENE_EXTRA_FIELD).stringValue()));
+                    results.addContent(e);
+                }
+
             }
 
         } finally {
@@ -364,7 +380,7 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
 
         return results;
     }
-    private final String getSourceId() {
+    private String getSourceId() {
         return this.settingRepository.findOne(SettingManager.SYSTEM_SITE_SITE_ID_PATH).getValue();
     }
 
@@ -374,4 +390,5 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
         return new WildcardQuery(term);
 
     }
+
 }

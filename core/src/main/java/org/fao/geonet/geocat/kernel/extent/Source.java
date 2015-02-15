@@ -43,10 +43,10 @@ public class Source {
     public String             wfsId;
 
     @Autowired
-    private DataStore datastore;
+    protected DataStore datastore;
 
     @PostConstruct
-    void init() {
+    protected void init() {
         for (FeatureType featureType : types.values()) {
             featureType.setSource(this);
         }
@@ -86,8 +86,11 @@ public class Source {
         }
     }
 
-    public Collection<FeatureType> getFeatureTypes()
-    {
+    public Map<String, FeatureType> getTypeDefinitions() {
+        return types;
+    }
+
+    public Collection<FeatureType> getFeatureTypes() {
         return types.values();
     }
 

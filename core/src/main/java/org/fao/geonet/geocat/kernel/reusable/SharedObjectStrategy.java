@@ -44,6 +44,7 @@ public abstract class SharedObjectStrategy implements FindMetadataReferences {
     public static final String REPORT_ROOT = "records";
     public static final String REPORT_ELEMENT = "record";
     public static final String REPORT_DESC = "desc";
+    public static final String REPORT_VALIDATED = "validated";
     public static final String REPORT_URL = "url";
     public static final String REPORT_ID = "id";
     public static final String REPORT_XLINK = "xlink";
@@ -86,7 +87,12 @@ public abstract class SharedObjectStrategy implements FindMetadataReferences {
     /**
      * Construct a list of the non_validated objects
      */
-    public abstract Element list(UserSession session, boolean validated, String language) throws Exception;
+    public abstract Element list(UserSession session, Boolean validated, String language) throws Exception;
+
+    /**
+     * Construct a list of the non_validated objects
+     */
+    public abstract Element search(UserSession session, String search, String language, int maxResults) throws Exception;
 
     /**
      * Deletes the objects. No other function
@@ -96,7 +102,7 @@ public abstract class SharedObjectStrategy implements FindMetadataReferences {
      * @param session
      *            TODO
      * @param strategySpecificData
- *            indicates the source to delete from. If null then assume
+     *            indicates the source to delete from. If null then assume
      */
     public abstract void performDelete(String[] ids, UserSession session, String strategySpecificData) throws Exception;
 

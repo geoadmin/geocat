@@ -28,6 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_UUID_FIELD;
 import static org.junit.Assert.assertEquals;
@@ -46,6 +47,31 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
     protected MetadataRepository metadataRepository;
     @Autowired
     protected SearchManager searchManager;
+
+    @Test
+    public void testSearch() throws Exception {
+        String searchTerm = "searchTerm";
+
+        createDefaultSubtemplate(searchTerm, false);
+        createDefaultSubtemplate(searchTerm+"Valid", true);
+        createDefaultSubtemplate("xxxxx", true);
+
+        final SharedObjectStrategy strategy = createReplacementStrategy();
+        UserSession session = new UserSession();
+        Element search = strategy.search(session, searchTerm, "eng", 10);
+
+        assertEquals(2, search.getContentSize());
+        assertEquals("true", ((Element)search.getChildren().get(0)).getChildText(SharedObjectStrategy.REPORT_VALIDATED));
+        assertEquals("false", ((Element)search.getChildren().get(1)).getChildText(SharedObjectStrategy.REPORT_VALIDATED));
+        for (Object o : search.getChildren()) {
+            Element e = (Element) o;
+            assertTrue(e.getChildText(SharedObjectStrategy.REPORT_DESC).contains(searchTerm));
+        }
+
+        search = strategy.search(session, searchTerm, "eng", 1);
+        assertEquals(1, search.getContentSize());
+        assertEquals("true", ((Element)search.getChildren().get(0)).getChildText(SharedObjectStrategy.REPORT_VALIDATED));
+    }
 
     @Test
     public void testFindOnDeletedXLink() throws Exception {
@@ -119,7 +145,6 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
         assertEquals(1, mdFound.totalHits);
         assertEquals(String.valueOf(mdId), searcher.doc(mdFound.scoreDocs[0].doc).get("_id"));
     }
-
 
     @Test
     public void testMarkAsValidated() throws Exception {
@@ -219,7 +244,10 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
         }
     }
 
-    protected abstract Metadata createDefaultSubtemplate(boolean validated) throws Exception;
+    protected abstract Metadata createDefaultSubtemplate(String seedData, boolean validated) throws Exception;
+    protected Metadata createDefaultSubtemplate(boolean validated) throws Exception {
+        return createDefaultSubtemplate(UUID.randomUUID().toString(), validated);
+    }
 
     protected abstract String getIsValidatedSpecificData();
 
