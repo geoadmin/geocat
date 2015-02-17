@@ -258,7 +258,9 @@
         </xsl:if>
 
         <xsl:value-of select="$label"/>
-
+        <xsl:if test="$hasXlink">
+          <button gc-shared-object="{$hasXlink}" class="btn">sharedObjectUpdate</button>
+        </xsl:if>
         <xsl:if test="$editInfo and not($isDisabled)">
           <xsl:call-template name="render-boxed-element-control">
             <xsl:with-param name="editInfo" select="$editInfo"/>
