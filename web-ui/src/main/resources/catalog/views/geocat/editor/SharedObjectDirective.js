@@ -212,4 +212,32 @@
       };
     }]);
 
+  /**
+   * Note: ng-model and angular checks could not be applied to
+   * the editor form as it would require to init the model
+   * from the form content using ng-init for example.
+   */
+  module.directive('gcSharedObjectUpdate',
+    function() {
+      return {
+        restrict: 'A',
+        scope: {
+          href: '@gcSharedObjectUpdate'
+        },
+        link: function(scope, element, attrs) {
+          var subtemplateRegexp = new RegExp("local://subtemplate\\?uuid=([^&]+).*");
+            element.click(function() {
+              if (subtemplateRegexp.test(scope.href)) {
+                var uuid = subtemplateRegexp.exec(scope.href)[1];
+                window.open('catalog.edit#/metadata/find?uuid=' + uuid);
+              } else {
+                window.open('admin.shared.objects#/edit/' + encodeURIComponent(scope.href), '_blank');
+              }
+
+            });
+            element.keyup();
+        }
+      };
+    });
+
 })();

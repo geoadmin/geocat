@@ -42,6 +42,7 @@
         <addInterceptUrl  pattern="/srv/\w\w\w/reusable.object.process!?.*" access="hasRole('Administrator')"/>
         <addInterceptUrl  pattern="/srv/\w\w\w/reusable.object.update!?.*" access="hasRole('Administrator')"/>
         <addInterceptUrl  pattern="/srv/\w\w\w/reusable.object.deleteUnused!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/reusable.object.categories/\w+" access="hasRole('Editor')"/>
 
         <!-- Allow a user to specify a XSL -->
         <addInterceptUrl  pattern="/srv/\w\w\w/metadata.formatter.register!?.*" access="hasRole('Administrator')"/>

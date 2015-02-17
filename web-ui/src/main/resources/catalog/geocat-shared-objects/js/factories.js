@@ -293,20 +293,7 @@ angular.module('geocat_shared_objects_factories', []).
                 }
               };
 
-            return loadRecords($scope).then(function () {
-              if ($routeParams.edit !== undefined) {
-                var editRow = null;
-                angular.forEach($scope.data, function(row) {
-                  if (row.id === $routeParams.edit) {
-                    editRow = row;
-                  }
-                });
-
-                if (editRow !== null) {
-                  $scope.edit(editRow);
-                }
-              }
-            });
+            return loadRecords($scope);
           }
 
       }
