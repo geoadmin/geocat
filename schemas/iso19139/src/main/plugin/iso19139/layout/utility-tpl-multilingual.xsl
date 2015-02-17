@@ -18,7 +18,7 @@
   <xsl:template name="get-iso19139-other-languages-as-json">
     <xsl:variable name="langs">
       <xsl:choose>
-       <xsl:when test="$metadata/gn:info[position() = last()]/isTemplate = 's'">
+      <xsl:when test="$metadata/gn:info[position() = last()]/isTemplate = 's'">
 
         <xsl:for-each select="distinct-values($metadata//gmd:LocalisedCharacterString/@locale)">
           <xsl:variable name="locale" select="string(.)" />
