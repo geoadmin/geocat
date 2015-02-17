@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED;
+import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_EXTRA_VALIDATED;
 import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_UUID_FIELD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -109,18 +111,18 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
 
-        int numberFormats = sharedObjectStrategy.list(serviceContext.getUserSession(), validated, "eng").getChildren().size();
+        int numberFormats = sharedObjectStrategy.list(serviceContext.getUserSession(), validated, "eng", 30000).getChildren().size();
 
         final String mdUUID = sharedObj.getUuid();
         sharedObjectStrategy.performDelete(new String[]{mdUUID}, serviceContext.getUserSession(), null);
 
         assertEquals(count - 1, bean.count());
 
-        final List formats = sharedObjectStrategy.list(serviceContext.getUserSession(), validated, "eng").getChildren();
+        final List formats = sharedObjectStrategy.list(serviceContext.getUserSession(), validated, "eng", 30000).getChildren();
 
         assertEquals(numberFormats - 1, formats.size());
 
-        final Element list = sharedObjectStrategy.list(serviceContext.getUserSession(), validated, "eng");
+        final Element list = sharedObjectStrategy.list(serviceContext.getUserSession(), validated, "eng", 30000);
         assertEquals(0, list.getChildren().size());
     }
 
@@ -148,16 +150,16 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
 
     @Test
     public void testMarkAsValidated() throws Exception {
-        final String validated = SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED;
+        final String validated = LUCENE_EXTRA_NON_VALIDATED;
         final Metadata sharedObj = createDefaultSubtemplate(false);
-        assertEquals(SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED, sharedObj.getDataInfo().getExtra());
+        assertEquals(LUCENE_EXTRA_NON_VALIDATED, sharedObj.getDataInfo().getExtra());
 
         final SharedObjectStrategy sharedObjectStrategy = createReplacementStrategy();
 
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
 
-        Element list = sharedObjectStrategy.list(serviceContext.getUserSession(), validated, "eng");
+        Element list = sharedObjectStrategy.list(serviceContext.getUserSession(), validated, "eng", 30000);
         assertEquals(1, list.getChildren().size());
         assertEqualsText(sharedObj.getUuid(), list, "record/id");
         sharedObjectStrategy.markAsValidated(new String[]{sharedObj.getUuid()}, serviceContext.getUserSession());
@@ -167,14 +169,39 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
         assertEquals(SharedObjectStrategy.LUCENE_EXTRA_VALIDATED, updated.getDataInfo().getExtra());
 
 
-        list = sharedObjectStrategy.list(serviceContext.getUserSession(), validated, "eng");
+        list = sharedObjectStrategy.list(serviceContext.getUserSession(), validated, "eng", 30000);
         assertEquals(0, list.getChildren().size());
 
-        list = sharedObjectStrategy.list(serviceContext.getUserSession(), SharedObjectStrategy.LUCENE_EXTRA_VALIDATED, "eng");
+        list = sharedObjectStrategy.list(serviceContext.getUserSession(), SharedObjectStrategy.LUCENE_EXTRA_VALIDATED, "eng", 30000);
         assertEquals(1, list.getChildren().size());
         assertEqualsText(sharedObj.getUuid(), list, "record/id");
     }
 
+    @Test
+    public void testList() throws Exception {
+        createDefaultSubtemplate(false);
+        createDefaultSubtemplate(false);
+        createDefaultSubtemplate(false);
+        createDefaultSubtemplate(true);
+        createDefaultSubtemplate(true);
+
+        final SharedObjectStrategy sharedObjectStrategy = createReplacementStrategy();
+
+        final ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+
+        Element list = sharedObjectStrategy.list(serviceContext.getUserSession(), null, "eng", 30000);
+        assertEquals(5, list.getChildren().size());
+        list = sharedObjectStrategy.list(serviceContext.getUserSession(), LUCENE_EXTRA_NON_VALIDATED, "eng", 30000);
+        assertEquals(3, list.getChildren().size());
+        list = sharedObjectStrategy.list(serviceContext.getUserSession(), LUCENE_EXTRA_VALIDATED, "eng", 30000);
+        assertEquals(2, list.getChildren().size());
+
+        list = sharedObjectStrategy.list(serviceContext.getUserSession(), null, "eng", 4);
+        assertEquals(4, list.getChildren().size());
+        list = sharedObjectStrategy.list(serviceContext.getUserSession(), null, "eng", 1);
+        assertEquals(1, list.getChildren().size());
+    }
 
     @Test
     public void testIsValidated() throws Exception {

@@ -185,7 +185,7 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
         return searcher;
     }
 
-    public Element list(UserSession session, String validated, String language) throws Exception {
+    public Element list(UserSession session, String validated, String language, int maxResults) throws Exception {
 
         List<String> thesaurusNames = Lists.newArrayList();
 
@@ -202,11 +202,15 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
         Element keywords = new Element(REPORT_ROOT);
 
         for (String thesaurusName : thesaurusNames) {
+            if (maxResults <= keywords.getContentSize()) {
+                break;
+            }
+
             KeywordsSearcher searcher = new KeywordsSearcher(this._isoLanguagesMapper, _thesaurusMan);
 
             KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(this._isoLanguagesMapper);
             builder.addLang(_currentLocale)
-                    .keyword("*", KeywordSearchType.MATCH, false)
+                    .keyword("*", KeywordSearchType.MATCH, false).maxResults(maxResults - keywords.getContentSize())
                     .addThesaurus(thesaurusName);
             KeywordSearchParams params = builder.build();
             searcher.search(params);

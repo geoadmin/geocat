@@ -113,7 +113,7 @@ public class List implements Service {
         if (searchTerm != null) {
             return strategy.search(session, searchTerm, language, maxResults);
         } else {
-            return strategy.list(session, validated, language);
+            return strategy.list(session, validated, language, maxResults);
         }
     }
 

@@ -52,6 +52,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED;
+
 /**
  * Deletes the objects from deleted reusable object table and unpublishes the
  * referencing metadata
@@ -83,7 +85,7 @@ public class DeleteUnused implements Service {
     private void process(SharedObjectStrategy strategy, ServiceContext context) throws Exception {
         UserSession userSession = context.getUserSession();
         @SuppressWarnings("unchecked")
-        List<Element> nonValidated = strategy.list(userSession, SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED, context.getLanguage()).getChildren();
+        List<Element> nonValidated = strategy.list(userSession, LUCENE_EXTRA_NON_VALIDATED, context.getLanguage(), 30000).getChildren();
         List<String> toDelete = new ArrayList<String>();
         final Function<String, String> idConverter = strategy.numericIdToConcreteId(userSession);
 

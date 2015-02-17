@@ -87,7 +87,7 @@ public abstract class SharedObjectStrategy implements FindMetadataReferences {
     /**
      * Construct a list of the non_validated objects
      */
-    public abstract Element list(UserSession session, String validated, String language) throws Exception;
+    public abstract Element list(UserSession session, String validated, String language, int maxResults) throws Exception;
 
     /**
      * Construct a list of the non_validated objects

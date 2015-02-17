@@ -103,10 +103,10 @@ public final class FormatsStrategy extends AbstractSubtemplateStrategy {
         return query;
     }
 
-    public Element list(UserSession session, String validated, String language) throws Exception
+    public Element list(UserSession session, String validated, String language, int maxResults) throws Exception
     {
         return super.listFromIndex(searchManager, "gmd:MD_Format", validated, language, session, this,
-                30000, new FormatDescFunction(), null);
+                maxResults, new FormatDescFunction(), null);
     }
 
     @Override

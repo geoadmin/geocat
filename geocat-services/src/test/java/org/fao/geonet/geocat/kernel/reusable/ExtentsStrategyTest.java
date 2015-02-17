@@ -12,6 +12,7 @@ import org.geotools.data.memory.MemoryDataStore;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.jdom.Element;
+import org.junit.Before;
 import org.junit.Test;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -32,11 +33,11 @@ public class ExtentsStrategyTest extends AbstractSharedObjectTest {
     @Autowired
     GeonetworkDataDirectory geonetworkDataDirectory;
 
-    MemoryDataStore dataStore = new MemoryDataStore();
-    TestSource source = new TestSource(dataStore);
+    private MemoryDataStore dataStore;
+    private TestSource source;
 
-    @Test
-    public void testSearch() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         dataStore = new MemoryDataStore();
         source = new TestSource(dataStore);
 
@@ -47,6 +48,10 @@ public class ExtentsStrategyTest extends AbstractSharedObjectTest {
         source.init();
 
         extentManager.setSource(source);
+    }
+
+    @Test
+    public void testSearch() throws Exception {
         final ExtentsStrategy extentsStrategy = new ExtentsStrategy(geonetworkDataDirectory.getWebappDir(), extentManager, "eng");
         UserSession session = new UserSession();
 
@@ -56,6 +61,42 @@ public class ExtentsStrategyTest extends AbstractSharedObjectTest {
         result = extentsStrategy.search(session, "b2", "eng", 1);
         assertEquals(Xml.getString(result), 1, result.getContentSize());
     }
+
+
+    @Test
+    public void testList() throws Exception {
+        final ExtentsStrategy extentsStrategy = new ExtentsStrategy(geonetworkDataDirectory.getWebappDir(), extentManager, "eng");
+        UserSession session = new UserSession();
+
+        Element result = extentsStrategy.list(session, null, "eng", 100);
+        assertEquals(Xml.getString(result), 4, result.getContentSize());
+
+        result = extentsStrategy.list(session, null, "eng", 2);
+        assertEquals(Xml.getString(result), 2, result.getContentSize());
+
+        result = extentsStrategy.list(session, null, "eng", 3);
+        assertEquals(Xml.getString(result), 3, result.getContentSize());
+
+        result = extentsStrategy.list(session, null, "eng", 1);
+        assertEquals(Xml.getString(result), 1, result.getContentSize());
+
+        result = extentsStrategy.list(session, SharedObjectStrategy.LUCENE_EXTRA_VALIDATED, "eng", 100);
+        assertEquals(Xml.getString(result), 1, result.getContentSize());
+
+        result = extentsStrategy.list(session, OTHERTYPE, "eng", 100);
+        assertEquals(Xml.getString(result), 2, result.getContentSize());
+
+        result = extentsStrategy.list(session, ExtentsStrategy.XLINK_TYPE, "eng", 100);
+        assertEquals(Xml.getString(result), 1, result.getContentSize());
+
+        result = extentsStrategy.list(session, ExtentsStrategy.NON_VALIDATED_TYPE, "eng", 100);
+        assertEquals(Xml.getString(result), 1, result.getContentSize());
+
+        result = extentsStrategy.list(session, SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED, "eng", 100);
+        assertEquals(Xml.getString(result), 1, result.getContentSize());
+    }
+
+
 
     private void createFeatureType(MemoryDataStore dataStore, String featureTypeName) throws IOException {
         FeatureType featureTypeDef = new FeatureType();

@@ -500,7 +500,7 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
 
     }
 
-    public Element list(UserSession session, String validated, String language) throws Exception {
+    public Element list(UserSession session, String validated, String language, int maxResults) throws Exception {
         List<FeatureType> featureTypes = Lists.newArrayList();
         if (validated == null) {
             featureTypes.addAll(_extentMan.getSource().getTypeDefinitions().values());
@@ -514,10 +514,14 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
         Element extents = new Element(REPORT_ROOT);
 
         for (FeatureType featureType : featureTypes) {
+            if (maxResults <= extents.getContentSize()) {
+                break;
+            }
             FeatureSource<SimpleFeatureType, SimpleFeature> featureSource = featureType.getFeatureSource();
 
             String[] properties = { featureType.idColumn, featureType.descColumn, featureType.geoIdColumn };
             Query query = featureType.createQuery(properties);
+            query.setMaxFeatures(maxResults - extents.getContentSize());
             FeatureIterator<SimpleFeature> features = featureSource.getFeatures(query).features();
 
             try {

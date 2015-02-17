@@ -95,7 +95,7 @@ public class KeywordsStrategyTest extends AbstractThesaurusBasedTest {
 
     @Test
     public void testList() throws Exception {
-        Element list = this.strategy.list(session, SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED, "eng");
+        Element list = this.strategy.list(session, SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED, "eng", 3000);
         assertEquals(GEOCAT_THES_WORDS, list.getContentSize());
         for (Object o : list.getChildren()) {
             Element element = (Element) o;
@@ -104,7 +104,7 @@ public class KeywordsStrategyTest extends AbstractThesaurusBasedTest {
             assertTrue(element.getChildText("validated").contains("false"));
         }
 
-        list = this.strategy.list(session, SharedObjectStrategy.LUCENE_EXTRA_VALIDATED, "eng");
+        list = this.strategy.list(session, SharedObjectStrategy.LUCENE_EXTRA_VALIDATED, "eng", 3000);
         assertEquals(GEOCAT_THES_WORDS, list.getContentSize());
         for (Object o : list.getChildren()) {
             Element element = (Element) o;
@@ -113,14 +113,17 @@ public class KeywordsStrategyTest extends AbstractThesaurusBasedTest {
             assertTrue(element.getChildText("validated").contains("true"));
         }
 
-        list = this.strategy.list(session, GEOCAT_THESAURUS_NAME, "eng");
+        list = this.strategy.list(session, GEOCAT_THESAURUS_NAME, "eng", 3000);
         assertEquals(GEOCAT_THES_WORDS, list.getContentSize());
 
-        list = this.strategy.list(session, NON_VALID_THESAURUS_NAME, "eng");
+        list = this.strategy.list(session, NON_VALID_THESAURUS_NAME, "eng", 3000);
         assertEquals(GEOCAT_THES_WORDS, list.getContentSize());
 
-        list = this.strategy.list(session, null, "eng");
+        list = this.strategy.list(session, null, "eng", 3000);
         assertEquals(2 * GEOCAT_THES_WORDS + keywords, list.getContentSize());
+
+        list = this.strategy.list(session, null, "eng", 10);
+        assertEquals(10, list.getContentSize());
     }
 
     @Test
@@ -133,8 +136,8 @@ public class KeywordsStrategyTest extends AbstractThesaurusBasedTest {
         }
         this.strategy.markAsValidated(ids.toArray(new String[ids.size()]), session);
 
-        assertEquals(GEOCAT_THES_WORDS - ids.size(), this.strategy.list(session, GEOCAT_THESAURUS_NAME, "eng").getContentSize());
-        assertEquals(GEOCAT_THES_WORDS + ids.size(), this.strategy.list(session, NON_VALID_THESAURUS_NAME, "eng").getContentSize());
+        assertEquals(GEOCAT_THES_WORDS - ids.size(), this.strategy.list(session, GEOCAT_THESAURUS_NAME, "eng", 3000).getContentSize());
+        assertEquals(GEOCAT_THES_WORDS + ids.size(), this.strategy.list(session, NON_VALID_THESAURUS_NAME, "eng", 3000).getContentSize());
     }
 
     @Test
@@ -147,8 +150,8 @@ public class KeywordsStrategyTest extends AbstractThesaurusBasedTest {
         }
         this.strategy.performDelete(ids.toArray(new String[ids.size()]), session, GEOCAT_THESAURUS_NAME);
 
-        assertEquals(GEOCAT_THES_WORDS - ids.size(), this.strategy.list(session, GEOCAT_THESAURUS_NAME, "eng").getContentSize());
-        assertEquals(GEOCAT_THES_WORDS, this.strategy.list(session, NON_VALID_THESAURUS_NAME, "eng").getContentSize());
+        assertEquals(GEOCAT_THES_WORDS - ids.size(), this.strategy.list(session, GEOCAT_THESAURUS_NAME, "eng", 3000).getContentSize());
+        assertEquals(GEOCAT_THES_WORDS, this.strategy.list(session, NON_VALID_THESAURUS_NAME, "eng", 3000).getContentSize());
     }
 
     private void doSearch(KeywordsStrategy strategy, UserSession session, String searchTerm, boolean validated, int expected) throws Exception {
