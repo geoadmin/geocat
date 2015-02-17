@@ -111,9 +111,7 @@ public class ReferencingMetadata implements Service {
                 try {
                     Element titleElement = metadataRecord.xml.getChild("identificationInfo", Geonet.Namespaces.GMD).getChild(
                             "CHE_MD_DataIdentification", GeocatXslUtil.CHE_NAMESPACE).getChild("citation", Geonet.Namespaces.GMD)
-                            .getChild(
-
-                            "CI_Citation", Geonet.Namespaces.GMD).getChild("title", Geonet.Namespaces.GMD);
+                            .getChild("CI_Citation", Geonet.Namespaces.GMD).getChild("title", Geonet.Namespaces.GMD);
 
                     String translated = LangUtils.iso19139TranslatedText(titleElement, context.getLanguage(),
                             iso19139DefaultLang(metadataRecord.xml));

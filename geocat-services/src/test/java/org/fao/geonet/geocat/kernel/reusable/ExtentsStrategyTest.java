@@ -53,7 +53,7 @@ public class ExtentsStrategyTest extends AbstractSharedObjectTest {
         Element result = extentsStrategy.search(session, "bern", "eng", 10);
         assertEquals(Xml.getString(result), 3, result.getContentSize());
 
-        result = extentsStrategy.search(session, "bern", "eng", 1);
+        result = extentsStrategy.search(session, "b2", "eng", 1);
         assertEquals(Xml.getString(result), 1, result.getContentSize());
     }
 
@@ -86,12 +86,14 @@ public class ExtentsStrategyTest extends AbstractSharedObjectTest {
         final SimpleFeature feature1 = builder.buildFeature("1" + featureTypeName);
         dataStore.addFeature(feature1);
 
-        builder.set(THE_GEOM, null);
-        builder.set(DESC, "b2" + featureTypeName);
-        builder.set(SEARCH, "b2" + featureTypeName);
-        builder.set(ID, 2);
-        final SimpleFeature feature2 = builder.buildFeature("2" + featureTypeName);
-        dataStore.addFeature(feature2);
+        if (featureTypeName.equalsIgnoreCase(OTHERTYPE)) {
+            builder.set(THE_GEOM, null);
+            builder.set(DESC, "b2" + featureTypeName);
+            builder.set(SEARCH, "b2" + featureTypeName);
+            builder.set(ID, 2);
+            final SimpleFeature feature2 = builder.buildFeature("2" + featureTypeName);
+            dataStore.addFeature(feature2);
+        }
 
         source.getTypeDefinitions().put(featureTypeDef.pgTypeName, featureTypeDef);
     }

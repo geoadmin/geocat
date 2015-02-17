@@ -203,7 +203,7 @@ public final class Utils {
 
         try {
             IndexSearcher searcher = new IndexSearcher(reader);
-            TreeSet<MetadataRecord> results = new TreeSet<MetadataRecord>(new Comparator<MetadataRecord>(){
+            TreeSet<MetadataRecord> results = new TreeSet<>(new Comparator<MetadataRecord>(){
 
                 public int compare( MetadataRecord o1, MetadataRecord o2 ) {
                     return o1.id.compareTo(o2.id);

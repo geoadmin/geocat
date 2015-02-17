@@ -24,6 +24,7 @@
 package org.fao.geonet.geocat.kernel.reusable;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -482,7 +483,7 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
 
     private Element wrapWithExtentParentElems(Element elem) {
         Element exExtent;
-        if(elem.getName() == "EX_Extent") {
+        if(elem.getName().equals("EX_Extent")) {
             exExtent = (Element) elem.clone();
         } else {
             exExtent = new Element("EX_Extent",Geonet.Namespaces.GMD);
@@ -499,29 +500,35 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
 
     }
 
-    public Element list(UserSession session, Boolean validated, String language) throws Exception {
-        FeatureType featureType;
-        if (validated) {
-            featureType = _extentMan.getSource().getFeatureType(XLINK_TYPE);
+    public Element list(UserSession session, String validated, String language) throws Exception {
+        List<FeatureType> featureTypes = Lists.newArrayList();
+        if (validated == null) {
+            featureTypes.addAll(_extentMan.getSource().getTypeDefinitions().values());
+        } else if (validated.equalsIgnoreCase(LUCENE_EXTRA_NON_VALIDATED)) {
+            featureTypes.add(_extentMan.getSource().getFeatureType(NON_VALIDATED_TYPE));
+        } else if (validated.equalsIgnoreCase(LUCENE_EXTRA_VALIDATED)) {
+            featureTypes.add(_extentMan.getSource().getFeatureType(XLINK_TYPE));
         } else {
-            featureType = _extentMan.getSource().getFeatureType(NON_VALIDATED_TYPE);
+            featureTypes.add(_extentMan.getSource().getFeatureType(validated));
         }
+        Element extents = new Element(REPORT_ROOT);
 
-        FeatureSource<SimpleFeatureType, SimpleFeature> featureSource = featureType.getFeatureSource();
+        for (FeatureType featureType : featureTypes) {
+            FeatureSource<SimpleFeatureType, SimpleFeature> featureSource = featureType.getFeatureSource();
 
-        String[] properties = { featureType.idColumn, featureType.descColumn, featureType.geoIdColumn };
-        Query query = featureType.createQuery(properties);
-        FeatureIterator<SimpleFeature> features = featureSource.getFeatures(query).features();
+            String[] properties = { featureType.idColumn, featureType.descColumn, featureType.geoIdColumn };
+            Query query = featureType.createQuery(properties);
+            FeatureIterator<SimpleFeature> features = featureSource.getFeatures(query).features();
 
-        try {
-            Element extents = new Element(REPORT_ROOT);
-            while (features.hasNext()) {
-                toXmlDesc(session, validated, featureType, features, extents);
+            try {
+                while (features.hasNext()) {
+                    toXmlDesc(session, !featureType.typename.equalsIgnoreCase(NON_VALIDATED_TYPE), featureType, features, extents);
+                }
+            } finally {
+                features.close();
             }
-            return extents;
-        } finally {
-            features.close();
         }
+        return extents;
 
     }
 

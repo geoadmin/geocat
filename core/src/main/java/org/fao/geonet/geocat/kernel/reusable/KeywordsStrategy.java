@@ -24,6 +24,7 @@
 package org.fao.geonet.geocat.kernel.reusable;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import jeeves.server.UserSession;
 import jeeves.xlink.XLink;
 import org.fao.geonet.constants.Geocat;
@@ -42,11 +43,9 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.util.ElementFinder;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.openrdf.model.GraphException;
 import org.openrdf.model.URI;
 import org.openrdf.sesame.config.AccessDeniedException;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -86,10 +85,10 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
         if (XLink.isXLink(originalElem))
             return NULL;
 
-        Collection<Element> results = new ArrayList<Element>();
+        Collection<Element> results = new ArrayList<>();
 
         List<Pair<Element, String>> allKeywords = getAllKeywords(originalElem);
-        java.util.Set<String> addedIds = new HashSet<String>();
+        java.util.Set<String> addedIds = new HashSet<>();
         for (Pair<Element, String> elem : allKeywords) {
             if (elem.one().getParent() == null || elem.two() == null || elem.two().trim().isEmpty()) {
                 // already processed by another translation.
@@ -103,12 +102,12 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
                 KeywordBean keyword = keywords.get(0);
                 elem.one().detach();
                 String thesaurus = keyword.getThesaurusKey();
-                String id = keyword.getUriCode();
+                String uriCode = keyword.getUriCode();
 
                 // do not add if a keyword with the same ID and thesaurus has previously been added
-                if (addedIds.add(thesaurus + "@@" + id)) {
+                if (addedIds.add(thesaurus + "@@" + uriCode)) {
                     boolean validated = !thesaurus.equalsIgnoreCase(NON_VALID_THESAURUS_NAME);
-                    Element descriptiveKeywords = xlinkIt(thesaurus, id, validated);
+                    Element descriptiveKeywords = xlinkIt(thesaurus, uriCode, validated);
                     results.add(descriptiveKeywords);
                 }
             }
@@ -121,7 +120,9 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
         }
 
         boolean done = true;
-        if (getKeywordElements(originalElem).size() > 0) {
+        List<Element> allKeywords1 = Utils.convertToList(originalElem.getDescendants(new ElementFinder(
+                "keyword", Geonet.Namespaces.GMD, "MD_Keywords")), Element.class);
+        if (allKeywords1.size() > 0) {
             // still have some elements that need to be made re-usable
             done = false;
         }
@@ -129,9 +130,10 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
     }
 
     private List<Pair<Element, String>> getAllKeywords(Element originalElem) {
-        List<Element> elKeywords = getKeywordElements(originalElem);
-        List<Pair<Element, String>> allKeywords = new ArrayList<Pair<Element, String>>();
-        for (Element element : elKeywords) {
+        List<Element> allKeywords1 = Utils.convertToList(originalElem.getDescendants(new ElementFinder(
+                "keyword", Geonet.Namespaces.GMD, "MD_Keywords")), Element.class);
+        List<Pair<Element, String>> allKeywords = new ArrayList<>();
+        for (Element element : allKeywords1) {
             allKeywords.addAll(zip(element, Utils.convertToList(originalElem.getDescendants(new ElementFinder(
                     "CharacterString", Geonet.Namespaces.GCO, "keyword")), Element.class)));
             allKeywords.addAll(zip(element, Utils.convertToList(originalElem.getDescendants(new ElementFinder(
@@ -141,17 +143,11 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
     }
 
     private Collection<? extends Pair<Element, String>> zip(Element keywordElem, List<Element> convertToList) {
-        List<Pair<Element, String>> zipped = new ArrayList<Pair<Element, String>>();
+        List<Pair<Element, String>> zipped = new ArrayList<>();
         for (Element word : convertToList) {
             zipped.add(Pair.read(keywordElem, word.getTextTrim()));
         }
         return zipped;
-    }
-
-    private List<Element> getKeywordElements(Element originalElem) {
-        List<Element> allKeywords = Utils.convertToList(originalElem.getDescendants(new ElementFinder(
-                "keyword", Geonet.Namespaces.GMD, "MD_Keywords")), Element.class);
-        return allKeywords;
     }
 
     private KeywordsSearcher search(String keyword) throws Exception {
@@ -163,7 +159,7 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
                 .maxResults(1)
                 .keyword(keyword, KeywordSearchType.MATCH, true);
 
-        Collection<Thesaurus> thesauri = new ArrayList<Thesaurus>(_thesaurusMan.getThesauriMap().values());
+        Collection<Thesaurus> thesauri = new ArrayList<>(_thesaurusMan.getThesauriMap().values());
         for (Iterator<Thesaurus> iterator = thesauri.iterator(); iterator.hasNext(); ) {
             Thesaurus thesaurus = iterator.next();
             String type = thesaurus.getType();
@@ -189,35 +185,41 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
         return searcher;
     }
 
-    public Element list(UserSession session, Boolean validated, String language) throws Exception {
+    public Element list(UserSession session, String validated, String language) throws Exception {
 
-        String thesaurusName;
+        List<String> thesaurusNames = Lists.newArrayList();
 
-        if (validated) {
-            thesaurusName = GEOCAT_THESAURUS_NAME;
+        if (validated == null) {
+            thesaurusNames.addAll(_thesaurusMan.getThesauriMap().keySet());
+        } else if (validated.equalsIgnoreCase(LUCENE_EXTRA_VALIDATED)) {
+            thesaurusNames.add(GEOCAT_THESAURUS_NAME);
+        } else if (validated.equalsIgnoreCase(LUCENE_EXTRA_NON_VALIDATED)) {
+            thesaurusNames.add(NON_VALID_THESAURUS_NAME);
         } else {
-            thesaurusName = NON_VALID_THESAURUS_NAME;
+            thesaurusNames.add(validated);
         }
 
         Element keywords = new Element(REPORT_ROOT);
 
-        KeywordsSearcher searcher = new KeywordsSearcher(this._isoLanguagesMapper, _thesaurusMan);
+        for (String thesaurusName : thesaurusNames) {
+            KeywordsSearcher searcher = new KeywordsSearcher(this._isoLanguagesMapper, _thesaurusMan);
 
-        KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(this._isoLanguagesMapper);
-        builder.addLang(_currentLocale)
-                .keyword("*", KeywordSearchType.MATCH, false)
-                .addThesaurus(thesaurusName);
-        KeywordSearchParams params = builder.build();
-        searcher.search(params);
-        searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
-        session.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT, searcher);
+            KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(this._isoLanguagesMapper);
+            builder.addLang(_currentLocale)
+                    .keyword("*", KeywordSearchType.MATCH, false)
+                    .addThesaurus(thesaurusName);
+            KeywordSearchParams params = builder.build();
+            searcher.search(params);
+            searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
+            session.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT, searcher);
 
-        addSearchResults(session, thesaurusName, keywords, searcher, validated);
+            addSearchResults(thesaurusName, keywords, searcher, !thesaurusName.equals(NON_VALID_THESAURUS_NAME));
+        }
 
         return keywords;
     }
 
-    private void addSearchResults(UserSession session, String thesaurusName, Element keywords, KeywordsSearcher searcher, boolean
+    private void addSearchResults(String thesaurusName, Element keywords, KeywordsSearcher searcher, boolean
             validated) throws Exception {
         for (KeywordBean bean : searcher.getResults()) {
             Element e = new Element(REPORT_ELEMENT);
@@ -230,16 +232,22 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
             uriBuilder.append("&lang=");
             uriBuilder.append(bean.getDefaultLang());
 
-            final String id = Integer.toString(bean.getId());
-            Utils.addChild(e, REPORT_ID, id);
+            Utils.addChild(e, REPORT_ID, createKeywordId(bean));
             Utils.addChild(e, REPORT_URL, uriBuilder.toString());
             Utils.addChild(e, REPORT_TYPE, "keyword");
-            Utils.addChild(e, REPORT_XLINK, createXlinkHref(id, session, bean.getThesaurusKey()));
+
+            final String xlinkHref = createXlinkHRefImpl(bean, validateName(bean.getThesaurusKey()));
+            Utils.addChild(e, REPORT_XLINK, xlinkHref);
             Utils.addChild(e, REPORT_DESC, bean.getDefaultValue());
             Utils.addChild(e, REPORT_VALIDATED, "" + validated);
-            Utils.addChild(e, REPORT_SEARCH, id + bean.getDefaultValue());
+            Utils.addChild(e, REPORT_SEARCH, bean.getThesaurusKey() + bean.getUriCode() + bean.getDefaultValue());
+
             keywords.addContent(e);
         }
+    }
+
+    private String createKeywordId(KeywordBean bean) {
+        return "thesaurus=" + bean.getThesaurusKey() + "&id=" + bean.getUriCode();
     }
 
     @Override
@@ -276,13 +284,13 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
             searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
             session.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT, searcher);
 
-            addSearchResults(session, thesaurusKey, results, searcher, validated);
+            addSearchResults(thesaurusKey, results, searcher, validated);
         }
     }
 
     public String createXlinkHref(String id, UserSession session, String thesaurusName) throws Exception {
         String thesaurus = validateName(thesaurusName);
-        KeywordBean concept = lookup(id, session);
+        KeywordBean concept = lookup(id);
         return createXlinkHRefImpl(concept, thesaurus);
     }
 
@@ -296,7 +304,7 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
         for (String id : ids) {
             try {
                 // A test to see if id is from a previous search or 
-                KeywordBean concept = lookup(id, session);
+                KeywordBean concept = lookup(id);
                 Thesaurus thesaurus = _thesaurusMan.getThesaurusByName(concept.getThesaurusKey());
                 thesaurus.removeElement(concept);
             } catch (NumberFormatException e) {
@@ -315,48 +323,67 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
         }
     }
 
-    private static KeywordBean lookup(String id, UserSession session) {
-        KeywordsSearcher searcher = (KeywordsSearcher) session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-        KeywordBean concept = searcher.getKeywordFromResultsById(Integer.parseInt(id));
-        return concept;
+    private KeywordBean lookup(String id) {
+        final KeywordSearchParamsBuilder paramsBuilder = new KeywordSearchParamsBuilder(_isoLanguagesMapper);
+        paramsBuilder.addLang("eng").addLang("fre").addLang("ger").addLang("ita");
+        final Pair<String, String> idPair = splitUriAndThesaurusName(id);
+        String uri = idPair.one();
+        String thesaurusName = idPair.two();
+
+        paramsBuilder.addThesaurus(thesaurusName).uri(uri);
+        final KeywordSearchParams build = paramsBuilder.build();
+
+        final List<KeywordBean> keywords;
+        try {
+            keywords = build.search(_thesaurusMan);
+            return keywords.get(0);
+        } catch (Throwable e) {
+            return null;
+        }
     }
 
-    public String updateHrefId(String oldHref, String id, UserSession session)
+    public Pair<String, String> splitUriAndThesaurusName(String id) {
+        String[] idParts = id.split("\\&|=");
+        String uri = null, thesaurusName = null;
+
+        if (idParts[0].equalsIgnoreCase("id")) {
+            uri = idParts[1];
+        } else {
+            thesaurusName = idParts[1];
+        }
+        if (idParts[2].equalsIgnoreCase("id")) {
+            uri = idParts[3];
+        } else {
+            thesaurusName = idParts[3];
+        }
+
+        return Pair.read(uri, thesaurusName);
+    }
+    public String updateHrefId(String oldHref, String uriCodeAndThesaurusName, UserSession session)
             throws UnsupportedEncodingException {
+        final KeywordBean concept = lookup(uriCodeAndThesaurusName);
         String base = oldHref.substring(0, oldHref.indexOf('?'));
-        KeywordsSearcher searcher = (KeywordsSearcher) session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-        KeywordBean concept = searcher.getKeywordFromResultsById(id);
         String encoded = URLEncoder.encode(concept.getUriCode(), "utf-8");
         return base + "?thesaurus=" + GEOCAT_THESAURUS_NAME + "&id=" + encoded + "&locales=en,it,de,fr";
     }
 
     public Map<String, String> markAsValidated(String[] ids, UserSession session) throws Exception {
-        KeywordsSearcher searcher = (KeywordsSearcher) session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
 
         Thesaurus geocatThesaurus = _thesaurusMan.getThesaurusByName(GEOCAT_THESAURUS_NAME);
         Thesaurus nonValidThesaurus = _thesaurusMan.getThesaurusByName(NON_VALID_THESAURUS_NAME);
 
-        Map<String, String> idMap = new HashMap<String, String>();
-        String[] langs = {"en", "fr", "de", "it"};
-        for (String id : ids) {
-            idMap.put(id, id);
-            KeywordBean concept = searcher.getKeywordFromResultsById(id);
-            String code = concept.getUriCode();
-            for (String lang : langs) {
-                KeywordBean translation = searcher.searchById(code, NON_VALID_THESAURUS_NAME, lang);
-
-                if (translation != null) {
-                    geocatThesaurus.addElement(translation);
-                }
-            }
-
+        Map<String, String> idMap = new HashMap<>();
+        for (String uriCodeAndThesaurusName : ids) {
+            KeywordBean concept = lookup(uriCodeAndThesaurusName);
+            idMap.put(uriCodeAndThesaurusName, createKeywordId(concept));
+            geocatThesaurus.addElement(concept);
             nonValidThesaurus.removeElement(concept);
         }
         return idMap;
     }
 
-    private Element xlinkIt(String thesaurus, String id, boolean validated) throws UnsupportedEncodingException {
-        String encoded = URLEncoder.encode(id, "UTF-8");
+    private Element xlinkIt(String thesaurus, String keywordUri, boolean validated) throws UnsupportedEncodingException {
+        String encoded = URLEncoder.encode(keywordUri, "UTF-8");
         Element descriptiveKeywords = new Element("descriptiveKeywords", Geonet.Namespaces.GMD);
 
         descriptiveKeywords.setAttribute(XLink.HREF, XLink.LOCAL_PROTOCOL + "che.keyword.get?thesaurus=" + thesaurus
@@ -387,7 +414,7 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
     }
 
     private URI doUpdateKeyword(Element originalElem, String nonValidThesaurusName, String code, String metadataLang,
-                                boolean update) throws Exception, GraphException, IOException, AccessDeniedException {
+                                boolean update) throws Exception, AccessDeniedException {
         @SuppressWarnings("unchecked")
         List<Element> xml = Xml.transform((Element) originalElem.clone(), _styleSheet).getChildren("keyword");
 
@@ -473,7 +500,9 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
         String rawId = Utils.id(href);
         if (rawId != null) {
             String startId = URLDecoder.decode(rawId, "UTF-8");
-            if (startId != null && startId.startsWith(NAMESPACE)) return href;
+            if (startId.startsWith(NAMESPACE)) {
+                return href;
+            }
         }
 
         String code = UUID.randomUUID().toString();
@@ -495,15 +524,9 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
         return new Function<String, String>() {
             public String apply(String id) {
                 try {
-                    KeywordsSearcher searcher = (KeywordsSearcher) session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-                    try {
-                        KeywordBean concept = searcher.getKeywordFromResultsById(Integer.parseInt(id));
-                        return URLEncoder.encode(concept.getUriCode(), "UTF-8");
-                    } catch (NumberFormatException e) {
-                        return URLEncoder.encode(NAMESPACE + id, "utf-8");
-                    }
+                    return URLEncoder.encode(splitUriAndThesaurusName(id).one(), "UTF-8");
                 } catch (UnsupportedEncodingException e) {
-                    throw new RuntimeException(e);
+                    return id;
                 }
             }
         };

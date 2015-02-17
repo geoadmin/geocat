@@ -46,14 +46,14 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <div class="panel-title">
-                                <a id="load-metadata-link-{{row.id}}" class="accordion-toggle " data-toggle="collapse" data-parent="#accordion"
-                                    data-ng-click="loadReferencedMetadata(row, 'collapse-'+row.id, 'collapse-body-'+row.id)">{{row.desc}}</a>
+                                <a id="load-metadata-link-{{$index}}" class="accordion-toggle " data-toggle="collapse" data-parent="#accordion"
+                                    data-ng-click="loadReferencedMetadata(row, 'collapse-'+$index, 'collapse-body-'+$index)">{{row.desc}}</a>
                                 <i class="badge">{{row.referenceCount}}</i>
                                 <i class="fa fa-spinner fa-spin" data-ng-show="loading === row.id"></i>
                             </div>
                         </div>
                     </div>
-                    <div id="collapse-{{row.id}}" class="panel-collapse collapse">
+                    <div id="collapse-{{$index}}" class="panel-collapse collapse">
                         <table class="table table-condensed">
                             <tr class="metadata-list" data-ng-repeat="md in metadata[row.id]" >
                                 <td class="id" style="width: 5%">{{md.id}}</td>

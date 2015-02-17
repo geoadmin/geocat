@@ -19,6 +19,7 @@
 
         commonProperties.addValidated($scope, $routeParams);
         commonProperties.add($scope, $routeParams);
+
         if ($scope.isValid) {
           $scope.luceneIndexField = 'V_invalid_xlink_extent';
         } else {

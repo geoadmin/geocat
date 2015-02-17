@@ -59,10 +59,27 @@ public class List implements Service {
         String nonValidatedParam = Util.getParam(params, "nonvalidated", null);
         String searchTerm = Util.getParam(params, "q", null);
         int maxResults = Util.getParam(params, "maxResults", 5000);
-        Boolean validated = validatedParam == null ? null : Boolean.parseBoolean(validatedParam);
 
-        if (validated == null && nonValidatedParam != null) {
-            validated = !Boolean.parseBoolean(nonValidatedParam);
+        String validated = null;
+
+        if (validatedParam != null) {
+            if (validatedParam.equals("true")) {
+                validated = SharedObjectStrategy.LUCENE_EXTRA_VALIDATED;
+            } else if (validatedParam.equals("false")) {
+                validated = SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED;
+            }
+        }
+
+        if (validatedParam == null && nonValidatedParam != null) {
+            if (nonValidatedParam.equals("false")) {
+                validated = SharedObjectStrategy.LUCENE_EXTRA_VALIDATED;
+            } else if (nonValidatedParam.equals("true")) {
+                validated = SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED;
+            }
+        }
+
+        if (validated == null && validatedParam != null) {
+            validated = validatedParam;
         }
 
         UserSession session = context.getUserSession();

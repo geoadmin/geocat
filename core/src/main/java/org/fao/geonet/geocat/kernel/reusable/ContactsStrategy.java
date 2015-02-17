@@ -250,7 +250,7 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
         }
     }
 
-    public Element list(UserSession session, Boolean validated, String language) throws Exception {
+    public Element list(UserSession session, String validated, String language) throws Exception {
         return super.listFromIndex(this.searchManager, LUCENE_ROOT_RESPONSIBLE_PARTY, validated, language, session, this,
                 30000, new ContactDescFunc(), null);
     }

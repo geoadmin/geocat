@@ -100,8 +100,8 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
 
     @Test
     public void testPerformDelete() throws Exception {
-        final boolean validated = true;
-        final Metadata sharedObj = createDefaultSubtemplate(validated);
+        final String validated = SharedObjectStrategy.LUCENE_EXTRA_VALIDATED;
+        final Metadata sharedObj = createDefaultSubtemplate(true);
 
         final MetadataRepository bean = _applicationContext.getBean(MetadataRepository.class);
         long count = bean.count();
@@ -148,8 +148,8 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
 
     @Test
     public void testMarkAsValidated() throws Exception {
-        final boolean validated = false;
-        final Metadata sharedObj = createDefaultSubtemplate(validated);
+        final String validated = SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED;
+        final Metadata sharedObj = createDefaultSubtemplate(false);
         assertEquals(SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED, sharedObj.getDataInfo().getExtra());
 
         final SharedObjectStrategy sharedObjectStrategy = createReplacementStrategy();
@@ -170,7 +170,7 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
         list = sharedObjectStrategy.list(serviceContext.getUserSession(), validated, "eng");
         assertEquals(0, list.getChildren().size());
 
-        list = sharedObjectStrategy.list(serviceContext.getUserSession(), true, "eng");
+        list = sharedObjectStrategy.list(serviceContext.getUserSession(), SharedObjectStrategy.LUCENE_EXTRA_VALIDATED, "eng");
         assertEquals(1, list.getChildren().size());
         assertEqualsText(sharedObj.getUuid(), list, "record/id");
     }

@@ -19,7 +19,7 @@ angular.module('geocat_shared_objects_factories', []).
       var loadRecords = function ($scope) {
           $scope.loading = '-1';
           var validated = $scope.isValidated ? 'true' : 'false';
-          $http({ method: 'GET', url: $scope.baseUrl + '/reusable.list.js?validated=' + validated + '&type=' + $scope.type }).
+          return $http({ method: 'GET', url: $scope.baseUrl + '/reusable.list.js?validated=' + validated + '&type=' + $scope.type }).
               success(function (data, status, headers, config) {
                   $scope.loading = undefined;
                   if (data.indexOf("<") != 0) {
@@ -46,7 +46,7 @@ angular.module('geocat_shared_objects_factories', []).
 
       return {
           addValidated: function ($scope, $routeParams) {
-              $scope.type = $window.location.href.split("#")[1].split("/")[2];
+              $scope.type = $window.location.href.split("#")[1].split("/")[2].split("?")[0];
               $scope.validated = $routeParams.validated;
               $scope.isValidated = $routeParams.validated === 'validated';
               if ($scope.isValidated) {
@@ -56,7 +56,7 @@ angular.module('geocat_shared_objects_factories', []).
               }
           },
 
-          add: function ($scope) {
+          add: function ($scope, $routeParams) {
 
               $scope.sort = 'desc';
               $scope.reverseSort = false;
@@ -84,8 +84,6 @@ angular.module('geocat_shared_objects_factories', []).
               $scope.data = [];
               $scope.metadata = [];
 
-              loadRecords($scope);
-
               $scope.reloadData = function () { loadRecords($scope); };
               var referenceMdUrl = function(ids, onlyCount) {
                 var url = baseUrl + '/reusable.references?_content_type=json&type=' + $scope.type + '&validated=' + $scope.isValidated;
@@ -98,7 +96,7 @@ angular.module('geocat_shared_objects_factories', []).
                 return url;
               };
               $scope.loadReferencedMetadata = function (row, collapseDiv, containerDivId) {
-                  var id = row.id;
+                  var id = encodeURIComponent(row.id);
                   $('.in').collapse('hide');
                   $scope.loading = id;
                   $('#' + collapseDiv).collapse('show');
@@ -107,7 +105,7 @@ angular.module('geocat_shared_objects_factories', []).
                         $scope.loading = undefined;
                         data = data[0];
                         row.referenceCount = parseInt(data['@count']);
-                        $scope.metadata[id] = data.records;
+                        $scope.metadata[row.id] = data.records;
                          $('#' + containerDivId).remove();
                      }).
                      error(function (data, status, headers, config) {
@@ -269,7 +267,7 @@ angular.module('geocat_shared_objects_factories', []).
                 for (i = 0; ids.length < 20 && rowIndex + i < $scope.data.length; i++) {
                   row = $scope.data[rowIndex + i];
                   if (row.referenceCount === '?') {
-                    ids.push(row.id);
+                    ids.push(encodeURIComponent(row.id));
                     idMap[row.id] = row;
                   }
                 }
@@ -293,7 +291,22 @@ angular.module('geocat_shared_objects_factories', []).
                       alert("An error occurred when loading referenced metadata: " + data.error.message);
                     });
                 }
+              };
+
+            return loadRecords($scope).then(function () {
+              if ($routeParams.edit !== undefined) {
+                var editRow = null;
+                angular.forEach($scope.data, function(row) {
+                  if (row.id === $routeParams.edit) {
+                    editRow = row;
+                  }
+                });
+
+                if (editRow !== null) {
+                  $scope.edit(editRow);
+                }
               }
+            });
           }
 
       }

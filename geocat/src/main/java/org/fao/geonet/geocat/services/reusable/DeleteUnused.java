@@ -83,7 +83,7 @@ public class DeleteUnused implements Service {
     private void process(SharedObjectStrategy strategy, ServiceContext context) throws Exception {
         UserSession userSession = context.getUserSession();
         @SuppressWarnings("unchecked")
-        List<Element> nonValidated = strategy.list(userSession, false, context.getLanguage()).getChildren();
+        List<Element> nonValidated = strategy.list(userSession, SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED, context.getLanguage()).getChildren();
         List<String> toDelete = new ArrayList<String>();
         final Function<String, String> idConverter = strategy.numericIdToConcreteId(userSession);
 

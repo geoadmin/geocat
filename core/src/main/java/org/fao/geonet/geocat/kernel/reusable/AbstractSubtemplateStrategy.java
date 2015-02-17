@@ -318,7 +318,7 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
     }
     protected final Element listFromIndex(SearchManager searchManager,
                                           String root,
-                                          @Nullable Boolean validated,
+                                          @Nullable String validated,
                                           String language,
                                           UserSession session,
                                           SharedObjectStrategy strategy,
@@ -332,8 +332,7 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
             IndexSearcher searcher = new IndexSearcher(reader);
             final BooleanQuery booleanQuery = new BooleanQuery();
             if (validated != null) {
-                final String validationType = validated ? LUCENE_EXTRA_VALIDATED : LUCENE_EXTRA_NON_VALIDATED;
-                booleanQuery.add(new TermQuery(new Term(LUCENE_EXTRA_FIELD, validationType)), BooleanClause.Occur.MUST);
+                booleanQuery.add(new TermQuery(new Term(LUCENE_EXTRA_FIELD, validated)), BooleanClause.Occur.MUST);
             }
             booleanQuery.add(new TermQuery(new Term(LUCENE_ROOT_FIELD, root)), BooleanClause.Occur.MUST);
             booleanQuery.add(new TermQuery(new Term(LUCENE_LOCALE_FIELD, language)), BooleanClause.Occur.SHOULD);
