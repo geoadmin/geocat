@@ -90,23 +90,18 @@
     <for name="srv:extent" addDirective="gc-add-sharedobject">
       <directiveAttributes
               data-template-add-action="true"
-              data-template-type="extents"
-              data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+              data-template-type="extents"/>
     </for>
     <for name="gmd:extent" addDirective="gc-add-sharedobject">
       <directiveAttributes
               data-template-add-action="true"
-              data-template-type="extents"
-              data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+              data-template-type="extents"/>
     </for>
     <for name="gmd:resourceFormat" addDirective="gc-add-sharedobject">
       <directiveAttributes
               data-template-add-action="true"
               data-template-type="formats"
-              data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+    />
     </for>
 
 
