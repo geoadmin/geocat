@@ -13,6 +13,10 @@
   goog.require('gn_suggestion');
   goog.require('gn_validation');
 
+  // geocat specific //
+  goog.require('gc_sharedobject');
+  // endof geocat specific //
+
   var module = angular.module('gn_editor', [
     'gn_module',
     'gn_popup',
@@ -24,7 +28,8 @@
     'gn_ows',
     'gn_geopublisher',
     'gn_batch_service',
-    'gn_mdactions_directive'
+    'gn_mdactions_directive',
+    'gc_sharedobject'
   ]);
 
   // Define the translation files to load
