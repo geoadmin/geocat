@@ -59,56 +59,52 @@
     <for name="gmd:contact" addDirective="gc-add-sharedobject">
       <directiveAttributes
               data-template-add-action="false"
-              data-template-type="contact"
+              data-template-type="contacts"
               data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:pointOfContact" addDirective="gc-add-sharedobject">
       <directiveAttributes
               data-template-add-action="false"
-              data-template-type="contact"
-              data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
+              data-template-type="contacts"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:distributor" addDirective="gc-add-sharedobject">
       <directiveAttributes
               data-template-add-action="false"
-              data-template-type="contact"
-              data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
+              data-template-type="contacts"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:processor" addDirective="gc-add-sharedobject">
       <directiveAttributes
               data-template-add-action="false"
-              data-template-type="contact"
-              data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
+              data-template-type="contacts"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:citedResponsibleParty" addDirective="gc-add-sharedobject">
       <directiveAttributes
               data-template-add-action="true"
-              data-template-type="contact"
-              data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
+              data-template-type="contacts"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="srv:extent" addDirective="gc-add-sharedobject">
       <directiveAttributes
               data-template-add-action="true"
-              data-template-type="extent"
+              data-template-type="extents"
               data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:extent" addDirective="gc-add-sharedobject">
       <directiveAttributes
               data-template-add-action="true"
-              data-template-type="extent"
+              data-template-type="extents"
               data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:resourceFormat" addDirective="gc-add-sharedobject">
       <directiveAttributes
               data-template-add-action="true"
-              data-template-type="format"
+              data-template-type="formats"
               data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>

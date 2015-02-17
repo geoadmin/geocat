@@ -1,0 +1,38 @@
+<div class="gc-shared-object" data-ng-class="{'input-group' : isContact}">
+
+  <!--search input-->
+  <input class="form-control input-sm" type="text" data-toggle="dropdown" data-ng-model="searchValue"
+         data-ng-mousedown="loadSO()" data-ng-change="loadSO()" placeholder="{{('searchA' + templateType) | translate}}"
+          data-ng-class="{'disabled' : !role}"/>
+  <ul data-ng-show="objects.length > 0" class="dropdown-menu" role="menu">
+    <li data-ng-repeat="o in objects">
+      <a href="" data-ng-click="addEntry(o, role.code, true)" title="{{o.desc}}">
+        <span class="label pull-right" data-ng-class="{'label-danger' : !o.validated, 'label-success' : o.validated}">&nbsp;</span>
+        {{o.desc}}
+      </a>
+    </li>
+  </ul>
+
+  <div data-ng-if="isContact"
+       title="{{'addContactAsLink-help' | translate}}"
+       class="input-group-btn">
+    <button type="button" class="btn btn-default dropdown-toggle group-middle" data-toggle="dropdown">
+      <span data-ng-if="role">{{role.label}}</span>
+      <span data-ng-if="!role" translate>role</span>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+      <li data-ng-repeat="r in roles" data-ng-hide="r['@hideInEditMode']">
+        <a href="" data-ng-click="setRole(r)" title="{{r.description}}">
+          {{r.label}}
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+  <!-- The contact to insert once received -->
+  <div data-ng-if="snippet">
+    <input name="{{snippetRef}}" type="hidden" value="{{snippet}}"/>
+  </div>
+</div>
