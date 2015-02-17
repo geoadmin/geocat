@@ -63,12 +63,18 @@
                 buildXMLFieldName(scope.elementRef, scope.elementName)
           });
 
+          scope.prop = {};
 
           /**
            * Load shared object list depending on type and search filter
            */
           scope.loadSO = function() {
-            gcSharedobject.loadRecords(scope.templateType, scope.searchValue).
+            var validated;
+            if(scope.templateType == 'extents' && scope.regionType) {
+              validated = 'gn:' + scope.regionType;
+            }
+            gcSharedobject.loadRecords(scope.templateType, scope.searchValue,
+            validated).
                 then(function(data) {
                   scope.objects = data;
                 }
@@ -77,6 +83,10 @@
 
           scope.setRole = function(role) {
             scope.role = role;
+          };
+
+          scope.setRegionType = function(regionType) {
+            scope.regionType = regionType;
           };
 
           scope.add = function() {
@@ -103,13 +113,6 @@
             var checkState = function() {
               if (snippets.length === entry.length) {
                 scope.snippet = snippets.join(separator);
-
-                // Clean results
-                // TODO: should call clean result from
-                // searchFormController
-                //                   scope.searchResults.records = null;
-                //                   scope.searchResults.count = null;
-
                 $timeout(function() {
                   // Save the metadata and refresh the form
                   gnEditor.save(gnCurrentEdit.id, true);
@@ -138,32 +141,62 @@
               } else {
                 params.process = '';
               }
-              gnHttp.callService(
-                  'subtemplate', params).success(function(xml) {
-                    if (usingXlink) {
-                      snippets.push(gnEditorXMLService.
-                          buildXMLForXlink(scope.elementName,
-                              url +
-                              '?uuid=' + uuid +
-                              '&process=' + params.process));
-                    } else {
-                      snippets.push(gnEditorXMLService.
-                          buildXML(scope.elementName, xml));
-                    }
-                    checkState();
-                  });
+              if(scope.templateType == 'contacts') {
+                gnHttp.callService(
+                    'subtemplate', params).success(function(xml) {
+                      if (usingXlink) {
+                        snippets.push(gnEditorXMLService.
+                            buildXMLForXlink(scope.elementName,
+                                url +
+                                '?uuid=' + uuid +
+                                '&process=' + params.process));
+                      } else {
+                        snippets.push(gnEditorXMLService.
+                            buildXML(scope.elementName, xml));
+                      }
+                      checkState();
+                    });
+              }
+              else if(scope.templateType == 'extents') {
+
+                c.xlink = c.xlink.replace('*',
+                    'format='+scope.prop.extentFormat+'&extentTypeCode=true');
+
+                var extUrl = c.xlink.replace(/local:\/\//g, '');
+
+                $http.get(extUrl).success(function(xml) {
+                  if (usingXlink) {
+                    snippets.push(gnEditorXMLService.
+                        buildXMLForXlink(scope.elementName,
+                            c.xlink +
+                            '&uuid=' + uuid));
+                  } else {
+                    snippets.push(gnEditorXMLService.
+                        buildXML(scope.elementName, xml));
+                  }
+                  checkState();
+                });
+              }
             });
 
             return false;
           };
 
-          gnSchemaManagerService
-              .getCodelist(gnCurrentEdit.schema + '|' +
-                  gnElementsMap['roleCode'][gnCurrentEdit.schema])
-              .then(function(data) {
-                scope.roles = data[0].entry;
-              });
+          if(scope.templateType == 'contacts') {
+            gnSchemaManagerService
+                .getCodelist(gnCurrentEdit.schema + '|' +
+                    gnElementsMap['roleCode'][gnCurrentEdit.schema])
+                .then(function(data) {
+                  scope.roles = data[0].entry;
+                });
+          }
+          else if(scope.templateType == 'extents') {
+            scope.prop.extentFormat = 'GMD_BBOX';
+            $http.get('reusable.object.categories/extents').success(function(data) {
+              scope.regionTypes = data;
+            });
 
+          }
         }
       };
     }]);
@@ -183,7 +216,8 @@
           params: {
             validated: validated,
             type: type,
-            q: searchValue
+            q: searchValue,
+            maxResults: 20
           }}).
             success(function (data) {
               if (data.indexOf("<") != 0) {

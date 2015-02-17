@@ -1,9 +1,30 @@
-<div class="gc-shared-object" data-ng-class="{'input-group' : isContact}">
+<!--Additional extent forms input-->
+<div data-ng-if="templateType == 'extents'">
+  <div class="form-group">
+    <div class="col-sm-6">
+      <select class="form-control" data-ng-model="prop.extentFormat">
+        <option value="GMD_BBOX" translate="">bboxOnly</option>
+        <option value="GMD_COMPLETE" translate="">bboxPolygon</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-6">
+      <select class="form-control">
+        <option value="include" translate="">include</option>
+        <option value="exclude" translate="">exclude</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!--Main search input that trigger the shared object XML push-->
+<div class="gc-shared-object" data-ng-class="{'input-group' : templateType == 'contacts' || templateType == 'extents'}">
 
   <!--search input-->
   <input class="form-control input-sm" type="text" data-toggle="dropdown" data-ng-model="searchValue"
          data-ng-mousedown="loadSO()" data-ng-change="loadSO()" placeholder="{{('searchA' + templateType) | translate}}"
-          data-ng-class="{'disabled' : !role}"/>
+          data-ng-class="{'disabled' : (templateType == 'contacts' && !role)}"/>
   <ul data-ng-show="objects.length > 0" class="dropdown-menu" role="menu">
     <li data-ng-repeat="o in objects">
       <a href="" data-ng-click="addEntry(o, role.code, true)" title="{{o.desc}}">
@@ -11,9 +32,12 @@
         {{o.desc}}
       </a>
     </li>
+    <li><a href=""><b translate="">addEntry</b></a></li>
+
   </ul>
 
-  <div data-ng-if="isContact"
+  <!--Contacts roles list-->
+  <div data-ng-if="templateType == 'contacts'"
        title="{{'addContactAsLink-help' | translate}}"
        class="input-group-btn">
     <button type="button" class="btn btn-default dropdown-toggle group-middle" data-toggle="dropdown">
@@ -30,9 +54,27 @@
     </ul>
   </div>
 
+  <!--Extent region type search filter list-->
+  <div data-ng-if="templateType == 'extents'"
+       title="{{'addContactAsLink-help' | translate}}"
+       class="input-group-btn">
+    <button type="button" class="btn btn-default dropdown-toggle group-middle" data-toggle="dropdown">
+      <span data-ng-if="regionType">{{regionType}}</span>
+      <span data-ng-if="!regionType" translate>region</span>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+      <li data-ng-repeat="r in regionTypes" data-ng-hide="r['@hideInEditMode']">
+        <a href="" data-ng-click="setRegionType(r)" title="{{r}}">
+          {{r}}
+        </a>
+      </li>
+    </ul>
+  </div>
 
   <!-- The contact to insert once received -->
   <div data-ng-if="snippet">
     <input name="{{snippetRef}}" type="hidden" value="{{snippet}}"/>
   </div>
 </div>
+

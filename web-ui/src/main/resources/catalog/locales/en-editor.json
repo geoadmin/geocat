@@ -190,4 +190,10 @@
     "editorBoardInfo": "Create or import new record from this page. Quickly access and manage all metadata records.",
     "minorEditHelp": "Do not update timestamp on save",
     "minorEdit": "Minor edit"
+    "searchAextents": "Search a shared Extent",
+    "searchAformats": "Search a shared Format",
+    "searchAcontacts": "Search a shared Contact",
+    "addEntry": "Create a new entry",
+    "bboxOnly": "Bounding box only",
+    "bboxPolygon": "Bounding box and bounding polyong"
 }
