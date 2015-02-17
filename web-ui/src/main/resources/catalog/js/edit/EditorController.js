@@ -65,6 +65,9 @@
 
 
       $routeProvider.
+          when('/metadata/find', {
+            templateUrl: tplFolder + 'editor.html',
+            controller: 'GnEditorController'}).
           when('/metadata/:id', {
             templateUrl: tplFolder + 'editor.html',
             controller: 'GnEditorController'}).
@@ -151,7 +154,19 @@
       var init = function() {
         gnConfigService.load().then(function(c) {
           // Config loaded
-          if ($routeParams.id) {
+          if ($routeParams.uuid) {
+            gnSearchManagerService.gnSearch({
+              _uuid: $routeParams.uuid,
+              _content_type: 'json',
+              _isTemplate: 'y or n or s',
+              fast: 'index'
+            }).then(function(data) {
+              $scope.metadataFound = data.count !== '0';
+              $scope.metadataNotFoundId = $routeParams.uuid;
+              $location.path("/metadata/" + data.metadata[0]['geonet:info'].id);
+              $location.search({});
+            });
+          } else if ($routeParams.id) {
             // Check requested metadata exists
             gnSearchManagerService.gnSearch({
               _id: $routeParams.id,
