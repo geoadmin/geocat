@@ -238,7 +238,7 @@
 
 
     <xsl:variable name="hasXlink" select="@xlink:href"/>
-    <xsl:variable name="isValidated" select="@xlink:title = 'http://www.geonetwork.org/non_valid_obj'"/>
+    <xsl:variable name="isValidated" select="@xlink:role = 'http://www.geonetwork.org/non_valid_obj'"/>
 
     <fieldset id="{concat('gn-el-', $editInfo/@ref)}"
               data-gn-field-highlight=""

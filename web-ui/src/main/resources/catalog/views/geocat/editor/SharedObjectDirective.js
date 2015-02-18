@@ -121,6 +121,12 @@
             };
 
             angular.forEach(entry, function(c) {
+              var extraXLinkParams = {
+                'xlink:show' : 'embed'
+              };
+              if (!c.validated) {
+                extraXLinkParams['xlink:role'] = "http://www.geonetwork.org/non_valid_obj";
+              }
               var uuid = c.id;
               var params = {uuid: uuid};
 
@@ -147,9 +153,7 @@
                       if (usingXlink) {
                         snippets.push(gnEditorXMLService.
                             buildXMLForXlink(scope.elementName,
-                                url +
-                                '?uuid=' + uuid +
-                                '&process=' + params.process));
+                          c.xlink + '&process=' + params.process, extraXLinkParams));
                       } else {
                         snippets.push(gnEditorXMLService.
                             buildXML(scope.elementName, xml));
@@ -169,7 +173,7 @@
                     snippets.push(gnEditorXMLService.
                         buildXMLForXlink(scope.elementName,
                             c.xlink +
-                            '&uuid=' + uuid));
+                            '&uuid=' + uuid, extraXLinkParams));
                   } else {
                     snippets.push(gnEditorXMLService.
                         buildXML(scope.elementName, xml));
@@ -260,7 +264,8 @@
         },
         link: function(scope, element, attrs) {
           var subtemplateRegexp = new RegExp("local://subtemplate\\?uuid=([^&]+).*");
-            element.click(function() {
+            element.click(function(e) {
+              e.stopPropagation();
               if (subtemplateRegexp.test(scope.href)) {
                 var uuid = subtemplateRegexp.exec(scope.href)[1];
                 window.open('catalog.edit#/metadata/find?uuid=' + uuid);
