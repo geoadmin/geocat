@@ -4,6 +4,7 @@
   goog.require('gn_module');
   goog.require('gn_urlutils_service');
   goog.require('geocat_shared_objects_contact_controller');
+  goog.require('geocat_shared_objects_edit_controller');
   goog.require('geocat_shared_objects_deleted_controller');
   goog.require('geocat_shared_objects_extent_controller');
   goog.require('geocat_shared_objects_extent_directive');
@@ -19,6 +20,7 @@ angular.module('geocat_shared_objects_app', [
       'geocat_shared_objects_factories',
       'geocat_shared_objects_contact_controller',
       'geocat_shared_objects_deleted_controller',
+      'geocat_shared_objects_edit_controller',
       'geocat_shared_objects_extent_controller',
       'geocat_shared_objects_extent_directive',
       'geocat_shared_objects_format_controller',

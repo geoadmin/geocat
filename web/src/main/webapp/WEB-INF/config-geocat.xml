@@ -345,5 +345,10 @@
             <documentation>The shared objects administration page.</documentation>
             <output sheet="../xslt/ui-admin/shared-objects.xsl"/>
         </service>
+
+        <service name="admin.shared.objects.edit">
+            <documentation>The shared objects edit page for editors.</documentation>
+            <output sheet="../xslt/ui-admin/shared-objects.xsl"/>
+        </service>
     </services>
 </geonet>

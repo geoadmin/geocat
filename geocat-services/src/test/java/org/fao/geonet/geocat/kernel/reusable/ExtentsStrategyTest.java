@@ -58,8 +58,17 @@ public class ExtentsStrategyTest extends AbstractSharedObjectTest {
         Element result = extentsStrategy.search(session, "bern", "eng", 10);
         assertEquals(Xml.getString(result), 3, result.getContentSize());
 
+        result = extentsStrategy.search(session, "@id@" + OTHERTYPE + "@2", "eng", 10);
+        assertEquals(Xml.getString(result), 1, result.getContentSize());
+
         result = extentsStrategy.search(session, "b2", "eng", 1);
         assertEquals(Xml.getString(result), 1, result.getContentSize());
+
+        result = extentsStrategy.search(session, "b", "eng", 1);
+        assertEquals(Xml.getString(result), 1, result.getContentSize());
+
+        result = extentsStrategy.search(session, "b", "eng", 10);
+        assertEquals(Xml.getString(result), 4, result.getContentSize());
     }
 
 

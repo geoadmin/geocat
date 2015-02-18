@@ -91,6 +91,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.apache.lucene.search.WildcardQuery.WILDCARD_STRING;
 import static org.fao.geonet.geocat.kernel.reusable.Utils.addChild;
@@ -1156,36 +1158,68 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
         return finalQuery;
     }
 
+    private Pattern searchByIdPattern = Pattern.compile("@id@(.+)@(.+?)");
     @Override
     public Element search(UserSession session, String search, String language, int maxResults) throws Exception {
         final FilterFactory2 factory2 = CommonFactoryFinder.getFilterFactory2();
 
         Element results = new Element(REPORT_ROOT);
-        for (FeatureType featureType : _extentMan.getSource().getFeatureTypes()) {
-            if (results.getContentSize() < maxResults) {
-                if (!featureType.typename.equalsIgnoreCase(NON_VALIDATED_TYPE) && !featureType.typename.equalsIgnoreCase(XLINK_TYPE)) {
-                    searchFeatureStore(session, search, factory2, results, featureType, true);
+        final Matcher searchByIdMatcher = searchByIdPattern.matcher(search);
+        if (searchByIdMatcher.matches()) {
+            String featureTypeName = searchByIdMatcher.group(1);
+            String featureId = searchByIdMatcher.group(2);
+
+            final FeatureType featureType = _extentMan.getSource().getFeatureType(featureTypeName);
+
+            if (featureType != null) {
+
+                final Literal literal;
+                final AttributeDescriptor idAttribute = featureType.getFeatureSource().getSchema().getDescriptor(featureType.idColumn);
+                if (Integer.class.isAssignableFrom(idAttribute.getType().getBinding())) {
+                    literal = factory2.literal(Integer.parseInt(featureId));
+                } else if (Short.class.isAssignableFrom(idAttribute.getType().getBinding())) {
+                    literal = factory2.literal(Short.parseShort(featureId));
+                } else {
+                    literal = factory2.literal(featureId);
+                }
+                PropertyIsEqualTo filter = factory2.equals(factory2.property(featureType.idColumn), literal);
+                toResults(session, results, featureType, !featureType.typename.equals(NON_VALIDATED_TYPE), filter, maxResults);
+            }
+        } else {
+            for (FeatureType featureType : _extentMan.getSource().getFeatureTypes()) {
+                if (results.getContentSize() < maxResults) {
+                    if (!featureType.typename.equalsIgnoreCase(NON_VALIDATED_TYPE) && !featureType.typename.equalsIgnoreCase(XLINK_TYPE)) {
+
+                        searchFeatureStore(session, search, factory2, results, featureType, true, maxResults);
+                    }
                 }
             }
+
+            searchFeatureStore(session, search, factory2, results, _extentMan.getSource().getFeatureType(XLINK_TYPE), true, maxResults);
+            searchFeatureStore(session, search, factory2, results, _extentMan.getSource().getFeatureType(NON_VALIDATED_TYPE), true, maxResults);
         }
-
-        searchFeatureStore(session, search, factory2, results, _extentMan.getSource().getFeatureType(XLINK_TYPE), true);
-        searchFeatureStore(session, search, factory2, results, _extentMan.getSource().getFeatureType(NON_VALIDATED_TYPE), true);
-
         return results;
     }
 
     private void searchFeatureStore(UserSession session, String search, FilterFactory2 factory2, Element results, FeatureType
-            featureType, boolean validated) throws IOException, JDOMException {
-        final FeatureSource<SimpleFeatureType, SimpleFeature> source = featureType.getFeatureSource();
+            featureType, boolean validated, int maxResults) throws IOException, JDOMException {
         PropertyIsLike filter = factory2.like(factory2.property(featureType.searchColumn), "*" + search + "*",
                 "*", "?", "\\", false);
 
+        toResults(session, results, featureType, validated, filter, maxResults);
+    }
+
+    private void toResults(UserSession session, Element results, FeatureType featureType, boolean validated,
+                           org.opengis.filter.Filter filter, int maxResults) throws IOException, JDOMException {
+        final FeatureSource<SimpleFeatureType, SimpleFeature> source = featureType.getFeatureSource();
         Query query = new Query(featureType.pgTypeName, filter, new String[]{featureType.idColumn, featureType.descColumn});
         FeatureCollection<SimpleFeatureType, SimpleFeature> features = source.getFeatures(query);
         final FeatureIterator<SimpleFeature> featureIterator = features.features();
         try {
             while(featureIterator.hasNext()) {
+                if (results.getContentSize() >= maxResults) {
+                    break;
+                }
                 toXmlDesc(session, validated, featureType, featureIterator, results);
             }
         } finally {

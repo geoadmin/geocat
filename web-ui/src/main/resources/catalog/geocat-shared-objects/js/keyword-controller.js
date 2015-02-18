@@ -6,8 +6,8 @@
   /* Controllers */
 
   var module = angular.module('geocat_shared_objects_keyword_controller', []).
-    controller('KeywordControl', ['$scope', '$routeParams', '$http', 'commonProperties',
-      function ($scope, $routeParams, $http, commonProperties) {
+    controller('KeywordControl', ['$scope', '$routeParams', '$http', 'commonProperties', 'keywordsService',
+      function ($scope, $routeParams, $http, commonProperties, keywordsService) {
         commonProperties.addValidated($scope, $routeParams);
         commonProperties.add($scope, $routeParams);
         if ($scope.isValid) {
@@ -23,41 +23,7 @@
           roh: { label: '', desc: '' }
         };
 
-        $scope.edit = function (row) {
-          var parts = row.url.substring(row.url.indexOf('?') + 1).split(/\&/g, 2);
-          var thesaurus = '';
-          var id = '';
-
-          for (var i = 0; i < parts.length; i++) {
-            if (parts[i].indexOf('thesaurus=') > -1) {
-              thesaurus = decodeURIComponent(parts[i].split(/=/, 2)[1]);
-            }
-
-            if (parts[i].indexOf('id=') > -1) {
-              id = decodeURIComponent(parts[i].split(/=/, 2)[1]);
-            }
-          }
-
-          $http({
-            method: 'GET',
-            url: $scope.baseUrl + '/json.keyword.get',
-            params: {
-              lang: 'eng,fre,ger,roh,ita',
-              id: id,
-              thesaurus: thesaurus
-            }
-          })
-            .success(function (data) {
-              $scope.finishEdit = function () {
-                $scope.submitEdit(thesaurus, id);
-              };
-              for (var lang in $scope.keyword) {
-                $scope.keyword[lang].label = data[lang].label;
-                $scope.keyword[lang].desc = data[lang].definition;
-              }
-              $('#editModal').modal('show');
-            });
-        };
+        $scope.edit = function(row) {extentsService.edit($scope, row)};
 
         var createUpdateParams = function () {
           var params = {
@@ -124,5 +90,43 @@
             $('#editModal').modal('hide');
           }
         }
-      }]);
+      }]).factory('keywordsService', function() {
+      return {
+        edit: function ($scope, row) {
+          var parts = row.url.substring(row.url.indexOf('?') + 1).split(/\&/g, 2);
+          var thesaurus = '';
+          var id = '';
+
+          for (var i = 0; i < parts.length; i++) {
+            if (parts[i].indexOf('thesaurus=') > -1) {
+              thesaurus = decodeURIComponent(parts[i].split(/=/, 2)[1]);
+            }
+
+            if (parts[i].indexOf('id=') > -1) {
+              id = decodeURIComponent(parts[i].split(/=/, 2)[1]);
+            }
+          }
+
+          $http({
+            method: 'GET',
+            url: $scope.baseUrl + '/json.keyword.get',
+            params: {
+              lang: 'eng,fre,ger,roh,ita',
+              id: id,
+              thesaurus: thesaurus
+            }
+          })
+            .success(function (data) {
+              $scope.finishEdit = function () {
+                $scope.submitEdit(thesaurus, id);
+              };
+              for (var lang in $scope.keyword) {
+                $scope.keyword[lang].label = data[lang].label;
+                $scope.keyword[lang].desc = data[lang].definition;
+              }
+              $('#editModal').modal('show');
+            });
+        }
+      }
+    });
 })();

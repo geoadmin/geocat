@@ -113,7 +113,7 @@
                 scope.clearMap();
                 scope.formObj.proj = 'EPSG:21781';
                 scope.formObj.geoId = scope.formObj.desc = {
-                  DE: '',EN: '', FR: '',  IT: ''};
+                  DE: '',EN: '', FR: '',  IT: '', RM: ''};
                 if(ft) {
                   scope.formObj.geoId = ft.feature.geoId;
                   scope.formObj.desc = ft.feature.desc;
