@@ -71,6 +71,7 @@
         }, 1);
       };
 
+      var map = $scope.searchObj.searchMap;
       $scope.resultviewFns = {
         addMdLayerToMap: function(link) {
           map.addLayer(gnMap.createOlWMS(gnSearchSettings.searchMap, {
@@ -516,7 +517,7 @@
               });
             });
           } else {
-            scope.layers = scope.md.getLinksByType('OGC', 'kml');
+            scope.layers = scope.md.getLinksByType('OGC:WMS', 'kml');
           }
 
           var d;
