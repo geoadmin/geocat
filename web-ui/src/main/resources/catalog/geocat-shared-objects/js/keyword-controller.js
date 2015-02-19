@@ -6,8 +6,17 @@
   /* Controllers */
 
   var module = angular.module('geocat_shared_objects_keyword_controller', []).
-    controller('KeywordControl', ['$scope', '$routeParams', '$http', 'commonProperties', 'keywordsService',
-      function ($scope, $routeParams, $http, commonProperties, keywordsService) {
+
+    controller('KeywordControl', [
+        '$scope',
+        '$routeParams',
+        '$http',
+        '$location',
+        'commonProperties',
+        'keywordsService',
+      function ($scope, $routeParams, $http, $location, commonProperties,
+                keywordsService) {
+
         commonProperties.addValidated($scope, $routeParams);
         commonProperties.add($scope, $routeParams);
         if ($scope.isValid) {
@@ -23,7 +32,7 @@
           roh: { label: '', desc: '' }
         };
 
-        $scope.edit = function(row) {extentsService.edit($scope, row)};
+        $scope.edit = function(row) {keywordsService.edit($scope, row)};
 
         var createUpdateParams = function () {
           var params = {
@@ -90,7 +99,11 @@
             $('#editModal').modal('hide');
           }
         }
-      }]).factory('keywordsService', function() {
+      }])
+
+
+    .factory('keywordsService', ['$http', function($http) {
+
       return {
         edit: function ($scope, row) {
           var parts = row.url.substring(row.url.indexOf('?') + 1).split(/\&/g, 2);
@@ -128,5 +141,5 @@
             });
         }
       }
-    });
+    }]);
 })();
