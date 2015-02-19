@@ -218,3 +218,4 @@ DELETE FROM settings WHERE datatype IS NULL;
 -- UPDATE Requests SET simpletemp = simple;
 -- ALTER TABLE Requests DROP COLUMN simpletemp;
 -- END GEOCAT
+UPDATE HarvestHistory SET elapsedTime = 0 WHERE elapsedTime IS NULL;
