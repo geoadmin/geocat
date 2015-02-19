@@ -24,7 +24,7 @@
   <!--search input-->
   <input class="form-control input-sm" type="text" data-toggle="dropdown" data-ng-model="searchValue"
          data-ng-mousedown="loadSO()" data-ng-change="loadSO()" placeholder="{{('searchA' + templateType) | translate}}"
-          data-ng-class="{'disabled' : (templateType == 'contacts' && !role)}"/>
+          data-ng-class="{'disabled' : (templateType == 'contacts' && !role)}" ng-disabled="templateType == 'contacts' && !role"/>
   <ul data-ng-show="objects.length > 0" class="dropdown-menu" role="menu">
     <li data-ng-repeat="o in objects">
       <a href="" data-ng-click="addEntry(o, role.code, true)" title="{{o.desc}}">
@@ -39,8 +39,8 @@
   <!--Contacts roles list-->
   <div data-ng-if="templateType == 'contacts'"
        title="{{'addContactAsLink-help' | translate}}"
-       class="input-group-btn">
-    <button type="button" class="btn btn-default dropdown-toggle group-middle" data-toggle="dropdown">
+       class="input-group-btn" data-ng-class="{'has-error': !role}">
+    <button type="button" class="btn btn-default dropdown-toggle group-right" data-toggle="dropdown">
       <span data-ng-if="role">{{role.label}}</span>
       <span data-ng-if="!role" translate>role</span>
       <span class="caret"></span>
@@ -58,7 +58,7 @@
   <div data-ng-if="templateType == 'extents'"
        title="{{'addContactAsLink-help' | translate}}"
        class="input-group-btn">
-    <button type="button" class="btn btn-default dropdown-toggle group-middle" data-toggle="dropdown">
+    <button type="button" class="btn btn-default dropdown-toggle group-right" data-toggle="dropdown">
       <span data-ng-if="regionType">{{regionType}}</span>
       <span data-ng-if="!regionType" translate>region</span>
       <span class="caret"></span>
