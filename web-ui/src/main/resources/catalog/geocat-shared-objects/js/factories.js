@@ -229,7 +229,7 @@ angular.module('geocat_shared_objects_factories', []).
                   success(function(data) {
                     $scope.loading = undefined;
                     var id = data.id;
-                    $scope.reloadOnWindowClosed($scope.open('catalog.edit#/metadata/' + id));
+                    $scope.reloadOnWindowClosed($scope.open('catalog.edit#/metadata/' + id + '/tab/simple'));
                     $location.path(validatedUrl);
                   }).
                   error(function(data) {

@@ -404,7 +404,7 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
                 if (searchTerm == null || (desc != null && desc.toLowerCase().contains(searchTerm.toLowerCase()))) {
                     Element e = new Element(REPORT_ELEMENT);
                     String id = doc.get("_id");
-                    String url = XLink.LOCAL_PROTOCOL + "catalog.edit#/metadata/" + id;
+                    String url = XLink.LOCAL_PROTOCOL + "catalog.edit#/metadata/" + id + "/tab/simple";
                     Utils.addChild(e, REPORT_URL, url);
                     Utils.addChild(e, REPORT_ID, uuid);
                     Utils.addChild(e, REPORT_TYPE, "contact");
