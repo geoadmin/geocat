@@ -11,7 +11,7 @@
 
       function ($scope, $routeParams, $http, extentsService, keywordsService, gnUrlUtils) {
         var onDialogHidden = function() {
-          window.open('','_self').close();
+          window.close();
         };
 
         //alert($routeParams.href);
@@ -21,7 +21,7 @@
 
           $scope.type = "extents";
           var paramMap = gnUrlUtils.parseKeyValue(href);
-          var id = paramMap.id;
+          var uuid = paramMap.uuid;
           var typename = paramMap.typename;
 
           if (typename !== 'gn:non_validated') {
@@ -29,7 +29,7 @@
             window.close();
           }
 
-          $http.get("reusable.list.js?maxResults=1&type=extents&q=@id@" + typename + "@" + id).success(function(data){
+          $http.get("reusable.list.js?maxResults=1&type=extents&q=@id@" + typename + "@" + uuid).success(function(data){
             $scope.rows = data;
             extentsService.edit(data[0], $scope);
 

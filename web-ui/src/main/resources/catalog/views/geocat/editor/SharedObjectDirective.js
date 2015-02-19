@@ -270,7 +270,7 @@
                 var uuid = subtemplateRegexp.exec(scope.href)[1];
                 window.open('catalog.edit#/metadata/find?uuid=' + uuid);
               } else {
-                window.open('admin.shared.objects#/edit/' + encodeURIComponent(scope.href), '_blank');
+                window.open('admin.shared.objects.edit#/edit?href=' + encodeURIComponent(scope.href), '_blank');
               }
 
             });

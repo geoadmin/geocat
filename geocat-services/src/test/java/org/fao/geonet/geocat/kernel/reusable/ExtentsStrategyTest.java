@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
+import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.*;
 import static org.junit.Assert.assertEquals;
 
 public class ExtentsStrategyTest extends AbstractSharedObjectTest {
@@ -60,15 +61,21 @@ public class ExtentsStrategyTest extends AbstractSharedObjectTest {
 
         result = extentsStrategy.search(session, "@id@" + OTHERTYPE + "@2", "eng", 10);
         assertEquals(Xml.getString(result), 1, result.getContentSize());
+        assertEquals("true", result.getChild(REPORT_ELEMENT).getChildText(REPORT_VALIDATED));
 
         result = extentsStrategy.search(session, "b2", "eng", 1);
         assertEquals(Xml.getString(result), 1, result.getContentSize());
+        assertEquals("true", result.getChild(REPORT_ELEMENT).getChildText(REPORT_VALIDATED));
 
         result = extentsStrategy.search(session, "b", "eng", 1);
         assertEquals(Xml.getString(result), 1, result.getContentSize());
 
         result = extentsStrategy.search(session, "b", "eng", 10);
         assertEquals(Xml.getString(result), 4, result.getContentSize());
+        assertEquals("true", result.getChild(REPORT_ELEMENT).getChildText(REPORT_VALIDATED));
+        assertEquals("true", ((Element) result.getChildren().get(1)).getChildText(REPORT_VALIDATED));
+        assertEquals("true", ((Element) result.getChildren().get(2)).getChildText(REPORT_VALIDATED));
+        assertEquals("false", ((Element) result.getChildren().get(3)).getChildText(REPORT_VALIDATED));
     }
 
 
@@ -89,7 +96,7 @@ public class ExtentsStrategyTest extends AbstractSharedObjectTest {
         result = extentsStrategy.list(session, null, "eng", 1);
         assertEquals(Xml.getString(result), 1, result.getContentSize());
 
-        result = extentsStrategy.list(session, SharedObjectStrategy.LUCENE_EXTRA_VALIDATED, "eng", 100);
+        result = extentsStrategy.list(session, LUCENE_EXTRA_VALIDATED, "eng", 100);
         assertEquals(Xml.getString(result), 1, result.getContentSize());
 
         result = extentsStrategy.list(session, OTHERTYPE, "eng", 100);
@@ -101,7 +108,7 @@ public class ExtentsStrategyTest extends AbstractSharedObjectTest {
         result = extentsStrategy.list(session, ExtentsStrategy.NON_VALIDATED_TYPE, "eng", 100);
         assertEquals(Xml.getString(result), 1, result.getContentSize());
 
-        result = extentsStrategy.list(session, SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED, "eng", 100);
+        result = extentsStrategy.list(session, LUCENE_EXTRA_NON_VALIDATED, "eng", 100);
         assertEquals(Xml.getString(result), 1, result.getContentSize());
     }
 
