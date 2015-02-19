@@ -1,6 +1,7 @@
 package org.fao.geonet.geocat.kernel.reusable;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -54,6 +55,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -309,11 +311,16 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
     }
     public final static class DescData {
         public final String uuid;
-        public final Document doc;
+        public final Map<String, Document> langToDoc = Maps.newHashMap();
+        public final String language;
 
-        private DescData(String uuid, Document doc) {
+        public DescData(String language, String uuid, String docLang, Document doc) {
+            this(language, uuid);
+            this.langToDoc.put(docLang, doc);
+        }
+        public DescData(String language, String uuid) {
             this.uuid = uuid;
-            this.doc = doc;
+            this.language = language;
         }
     }
     protected final Element listFromIndex(SearchManager searchManager,
@@ -342,20 +349,57 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
             final TopFieldDocs topDocs = searcher.search(booleanQuery, 30000, new Sort(new SortField(LUCENE_EXTRA_FIELD,
                     SortField.Type.STRING, true)));
 
-            Set<String> added = Sets.newHashSet();
+            Map<String, DescData> descDatas = Maps.newLinkedHashMap();
             for (ScoreDoc topDoc : topDocs.scoreDocs) {
-                if (results.getContentSize() >= maxResults) {
-                    break;
-                }
-
                 final Document doc = searcher.doc(topDoc.doc);
                 String uuid = doc.getField("_uuid").stringValue();
+                String docLang = doc.getField(LUCENE_LOCALE_FIELD).stringValue();
 
-                if (added.contains(uuid)) {
-                    continue;
+                if (descDatas.containsKey(uuid)) {
+                    descDatas.get(uuid).langToDoc.put(docLang, doc);
+                } else {
+                    descDatas.put(uuid, new DescData(language, uuid, docLang, doc));
                 }
-                added.add(uuid);
-                String desc = describer.apply(new DescData(uuid, doc));
+            }
+            Set<Element> records = Sets.newTreeSet(new Comparator<Element>() {
+                @Override
+                public int compare(Element o1, Element o2) {
+                    boolean valid1 = Boolean.parseBoolean(o1.getChildText(REPORT_VALIDATED).trim());
+                    String desc1 = o1.getChildText(REPORT_DESC).trim();
+                    String uuid1 = o1.getChildText(REPORT_ID);
+
+                    boolean valid2 = Boolean.parseBoolean(o2.getChildText(REPORT_VALIDATED).trim());
+                    String desc2 = o2.getChildText(REPORT_DESC).trim();
+                    String uuid2 = o2.getChildText(REPORT_ID);
+
+                    if (valid1 != valid2) {
+                        if (valid1) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    }
+
+                    if (desc1.startsWith("(")) {
+                        return 1;
+                    }
+                    if (desc2.startsWith("(")) {
+                        return -1;
+                    }
+
+                    int descCompare = desc1.compareToIgnoreCase(desc2);
+
+                    if (descCompare == 0) {
+                        return uuid1.compareToIgnoreCase(uuid2);
+                    }
+
+                    return descCompare;
+                }
+            });
+            for (DescData descData : descDatas.values()) {
+                String desc = describer.apply(descData);
+                String uuid = descData.uuid;
+                final Document doc = descData.langToDoc.values().iterator().next();
 
                 if (searchTerm == null || (desc != null && desc.toLowerCase().contains(searchTerm.toLowerCase()))) {
                     Element e = new Element(REPORT_ELEMENT);
@@ -367,10 +411,17 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
                     Utils.addChild(e, REPORT_XLINK, strategy.createXlinkHref(uuid, session, ""));
                     Utils.addChild(e, REPORT_DESC, desc);
                     Utils.addChild(e, REPORT_SEARCH, uuid + desc);
-                    Utils.addChild(e, REPORT_VALIDATED, ""+LUCENE_EXTRA_VALIDATED.equals(doc.getField(LUCENE_EXTRA_FIELD).stringValue()));
-                    results.addContent(e);
+                    Utils.addChild(e, REPORT_VALIDATED, ""+LUCENE_EXTRA_VALIDATED.equals(doc.get(LUCENE_EXTRA_FIELD)));
+                    records.add(e);
+                }
+            }
+
+            for (Element record : records) {
+                if (results.getContentSize() >= maxResults) {
+                    break;
                 }
 
+                results.addContent(record);
             }
 
         } finally {

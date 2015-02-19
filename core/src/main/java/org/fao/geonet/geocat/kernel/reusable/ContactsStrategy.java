@@ -52,6 +52,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
@@ -59,10 +60,10 @@ import javax.annotation.Nullable;
 
 public final class ContactsStrategy extends AbstractSubtemplateStrategy {
     public static final String LUCENE_ROOT_RESPONSIBLE_PARTY = "che:CHE_CI_ResponsibleParty";
-    protected static final String LUCENE_EMAIL = "electronicmailaddress";
-    protected static final String LUCENE_FIRST_NAME = "individualfirstname";
-    protected static final String LUCENE_LAST_NAME = "individuallastname";
-    private static final String LUCENE_ORG_NAME = "organisationname";
+    public static final String LUCENE_EMAIL = "electronicmailaddress";
+    public static final String LUCENE_FIRST_NAME = "individualfirstname";
+    public static final String LUCENE_LAST_NAME = "individuallastname";
+    public static final String LUCENE_ORG_NAME = "organisationname";
 
 
     public ContactsStrategy(ApplicationContext context) {
@@ -328,31 +329,83 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
                + "    </che:CHE_CI_ResponsibleParty>";
     }
 
-    private static class ContactDescFunc implements Function<DescData, String> {
-        @Nullable
+    static class ContactDescFunc implements Function<DescData, String> {
+        @Nonnull
         @Override
         public String apply(@Nonnull DescData data) {
-            String email = safeField(data.doc, LUCENE_EMAIL);
-            String name = safeField(data.doc, LUCENE_FIRST_NAME);
-            String surname = safeField(data.doc, LUCENE_LAST_NAME);
+            String email = anyLangSafeField(data.langToDoc, LUCENE_EMAIL);
+            String name = anyLangSafeField(data.langToDoc, LUCENE_FIRST_NAME);
+            String surname = anyLangSafeField(data.langToDoc, LUCENE_LAST_NAME);
 
-            String desc;
-            if (email == null || email.length() == 0) {
-                desc = data.uuid;
+            if (name.isEmpty() && surname.isEmpty()) {
+                String org = localizedField(data, LUCENE_ORG_NAME);
+
+                if (org.isEmpty()) {
+                    if (!email.isEmpty()) {
+                        return email;
+                    } else {
+                        return "(" + data.uuid + ")";
+                    }
+                } else if (email.isEmpty()) {
+                    return org;
+                } else {
+                    return org + " (" + email + ")";
+                }
             } else {
-                desc = email;
+                final String fullName = (name + " " + surname).trim();
+                if (email.isEmpty()) {
+                    String org = localizedField(data, LUCENE_ORG_NAME);
+                    if (org.isEmpty()) {
+                        return fullName;
+                    } else {
+                        return fullName + " (" + org + ")";
+                    }
+                } else {
+                    return fullName + " (" + email + ")";
+                }
             }
-
-            return name + " " + surname + " (" + desc + ")";
         }
 
-        private String safeField(Document doc, String fieldName) {
-            final IndexableField field = doc.getField(fieldName);
-            if (field != null) {
-                return field.stringValue();
-            } else {
-                return "";
+        @Nonnull
+        private String localizedField(DescData data, String fieldName) {
+            final Document preferredDoc = data.langToDoc.get(data.language);
+            String orgName = safeField(preferredDoc, fieldName);
+            if (orgName != null) {
+                return orgName;
             }
+
+            for (Document document : data.langToDoc.values()) {
+                orgName = safeField(document, fieldName);
+                if (orgName != null) {
+                    return orgName;
+                }
+            }
+            return "";
+        }
+
+        @Nonnull
+        private String anyLangSafeField(Map<String, Document> langToDoc, String fieldName) {
+            for (Document doc : langToDoc.values()) {
+                final String safeField = safeField(doc, fieldName);
+                if (safeField != null) {
+                    return safeField;
+                }
+            }
+            return "";
+        }
+
+        @Nullable
+        private String safeField(Document doc, String fieldName) {
+            if (doc != null) {
+                final IndexableField field = doc.getField(fieldName);
+                if (field != null) {
+                    final String stringValue = field.stringValue();
+                    if (stringValue != null) {
+                        return stringValue.trim();
+                    }
+                }
+            }
+            return null;
         }
 
     }

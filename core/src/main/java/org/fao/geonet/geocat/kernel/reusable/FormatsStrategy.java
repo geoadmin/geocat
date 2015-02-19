@@ -23,6 +23,7 @@
 
 package org.fao.geonet.geocat.kernel.reusable;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import jeeves.server.UserSession;
 import jeeves.xlink.XLink;
@@ -43,7 +44,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public final class FormatsStrategy extends AbstractSubtemplateStrategy {
 
@@ -165,21 +165,36 @@ public final class FormatsStrategy extends AbstractSubtemplateStrategy {
                + "        </gmd:MD_Format>";
     }
 
-    private static class FormatDescFunction implements Function<DescData, String> {
-        @Nullable
+    @VisibleForTesting
+    public static class FormatDescFunction implements Function<DescData, String> {
+        @Nonnull
         @Override
         public String apply(@Nonnull DescData data) {
-            String name = data.doc.get("name");
-            if (name == null || name.length() == 0) {
-                name = data.uuid;
-            }
-            String version = data.doc.get("version");
-            if (version == null) {
-                version = "";
+            String name = stringValue(data, "name");
+            String version  = stringValue(data, "version");
+
+            if (name.isEmpty()) {
+                if (version.isEmpty()) {
+                    return "(" + data.uuid + ")";
+                } else {
+                    return version;
+                }
+            } else if (version.isEmpty()) {
+                return name;
             } else {
-                version = " (" + version + ")";
+                return name + " (" + version + ")";
             }
-            return name + version;
+        }
+
+        @Nonnull
+        private String stringValue(DescData data, String fieldName) {
+            for (Document document : data.langToDoc.values()) {
+                final String fieldValue = document.get(fieldName);
+                if (fieldValue != null && !fieldValue.isEmpty()) {
+                    return fieldValue;
+                }
+            }
+            return "";
         }
     }
 }
