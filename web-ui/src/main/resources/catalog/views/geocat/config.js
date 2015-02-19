@@ -14,8 +14,7 @@
           '369.344,2.484,1.783,2.939,5.66 +units=m +no_defs');
 
       ol.proj.get('EPSG:21781').setExtent([420000, 30000, 900000, 350000]);
-      ol.proj.get('EPSG:21781').setWorldExtent(
-          [5.9700, 45.8300, 10.4900, 47.8100]);
+      ol.proj.get('EPSG:21781').setWorldExtent([ 5.5, 45.5, 10.6, 48 ]);
 
       searchSettings.olStyles = {
         drawBbox: new ol.style.Style({
