@@ -188,7 +188,7 @@
     </xsl:if>
 
     <!--geocatch specific settings initialization-->
-    <xsl:if test="$searchView = 'geocat'">
+    <xsl:if test="$searchView = 'geocat' and $angularApp = 'gn_search'">
       <script type="text/javascript">
         var module = angular.module('gn_search');
         module.config(['gnSearchSettings', function(gnSearchSettings) {
