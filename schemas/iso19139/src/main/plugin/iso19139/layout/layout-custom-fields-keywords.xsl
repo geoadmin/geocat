@@ -8,6 +8,7 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="#all">
 
   <!-- Custom rendering of keyword section 
@@ -28,8 +29,8 @@
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
     <xsl:variable name="thesaurusTitle"
-      select="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
-
+      select="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString|
+      gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = concat('#', upper-case(xslutil:twoCharLangCode($lang)))]"/>
 
     <xsl:variable name="attributes">
       <xsl:if test="$isEditing">
@@ -77,7 +78,6 @@
 
     <xsl:variable name="thesaurusTitle"
       select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString)"/>
-
 
     <xsl:variable name="isTheaurusAvailable"
       select="count($listOfThesaurus/thesaurus[title=$thesaurusTitle]) > 0"/>
