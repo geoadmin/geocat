@@ -255,28 +255,38 @@
    * the editor form as it would require to init the model
    * from the form content using ng-init for example.
    */
-  module.directive('gcSharedObjectUpdate',
-    function() {
+  module.directive('gcSharedObjectUpdate', ['gnSearchManagerService',
+    function(gnSearchManagerService) {
       return {
         restrict: 'A',
         scope: {
           href: '@gcSharedObjectUpdate'
         },
         link: function(scope, element, attrs) {
-          var subtemplateRegexp = new RegExp("local://subtemplate\\?uuid=([^&]+).*");
+          var subtemplateRegexp = new RegExp(
+              "local://subtemplate\\?uuid=([^&]+).*");
+
             element.click(function(e) {
               e.stopPropagation();
               if (subtemplateRegexp.test(scope.href)) {
                 var uuid = subtemplateRegexp.exec(scope.href)[1];
-                window.open('catalog.edit#/metadata/find?uuid=' + uuid);
+                gnSearchManagerService.gnSearch({
+                  _uuid: uuid,
+                  _content_type: 'json',
+                  fast: 'index',
+                  _isTemplate: 's'
+                }).then(function(data) {
+                  window.open('catalog.edit#/metadata/' +
+                      data.metadata[0]['geonet:info'].id+'/tab/simple');
+                });
               } else {
-                window.open('admin.shared.objects.edit#/edit?href=' + encodeURIComponent(scope.href), '_blank');
+                window.open('admin.shared.objects.edit#/edit?href=' +
+                    encodeURIComponent(scope.href), '_blank');
               }
-
             });
             element.keyup();
         }
       };
-    });
+    }]);
 
 })();
