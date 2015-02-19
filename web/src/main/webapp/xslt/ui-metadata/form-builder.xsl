@@ -238,7 +238,7 @@
 
 
     <xsl:variable name="hasXlink" select="@xlink:href"/>
-    <xsl:variable name="isValidated" select="@xlink:role = 'http://www.geonetwork.org/non_valid_obj'"/>
+    <xsl:variable name="isValidated" select="not(@xlink:role = 'http://www.geonetwork.org/non_valid_obj')"/>
 
     <fieldset id="{concat('gn-el-', $editInfo/@ref)}"
               data-gn-field-highlight=""
@@ -259,8 +259,20 @@
         </xsl:if>
 
         <xsl:value-of select="$label"/>
-        <xsl:if test="$hasXlink and $isValidated">
-          <button data-gc-shared-object-update="{$hasXlink}" class="btn">sharedObjectUpdate</button>
+        <xsl:if test="$hasXlink">
+          <a class="update-shared-object">
+              <xsl:choose>
+                  <xsl:when test="not($isValidated)">
+                      <xsl:attribute name="data-gc-shared-object-update">
+                          <xsl:value-of select="$hasXlink" />
+                      </xsl:attribute>
+                  </xsl:when>
+                  <xsl:otherwise>
+                      <xsl:attribute name="disabled" />
+                  </xsl:otherwise>
+              </xsl:choose>
+            <i class="fa fa-edit"></i>
+          </a>
         </xsl:if>
         <xsl:if test="$editInfo and not($isDisabled)">
           <xsl:call-template name="render-boxed-element-control">

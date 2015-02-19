@@ -1,5 +1,6 @@
 @import "../../../style/gn_editor";
 
+
 .gc-shared-object {
   .label {
     margin-left: 5px;
@@ -13,4 +14,13 @@
     border-color: @brand-danger;
     z-index: 2;
   }
+}
+
+a.update-shared-object {
+  margin-left: 5px;
+  font-size: 80%;
+}
+a.update-shared-object[disabled] {
+  color: @gray-light;
+  cursor: not-allowed;
 }
