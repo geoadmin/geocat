@@ -137,7 +137,7 @@ angular.module('geocat_shared_objects_factories', []).
               };
               $scope.updateReferenceCount = function () {
                 $scope.loading = "-1";
-                return $http({method: 'GET', url: referenceMdUrl([$scope.selected.id], true)}).
+                return $http({method: 'GET', url: referenceMdUrl([encodeURIComponent($scope.selected.id)], true)}).
                   success(function (data) {
                     $scope.loading = undefined;
                     var referenceCount = parseInt(data[0]['@count']);
