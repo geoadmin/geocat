@@ -28,12 +28,16 @@ import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.geocat.kernel.extent.FeatureType;
 import org.fao.geonet.geocat.kernel.extent.Source;
+import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.LangUtils;
 import org.geotools.data.FeatureStore;
 import org.geotools.gml2.GMLConfiguration;
@@ -133,6 +137,12 @@ public class Add implements Service {
     }
 
     public Element exec(Element params, ServiceContext context) throws Exception {
+
+        final UserSession userSession = context.getUserSession();
+        if (userSession == null) {
+            Lib.resource.denyAccess(context);
+            return new Element("fail");
+        }
         final ExtentManager extentMan = context.getBean(ExtentManager.class);
 
         String id = Util.getParamText(params, ID);
@@ -142,6 +152,12 @@ public class Add implements Service {
         final String desc = LangUtils.createDescFromParams(params, DESC);
         final Format format = Format.lookup(Util.getParamText(params, FORMAT));
         final String requestCrsCode = Util.getParamText(params, ExtentHelper.CRS_PARAM);
+
+
+
+        if (!typename.equalsIgnoreCase(ExtentsStrategy.NON_VALIDATED_TYPE) && userSession.getProfile() != Profile.Administrator) {
+            Lib.resource.denyAccess(context);
+        }
 
         final Source wfs = extentMan.getSource();
         final FeatureType featureType = wfs.getFeatureType(typename);
@@ -168,8 +184,9 @@ public class Add implements Service {
         Geometry geometry = format.parse(geomParam);
         id = extentMan.add(id, geomId, desc, requestCrsCode, featureType, store, geometry, false);
 
-        final Element responseElem = new Element("success");
-        responseElem.setText("Added one new feature id= " + id);
+        final Element responseElem = new Element("success").addContent(
+                new Element("xlink").setText(
+                        "local://xml.extent.get?id="+id+"&wfs=default&typename="+ ExtentsStrategy.NON_VALIDATED_TYPE+"&"));
         return responseElem;
     }
 
