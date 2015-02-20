@@ -93,9 +93,9 @@
         <value>gn_search_geocat.css</value>
         <value>gn_search_geocat.js</value>
         <value>geocat_shared_objects_app.js</value>
-        <value>geocat_shared_objects_app_default.css</value>
+        <value>geocat_shared_objects_app_geocat.css</value>
         <value>geocat_shared_objects_edit.js</value>
-        <value>geocat_shared_objects_edit_default.css</value>
+        <value>geocat_shared_objects_edit_geocat.css</value>
         <!-- END GEOCAT -->
     </util:list>
 
