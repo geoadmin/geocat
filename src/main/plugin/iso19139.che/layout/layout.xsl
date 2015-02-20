@@ -56,7 +56,7 @@
           </xsl:when>
           <xsl:when test="gmd:EX_BoundingPolygon">
             <img class="gn-img-extent"
-                 src="region.getmap.png?mapsrs=EPSG:21781&amp;width=250&amp;background=geocat&amp;id=metadata:@id358:@xpathgmd:identificationInfo{$xpath}/gmd:EX_BoundingPolygon"/>
+                 src="region.getmap.png?mapsrs=EPSG:21781&amp;width=250&amp;background=geocat&amp;id=metadata:@id{$metadataId}:@xpathgmd:identificationInfo{$xpath}/gmd:EX_BoundingPolygon"/>
           </xsl:when>
         </xsl:choose>
       </xsl:with-param>
