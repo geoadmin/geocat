@@ -186,7 +186,7 @@ public class Add implements Service {
 
         final Element responseElem = new Element("success").addContent(
                 new Element("xlink").setText(
-                        "local://xml.extent.get?id="+id+"&wfs=default&typename="+ ExtentsStrategy.NON_VALIDATED_TYPE+"&"));
+                        "local://xml.extent.get?id="+id+"&wfs=default&typename="+ ExtentsStrategy.NON_VALIDATED_TYPE+"&*"));
         return responseElem;
     }
 

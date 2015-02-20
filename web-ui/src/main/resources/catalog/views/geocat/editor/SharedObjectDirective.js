@@ -4,12 +4,20 @@
   goog.require('gn_editor_xml_service');
   goog.require('gn_metadata_manager_service');
   goog.require('gn_schema_manager_service');
+  goog.require('geocat_shared_objects_extent_directive');
+  goog.require('geocat_shared_objects_extent_controller');
 
   var module = angular.module('gc_sharedobject', [
     'gn_metadata_manager_service',
     'gn_schema_manager_service',
-    'gn_editor_xml_service'
+    'gn_editor_xml_service',
+    'geocat_shared_objects_extent_directive',
+    'geocat_shared_objects_extent_controller'
   ]);
+
+  module.config(['$LOCALES', function($LOCALES) {
+    $LOCALES.push('shared');
+  }]);
 
 
   module.directive('gcAddSharedobject', [
@@ -182,7 +190,6 @@
                 });
               }
             });
-
             return false;
           };
 
@@ -201,15 +208,61 @@
             });
 
           }
+
+          scope.editEntry = function() {
+            gcSharedobject.editEntry(this.templateType, scope);
+          };
+
         }
       };
     }]);
 
+  /**
+   * This controller is used to controller the content of the extent
+   * modal.
+   */
+  module.controller('ExtentControlEditor', [
+    '$scope',
+    'extentsService',
+    'gnUrlUtils',
+    function($scope, extentsService, gnUrlUtils) {
+      $scope.formObj = angular.copy(extentsService.formObjTemplate);
+      $scope.formObj.typename = 'gn:non_validated';
+
+      $scope.finishEdit = function() {
+        extentsService.updateExtent(extentsService.addService, $scope.formObj).
+        success(function(data) {
+              var params = gnUrlUtils.parseKeyValue(data[0].split('?')[1]);
+              params.xlink = data[0];
+
+              $('#sharedobjectModal').modal('hide');
+
+              // get the first extent directive to insert XML snippet once.
+              var scope = angular.element($(
+                  '[gc-add-sharedobject][data-template-type="extents"]').
+                  first().children()[0]).
+                  scope().$parent;
+
+              scope.addEntry(params, undefined, true);
+            });
+      };
+  }]);
+
   module.service('gcSharedobject', [
     '$q',
     '$http',
-    function ($q, $http) {
+    '$rootScope',
+    '$timeout',
+    'gnPopup',
+    function ($q, $http, $rootScope, $timeout, gnPopup) {
 
+      /**
+       * Load a list of shared object and format response
+       * @param type
+       * @param searchValue
+       * @param validated
+       * @returns {*}
+       */
       this.loadRecords = function (type, searchValue, validated) {
 
         var defer = $q.defer();
@@ -247,6 +300,32 @@
               defer.reject(data);
             });
         return defer.promise;
+      };
+
+      /**
+       * Edit or create a shared object.
+       * @param type
+       */
+      this.editEntry = function(type, directiveScope) {
+        gnPopup.createModal({
+          title: 'createNewSharedObject',
+          id: 'sharedobjectModal',
+          controller: 'ExtentControlEditor',
+          content: '<form class="form-horizontal" role="form"><div gc-edit-extent="' + url + '"></div></form>',
+          footer: '<div class="modal-footer">' +
+            '<button type="button" class="btn btn-default" data-dismiss="modal" translate>cancel</button>' +
+            '<button type="button" class="btn btn-primary" data-ng-click="finishEdit()" translate>accept</button>' +
+            '</div>'
+        });
+        $timeout(function() {
+          $rootScope.$broadcast('modalShown', {
+            feature: {
+              geoId: {},
+              desc: {},
+              geom: 'POLYGON((481500 88000,481500 297250,832500 297250,832500 88000,481500 88000))'
+            }
+          })
+        }, 200, true);
       };
     }]);
 
