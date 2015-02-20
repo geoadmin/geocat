@@ -209,7 +209,7 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
             KeywordsSearcher searcher = new KeywordsSearcher(this._isoLanguagesMapper, _thesaurusMan);
 
             KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(this._isoLanguagesMapper);
-            builder.addLang(_currentLocale)
+            builder.addLang(_currentLocale).addLang("fre").addLang("eng").addLang("ger").addLang("ita")
                     .keyword("*", KeywordSearchType.MATCH, false).maxResults(maxResults - keywords.getContentSize())
                     .addThesaurus(thesaurusName);
             KeywordSearchParams params = builder.build();
@@ -242,7 +242,17 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
 
             final String xlinkHref = createXlinkHRefImpl(bean, validateName(bean.getThesaurusKey()));
             Utils.addChild(e, REPORT_XLINK, xlinkHref);
-            Utils.addChild(e, REPORT_DESC, bean.getDefaultValue());
+            String desc = bean.getDefaultValue();
+            if (desc == null || desc.isEmpty()) {
+                for (String word : bean.getValues().values()) {
+                    if (desc != null && !desc.isEmpty()) {
+                        break;
+                    }
+                    desc = word;
+                }
+            }
+
+            Utils.addChild(e, REPORT_DESC, desc);
             Utils.addChild(e, REPORT_VALIDATED, "" + validated);
             Utils.addChild(e, REPORT_SEARCH, bean.getThesaurusKey() + bean.getUriCode() + bean.getDefaultValue());
 
