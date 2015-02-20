@@ -22,7 +22,7 @@
         restrict: 'A',
         transclude: true,
         templateUrl: '../../catalog/components/edit/' +
-        'multilingualfield/partials/multilingualfield.html',
+            'multilingualfield/partials/multilingualfield.html',
         scope: {
           mainLanguage: '@',
           expanded: '@'
@@ -75,11 +75,11 @@
           function getISO3Code(langId) {
             var langCode = null;
             angular.forEach(scope.languages,
-              function(key, value) {
-                if (key === '#' + langId) {
-                  langCode = value;
+                function(key, value) {
+                  if (key === '#' + langId) {
+                    langCode = value;
+                  }
                 }
-              }
             );
             return langCode;
           }
@@ -95,7 +95,7 @@
               if (langId) {
                 // Add the language label
                 inputEl.before('<span class="label label-primary">' +
-                $translate(getISO3Code(langId)) + '</span>');
+                    $translate(getISO3Code(langId)) + '</span>');
 
                 // Set the direction attribute
                 if ($.inArray(langId, rtlLanguages) !== -1) {
@@ -122,7 +122,7 @@
             $(element).find(formFieldsSelector).each(function() {
               if ($(this).attr('lang') === scope.currentLanguage ||
                 ($(this).attr('lang') === mainLanguage &&
-                scope.currentLanguage === '')) {
+                  scope.currentLanguage === '')) {
                 $(this).removeClass('hidden').focus();
               } else {
                 $(this).addClass('hidden');
@@ -137,7 +137,7 @@
 
           scope.displayAllLanguages = function(force, focus) {
             scope.expanded =
-              force !== undefined ? force : !scope.expanded;
+                force !== undefined ? force : !scope.expanded;
 
             $(element).find(formFieldsSelector).each(function() {
               if (scope.expanded) {
