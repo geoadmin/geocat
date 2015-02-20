@@ -32,8 +32,10 @@
     'gc_sharedobject'
   ]);
 
-  // Define the translation files to load
-  module.constant('$LOCALES', ['core', 'search', 'editor']);
+  module.config(['$LOCALES', function($LOCALES) {
+    $LOCALES.push('search');
+    $LOCALES.push('editor');
+  }]);
 
   module.constant('gnViewerSettings', {});
 
