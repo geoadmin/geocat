@@ -23,22 +23,17 @@
 
 package org.fao.geonet.geocat.services.selection;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.utils.Log;
+import org.fao.geonet.services.metadata.BatchOpsMetadataReindexer;
 import org.jdom.Element;
 
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Set;
-import javax.annotation.Nullable;
 
 //=============================================================================
 
@@ -68,37 +63,37 @@ public class Index implements Service {
     public Element exec(Element params, final ServiceContext context) throws Exception {
         final SelectionManager manager = SelectionManager.getManager(context.getUserSession());
         final Set<String> selection = manager.getSelection(SelectionManager.SELECTION_METADATA);
-
         int index = 0;
-        if (selection != null && !selection.isEmpty()) {
-            if (selection.size() > maxToIndex) {
-                return new Element("error").setText("Attempted to index " + selection.size() + ".  The maximum allowed elements: " +
-                                                    maxToIndex);
+        if (selection != null) {
+            synchronized (selection) {
+                if (!selection.isEmpty()) {
+                    if (false && selection.size() > maxToIndex) {
+                        return new Element("error").setText("Attempted to index " + selection.size() + ".  The maximum allowed elements: " +
+
+                                                            maxToIndex);
+                    }
+                    final DataManager dataManager = context.getBean(DataManager.class);
+                    Set<Integer> ids = Sets.newHashSet();
+
+                    for (String uuid : selection) {
+                        try {
+                            final String metadataId = dataManager.getMetadataId(uuid);
+                            if (metadataId != null) {
+                                ids.add(Integer.valueOf(metadataId));
+                            }
+                        } catch (Exception e) {
+                            try {
+                                ids.add(Integer.valueOf(uuid));
+                            } catch (NumberFormatException nfe) {
+                                // skip
+                            }
+                        }
+                    }
+
+                    index = ids.size();
+                    new BatchOpsMetadataReindexer(dataManager, ids).process();
+                }
             }
-            final DataManager dataManager = context.getBean(DataManager.class);
-            index = selection.size();
-            final List<String> finalSelection = Lists.transform(Lists.newArrayList(selection), new Function<String, String>() {
-                @Nullable
-                @Override
-                public String apply(String input) {
-                    try {
-                        return dataManager.getMetadataId(input);
-                    } catch (Exception e) {
-                        return input;
-                    }
-                }
-            });
-            final GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-            gc.getThreadPool().runTask(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        dataManager.indexMetadata(finalSelection);
-                    } catch (Exception e) {
-                        Log.error(Geonet.INDEX_ENGINE, "Exception thrown during indexing", e);
-                    }
-                }
-            });
         }
 
         return new Element("results").setAttribute("numberIndexed", "" + index);
