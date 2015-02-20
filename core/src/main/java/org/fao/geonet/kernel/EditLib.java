@@ -31,8 +31,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import jeeves.xlink.XLink;
-import jeeves.xlink.Processor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.jxpath.ri.parser.Token;
 import org.apache.commons.jxpath.ri.parser.XPathParser;
@@ -40,7 +38,11 @@ import org.apache.commons.jxpath.ri.parser.XPathParserConstants;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.kernel.schema.*;
+import org.fao.geonet.kernel.schema.ISOPlugin;
+import org.fao.geonet.kernel.schema.MetadataAttribute;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.MetadataType;
+import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jaxen.JaxenException;
@@ -58,8 +60,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -130,8 +130,7 @@ public class EditLib {
         if(Log.isDebugEnabled(Geonet.EDITOR))
             Log.debug(Geonet.EDITOR,"MD before editing infomation:\n" + Xml.getString(md));
 
-		Map<String, Integer> xlinks = new HashMap<String,Integer>();
-        enumerateTree(md,id,parent,xlinks, false);
+        enumerateTree(md,id,parent);
 		expandTree(scm.getSchema(schema), md);
         if(Log.isDebugEnabled(Geonet.EDITOR))
             Log.debug(Geonet.EDITOR,"MD after editing infomation:\n" + Xml.getString(md));
@@ -144,8 +143,7 @@ public class EditLib {
      * @throws Exception
      */
 	public void enumerateTree(Element md) throws Exception {
-        Map<String, Integer> xlinks = new HashMap<String,Integer>();
-		enumerateTree(md,1,0,xlinks, false);
+		enumerateTree(md,1,0);
 	}
 
     /**
@@ -157,8 +155,7 @@ public class EditLib {
      * @throws Exception
      */
 	public void enumerateTreeStartingAt(Element md, int id, int parent) throws Exception {
-        Map<String, Integer> xlinks = new HashMap<String,Integer>();
-		enumerateTree(md,id,parent,xlinks,false);
+		enumerateTree(md,id,parent);
 	}
 
     /**
@@ -481,7 +478,7 @@ public class EditLib {
      * @return the number of updates.
      */
     public int addElementOrFragmentFromXpaths(Element metadataRecord, Map<String, AddElemValue> xmlAndXpathInputs,
-                                              MetadataSchema metadataSchema, boolean createXpathNodeIfNotExist, HashSet<Element> updatedXLinks) {
+                                              MetadataSchema metadataSchema, boolean createXpathNodeIfNotExist) {
 
 
         int numUpdated = 0;
@@ -1367,43 +1364,28 @@ public class EditLib {
      * @return
      * @throws Exception
      */
-	private int enumerateTree(Element md, int ref, int parent, Map<String,Integer> xlinks, boolean parentInDisabledXLinkElem) throws Exception {
+	private int enumerateTree(Element md, int ref, int parent) throws Exception {
 
-		int thisRef = ref;
-		int thisParent = ref;
-        // GEOCAT
-		boolean inDisabledXlinkElem = parentInDisabledXLinkElem;
-        String href = XLink.getHRef(md);
-        if(href!=null) {
-            href = Processor.mapURI(href);
-            if(xlinks.containsKey(href)) {
-                inDisabledXlinkElem = true;
-            }
-            xlinks.put(href, thisRef);
-        }
-        // END GEOCAT
+        int thisRef = ref;
+        int thisParent = ref;
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> list = md.getChildren();
 
         for (Element child : list) {
             if (!Edit.NAMESPACE.getPrefix().equals(child.getNamespacePrefix())) {
-                ref = enumerateTree(child, ref + 1, thisParent, xlinks, inDisabledXlinkElem);
+                ref = enumerateTree(child, ref + 1, thisParent);
             }
         }
 
-		Element elem = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
-		elem.setAttribute(new Attribute(Edit.Element.Attr.REF, (inDisabledXlinkElem ? "d_" : "")+thisRef));
-		if(inDisabledXlinkElem) {
-		    elem.setAttribute(new Attribute(Edit.Element.Attr.DISABLED, "true"));
-		}
+        Element elem = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
+        elem.setAttribute(new Attribute(Edit.Element.Attr.REF, thisRef +""));
+        elem.setAttribute(new Attribute(Edit.Element.Attr.PARENT, parent +""));
+        elem.setAttribute(new Attribute(Edit.Element.Attr.UUID, md.getQualifiedName()+"_"+UUID.randomUUID().toString()));
+        md.addContent(elem);
 
-		elem.setAttribute(new Attribute(Edit.Element.Attr.PARENT, parent +""));
-		elem.setAttribute(new Attribute(Edit.Element.Attr.UUID, md.getQualifiedName()+"_"+UUID.randomUUID().toString()));
-		md.addContent(elem);
-
-		return ref;
-	}
+        return ref;
+    }
 
     /**
      * Finds the ref element with the maximum ref value and returns it.

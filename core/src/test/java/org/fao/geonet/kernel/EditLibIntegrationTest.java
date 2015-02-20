@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import static org.fao.geonet.Assert.assertEquals;
@@ -571,8 +570,8 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         updates.put(charStringXpath, new AddElemValue(text));
         updates.put(attXPath, new AddElemValue(att));
 
-        final int numUpdates = new EditLib(_schemaManager).addElementOrFragmentFromXpaths(metadataElement, updates, schema, true,
-                new HashSet<Element>());
+        final int numUpdates = new EditLib(_schemaManager).addElementOrFragmentFromXpaths(metadataElement, updates, schema, true
+        );
 
         assertEquals(2, numUpdates);
 

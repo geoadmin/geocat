@@ -244,7 +244,7 @@ public class AjaxEditUtils extends EditUtils {
 
         // Deals with XML fragments and XPath to insert or update
         if (!xmlAndXpathInputs.isEmpty()) {
-            editLib.addElementOrFragmentFromXpaths(md, xmlAndXpathInputs, metadataSchema, true, updatedXLinks);
+            editLib.addElementOrFragmentFromXpaths(md, xmlAndXpathInputs, metadataSchema, true);
             // GEOCAT
             for (String xpath : xmlAndXpathInputs.keySet()) {
                 EditLib.SelectResult selectResult = editLib.trySelectNode(md, metadataSchema, xpath);
