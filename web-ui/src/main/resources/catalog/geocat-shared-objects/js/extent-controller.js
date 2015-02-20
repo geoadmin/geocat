@@ -61,7 +61,7 @@
           });
           $scope.finishEdit = function () {
             $('#editModal').modal('hide');
-            extentsService.updateExtent(service.addService, $scope.formObj).success(function(){
+            extentsService.updateExtent(extentsService.addService, $scope.formObj).success(function(){
               if ($location.path().contains("nonvalidated")) {
                 setTimeout(function () {
                   $location.path('/validated/extents');
@@ -158,8 +158,7 @@
             'typename=' + o.typename,
             'geom=' + o.geomString,
             'crs=' + o.proj,
-            'format=' + 'WKT',
-            '_content_type=' + 'json'
+            'format=WKT'
           ];
           if (o.id !== undefined) {
             params.push('id=' + o.id);
@@ -170,6 +169,9 @@
           return $http({
             method: 'POST',
             url: service,
+            params: {
+              _content_type: 'json'
+            },
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             data: params.join("&")
           });

@@ -78,12 +78,9 @@
 
       var Modal = function(options, scope) {
         var element = angular.element('' +
-            '<div class="modal fade in"' +
-                (options.id ? (' id="'+ options.id + '"') : ('')) + '>' +
-                '<div class="modal-dialog in">' +
-            '  <div class="modal-content"' +
-                (options.controller ? (' ng-controller="'+ options.controller + '"') :
-            ('')) + '>' +
+            '<div class="modal fade in">' +
+            '<div class="modal-dialog in">' +
+            '  <div class="modal-content">' +
             '    <div class="modal-header">' +
             '      <button type="button" class="close" data-dismiss="modal">' +
             '        &times;</button>' +
@@ -91,7 +88,6 @@
             '        <span>' + options.title + '</span></h5>' +
             '      </div>' +
             '    <div class="modal-body">' + options.content + '</div>' +
-                 options.footer || '',
             '  </div>' +
             '</div>' +
             '</div>');
