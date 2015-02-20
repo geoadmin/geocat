@@ -210,51 +210,24 @@
           }
 
           scope.editEntry = function() {
-            gcSharedobject.editEntry(this.templateType, scope);
+            gcSharedobject.editEntry(this.templateType);
           };
 
         }
       };
     }]);
 
-  /**
-   * This controller is used to controller the content of the extent
-   * modal.
-   */
-  module.controller('ExtentControlEditor', [
-    '$scope',
-    'extentsService',
-    'gnUrlUtils',
-    function($scope, extentsService, gnUrlUtils) {
-      $scope.formObj = angular.copy(extentsService.formObjTemplate);
-      $scope.formObj.typename = 'gn:non_validated';
-
-      $scope.finishEdit = function() {
-        extentsService.updateExtent(extentsService.addService, $scope.formObj).
-        success(function(data) {
-              var params = gnUrlUtils.parseKeyValue(data[0].split('?')[1]);
-              params.xlink = data[0];
-
-              $('#sharedobjectModal').modal('hide');
-
-              // get the first extent directive to insert XML snippet once.
-              var scope = angular.element($(
-                  '[gc-add-sharedobject][data-template-type="extents"]').
-                  first().children()[0]).
-                  scope().$parent;
-
-              scope.addEntry(params, undefined, true);
-            });
-      };
-  }]);
-
   module.service('gcSharedobject', [
     '$q',
     '$http',
     '$rootScope',
     '$timeout',
+    'gnEditor',
     'gnPopup',
-    function ($q, $http, $rootScope, $timeout, gnPopup) {
+    'gnUrlUtils',
+    'extentsService',
+    function ($q, $http, $rootScope, $timeout, gnEditor, gnPopup,
+              gnUrlUtils, extentsService) {
 
       /**
        * Load a list of shared object and format response
@@ -302,30 +275,108 @@
         return defer.promise;
       };
 
+      var scope;
+      var finishEditExtent = function() {
+        var service = scope.xlink ? extentsService.updateService :
+            extentsService.addService;
+
+        extentsService.updateExtent(service, scope.formObj).
+            success(function(data) {
+
+              $('#sharedobjectModal').modal('hide');
+
+              if(!scope.xlink) {
+
+                var params = gnUrlUtils.parseKeyValue(data[0].split('?')[1]);
+                params.xlink = data[0];
+
+                // get the first extent directive to insert XML snippet once.
+                var directiveScope = angular.element($(
+                    '[gc-add-sharedobject][data-template-type="extents"]').
+                    first().children()[0]).
+                    scope().$parent;
+
+                directiveScope.addEntry(params, undefined, true);
+              }
+              else {
+                gnEditor.save(true);
+              }
+            });
+      };
+
       /**
        * Edit or create a shared object.
        * @param type
        */
-      this.editEntry = function(type, directiveScope) {
-        gnPopup.createModal({
-          title: 'createNewSharedObject',
-          id: 'sharedobjectModal',
-          controller: 'ExtentControlEditor',
-          content: '<form class="form-horizontal" role="form"><div gc-edit-extent="' + url + '"></div></form>',
-          footer: '<div class="modal-footer">' +
-            '<button type="button" class="btn btn-default" data-dismiss="modal" translate>cancel</button>' +
-            '<button type="button" class="btn btn-primary" data-ng-click="finishEdit()" translate>accept</button>' +
-            '</div>'
-        });
-        $timeout(function() {
-          $rootScope.$broadcast('modalShown', {
-            feature: {
-              geoId: {},
-              desc: {},
-              geom: 'POLYGON((481500 88000,481500 297250,832500 297250,832500 88000,481500 88000))'
-            }
-          })
-        }, 200, true);
+      this.editEntry = function(type, xlink) {
+        scope = $rootScope.$new();
+        scope.formObj = angular.copy(extentsService.formObjTemplate);
+        scope.xlink = xlink;
+
+        if(!type && xlink) {
+          if(xlink.indexOf('xml.extent.get') >= 0) {
+            type = 'extents';
+          }
+        }
+        scope.type = type;
+
+        if(type == 'extents') {
+
+          scope.finishEdit = finishEditExtent;
+
+          var modalConfig = {
+            title: 'createNewSharedObject',
+            id: 'sharedobjectModal',
+            content: '<form class="form-horizontal" role="form"><div gc-edit-extent=""></div></form>',
+            footer: '<div class="modal-footer">' +
+                '<button type="button" class="btn btn-default" data-dismiss="modal" translate>cancel</button>' +
+                '<button type="button" class="btn btn-primary" data-ng-click="finishEdit()" translate>accept</button>' +
+                '</div>'
+          };
+
+          // Extent creation
+          if(!xlink) {
+            scope.formObj.typename = 'gn:non_validated';
+            gnPopup.createModal(modalConfig, scope);
+            $timeout(function() {
+              $rootScope.$broadcast('modalShown', {
+                feature: {
+                  geoId: {},
+                  desc: {},
+                  geom: 'POLYGON((481500 88000,481500 297250,832500 297250,832500 88000,481500 88000))'
+                }
+              })
+            }, 200, true);
+
+          }
+          // Extent edition
+          else {
+
+            var params = gnUrlUtils.parseKeyValue(xlink.split('?')[1]);
+            angular.extend(scope.formObj, {
+              id: params.id,
+              typename: params.typename
+            });
+
+            $http({
+              method: 'GET',
+              url: extentsService.getService,
+              params: {
+                id: scope.formObj.id,
+                typename: scope.formObj.typename,
+                format: 'wkt',
+                crs: 'EPSG:21781',
+                _content_type: 'json'
+              }
+            }).success(function (data) {
+
+              gnPopup.createModal(modalConfig, scope);
+              $timeout(function() {
+                $rootScope.$broadcast('modalShown',  data[0].featureType)
+              }, 200, true);
+            });
+          }
+        }
       };
     }]);
 
@@ -334,8 +385,10 @@
    * the editor form as it would require to init the model
    * from the form content using ng-init for example.
    */
-  module.directive('gcSharedObjectUpdate', ['gnSearchManagerService',
-    function(gnSearchManagerService) {
+  module.directive('gcSharedObjectUpdate', [
+    'gnSearchManagerService',
+    'gcSharedobject',
+    function(gnSearchManagerService, gcSharedobject) {
       return {
         restrict: 'A',
         scope: {
@@ -359,8 +412,11 @@
                       data.metadata[0]['geonet:info'].id+'/tab/simple');
                 });
               } else {
+                gcSharedobject.editEntry(undefined, scope.href);
+/*
                 window.open('admin.shared.objects.edit#/edit?href=' +
                     encodeURIComponent(scope.href), '_blank');
+*/
               }
             });
             element.keyup();
