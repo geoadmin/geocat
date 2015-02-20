@@ -1,5 +1,6 @@
 package v2110;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import jeeves.xlink.XLink;
@@ -28,6 +29,7 @@ import java.util.regex.Pattern;
 import static jeeves.xlink.XLink.HREF;
 import static jeeves.xlink.XLink.LOCAL_PROTOCOL;
 import static jeeves.xlink.XLink.NAMESPACE_XLINK;
+import static jeeves.xlink.XLink.ROLE;
 import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED;
 import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_EXTRA_VALIDATED;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
@@ -39,6 +41,7 @@ import static org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces.CHE;
  */
 public class SharedObjects implements DatabaseMigrationTask {
 
+    private final static Pattern PARAMS_PATTERN = Pattern.compile("(\\?|\\&)([^=]+)=([^\\&]+)");
     private final static Pattern ID_PATTERN = Pattern.compile(".*id=(\\d+).*");
     private final static Pattern ROLE_PATTERN = Pattern.compile(".*role=([^&]+).*");
     protected static final String PREPARED_STATEMENT_SQL = "INSERT INTO public.metadata(" +
@@ -116,6 +119,66 @@ public class SharedObjects implements DatabaseMigrationTask {
                                             href += "&process=*//gmd:CI_RoleCode/@codeListValue~" + role;
                                         }
                                         el.setAttribute(HREF, href, NAMESPACE_XLINK);
+                                    }
+                                } else if (atValue != null && atValue.contains("che.keyword.get")) {
+                                    String thesaurus = null;
+                                    String keywordId = null;
+                                    String langs = null;
+                                    final Matcher matcher = PARAMS_PATTERN.matcher(atValue);
+                                    while(matcher.find()) {
+                                        String key = matcher.group(2);
+                                        String value = matcher.group(3);
+
+                                        switch (key) {
+                                            case "thesaurus" :
+                                                thesaurus = value;
+                                                break;
+                                            case "id" :
+                                                keywordId = value;
+                                                break;
+                                            case "locales" :
+                                                String[] twoLetterLocales = value.split(",");
+                                                for (int i = 0; i < twoLetterLocales.length; i++) {
+                                                    String twoLetterLocale = twoLetterLocales[i];
+                                                    switch (twoLetterLocale.toLowerCase()) {
+                                                        case "de":
+                                                        case "ge":
+                                                            twoLetterLocales[i] = "ger";
+                                                            break;
+                                                        case "fr":
+                                                            twoLetterLocales[i] = "fre";
+                                                            break;
+                                                        case "it":
+                                                            twoLetterLocales[i] = "ita";
+                                                            break;
+                                                        case "en":
+                                                            twoLetterLocales[i] = "eng";
+                                                            break;
+                                                        case "rm":
+                                                            twoLetterLocales[i] = "roh";
+                                                            break;
+                                                        default:
+                                                            // skip
+                                                    }
+                                                }
+                                                langs = Joiner.on(',').join(twoLetterLocales);
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+
+
+                                    if (thesaurus != null && keywordId != null) {
+                                        if (langs == null) {
+                                            langs = "ger,fre,ita,eng";
+                                        }
+                                        String href = "local://eng/xml.keyword.get?thesaurus=" + thesaurus + "&id=" + keywordId +
+                                                      "&multiple=false&lang=" + langs + "&textgroupOnly";
+                                        el.setAttribute(HREF, href, NAMESPACE_XLINK);
+                                    } else {
+                                        el.removeAttribute(HREF, NAMESPACE_XLINK);
+                                        el.removeAttribute(ROLE, NAMESPACE_XLINK);
                                     }
                                 }
                             }
