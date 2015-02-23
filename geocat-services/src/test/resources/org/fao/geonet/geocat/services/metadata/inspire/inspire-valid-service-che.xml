@@ -325,7 +325,7 @@
                 </che:CHE_CI_ResponsibleParty>
             </gmd:pointOfContact>
             <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink"
-                xlink:href="local://che.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F14891&amp;locales=en,it,de,fr"
+                xlink:href="local://xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F14891&amp;locales=en,it,de,fr"
                 xlink:show="embed">
                 <gmd:MD_Keywords>
                     <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
@@ -370,7 +370,7 @@
                 </gmd:MD_Keywords>
             </gmd:descriptiveKeywords>
             <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink"
-                xlink:href="local://che.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F5167&amp;locales=en,it,de,fr"
+                xlink:href="local://xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F5167&amp;locales=en,it,de,fr"
                 xlink:show="embed">
                 <gmd:MD_Keywords>
                     <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
@@ -414,7 +414,7 @@
                 </gmd:MD_Keywords>
             </gmd:descriptiveKeywords>
             <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink"
-                xlink:href="local://che.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A%2F%2Fgeocat.ch%2Fconcept%2344&amp;locales=en,it,de,fr"
+                xlink:href="local://xml.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A%2F%2Fgeocat.ch%2Fconcept%2344&amp;locales=en,it,de,fr"
                 xlink:show="embed">
                 <gmd:MD_Keywords>
                     <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
@@ -458,7 +458,7 @@
                 </gmd:MD_Keywords>
             </gmd:descriptiveKeywords>
             <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink"
-                xlink:href="local://che.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F1984&amp;locales=en,it,de,fr"
+                xlink:href="local://xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F1984&amp;locales=en,it,de,fr"
                 xlink:show="embed">
                 <gmd:MD_Keywords>
                     <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
@@ -502,7 +502,7 @@
                 </gmd:MD_Keywords>
             </gmd:descriptiveKeywords>
             <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink"
-                xlink:href="local://che.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F4398&amp;locales=en,it,de,fr"
+                xlink:href="local://xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F4398&amp;locales=en,it,de,fr"
                 xlink:show="embed">
                 <gmd:MD_Keywords>
                     <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
@@ -546,7 +546,7 @@
                 </gmd:MD_Keywords>
             </gmd:descriptiveKeywords>
             <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink"
-                xlink:href="local://che.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F14940&amp;locales=en,it,de,fr"
+                xlink:href="local://xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F14940&amp;locales=en,it,de,fr"
                 xlink:show="embed">
                 <gmd:MD_Keywords>
                     <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
@@ -590,7 +590,7 @@
                 </gmd:MD_Keywords>
             </gmd:descriptiveKeywords>
             <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink"
-                xlink:href="local://che.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&amp;id=urn%3Ainspire%3Aservice%3Ataxonomy%3AspatialFeatureMatchingService&amp;locales=fr,en,de,it"
+                xlink:href="local://xml.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&amp;id=urn%3Ainspire%3Aservice%3Ataxonomy%3AspatialFeatureMatchingService&amp;locales=fr,en,de,it"
                 xlink:role="" xlink:show="embed">
                 <gmd:MD_Keywords>
                     <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">

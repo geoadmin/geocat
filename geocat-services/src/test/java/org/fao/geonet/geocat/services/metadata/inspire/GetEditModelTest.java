@@ -590,7 +590,7 @@ public class GetEditModelTest {
                 }
             }
 
-            this.sharedObjects.put("local://che.keyword.get?thesaurus=null&id=http%3A%2F%2Ftest.com%2FINSPIRE&locales=en,it,de,fr",
+            this.sharedObjects.put("local://xml.keyword.get?thesaurus=null&id=http%3A%2F%2Ftest.com%2FINSPIRE&multiple=false&lang=fre,eng,ger,ita,roh&textgroupOnly",
                     SaveServiceTestImpl.createKeyword("eng", "INSPIRE", "local._none_.geocat.ch"));
         }
 

@@ -138,10 +138,10 @@ public class CharacterStringToLocalisedTest {
                 + "/xsl/characterstring-to-localisedcharacterstring.xsl";
         Element testData = Xml
                 .loadString(
-                        "<descriptiveKeywords xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"local://che.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A//geocat.ch/concept%23154&amp;amp;locales=DE,FR,IT,EN\"/>",
+                        "<descriptiveKeywords xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"local://xml.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A//geocat.ch/concept%23154&amp;multiple=false&amp;lang=fre,eng,ger,ita,roh&amp;textgroupOnly\"/>",
                         false);
         Element transformed = Xml.transform(testData, IO.toPath(pathToXsl));
-        String expected = "local://che.keyword.get?thesaurus=local._none_.geocat.ch&id=http%3A//geocat.ch/concept%23154&locales=DE,FR,IT,EN";
+        String expected = "local://xml.keyword.get?thesaurus=local._none_.geocat.ch&id=http%3A//geocat.ch/concept%23154&&multiple=false&lang=fre,eng,ger,ita,roh&textgroupOnly";
         assertEquals(expected, transformed.getAttributeValue("href", XLink.NAMESPACE_XLINK));
         assertFalse(Xml.getString(transformed).contains("&amp;amp;"));
     }

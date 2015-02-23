@@ -1390,7 +1390,7 @@ public class Save implements Service {
         @Override
         public String createHref(JSONObject jsonObject, Element elem, String identType) throws Exception {
 
-            String hrefTemplate = "local://che.keyword.get?thesaurus=%s&amp;id=%s&amp;locales=fr,en,de,it";
+            String hrefTemplate = "local://xml.keyword.get?thesaurus=%s&amp;id=%s&amp;multiple=false&amp;lang=fre,eng,ger,ita,roh&amp;textgroupOnly";
 
             String thesaurus = jsonObject.optString(JSON_IDENTIFICATION_KEYWORD_THESAURUS);
 

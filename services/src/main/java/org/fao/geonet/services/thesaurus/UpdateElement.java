@@ -24,16 +24,14 @@
 package org.fao.geonet.services.thesaurus;
 
 
-import static org.fao.geonet.services.thesaurus.AddElement.*;
-
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Pair;
@@ -43,11 +41,14 @@ import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.jdom.Element;
 
-import java.nio.file.Path;
-
 import java.net.URLEncoder;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
+
+import static org.fao.geonet.services.thesaurus.AddElement.DEFINITION;
+import static org.fao.geonet.services.thesaurus.AddElement.PREF_LAB;
+import static org.fao.geonet.services.thesaurus.AddElement.getLocalizedElements;
 
 //=============================================================================
 
@@ -82,10 +83,10 @@ public class UpdateElement implements Service {
 		ThesaurusManager manager = gc.getBean(ThesaurusManager.class);
 		Thesaurus thesaurus = manager.getThesaurusByName(ref);
 
-		Processor.uncacheXLinkUri(XLink.LOCAL_PROTOCOL + "che.keyword.get?thesaurus=" + ref + "&id=" +
-                                  URLEncoder.encode(namespace + oldid, "UTF-8").toLowerCase() + "&locales=en,it,de,fr");
-		Processor.uncacheXLinkUri(XLink.LOCAL_PROTOCOL+"che.keyword.get?thesaurus=" + ref + "&id=" +
-                                  URLEncoder.encode(namespace+oldid, "UTF-8") + "&locales=en,it,de,fr");
+		Processor.uncacheXLinkUri(XLink.LOCAL_PROTOCOL + "xml.keyword.get?thesaurus=" + ref + "&id=" +
+                                  URLEncoder.encode(namespace + oldid, "UTF-8").toLowerCase() + "&multiple=false&lang=fre,eng,ger,ita,roh&textgroupOnly");
+		Processor.uncacheXLinkUri(XLink.LOCAL_PROTOCOL+"xml.keyword.get?thesaurus=" + ref + "&id=" +
+                                  URLEncoder.encode(namespace+oldid, "UTF-8") + "&multiple=false&lang=fre,eng,ger,ita,roh&textgroupOnly");
 
 		if (!(oldid.equals(newid))) {
 			if (thesaurus.isFreeCode(null, newid)) {

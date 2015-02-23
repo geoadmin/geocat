@@ -104,7 +104,6 @@
         <addInterceptUrl  pattern="/srv/\w\w\w/metadata.show.xml!?.*" access="permitAll"/>
         <addInterceptUrl  pattern="/srv/\w\w\w/csw.pdf!?.*" access="permitAll"/>
         <addInterceptUrl  pattern="/srv/\w\w\w/csw.csv!?.*" access="permitAll"/>
-        <addInterceptUrl  pattern="/srv/\w\w\w/geocat.keywords.list!?.*" access="permitAll"/>
         <addInterceptUrl  pattern="/srv/\w\w\w/download.backup!?.*" access="hasRole('Administrator')"/>
         <addInterceptUrl  pattern="/srv/\w\w\w/trigger.backup!?.*" access="hasRole('Administrator')"/>
 

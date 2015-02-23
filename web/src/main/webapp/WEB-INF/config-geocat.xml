@@ -211,11 +211,6 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="che.keyword.get" type="xml">
-            <class name=".geocat.services.thesaurus.GetCHEKeywordById" />
-            <output sheet="skos-to-iso.xsl" contentType="text/xml; charset=UTF-8"/>
-        </service>
-
 	    <service name="geocat.thesaurus.updateelement">
 	      <class name=".geocat.services.thesaurus.GeocatUpdateElement"/>
 	    </service>

@@ -780,7 +780,7 @@ public class GetEditModel implements Service {
             }
 
             final KeywordBean bean = inspireKeywords.get(0);
-            String id = String.format("local://che.keyword.get?thesaurus=%s&id=%s&locales=en,it,de,fr",
+            String id = String.format("local://xml.keyword.get?thesaurus=%s&id=%s&multiple=false&lang=fre,eng,ger,ita,roh&textgroupOnly",
                     bean.getThesaurusKey(),
                     URLEncoder.encode(bean.getUriCode(), "UTF-8"));
             final Element inspireKeywordEl = new Element("keyword").setAttribute(XLink.HREF, id, XLink.NAMESPACE_XLINK);

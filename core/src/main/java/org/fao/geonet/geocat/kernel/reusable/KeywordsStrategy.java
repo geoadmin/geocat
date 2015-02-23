@@ -310,7 +310,8 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
 
     public static String createXlinkHRefImpl(KeywordBean concept, String thesaurus) throws UnsupportedEncodingException {
         String uri = concept.getUriCode();
-        return XLink.LOCAL_PROTOCOL + "che.keyword.get?thesaurus=" + thesaurus + "&id=" + URLEncoder.encode(uri, "utf-8");
+        return XLink.LOCAL_PROTOCOL + "xml.keyword.get?thesaurus=" + thesaurus + "&id=" + URLEncoder.encode(uri, "utf-8") +
+               "&multiple=false&lang=fre,eng,ger,ita,roh&textgroupOnly";
     }
 
     public void performDelete(String[] ids, UserSession session, String thesaurusName) throws Exception {
@@ -400,8 +401,9 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
         String encoded = URLEncoder.encode(keywordUri, "UTF-8");
         Element descriptiveKeywords = new Element("descriptiveKeywords", Geonet.Namespaces.GMD);
 
-        descriptiveKeywords.setAttribute(XLink.HREF, XLink.LOCAL_PROTOCOL + "che.keyword.get?thesaurus=" + thesaurus
-                                                     + "&id=" + encoded + "&locales=en,it,de,fr", XLink.NAMESPACE_XLINK);
+        descriptiveKeywords.setAttribute(XLink.HREF,
+                XLink.LOCAL_PROTOCOL + "xml.keyword.get?thesaurus=" + thesaurus +
+                "&id=" + encoded + "&multiple=false&lang=fre,eng,ger,ita,roh&textgroupOnly", XLink.NAMESPACE_XLINK);
 
         if (!validated) {
             descriptiveKeywords.setAttribute(XLink.ROLE, ReusableObjManager.NON_VALID_ROLE,
@@ -530,7 +532,8 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
 
         String id = URLEncoder.encode(thesaurus.addElement(keywordBean).toString(), "UTF-8");
 
-        return XLink.LOCAL_PROTOCOL + "che.keyword.get?thesaurus=" + NON_VALID_THESAURUS_NAME + "&id=" + id + "&locales=en,it,de,fr";
+        return XLink.LOCAL_PROTOCOL + "xml.keyword.get?thesaurus=" + NON_VALID_THESAURUS_NAME + "&id=" + id +
+               "&multiple=false&lang=fre,eng,ger,ita,roh&textgroupOnly";
     }
 
     @Override

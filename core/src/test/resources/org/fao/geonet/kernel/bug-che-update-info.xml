@@ -493,7 +493,7 @@
                     </che:organisationAcronym>
                 </che:CHE_CI_ResponsibleParty>
             </gmd:pointOfContact>
-            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://che.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A%2F%2Fgeocat.ch%2Fconcept%2373&amp;locales=en,it,de,fr" xlink:show="embed">
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://xml.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A%2F%2Fgeocat.ch%2Fconcept%2373&amp;locales=en,it,de,fr" xlink:show="embed">
                 <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="java:org.fao.geonet.util.XslUtil">
                     <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
                         <gmd:PT_FreeText>
@@ -534,7 +534,7 @@
                     </gmd:thesaurusName>
                 </gmd:MD_Keywords>
             </gmd:descriptiveKeywords>
-            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://che.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F267&amp;locales=en,it,de,fr" xlink:show="embed">
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F267&amp;locales=en,it,de,fr" xlink:show="embed">
                 <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="java:org.fao.geonet.util.XslUtil">
                     <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
                         <gmd:PT_FreeText>
@@ -575,7 +575,7 @@
                     </gmd:thesaurusName>
                 </gmd:MD_Keywords>
             </gmd:descriptiveKeywords>
-            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://che.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F1431&amp;locales=en,it,de,fr" xlink:show="embed">
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F1431&amp;locales=en,it,de,fr" xlink:show="embed">
                 <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="java:org.fao.geonet.util.XslUtil">
                     <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
                         <gmd:PT_FreeText>
@@ -616,7 +616,7 @@
                     </gmd:thesaurusName>
                 </gmd:MD_Keywords>
             </gmd:descriptiveKeywords>
-            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://che.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F282&amp;locales=en,it,de,fr" xlink:show="embed">
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://xml.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F282&amp;locales=en,it,de,fr" xlink:show="embed">
                 <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="java:org.fao.geonet.util.XslUtil">
                     <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
                         <gmd:PT_FreeText>
@@ -657,7 +657,7 @@
                     </gmd:thesaurusName>
                 </gmd:MD_Keywords>
             </gmd:descriptiveKeywords>
-            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://che.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A%2F%2Fgeocat.ch%2Fconcept%23184&amp;locales=en,it,de,fr" xlink:show="embed">
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://xml.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A%2F%2Fgeocat.ch%2Fconcept%23184&amp;locales=en,it,de,fr" xlink:show="embed">
                 <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="java:org.fao.geonet.util.XslUtil">
                     <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
                         <gmd:PT_FreeText>
@@ -698,7 +698,7 @@
                     </gmd:thesaurusName>
                 </gmd:MD_Keywords>
             </gmd:descriptiveKeywords>
-            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://che.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23ef050a66-ded6-4022-b4fe-90aab4a9079e&amp;locales=en,it,de,fr" xlink:show="embed">
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://xml.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23ef050a66-ded6-4022-b4fe-90aab4a9079e&amp;locales=en,it,de,fr" xlink:show="embed">
                 <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="java:org.fao.geonet.util.XslUtil">
                     <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
                         <gmd:PT_FreeText>
@@ -739,7 +739,7 @@
                     </gmd:thesaurusName>
                 </gmd:MD_Keywords>
             </gmd:descriptiveKeywords>
-            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://che.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23ad5b2359-557b-48fc-8572-94364eff949f&amp;locales=en,it,de,fr" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+            <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23ad5b2359-557b-48fc-8572-94364eff949f&amp;locales=en,it,de,fr" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
                 <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="java:org.fao.geonet.util.XslUtil">
                     <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
                         <gmd:PT_FreeText>

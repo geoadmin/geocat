@@ -314,12 +314,12 @@ public class SaveTest extends AbstractCoreIntegrationTest {
         List<?> keywords = identification.getChildren("descriptiveKeywords", GMD);
         assertEquals(3, keywords.size());
         final String buildingsKeywordXlink =
-                "local://che.keyword.get?thesaurus=external.theme.inspire-theme&amp;id=http%3A%2F%2Frdfdata.eionet.europa" +
-                ".eu%2Finspirethemes%2Fthemes%2F15&amp;locales=fr,en,de,it";
+                "local://xml.keyword.get?thesaurus=external.theme.inspire-theme&amp;id=http%3A%2F%2Frdfdata.eionet.europa" +
+                ".eu%2Finspirethemes%2Fthemes%2F15&amp;multiple=false&amp;lang=fre,eng,ger,ita,roh&amp;textgroupOnly";
         assertSharedObject(identification, "gmd:descriptiveKeywords", buildingsKeywordXlink, true);
         final String hydrographyKeywordXlink =
-                "local://che.keyword.get?thesaurus=external.theme.inspire-theme&amp;id=http%3A%2F%2Frdfdata.eionet.europa" +
-                ".eu%2Finspirethemes%2Fthemes%2F9&amp;locales=fr,en,de,it";
+                "local://xml.keyword.get?thesaurus=external.theme.inspire-theme&amp;id=http%3A%2F%2Frdfdata.eionet.europa" +
+                ".eu%2Finspirethemes%2Fthemes%2F9&amp;multiple=false&amp;lang=fre,eng,ger,ita,roh&amp;textgroupOnly";
         assertSharedObject(identification, "gmd:descriptiveKeywords", hydrographyKeywordXlink, true);
 
 
@@ -515,8 +515,8 @@ public class SaveTest extends AbstractCoreIntegrationTest {
                          "extentTypeCode=true",
                 Xml.loadFile(SaveTest.class.getResource("exception-saving-keywords/extent-countries-0.xml")));
 
-        service.addXLink("local://che.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&amp;id=http%3A%2F%2Frdfdata.eionet" +
-                         ".europa.eu%2Finspirethemes%2Fthemes%2F5&amp;locales=fr,en,de,it",
+        service.addXLink("local://xml.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&amp;id=http%3A%2F%2Frdfdata.eionet" +
+                         ".europa.eu%2Finspirethemes%2Fthemes%2F5&amp;multiple=false&amp;lang=fre,eng,ger,ita,roh&amp;textgroupOnly",
                 null);
         service.exec(new Element("request").addContent(Arrays.asList(
                 new Element("id").setText("12"),
@@ -572,8 +572,8 @@ public class SaveTest extends AbstractCoreIntegrationTest {
         JSONObject json = new JSONObject(jsonString);
         json.getJSONObject(Save.JSON_IDENTIFICATION).put(Save.JSON_IDENTIFICATION_TYPE, "service");
 
-        service.addXLink("local://che.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&amp;id=http%3A%2F%2Frdfdata.eionet" +
-                         ".europa.eu%2Finspirethemes%2Fthemes%2F15&amp;locales=fr,en,de,it",
+        service.addXLink("local://xml.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&amp;id=http%3A%2F%2Frdfdata.eionet" +
+                         ".europa.eu%2Finspirethemes%2Fthemes%2F15&amp;multiple=false&amp;lang=fre,eng,ger,ita,roh&amp;textgroupOnly",
                 service.createKeyword("eng", "someword", "external.theme.inspire-service-taxonomy"));
         final Element result = service.exec(new Element("request").addContent(Arrays.asList(
                 new Element("id").setText("12"),
@@ -687,8 +687,8 @@ public class SaveTest extends AbstractCoreIntegrationTest {
                 new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
         service.addXLink("local://xml.user.get?id=5&amp;schema=iso19139.che&amp;role=pointOfContact",
                 new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
-        service.addXLink("local://che.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&amp;" +
-                         "id=urn%3Ainspire%3Aservice%3Ataxonomy%3AcomGeographicCompressionService&amp;locales=fr,en,de,it",
+        service.addXLink("local://xml.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&amp;" +
+                         "id=urn%3Ainspire%3Aservice%3Ataxonomy%3AcomGeographicCompressionService&amp;multiple=false&amp;lang=fre,eng,ger,ita,roh&amp;textgroupOnlyit",
                 new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
         service.addXLink("local://xml.extent.get?id=0&amp;wfs=default&amp;typename=gn:countries&amp;format=gmd_complete&amp;" +
                          "extentTypeCode=true",

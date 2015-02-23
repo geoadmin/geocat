@@ -68,6 +68,7 @@ public class LocalXLink implements DatabaseMigrationTask {
                             xlink.contains("xml.extent.get") ||
                             xlink.contains("xml.user.get") ||
                             xlink.contains("xml.format.get") ||
+                            xlink.contains("xml.keyword.get") ||
                             xlink.contains("che.keyword.get")
                     )) {
                         String newXLink = XLink.LOCAL_PROTOCOL + matcher.group(1);

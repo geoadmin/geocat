@@ -542,7 +542,7 @@ public class ReusableObjManager {
 
     private ReusableTypes hrefToReusableType(String href) {
         ReusableTypes type;
-        if (href.contains("che.keyword.get")) {
+        if (href.contains("che.keyword.get") || href.contains("xml.keyword.get")) {
             type = ReusableTypes.keywords;
         } else if (href.contains("xml.user.get")) {
             type = ReusableTypes.contacts;
