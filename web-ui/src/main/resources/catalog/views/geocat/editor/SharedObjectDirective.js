@@ -6,13 +6,15 @@
   goog.require('gn_schema_manager_service');
   goog.require('geocat_shared_objects_extent_directive');
   goog.require('geocat_shared_objects_extent_controller');
+  goog.require('geocat_shared_objects_keyword_controller');
 
   var module = angular.module('gc_sharedobject', [
     'gn_metadata_manager_service',
     'gn_schema_manager_service',
     'gn_editor_xml_service',
     'geocat_shared_objects_extent_directive',
-    'geocat_shared_objects_extent_controller'
+    'geocat_shared_objects_extent_controller',
+    'geocat_shared_objects_keyword_controller'
   ]);
 
   module.config(['$LOCALES', function($LOCALES) {
@@ -226,8 +228,9 @@
     'gnPopup',
     'gnUrlUtils',
     'extentsService',
+    'keywordsService',
     function ($q, $http, $rootScope, $timeout, gnEditor, gnPopup,
-              gnUrlUtils, extentsService) {
+              gnUrlUtils, extentsService, keywordsService) {
 
       /**
        * Load a list of shared object and format response
@@ -304,13 +307,40 @@
             });
       };
 
+      var finishEditKeyword = function() {
+
+        var params = keywordsService.createUpdateParams(scope.keyword);
+        params.params.namespace = 'http://geocat.ch/concept#';
+        params.params.ref = 'local._none_.non_validated';
+
+        if(scope.xlink) {
+          var parts = scope.xlink.props.uri.split('#', 2);
+          params.params.newid = parts[1];
+          params.params.oldid = parts[1];
+
+        }
+        if (!params.isEmpty) {
+          $http({
+            method: 'POST',
+            url: 'geocat.thesaurus.updateelement',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            data: $.param(params.params),
+            params: {
+              _content_type: 'json'
+            }
+          }).success(function () {
+            $('#sharedobjectModal').modal('hide');
+          });
+        }
+      };
+
+
       /**
        * Edit or create a shared object.
        * @param type
        */
       this.editEntry = function(type, xlink) {
         scope = $rootScope.$new();
-        scope.formObj = angular.copy(extentsService.formObjTemplate);
         scope.xlink = xlink;
 
         if(!type && xlink) {
@@ -323,6 +353,7 @@
         if(type == 'extents') {
 
           scope.finishEdit = finishEditExtent;
+          scope.formObj = angular.copy(extentsService.formObjTemplate);
 
           var modalConfig = {
             title: 'createNewSharedObject',
@@ -375,6 +406,53 @@
                 $rootScope.$broadcast('modalShown',  data[0].featureType)
               }, 200, true);
             });
+          }
+        }
+        else if(type == 'keywords') {
+
+          scope.finishEdit = finishEditKeyword;
+          scope.keyword = angular.copy(keywordsService.defaultKeyword);
+
+          var modalConfig = {
+            title: 'createNewSharedObject',
+            id: 'sharedobjectModal',
+            content: '<form class="form-horizontal" role="form">' +
+              '<div class="form-group" ng-repeat="(lang, obj) in keyword">' +
+              '  <label class="col-lg-2" for="{{$index}}Label">{{lang | translate}}</label>' +
+              '    <span class="col-lg-5">' +
+              '      <input type="text" class="form-control" ' +
+              '         ng-model="keyword[lang].label" name="{{lang}}Label"' +
+              '         id="Text1" placeholder="{{\'label\' | translate}}" />' +
+              '    </span>' +
+              '  </div>' +
+              '</form>',
+            footer: '<div class="modal-footer">' +
+                '<button type="button" class="btn btn-default" data-dismiss="modal" translate>cancel</button>' +
+                '<button type="button" class="btn btn-primary" data-ng-click="finishEdit()" translate>accept</button>' +
+                '</div>'
+          };
+
+          // Keyword creation
+          if(!xlink) {
+            gnPopup.createModal(modalConfig, scope);
+          }
+          else {
+            $http({
+              method: 'GET',
+              url: 'json.keyword.get',
+              params: {
+                lang: 'eng,fre,ger,roh,ita',
+                id: xlink.props.uri,
+                thesaurus: xlink.props.thesaurus.key
+              }
+            })
+                .success(function (data) {
+                  for (var lang in scope.keyword) {
+                    scope.keyword[lang].label = data[lang].label;
+                    scope.keyword[lang].desc = data[lang].definition;
+                  }
+                  gnPopup.createModal(modalConfig, scope);
+                });
           }
         }
       };

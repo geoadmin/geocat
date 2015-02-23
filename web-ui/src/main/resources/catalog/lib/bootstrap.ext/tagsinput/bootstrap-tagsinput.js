@@ -123,7 +123,7 @@
       if (self.options.maxTags === self.itemsArray.length)
         self.$container.addClass('bootstrap-tagsinput-max');
 
-      self.$element.trigger($.Event('itemAdded', { item: item }));
+      self.$element.trigger($.Event('itemAdded', { item: item, tag: $tag }));
     },
 
     /**

@@ -24,44 +24,12 @@
         } else {
           $scope.luceneIndexField = 'V_valid_xlink_keyword';
         }
-        $scope.keyword = {
-          eng: {label: '', desc: ''},
-          fre: { label: '', desc: '' },
-          ger: { label: '', desc: '' },
-          ita: { label: '', desc: '' },
-          roh: { label: '', desc: '' }
-        };
+        $scope.keyword = angular.copy(keywordsService.defaultKeyword);
 
         $scope.edit = function(row) {keywordsService.edit($scope, row)};
 
-        var createUpdateParams = function () {
-          var params = {
-            ref: 'local._none_.geocat.ch',
-            refType: '_none_',
-            namespace: 'http://custom.shared.obj.ch/concept#',
-            id: ''
-          };
-
-          var isEmpty = true;
-          for (var lang in $scope.keyword) {
-            if ('' !== $scope.keyword[lang].label) {
-              isEmpty = false;
-              params['loc_' + lang + '_label'] = $scope.keyword[lang].label;
-            }
-            if ('' !== $scope.keyword[lang].desc) {
-              isEmpty = false;
-              params['loc_' + lang + '_definition'] = $scope.keyword[lang].desc;
-            }
-          }
-
-          return {
-            params: params,
-            isEmpty: isEmpty
-          };
-        };
-
         $scope.submitEdit = function (thesaurus, id) {
-          var params = createUpdateParams().params;
+          var params = keywordsService.createUpdateParams($scope.keyword).params;
           var parts = id.split('#', 2);
           params.newid = parts[1];
           params.oldid = parts[1];
@@ -78,7 +46,7 @@
         };
 
         $scope.createNewObject = function () {
-          var params = createUpdateParams();
+          var params = keywordsService.createUpdateParams($scope.keyword);
           params.params.namespace = 'http://geocat.ch/concept#';
 
           if (!params.isEmpty) {
@@ -98,13 +66,39 @@
           } else {
             $('#editModal').modal('hide');
           }
-        }
+        };
       }])
 
 
     .factory('keywordsService', ['$http', function($http) {
 
       return {
+        createUpdateParams: function (keyword) {
+          var params = {
+            ref: 'local._none_.geocat.ch',
+            refType: '_none_',
+            namespace: 'http://custom.shared.obj.ch/concept#',
+            id: ''
+          };
+
+          var isEmpty = true;
+          for (var lang in keyword) {
+            if ('' !== keyword[lang].label) {
+              isEmpty = false;
+              params['loc_' + lang + '_label'] = keyword[lang].label;
+            }
+            if ('' !== keyword[lang].desc) {
+              isEmpty = false;
+              params['loc_' + lang + '_definition'] = keyword[lang].desc;
+            }
+          }
+
+          return {
+            params: params,
+            isEmpty: isEmpty
+          };
+        },
+
         edit: function ($scope, row) {
           var parts = row.url.substring(row.url.indexOf('?') + 1).split(/\&/g, 2);
           var thesaurus = '';
@@ -139,6 +133,13 @@
               }
               $('#editModal').modal('show');
             });
+        },
+        defaultKeyword : {
+          eng: {label: '', desc: ''},
+          fre: { label: '', desc: '' },
+          ger: { label: '', desc: '' },
+          ita: { label: '', desc: '' },
+          roh: { label: '', desc: '' }
         }
       }
     }]);
