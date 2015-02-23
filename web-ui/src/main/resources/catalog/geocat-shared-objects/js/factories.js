@@ -140,8 +140,7 @@ angular.module('geocat_shared_objects_factories', []).
                 return $http({method: 'GET', url: referenceMdUrl([encodeURIComponent($scope.selected.id)], true)}).
                   success(function (data) {
                     $scope.loading = undefined;
-                    var referenceCount = parseInt(data[0]['@count']);
-                    $scope.selected.referenceCount = referenceCount;
+                    $scope.selected.referenceCount = parseInt(data[0]['@count']);
                   }).
                   error(function (data) {
                     $scope.loading = undefined;
