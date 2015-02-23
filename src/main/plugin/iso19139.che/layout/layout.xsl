@@ -32,35 +32,37 @@
     </xsl:apply-templates>
   </xsl:template>
 
-  <xsl:template mode="mode-iso19139" match="gmd:geographicElement" priority="2000">
+  <xsl:template mode="mode-iso19139" match="gmd:geographicElement[gmd:EX_GeographicBoundingBox]|
+  gmd:geographicElement[gmd:EX_BoundingPolygon]" priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
 
-    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(., true())"/>
-    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+    <xsl:if test="not(gmd:EX_GeographicBoundingBox) or not(../gmd:geographicElement/gmd:EX_BoundingPolygon)">
 
-    <xsl:call-template name="render-boxed-element">
-      <xsl:with-param name="label"
-        select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
-      <xsl:with-param name="editInfo" select="gn:element"/>
-      <xsl:with-param name="cls" select="local-name()"/>
-      <xsl:with-param name="isDisabled" select="'true'"/>
-      <xsl:with-param name="subTreeSnippet">
-        <xsl:variable name="hasXlink" select="@xlink:href"/>
+      <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(., true())"/>
+      <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
 
-        <xsl:choose>
-          <xsl:when test="gmd:EX_GeographicBoundingBox">
+      <xsl:call-template name="render-boxed-element">
+        <xsl:with-param name="label"
+          select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
+        <xsl:with-param name="editInfo" select="gn:element"/>
+        <xsl:with-param name="cls" select="local-name()"/>
+        <xsl:with-param name="isDisabled" select="'true'"/>
+        <xsl:with-param name="subTreeSnippet">
+          <xsl:variable name="hasXlink" select="@xlink:href"/>
 
-            <img src="region.getmap.png?mapsrs=EPSG:21781&amp;width=250&amp;background=geocat&amp;geom=Polygon(({*/gmd:westBoundLongitude/gco:Decimal}%20{*/gmd:northBoundLatitude/gco:Decimal},{*/gmd:eastBoundLongitude/gco:Decimal}%20{*/gmd:northBoundLatitude/gco:Decimal},{*/gmd:eastBoundLongitude/gco:Decimal}%20{*/gmd:southBoundLatitude/gco:Decimal},{*/gmd:westBoundLongitude/gco:Decimal}%20{*/gmd:southBoundLatitude/gco:Decimal},{*/gmd:westBoundLongitude/gco:Decimal}%20{*/gmd:northBoundLatitude/gco:Decimal}))&amp;geomsrs=EPSG:4326"/>
-
-          </xsl:when>
-          <xsl:when test="gmd:EX_BoundingPolygon">
-            <img class="gn-img-extent"
-              src="region.getmap.png?mapsrs=EPSG:21781&amp;width=250&amp;background=geocat&amp;id=metadata:@id{$metadataId}:@xpathgmd:identificationInfo{$xpath}/gmd:EX_BoundingPolygon"/>
-          </xsl:when>
-        </xsl:choose>
-      </xsl:with-param>
-    </xsl:call-template>
+          <xsl:choose>
+            <xsl:when test="gmd:EX_GeographicBoundingBox">
+                <img src="region.getmap.png?mapsrs=EPSG:21781&amp;width=250&amp;background=geocat&amp;geom=Polygon(({*/gmd:westBoundLongitude/gco:Decimal}%20{*/gmd:northBoundLatitude/gco:Decimal},{*/gmd:eastBoundLongitude/gco:Decimal}%20{*/gmd:northBoundLatitude/gco:Decimal},{*/gmd:eastBoundLongitude/gco:Decimal}%20{*/gmd:southBoundLatitude/gco:Decimal},{*/gmd:westBoundLongitude/gco:Decimal}%20{*/gmd:southBoundLatitude/gco:Decimal},{*/gmd:westBoundLongitude/gco:Decimal}%20{*/gmd:northBoundLatitude/gco:Decimal}))&amp;geomsrs=EPSG:4326"/>
+            </xsl:when>
+            <xsl:when test="gmd:EX_BoundingPolygon">
+                <img class="gn-img-extent"
+                     src="region.getmap.png?mapsrs=EPSG:21781&amp;width=250&amp;background=geocat&amp;id=metadata:@id{$metadataId}:@xpathgmd:identificationInfo{$xpath}/gmd:EX_BoundingPolygon"/>
+            </xsl:when>
+          </xsl:choose>
+        </xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template mode="mode-iso19139" priority="200"
