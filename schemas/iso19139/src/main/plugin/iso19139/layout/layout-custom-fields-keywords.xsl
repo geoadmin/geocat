@@ -123,16 +123,11 @@
         <!-- Define the list of transformation mode available. -->
         <xsl:variable name="transformations"
                       as="xs:string"
-                      select="if ($thesaurusConfig/@transformations != '')
-                              then $thesaurusConfig/@transformations
-                              else 'to-iso19139-keyword,to-iso19139-keyword-with-anchor,to-iso19139-keyword-as-xlink'"/>
+                      select="'to-iso19139-keyword-as-xlink'"/>
 
         <!-- Get current transformation mode based on XML fragment analysis -->
         <xsl:variable name="transformation"
-          select="if (parent::node()/@xlink:href) then 'to-iso19139-keyword-as-xlink'
-          else if (count(gmd:keyword/gmx:Anchor) > 0)
-          then 'to-iso19139-keyword-with-anchor' 
-          else 'to-iso19139-keyword'"/>
+          select="'to-iso19139-keyword-as-xlink'"/>
 
         <xsl:variable name="parentName" select="name(..)"/>
 
