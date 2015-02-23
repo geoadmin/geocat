@@ -167,17 +167,19 @@
     <xsl:variable name="excluded"
                   select="count($editorConfig/editor/multilingualFields/exclude[name = $elementName]) > 0 or
                     $exclusionMatchesAncestor = true() or $exclusionMatchesParent = true() or $exclusionMatchesChild = true()"/>
-
+    
     <xsl:variable name="hasPTFreeText"
                   select="count(gmd:PT_FreeText) > 0"/>
     <xsl:variable name="hasOnlyPTFreeText"
                   select="count(gmd:PT_FreeText) > 0 and count(gco:CharacterString) = 0"/>
-    <xsl:variable name="isMultilingualElement"
+    <xsl:variable name="isMultilingualElement" 
                   select="$metadataIsMultilingual and $excluded = false()"/>
-    <xsl:variable name="isMultilingualElementExpanded"
+                  select="$metadataIsMultilingual and
+                    count($editorConfig/editor/multilingualFields/exclude[name = $elementName]) = 0"/>
+    <xsl:variable name="isMultilingualElementExpanded" 
                   select="count($editorConfig/editor/multilingualFields/expanded[name = $elementName]) > 0"/>
-
-    <!-- For some fields, always display attributes.
+    
+    <!-- For some fields, always display attributes. 
     TODO: move to editor config ? -->
     <xsl:variable name="forceDisplayAttributes" select="count(gmx:FileName) > 0"/>
 
