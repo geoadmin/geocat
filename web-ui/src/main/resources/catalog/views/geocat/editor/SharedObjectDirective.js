@@ -157,7 +157,8 @@
               } else {
                 params.process = '';
               }
-              if(scope.templateType == 'contacts') {
+              if(scope.templateType == 'contacts' ||
+                  scope.templateType == 'formats') {
                 gnHttp.callService(
                     'subtemplate', params).success(function(xml) {
                       if (usingXlink) {
