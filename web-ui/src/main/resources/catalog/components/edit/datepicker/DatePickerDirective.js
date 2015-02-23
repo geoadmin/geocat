@@ -41,6 +41,10 @@
                  gco: gnNamespaces.gco,
                  gml: gnNamespaces.gml
                },
+               'iso19139.che': {
+                 gco: gnNamespaces.gco,
+                 gml: gnNamespaces.gml
+               },
                'iso19115-3': {
                  gco: gnNamespaces.gco3,
                  gml: gnNamespaces.gml32
