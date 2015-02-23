@@ -174,7 +174,8 @@
               else if(scope.templateType == 'extents') {
 
                 c.xlink = c.xlink.replace('*',
-                    'format='+scope.prop.extentFormat+'&extentTypeCode=true');
+                    'format='+scope.prop.extentFormat+'&extentTypeCode=' +
+                    scope.prop.extentTypeCode);
 
                 var extUrl = c.xlink.replace(/local:\/\//g, '');
 
@@ -205,6 +206,8 @@
           }
           else if(scope.templateType == 'extents') {
             scope.prop.extentFormat = 'GMD_BBOX';
+            scope.prop.extentTypeCode = 'true';
+            extentTypeCode = true;
             $http.get('reusable.object.categories/extents').success(function(data) {
               scope.regionTypes = data;
             });
