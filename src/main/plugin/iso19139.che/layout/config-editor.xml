@@ -348,6 +348,9 @@
                  in="/che:CHE_MD_Metadata"/>
       </tab>
     </view>
+    <view name="inspire">
+      <tab id="inspire" default="true" href="inspire.edit?id=$mdId"/>
+    </view>
     <view name="xml">
       <tab id="xml" default="true"/>
     </view>
