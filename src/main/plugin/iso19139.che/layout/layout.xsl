@@ -169,4 +169,94 @@
     </xsl:call-template>
   </xsl:template>
 
+  <!--GEOCAT Topic category-->
+  <xsl:template mode="mode-iso19139" match="gmd:MD_TopicCategoryCode" priority="2000">
+
+    <xsl:param name="schema" select="$schema" required="no"/>
+    <xsl:param name="codelists" select="$iso19139codelists" required="no"/>
+    <xsl:param name="labels" select="$labels" required="no"/>
+
+
+    <xsl:variable name="name"  select="name(.)"/>
+    <xsl:variable name="value" select="string(.)"/>
+
+    <xsl:variable name="invalidCls" select="if($value = 'environment' or $value = 'geoscientificInformation'
+        or $value = 'planningCadastre' or $value = 'imageryBaseMapsEarthCover') then 'has-error' else ''" />
+    <xsl:variable name="list">
+      <items>
+        <xsl:for-each select="gn:element/gn:text">
+          <xsl:variable name="choiceValue" select="string(@value)"/>
+          <xsl:variable name="label" select="$codelists/codelist[@name = $name]/entry[code = $choiceValue]/label"/>
+
+          <item>
+            <value>
+              <xsl:if test="contains(@value,'_')">
+                <xsl:attribute name="parent"><xsl:value-of select="substring-before(@value, '_')" /></xsl:attribute>
+              </xsl:if>
+              <xsl:value-of select="@value"/>
+            </value>
+            <label>
+              <xsl:choose>
+                <xsl:when test="$label"><xsl:value-of select="$label"/></xsl:when>
+                <xsl:otherwise><xsl:value-of select="$choiceValue"/></xsl:otherwise>
+              </xsl:choose>
+            </label>
+          </item>
+        </xsl:for-each>
+      </items>
+    </xsl:variable>
+
+    <xsl:variable name="fieldId" select="concat('gn-field-', gn:element/@ref)" />
+    <div class="form-group gn-field {$invalidCls}" data-gn-field-highlight="">
+      <label for="{$fieldId}" class="col-sm-2 control-label">
+        <xsl:value-of select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), '', '')/label"/>
+      </label>
+      <div class="col-sm-9 gn-value">
+        <select id="{$fieldId}" class="form-control" name="_{gn:element/@ref}" size="1">
+          <option name=""/>
+
+          <xsl:for-each select="exslt:node-set($list)//item">
+            <xsl:sort select="label" />
+            <xsl:variable name="curValue" select="value"/>
+            <xsl:choose>
+              <xsl:when test="count(exslt:node-set($list)//item/value[@parent=$curValue]) > 0">
+                <optgroup>
+                  <xsl:attribute name="label"><xsl:value-of select="label" /></xsl:attribute>
+                  <xsl:for-each select="exslt:node-set($list)//item[value/@parent=$curValue]">
+                    <option>
+                      <xsl:if test="value=$value">
+                        <xsl:attribute name="selected" />
+                      </xsl:if>
+                      <xsl:attribute name="value"><xsl:value-of select="value" /></xsl:attribute>
+                      <xsl:value-of select="label" />
+                    </option>
+                  </xsl:for-each>
+                </optgroup>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:if test="not(value/@parent)">
+                  <option>
+                    <xsl:if test="value=$value">
+                      <xsl:attribute name="selected" />
+                    </xsl:if>
+                    <xsl:attribute name="value"><xsl:value-of select="value" /></xsl:attribute>
+                    <xsl:value-of select="label" />
+                  </option>
+                </xsl:if>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
+        </select>
+      </div>
+      <div class="col-sm-1 gn-control" data-gn-field-highlight="">
+<!--
+        <xsl:call-template name="render-boxed-element-control">
+          <xsl:with-param name="editInfo" select="gn:element"/>
+        </xsl:call-template>
+-->
+      </div>
+
+    </div>
+  </xsl:template>
+
 </xsl:stylesheet>
