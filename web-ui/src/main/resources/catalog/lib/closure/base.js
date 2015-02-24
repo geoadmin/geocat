@@ -225,7 +225,7 @@ goog.setTestOnly = function(opt_message) {
   if (COMPILED && !goog.DEBUG) {
     opt_message = opt_message || '';
     throw Error('Importing test-only code into non-debug environment' +
-                opt_message ? ': ' + opt_message : '.');
+    opt_message ? ': ' + opt_message : '.');
   }
 };
 
@@ -395,7 +395,7 @@ goog.require = function(name) {
     }
 
 
-      throw Error(errorMessage);
+    throw Error(errorMessage);
 
   }
 };
@@ -549,7 +549,7 @@ if (goog.DEPENDENCIES_ENABLED) {
   goog.inHtmlDocument_ = function() {
     var doc = goog.global.document;
     return typeof doc != 'undefined' &&
-           'write' in doc;  // XULDocument misses write.
+      'write' in doc;  // XULDocument misses write.
   };
 
 
@@ -588,7 +588,7 @@ if (goog.DEPENDENCIES_ENABLED) {
    */
   goog.importScript_ = function(src) {
     var importScript = goog.global.CLOSURE_IMPORT_SCRIPT ||
-        goog.writeScriptTag_;
+      goog.writeScriptTag_;
     if (!goog.dependencies_.written[src] && importScript(src)) {
       goog.dependencies_.written[src] = true;
     }
@@ -623,10 +623,8 @@ if (goog.DEPENDENCIES_ENABLED) {
         }
       }
 
-      // ** GN Specific
-      //doc.write(
-      //    '<script type="text/javascript" src="' + src + '"></' + 'script>');
-      
+      doc.write(
+        '<script type="text/javascript" src="' + src + '"></' + 'script>');
       return true;
     } else {
       return false;
@@ -753,7 +751,7 @@ goog.typeOf = function(value) {
       //   value, the compiler requires the value be cast to type Object,
       //   even though the ECMA spec explicitly allows it.
       var className = Object.prototype.toString.call(
-          /** @type {Object} */ (value));
+        /** @type {Object} */ (value));
       // In Firefox 3.6, attempting to access iframe window objects' length
       // property throws an NS_ERROR_FAILURE, so we need to special-case it
       // here.
@@ -780,15 +778,15 @@ goog.typeOf = function(value) {
       //      3. Return Result(2).
       // and this behavior survives the destruction of the execution context.
       if ((className == '[object Array]' ||
-           // In IE all non value types are wrapped as objects across window
-           // boundaries (not iframe though) so we have to do object detection
-           // for this edge case
-           typeof value.length == 'number' &&
-           typeof value.splice != 'undefined' &&
-           typeof value.propertyIsEnumerable != 'undefined' &&
-           !value.propertyIsEnumerable('splice')
+          // In IE all non value types are wrapped as objects across window
+          // boundaries (not iframe though) so we have to do object detection
+          // for this edge case
+        typeof value.length == 'number' &&
+        typeof value.splice != 'undefined' &&
+        typeof value.propertyIsEnumerable != 'undefined' &&
+        !value.propertyIsEnumerable('splice')
 
-          )) {
+        )) {
         return 'array';
       }
       // HACK: There is still an array case that fails.
@@ -806,9 +804,9 @@ goog.typeOf = function(value) {
       // 'function'. However, if the object has a call property, it is a
       // function.
       if ((className == '[object Function]' ||
-          typeof value.call != 'undefined' &&
-          typeof value.propertyIsEnumerable != 'undefined' &&
-          !value.propertyIsEnumerable('call'))) {
+        typeof value.call != 'undefined' &&
+        typeof value.propertyIsEnumerable != 'undefined' &&
+        !value.propertyIsEnumerable('call'))) {
         return 'function';
       }
 
@@ -969,7 +967,7 @@ goog.getUid = function(obj) {
   // using it. As a consequence the unique ID generated for BaseClass.prototype
   // and SubClass.prototype will be the same.
   return obj[goog.UID_PROPERTY_] ||
-      (obj[goog.UID_PROPERTY_] = ++goog.uidCounter_);
+    (obj[goog.UID_PROPERTY_] = ++goog.uidCounter_);
 };
 
 
@@ -1148,7 +1146,7 @@ goog.bind = function(fn, selfObj, var_args) {
       // to introduce a circular dependency between goog.bind and
       // Function.prototype.bind, so we have to hack this to make sure it
       // works correctly.
-      Function.prototype.bind.toString().indexOf('native code') != -1) {
+    Function.prototype.bind.toString().indexOf('native code') != -1) {
     goog.bind = goog.bindNative_;
   } else {
     goog.bind = goog.bindJs_;
@@ -1334,7 +1332,7 @@ goog.getCssName = function(className, opt_modifier) {
   var rename;
   if (goog.cssNameMapping_) {
     rename = goog.cssNameMappingStyle_ == 'BY_WHOLE' ?
-        getMapping : renameByParts;
+      getMapping : renameByParts;
   } else {
     rename = function(a) {
       return a;
@@ -1560,15 +1558,15 @@ goog.base = function(me, opt_methodName, var_args) {
   if (goog.DEBUG) {
     if (!caller) {
       throw Error('arguments.caller not defined.  goog.base() expects not ' +
-                  'to be running in strict mode. See ' +
-                  'http://www.ecma-international.org/ecma-262/5.1/#sec-C');
+      'to be running in strict mode. See ' +
+      'http://www.ecma-international.org/ecma-262/5.1/#sec-C');
     }
   }
 
   if (caller.superClass_) {
     // This is a constructor. Call the superclass constructor.
     return caller.superClass_.constructor.apply(
-        me, Array.prototype.slice.call(arguments, 1));
+      me, Array.prototype.slice.call(arguments, 1));
   }
 
   var args = Array.prototype.slice.call(arguments, 2);
@@ -1590,8 +1588,8 @@ goog.base = function(me, opt_methodName, var_args) {
     return me.constructor.prototype[opt_methodName].apply(me, args);
   } else {
     throw Error(
-        'goog.base called from a method of one name ' +
-        'to a method of a different name');
+      'goog.base called from a method of one name ' +
+      'to a method of a different name');
   }
 };
 

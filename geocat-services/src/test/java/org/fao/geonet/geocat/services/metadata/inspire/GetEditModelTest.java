@@ -133,7 +133,7 @@ public class GetEditModelTest {
         assertEquals("", inspireModel.getString(Save.JSON_HIERARCHY_LEVEL_NAME));
 
         assertEquals(1, inspireModel.getJSONArray(Save.JSON_CONTACT).length());
-        assertContact(inspireModel.getJSONArray(Save.JSON_CONTACT).getJSONObject(0), "8", false, "", "",
+        assertContact(inspireModel.getJSONArray(Save.JSON_CONTACT).getJSONObject(0), "786f4876-c13b-472c-8547-4582f1b1fd56-8", false, "", "",
                 "metadata@swisstopo.ch", "pointOfContact", read("ger", "Bundesamt für Landestopografie"),
                 read("fre", "Office fédéral de topographie"), read("ita", "Ufficio federale di topografia"),
                 read("eng", "Federal Office of Topography"));
@@ -161,7 +161,7 @@ public class GetEditModelTest {
                 read("fre", "Résumé Test INSPIRE"));
 
         assertEquals(1, identification.getJSONArray(Save.JSON_IDENTIFICATION_POINT_OF_CONTACT).length());
-        assertContact(identification.getJSONArray(Save.JSON_IDENTIFICATION_POINT_OF_CONTACT).getJSONObject(0), "10", false, "", "",
+        assertContact(identification.getJSONArray(Save.JSON_IDENTIFICATION_POINT_OF_CONTACT).getJSONObject(0), "786f4876-c13b-472c-8547-4582f1b1fd56-10", false, "", "",
                 "geodata@swisstopo.ch", "pointOfContact", read("ger", "Bundesamt für Landestopografie"),
                 read("fre", "Office fédéral de topographie"), read("ita", "Ufficio federale di topografia"),
                 read("eng", "Federal Office of Topography"));
@@ -282,7 +282,7 @@ public class GetEditModelTest {
         JSONObject format = formats.getJSONObject(0);
         assertEquals("INTERLIS", format.getString(Save.JSON_DISTRIBUTION_FORMAT_NAME));
         assertEquals("2", format.getString(Save.JSON_DISTRIBUTION_FORMAT_VERSION));
-        assertEquals("1", format.getString(Params.ID));
+        assertEquals("786f4876-c13b-472c-8547-4582f1b1fd56-1", format.getString(Params.ID));
         assertEquals(false, format.getBoolean(Save.JSON_DISTRIBUTION_FORMAT_VALIDATED));
     }
 
@@ -303,7 +303,7 @@ public class GetEditModelTest {
         assertEquals("Service", inspireModel.getString(Save.JSON_HIERARCHY_LEVEL_NAME));
 
         assertEquals(1, inspireModel.getJSONArray(Save.JSON_CONTACT).length());
-        assertContact(inspireModel.getJSONArray(Save.JSON_CONTACT).getJSONObject(0), "15", false, "André", "Schneider",
+        assertContact(inspireModel.getJSONArray(Save.JSON_CONTACT).getJSONObject(0), "786f4876-c13b-472c-8547-4582f1b1fd56-15", false, "André", "Schneider",
                 "andre.schneider@swisstopo.ch", "pointOfContact", read("ger", "Bundesamt für Landestopographie"),
                 read("fre", "Office fédéral de topographie"));
 
@@ -335,7 +335,7 @@ public class GetEditModelTest {
                             "service est basé sur le standard OGC CSW 2.0.2"));
 
         assertEquals(1, identification.getJSONArray(Save.JSON_IDENTIFICATION_POINT_OF_CONTACT).length());
-        assertContact(identification.getJSONArray(Save.JSON_IDENTIFICATION_POINT_OF_CONTACT).getJSONObject(0), "10", false, "", "",
+        assertContact(identification.getJSONArray(Save.JSON_IDENTIFICATION_POINT_OF_CONTACT).getJSONObject(0), "786f4876-c13b-472c-8547-4582f1b1fd56-10", false, "", "",
                 "geodata@swisstopo.ch", "pointOfContact", read("ger", "Bundesamt für Landestopografie"),
                 read("fre", "Office fédéral de topographie"), read("ita", "Ufficio federale di topografia"),
                 read("eng", "Federal Office of Topography"));
@@ -431,7 +431,7 @@ public class GetEditModelTest {
         JSONObject format = formats.getJSONObject(0);
         assertEquals("INTERLIS", format.getString(Save.JSON_DISTRIBUTION_FORMAT_NAME));
         assertEquals("2", format.getString(Save.JSON_DISTRIBUTION_FORMAT_VERSION));
-        assertEquals("1", format.getString(Params.ID));
+        assertEquals("786f4876-c13b-472c-8547-4582f1b1fd56-1", format.getString(Params.ID));
         assertEquals(false, format.getBoolean(Save.JSON_DISTRIBUTION_FORMAT_VALIDATED));
 
     }
@@ -510,7 +510,7 @@ public class GetEditModelTest {
         assertEquals(orgNames.length, actualOrgNames.length());
 
         for (Pair<String, String> orgName : orgNames) {
-            assertEquals(orgName.two(), actualOrgNames.getString(orgName.one()));
+            assertEquals(orgName.two().replaceAll("\\s+", " "), actualOrgNames.getString(orgName.one()).replaceAll("\\s+", " "));
         }
     }
 

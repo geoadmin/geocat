@@ -515,7 +515,9 @@ public final class XslUtil
     public static String toHyperlinksSplitNodes(String textString, Configuration configuration) throws Exception {
         return GeocatXslUtil.toHyperlinksSplitNodes(textString, configuration);
     }
-
+    public static String loadTranslationFile(Object filePattern, Object language) throws IOException {
+        return GeocatXslUtil.loadTranslationFile(filePattern, language);
+    }
     public static UnfailingIterator parse(Configuration configuration, String string, boolean printError)
             throws Exception {
         return GeocatXslUtil.parse(configuration, string, printError);

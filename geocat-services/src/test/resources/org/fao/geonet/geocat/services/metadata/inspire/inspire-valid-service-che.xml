@@ -19,7 +19,7 @@
         <gco:CharacterString>Service</gco:CharacterString>
     </gmd:hierarchyLevelName>
     <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xlink:show="embed"
-        xlink:href="local://xml.user.get?id=15&amp;schema=iso19139.che&amp;role=pointOfContact"
+        xlink:href="local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-15&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact"
         xlink:role="http://www.geonetwork.org/non_valid_obj">
         <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
             <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
@@ -219,7 +219,7 @@
                     </gmd:textGroup>
                 </gmd:PT_FreeText>
             </gmd:abstract>
-            <gmd:pointOfContact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://xml.user.get?id=10&amp;role=pointOfContact"
+            <gmd:pointOfContact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-10&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact"
                 xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
                 <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
                     <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
@@ -1034,7 +1034,7 @@
     </gmd:identificationInfo>
     <gmd:distributionInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <gmd:MD_Distribution>
-            <gmd:distributionFormat xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://xml.format.get?id=1"
+            <gmd:distributionFormat xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-1"
                 xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
                 <gmd:MD_Format>
                     <gmd:name>

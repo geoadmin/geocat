@@ -237,6 +237,7 @@
 
                 $scope.gnCurrentEdit = gnCurrentEdit;
                 $scope.tocIndex = null;
+                $scope.warnBeforePageUnload = true;
 
 
                 // Create URL for loading the metadata form
@@ -249,8 +250,11 @@
                 window.onbeforeunload = function() {
                   // TODO: could be better to provide
                   // cancelAndClose and saveAndClose button
-                  return $translate('beforeUnloadEditor',
+
+                  if ($scope.warnBeforePageUnload) {
+                    return $translate('beforeUnloadEditor',
                       {timeAgo: moment(gnCurrentEdit.savedTime).fromNow()});
+                  }
                 };
               }
             });
@@ -302,6 +306,17 @@
         // Disable form + indicator ?
         //        $($scope.formId + ' > fieldset').fadeOut(duration);
         $scope.save(true);
+      };
+      $scope.switchToExternalEditor = function(href, target) {
+        $scope.save(true).then(function(){
+          $scope.warnBeforePageUnload = false;
+          if (target) {
+            window.open(href, target);
+          } else {
+            window.location = href;
+          }
+        });
+
       };
 
       /**

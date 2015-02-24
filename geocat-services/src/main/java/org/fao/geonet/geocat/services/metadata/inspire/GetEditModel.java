@@ -432,7 +432,7 @@ public class GetEditModel implements Service {
                 while (optionKeys.hasNext()) {
                     String optionKey = (String) optionKeys.next();
                     String translation = titleOption.getString(optionKey);
-                    if (translation.equalsIgnoreCase(title)) {
+                    if (translation.replaceAll("\\s+", " ").equalsIgnoreCase(title.replaceAll("\\s+", " "))) {
                         conformityJson.put(Save.JSON_TITLE, titleOption);
                         return;
                     }
@@ -549,7 +549,7 @@ public class GetEditModel implements Service {
     private void addCodeListOptionsFromLabelsHelper(JSONObject metadataJson, Element codelists, Element cheCodelistsExtensions,
                                                     String codelistName, String jsonKey, Function<CodeListEntry, CodeListEntry>
             grouperFilter) throws JDOMException, JSONException {
-        Set<CodeListEntry> collector = new LinkedHashSet<CodeListEntry>();
+        Set<CodeListEntry> collector = new LinkedHashSet<>();
         final String xpath = "element[@name = '" + codelistName + "']/helper/option";
         @SuppressWarnings("unchecked")
         List<Element> elems = (List<Element>) Xml.selectNodes(codelists, xpath);
@@ -1027,7 +1027,7 @@ public class GetEditModel implements Service {
             final String hRef = XLink.getHRef(node);
             if (hRef != null) {
                 String id = URLDecoder.decode(org.fao.geonet.geocat.kernel.reusable.Utils.id(hRef), "UTF-8");
-                addValue(node, json, Save.JSON_CONTACT_ID, id);
+                json.put(Save.JSON_CONTACT_ID, id);
             }
             addValue(node, json, Save.JSON_CONTACT_FIRST_NAME, "che:CHE_CI_ResponsibleParty/che:individualFirstName");
             addValue(node, json, Save.JSON_CONTACT_LAST_NAME, "che:CHE_CI_ResponsibleParty/che:individualLastName");

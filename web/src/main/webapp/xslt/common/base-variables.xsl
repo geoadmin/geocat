@@ -54,6 +54,7 @@
     else if ($service = 'admin.shared.objects') then 'geocat_shared_objects_app'
     else if ($service = 'md.viewer') then 'gn_formatter_viewer'
     else if ($service = 'admin.shared.objects.edit') then 'geocat_shared_objects_edit'
+    else if ($service = 'inspire.edit') then 'gn_inspire_editor'
     else 'gn'"/>
 
   <xsl:variable name="customFilename" select="concat($angularApp, '_', $searchView)"></xsl:variable>

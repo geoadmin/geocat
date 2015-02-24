@@ -95,8 +95,7 @@
 
                 <script src="{$uiResourcesPath}lib/angular-translate.js"></script>
 
-                <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.js"></script>
-                <script src="{$uiResourcesPath}lib/ol-whitespace.js"></script>
+                <script src="{$uiResourcesPath}lib/style/bootstrap/dist/js/bootstrap.min.js"></script>
 
             </xsl:when>
             <xsl:otherwise>

@@ -106,7 +106,19 @@
                     </xsl:if>
                     <!-- When a view contains multiple tab, the one with
                   the default attribute is the one to open -->
-                    <a data-ng-click="switchToTab('{tab[@default]/@id}', '{tab[@default]/@mode}')" href="">
+                    <a>
+                      <xsl:choose>
+                        <xsl:when test="tab/@href">
+                          <xsl:attribute name="href"/>
+                          <!--<xsl:attribute name="href" select=""/>-->
+                          <xsl:attribute name="target" select="tab/@target"/>
+                          <xsl:attribute name="data-ng-click">switchToExternalEditor('<xsl:value-of select="replace(tab/@href, '\$mdId', $metadataId)"/>')</xsl:attribute>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:attribute name="href"/>
+                          <xsl:attribute name="data-ng-click">switchToTab('<xsl:value-of select="tab[@default]/@id"/>', '<xsl:value-of select="tab[@default]/@mode"/>"')</xsl:attribute>
+                        </xsl:otherwise>
+                      </xsl:choose>
                       <xsl:variable name="viewName" select="@name"/>
                       <xsl:value-of select="$strings/*[name() = $viewName]"/>
                     </a>

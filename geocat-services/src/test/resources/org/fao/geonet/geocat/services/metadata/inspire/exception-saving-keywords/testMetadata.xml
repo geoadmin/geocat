@@ -16,7 +16,7 @@
         <gmd:MD_ScopeCode codeListValue="dataset" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode" />
     </gmd:hierarchyLevel>
     <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:java="java:org.fao.geonet.util.XslUtil"
-        xlink:href="local://xml.user.get?id=8&amp;schema=iso19139.che&amp;role=pointOfContact"
+        xlink:href="local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-8&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact"
         xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
         <che:CHE_CI_ResponsibleParty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gco:isoType="gmd:CI_ResponsibleParty">
             <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
@@ -212,7 +212,7 @@
                 </gmd:PT_FreeText>
             </gmd:abstract>
             <gmd:pointOfContact xmlns:xlink="http://www.w3.org/1999/xlink"
-                xlink:href="local://xml.user.get?id=10&amp;schema=iso19139.che&amp;role=pointOfContact"
+                xlink:href="local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-10&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact"
                 xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
                 <che:CHE_CI_ResponsibleParty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gco:isoType="gmd:CI_ResponsibleParty">
                     <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
@@ -796,7 +796,7 @@
     </gmd:identificationInfo>
     <gmd:distributionInfo xmlns:java="java:org.fao.geonet.util.XslUtil">
         <gmd:MD_Distribution>
-            <gmd:distributionFormat xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://xml.format.get?id=1"
+            <gmd:distributionFormat xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-1"
                 xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
                 <gmd:MD_Format>
                     <gmd:name>

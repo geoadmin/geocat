@@ -12,7 +12,7 @@
     <gmd:hierarchyLevel xmlns:xalan="http://xml.apache.org/xalan">
         <gmd:MD_ScopeCode codeListValue="dataset" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
     </gmd:hierarchyLevel>
-    <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed" xlink:href="local://xml.user.get?id=12316&amp;schema=iso19139.che&amp;role=pointOfContact" xlink:role="http://www.geonetwork.org/non_valid_obj">
+    <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed" xlink:href="local://subtemplate?uuid=ab-cajkd-abbeds-12316&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact" xlink:role="http://www.geonetwork.org/non_valid_obj">
         <che:CHE_CI_ResponsibleParty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gco:isoType="gmd:CI_ResponsibleParty">
             <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
                 <gmd:PT_FreeText>
@@ -43,7 +43,7 @@
             </che:individualLastName>
         </che:CHE_CI_ResponsibleParty>
     </gmd:contact>
-    <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed" xlink:href="local://xml.user.get?id=12263&amp;schema=iso19139.che&amp;role=pointOfContact">
+    <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed" xlink:href="local://subtemplate?uuid=ab-cajkd-abbeds-12263&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact">
         <che:CHE_CI_ResponsibleParty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gco:isoType="gmd:CI_ResponsibleParty">
             <gmd:contactInfo>
                 <gmd:CI_Contact/>
@@ -59,7 +59,7 @@
             </che:individualLastName>
         </che:CHE_CI_ResponsibleParty>
     </gmd:contact>
-    <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed" xlink:href="local://xml.user.get?id=12314&amp;schema=iso19139.che&amp;role=pointOfContact">
+    <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed" xlink:href="local://subtemplate?uuid=ab-cajkd-abbeds-12314&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact">
         <che:CHE_CI_ResponsibleParty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gco:isoType="gmd:CI_ResponsibleParty">
             <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
                 <gmd:PT_FreeText>

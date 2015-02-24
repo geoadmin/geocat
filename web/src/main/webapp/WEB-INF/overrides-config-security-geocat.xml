@@ -131,9 +131,9 @@
         <addInterceptUrl  pattern="/apps/shared-objects/app/.*" access="hasRole('Editor')"/>
 
         <addInterceptUrl  pattern="/srv/\w\w\w/metadata.summary.zip!?.*" access="hasRole('Administrator')"/>
-        <addInterceptUrl  pattern="/srv/\w\w\w//srv/\w\w\w/inspire.edit!?.*" access="hasRole('Editor')"/>
-        <addInterceptUrl  pattern="/srv/\w\w\w//srv/\w\w\w/inspire.edit.model!?.*" access="hasRole('Editor')"/>
-        <addInterceptUrl  pattern="/srv/\w\w\w//srv/\w\w\w/inspire.edit.save!?.*" access="hasRole('Editor')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/inspire.edit!?.*" access="hasRole('Editor')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/inspire.edit.model!?.*" access="hasRole('Editor')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/inspire.edit.save!?.*" access="hasRole('Editor')"/>
         <addInterceptUrl pattern="/srv/\w\w\w/plain.xml.user.get!?.*" access="permitAll" />
         <addInterceptUrl pattern="/srv/\w\w\w/geocat.search.info!?.*" access="permitAll" />
     </spring>

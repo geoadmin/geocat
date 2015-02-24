@@ -11,7 +11,7 @@
     <gmd:hierarchyLevel xmlns:xalan="http://xml.apache.org/xalan">
         <gmd:MD_ScopeCode codeListValue="dataset" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode" />
     </gmd:hierarchyLevel>
-    <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed" xlink:href="local://xml.user.get?id=4721&amp;schema=iso19139.che&amp;role=pointOfContact">
+    <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed" xlink:href="local://subtemplate?uuid=ab-cajkd-abbeds-4721&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact">
         <che:CHE_CI_ResponsibleParty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gco:isoType="gmd:CI_ResponsibleParty">
             <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
                 <gmd:PT_FreeText>
@@ -354,7 +354,7 @@
             <gmd:status>
                 <gmd:MD_ProgressCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ProgressCode" codeListValue="underDevelopment" />
             </gmd:status>
-            <gmd:pointOfContact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed" xlink:href="local://xml.user.get?id=7073&amp;schema=iso19139.che&amp;role=owner">
+            <gmd:pointOfContact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed" xlink:href="local://subtemplate?uuid=ab-cajkd-abbeds-7073&amp;process=*//gmd:CI_RoleCode/@codeListValue~owner">
                 <che:CHE_CI_ResponsibleParty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gco:isoType="gmd:CI_ResponsibleParty">
                     <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
                         <gmd:PT_FreeText>

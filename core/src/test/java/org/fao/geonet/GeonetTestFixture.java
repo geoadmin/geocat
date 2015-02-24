@@ -2,10 +2,8 @@ package org.fao.geonet;
 
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.MultiPolygon;
-
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -43,7 +41,6 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import javax.sql.DataSource;
 
 import static org.fao.geonet.constants.Geonet.Config.LANGUAGE_PROFILES_DIR;

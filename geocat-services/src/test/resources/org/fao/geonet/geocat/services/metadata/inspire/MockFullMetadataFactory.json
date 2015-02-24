@@ -11,7 +11,7 @@
   "hierarchyLevelName": "",
   "contact": [
     {
-      "id": "1", // id indicates this is a shared object
+      "id": "786f4876-c13b-472c-8547-4582f1b1fd56-1", // id indicates this is a shared object
       "name": "Florent",
       "surname": "Gravin",
       "email": "florent.gravin@camptocamp.com",
@@ -22,7 +22,7 @@
       "validated": false
     },
     {
-      "id": "2",
+      "id": "786f4876-c13b-472c-8547-4582f1b1fd56-2",
       "name": "Jesse",
       "surname": "Eichar",
       "email": "jesse.eichar@camptocamp.com",
@@ -66,7 +66,7 @@
     },
     "pointOfContact": [
       {
-        "id": "2",
+        "id": "786f4876-c13b-472c-8547-4582f1b1fd56-2",
         "name": "Jesse",
         "surname": "Eichar",
         "email": "jesse.eichar@camptocamp.com",
@@ -78,7 +78,7 @@
         "validated": true
       },
       {
-        "id": "1",
+        "id": "786f4876-c13b-472c-8547-4582f1b1fd56-1",
         "name": "Florent",
         "surname": "Gravin",
         "email": "florent.gravin@camptocamp.com",
@@ -232,7 +232,7 @@
     {
       "name": "newname",
       "version": "newversion",
-      "id": "3",
+      "id": "786f4876-c13b-472c-8547-4582f1b1fd56-3",
       "validated": false
     }
   ]

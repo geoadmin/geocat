@@ -359,7 +359,7 @@ public class SaveTest extends AbstractCoreIntegrationTest {
 
         assertEquals("newname", name);
         assertEquals("newversion", version);
-        assertEquals("local://xml.format.get?id=3", href);
+        assertEquals("local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-3", href);
         assertEquals(ReusableObjManager.NON_VALID_ROLE, role);
 
 
@@ -507,9 +507,9 @@ public class SaveTest extends AbstractCoreIntegrationTest {
         final Element testMetadata = Xml.loadFile(SaveTest.class.getResource("exception-saving-keywords/testMetadata.xml"));
 
         service.setTestMetadata(testMetadata);
-        service.addXLink("local://xml.user.get?id=8&amp;schema=iso19139.che&amp;role=pointOfContact",
+        service.addXLink("local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-8&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact",
                 Xml.loadFile(SaveTest.class.getResource("exception-saving-keywords/user-8.xml")));
-        service.addXLink("local://xml.user.get?id=10&amp;schema=iso19139.che&amp;role=pointOfContact",
+        service.addXLink("local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-10&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact",
                 Xml.loadFile(SaveTest.class.getResource("exception-saving-keywords/user-10.xml")));
         service.addXLink("local://xml.extent.get?id=0&amp;wfs=default&amp;typename=gn:countries&amp;format=gmd_complete&amp;" +
                          "extentTypeCode=true",
@@ -643,11 +643,11 @@ public class SaveTest extends AbstractCoreIntegrationTest {
 
     @Test
     public void testService_SetCouplingInformation() throws Exception {
-        service.addXLink("local://xml.user.get?id=15&amp;amp;schema=iso19139.che&amp;amp;role=pointOfContact&#xD",
+        service.addXLink("local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-15&amp;amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact&#xD",
                 new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
-        service.addXLink("local://xml.user.get?id=15&amp;schema=iso19139.che&amp;role=pointOfContact",
+        service.addXLink("local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-15&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact",
                 new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
-        service.addXLink("local://xml.user.get?id=10&amp;schema=iso19139.che&amp;role=pointOfContact",
+        service.addXLink("local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-10&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact",
                 new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
         final String jsonString = loadTestJson("updateServiceCouplingInformation.json");
         JSONObject json = new JSONObject(jsonString);
@@ -679,13 +679,13 @@ public class SaveTest extends AbstractCoreIntegrationTest {
         testMetadata = Xml.loadFile(SaveTest.class.getResource("updateContainsOperation/metadata2.xml"));
 
         service.setTestMetadata(testMetadata);
-        service.addXLink("local://xml.user.get?id=7&amp;amp;schema=iso19139.che&amp;amp;role=pointOfContact&#xD;",
+        service.addXLink("local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-7&amp;amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact&#xD;",
                 new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
-        service.addXLink("local://xml.user.get?id=7&amp;schema=iso19139.che&amp;role=pointOfContact",
+        service.addXLink("local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-7&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact",
                 new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
-        service.addXLink("local://xml.user.get?id=5&amp;amp;schema=iso19139.che&amp;amp;role=pointOfContact&#xD;",
+        service.addXLink("local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-5&amp;amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact&#xD;",
                 new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
-        service.addXLink("local://xml.user.get?id=5&amp;schema=iso19139.che&amp;role=pointOfContact",
+        service.addXLink("local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-5&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact",
                 new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
         service.addXLink("local://xml.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&amp;" +
                          "id=urn%3Ainspire%3Aservice%3Ataxonomy%3AcomGeographicCompressionService&amp;multiple=false&amp;lang=fre,eng,ger,ita,roh&amp;textgroupOnlyit",
@@ -719,11 +719,11 @@ public class SaveTest extends AbstractCoreIntegrationTest {
 
         service.setTestMetadata(testMetadata);
 
-        service.addXLink("local://xml.user.get?id=15&amp;amp;schema=iso19139.che&amp;amp;role=pointOfContact&#xD",
+        service.addXLink("local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-15&amp;amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact&#xD",
                 new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
-        service.addXLink("local://xml.user.get?id=15&amp;schema=iso19139.che&amp;role=pointOfContact",
+        service.addXLink("local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-15&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact",
                 new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
-        service.addXLink("local://xml.user.get?id=10&amp;schema=iso19139.che&amp;role=pointOfContact",
+        service.addXLink("local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-10&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact",
                 new Element("CHE_CI_ResponsibleParty", ISO19139cheNamespaces.CHE));
         final String jsonString = loadTestJson("updateContainsOperation/request.json");
         JSONObject json = new JSONObject(jsonString);

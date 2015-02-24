@@ -47,10 +47,10 @@ class SaveServiceTestImpl extends Save {
         this.testMetadata = testMetadata;
         Element contact1 = createContact("name", "lastname", "email", "role", Pair.read("eng", "en OrgName"), Pair.read("fre",
                 "fr OrgName"), Pair.read("ger", "de OrgName"));
-        sharedObjects.put("local://xml.user.get?id=1&amp;schema=iso19139.che&amp;role=owner", contact1);
+        sharedObjects.put("local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-1&amp;process=*//gmd:CI_RoleCode/@codeListValue~owner", contact1);
         Element contact2 = createContact("Jesse", "Eichar", "jesse.eichar@camptocamp.com", "pointOfContact",
                 Pair.read("eng", "Camptocamp SA"), Pair.read("ger", "Camptocamp AG"));
-        sharedObjects.put("local://xml.user.get?id=2&amp;schema=iso19139.che&amp;role=pointOfContact", contact2);
+        sharedObjects.put("local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-2&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact", contact2);
 
         Element buildingsKeyword = createKeyword("eng", "Building", "external.theme.inspire-theme");
         sharedObjects.put("local://xml.keyword.get?thesaurus=external.theme.inspire-theme&amp;id=http%3A%2F%2Frdfdata.eionet.europa" +

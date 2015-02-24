@@ -20,7 +20,7 @@
         <gco:CharacterString>ViewService</gco:CharacterString>
     </gmd:hierarchyLevelName>
     <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink"
-        xlink:href="local://xml.user.get?id=10516&amp;schema=iso19139.che&amp;role=pointOfContact"
+        xlink:href="local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-10516&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact"
         xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
         <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
             <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
@@ -250,7 +250,7 @@
                     codeListValue="completed" />
             </gmd:status>
             <gmd:pointOfContact xmlns:xlink="http://www.w3.org/1999/xlink"
-                xlink:href="local://xml.user.get?id=10516&amp;role=pointOfContact" xlink:role="http://www.geonetwork.org/non_valid_obj"
+                xlink:href="local://subtemplate?uuid=786f4876-c13b-472c-8547-4582f1b1fd56-10516&amp;process=*//gmd:CI_RoleCode/@codeListValue~pointOfContact" xlink:role="http://www.geonetwork.org/non_valid_obj"
                 xlink:show="embed">
                 <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
                     <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">

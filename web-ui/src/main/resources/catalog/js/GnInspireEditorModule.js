@@ -11,12 +11,13 @@
   goog.require('inspire_date_picker_directive');
   goog.require('inspire-metadata-loader');
   goog.require('inspire_ie9_select');
+  goog.require('inspire_get_shared_formats_factory');
 
   angular.module('gn', []);
 
   var module = angular.module('gn_inspire_editor', ['gn_language_switcher', 'pascalprecht.translate', 'inspire_contact_directive',
     'inspire_multilingual_text_directive', 'inspire_metadata_factory', 'inspire_get_shared_users_factory', 'inspire_get_keywords_factory',
-    'inspire_get_extents_factory', 'inspire_date_picker_directive', 'inspire_ie9_select']);
+    'inspire_get_extents_factory', 'inspire_date_picker_directive', 'inspire_ie9_select', 'inspire_get_shared_formats_factory']);
 
   module.factory('localeLoader', ['$http', '$q', function($http, $q) {
     return function(options) {
@@ -80,6 +81,7 @@
   module.controller('GnInspireController', [
     '$scope', 'inspireMetadataLoader', 'translateLangFilter', '$translate', '$http',
     function($scope, inspireMetadataLoader, translateLangFilter, $translate, $http) {
+      $scope.metadataIcon = "";
       $scope.base = "../../catalog/";
       $scope.url = "";
       $scope.lang = location.href.split('/')[5].substring(0, 3) || 'eng';
@@ -102,6 +104,36 @@
       $scope.data = inspireMetadataLoader($scope.lang, $scope.url, mdId);
       $scope.emptyContact = $scope.data.contact[0];
 
+      $http.get($scope.url + "q@json?fast=index&from=1&to=1&sortBy=relevance&_id=" + mdId).success(function(data){
+        var metadata, logoId;
+        if (data.metadata) {
+          if (data.metadata[0]) {
+            metadata = data.metadata[0];
+          } else {
+            metadata = data.metadata;
+          }
+          if (metadata.groupLogoUuid) {
+            logoId = metadata.groupLogoUuid;
+          }
+          if (!logoId && metadata.catalog && metadata.catalog.length == 2) {
+            logoId = metadata.catalog[1];
+          }
+
+          if (!logoId) {
+            logoId = metadata.source;
+          }
+        }
+
+        if (logoId) {
+          $scope.metadataIcon = "/geonetwork/images/logos/"+logoId+".gif";
+        }
+      }).error(function(err){
+        if (waitDialog) {
+          waitDialog.modal('hide');
+        }
+        alert(err);
+      });
+
       $scope.translateLanguage = function(lang) {
         return function (lang) {
           return translateLangFilter(lang);
@@ -119,7 +151,10 @@
           return result;
         };
       };
-      $scope.validationErrorClass = 'has-error';
+      $scope.validationErrorClass = '';
+      $scope.$watch('data.refSysOptions', function (refSysOptions) {
+        $scope.validationErrorClass = refSysOptions && refSysOptions.length > 0 ? 'has-error' : '';
+      });
       $scope.validationClassString = function(model) {
         if (model && model.length > 0) {
           return '';
@@ -194,11 +229,95 @@
           model.splice(i, 1);
         }
       };
+      $scope.refSysTitle = function() {
+        return function (refSys) {
+          if (refSys[$scope.lang]) {
+            return refSys[$scope.lang];
+          } else {
+            for (var lang in refSys) {
+              if (refSys.hasOwnProperty(lang)) {
+                return refSys[lang];
+              }
 
+              return "";
+            }
+          }
+        }
+      };
+      $scope.refSysValidationErrorClass = '';
+      var addEmptyRefSys = function () {
+        var j;
+        var refSys = {
+          code: {},
+          options: [{}]
+        };
+        for (j = 0; j < $scope.data.refSysOptions.length; j++) {
+          refSys.options.push({
+            "eng": $scope.data.refSysOptions[j],
+            "fre": $scope.data.refSysOptions[j],
+            "ger": $scope.data.refSysOptions[j],
+            "ita": $scope.data.refSysOptions[j],
+            "roh": $scope.data.refSysOptions[j]
+          });
+        }
+        $scope.data.refSys.push(refSys);
+      };
+      var removeEmptyRefSys = function () {
+        var i;
+        for (i = $scope.data.refSys.length - 1; i > -1; i--) {
+          if ($scope.data.refSys[i].ref === undefined && ($scope.data.refSys[i].code === undefined ||
+            $scope.data.refSys[i].code.eng === undefined)) {
+            $scope.data.refSys.splice(i, 1);
+            return;
+          }
+        }
+      };
+      $scope.$watch("data.refSys", function () {
+        var refSys = $scope.data.refSys;
+        var i, doAdd = $scope.data.refSysOptions !== undefined;
+        var refSysClass = $scope.validationErrorClass;
+
+        for (i = 0; i < refSys.length; i++) {
+          if (refSys[i].code) {
+            if (refSys[i].code[$scope.lang] && $scope.data.refSysOptions.indexOf(refSys[i].code[$scope.lang]) > -1) {
+              refSysClass = '';
+              removeEmptyRefSys();
+              doAdd = false;
+            }
+
+            if (refSys[i].ref === undefined || !$scope.refSysTitle()(refSys[i].code)) {
+              doAdd = false;
+            }
+          }
+        }
+        $scope.refSysValidationErrorClass = refSysClass;
+        if (doAdd) {
+          addEmptyRefSys();
+        }
+      }, true);
+      $scope.$watch("data.refSysOptions", function () {
+        var i,j;
+        for (i = 0; i < $scope.data.refSys.length; i++ ){
+          $scope.data.refSys[i].options = [$scope.data.refSys[i].code];
+          for (j = 0; j < $scope.data.refSysOptions.length; j++) {
+            $scope.data.refSys[i].options.push({
+              "eng": $scope.data.refSysOptions[j],
+              "fre": $scope.data.refSysOptions[j],
+              "ger": $scope.data.refSysOptions[j],
+              "ita": $scope.data.refSysOptions[j],
+              "roh": $scope.data.refSysOptions[j]
+            });
+          }
+        }
+      });
       $scope.saveMetadata = function(editTab, finish) {
         var waitDialog = $('#pleaseWaitDialog');
         if (waitDialog) {
-          waitDialog.find('h2').text($translate('saveInProgress'));
+          if (editTab) {
+            waitDialog.find('h2').text($translate('viewChange'));
+          } else {
+            waitDialog.find('h2').text($translate('saveInProgress'));
+          }
           waitDialog.modal();
         }
         var dataClone = angular.copy($scope.data);
@@ -214,6 +333,10 @@
         delete dataClone.allConformanceReports;
         delete dataClone.couplingTypeOptions;
         delete dataClone.dcpListOptions;
+        delete dataClone.refSysOptions;
+        for (var i = 0; i < dataClone.refSys; i++) {
+          delete dataClone.refSys[i].options;
+        }
 
         var data = encodeURIComponent(JSON.stringify(dataClone));
         var finalData = 'id=' + mdId + '&data=' + data;
@@ -221,7 +344,11 @@
           finalData = 'validate=false&'+finalData;
         }
         if (finish) {
-          finalData = 'finish=false&'+finalData;
+          finalData = 'finished=yes&'+finalData;
+        }
+
+        if (!finish && !editTab) {
+          finalData = 'starteditingsession=true&'+finalData;
         }
         return $http({
           method: 'POST',
@@ -261,18 +388,27 @@
         });
       };
 
-      $scope.stopEditing = function() {
-        allowUnload = true;
-        window.location.href = 'metadata.show?id=' + mdId;
+      $scope.stopEditing = function(forget) {
+        $http({
+          method: 'POST',
+          url: $scope.url + "metadata.update.forgetandfinish?id=" + mdId + "&forget="+forget
+        }).success(function (data) {
+          allowUnload = true;
+          window.location.href = 'metadata.show?id=' + mdId;
+        }).error(function (data) {
+          allowUnload = true;
+          window.location.href = 'metadata.show?id=' + mdId;
+        });
+
       };
 
       $scope.saveMetadataAndExit = function (){
         $scope.saveMetadata(undefined, true).success(function(){
-          $scope.stopEditing();
+          $scope.stopEditing('yes');
         });
       };
 
-  }]);
+    }]);
 
 
   module.controller('InspireKeywordController', [
@@ -356,6 +492,67 @@
       };
 
       $scope.$watch('data.identification.descriptiveKeywords', $scope.validateKeywords, true);
+    }]);
+
+
+  module.controller('InspireFormatController', [
+    '$scope', 'inspireGetFormatsFactory',
+    function($scope, inspireGetFormatsFactory) {
+      $scope.allFormats = {validated: [], nonValidated: []};
+
+      inspireGetFormatsFactory.loadAll($scope.url).then(function(formats) {
+        $scope.allFormats.validated = formats.validated;
+        $scope.allFormats.nonValidated = formats.nonValidated;
+      });
+
+      $scope.editFormat = function(format) {
+        $scope.formatUnderEdit = format;
+        $scope.selectedFormat = {};
+        var modal = $('#editFormatModal');
+        modal.modal('show');
+      };
+
+      $scope.deleteFormat = function(format) {
+        var k, i, formats = $scope.data.distributionFormats;
+        if (formats.length > 1) {
+          formats.splice(formats.indexOf(format), 1);
+        } else {
+          formats[0].id = "";
+          formats[0].name = "";
+          formats[0].version = "";
+          formats[0].validated = false;
+        }
+      };
+
+      $scope.selectFormat = function(format) {
+        $scope.selectedFormat = format;
+      };
+
+      $scope.linkToOtherFormat = function() {
+        var format = $scope.selectedFormat;
+        angular.copy(format, $scope.formatUnderEdit);
+
+        var modal = $('#editFormatModal');
+        modal.modal('hide');
+      };
+
+      $scope.validationCls = '';
+      $scope.validateFormats = function(){
+        var format, i, formats, thesaurus, valid = false;
+        formats = $scope.data.distributionFormats;
+
+        for (i = 0; i < formats.length; i++) {
+          format = formats[i];
+
+          if (format.id) {
+            valid = true;
+          }
+        }
+
+        $scope.validationCls = valid ? '' : $scope.validationErrorClass;
+      };
+
+      $scope.$watch('data.distributionFormats', $scope.validateFormats, true);
     }]);
 
 
@@ -472,8 +669,8 @@
       };
 
       $scope.validityClass = {
-          otherConstraints: ''
-        };
+        otherConstraints: ''
+      };
       $scope.$watchCollection('data.constraints.legal', function(newValue) {
         if (newValue.length === 0) {
           newValue.push({
@@ -522,7 +719,7 @@
         }
         $scope.validityClass.otherConstraints = !hasOtherRestrictions || $scope.hasNonEmptyOtherConstraint() ? '' : $scope.validationErrorClass;
       });
-  }]);
+    }]);
   module.controller('InspireUseConstraintController', [
     '$scope', function($scope) {
 
@@ -534,7 +731,7 @@
           $scope.legal.otherConstraints.push(otherConstraint);
         }
       });
-  }]);
+    }]);
   module.controller('InspireOtherConstraintController', [
     '$scope', function($scope) {
 
@@ -545,7 +742,7 @@
       $scope.deleteOtherConstraint = function (legal, constraint) {
         $scope.deleteFromArray(legal.otherConstraints, constraint);
       };
-  }]);
+    }]);
 
   module.controller('InspireConformityController', [
     '$scope', '$translate', function($scope, $translate) {
@@ -612,7 +809,7 @@
           return desc.conformanceResultRef;
         };
       };
-  }]);
+    }]);
 
   module.controller('InspireLinkController', [
     '$scope', '$http', function($scope, $http) {
@@ -628,7 +825,7 @@
 
         for (lang in newVal.localizedURL) {
           if (newVal.localizedURL.hasOwnProperty(lang) &&
-              $scope.data.otherLanguages.indexOf(lang) > -1) {
+            $scope.data.otherLanguages.indexOf(lang) > -1) {
             if ($scope.isValidURL === undefined) {
               $scope.isValidURL = true;
             }
@@ -648,7 +845,7 @@
       $scope.deleteLink = function(link) {
         delete link.localizedURL;
       };
-  }]);
+    }]);
 
   module.filter('hideNonCheTopicCategories', function () {
     var acceptable = {

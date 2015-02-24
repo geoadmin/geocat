@@ -287,7 +287,7 @@ public class Save implements Service {
                                     new Element("version", GMD).addContent(new Element("CharacterString", GCO).setText(version))
                             ))
                     );
-                    formatEl.setAttribute("href", "local://xml.format.get?id=" + id, XLINK);
+                    formatEl.setAttribute("href", "local://subtemplate?uuid=" + id, XLINK);
                     if (!validated) {
                         formatEl.setAttribute("role", ReusableObjManager.NON_VALID_ROLE, XLINK);
                     }
@@ -1218,7 +1218,7 @@ public class Save implements Service {
             boolean validated = contact.getBoolean(JSON_VALIDATED);
             String role = contact.optString(JSON_CONTACT_ROLE, "pointOfContact");
 
-            String xlinkHref = "local://xml.user.get?id=" + contactId + "&amp;schema=iso19139.che&amp;role=" + role;
+            String xlinkHref = "local://subtemplate?uuid=" + contactId + "&amp;process=*//gmd:CI_RoleCode/@codeListValue~" + role;
 
             final Element contactEl;
             if (validated && !Strings.isNullOrEmpty(contactId)) {

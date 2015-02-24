@@ -17,7 +17,7 @@
   "security": []
 }, "otherLanguages": ["ger", "fre", "ita", "eng"], "contact": [
   {
-    "id": "1",
+    "id": "786f4876-c13b-472c-8547-4582f1b1fd56-1",
     "organization": {
       "ita": "Ufficio federale di topografia",
       "ger": "Bundesamt für Landestopografie",
@@ -50,7 +50,7 @@
   },
   "pointOfContact": [
     {
-      "id": "1",
+      "id": "786f4876-c13b-472c-8547-4582f1b1fd56-1",
       "organization": {
         "ita": "Ufficio federale di topografia",
         "ger": "Bundesamt für Landestopografie",

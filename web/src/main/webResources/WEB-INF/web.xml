@@ -40,7 +40,7 @@
 	
     <!-- Spring security -->
 <!--     <filter>
-        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-name>ok</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     </filter> -->
     <filter>
