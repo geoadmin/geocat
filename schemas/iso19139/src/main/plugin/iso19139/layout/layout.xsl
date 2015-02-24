@@ -167,7 +167,7 @@
     <xsl:variable name="excluded"
                   select="count($editorConfig/editor/multilingualFields/exclude[name = $elementName]) > 0 or
                     $exclusionMatchesAncestor = true() or $exclusionMatchesParent = true() or $exclusionMatchesChild = true()"/>
-    
+
     <xsl:variable name="hasPTFreeText"
                   select="count(gmd:PT_FreeText) > 0"/>
     <xsl:variable name="hasOnlyPTFreeText"
