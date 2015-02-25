@@ -30,5 +30,8 @@
   "mostReferenceCount": "Most References",
   "fewestReferenceCount": "Fewest References",
   "reusable_confirmDelete": "Deleting Shared Object",
-  "reusable_confirmDeleteMsg": "<div>Are you sure you want to delete the following shared object?</div> <div>{{desc}}</div><div>Number of References: {{referenceCount}}</div>"
+  "reusable_confirmDeleteMsg": "<div>Are you sure you want to delete the following shared object?</div> <div>{{desc}}</div><div>Number of References: {{referenceCount}}</div>",
+  "typeForMore": "Type to search for more",
+  "exclude": "Exclude",
+  "include": "Include"
 }

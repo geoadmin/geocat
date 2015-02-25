@@ -78,7 +78,13 @@
           /**
            * Load shared object list depending on type and search filter
            */
-          scope.loadSO = function() {
+          scope.loadSO = function(e) {
+            if(e) {
+              if(element.find('.gc-shared-object').hasClass('open')) {
+                e.stopImmediatePropagation();
+              }
+            }
+
             var validated;
             if(scope.templateType == 'extents' && scope.regionType) {
               validated = 'gn:' + scope.regionType;
@@ -206,7 +212,7 @@
                 });
           }
           else if(scope.templateType == 'extents') {
-            scope.prop.extentFormat = 'GMD_BBOX';
+            scope.prop.extentFormat = 'GMD_COMPLETE';
             scope.prop.extentTypeCode = 'true';
             extentTypeCode = true;
             $http.get('reusable.object.categories/extents').success(function(data) {
@@ -236,6 +242,7 @@
     function ($q, $http, $rootScope, $timeout, gnEditor, gnPopup,
               gnUrlUtils, extentsService, keywordsService) {
 
+
       /**
        * Load a list of shared object and format response
        * @param type
@@ -254,7 +261,7 @@
             validated: validated,
             type: type,
             q: searchValue,
-            maxResults: 20
+            maxResults: 10
           }}).
             success(function (data) {
               if (data.indexOf("<") != 0) {
