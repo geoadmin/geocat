@@ -66,8 +66,11 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" role="menu">
-      <li data-ng-repeat="r in regionTypes" data-ng-hide="r['@hideInEditMode']">
-        <a href="" data-ng-click="setRegionType(r)" title="{{r}}">
+      <li>
+        <a href="" data-ng-click="setRegionType(undefined)" translate="">all</a>
+      </li>
+      <li data-ng-repeat="r in regionTypes">
+        <a href="" data-ng-click="setRegionType(r)">
           {{r}}
         </a>
       </li>

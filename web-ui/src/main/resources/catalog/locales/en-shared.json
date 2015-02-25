@@ -1,4 +1,6 @@
 {
+  "all": "All",
+  "region": "Region type",
   "contacts" : "Contacts",
   "formats" : "Formats",
   "extents" : "Extents",
@@ -31,7 +33,7 @@
   "fewestReferenceCount": "Fewest References",
   "reusable_confirmDelete": "Deleting Shared Object",
   "reusable_confirmDeleteMsg": "<div>Are you sure you want to delete the following shared object?</div> <div>{{desc}}</div><div>Number of References: {{referenceCount}}</div>",
-  "typeForMore": "Type to search for more",
+  "typeForMore": "Only 10 results displayed -- Type to search for more",
   "exclude": "Exclude",
   "include": "Include"
 }
