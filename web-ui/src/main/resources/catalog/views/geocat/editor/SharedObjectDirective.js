@@ -79,6 +79,8 @@
            * Load shared object list depending on type and search filter
            */
           scope.loadSO = function(e) {
+            scope.entry = undefined;
+
             if(e) {
               if(element.find('.gc-shared-object').hasClass('open')) {
                 e.stopImmediatePropagation();
@@ -114,6 +116,11 @@
                   }
                 });
             return false;
+          };
+
+          scope.selectEntry = function(entry) {
+            scope.searchValue = entry.desc;
+            scope.entry = entry;
           };
 
           // <request><codelist schema="iso19139"

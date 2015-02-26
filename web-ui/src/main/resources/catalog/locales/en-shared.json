@@ -36,5 +36,9 @@
   "typeForMore": "Only 10 results displayed -- Type to search for more",
   "exclude": "Exclude",
   "include": "Include",
-  "bbox": "Bounding box"
+  "bbox": "Bounding box",
+  "soExtent": "Add an extent from shared objects library",
+  "extentsAddBtn": "Add this extent to the metadata",
+  "contactsAddBtn": "Add this contact to the metadata",
+  "formatsAddBtn": "Add this format to the metadata"
 }

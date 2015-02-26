@@ -1,41 +1,56 @@
 @import "../../../style/gn_editor";
 
-
-.gc-shared-object {
-  .label {
-    margin-left: 5px;
+form.gn-editor {
+  .gn-extra-field [gc-add-sharedobject] {
+    padding-top: 15px;
   }
-  .dropdown-menu {
-    width: 100%;
-  }
-  .has-error button {
-    color: @brand-danger;
-    border-color: @brand-danger;
-    z-index: 2;
-  }
-}
-
-.bootstrap-tagsinput {
-  .fa-edit {
-    padding-left:5px;
-    color: #fff;
-    font-size: 14px;
-    cursor: pointer;
-    &:hover {
-      color: #cdcdcd;
+  [gc-add-sharedobject] {
+    .gc-sharedobject-label {
+      padding-bottom: 10px;
+      line-height: 1em;
+    }
+    .form-group {
+      margin-bottom: 10px;
+    }
+    .gc-sharedobject-addbtn {
+      margin-top: 10px;
+    }
+    .gc-shared-object {
+      .label {
+        margin-left: 5px;
+      }
+      .dropdown-menu {
+        width: 100%;
+      }
+      .has-error button {
+        color: @brand-danger;
+        border-color: @brand-danger;
+        z-index: 2;
+      }
     }
   }
-}
 
-a.update-shared-object {
-  margin-left: 5px;
-  font-size: 80%;
-}
-a.update-shared-object[disabled] {
-  color: @gray-light;
-  cursor: not-allowed;
-}
+  .bootstrap-tagsinput {
+    .fa-edit {
+      padding-left:5px;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+      &:hover {
+        color: #cdcdcd;
+      }
+    }
+  }
 
+  a.update-shared-object {
+    margin-left: 5px;
+    font-size: 80%;
+  }
+  a.update-shared-object[disabled] {
+    color: @gray-light;
+    cursor: not-allowed;
+  }
+}
 
 .gc-extent {
   [ngeo-map] {
@@ -110,5 +125,6 @@ a.update-shared-object[disabled] {
     }
   }
 }
+
 
 

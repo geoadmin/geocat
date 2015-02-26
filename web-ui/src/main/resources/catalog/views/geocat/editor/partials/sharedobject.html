@@ -1,7 +1,8 @@
 <!--Additional extent forms input-->
-<div data-ng-if="templateType == 'extents'">
+<div class="gn-required" data-ng-if="templateType == 'extents'">
+  <label class="gc-sharedobject-label" translate>soExtent</label>
   <div class="form-group">
-    <div class="col-sm-7">
+    <div class="col-sm-8">
       <select class="form-control" data-ng-model="prop.extentFormat">
         <option value="GMD_BBOX" translate="">bboxOnly</option>
         <option value="GMD_COMPLETE" translate="">bboxPolygon</option>
@@ -9,7 +10,7 @@
     </div>
   </div>
   <div class="form-group">
-    <div class="col-sm-7">
+    <div class="col-sm-6">
       <select class="form-control" data-ng-model="prop.extentTypeCode">
         <option value="true" translate="">include</option>
         <option value="false" translate="">exclude</option>
@@ -27,7 +28,7 @@
           data-ng-class="{'disabled' : (templateType == 'contacts' && !role)}" ng-disabled="templateType == 'contacts' && !role"/>
   <ul data-ng-show="objects.length > 0" class="dropdown-menu" role="menu">
     <li data-ng-repeat="o in objects">
-      <a href="" data-ng-click="addEntry(o, role.code, true)" title="{{o.desc}}">
+      <a href="" data-ng-click="selectEntry(o)" title="{{o.desc}}">
         <span class="label pull-right" data-ng-class="{'label-danger' : !o.validated, 'label-success' : o.validated}">&nbsp;</span>
         {{o.desc}}
       </a>
@@ -82,4 +83,7 @@
     <input name="{{snippetRef}}" type="hidden" value="{{snippet}}"/>
   </div>
 </div>
+
+<button class="btn btn-default gc-sharedobject-addbtn" data-ng-click="addEntry(entry, role.code, true)"
+        data-ng-disabled="!entry"><i class="fa fa-plus"/>&nbsp;<span>{{(templateType + 'AddBtn') | translate}}</span></button>
 
