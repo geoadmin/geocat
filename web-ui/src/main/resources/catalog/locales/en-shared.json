@@ -35,5 +35,6 @@
   "reusable_confirmDeleteMsg": "<div>Are you sure you want to delete the following shared object?</div> <div>{{desc}}</div><div>Number of References: {{referenceCount}}</div>",
   "typeForMore": "Only 10 results displayed -- Type to search for more",
   "exclude": "Exclude",
-  "include": "Include"
+  "include": "Include",
+  "bbox": "Bounding box"
 }

@@ -38,29 +38,69 @@
   </div>
 
   <!--Geometry field-->
+  <!--
+    <div class="form-group" >
+      <label for="geomF" class="col-sm-2 control-label"><a href="" translate data-ng-click="prop.showWKT = !prop.showWKT">geometry</a></label>
+      <div class="col-sm-10" data-ng-show="prop.showWKT">
+        <textarea rows="3" data-ng-model="formObj.geomString"
+                  class="form-control input-sm" id="geomF"
+                  placeholder="Description" name="description" />
+      </div>
+    </div>
+  -->
+
+  <!--BBOX field-->
   <div class="form-group" >
-    <label for="geomF" class="col-sm-2 control-label">geometry</label>
-    <div class="col-sm-10">
-      <textarea rows="3" data-ng-model="formObj.geomString"
-                class="form-control input-sm" id="geomF"
-                placeholder="Description" name="description" />
+    <label class="col-sm-2 control-label" translate>bbox</label>
+    <div class="col-sm-10 gn-bbox">
+      <div class="">
+        <div class="input-group coord coord-north">
+          <input type="number" step="any"
+                 data-ng-model="extent[3]"
+                 data-ng-change="updateBbox(true)"
+                 class="form-control" value="180">
+          <span class="input-group-addon">N</span>
+        </div>
+        <div class="input-group coord coord-south">
+          <input type="number" step="any"
+                 data-ng-model="extent[1]"
+                 data-ng-change="updateBbox(true)"
+                 class="form-control" value="-180">
+          <span class="input-group-addon">S</span>
+        </div>
+        <div class="input-group coord coord-east">
+          <input type="number" step="any"
+                 data-ng-model="extent[2]"
+                 data-ng-change="updateBbox(true)"
+                 class="form-control" value="-90">
+          <span class="input-group-addon">E</span>
+        </div>
+        <div class="input-group coord coord-west">
+          <input type="number" step="any"
+                 data-ng-model="extent[0]"
+                 data-ng-change="updateBbox(true)"
+                 class="form-control" value="90">
+          <span class="input-group-addon">W</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!--Draw buttons-->
+    <div ngeo-btn-group>
+      <button class="btn btn-default" ng-model="drawInteraction.active"  ngeo-btn>
+        <span class="fa fa-pencil"></span>
+      </button>
+      <button class="btn btn-default" ng-model="dragboxInteraction.active" ngeo-btn>
+        <span class="fa fa-pencil-square-o"></span>
+      </button>
+      <button class="btn btn-default" data-ng-click="clearMap()">
+        <span class="fa fa-trash-o"></span>
+      </button>
+    </div>
+
+    <!--Map panel-->
+    <div ngeo-map="map">
     </div>
   </div>
-
-  <!--Draw buttons-->
-  <div ngeo-btn-group>
-    <button class="btn btn-default" ng-model="drawInteraction.active"  ngeo-btn>
-      <span class="fa fa-pencil"></span>
-    </button>
-    <button class="btn btn-default" ng-model="dragboxInteraction.active" ngeo-btn>
-      <span class="fa fa-pencil-square-o"></span>
-    </button>
-    <button class="btn btn-default" data-ng-click="clearMap()">
-      <span class="fa fa-trash-o"></span>
-    </button>
-  </div>
-
-  <!--Map panel-->
-  <div ngeo-map="map">
-  </div>
-</div>
+ </div>

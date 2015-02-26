@@ -1,9 +1,64 @@
 @import "../../style/gn.less";
 
+
+
+.modal {
+  height: 100%;
+  overflow: hidden;
+  .modal-dialog {
+    height: ~"calc(100% - 60px)";
+    .modal-content {
+      height: 100%;
+      overflow: hidden;
+
+      .modal-body {
+        height: ~"calc(100% - 9.2em)";
+        overflow: auto;
+        padding-bottom: 0;
+      }
+      .modal-footer {
+        margin-top: 0;
+      }
+    }
+  }
+}
+
 .gc-extent {
   [ngeo-map] {
     width: 100%;
     height: 400px;
+  }
+  .gn-bbox {
+    margin-top: 20px;
+    > div {
+      height: 96px;
+    }
+  }
+  .coord {
+    position: absolute;
+    width: 180px;
+  }
+  .coord-north {
+    top: -0.75em;
+  }
+  .coord-south {
+    bottom: -1.1em;
+  }
+  .coord-east {
+    right: 35px;
+  }
+  .coord-west {
+    left: 35px;
+  }
+  .coord-north,
+  .coord-south {
+    left: 50%;
+    margin-left: -75px;
+  }
+  .coord-east,
+  .coord-west {
+    top: 50%;
+    margin-top: -1em;
   }
 }
 
@@ -32,6 +87,7 @@
     display: none;
   }
 }
+
 
 /* app css stylesheet */
 //

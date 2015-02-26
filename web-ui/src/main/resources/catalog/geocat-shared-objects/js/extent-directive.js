@@ -62,6 +62,14 @@
               var map = scope.map;
               var drawnGeom;
 
+              // Manage form control display
+              scope.prop = {
+                showWKT: false,
+                showBbox: true
+              };
+
+              scope.extent = [];
+
               featureOverlay.setMap(map);
               map.addInteraction(drawInteraction);
               map.addInteraction(dragboxInteraction);
@@ -71,6 +79,7 @@
                */
               scope.clearMap = function() {
                 clearMap();
+                scope.extent = [];
                 scope.formObj.geomString = '';
               };
 
@@ -86,6 +95,7 @@
               };
 
               drawInteraction.on('drawend', function() {
+                scope.extent = [];
                 scope.fillInput();
                 scope.$apply();
               });
@@ -96,12 +106,50 @@
                   var g = dragboxInteraction.getGeometry();
                   f.setGeometry(g);
                   featureOverlay.addFeature(f);
+
+                  scope.extent = ol.proj.transformExtent(g.getExtent(),
+                      map.getView().getProjection(), scope.formObj.proj);
+
                   scope.fillInput();
                 });
               });
 
               scope.drawInteraction = drawInteraction;
               scope.dragboxInteraction = dragboxInteraction;
+
+              /**
+               * Update featureOverlay drawn bbox after bbox form change
+               */
+              scope.updateBbox = function() {
+
+                var coordinates, geom, f, extentProj;
+
+                clearMap();
+                drawInteraction.active = false;
+                dragboxInteraction.active = false;
+
+                extentProj = ol.proj.transformExtent(scope.extent,
+                    scope.formObj.proj, map.getView().getProjection());
+                coordinates = gnMap.getPolygonFromExtent(extentProj);
+                geom = new ol.geom.Polygon(coordinates);
+
+                f = new ol.Feature();
+                f.setGeometry(geom);
+                f.getGeometry().setCoordinates(coordinates);
+                featureOverlay.addFeature(f);
+
+                map.getView().fitExtent(extentProj, map.getSize());
+              };
+
+              /**
+               * Update form bbox values depending on current porj
+               */
+              scope.$watch('formObj.proj', function(newV, oldV) {
+                if(newV && oldV) {
+                  scope.extent = ol.proj.transformExtent(scope.extent,
+                  oldV, newV);
+                }
+              });
             },
 
             post: function postLink(scope) {
@@ -131,6 +179,7 @@
                   var f = new ol.Feature();
                   f.setGeometry(geom);
                   featureOverlay.addFeature(f);
+                  scope.extent = geom.getExtent();
                   scope.fillInput();
                 }
 
