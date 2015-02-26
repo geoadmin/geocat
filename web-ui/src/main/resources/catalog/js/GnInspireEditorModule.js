@@ -372,8 +372,17 @@
           }
 
           if (editTab) {
+            var debug = '';
+            var tab = '/tab/' + editTab;
+            if (editTab === 'default') {
+              tab = '';
+            }
+            if (window.location.search.contains('debug')) {
+              debug = '?debug=true';
+            }
+
             allowUnload = true;
-            window.location.href = 'metadata.edit?id=' + mdId + '&currTab=' + editTab;
+            window.location.href = 'catalog.edit' + debug + '#/metadata/' + mdId + tab;
           } else {
             angular.copy(data[0], $scope.data);
             if (waitDialog) {
@@ -389,15 +398,21 @@
       };
 
       $scope.stopEditing = function(forget) {
+        var url;
+        if (forget) {
+          url = $scope.url + "md.edit.cancel?id=" + mdId;
+        } else {
+          url = $scope.url + "md.edit.save.and.close?id=" + mdId;
+        }
         $http({
           method: 'POST',
-          url: $scope.url + "metadata.update.forgetandfinish?id=" + mdId + "&forget="+forget
+          url: url
         }).success(function (data) {
           allowUnload = true;
-          window.location.href = 'metadata.show?id=' + mdId;
+          window.location.href = 'catalog.search#/metadata/' + mdId;
         }).error(function (data) {
           allowUnload = true;
-          window.location.href = 'metadata.show?id=' + mdId;
+          window.location.href = 'catalog.search#/metadata/' + mdId;
         });
 
       };
