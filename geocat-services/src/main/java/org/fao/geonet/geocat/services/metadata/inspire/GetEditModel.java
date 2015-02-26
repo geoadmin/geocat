@@ -1080,8 +1080,13 @@ public class GetEditModel implements Service {
                     }
                     json.put(Save.JSON_IDENTIFICATION_KEYWORD_CODE, code);
 
-                    addTranslatedElement(mainLanguage, element, mapper, json,
-                            Save.JSON_IDENTIFICATION_KEYWORD_WORD, "gmd:keyword");
+                    if (element.getQualifiedName().equalsIgnoreCase("gmd:descriptiveKeywords")) {
+                        addTranslatedElement(mainLanguage, element, mapper, json,
+                                Save.JSON_IDENTIFICATION_KEYWORD_WORD, "gmd:MD_Keywords/gmd:keyword");
+                    } else {
+                        addTranslatedElement(mainLanguage, element, mapper, json,
+                                Save.JSON_IDENTIFICATION_KEYWORD_WORD, "gmd:keyword");
+                    }
 
                     if (thesaurus != null) {
                         Map<String, String> thesaurusNames = getThesaurusTranslations(mapper, element);

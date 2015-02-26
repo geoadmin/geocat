@@ -16,34 +16,73 @@
    * }
    */
   module.factory('inspireGetSharedUsersFactory', [ '$http', '$q', function($http, $q) {
+    var selectArray = function(json, path) {
+      var i;
+      for(i = 0; i < path.length; i++) {
+        if (angular.isDefined(json)) {
+          if (angular.isArray(json)) {
+            var data = json;
+            json = [];
+            angular.forEach(data, function(elem) {
+              var val = elem[path[i]];
+              if (angular.isArray(val)) {
+                json = json.concat(val);
+              } else {
+                json.push(val);
+              }
+            });
+          } else if (!angular.isArray(json)) {
+            json = json[path[i]];
+          } else {
+            json = undefined;
+          }
+        }
+      }
+
+      if (angular.isDefined(json)) {
+        if (!angular.isArray(json)) {
+          json = [json];
+        }
+        return json;
+      } else {
+        return [];
+      }
+    };
+    var charString = function (json, path, def) {
+      var result = selectArray(json, path.concat(['gco:CharacterString', '#text']));
+      if (result.length > 0) {
+          return result[0];
+      } else {
+        return def;
+      }
+    };
     return {
-      loadDetails: function(url, userId) {
+      loadDetails: function(url, userId, validated) {
         var deferred = $q.defer();
 
-        $http.get(url + 'plain.xml.user.get@json?id=' + userId).success(function(data) {
-          data = data.record;
-          var lang, threeLetterCode;
+        $http.get(url + 'subtemplate?_content_type=json&uuid=' + userId).success(function(data) {
+          var locale, threeLetterCode;
           var langMap = {
-            'DE': 'ger',
-            'EN': 'eng',
-            'FR': 'fre',
-            'IT': 'ita',
-            'RM': 'roh'
+            '#DE': 'ger',
+            '#EN': 'eng',
+            '#FR': 'fre',
+            '#IT': 'ita',
+            '#RM': 'roh'
           };
           var user = {
             id: userId,
-            name: data.name || '',
-            surname: data.surname || '',
-            email: data.email || '',
+            name: charString(data, ['che:individualFirstName'], ''),
+            surname: charString(data, ['che:individualLastName'], ''),
+            email: charString(data, ['gmd:contactInfo', 'gmd:CI_Contact', 'gmd:address', 'che:CHE_CI_Address', 'gmd:electronicMailAddress'], ''),
             organization: {},
-            validated: data.validated === 'y'
+            validated: validated === "true"
           };
 
-          for (lang in data.organisation) {
-            if (data.organisation.hasOwnProperty(lang)) {
-              threeLetterCode = langMap[lang];
-              user.organization[threeLetterCode] = data.organisation[lang];
-            }
+          var orgName = selectArray(data, ['gmd:organisationName', 'gmd:PT_FreeText', 'gmd:textGroup', 'gmd:LocalisedCharacterString'], []);
+          for (var i = 0; i < orgName.length; i++) {
+            locale = orgName[i];
+            threeLetterCode = langMap[locale['@locale']];
+            user.organization[threeLetterCode] = orgName[i]['#text'];;
           }
 
           deferred.resolve(user);

@@ -104,7 +104,7 @@
       $scope.data = inspireMetadataLoader($scope.lang, $scope.url, mdId);
       $scope.emptyContact = $scope.data.contact[0];
 
-      $http.get($scope.url + "q@json?fast=index&from=1&to=1&sortBy=relevance&_id=" + mdId).success(function(data){
+      $http.get($scope.url + "q?_content_type=json&fast=index&from=1&to=1&sortBy=relevance&_id=" + mdId).success(function(data){
         var metadata, logoId;
         if (data.metadata) {
           if (data.metadata[0]) {
@@ -352,7 +352,7 @@
         }
         return $http({
           method: 'POST',
-          url: $scope.url + "inspire.edit.save@json",
+          url: $scope.url + "inspire.edit.save?_content_type=json",
           data: finalData,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function (data) {

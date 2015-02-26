@@ -8,7 +8,7 @@
     return  function(url, thesaurus) {
         var deferred = $q.defer();
 
-        var serviceAndParams = 'xml.search.keywords@json?pNewSearch=true&pLanguage=*&pThesauri=';
+        var serviceAndParams = 'xml.search.keywords?_content_type=json&pNewSearch=true&pLanguage=*&pThesauri=';
         $http.get(url + serviceAndParams + thesaurus).success(function(data) {
           data = data[0];
           var i, j, raw, words, word;

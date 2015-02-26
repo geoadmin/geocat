@@ -8,7 +8,7 @@
     return  function($scope, url, query) {
         var deferred = $q.defer();
         $scope.loadingExtents = true;
-        var serviceAndParams = 'xml.regions.list@json?maxRecords=20&label='+query;
+        var serviceAndParams = 'xml.regions.list?_content_type=json&maxRecords=20&label='+query;
         $http.get(url +serviceAndParams).success(function(data) {
           var i, region, regions = [];
 

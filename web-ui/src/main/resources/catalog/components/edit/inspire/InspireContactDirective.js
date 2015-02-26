@@ -11,7 +11,8 @@
     function($scope, inspireGetSharedUsersFactory, $translate) {
       $scope.linkToOtherContact = function() {
         var userId = $scope.selectedSharedUser.id;
-        inspireGetSharedUsersFactory.loadDetails($scope.url, userId).then(function(newContact){
+        var validated = $scope.selectedSharedUser.validated;
+        inspireGetSharedUsersFactory.loadDetails($scope.url, userId, validated).then(function(newContact){
           $scope.updateContact(newContact, true)
         });
       };
