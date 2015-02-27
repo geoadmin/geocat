@@ -30,6 +30,7 @@
   module.value('gnElementsMap', {
     protocol: {
       'iso19139': 'gmd:protocol',
+      'iso19139.che': 'gmd:protocol',
       'iso19115-3': 'cit:protocol'
     },
     roleCode: {
@@ -39,10 +40,12 @@
     },
     associationType: {
       'iso19139': 'gmd:DS_AssociationTypeCode',
+      'iso19139.che': 'gmd:DS_AssociationTypeCode',
       'iso19115-3': 'mri:DS_AssociationTypeCode'
     },
     initiativeType: {
       'iso19139': 'gmd:DS_InitiativeTypeCode',
+      'iso19139.che': 'gmd:DS_InitiativeTypeCode',
       'iso19115-3': 'mri:DS_InitiativeTypeCode'
     }
   });
