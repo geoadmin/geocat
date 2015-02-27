@@ -2036,12 +2036,36 @@
     <description>Adresse für den Online-Zugriff unter Verwendung einer URL (Uniform Resource
       Locator)</description>
   </element>
-  <element name="gmd:protocol" context="gmd:CI_OnlineResource" id="398">
+  <element name="gmd:protocol" id="398.0">
     <label>Protokoll</label>
-    <help/>
-    <condition/>
     <description>Zu verwendendes Verbindungsprotokoll</description>
+    <helper sort="true">
+
+      <!--GEOCAT SPECIFIC-->
+      <option value="WWW:LINK-1.0-http--link">Webaddresse (URL)</option>
+      <option value="WWW:LINK-1.0-http--samples">Beispielprodukt (URL)</option>
+      <option value="WWW:LINK-1.0-http--related">Verwandter Link (URL)</option>
+      <option value="WWW:LINK-1.0-http--partners">Partner Webaddresse (URL)</option>
+      <option value="WWW:LINK-1.0-http--rss">RSS Newsfeed (URL)</option>
+      <option value="WWW:LINK-1.0-http--ical">iCalendar (URL)</option>
+      <option value="WWW:DOWNLOAD-1.0-http--download">Datei zum download</option>
+      <option value="WWW:DOWNLOAD-1.0-ftp--download">Datei via FTP zum download</option>
+      <option value="OGC:WMS-http-get-map">OGC-WMS Web Map Service</option>
+      <option value="OGC:WFS-http-get-capabilities">OGC-WFS Web Feature Service</option>
+      <option value="OGC:WCS-http-get-capabilities">OGC-WCS Web Coverage Service</option>
+      <option value="OGC:WMTS-http-get-capabilities">OGC-WMTS Web Map Tile Service</option>
+      <option value="OGC:WMC-http-get-capabilities">OGC-WMC Web Map Context</option>
+      <option value="OGC:WMS-http-get-capabilities">OGC-WMS Capabilities Service</option>
+      <option value="CHTOPO:specialised-geoportal">Spezialisiertes Geoportal</option>
+      <option value="GLG:KML-2.0-http-get-map">Google Earth KML Service (2.0)</option>
+      <option value="ESRI:AIMS--http--configuration">ArcIMS Map Service Konfigurationsdatei (*.AXL)</option>
+      <option value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</option>
+      <option value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</option>
+      <!--END GEOCAT SPECIFIC-->
+
+    </helper>
   </element>
+
   <element name="gmd:applicationProfile" context="gmd:CI_OnlineResource" id="399">
     <label>Anwendungsprofil</label>
     <help>z. B. "OpenGIS Catalogue Services Specification 2.0.2 - ISO Metadata Application Profile",
