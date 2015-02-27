@@ -85,5 +85,12 @@
 </div>
 
 <button class="btn btn-default gc-sharedobject-addbtn" data-ng-click="addEntry(entry, role.code, true)"
-        data-ng-disabled="!entry"><i class="fa fa-plus"/>&nbsp;<span>{{(templateType + 'AddBtn') | translate}}</span></button>
+        data-ng-disabled="!entry">
+  <i class="fa fa-plus"/>&nbsp;<span>{{(templateType + 'AddBtn') | translate}}</span>
+</button>
 
+<div class="gn-addextent-btn">
+  <button class="btn btn-default gc-sharedobject-addbtn" data-ng-if="templateType == 'extents'" data-ng-click="addExtent()">
+    <i class="fa fa-plus"/>&nbsp;<span translate>addClassicExtent</span>
+  </button>
+</div>

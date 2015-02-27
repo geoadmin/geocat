@@ -232,6 +232,13 @@
             gcSharedobject.editEntry(this.templateType);
           };
 
+          /**
+           * Will add a classic extent panel for temporal or vertical ..
+           */
+          scope.addExtent = function() {
+            gnEditor.add(gnCurrentEdit.id,
+                scope.elementRef, scope.elementName, scope.domId, 'before');
+          };
         }
       };
     }]);

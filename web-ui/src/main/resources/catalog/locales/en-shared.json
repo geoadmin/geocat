@@ -40,5 +40,6 @@
   "soExtent": "Add an extent from shared objects library",
   "extentsAddBtn": "Add this extent to the metadata",
   "contactsAddBtn": "Add this contact to the metadata",
-  "formatsAddBtn": "Add this format to the metadata"
+  "formatsAddBtn": "Add this format to the metadata",
+  "addClassicExtent": "Add a classic extent"
 }
