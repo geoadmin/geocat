@@ -174,7 +174,7 @@ public class SharedObjects implements DatabaseMigrationTask {
                                             langs = "ger,fre,ita,eng";
                                         }
                                         String href = "local://eng/xml.keyword.get?thesaurus=" + thesaurus + "&id=" + keywordId +
-                                                      "&multiple=false&lang=" + langs + "&textgroupOnly";
+                                                      "&multiple=false&lang=" + langs + "&textgroupOnly&skipdescriptivekeywords";
                                         el.setAttribute(HREF, href, NAMESPACE_XLINK);
                                     } else {
                                         el.removeAttribute(HREF, NAMESPACE_XLINK);

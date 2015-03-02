@@ -315,11 +315,11 @@ public class SaveTest extends AbstractCoreIntegrationTest {
         assertEquals(3, keywords.size());
         final String buildingsKeywordXlink =
                 "local://xml.keyword.get?thesaurus=external.theme.inspire-theme&amp;id=http%3A%2F%2Frdfdata.eionet.europa" +
-                ".eu%2Finspirethemes%2Fthemes%2F15&amp;multiple=false&amp;lang=fre,eng,ger,ita,roh&amp;textgroupOnly";
+                ".eu%2Finspirethemes%2Fthemes%2F15&amp;multiple=false&amp;lang=fre,eng,ger,ita,roh&amp;textgroupOnly&amp;skipdescriptivekeywords";
         assertSharedObject(identification, "gmd:descriptiveKeywords", buildingsKeywordXlink, true);
         final String hydrographyKeywordXlink =
                 "local://xml.keyword.get?thesaurus=external.theme.inspire-theme&amp;id=http%3A%2F%2Frdfdata.eionet.europa" +
-                ".eu%2Finspirethemes%2Fthemes%2F9&amp;multiple=false&amp;lang=fre,eng,ger,ita,roh&amp;textgroupOnly";
+                ".eu%2Finspirethemes%2Fthemes%2F9&amp;multiple=false&amp;lang=fre,eng,ger,ita,roh&amp;textgroupOnly&amp;skipdescriptivekeywords";
         assertSharedObject(identification, "gmd:descriptiveKeywords", hydrographyKeywordXlink, true);
 
 
