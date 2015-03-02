@@ -40,6 +40,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.geocat.kernel.reusable.SharedObjectUriMapper;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
 import org.fao.geonet.inspireatom.InspireAtomType;
 import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
 import org.fao.geonet.kernel.DataManager;
@@ -398,6 +399,7 @@ public class Geonetwork implements ApplicationHandler {
 
         fillCaches(context);
 
+        AbstractEntityListenerManager.setSystemRunning(true);
         return gnContext;
     }
 
@@ -590,6 +592,7 @@ public class Geonetwork implements ApplicationHandler {
 
     public void stop() {
         logger.info("Stopping geonetwork...");
+        AbstractEntityListenerManager.setSystemRunning(false);
 
         logger.info("shutting down CSW HarvestResponse executionService");
         CswHarvesterResponseExecutionService.getExecutionService().shutdownNow();

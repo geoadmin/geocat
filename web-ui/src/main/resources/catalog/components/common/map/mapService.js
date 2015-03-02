@@ -533,6 +533,9 @@
          */
         selected: function(layer) {
           return layer.displayInLayerManager;
+        },
+        visible: function(layer) {
+          return layer.displayInLayerManager && layer.visible;
         }
       };
     };

@@ -1,5 +1,6 @@
 @import "../../../style/gn_search";
 @import "gn_mapviewer_sextant.less";
+@import "../../../style/gn_metadata";
 
 @sxt-orange: #F28033;
 
@@ -45,17 +46,18 @@
   border-radius: 0;
   width: 1em;
   z-index: 100;
-  span {
+  .side-label {
     position: absolute;
     bottom: 50%;
-    left: -2.35em;
     transform: rotate(-90deg);
     height: 1em;
     text-transform: uppercase;
+    transform-origin: top left;
+    left: 0;
   }
-  i {
+  i.fa {
     position: absolute;
-    bottom: ~"calc(50% - 4em)";
+    bottom: 50%;
     margin-left: -0.4em;
   }
 }
@@ -169,6 +171,9 @@
     .btn {
       .btn-sm;
       opacity: .80;
+      &:nth-of-type(2) {
+        display: none;
+      }
     }
   }
   [gn-facet-multiselect] {
@@ -392,7 +397,7 @@ ul.gn-resultview {
     .gn-grid-item {
       position: relative;
       border: 1px solid @list-group-border;
-      height: 300px;
+      height: 18em;
       background-color: #EFEFEF;
       margin: 0;
       &:hover {
@@ -511,27 +516,34 @@ ul.gn-resultview {
   }
 
   .layers {
-    max-height: 50%;
-    height: 50%;
+    max-height: none;
+    height: ~"calc(100% - 3.6em)";
+    border-bottom: 2px dotted rgba(0,0,0,0.2);
+    &.layers-tools-expanded {
+      max-height: 50%;
+      height: 50%;
+    }
   }
 
   .sxt-layertree {
     max-height: ~"calc(100% - 4em)";
+    height: ~"calc(100% - 4em)";
     overflow-y: auto;
   }
 
   .layers-tools {
     position: absolute;
     bottom: 0px;
-    top: 50%;
+    top: ~"calc(100% - 4em)";
+    overflow: hidden;
     width: 100%;
-    height: 50%;
-    padding-top: 0;
+    height: 4em;
+    padding-top: 1em;
     .btn-group {
       margin-top: 0;
     }
     .panel-carousel-window {
-      height: ~"calc(100% - 4em)";
+      height: ~"calc(100% - 3.4em)";
     }
     .panel-carousel-container {
       height: 100%;
@@ -542,6 +554,20 @@ ul.gn-resultview {
       height: 100%;
       overflow-y: auto;
     }
+    &.layers-tools-expanded {
+      top: 50%;
+      height: 50%;
+      overflow: visible;
+    }
   }
+}
 
+@media (max-width: @screen-sm) {
+  [gn-map-field], .gn-facet, .expander {
+    display:none;
+  }
+}@media (max-width: @screen-md) {
+  .expander {
+    display:none;
+  }
 }
