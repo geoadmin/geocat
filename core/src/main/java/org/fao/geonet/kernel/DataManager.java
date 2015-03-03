@@ -560,23 +560,6 @@ public class DataManager implements ApplicationEventPublisherAware {
             xmlSerializer.update(metadataId, metadataEl, new ISODate().toString(), false, uuid, servContext);
             return metadataEl;
         }
-
-        if (!fastIndex) {
-            try {
-                    /*
-                     * Geocat doesn't permit multilingual elements to have characterString elements only LocalizedString elements.
-                     * This transformation ensures this property
-                     */
-                metadataEl = Xml.transform(metadataEl, stylePath.resolve("characterstring-to-localisedcharacterstring.xsl"));
-                String parentUuid = null;
-                metadataEl = updateFixedInfo(schemaId, Optional.of(Integer.parseInt(metadataId)), uuid, metadataEl, parentUuid,
-                        UpdateDatestamp.NO, servContext);
-
-                xmlSerializer.update(metadataId, metadataEl, new ISODate().toString(), false, uuid, servContext);
-            } catch (Throwable t) {
-                Log.error(Geonet.DATA_MANAGER, "Error converting Characterstring to PTFreeText elements. For metadata " + metadataId, t);
-            }
-        }
         if (!metadata.getHarvestInfo().isHarvested() && metadata.getDataInfo().getType() == MetadataType.METADATA &&
             processSharedObjects) {
             try {
@@ -610,6 +593,23 @@ public class DataManager implements ApplicationEventPublisherAware {
         } else {
             List<Attribute> xlinks = Processor.getXLinks(metadataEl);
             if (xlinks.size() > 0) moreFields.add(SearchManager.makeField("_hasxlinks", "1", true, true));
+        }
+
+        if (!fastIndex) {
+            try {
+                    /*
+                     * Geocat doesn't permit multilingual elements to have characterString elements only LocalizedString elements.
+                     * This transformation ensures this property
+                     */
+                metadataEl = Xml.transform(metadataEl, stylePath.resolve("characterstring-to-localisedcharacterstring.xsl"));
+                String parentUuid = null;
+                metadataEl = updateFixedInfo(schemaId, Optional.of(Integer.parseInt(metadataId)), uuid, metadataEl, parentUuid,
+                        UpdateDatestamp.NO, servContext);
+
+                xmlSerializer.update(metadataId, metadataEl, new ISODate().toString(), false, uuid, servContext);
+            } catch (Throwable t) {
+                Log.error(Geonet.DATA_MANAGER, "Error converting Characterstring to PTFreeText elements. For metadata " + metadataId, t);
+            }
         }
 
         // GEOCAT
@@ -1991,6 +1991,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         if(session != null) {
             session.removeProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
         }
+
         String schema = getMetadataSchema(metadataId);
         if(ufo) {
             String parentUuid = null;

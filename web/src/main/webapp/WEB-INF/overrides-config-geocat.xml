@@ -52,7 +52,7 @@
 	    </addXML>
     </file>
     <file name=".*/WEB-INF/config-gui.xml">
-        <replaceAtt xpath="client" attName="url" value="catalog.search?view=geocat"/>
+        <replaceAtt xpath="client" attName="url" value="catalog.search"/>
         <replaceAtt xpath="client" attName="parameters" value=""/>
         <removeXML xpath="editor-geopublisher"/>
         <removeXML xpath="compute-extent-from-keyword"/>
