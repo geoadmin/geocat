@@ -349,7 +349,6 @@
     <xsl:param name="node" as="node()"/>
     <xsl:variable name="nodePosition" select="$node/position()" />
     <xsl:variable name="allPrecedingSiblings" select="$node/preceding-sibling::*[name() = name($node)]" />
-    <xsl:message select="concat('-------------##$$%% ', $node/name(), ' -- ', count($node/preceding-sibling::*), ' -----------------------------------')" />
     <!--<xsl:value-of select="count($node/../*[name = name($node) and position() &lt; $nodePosition]) + 1"/>-->
     <xsl:value-of select="count($allPrecedingSiblings) + 1"/>
   </xsl:function>

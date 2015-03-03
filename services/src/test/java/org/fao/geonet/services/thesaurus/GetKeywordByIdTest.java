@@ -113,6 +113,29 @@ public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
         });
 
         assertEquals("gmd:MD_Keywords", keywordXml.getQualifiedName());
+        assertTrue(Xml.getString(keywordXml), Xml.selectNodes(keywordXml, "gmd:keyword/gco:CharacterString[normalize-space(text()) != "
+                                                                          + "'']", Arrays.asList(ISO19139Namespaces.GCO,
+                ISO19139Namespaces.GMD)).size() > 0);
+    }
+
+    @Test
+    public void testExecMD_KeywordsAsXlink() throws Exception {
+        final String thesaurusKey = firstThesaurusKey();
+        final java.util.List<KeywordBean> keywordBeans = getExampleKeywords(thesaurusKey, 2);
+
+        String uri1 = keywordBeans.get(0).getUriCode();
+        String uri2 = keywordBeans.get(1).getUriCode();
+
+        final Element keywordXml = getKeywordsById(uri1, uri2, thesaurusKey, new Function<Element, Void>() {
+            @Nullable
+            @Override
+            public Void apply(Element input) {
+                input.addContent(new Element("transformation").setText("to-iso19139-keyword-as-xlink"));
+                return null;
+            }
+        });
+
+        assertEquals("gmd:MD_Keywords", keywordXml.getQualifiedName());
         assertTrue(Xml.getString(keywordXml), Xml.selectNodes(keywordXml, "gmd:keyword/gco:CharacterString[normalize-space(text()) != '']", Arrays.asList(ISO19139Namespaces.GCO,
                 ISO19139Namespaces.GMD)).size() > 0);
     }
