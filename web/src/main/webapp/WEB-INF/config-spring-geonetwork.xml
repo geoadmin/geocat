@@ -90,6 +90,9 @@
         <value>srv_custom_style.css</value>
         <value>gn_login.js</value>
         <!-- GEOCAT -->
+        <value>gn_editor_geocat.css</value>
+        <value>gn_login_geocat.css</value>
+        <value>gn_admin_geocat.css</value>
         <value>gn_search_geocat.css</value>
         <value>gn_search_geocat.js</value>
         <value>geocat_shared_objects_app.js</value>
