@@ -103,6 +103,12 @@
               data-template-type="formats"
     />
     </for>
+    <for name="gmd:distributionFormat" addDirective="gc-add-sharedobject">
+      <directiveAttributes
+              data-template-add-action="true"
+              data-template-type="formats"
+    />
+    </for>
 
 
     <!-- Example configuration: Add onLine source from subtemplate
@@ -225,6 +231,7 @@
       <name>gmd:transformationDimensionDescription</name>
       <name>gmd:orientationParameterDescription</name>
       <name parent="gmd:MD_Format">gmd:name</name>
+      <name parent="gmd:MD_Identifier">gmd:code</name>
       <name>gmd:language</name>
       <name>srv:name</name>
       <name>srv:invocationName</name>
@@ -280,6 +287,7 @@
         <for name="gmd:extent"/>
         <for name="srv:extent"/>
         <for name="gmd:resourceFormat"/>
+        <for name="gmd:distributionFormat"/>
       </flatModeExceptions>
 
     </view>
