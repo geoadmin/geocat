@@ -131,13 +131,37 @@ public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
             @Override
             public Void apply(Element input) {
                 input.addContent(new Element("transformation").setText("to-iso19139-keyword-as-xlink"));
+                input.addContent(new Element("textgroupOnly").setText(""));
                 return null;
             }
         });
 
-        assertEquals("gmd:MD_Keywords", keywordXml.getQualifiedName());
-        assertTrue(Xml.getString(keywordXml), Xml.selectNodes(keywordXml, "gmd:keyword/gco:CharacterString[normalize-space(text()) != '']", Arrays.asList(ISO19139Namespaces.GCO,
-                ISO19139Namespaces.GMD)).size() > 0);
+        assertEquals("gmd:descriptiveKeywords", keywordXml.getQualifiedName());
+        assertEquals(0, keywordXml.getChildren().size());
+        assertNotNull(keywordXml.getAttributeValue("href", Geonet.Namespaces.XLINK));
+    }
+    @Test
+    public void testExecMD_KeywordsAsXlinkAllThesaurus() throws Exception {
+        final String thesaurusKey = AllThesaurus.ALL_THESAURUS_KEY;
+        final java.util.List<KeywordBean> keywordBeans = getExampleKeywords(thesaurusKey, 2);
+
+        String uri1 = keywordBeans.get(0).getUriCode();
+        String uri2 = keywordBeans.get(1).getUriCode();
+
+        final Element keywordXml = getKeywordsById(uri1, uri2, thesaurusKey, new Function<Element, Void>() {
+            @Nullable
+            @Override
+            public Void apply(Element input) {
+                input.addContent(new Element("transformation").setText("to-iso19139-keyword-as-xlink"));
+                input.addContent(new Element("textgroupOnly").setText(""));
+                input.getChild("lang").setText("ger,fre,eng,ita");
+                return null;
+            }
+        });
+
+        assertEquals("gmd:descriptiveKeywords", keywordXml.getQualifiedName());
+        assertEquals(0, keywordXml.getChildren().size());
+        assertNotNull(keywordXml.getAttributeValue("href", Geonet.Namespaces.XLINK));
     }
     @Test
     public void testExecMD_KeywordsAsXlinkAllThesaurus() throws Exception {
