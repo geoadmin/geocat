@@ -74,12 +74,12 @@ public class SharedObjects implements DatabaseMigrationTask {
                 statement.execute("DROP TABLE Formats");
             }
         } catch (java.sql.BatchUpdateException e) {
-            System.out.println("Error occurred updating shared objects");
+            System.out.println("-------------------------------  Error occurred updating shared objects  -------------------------------");
             e.printStackTrace();
 
             SQLException next = e.getNextException();
             while (next != null) {
-                System.out.println("Next error");
+                System.err.println("-------------------------------  Next error   ---------------------------");
                 next.printStackTrace();
             }
         } catch (Exception e) {
