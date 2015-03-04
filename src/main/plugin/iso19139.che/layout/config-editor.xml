@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="../../config-editor.xsd"
-        xmlns:gn="http://www.fao.org/geonetwork"
-        xmlns:gco="http://www.isotc211.org/2005/gco"
-        xmlns:gmd="http://www.isotc211.org/2005/gmd"
-        xmlns:gmx="http://www.isotc211.org/2005/gmx"
-        xmlns:srv="http://www.isotc211.org/2005/srv"
-        xmlns:gml="http://www.opengis.net/gml"
-        xmlns:xlink="http://www.w3.org/1999/xlink" >
+  xsi:noNamespaceSchemaLocation="../../config-editor.xsd"
+  xmlns:gn="http://www.fao.org/geonetwork"
+  xmlns:gco="http://www.isotc211.org/2005/gco"
+  xmlns:gmd="http://www.isotc211.org/2005/gmd"
+  xmlns:gmx="http://www.isotc211.org/2005/gmx"
+  xmlns:srv="http://www.isotc211.org/2005/srv"
+  xmlns:gml="http://www.opengis.net/gml"
+  xmlns:xlink="http://www.w3.org/1999/xlink" >
 
   <!-- Form field type configuration. Default is text. -->
   <fields>
@@ -58,56 +58,56 @@
 
     <for name="gmd:contact" addDirective="gc-add-sharedobject">
       <directiveAttributes
-              data-template-add-action="false"
-              data-template-type="contacts"
-              data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+        data-template-add-action="false"
+        data-template-type="contacts"
+        data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
+        data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:pointOfContact" addDirective="gc-add-sharedobject">
       <directiveAttributes
-              data-template-add-action="false"
-              data-template-type="contacts"
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+        data-template-add-action="false"
+        data-template-type="contacts"
+        data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:distributor" addDirective="gc-add-sharedobject">
       <directiveAttributes
-              data-template-add-action="false"
-              data-template-type="contacts"
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+        data-template-add-action="false"
+        data-template-type="contacts"
+        data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:processor" addDirective="gc-add-sharedobject">
       <directiveAttributes
-              data-template-add-action="false"
-              data-template-type="contacts"
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+        data-template-add-action="false"
+        data-template-type="contacts"
+        data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:citedResponsibleParty" addDirective="gc-add-sharedobject">
       <directiveAttributes
-              data-template-add-action="true"
-              data-template-type="contacts"
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+        data-template-add-action="true"
+        data-template-type="contacts"
+        data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="srv:extent" addDirective="gc-add-sharedobject">
       <directiveAttributes
-              data-template-add-action="true"
-              data-template-type="extents"/>
+        data-template-add-action="true"
+        data-template-type="extents"/>
     </for>
     <for name="gmd:extent" addDirective="gc-add-sharedobject">
       <directiveAttributes
-              data-template-add-action="true"
-              data-template-type="extents"/>
+        data-template-add-action="true"
+        data-template-type="extents"/>
     </for>
     <for name="gmd:resourceFormat" addDirective="gc-add-sharedobject">
       <directiveAttributes
-              data-template-add-action="true"
-              data-template-type="formats"
-    />
+        data-template-add-action="true"
+        data-template-type="formats"
+        />
     </for>
     <for name="gmd:distributionFormat" addDirective="gc-add-sharedobject">
       <directiveAttributes
-              data-template-add-action="true"
-              data-template-type="formats"
-    />
+        data-template-add-action="true"
+        data-template-type="formats"
+        />
     </for>
 
 
@@ -231,7 +231,7 @@
       <name>gmd:transformationDimensionDescription</name>
       <name>gmd:orientationParameterDescription</name>
       <name parent="gmd:MD_Format">gmd:name</name>
-      <name parent="gmd:MD_Identifier">gmd:code</name>
+      <name ancestor="gmd:thesaurusName">gmd:code</name>
       <name>gmd:language</name>
       <name>srv:name</name>
       <name>srv:invocationName</name>
@@ -257,11 +257,11 @@
           <field xpath="/che:CHE_MD_Metadata/gmd:language" or="language" in="/che:CHE_MD_Metadata"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:characterSet"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:parentIdentifier" or="parentIdentifier"
-                 in="/che:CHE_MD_Metadata"/>
+            in="/che:CHE_MD_Metadata"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:hierarchyLevel" or="hierarchyLevel"
-                 in="/che:CHE_MD_Metadata"/>
+            in="/che:CHE_MD_Metadata"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:hierarchyLevelName" or="hierarchyLevelName"
-                 in="/che:CHE_MD_Metadata"/>
+            in="/che:CHE_MD_Metadata"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:dateStamp"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:metadataStandardName"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:metadataStandardVersion"/>
@@ -294,30 +294,30 @@
     <view name="advanced">
       <tab id="identificationInfo" default="true">
         <section xpath="/che:CHE_MD_Metadata/gmd:identificationInfo" or="identificationInfo"
-                 in="/che:CHE_MD_Metadata"/>
+          in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="distributionInfo">
         <section xpath="/che:CHE_MD_Metadata/gmd:distributionInfo" or="distributionInfo"
-                 in="/che:CHE_MD_Metadata"/>
+          in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="dataQualityInfo">
         <section xpath="/che:CHE_MD_Metadata/gmd:dataQualityInfo" or="dataQualityInfo"
-                 in="/che:CHE_MD_Metadata"/>
+          in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="spatialRepresentationInfo">
         <section xpath="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo"
-                 or="spatialRepresentationInfo" in="/che:CHE_MD_Metadata"/>
+          or="spatialRepresentationInfo" in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="referenceSystemInfo">
         <section xpath="/che:CHE_MD_Metadata/gmd:referenceSystemInfo" or="referenceSystemInfo"
-                 in="/che:CHE_MD_Metadata"/>
+          in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="contentInfo" toggle="true">
         <section xpath="/che:CHE_MD_Metadata/gmd:contentInfo" or="contentInfo" in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="portrayalCatalogueInfo" toggle="true">
         <section xpath="/che:CHE_MD_Metadata/gmd:portrayalCatalogueInfo" or="portrayalCatalogueInfo"
-                 in="/che:CHE_MD_Metadata"/>
+          in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="metadata">
         <section name="che:CHE_MD_Metadata">
@@ -325,11 +325,11 @@
           <field xpath="/che:CHE_MD_Metadata/gmd:language" or="language" in="/che:CHE_MD_Metadata"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:characterSet"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:parentIdentifier" or="parentIdentifier"
-                 in="/che:CHE_MD_Metadata"/>
+            in="/che:CHE_MD_Metadata"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:hierarchyLevel" or="hierarchyLevel"
-                 in="/che:CHE_MD_Metadata"/>
+            in="/che:CHE_MD_Metadata"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:hierarchyLevelName" or="hierarchyLevelName"
-                 in="/che:CHE_MD_Metadata"/>
+            in="/che:CHE_MD_Metadata"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:dateStamp"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:metadataStandardName"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:metadataStandardVersion"/>
@@ -345,15 +345,15 @@
       </tab>
       <tab id="metadataConstraints" toggle="true">
         <section xpath="/che:CHE_MD_Metadata/gmd:metadataConstraints" or="metadataConstraints"
-                 in="/che:CHE_MD_Metadata"/>
+          in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="metadataMaintenance" toggle="true">
         <section xpath="/che:CHE_MD_Metadata/gmd:metadataMaintenance" or="metadataMaintenance"
-                 in="/che:CHE_MD_Metadata"/>
+          in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="applicationSchemaInfo" toggle="true">
         <section xpath="/che:CHE_MD_Metadata/gmd:applicationSchemaInfo" or="applicationSchemaInfo"
-                 in="/che:CHE_MD_Metadata"/>
+          in="/che:CHE_MD_Metadata"/>
       </tab>
     </view>
     <view name="inspire">
