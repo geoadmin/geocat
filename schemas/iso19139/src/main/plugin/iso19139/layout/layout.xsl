@@ -174,8 +174,6 @@
                   select="count(gmd:PT_FreeText) > 0 and count(gco:CharacterString) = 0"/>
     <xsl:variable name="isMultilingualElement" 
                   select="$metadataIsMultilingual and $excluded = false()"/>
-                  select="$metadataIsMultilingual and
-                    count($editorConfig/editor/multilingualFields/exclude[name = $elementName]) = 0"/>
     <xsl:variable name="isMultilingualElementExpanded" 
                   select="count($editorConfig/editor/multilingualFields/expanded[name = $elementName]) > 0"/>
     
