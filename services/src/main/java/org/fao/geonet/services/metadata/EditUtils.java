@@ -314,9 +314,6 @@ class EditUtils {
 
 		editLib.contractElements(md);
 
-        // GEOCAT
-        dataManager.updateXlinkObjects(id, lang, md, updatedXLinks.toArray(new Element[updatedXLinks.size()]));
-        // END GEOCAT
         return md;
     }
 

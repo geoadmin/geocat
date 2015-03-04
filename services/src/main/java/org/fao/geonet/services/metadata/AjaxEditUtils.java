@@ -252,7 +252,7 @@ public class AjaxEditUtils extends EditUtils {
                     Element xlinkParent = EditUtils.findXlinkParent((Element) selectResult.result);
                     if( xlinkParent!=null && ReusableObjManager.isValidated(xlinkParent)){
                         continue;
-        }
+                    }
                     if( xlinkParent!=null ){
                         updatedXLinks.add(xlinkParent);
                     }
@@ -260,9 +260,6 @@ public class AjaxEditUtils extends EditUtils {
             }
             // END GEOCAT
         }
-        // GEOCAT
-        dataManager.updateXlinkObjects(id, lang, md, updatedXLinks.toArray(new Element[updatedXLinks.size()]));
-        // END GEOCAT
         
         
         setMetadataIntoSession(session,(Element)md.clone(), id);

@@ -7,6 +7,7 @@
   goog.require('geocat_shared_objects_extent_directive');
   goog.require('geocat_shared_objects_extent_controller');
   goog.require('geocat_shared_objects_keyword_controller');
+  goog.require('shared-object-subtemplate-service');
 
   var module = angular.module('gc_sharedobject', [
     'gn_metadata_manager_service',
@@ -14,6 +15,7 @@
     'gn_editor_xml_service',
     'geocat_shared_objects_extent_directive',
     'geocat_shared_objects_extent_controller',
+    'shared-object-subtemplate-service',
     'geocat_shared_objects_keyword_controller'
   ]);
 
@@ -56,12 +58,6 @@
             'sharedobject.html',
 
         link: function(scope, element, attrs) {
-
-          var separator = '&&&';
-
-          // xlink local
-          var url = 'local://' + scope.$parent.lang + '/subtemplate';
-
           angular.extend(scope, {
             gnConfig: gnConfig,
             templateAddAction: scope.templateAddAction === 'true',
@@ -135,7 +131,7 @@
 
             var checkState = function() {
               if (snippets.length === entry.length) {
-                scope.snippet = snippets.join(separator);
+                scope.snippet = snippets.join(gcSharedobject.separator);
                 $timeout(function() {
                   // Save the metadata and refresh the form
                   gnEditor.save(gnCurrentEdit.id, true);
@@ -172,18 +168,7 @@
               }
               if(scope.templateType == 'contacts' ||
                   scope.templateType == 'formats') {
-                gnHttp.callService(
-                    'subtemplate', params).success(function(xml) {
-                      if (usingXlink) {
-                        snippets.push(gnEditorXMLService.
-                            buildXMLForXlink(scope.elementName,
-                          c.xlink + '&process=' + params.process, extraXLinkParams));
-                      } else {
-                        snippets.push(gnEditorXMLService.
-                            buildXML(scope.elementName, xml));
-                      }
-                      checkState();
-                    });
+                gcSharedobject.addXlinkXml(scope, snippets, extraXLinkParams, extraXLinkParams, c.xlink, params).then(checkState);
               }
               else if(scope.templateType == 'extents') {
 
@@ -229,7 +214,7 @@
           }
 
           scope.editEntry = function() {
-            gcSharedobject.editEntry(this.templateType);
+            gcSharedobject.editEntry(this.templateType, undefined, scope);
           };
 
           /**
@@ -251,10 +236,25 @@
     'gnEditor',
     'gnPopup',
     'gnUrlUtils',
+    'gnHttp',
+    'gnEditorXMLService',
+    'gnCurrentEdit',
     'extentsService',
     'keywordsService',
-    function ($q, $http, $rootScope, $timeout, gnEditor, gnPopup,
-              gnUrlUtils, extentsService, keywordsService) {
+    'subtemplateService',
+    function ($q,
+              $http,
+              $rootScope,
+              $timeout,
+              gnEditor,
+              gnPopup,
+              gnUrlUtils,
+              gnHttp,
+              gnEditorXMLService,
+              gnCurrentEdit,
+              extentsService,
+              keywordsService,
+              subtemplateService) {
 
 
       /**
@@ -359,12 +359,156 @@
         }
       };
 
+      var editExtent = function(xlink) {
+
+        scope.finishEdit = finishEditExtent;
+        scope.formObj = angular.copy(extentsService.formObjTemplate);
+
+        var modalConfig = {
+          title: 'createNewSharedObject',
+          id: 'sharedobjectModal',
+          content: '<form class="form-horizontal" role="form"><div gc-edit-extent=""></div></form>',
+          footer: '<div class="modal-footer">' +
+          '<button type="button" class="btn btn-default" data-dismiss="modal" translate>cancel</button>' +
+          '<button type="button" class="btn btn-primary" data-ng-click="finishEdit()" translate>accept</button>' +
+          '</div>'
+        };
+
+        // Extent creation
+        if(!xlink) {
+          scope.formObj.typename = 'gn:non_validated';
+          gnPopup.createModal(modalConfig, scope);
+          $timeout(function() {
+            $rootScope.$broadcast('modalShown', {
+              feature: {
+                geoId: {},
+                desc: {},
+                geom: 'POLYGON((481500 88000,481500 297250,832500 297250,832500 88000,481500 88000))'
+              }
+            })
+          }, 200, true);
+
+        }
+        // Extent edition
+        else {
+
+          var params = gnUrlUtils.parseKeyValue(xlink.split('?')[1]);
+          angular.extend(scope.formObj, {
+            id: params.id,
+            typename: params.typename
+          });
+
+          $http({
+            method: 'GET',
+            url: extentsService.getService,
+            params: {
+              id: scope.formObj.id,
+              typename: scope.formObj.typename,
+              format: 'wkt',
+              crs: 'EPSG:21781',
+              _content_type: 'json'
+            }
+          }).success(function (data) {
+
+            gnPopup.createModal(modalConfig, scope);
+            $timeout(function() {
+              $rootScope.$broadcast('modalShown',  data[0].featureType)
+            }, 200, true);
+          });
+        }
+      };
+
+      var editKeyword = function (xlink) {
+
+        scope.finishEdit = finishEditKeyword;
+        scope.keyword = angular.copy(keywordsService.defaultKeyword);
+
+        var modalConfig = {
+          title: 'createNewSharedObject',
+          id: 'sharedobjectModal',
+          content: '<form class="form-horizontal" role="form">' +
+          '<div class="form-group" ng-repeat="(lang, obj) in keyword">' +
+          '  <label class="col-lg-2" for="{{$index}}Label">{{lang | translate}}</label>' +
+          '    <span class="col-lg-5">' +
+          '      <input type="text" class="form-control" ' +
+          '         ng-model="keyword[lang].label" name="{{lang}}Label"' +
+          '         id="Text1" placeholder="{{\'label\' | translate}}" />' +
+          '    </span>' +
+          '  </div>' +
+          '</form>',
+          footer: '<div class="modal-footer">' +
+          '<button type="button" class="btn btn-default" data-dismiss="modal" translate>cancel</button>' +
+          '<button type="button" class="btn btn-primary" data-ng-click="finishEdit()" translate>accept</button>' +
+          '</div>'
+        };
+
+        // Keyword creation
+        if(!xlink) {
+          gnPopup.createModal(modalConfig, scope);
+        }
+        else {
+          $http({
+            method: 'GET',
+            url: 'json.keyword.get',
+            params: {
+              lang: 'eng,fre,ger,roh,ita',
+              id: xlink.props.uri,
+              thesaurus: xlink.props.thesaurus.key
+            }
+          })
+            .success(function (data) {
+              for (var lang in scope.keyword) {
+                scope.keyword[lang].label = data[lang].label;
+                scope.keyword[lang].desc = data[lang].definition;
+              }
+              gnPopup.createModal(modalConfig, scope);
+            });
+        }
+      };
+
+      this.separator = '&&&';
+      var self = this;
+
+      var createNewSubtemplate = function(sharedObjectControllerScope, template, subtplCustomParams) {
+
+        subtemplateService.createNewSubtemplate(template, false, function(){}).
+        success(function(data) {
+            var win = window.open('catalog.edit#/metadata/' + data.id +'/tab/simple');
+
+            var intervalId = setInterval(function() {
+              if (win.closed) {
+                clearInterval(intervalId);
+                var snippets = [];
+
+                var extraXLinkParams = {
+                  'xlink:show' : 'embed',
+                  'xlink:role' : "http://www.geonetwork.org/non_valid_obj"
+                };
+
+                var params = angular.extend({uuid: data.uuid}, subtplCustomParams);
+                self.addXlinkXml(sharedObjectControllerScope, snippets, true, extraXLinkParams,
+                                 'local://subtemplate?uuid=' + data.uuid, params).
+                  then( function () {
+                    sharedObjectControllerScope.snippet = snippets.join(self.separator);
+                    $timeout(function() {
+                      // Save the metadata and refresh the form
+                      gnEditor.save(gnCurrentEdit.id, true);
+                    });
+                  });
+              }
+            }, 100);
+          }).
+        error(function(data) {
+            alert('Error creating subtemplate');
+          }
+        );
+      };
 
       /**
        * Edit or create a shared object.
        * @param type
        */
-      this.editEntry = function(type, xlink) {
+      this.editEntry = function(type, xlink, sharedObjectControllerScope) {
         scope = $rootScope.$new();
         scope.xlink = xlink;
 
@@ -376,111 +520,33 @@
         scope.type = type;
 
         if(type == 'extents') {
-
-          scope.finishEdit = finishEditExtent;
-          scope.formObj = angular.copy(extentsService.formObjTemplate);
-
-          var modalConfig = {
-            title: 'createNewSharedObject',
-            id: 'sharedobjectModal',
-            content: '<form class="form-horizontal" role="form"><div gc-edit-extent=""></div></form>',
-            footer: '<div class="modal-footer">' +
-                '<button type="button" class="btn btn-default" data-dismiss="modal" translate>cancel</button>' +
-                '<button type="button" class="btn btn-primary" data-ng-click="finishEdit()" translate>accept</button>' +
-                '</div>'
+           editExtent(xlink);
+        } else if(type == 'keywords') {
+           editKeyword(xlink);
+        } else if (type === 'contacts') {
+          var params = {
+            process: '*//gmd:CI_RoleCode/@codeListValue~'+sharedObjectControllerScope.role.code
           };
-
-          // Extent creation
-          if(!xlink) {
-            scope.formObj.typename = 'gn:non_validated';
-            gnPopup.createModal(modalConfig, scope);
-            $timeout(function() {
-              $rootScope.$broadcast('modalShown', {
-                feature: {
-                  geoId: {},
-                  desc: {},
-                  geom: 'POLYGON((481500 88000,481500 297250,832500 297250,832500 88000,481500 88000))'
-                }
-              })
-            }, 200, true);
-
-          }
-          // Extent edition
-          else {
-
-            var params = gnUrlUtils.parseKeyValue(xlink.split('?')[1]);
-            angular.extend(scope.formObj, {
-              id: params.id,
-              typename: params.typename
-            });
-
-            $http({
-              method: 'GET',
-              url: extentsService.getService,
-              params: {
-                id: scope.formObj.id,
-                typename: scope.formObj.typename,
-                format: 'wkt',
-                crs: 'EPSG:21781',
-                _content_type: 'json'
-              }
-            }).success(function (data) {
-
-              gnPopup.createModal(modalConfig, scope);
-              $timeout(function() {
-                $rootScope.$broadcast('modalShown',  data[0].featureType)
-              }, 200, true);
-            });
-          }
-        }
-        else if(type == 'keywords') {
-
-          scope.finishEdit = finishEditKeyword;
-          scope.keyword = angular.copy(keywordsService.defaultKeyword);
-
-          var modalConfig = {
-            title: 'createNewSharedObject',
-            id: 'sharedobjectModal',
-            content: '<form class="form-horizontal" role="form">' +
-              '<div class="form-group" ng-repeat="(lang, obj) in keyword">' +
-              '  <label class="col-lg-2" for="{{$index}}Label">{{lang | translate}}</label>' +
-              '    <span class="col-lg-5">' +
-              '      <input type="text" class="form-control" ' +
-              '         ng-model="keyword[lang].label" name="{{lang}}Label"' +
-              '         id="Text1" placeholder="{{\'label\' | translate}}" />' +
-              '    </span>' +
-              '  </div>' +
-              '</form>',
-            footer: '<div class="modal-footer">' +
-                '<button type="button" class="btn btn-default" data-dismiss="modal" translate>cancel</button>' +
-                '<button type="button" class="btn btn-primary" data-ng-click="finishEdit()" translate>accept</button>' +
-                '</div>'
-          };
-
-          // Keyword creation
-          if(!xlink) {
-            gnPopup.createModal(modalConfig, scope);
-          }
-          else {
-            $http({
-              method: 'GET',
-              url: 'json.keyword.get',
-              params: {
-                lang: 'eng,fre,ger,roh,ita',
-                id: xlink.props.uri,
-                thesaurus: xlink.props.thesaurus.key
-              }
-            })
-                .success(function (data) {
-                  for (var lang in scope.keyword) {
-                    scope.keyword[lang].label = data[lang].label;
-                    scope.keyword[lang].desc = data[lang].definition;
-                  }
-                  gnPopup.createModal(modalConfig, scope);
-                });
-          }
+          createNewSubtemplate(sharedObjectControllerScope, subtemplateService.contactTemplate, params);
+        } else if (type === 'formats') {
+          createNewSubtemplate(sharedObjectControllerScope, subtemplateService.formatTemplate, {});
         }
       };
+
+      this.addXlinkXml = function (scope, snippets, usingXlink, extraXLinkParams, xlink, params) {
+        var promise = gnHttp.callService('subtemplate', params);
+        promise.success(function(xml) {
+          if (usingXlink) {
+            snippets.push(gnEditorXMLService.
+              buildXMLForXlink(scope.elementName, xlink + '&process=' + params.process, extraXLinkParams));
+          } else {
+            snippets.push(gnEditorXMLService.
+              buildXML(scope.elementName, xml));
+          }
+        });
+        return promise;
+      };
+
     }]);
 
   /**

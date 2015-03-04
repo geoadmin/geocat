@@ -1,21 +1,16 @@
 (function() {
   goog.provide('geocat_shared_objects_factories');
+  goog.require('geocat_shared_objects_translate_config');
   'use strict';
 
 /* Services */
 
 // Demonstrate how to register services
 // In this case it is a simple value service.
-angular.module('geocat_shared_objects_factories', []).
-  factory('commonProperties', ['$window', '$http', '$translate', '$location', function ($window, $http, $translate, $location) {
-      var tranformToFormUrlEncoded = function(obj) {
-        var str = [];
-        for(var p in obj) {
-          if (obj.hasOwnProperty(p))
-            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-        }
-        return str.join("&");
-      };
+angular.module('geocat_shared_objects_factories', ['geocat_shared_objects_translate_config']).
+  factory('commonProperties', ['$window', '$http', '$translate', 'subtemplateService', function ($window, $http, $translate,
+                                                                                                 subtemplateService) {
+      var transformToFormUrlEncoded = subtemplateService.transformToFormUrlEncoded;
       var loadRecords = function ($scope) {
           $scope.loading = '-1';
           var validated = $scope.isValidated ? 'true' : 'false';
@@ -198,7 +193,7 @@ angular.module('geocat_shared_objects_factories', []).
                       method: 'POST',
                       url: baseUrl + '/' + service,
                       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                      transformRequest: tranformToFormUrlEncoded,
+                      transformRequest: transformToFormUrlEncoded,
                       data: params
                   });
               };
@@ -222,7 +217,7 @@ angular.module('geocat_shared_objects_factories', []).
                   method: 'POST',
                   url: 'md.insert?_content_type=json',
                   headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                  transformRequest: tranformToFormUrlEncoded,
+                  transformRequest: transformToFormUrlEncoded,
                   data: data
                 }).
                   success(function(data) {
@@ -293,6 +288,24 @@ angular.module('geocat_shared_objects_factories', []).
               };
 
             return loadRecords($scope);
+          },
+          createSubtemplateSuccess: function($scope, locationUrl) {
+            return function(data) {
+              $scope.loading = undefined;
+              var id = data.id;
+              $scope.reloadOnWindowClosed($scope.open('catalog.edit#/metadata/' + id + '/tab/simple'));
+              $location.path(locationUrl);
+            }
+          },
+          createSubtemplateError: function($scope) {
+            return function(data) {
+              $scope.loading = undefined;
+              if (data.error) {
+                alert(data.error.message);
+              } else {
+                alert('Error occurred creating a new shared object: ' + data.message);
+              }
+            }
           }
 
       }

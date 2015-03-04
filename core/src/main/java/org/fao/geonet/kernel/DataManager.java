@@ -2185,6 +2185,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             md = metadata;
         }
         // GEOCAT
+        Processor.processXLink(md, context);
         md = Xml.transform(md, this.servContext.getAppPath().resolve("xsl/characterstring-to-localisedcharacterstring.xsl"));
         UserSession session = null;
         if (context != null && context.getUserSession() != null) {
@@ -3556,25 +3557,6 @@ public class DataManager implements ApplicationEventPublisherAware {
                 addElement(infoEl, Edit.Info.Elem.GUEST_DOWNLOAD, downloadableByGuest.contains(mdId));
             }
         }
-    }
-
-    public void updateXlinkObjects(String metadataId, String lang, Element md, Element... updatedXLinks) throws Exception {
-/*
-        ProcessParams params = new ProcessParams(ReusableObjectLogger.THREAD_SAFE_LOGGER, metadataId, md, md, false, lang, servContext);
-        ReusableObjManager reusableObjMan = servContext.getBean(ReusableObjManager.class);
-        for (Element xlink : updatedXLinks) {
-            editLib.removeEditingInfo(xlink);
-            Collection<Element> newElements = reusableObjMan.updateXlink(xlink, params);
-
-            for (Element element : newElements) {
-                element.detach();
-            }
-
-            Element parentElement = xlink.getParentElement();
-            int index = parentElement.indexOf(xlink);
-            parentElement.addContent(index + 1, newElements);
-        }
-*/
     }
 
     private SetMultimap<Integer, ReservedOperation> loadOperationsAllowed(ServiceContext context, Specification<OperationAllowed>
