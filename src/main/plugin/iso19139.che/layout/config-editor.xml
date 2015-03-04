@@ -238,6 +238,13 @@
       <name>srv:serviceTypeVersion</name>
       <name>srv:operationName</name>
       <name>srv:identifier</name>
+      <name>che:streetName</name>
+      <name>che:streetNumber</name>
+      <name>che:addressLine</name>
+      <name>gmd:electronicMailAddress</name>
+      <name>che:individualFirstName</name>
+      <name>che:individualLastName</name>
+      <name>che:mobile</name>
     </exclude>
   </multilingualFields>
 
