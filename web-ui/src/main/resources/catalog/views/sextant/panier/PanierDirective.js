@@ -18,7 +18,7 @@
         scope: {
           panier: '=sxtPanier'
         },
-        templateUrl: '../../catalog/components/panier/' +
+        templateUrl: '../../catalog/views/sextant/panier/' +
             'partials/panier.html',
         controller: ['$scope', function($scope) {
           this.del = function(md) {
@@ -29,7 +29,7 @@
 
           scope.formObj = [];
           scope.extract = function() {
-            console.log(scope.formObj);
+            scope.panier = [];
           };
         }
       };
@@ -48,7 +48,7 @@
           formObj: '=sxtPanierElt',
           md: '=sxtPanierEltMd'
         },
-        templateUrl: '../../catalog/components/panier/' +
+        templateUrl: '../../catalog/views/sextant/panier/' +
             'partials/panierelement.html',
         compile: function compile(tElement, tAttrs, transclude) {
           return {
@@ -74,6 +74,7 @@
                     source: new ol.source.OSM()
                   })
                 ],
+                controls:[],
                 view: new ol.View({
                   center: [0, 0],
                   zoom: 2

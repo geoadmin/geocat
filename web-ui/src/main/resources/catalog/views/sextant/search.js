@@ -24,6 +24,10 @@
 
   module.value('sxtGlobals', {});
 
+  module.config(['$LOCALES', function($LOCALES) {
+    $LOCALES.push('sextant');
+  }]);
+
   module.controller('gnsSextant', [
     '$scope',
     '$location',
@@ -102,8 +106,9 @@
       };
 
       $scope.displayPanierTab = function() {
-        $scope.$broadcast('renderPanierMap');
-        $scope.mainTabs.panier.titleInfo = 0;
+        $timeout(function() {
+          $scope.$broadcast('renderPanierMap');
+        },0)
       };
 
 
@@ -214,24 +219,21 @@
     }]);
 
   module.controller('gnsSextantSearchForm', [
-    '$scope', 'suggestService', 'gnSearchSettings',
-    function($scope, suggestService, searchSettings) {
+    '$scope', 'gnSearchSettings',
+    function($scope, searchSettings) {
 
-      $scope.groupPublishedOptions = {
-        mode: 'remote',
-        remote: {
-          url: suggestService.getUrl('QUERY', '_groupPublished',
-              'STARTSWITHFIRST'),
-          filter: suggestService.bhFilter,
-          wildcard: 'QUERY'
+      $scope.categorytreeCollapsed = true;
+
+      // Run search on bbox draw
+      $scope.$watch('searchObj.params.geometry', function(v){
+        if(angular.isDefined(v)) {
+          $scope.triggerSearch();
         }
-      };
+      });
 
-      // Get Thesaurus config and set first one as active
-      $scope.thesaurus = searchSettings.defaultListOfThesaurus;
-      if (angular.isArray($scope.thesaurus) && $scope.thesaurus.length > 1) {
-        $scope.activeThesaurus = {value: $scope.thesaurus[0].field};
-      }
+     // Get Thesaurus config and set first one as active
+     $scope.thesaurus = searchSettings.defaultListOfThesaurus;
+
     }]);
 
   module.directive('sxtFixMdlinks', [
