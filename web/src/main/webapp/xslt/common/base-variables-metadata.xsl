@@ -28,16 +28,55 @@
   <xsl:variable name="isService">
     <saxon:call-template name="{concat('get-', $schema, '-is-service')}"/>
   </xsl:variable>
-  
+
+  <!--GEOCAT-->
+  <xsl:variable name="defaultMetadataLanguage" select="'ger'" />
+  <xsl:variable name="defaultMetadataOtherLanguages">
+    <lang id="DE" code="ger"/>
+    <lang id="FR" code="fre"/>
+    <lang id="IT" code="ita"/>
+    <lang id="EN" code="eng"/>
+    <lang id="RM" code="roh"/>
+  </xsl:variable>
+  <xsl:variable name="defaultMetadataOtherLanguagesJson" select="'{
+    &quot;ger&quot;:&quot;#DE&quot;,
+    &quot;fre&quot;:&quot;#FR&quot;,
+    &quot;ita&quot;:&quot;#IT&quot;,
+    &quot;eng&quot;:&quot;#EN&quot;,
+    &quot;roh&quot;:&quot;#RM&quot;
+    }'" />
+
   <xsl:variable name="metadataLanguage">
-    <saxon:call-template name="{concat('get-', $schema, '-language')}"/>
+    <xsl:choose>
+      <xsl:when test="$isTemplate = 's'">
+        <xsl:value-of select="$defaultMetadataLanguage" />
+      </xsl:when>
+      <xsl:otherwise>
+        <saxon:call-template name="{concat('get-', $schema, '-language')}"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:variable>
   <xsl:variable name="metadataOtherLanguages">
-    <saxon:call-template name="{concat('get-', $schema, '-other-languages')}"/>
+    <xsl:choose>
+      <xsl:when test="$isTemplate = 's'">
+        <xsl:copy-of select="$defaultMetadataOtherLanguages" />
+      </xsl:when>
+      <xsl:otherwise>
+        <saxon:call-template name="{concat('get-', $schema, '-other-languages')}"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:variable>
   <xsl:variable name="metadataOtherLanguagesAsJson">
-    <saxon:call-template name="{concat('get-', $schema, '-other-languages-as-json')}"/>
+    <xsl:choose>
+      <xsl:when test="$isTemplate = 's'">
+        <xsl:value-of select="$defaultMetadataOtherLanguagesJson" />
+      </xsl:when>
+      <xsl:otherwise>
+        <saxon:call-template name="{concat('get-', $schema, '-other-languages-as-json')}"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:variable>
+  <!--END GEOCAT-->
   <xsl:variable name="metadataIsMultilingual" select="count($metadataOtherLanguages/*) > 0"/>
   
   <!-- The list of thesaurus -->

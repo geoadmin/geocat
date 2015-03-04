@@ -54,13 +54,6 @@
           '   </gmd:organisationName>\n' +
           '   <gmd:contactInfo>\n' +
           '      <gmd:CI_Contact>\n' +
-          '         <gmd:phone>\n' +
-          '            <che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">\n' +
-          '               <che:mobile>\n' +
-          '                  <gco:CharacterString>~~ Template Mobile Number ~~</gco:CharacterString>\n' +
-          '               </che:mobile>\n' +
-          '            </che:CHE_CI_Telephone>\n' +
-          '         </gmd:phone>\n' +
           '         <gmd:address>\n' +
           '            <che:CHE_CI_Address gco:isoType="gmd:CI_Address">\n' +
           '               <gmd:electronicMailAddress>\n' +
