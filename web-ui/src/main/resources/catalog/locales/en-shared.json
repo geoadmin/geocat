@@ -41,5 +41,11 @@
   "extentsAddBtn": "Add this extent to the metadata",
   "contactsAddBtn": "Add this contact to the metadata",
   "formatsAddBtn": "Add this format to the metadata",
-  "addClassicExtent": "Add a classic extent"
+  "addClassicExtent": "Add a classic extent",
+  "searchAextents": "Search a shared Extent",
+  "searchAformats": "Search a shared Format",
+  "searchAcontacts": "Search a shared Contact",
+  "addEntry": "Create a new entry",
+  "bboxOnly": "Bounding box only",
+  "bboxPolygon": "Bounding box and bounding polygon"
 }
