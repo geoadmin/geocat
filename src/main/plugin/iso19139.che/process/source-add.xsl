@@ -48,14 +48,22 @@ Stylesheet used to update metadata adding a reference to a source record.
 			<xsl:apply-templates select="
 			  gmd:portrayalCatalogueInfo | gmd:metadataConstraints | gmd:applicationSchemaInfo | gmd:metadataMaintenance |
 			  gmd:series | gmd:describes | gmd:propertyType | gmd:featureType | gmd:featureAttribute | che:legislationInformation"/>
-
-			<!-- Only one parent identifier allowed
-			- overwriting existing one. -->
-			<gmd:source uuidref="{$sourceUuid}">
-				<gmd:LI_Source/>
-			</gmd:source>
 		</xsl:copy>
 	</xsl:template>
+
+	<xsl:template match="gmd:dataQualityInfo/*[not(gmd:lineage)]" priority="2">
+		<xsl:copy>
+			<xsl:copy-of select="@*"/>
+			<xsl:apply-templates select="*[name() != 'gmd:lineage']" />
+      <gmd:lineage>
+        <gmd:LI_Lineage>
+          <gmd:source uuidref="{$sourceUuid}">
+            <gmd:LI_Source/>
+          </gmd:source>
+        </gmd:LI_Lineage>
+      </gmd:lineage>
+    </xsl:copy>
+  </xsl:template>
 
 	<xsl:template match="gmd:LI_Lineage|*[contains(@gco:isoType, 'LI_Lineage')]" priority="2">
 		<xsl:copy>
@@ -69,8 +77,6 @@ Stylesheet used to update metadata adding a reference to a source record.
 			</gmd:source>
 		</xsl:copy>
 	</xsl:template>
-
-	<!-- TODO : support when record does not contain lineage (should not happen for a ISO compliant record -->
 
 	<!-- Remove geonet:* elements. -->
 	<xsl:template match="geonet:*" priority="2"/>
