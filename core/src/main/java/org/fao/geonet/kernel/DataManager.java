@@ -2825,27 +2825,6 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @return
      */
     public Optional<OperationAllowed> getOperationAllowedToAdd(final ServiceContext context, final int mdId, final int grpId, final int opId) {
-        // GEOCAT
-        if (ReservedGroup.isReserved(grpId) &&
-            (ReservedGroup.lookup(grpId) == ReservedGroup.all || ReservedGroup.lookup(grpId) == ReservedGroup.guest)) {
-            final Specifications<Metadata> hasId = Specifications.where(MetadataSpecs.hasMetadataId(mdId));
-            final Specification<Metadata> isHarvested = MetadataSpecs.isHarvested(true);
-
-            if(context.getBean(MetadataRepository.class).findAll(hasId.and(isHarvested)).isEmpty()) {
-                MetadataValidationRepository metadataValidationRepository = _applicationContext.getBean(MetadataValidationRepository.class);
-
-                List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(mdId);
-                if (validationInfo.isEmpty()) {
-                    return Optional.absent();
-                }
-                for (MetadataValidation metadataValidation : validationInfo) {
-                    if (!metadataValidation.isValid() && metadataValidation.isRequired()) {
-                        return Optional.absent();
-                    }
-                }
-            }
-        }
-        // END GEOCAT
         OperationAllowedRepository opAllowedRepo = _applicationContext.getBean(OperationAllowedRepository.class);
         UserGroupRepository userGroupRepo = _applicationContext.getBean(UserGroupRepository.class);
         final OperationAllowed operationAllowed = opAllowedRepo
