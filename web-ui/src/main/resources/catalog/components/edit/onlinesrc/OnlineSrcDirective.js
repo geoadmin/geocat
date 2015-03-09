@@ -511,10 +511,7 @@
         'Metadata',
         'gnOwsCapabilities',
         'gnCurrentEdit',
-        '$rootScope',
-        '$translate',
-        function(gnOnlinesrc, Metadata, gnOwsCapabilities,
-                 gnCurrentEdit, $rootScope, $translate) {
+        function(gnOnlinesrc, Metadata, gnOwsCapabilities, gnCurrentEdit) {
           return {
             restrict: 'A',
             scope: {},
@@ -530,7 +527,6 @@
                 post: function postLink(scope, iElement, iAttrs) {
                   scope.mode = iAttrs['gnLinkServiceToDataset'];
                   scope.popupid = '#linkto' + scope.mode + '-popup';
-                  scope.alertMsg = null;
 
                   gnOnlinesrc.register(scope.mode, function() {
                     $(scope.popupid).modal('show');
@@ -559,15 +555,9 @@
                    * passed to the layers grid directive.
                    */
                   scope.loadWMSCapabilities = function(url) {
-                    scope.alertMsg = null;
                     gnOwsCapabilities.getWMSCapabilities(url)
-                        .then(function(capabilities) {
-                          scope.layers = [];
-                          scope.layers.push(capabilities.Layer[0]);
-                          angular.forEach(scope.layers[0].Layer, function(l) {
-                            scope.layers.push(l);
-                            // TODO: We may have more than one level
-                          });
+                        .then(function(layers) {
+                          scope.layers = layers;
                         });
                   };
 
@@ -586,15 +576,33 @@
                       links = links.concat(md.getLinksByType('OGC:WMS'));
                       links = links.concat(md.getLinksByType('wms'));
 
+                      // specific GEOCAT
+                      var wmsUris;
+                      if (md.type.indexOf('service') >= 0) {
+                        wmsUris = [];
+                        angular.forEach(md.wmsuri, function(uri) {
+                          var e = uri.split('###');
+                          wmsUris.push({
+                            uuid: e[0],
+                            Name: e[1],
+                            Title: e[1],
+                            url: e[2]
+                          });
+                        });
+                      }
+                      // end - specific GEOCAT
+
                       if (scope.mode == 'service') {
                         scope.srcParams.uuidSrv = md.getUuid();
                         scope.srcParams.uuidDS = gnCurrentEdit.uuid;
 
-                        if (angular.isArray(links) && links.length == 1) {
-                          scope.loadWMSCapabilities(links[0].url);
-                        } else {
-                          scope.alertMsg =
-                              $translate('linkToServiceWithoutURLError');
+                        if (links || wmsUris) { // specific GEOCAT
+                          if(!wmsUris) {
+                            scope.loadWMSCapabilities(links[0].url);
+                          }
+                          else {
+                            scope.layers = wmsUris;
+                          }
                         }
                       }
                       else {
