@@ -1,5 +1,5 @@
 <div>
-  <div class="btn-group">
+<!--
     <button class="btn btn-default" type="button"
             data-ng-click="add()"
             data-ng-show="allowFreeTextKeywords"
@@ -7,11 +7,12 @@
       <i class="fa fa-plus gn-add"/>&nbsp;
       <span data-translate="">addKeywordNotFromThesaurus</span>
     </button>
+-->
     <div class="btn-group">
       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
         <i class="fa fa-book"/>&nbsp;
         <span data-ng-hide="selectorOnly"
-              data-translate="">addFromThesaurus</span>
+              data-translate="">addFromThesaurus</span>&nbsp;
         <span class="caret"/>
       </button>
       <ul class="dropdown-menu">
@@ -25,9 +26,10 @@
               </span>
           </a>
         </li>
+        <li role="presentation" class="divider"></li>
+        <li><a href="" data-ng-click="add()"><b translate="">addKeywordNotFromThesaurus</b></a></li>
       </ul>
     </div>
-  </div>
   <!-- The thesaurus snippet to insert once received -->
   <div data-ng-if="snippet && !selectorOnly">
     <input name="{{snippetRef}}" type="hidden" value="{{snippet}}"/>
