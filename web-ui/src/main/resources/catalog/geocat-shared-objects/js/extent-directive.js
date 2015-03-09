@@ -84,7 +84,7 @@
               };
 
               /**
-               * Set geometry as text in put value. I could be formated
+               * Set geometry as text input value. I could be formated
                * to WKT or GML.
                * @geom {ol.geometry}
                */
@@ -139,6 +139,21 @@
                 featureOverlay.addFeature(f);
 
                 map.getView().fitExtent(extentProj, map.getSize());
+              };
+
+              /**
+               * On form input WKT change, update the map geometry.
+               */
+              scope.updateWKT = function() {
+                if(scope.formObj.geomString) {
+                  featureOverlay.getFeatures().clear();
+                  var geom = formatWkt.readGeometry(scope.formObj.geomString).
+                      transform(scope.formObj.proj,
+                      map.getView().getProjection());;
+                  var f = new ol.Feature();
+                  f.setGeometry(geom);
+                  featureOverlay.addFeature(f);
+                }
               };
 
               /**
