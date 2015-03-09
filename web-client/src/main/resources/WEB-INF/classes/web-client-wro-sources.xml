@@ -26,7 +26,6 @@
             <jsSource webappPath="/apps/js/ext-ux/MultiselectItemSelector-3.0/Multiselect.js"/>
             <jsSource webappPath="/apps/js/ext-ux/LightBox/lightbox.js"/>
             <jsSource webappPath="/apps/js/ext-ux/SuperBoxSelect/SuperBoxSelect.js"/>
-            <jsSource webappPath="/apps/js/ext-ux/CheckColumn.js"/>
 
             <jsSource webappPath="/apps/js/proj4js-compressed.js" minimize="false"/>
 
@@ -285,7 +284,6 @@
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/CategoryView.js"/>
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/SearchFormPanel.js"/>
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/FacetsPanel.js"/>
-            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/FeedbackForm.js"/>
 
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/view/ViewWindow.js"/>
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/view/ViewPanel.js"/>
@@ -298,12 +296,10 @@
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/HelpPanel.js"/>
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/KeywordSelectionPanel.js"/>
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/ConceptSelectionPanel.js"/>
-            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/LinkResourcesWindow.js"/>
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/LinkedMetadataPanel.js"/>
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/LinkedMetadataSelectionPanel.js"/>
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/LogoSelectionPanel.js"/>
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/NewMetadataPanel.js"/>
-            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/InsertMetadataPanel.js"/>
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/GeoPublisherPanel.js"/>
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/SuggestionsPanel.js"/>
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/editor/ThumbnailPanel.js"/>
@@ -313,7 +309,6 @@
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/AdminTools.js"/>
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/HarvesterPanel.js"/>
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/MetadataInsertPanel.js"/>
-            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/PrivilegesPanel.js"/>
 
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/widgets/OGCServiceQuickRegister.js"/>
 
@@ -343,7 +338,6 @@
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/BaseWindow.js"/>
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/SingletonWindowManager.js"/>
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/AddWMS.js"/>
-            <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/AddWMTS.js"/>
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/FeatureInfo.js"/>
             <!--<jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/Opacity.js" />-->
             <jsSource webappPath="/apps/js/GeoNetwork/lib/GeoNetwork/map/windows/LoadWmc.js"/>
