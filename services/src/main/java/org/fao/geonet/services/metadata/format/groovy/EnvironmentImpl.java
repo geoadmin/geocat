@@ -3,7 +3,6 @@ package org.fao.geonet.services.metadata.format.groovy;
 import com.google.common.base.Optional;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Multimap;
 import jeeves.server.context.ServiceContext;
 import org.apache.lucene.document.Document;
@@ -27,13 +26,12 @@ import org.jdom.Element;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.context.request.WebRequest;
 
-import java.util.AbstractCollection;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * The actual Environment implementation.
@@ -50,7 +48,7 @@ public class EnvironmentImpl implements Environment {
     private final String locUrl;
     private final Element jdomMetadata;
     private final ServiceContext serviceContext;
-    private final HttpServletRequest servletRequest;
+    private final WebRequest webRequest;
     private Multimap<String, String> indexInfo = null;
 
     public EnvironmentImpl(FormatterParams fparams, IsoLanguagesMapper mapper) {
@@ -62,12 +60,13 @@ public class EnvironmentImpl implements Environment {
         this.resourceUrl = fparams.getResourceUrl();
         this.locUrl = fparams.getLocUrl();
         this.metadataInfo = fparams.metadataInfo;
-        for (Map.Entry<String, String[]> entry : fparams.servletRequest.getParameterMap().entrySet()) {
+        for (Map.Entry<String, String[]> entry : fparams.webRequest.getParameterMap().entrySet()) {
             for (String value : entry.getValue()) {
                 this.params.put(entry.getKey(), new ParamValue(value));
             }
         }
-        this.servletRequest = fparams.servletRequest;
+
+        this.webRequest = fparams.webRequest;
         this.serviceContext = fparams.context;
     }
 
@@ -213,29 +212,10 @@ public class EnvironmentImpl implements Environment {
 
     @Override
     public Optional<String> getHeader(String name) {
-        return Optional.fromNullable(servletRequest.getHeader(name));
+        return Optional.fromNullable(webRequest.getHeader(name));
     }
 
     public Collection<String> getHeaders(final String name) {
-        return new AbstractCollection<String>() {
-            int size = -1;
-            @Override
-            public Iterator<String> iterator() {
-                return Iterators.forEnumeration(servletRequest.getHeaders(name));
-            }
-
-            @Override
-            public int size() {
-                if (this.size == -1) {
-                    this.size = 0;
-                    final Iterator<String> iterator = iterator();
-                    while (iterator.hasNext()) {
-                        iterator.next();
-                        this.size++;
-                    }
-                }
-                return this.size;
-            }
-        };
+        return Arrays.asList(webRequest.getHeaderValues(name));
     }
 }

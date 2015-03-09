@@ -36,4 +36,8 @@
     </util:set>
 
     <bean id="extentManager" class="org.fao.geonet.geocat.kernel.extent.ExtentManager"></bean>
+    <bean id="formatterCache"
+      class="org.fao.geonet.services.metadata.format.cache.NoCachingStore">
+    </bean>
+
 </beans>
