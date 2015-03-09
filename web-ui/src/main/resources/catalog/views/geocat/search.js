@@ -415,7 +415,7 @@
       var getRegionOptions = function(type) {
         return {
           mode: 'prefetch',
-          promise: gnRegionService.loadRegion({id: type}, 'fre')
+          promise: gnRegionService.loadRegion({id: type}, $scope.lang)
         };
       };
       $scope.regionOptions = {

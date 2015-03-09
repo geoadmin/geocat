@@ -538,7 +538,6 @@
           var limits;
           if (scope.dates) {
             limits = getMaxInProp(scope.dates);
-
           }
 
           $(element).datepicker(angular.isDefined(scope.dates) ? {
