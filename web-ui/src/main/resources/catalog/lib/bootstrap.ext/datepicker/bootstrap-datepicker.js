@@ -1427,7 +1427,7 @@
 	];
 	$.fn.datepicker.Constructor = Datepicker;
 	var dates = $.fn.datepicker.dates = {
-		en: {
+		eng: {
 			days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
 			daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
 			daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
@@ -1435,8 +1435,40 @@
 			monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
 			today: "Today",
 			clear: "Clear"
-		}
-	};
+		},
+    ger: {
+      days:["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag","Sonntag"],
+      daysShort:["Son","Mon","Die","Mit","Don","Fre","Sam","Son"],
+      daysMin:["So","Mo","Di","Mi","Do","Fr","Sa","So"],
+      months:["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
+      monthsShort:["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],
+      today:"Heute",clear:"Löschen",
+      weekStart:1,
+      format:"dd.mm.yyyy"
+    },
+    fre: {
+      days:["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"],
+      daysShort:["Dim.","Lun.","Mar.","Mer.","Jeu.","Ven.","Sam.","Dim."],
+      daysMin:["Di","Lu","Ma","Me","Je","Ve","Sa","Di"],
+      months:["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],
+      monthsShort:["Janv.","Févr.","Mars","Avril","Mai","Juin","Juil.","Août","Sept.","Oct.","Nov.","Déc."],
+      today:"Aujourd'hui",
+      clear:"Effacer",
+      weekStart:1,
+      format:"dd/mm/yyyy"
+    },
+    ita: {
+      days:["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato","Domenica"],
+      daysShort:["Dom","Lun","Mar","Mer","Gio","Ven","Sab","Dom"],
+      daysMin:["Do","Lu","Ma","Me","Gi","Ve","Sa","Do"],
+      months:["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"],
+      monthsShort:["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"],
+      today:"Oggi",clear:"Cancella",
+      weekStart:1,
+      format:"dd/mm/yyyy"
+    }
+
+};
 
 	var DPGlobal = {
 		modes: [

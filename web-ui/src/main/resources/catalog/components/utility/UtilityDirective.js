@@ -519,7 +519,8 @@
         restrict: 'A',
         scope: {
           date: '=gnBootstrapDatepicker',
-          dates: '=dateAvailable'
+          dates: '=dateAvailable',
+          lang: '='
         },
         link: function(scope, element, attrs, ngModelCtrl) {
 
@@ -544,9 +545,12 @@
             beforeShowDay: function(dt, a, b) {
               return available(dt);
             },
+            language: scope.lang,
             startDate: limits.min,
             endDate: limits.max
-          } : {}).on('changeDate', function(ev) {
+          } : {
+            language: scope.lang
+          }).on('changeDate', function(ev) {
             // view -> model
             scope.$apply(function() {
               scope.date = $(element).find('input')[0].value;
