@@ -539,7 +539,8 @@
                     scope.srcParams = {};
 
                     var searchParams = {
-                      type: scope.mode
+                      type: scope.mode,
+                      _isHarvested: 'n' //specific GEOCAT
                     };
                     scope.$broadcast('resetSearch', searchParams);
                     scope.layers = [];
@@ -682,7 +683,9 @@
                     }
                     else if (scope.mode == 'parent') {
                       searchParams = {
-                        hitsPerPage: 10
+                        hitsPerPage: 10,
+                        _isHarvested: 'n' //specific GEOCAT
+
                       };
                       scope.btn = {
                         icon: 'fa-sitemap',
@@ -691,7 +694,9 @@
                     }
                     else if (scope.mode == 'source') {
                       searchParams = {
-                        hitsPerPage: 10
+                        hitsPerPage: 10,
+                        _isHarvested: 'n' //specific GEOCAT
+
                       };
                       scope.btn = {
                         icon: 'fa-sitemap fa-rotate-180',
