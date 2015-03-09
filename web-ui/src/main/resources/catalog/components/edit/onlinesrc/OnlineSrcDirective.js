@@ -761,7 +761,9 @@
                   gnOnlinesrc.register('sibling', function() {
                     $(scope.popupid).modal('show');
 
-                    scope.$broadcast('resetSearch');
+                    scope.$broadcast('resetSearch', {
+                      _isHarvested: 'n' //specific GEOCAT
+                    });
                     scope.selection = [];
                   });
 
