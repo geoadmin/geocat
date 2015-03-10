@@ -3,9 +3,11 @@
   <require pathOnDisk="web-ui/src/main/resources" >
       <jsSource webappPath="/catalog/js/" />
       <jsSource webappPath="/catalog/views/" />
+      <jsSource webappPath="/catalog/geocat-shared-objects/js" />
       <jsSource webappPath="/catalog/components/" />
       <cssSource webappPath="/catalog/views/" />
       <cssSource webappPath="/catalog/style/" />
+      <cssSource webappPath="/catalog/geocat-shared-objects/css"/>
   </require>
   <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js"/>

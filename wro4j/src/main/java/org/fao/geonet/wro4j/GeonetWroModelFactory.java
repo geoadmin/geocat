@@ -413,12 +413,6 @@ public class GeonetWroModelFactory implements WroModelFactory {
             Log.error(WRO4J_LOG, "Errors were encountered");
             for (Throwable error : errors) {
                 Log.error(WRO4J_LOG, "error", error);
-        }
-
-        if (!errors.isEmpty()) {
-            LOG.severe("Errors were encountered");
-            for (Throwable error : errors) {
-                Log.error(WRO4J_LOG, "error", error);
             }
         }
     }
