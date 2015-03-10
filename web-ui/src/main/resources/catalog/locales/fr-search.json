@@ -1,6 +1,10 @@
 {
     "rate": "Note",
     "clickToRate": "Cliquer pour noter",
+    "bbox": "BBOX",
+    "within": "Complètement à l'intérieur ou égal",
+    "intersection": "Au moins partiellement à l'intérieur",
+    "encloses": "Comprend au moins",
     "source": "Catalogue(s)",
     "title": "Titre",
     "abstract": "Résumé",

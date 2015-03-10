@@ -1,4 +1,8 @@
 {
+  "bbox": "BBOX",
+  "within": "Completely within or equal",
+  "intersection": "Intersects",
+  "encloses": "Contains at least",
   "rate": "Rating",
   "clickToRate": "Click to rate",
   "source": "Catalogue(s)",

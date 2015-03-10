@@ -1,6 +1,10 @@
 {
     "rate": "Rating",
     "clickToRate": "Click to rate",
+    "bbox": "Im aktuellen Kartenausschnitt",
+    "within": "Vollständig innerhalb oder gleich",
+    "intersection": "Schneidet",
+    "encloses": "Umfasst mindestens",
     "source": "Katalog(e)",
     "title": "Titel",
     "abstract": "Kurzbeschreibung",
