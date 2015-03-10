@@ -70,7 +70,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
     public static final String CLASSPATH_PREFIX = "classpath:";
     private static final String NOT_MINIMIZED_EL = "notMinimized";
     public static final String GROUP_NAME_CLOSURE_DEPS = "closure_deps";
-
+    
     public static final String TEMPLATE_PATTERN = "directive.js";
     @Inject
     private ReadOnlyContext _context;
@@ -418,8 +418,8 @@ public class GeonetWroModelFactory implements WroModelFactory {
         if (!errors.isEmpty()) {
             LOG.severe("Errors were encountered");
             for (Throwable error : errors) {
-                LOG.log(Level.SEVERE, "error", error);
-    }
+                Log.error(WRO4J_LOG, "error", error);
+            }
         }
     }
 
@@ -513,7 +513,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
         resource.setUri(dep.path);
         return resource;
     }
-
+    
     private Resource getTemplateResource(final String prefix) {
         Resource resource = new Resource();
         resource.setMinimize(false);
