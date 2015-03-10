@@ -69,7 +69,6 @@ public class KeywordBean {
 	private final Map<String, String> definitions = new LinkedHashMap<String,String>();
     private IsoLanguagesMapper isoLanguageMapper;
     private String defaultLang;
-    private Map<String, String> titles;
 
     public KeywordBean(IsoLanguagesMapper isoLangMapper) {
         this.isoLanguageMapper = isoLangMapper;
@@ -79,11 +78,6 @@ public class KeywordBean {
 	    this.thesaurusKey = thesaurus.getKey();
 	    this.thesaurusDate = thesaurus.getDate();
 	    this.thesaurusTitle = thesaurus.getTitle();
-        try {
-            this.titles = thesaurus.getTitles(ServiceContext.get().getApplicationContext());
-        } catch (IOException | JDOMException e) {
-            throw new RuntimeException(e);
-        }
 
         return this;
 	}
@@ -108,9 +102,6 @@ public class KeywordBean {
 
 	public String getThesaurusTitle() {
         return thesaurusTitle;
-    }
-	public Map<String, String> getThesaurusTitles() {
-        return this.titles;
     }
 
     public void setThesaurusTitle(String thesaurusTitle) {

@@ -468,12 +468,19 @@ public class ThesaurusManager implements ThesaurusFinder {
             elFname.addContent(fname);
 
             Element elTitle = new Element("title");
-            String title = currentTh.getTitles(context.getApplicationContext()).get(context.getLanguage());
+            // GEOCAT
+            final Map<String, String> titles = currentTh.getTitles(context.getApplicationContext());
+            String title = titles.get(context.getLanguage());
             if(title == null) {
                 title = currentTh.getTitle();
             }
             elTitle.addContent(title);
-
+            Element elLabels = new Element("labels");
+            for (Map.Entry<String, String> entry : titles.entrySet()) {
+                elLabels.addContent(new Element("label").setAttribute("language", entry.getKey()).setText(entry.getValue()));
+            }
+            elLoop.addContent(elLabels);
+            // END GEOCAT
             Element elType = new Element("type");
             String type = currentTh.getType();
             elType.addContent(type);

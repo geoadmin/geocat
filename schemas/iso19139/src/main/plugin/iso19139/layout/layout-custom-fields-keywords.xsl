@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                xmlns:gco="http://www.isotc211.org/2005/gco"
-                xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:gn="http://www.fao.org/geonetwork"
-                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-                xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
-                exclude-result-prefixes="#all">
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:gmd="http://www.isotc211.org/2005/gmd"
+  xmlns:gco="http://www.isotc211.org/2005/gco"
+  xmlns:gmx="http://www.isotc211.org/2005/gmx"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:gn="http://www.fao.org/geonetwork"
+  xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+  xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
+  exclude-result-prefixes="#all">
 
   <!-- Custom rendering of keyword section 
     * gmd:descriptiveKeywords is boxed element and the title 
@@ -17,7 +17,7 @@
     * if the thesaurus is available in the catalog, display
     the advanced editor which provides easy selection of 
     keywords.
-  
+
   -->
 
 
@@ -28,10 +28,18 @@
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
-    <xsl:variable name="thesaurusTitle"
-      select="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString|
-      gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = concat('#', upper-case(xslutil:twoCharLangCode($lang)))]"/>
-
+    <xsl:variable name="thesaurusTitleEl" select="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title"/>
+    <xsl:variable name="thesaurusTitle">
+      <xsl:choose>
+        <xsl:when test="normalize-space($thesaurusTitleEl/gco:CharacterString) != ''">$thesaurusTitleEl/gco:CharacterString</xsl:when>
+        <xsl:when test="normalize-space($thesaurusTitleEl/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = concat('#', upper-case(xslutil:twoCharLangCode($lang)))][1]) != ''">
+          <xsl:value-of select="$thesaurusTitleEl/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = concat('#', upper-case(xslutil:twoCharLangCode($lang)))][1]"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$thesaurusTitleEl/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space(text()) != ''][1]" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="attributes">
       <xsl:if test="$isEditing">
         <!-- Create form for all existing attribute (not in gn namespace)
@@ -47,13 +55,11 @@
     </xsl:variable>
 
 
-
-
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
-        select="if ($thesaurusTitle) 
-                then $thesaurusTitle 
-                else gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
+        select="concat(gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label, if (normalize-space($thesaurusTitle) != '')
+                then concat('(', $thesaurusTitle, ')')
+                else '')"/>
       <xsl:with-param name="editInfo" select="gn:element"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>
@@ -93,13 +99,13 @@
           then gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code 
           else $listOfThesaurus/thesaurus[title=$thesaurusTitle]/key"/>
         <xsl:variable name="thesaurusKey"
-                      select="if (starts-with($thesaurusInternalKey, 'geonetwork.thesaurus.'))
+          select="if (starts-with($thesaurusInternalKey, 'geonetwork.thesaurus.'))
                       then substring-after($thesaurusInternalKey, 'geonetwork.thesaurus.')
                       else $thesaurusInternalKey"/>
 
         <xsl:variable name="thesaurusConfig"
-                      as="element()?"
-                      select="$thesaurusList/thesaurus[@key = $thesaurusKey]"/>
+          as="element()?"
+          select="$thesaurusList/thesaurus[@key = $thesaurusKey]"/>
         <!-- Single quote are escaped inside keyword. 
           TODO: support multilingual editing of keywords
           -->
@@ -108,7 +114,7 @@
 
         <!-- if gui lang eng > #EN -->
         <xsl:variable name="guiLangId"
-                      select="
+          select="
                       if (count($metadata/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue = $lang]) = 1)
                         then $metadata/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue = $lang]/@id
                         else $metadata/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue = $metadataLanguage]/@id"/>
@@ -122,8 +128,8 @@
 
         <!-- Define the list of transformation mode available. -->
         <xsl:variable name="transformations"
-                      as="xs:string"
-                      select="'to-iso19139-keyword-as-xlink'"/>
+          as="xs:string"
+          select="'to-iso19139-keyword-as-xlink'"/>
 
         <!-- Get current transformation mode based on XML fragment analysis -->
         <xsl:variable name="transformation"
@@ -139,8 +145,8 @@
         -->
         <xsl:variable name="widgetMode" select="'tagsinput'"/>
         <xsl:variable name="maxTags"
-                      as="xs:string"
-                      select="if ($thesaurusConfig/@maxtags)
+          as="xs:string"
+          select="if ($thesaurusConfig/@maxtags)
                               then $thesaurusConfig/@maxtags
                               else ''"/>
         <!--
@@ -162,7 +168,7 @@
         <div data-gn-keyword-selector="{$widgetMode}"
           data-metadata-id="{$metadataId}"
           data-element-ref="{concat('_X', ../gn:element/@ref, '_replace')}"
-          data-thesaurus-title="{$thesaurusTitle}"
+          data-thesaurus-title="keywords{$thesaurusTitle}"
           data-thesaurus-key="{$thesaurusKey}"
           data-keywords="{$keywords}" data-transformations="{$transformations}"
           data-current-transformation="{$transformation}"

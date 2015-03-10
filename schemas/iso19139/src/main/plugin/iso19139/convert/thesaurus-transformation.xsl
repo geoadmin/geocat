@@ -8,6 +8,7 @@
 								xmlns:geonet="http://www.fao.org/geonetwork"
 								xmlns:xlink="http://www.w3.org/1999/xlink"
 								xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
 								exclude-result-prefixes="#all">
 	
@@ -133,6 +134,10 @@
             <xsl:variable name="keywordThesaurus" select="replace(./uri, 'http://org.fao.geonet.thesaurus.all/([^@]+)@@@.+', '$1')" />
             <xsl:attribute name="gco:nilReason" select="concat('thesaurus::', $keywordThesaurus)" />
           </xsl:if>
+          <xsl:if test="$textgroupOnly or count($listOfLanguage) > 1">
+            <xsl:attribute name="xsi:type">gmd:PT_FreeText_PropertyType</xsl:attribute>
+          </xsl:if>
+
           <xsl:choose>
             <xsl:when test="/root/request/lang">
 
@@ -177,7 +182,8 @@
 
         </gmd:keyword>
       </xsl:for-each>
-      <xsl:copy-of select="geonet:add-thesaurus-info($currentThesaurus, $withThesaurusAnchor, /root/gui/thesaurus/thesauri, not(/root/request/keywordOnly))" />
+      <xsl:copy-of select="geonet:add-thesaurus-info($currentThesaurus, $withThesaurusAnchor, /root/gui/thesaurus/thesauri,
+                                                     not(/root/request/keywordOnly), $textgroupOnly, $listOfLanguage)" />
     </gmd:MD_Keywords>
   </xsl:template>
 
@@ -186,6 +192,8 @@
     <xsl:param name="withThesaurusAnchor" as="xs:boolean"/>
     <xsl:param name="thesauri" as="node()"/>
     <xsl:param name="thesaurusInfo" as="xs:boolean"/>
+    <xsl:param name="textgroupOnly"/>
+    <xsl:param name="listOfLanguage"/>
 
     <!-- Add thesaurus theme -->
     <gmd:type>
@@ -196,9 +204,27 @@
       <gmd:thesaurusName>
         <gmd:CI_Citation>
           <gmd:title>
-            <gco:CharacterString>
-              <xsl:value-of select="$thesauri/thesaurus[key = $currentThesaurus]/title" />
-            </gco:CharacterString>
+            <xsl:if test="$textgroupOnly or count($listOfLanguage) > 1">
+              <xsl:attribute name="xsi:type">gmd:PT_FreeText_PropertyType</xsl:attribute>
+            </xsl:if>
+            <xsl:if test="not($textgroupOnly)">
+              <gco:CharacterString>
+                <xsl:value-of select="$thesauri/thesaurus[key = $currentThesaurus]/title" />
+              </gco:CharacterString>
+            </xsl:if>
+
+            <gmd:PT_FreeText>
+              <xsl:for-each select="$listOfLanguage">
+                <xsl:variable name="lang" select="." />
+                <xsl:if test="$textgroupOnly or $lang != $listOfLanguage[1]">
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#{upper-case(util:twoCharLangCode($lang))}">
+                      <xsl:value-of select="$thesauri/labels/label[@language = $lang]/text()"></xsl:value-of>
+                    </gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                </xsl:if>
+              </xsl:for-each>
+            </gmd:PT_FreeText>
           </gmd:title>
 
           <xsl:variable name="thesaurusDate"
