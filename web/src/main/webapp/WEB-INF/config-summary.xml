@@ -92,7 +92,9 @@
             <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
             <item facet="format" max="15" sortBy="value"/>
             <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
-            <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
+          <!--GEOCAT-->
+            <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" sortBy="label" sortOrder="asc"/>
+          <!--END GEOCAT-->
             <item facet="orgName" max="15"/>
             <!-- GEOCAT -->
             <!--<item facet="metadataPOC" max="15"/>-->
@@ -132,7 +134,7 @@
         </summaryType>
         <summaryType name="results_with_summary">
             <!-- GEOCAT -->
-            <item facet="topicCat" sortBy="label" sortOrder="asc" max="100"  translator="codelist:gmd:MD_TopicCategoryCode"/>
+            <item facet="topicCat" sortBy="label" sortOrder="asc" max="100" translator="codelist:gmd:MD_TopicCategoryCode" />
             <!-- END GEOCAT -->
             <item facet="keyword" max="15"/>
             <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
