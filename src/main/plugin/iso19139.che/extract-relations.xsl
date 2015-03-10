@@ -15,24 +15,10 @@
   xmlns:gn-fn-rel="http://geonetwork-opensource.org/xsl/functions/relations"
   exclude-result-prefixes="gn-fn-rel geonet exslt che gmd gco">
 
-  <xsl:include href="../iso19139/convert/functions.xsl" />
-
-  <xsl:function name="gn-fn-rel:translate">
-    <xsl:param name="el"/>
-    <xsl:param name="lang"/>
-    <xsl:choose>
-      <xsl:when test="$el/gco:CharacterString!=''"><xsl:value-of select="$el/gco:CharacterString"/></xsl:when>
-      <xsl:when test="($el/gmd:PT_FreeText//gmd:LocalisedCharacterString[@locale = $lang][text() != ''])[1]">
-        <xsl:value-of select="($el/gmd:PT_FreeText//gmd:LocalisedCharacterString[@locale = $lang][text() != ''])[1]"/>
-      </xsl:when>
-      <xsl:otherwise><xsl:value-of select="($el/gmd:PT_FreeText//gmd:LocalisedCharacterString[text() != ''])[1]"/></xsl:otherwise>
-    </xsl:choose>
-  </xsl:function>
-
   <!-- Relation contained in the metadata record has to be returned
   It could be document or thumbnails
   -->
-  <xsl:template mode="relation" match="metadata[gmd:MD_Metadata or *[contains(@gco:isoType, 'MD_Metadata')]]" priority="99">
+  <xsl:template mode="relation" match="metadata[gmd:MD_Metadata or *[contains(@gco:isoType, 'MD_Metadata')]]" priority="299">
 
     <xsl:for-each select="*/descendant::*[name(.) = 'gmd:graphicOverview']/*">
       <relation type="thumbnail">
