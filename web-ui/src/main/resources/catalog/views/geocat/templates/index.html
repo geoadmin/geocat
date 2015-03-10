@@ -28,7 +28,7 @@
               <div class="input-group">
                 <input type="text" ng-model="searchObj.params.any" placeholder="{{'anyPlaceHolder' | translate}}"
                        typeahead="address for address in getAnySuggestions($viewValue)" typeahead-loading="anyLoading" class="form-control"
-                       typeahead-min-length="1" id="anySearchField">
+                       typeahead-min-length="1" id="anySearchField" autocomplete="off">
                 <i ng-show="anyLoading" class="fa fa-refresh inner-spinner"></i>
                 <span class="input-group-btn">
                   <button type="submit" data-ng-click="triggerSearch()" class="btn btn-default">
