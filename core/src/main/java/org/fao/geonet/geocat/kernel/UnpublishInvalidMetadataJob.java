@@ -137,6 +137,8 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
 
             DataManager dataManager = serviceContext.getBean(DataManager.class);
             for (Metadata metadataRecord : metadataToTest) {
+                ApplicationContextHolder.set(serviceContext.getApplicationContext());
+                serviceContext.setAsThreadLocal();
                 final String id = "" + metadataRecord.getId();
                 try {
                      if(checkIfNeedsUnpublishingAndSavePublishedRecord(serviceContext, metadataRecord, dataManager)) {
