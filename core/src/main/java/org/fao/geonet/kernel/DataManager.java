@@ -579,12 +579,6 @@ public class DataManager implements ApplicationEventPublisherAware {
             List<Attribute> xlinks = Processor.getXLinks(metadataEl);
             if (xlinks.size() > 0) {
                 moreFields.add(SearchManager.makeField("_hasxlinks", "1", true, true));
-                StringBuilder sb = new StringBuilder();
-                for (Attribute xlink : xlinks) {
-                    sb.append(xlink.getValue());
-                    sb.append(" ");
-                }
-                moreFields.add(SearchManager.makeField("_xlink", sb.toString(), true, true));
                 Processor.processXLink(metadataEl, servContext);
                 xmlSerializer.update(metadataId, metadataEl, new ISODate().toString(), false, null, servContext);
             } else {
