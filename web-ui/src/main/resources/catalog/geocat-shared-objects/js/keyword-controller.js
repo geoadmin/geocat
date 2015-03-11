@@ -12,9 +12,10 @@
         '$routeParams',
         '$http',
         '$location',
+        '$timeout',
         'commonProperties',
         'keywordsService',
-      function ($scope, $routeParams, $http, $location, commonProperties,
+      function ($scope, $routeParams, $http, $location, $timeout, commonProperties,
                 keywordsService) {
 
         commonProperties.addValidated($scope, $routeParams);
@@ -50,18 +51,24 @@
           params.params.namespace = 'http://geocat.ch/concept#';
 
           if (!params.isEmpty) {
-            $scope.performOperation({
+            $http({
               method: 'POST',
-              url: $scope.baseUrl + '/geocat.thesaurus.updateelement',
+              url: $scope.baseUrl + '/geocat.thesaurus.updateelement?_content_type=json',
               headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
               data: $.param(params.params)
-            }).
-              success(function () {
+            }).success(function (data) {
+              $('#editModal').modal('hide');
+
                 for (var lang in $scope.keyword) {
                   $scope.keyword[lang].label = '';
                   $scope.keyword[lang].desc = '';
                 }
-                $location.path("/validated/keywords");
+
+                $timeout(function () {
+                  var id = encodeURIComponent(data.id);
+                  $location.url('/validated/keywords?search='+id);
+                }, 200);
+
               });
           } else {
             $('#editModal').modal('hide');

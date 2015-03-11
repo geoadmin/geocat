@@ -11,10 +11,11 @@
         '$scope',
         '$routeParams',
         '$location',
+        '$timeout',
         '$http',
         'commonProperties',
         'extentsService',
-      function ($scope, $routeParams, $location, $http,
+      function ($scope, $routeParams, $location, $timeout, $http,
                 commonProperties, extentsService) {
 
         commonProperties.addValidated($scope, $routeParams);
@@ -61,14 +62,11 @@
           });
           $scope.finishEdit = function () {
             $('#editModal').modal('hide');
-            extentsService.updateExtent(extentsService.addService, $scope.formObj).success(function(){
-              if ($location.path().contains("nonvalidated")) {
-                setTimeout(function () {
-                  $location.path('/validated/extents');
-                }, 200);
-              } else {
-                $scope.reloadData();
-              }
+            extentsService.updateExtent(extentsService.addService, $scope.formObj).success(function(data){
+              $timeout(function () {
+                var id = /.+id=(\d+).*/.exec(data[0])[1];
+                $location.url('/validated/extents?search='+id);
+              }, 200);
             });
           };
           $('#editModal').modal('show');

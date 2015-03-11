@@ -103,11 +103,11 @@ public class GeocatUpdateElement implements Service {
             bean.setValue(entry.getValue(), entry.getKey());
             bean.setDefinition(definition, entry.getKey());
         }
-
+        String uri;
         if (oldid != null) {
-            thesaurus.updateElement(bean, true);
+            uri = thesaurus.updateElement(bean, true).getURI();
         } else {
-            thesaurus.addElement(bean);
+            uri = thesaurus.addElement(bean).getURI();
         }
 
         DataManager.reindex(context, newid, manager);
@@ -116,6 +116,7 @@ public class GeocatUpdateElement implements Service {
 
         elResp.addContent(new Element("selected").setText(ref));
         elResp.addContent(new Element("mode").setText("edit"));
+        elResp.addContent(new Element("id").setText(uri));
         return elResp;
     }
 

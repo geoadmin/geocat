@@ -1,4 +1,6 @@
 {
+  "all": "All",
+  "region": "Region type",
   "contacts" : "Contacts",
   "formats" : "Formats",
   "extents" : "Extents",
@@ -30,5 +32,20 @@
   "mostReferenceCount": "Most References",
   "fewestReferenceCount": "Fewest References",
   "reusable_confirmDelete": "Deleting Shared Object",
-  "reusable_confirmDeleteMsg": "<div>Are you sure you want to delete the following shared object?</div> <div>{{desc}}</div><div>Number of References: {{referenceCount}}</div>"
+  "reusable_confirmDeleteMsg": "<div>Are you sure you want to delete the following shared object?</div> <div>{{desc}}</div><div>Number of References: {{referenceCount}}</div>",
+  "typeForMore": "Only 10 results displayed -- Type to search for more",
+  "exclude": "Exclude",
+  "include": "Include",
+  "bbox": "Bounding box",
+  "soExtent": "Add an extent from shared objects library",
+  "extentsAddBtn": "Add this extent to the metadata",
+  "contactsAddBtn": "Add this contact to the metadata",
+  "formatsAddBtn": "Add this format to the metadata",
+  "addClassicExtent": "Add a classic extent",
+  "searchAextents": "Search a shared Extent",
+  "searchAformats": "Search a shared Format",
+  "searchAcontacts": "Search a shared Contact",
+  "addEntry": "Create a new entry",
+  "bboxOnly": "Bounding box only",
+  "bboxPolygon": "Bounding box and bounding polygon"
 }

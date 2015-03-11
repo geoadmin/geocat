@@ -8,8 +8,8 @@
 // Demonstrate how to register services
 // In this case it is a simple value service.
 angular.module('geocat_shared_objects_factories', ['geocat_shared_objects_translate_config']).
-  factory('commonProperties', ['$window', '$http', '$translate', 'subtemplateService', function ($window, $http, $translate,
-                                                                                                 subtemplateService) {
+  factory('commonProperties', ['$window', '$http', '$translate', '$location', '$timeout', 'subtemplateService',
+    function ($window, $http, $translate, $location, $timeout, subtemplateService) {
       var transformToFormUrlEncoded = subtemplateService.transformToFormUrlEncoded;
       var loadRecords = function ($scope) {
           $scope.loading = '-1';
@@ -66,6 +66,9 @@ angular.module('geocat_shared_objects_factories', ['geocat_shared_objects_transl
               $scope.search = {
                   search: ''
               };
+              if ($routeParams.search) {
+                $scope.search.search = decodeURIComponent($routeParams.search);
+              }
               $scope.edit = {
                   
               };
@@ -189,7 +192,7 @@ angular.module('geocat_shared_objects_factories', ['geocat_shared_objects_transl
                       angular.extend(params, extraParams);
                   }
 
-                  $scope.performOperation({
+                  return $scope.performOperation({
                       method: 'POST',
                       url: baseUrl + '/' + service,
                       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -236,12 +239,15 @@ angular.module('geocat_shared_objects_factories', ['geocat_shared_objects_transl
                   });
               };
               $scope.reloadOnWindowClosed = function (win) {
-                  var intervalId = setInterval(function() {
-                      if (win.closed) {
-                          clearInterval(intervalId);
-                          $scope.reloadData();
-                      }
-                  }, 100);
+                var reloadFunc = function() {
+                  if (win.closed) {
+                    $scope.reloadData();
+                  } else {
+                     $timeout(reloadFunc, 100);
+                  }
+
+                };
+                $timeout(reloadFunc, 100);
               };
               $scope.loadReferenceCounts = function(rowIndex) {
                 var ids, idMap, row, i;
@@ -293,8 +299,16 @@ angular.module('geocat_shared_objects_factories', ['geocat_shared_objects_transl
             return function(data) {
               $scope.loading = undefined;
               var id = data.id;
-              $scope.reloadOnWindowClosed($scope.open('catalog.edit#/metadata/' + id + '/tab/simple'));
-              $location.path(locationUrl);
+              var win = $scope.open('catalog.edit#/metadata/' + id + '/tab/simple');
+              var changePageOnWindowClosed = function() {
+                if (win.closed) {
+                  $location.url(locationUrl + '?search='+data.uuid);
+                } else {
+                  $timeout(changePageOnWindowClosed, 100);
+                }
+              };
+              $timeout(changePageOnWindowClosed, 100);
+
             }
           },
           createSubtemplateError: function($scope) {

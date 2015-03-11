@@ -566,7 +566,7 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
             String geoIdAt = ExtentHelper.decodeDescription(att.toString());
             String geoId = LangUtils.getTranslation(geoIdAt, _currentLocale);
             if (geoId != null && !geoId.isEmpty()) {
-                desc = desc + " &lt;" + geoId + "&gt;";
+                desc = desc + " (" + geoId + ")";
             }
         }
 
