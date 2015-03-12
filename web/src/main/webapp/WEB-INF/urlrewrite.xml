@@ -137,7 +137,30 @@
       <to type="permanent-redirect" last="true">%{context-path}/home?node=$1</to>
     </rule>
 
-    <!-- Rules for RESTful urls for metadata retrieve -->
+
+  <rule>
+    <note>
+      map old metadata.show requests to new formatter based viewer
+    </note>
+    <from>^(.*)/(.*)/metadata.show?.*fileIdentifier=([^&amp;]+).*</from>
+    <to type="permanent-redirect" last="true">%{context-path}$1/$2/md.viewer?debug#/full_view/$3</to>
+  </rule>
+  <rule>
+    <note>
+      map old metadata.show requests to new formatter based viewer
+    </note>
+    <from>^(.*)/(.*)/metadata.show?.*id=([^&amp;]+).*</from>
+    <to type="permanent-redirect" last="true">%{context-path}$1/$2/md.viewer?debug#/full_view/$3</to>
+  </rule>
+  <rule>
+    <note>
+      map old metadata.show requests to new formatter based viewer
+    </note>
+    <from>^(.*)/(.*)/metadata.show?.*uuid=([^&amp;]+).*</from>
+    <to type="permanent-redirect" last="true">%{context-path}$1/$2/md.viewer?debug#/full_view/$3</to>
+  </rule>
+
+  <!-- Rules for RESTful urls for metadata retrieve -->
     <rule>
         <note>
             Retrieves mef format for a metadata.
