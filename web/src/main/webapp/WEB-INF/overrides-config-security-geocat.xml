@@ -2,6 +2,7 @@
            xsi:noNamespaceSchemaLocation="overrides/config-overrides.xsd">
 
     <spring>
+        <addInterceptUrl pattern="/srv/\w\w\w/metadata.show\?fileIdentifier=.*" access="permitAll"/>
         <addInterceptUrl pattern="/srv/\w\w\w/admin.shared.objects!?\??.*" access="hasRole('Administrator')"/>
         <addInterceptUrl pattern="/srv/\w\w\w/strings.js!?" access="permitAll"/>
 
