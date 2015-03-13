@@ -1032,9 +1032,8 @@
       select="gn-fn-metadata:getFieldType($editorConfig, name(), 
       name(..))"/>
     
-    <!-- Form field name escaping ":" which will be invalid character for
-    Jeeves request parameters. -->
-    <xsl:variable name="fieldName" select="concat('_', $ref, '_', replace($attributeName, ':', 'COLON'))"/>
+    <!-- Form field name escaping ":" which will be invalid character for Jeeves request parameters. -->
+    <xsl:variable name="fieldName" select="concat('_', $ref[1], '_', replace($attributeName, ':', 'COLON'))"/>
     
     <div class="form-group" id="gn-attr-{$fieldName}">
       <label class="col-sm-4">
