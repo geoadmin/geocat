@@ -38,6 +38,7 @@
     "catalog": "catalog",
     "chi": "中文",
     "city": "City",
+    "associatedResources": "Associated resources",
     "comments": "Comment",
     "contactDetailsSentTo": "An email has been sent to",
     "country": "Country",

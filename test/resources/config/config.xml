@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <geonet>
-    <!-- ====================================================================== -->
+	<!-- ====================================================================== -->
 
-    <general>
+	<general>
         <!-- Size must be in megabyte (integer), 100MB by default -->
         <maxUploadSize>100</maxUploadSize>
         <uploadDir>./data/tmp</uploadDir>
-        <debug>true</debug>
-    </general>
+		<debug>true</debug>
+	</general>
 
-    <!-- ====================================================================== -->
+	<!-- ====================================================================== -->
 
-    <default>
+	<default>
         <service>home</service>
         <!-- the following service is called if there is an exception raised
             during the initialization of resources or
             the appHandler org.fao.geonet.Geonetwork
         -->
         <startupErrorService>error</startupErrorService>
-        <language>eng</language>
-        <localized>true</localized>
-        <contentType>text/html; charset=UTF-8</contentType>
+		<language>eng</language>
+		<localized>true</localized>
+		<contentType>text/html; charset=UTF-8</contentType>
 
-        <gui>
-            <xml name="strings" file="xml/strings.xml" />
+		<gui>
+			<xml name="strings" file="xml/strings.xml" />
 
             <call name="isolanguages" class="org.fao.geonet.guiservices.isolanguages.Get"/>
 
-            <call name="session" class="jeeves.guiservices.session.Get" />
-            <call name="env" class="org.fao.geonet.guiservices.util.Env" />
+			<call name="session" class="jeeves.guiservices.session.Get" />
+			<call name="env" class="org.fao.geonet.guiservices.util.Env" />
             <call name="systemConfig" class="org.fao.geonet.services.config.Get" />
-            <call name="results" class="org.fao.geonet.guiservices.search.GetResultsInfo" />
+			<call name="results" class="org.fao.geonet.guiservices.search.GetResultsInfo" />
             <call name="schemalist" class="org.fao.geonet.guiservices.schemas.Get" />
             <call name="svnmanager" class="org.fao.geonet.guiservices.util.GetSvnDetails"/>
 
@@ -40,27 +40,27 @@
             <xml name="config" file="WEB-INF/config-gui.xml" localized="false" />
         </gui>
 
-        <!-- no privileges to access the service -->
+		<!-- no privileges to access the service -->
 
         <error id="service-not-allowed" sheet="../xslt/common/error.xsl" statusCode="403">
-            <xml name="error" file="xml/privileges-error.xml" />
-        </error>
+			<xml name="error" file="xml/privileges-error.xml" />
+		</error>
 
-        <!-- data in upload too big -->
+		<!-- data in upload too big -->
 
         <error id="file-upload-too-big" sheet="../xslt/common/error.xsl">
-            <xml name="error" file="xml/file-too-big-error.xml" />
-        </error>
+			<xml name="error" file="xml/file-too-big-error.xml" />
+		</error>
 
-        <!-- general error -->
+		<!-- general error -->
 
         <error sheet="../xslt/common/error.xsl">
-            <xml name="error" file="xml/error.xml" />
-        </error>
+			<xml name="error" file="xml/error.xml" />
+		</error>
 
-    </default>
+	</default>
 
-    <!-- ====================================================================== -->
+	<!-- ====================================================================== -->
 
     <appHandler class="org.fao.geonet.Geonetwork">
         <!-- language profiles for automatic language detection -->
@@ -116,68 +116,58 @@
         <!-- Define the class to use when metadata status change
         -->
         <param name="statusActionsClass" value="org.fao.geonet.kernel.metadata.DefaultStatusActions"/>
-    </appHandler>
+	</appHandler>
 
-    <!-- ====================================================================== -->
+	<!-- ====================================================================== -->
 
-    <services package="org.fao.geonet">
+	<services package="org.fao.geonet">
 
         <!-- Ext GUIs -->
         <service name="feedback.send">
             <class name=".services.feedback.Receptor" />
             <output sheet="extjs-feedback-response.xsl" contentType="application/json; charset=UTF-8" />
-        </service>
+		</service>
 
-        <service name="util.ping">
-            <class name="jeeves.services.Ping" />
-        </service>
+		<service name="util.ping">
+			<class name="jeeves.services.Ping" />
+		</service>
 
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <!-- Resources management services                                 -->
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Resources management services                                 -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="file.disclaimer">
+		<service name="file.disclaimer">
             <class name=".services.feedback.AddLimitations" />
-            <output sheet="file-download-disclaimer.xsl" />
-        </service>
+			<output sheet="file-download-disclaimer.xsl" />
+		</service>
 
 
-        <service name="file.download">
-            <class name=".services.feedback.Insert" />
+		<service name="file.download">
+			<class name=".services.feedback.Insert" />
 
-            <output sheet="file-download.xsl" />
-        </service>
+			<output sheet="file-download.xsl" />
+		</service>
 
-        <service name="prepare.file.download">
-            <class name=".services.metadata.PrepareFileDownload" />
-            <output sheet="file-download-list.xsl" />
-        </service>
+		<service name="prepare.file.download">
+			<class name=".services.metadata.PrepareFileDownload" />
+			<output sheet="file-download-list.xsl" />
+		</service>
 
-        <service name="resources.get.archive">
-            <class name=".services.resources.DownloadArchive" />
+		<service name="resources.get.archive">
+			<class name=".services.resources.DownloadArchive" />
 
             <error id="file-not-found" sheet="error-embedded.xsl" statusCode="404">
-                <xml name="error" file="xml/file-not-found-error.xml" />
-            </error>
+				<xml name="error" file="xml/file-not-found-error.xml" />
+			</error>
 
-            <output file="true" />
-        </service>
+			<output file="true" />
+		</service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="resources.get">
-            <class name=".services.resources.Download" />
-
-            <error id="file-not-found" sheet="error-embedded.xsl" statusCode="404">
-                <xml name="error" file="xml/file-not-found-error.xml" />
-            </error>
-
-            <output file="true" />
-        </service>
 
 
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- KML services -->
         <!-- Show WMS service in GE -->
         <service name="google.kml">
@@ -187,15 +177,15 @@
             <error id="operation-not-allowed" sheet="../xslt/common/error.xsl" statusCode="403">
                 <xml name="error" file="xml/privileges-error.xml" />
             </error>
-        </service>
+		</service>
 
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- MEF services -->
 
         <service name="mef.import">
             <class name=".services.mef.Import" />
             <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
-        </service>
+		</service>
 
         <service name="xml.mef.import.ui">
             <!-- TODO rename Catalogue.js -->
@@ -203,32 +193,32 @@
             <output sheet="metadata/md-insert-results.xsl"/>
 
             <error sheet="error-xml.xsl"/>
-        </service>
+		</service>
 
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="mef.export">
             <class name=".services.mef.Export" />
             <output file="true" />
             <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
-        </service>
+		</service>
 
 
         <service name="crs.types" deprecated="true">
             <!-- Still used by ExtJS editor -->
             <class name=".services.crs.GetCRSTypes" />
-        </service>
+		</service>
         <service name="crs.get" deprecated="true">
             <!-- Still used by ExtJS editor -->
             <class name=".services.crs.GetCRS" />
             <output sheet="crs.xsl" contentType="text/xml; charset=UTF-8" />
-        </service>
+		</service>
 
 
         <service name="isolanguages" deprecated="true">
             <!-- Still used by ExtJS search form criteria on language -->
             <class name="org.fao.geonet.guiservices.isolanguages.Get" />
-        </service>
+		</service>
 
 
         <!-- HTML5UI -->
@@ -237,12 +227,12 @@
             <output sheet="search.xsl">
                 <call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
                 <call name="isoLang" class=".guiservices.isolanguages.Get" />
-            </output>
-        </service>
+			</output>
+		</service>
 
         <service name="find">
             <output sheet="search-cat.xsl"/>
-        </service>
+		</service>
 
 
 
@@ -250,7 +240,7 @@
             tabsearch is turned off by default (no maintainer).
                 <service name="tabsearch">
                     <output sheet="search-tab.xsl"/>
-                </service>
+		</service>
         -->
 
     </services>

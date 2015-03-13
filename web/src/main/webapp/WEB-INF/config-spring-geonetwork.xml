@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans default-lazy-init="true"
-       xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:p="http://www.springframework.org/schema/p"
        xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-" >
+">
 
 	<import resource="config-spring-env.xml" />
 	<import resource="config-security/config-security.xml" />
@@ -33,13 +32,11 @@
 	<import resource="config-versioning.xml" />
 
 
-	<bean id="scheduler"
-		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+  <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="applicationContextSchedulerContextKey" value="applicationContext" />
 	</bean>
 
-	<bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory"
-		lazy-init="true" />
+  <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true" />
 
     <bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
         <property name="numberOfConcurrentRequests" value="30" />
@@ -80,7 +77,7 @@
     -->
 	</util:map>
 
-    <util:list id="wro4jUrlsToInitialize" value-type="java.lang.String" >
+  <util:list id="wro4jUrlsToInitialize" value-type="java.lang.String">
         <value>lib.js</value>
         <value>nv.d3.css</value>
         <value>gn_search_default.css</value>
@@ -100,18 +97,31 @@
         <!-- END GEOCAT -->
     </util:list>
 
-    <util:list id="formattersToInitialize" value-type="java.lang.String" >
+  <util:list id="formattersToInitialize" value-type="java.lang.String">
         <value>full_view</value>
         <value>xml_view</value>
         <value>hierarchy_view</value>
     </util:list>
 
-    <util:set id="formatterRemoteFormatAllowedHosts" value-type="java.lang.String">
-    </util:set>
+  <util:set id="formatterRemoteFormatAllowedHosts" value-type="java.lang.String"></util:set>
     <bean id="threadResources" class="org.mapfish.print.ThreadResources">
-        <property name="connectionTimeout" value="30000"/>
+    <property name="connectionTimeout" value="30000" />
         <property name="socketTimeout" value="30000" />
-        <property name="globalParallelFetches" value="50"/>
+    <property name="globalParallelFetches" value="50" />
         <property name="perHostParallelFetches" value="10" />
     </bean>
+
+  <util:set id="regionGetMapExpandFactors" set-class="java.util.TreeSet">
+    <bean class="org.fao.geonet.services.region.ExpandFactor"
+      p:proportion=".0005" p:factor="2"/>
+    <bean class="org.fao.geonet.services.region.ExpandFactor"
+      p:proportion=".01" p:factor=".5"/>
+    <bean class="org.fao.geonet.services.region.ExpandFactor"
+      p:proportion=".015" p:factor=".2"/>
+  </util:set>
+
+  <util:map id="regionGetMapBackgroundLayers">
+    <entry key="osm" value="http://ows.terrestris.de/osm/service?SERVICE=WMS&amp;REQUEST=GetMap&amp;VERSION=1.1.0&amp;LAYERS=OSM-WMS&amp;STYLES=default&amp;SRS={srs}&amp;BBOX={minx},{miny},{maxx},{maxy}&amp;WIDTH={width}&amp;HEIGHT={height}&amp;FORMAT=image/png"/>
+  </util:map>
+
 </beans>
