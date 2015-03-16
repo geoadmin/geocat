@@ -442,7 +442,8 @@
                 </gmd:keyword>
               </xsl:for-each>
 
-              <xsl:copy-of select="geonet:add-thesaurus-info(substring-after(., 'thesaurus::'), true(), $root/root/env/thesauri, true())" />
+              <xsl:variable name="listOfLanguage" select="$root/*/gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue" />
+              <xsl:copy-of select="geonet:add-thesaurus-info(substring-after(., 'thesaurus::'), true(), $root/root/env/thesauri, true(), true(), $listOfLanguage)" />
 
             </gmd:MD_Keywords>
           </gmd:descriptiveKeywords>
