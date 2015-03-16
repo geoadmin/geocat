@@ -369,3 +369,36 @@ alter table gemeinden_search add PRIMARY KEY ("OBJECTVAL");
 DELETE FROM geometry_columns where f_table_name='countriesBB' OR f_table_name='countries' OR f_table_name='non_validated' OR 
     f_table_name='xlinks' OR f_table_name='gemeindenBB' OR f_table_name='kantoneBB' OR f_table_name='spatialIndex' OR 
     f_table_name='countries_search' OR f_table_name='kantone_search' OR f_table_name='gemeinden_search';
+
+
+CREATE TABLE geom_table_lastmodified (
+  name varchar(40),
+  lastmodified timestamp,
+  PRIMARY KEY(name)
+);
+INSERT INTO geom_table_lastmodified VALUES ('countries', now());
+INSERT INTO geom_table_lastmodified VALUES ('countriesBB', now());
+INSERT INTO geom_table_lastmodified VALUES ('countries_search', now());
+INSERT INTO geom_table_lastmodified VALUES ('gemeindenBB', now());
+INSERT INTO geom_table_lastmodified VALUES ('gemeinden_search', now());
+INSERT INTO geom_table_lastmodified VALUES ('kantoneBB', now());
+INSERT INTO geom_table_lastmodified VALUES ('kantone_search', now());
+INSERT INTO geom_table_lastmodified VALUES ('non_validated', now());
+INSERT INTO geom_table_lastmodified VALUES ('xlinks', now());
+
+CREATE FUNCTION update_geom_lastmodified() RETURNS trigger AS $$
+  BEGIN
+    UPDATE geom_table_lastmodified SET lastmodified = now() WHERE name = TG_TABLE_NAME;
+    RETURN NULL;
+  END
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER lastmodified_updater AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE ON countries EXECUTE PROCEDURE update_geom_lastmodified();
+CREATE TRIGGER lastmodified_updater AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE ON "countriesBB" EXECUTE PROCEDURE update_geom_lastmodified();
+CREATE TRIGGER lastmodified_updater AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE ON countries_search EXECUTE PROCEDURE update_geom_lastmodified();
+CREATE TRIGGER lastmodified_updater AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE ON "gemeindenBB" EXECUTE PROCEDURE update_geom_lastmodified();
+CREATE TRIGGER lastmodified_updater AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE ON gemeinden_search EXECUTE PROCEDURE update_geom_lastmodified();
+CREATE TRIGGER lastmodified_updater AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE ON "kantoneBB" EXECUTE PROCEDURE update_geom_lastmodified();
+CREATE TRIGGER lastmodified_updater AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE ON kantone_search EXECUTE PROCEDURE update_geom_lastmodified();
+CREATE TRIGGER lastmodified_updater AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE ON non_validated EXECUTE PROCEDURE update_geom_lastmodified();
+CREATE TRIGGER lastmodified_updater AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE ON xlinks EXECUTE PROCEDURE update_geom_lastmodified();
