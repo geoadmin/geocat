@@ -40,7 +40,7 @@
            * @return {*}
            */
           this.getAnySuggestions = function(val) {
-            var url = this.getUrl(val, 'any',
+            var url = this.getUrl(val, 'anylight',
                 ('STARTSWITHFIRST'));
 
             return $http.get(url, {
