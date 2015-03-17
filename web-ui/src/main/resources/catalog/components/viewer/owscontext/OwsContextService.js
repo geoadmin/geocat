@@ -300,6 +300,10 @@
                   var l = gnMap.createOlWMTSFromCap(map, info, capObj);
                   l.setOpacity(layer.opacity);
                   l.setVisible(!layer.hidden);
+                  if(layer.title) {
+                    l.set('title', layer.title);
+                    l.set('label', layer.title);
+                  }
                   defer.resolve({ol: l, ctx: layer});
                 });
           }
@@ -312,11 +316,16 @@
             var l = gnMap.createOlWMSFromCap(map, info);
             l.setOpacity(layer.opacity);
             l.setVisible(!layer.hidden);
+            if(layer.title) {
+              l.set('title', layer.title);
+              l.set('label', layer.title);
+            }
+
             defer.resolve({ol: l, ctx: layer});
           }, function() {
-            console.warn('Failed to load layer from : ' + res.href
-            + 'during capabilities reading.');
-            defer.reject(layer.name)
+            console.warn('Failed to load layer from : ' + res.href +
+                'during capabilities reading.');
+            defer.reject(layer.name);
           });
         }
         return defer.promise;

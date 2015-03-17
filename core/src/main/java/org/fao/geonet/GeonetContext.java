@@ -24,6 +24,8 @@
 package org.fao.geonet;
 
 import org.fao.geonet.geocat.kernel.Email;
+
+import com.google.common.annotations.VisibleForTesting;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.ThreadPool;
@@ -36,7 +38,8 @@ public class GeonetContext {
     private final NodeInfo nodeInfo;
 
     // ---------------------------------------------------------------------------
-    /* package */GeonetContext(ApplicationContext springAppContext, boolean readOnly,
+    @VisibleForTesting
+    public GeonetContext(ApplicationContext springAppContext, boolean readOnly,
                                Class<StatusActions> statusActionsClass) {
         this._springAppContext = springAppContext;
         this.nodeInfo = springAppContext.getBean(NodeInfo.class);

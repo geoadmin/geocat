@@ -40,10 +40,11 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
     <bean id="geonetTestFixture" class="org.fao.geonet.GeonetTestFixture" />
     <!--<bean id="coreTestDatastoreInitializer" class="org.fao.geonet.DatastoreInitializer" />-->
 
-    <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext"/>
     <bean id="stagingProfile" class="java.lang.String">
         <constructor-arg value="development" />
     </bean>
     <bean id="reusableObjectManager" class="org.fao.geonet.geocat.kernel.reusable.MockReusableObjManager"/>
 
+    <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext"/>
+    <bean id="threadPool" class="org.fao.geonet.TestThreadPool"/>
 </beans>
