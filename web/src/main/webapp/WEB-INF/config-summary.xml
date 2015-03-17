@@ -85,24 +85,16 @@
     <summaryTypes>
         <summaryType name="hits">
             <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
-            <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
+          <!--GEOCAT-->
+          <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" sortBy="label" sortOrder="asc"/>
+          <!--END GEOCAT-->
             <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
             <item facet="keyword" max="15"/>
             <item facet="orgName" max="25"/>
             <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
             <item facet="format" max="15" sortBy="value"/>
             <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
-          <!--GEOCAT-->
-            <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" sortBy="label" sortOrder="asc"/>
-          <!--END GEOCAT-->
-            <item facet="orgName" max="15"/>
-            <!-- GEOCAT -->
-            <!--<item facet="metadataPOC" max="15"/>-->
-            <!-- END GEOCAT -->
             <item facet="serviceType"/>
-            <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
-            <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
-            <item facet="format" max="15" sortBy="value"/>
             <!-- GEOCAT -->
             <item facet="groupOwner" max="99" sortBy="value" translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
             <!-- END GEOCAT -->
