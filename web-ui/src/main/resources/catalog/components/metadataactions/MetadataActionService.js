@@ -312,8 +312,10 @@
        */
       this.getPermalink = function(md) {
 
-        var url = $location.absUrl().split('#')[0] + '#/metadata/' +
-            md.getUuid();
+        var url = $location.absUrl().split('#')[0];
+        url = url.split("?")[0];
+        url = new RegExp("(.*)/.+").exec(url)[1];
+        url += "/md.viewer#/full_view/" + md.getUuid();
         gnPopup.createModal({
           title: 'permalink',
           content: '<div gn-permalink-input="' + url + '"></div>'
