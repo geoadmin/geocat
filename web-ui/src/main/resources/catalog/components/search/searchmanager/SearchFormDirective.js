@@ -30,6 +30,7 @@
                gnFacetService, Metadata, gnSearchLocation) {
     var defaultParams = {
       fast: 'index',
+      similarity: '0.8',
       _content_type: 'json'
     };
     var self = this;
