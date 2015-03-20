@@ -1765,6 +1765,12 @@
     <condition/>
     <description>Kurzbezeichnung oder anderer Titel der Ressource</description>
   </element>
+  <element name="gmd:date" id="570.0">
+    <label>Datum</label>
+    <description>Datum der Erzeugung, Veröffentlichung oder Überarbeitung der
+      Ressource</description>
+    <condition>mandatory</condition>
+  </element>
   <element name="gmd:date" context="gmd:CI_Date" id="394">
     <label>Datum</label>
     <help/>
@@ -1779,6 +1785,15 @@
     <description>Datum der Erzeugung, Veröffentlichung oder Überarbeitung der
       Ressource</description>
   </element>
+  <element name="gmd:date" id="570.0" context="gmd:MD_Revision">
+    <label>Datum der letzten Überarbeitung</label>
+    <description>Datum der letzten Überarbeitung</description>
+  </element>
+  <element name="gmd:date" id="144.0" context="gmd:MD_MaintenanceInformation">
+    <label>Datum der nächsten Überarbeitung</label>
+    <description>Datum der nächsten Überarbeitung</description>
+  </element>
+
   <element name="gmd:edition" context="gmd:CI_Citation" id="363">
     <label>Ausgabe</label>
     <help/>
