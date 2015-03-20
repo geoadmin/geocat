@@ -26,7 +26,7 @@
   <input class="form-control input-sm main-input" type="text" data-toggle="dropdown" data-ng-model="searchValue"
          data-ng-click="loadSO($event)" data-ng-change="loadSO()" placeholder="{{('searchA' + templateType) | translate}}"
           data-ng-class="{'disabled' : (templateType == 'contacts' && !role)}" ng-disabled="templateType == 'contacts' && !role"/>
-  <ul data-ng-show="objects.length > 0" class="dropdown-menu" role="menu">
+  <ul class="dropdown-menu" role="menu">
     <li data-ng-repeat="o in objects">
       <a href="" data-ng-click="selectEntry(o)" title="{{o.desc}}">
         <span class="label pull-right" data-ng-class="{'label-danger' : !o.validated, 'label-success' : o.validated}">&nbsp;</span>
