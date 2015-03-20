@@ -176,8 +176,10 @@
     the widget should have. If expanded, then one
     field per language is displayed. -->
     <expanded>
+<!--
       <name>gmd:title</name>
       <name>gmd:abstract</name>
+-->
     </expanded>
     <!-- All fields in ISO could be multilingual.
     Define element to exlcude. 
