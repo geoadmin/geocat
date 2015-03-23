@@ -297,6 +297,7 @@
         <for name="srv:extent"/>
         <for name="gmd:resourceFormat"/>
         <for name="gmd:distributionFormat"/>
+        <for name="gmd:topicCategory"/>
       </flatModeExceptions>
 
     </view>
