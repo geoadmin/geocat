@@ -169,6 +169,7 @@
     <name>gmd:verticalCRS</name>
     <name>gml:verticalCS</name>
     <name>gml:verticalDatum</name>
+    <name>gmd:resourceFormat</name>
   </fieldsWithFieldset>
 
   <multilingualFields>
