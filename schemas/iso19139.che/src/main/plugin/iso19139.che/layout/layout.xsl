@@ -224,7 +224,7 @@
         </div>
       </xsl:when>
       <xsl:otherwise>
-        <div class="form-group gn-field {$invalidCls}" data-gn-field-highlight="">
+        <div class="form-group gn-field {$invalidCls} gn-required" data-gn-field-highlight="">
           <label for="{$fieldId}" class="col-sm-2 control-label">
             <xsl:value-of select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), '', '')/label"/>
           </label>
