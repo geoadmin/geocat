@@ -25,8 +25,11 @@
       $scope.groupsFilter = {};
       $scope.sourcesFilter = {};
       $scope.categoriesFilter = {};
-      $scope.newFilterField = null;
-      $scope.newFilterValue = null;
+      $scope.newFilter = {
+        name: null,
+        value: null,
+        occur: '+'
+      };
       $scope.occurs = ['+',' ','-'];
       $scope.showExplicitQuery = false;
       $scope.filterHelper = ['any', 'title', 'abstract', 'keyword',
@@ -95,19 +98,21 @@
       };
 
       $scope.addFilter = function() {
-        $scope.virtualCSWSelected.serviceParameters[$scope.newFilterField] =
-            $scope.newFilterValue;
-        $scope.newFilterValue = $scope.newFilterField = null;
+        $scope.virtualCSWSelected.serviceParameters[$scope.newFilter.name] = angular.copy($scope.newFilter);
+        $scope.newFilter.value = $scope.newFilter.name = null;
+        $scope.newFilter.occur = '+';
       };
       $scope.removeFilter = function(f) {
         delete $scope.virtualCSWSelected.serviceParameters[f];
       };
       $scope.setFilter = function(f) {
-        $scope.newFilterField = f;
+        $scope.newFilter.name = f;
       };
       $scope.setFilterValue = function(field, value) {
-        $scope.virtualCSWSelected.serviceParameters[field] =
-            value;
+        $scope.virtualCSWSelected.serviceParameters[field] = {
+            value: value,
+            occur: '='
+        }
       };
 
       $scope.$watchCollection('virtualCSWSelected', function() {

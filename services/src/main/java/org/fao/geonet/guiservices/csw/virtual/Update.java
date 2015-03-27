@@ -22,6 +22,8 @@
 //==============================================================================
 package org.fao.geonet.guiservices.csw.virtual;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import jeeves.server.JeevesEngine;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Service;
@@ -36,7 +38,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -46,6 +48,7 @@ import java.util.Map;
 @Controller("admin.config.virtualcsw.update")
 public class Update {
 
+    public static final String OCCUR_PREFIX = "occur__";
     @Autowired
     private ConfigurableApplicationContext jeevesApplicationContext;
 
@@ -79,6 +82,24 @@ public class Update {
             filters.remove(p);
         }
 
+        java.util.List<ServiceParam> params = Lists.newArrayList();
+
+        Map<String, Character> occurMapping = Maps.newHashMap();
+        for (Map.Entry<String, String> filter : filters.entrySet()) {
+            if (filter.getKey().startsWith(OCCUR_PREFIX)) {
+                String paramName = filter.getKey().substring(OCCUR_PREFIX.length());
+                final String value = filter.getValue();
+                occurMapping.put(paramName, value.length() > 0 ? value.charAt(0) : '+');
+            }
+        }
+        for (Map.Entry<String, String> filter : filters.entrySet()) {
+            if (!filter.getKey().startsWith(OCCUR_PREFIX)) {
+                final ServiceParam param = new ServiceParam(filter.getKey(), filter.getValue());
+                Character occur = occurMapping.get(filter.getKey());
+                param.setOccur(occur == null ? '+' : occur);
+                params.add(param);
+            }
+        }
         if (operation.equals(Params.Operation.NEWSERVICE)) {
             Service service = serviceRepository.findOneByName(serviceName);
 
@@ -92,11 +113,8 @@ public class Update {
             service.setClassName(className);
             service.setName(serviceName);
 
-
-            for (Map.Entry<String, String> filter : filters.entrySet()) {
-                if (filter.getValue() != null && !filter.getValue().equals("")) {
-                    service.addParameter(new ServiceParam(filter.getKey(), filter.getValue()));
-                }
+            for (ServiceParam param : params) {
+                service.addParameter(param);
             }
             serviceRepository.save(service);
             serviceId = String.valueOf(service.getId());
@@ -107,8 +125,9 @@ public class Update {
             service.setDescription(serviceDescription);
             service.setExplicitQuery(explicitQuery);
             service.clearParameters();
-            for (Map.Entry<String, String> filter : filters.entrySet()) {
-                service.addParameter(new ServiceParam(filter.getKey(), filter.getValue()));
+
+            for (ServiceParam param : params) {
+                service.addParameter(param);
             }
 
             serviceRepository.save(service);
