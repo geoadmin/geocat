@@ -32,20 +32,20 @@
 
         -->
 
-        <service name="csw-liechtenstein">
-            <class name=".services.main.CswDiscoveryDispatcher" >
-                <param name="filter" value="+_groupOwner:13"/>
-            </class>
-        </service>
-        <service name="csw-liechtenstein-inspire-strict-valid">
-            <class name=".services.main.CswDiscoveryDispatcher" >
-                <param name="filter" value="+(_groupOwner:13 _valid_schematron-rules-inspire-strict:1)"/>
-            </class>
-        </service>
-        <service name="csw-liechtenstein-inspire">
-            <class name=".services.main.CswDiscoveryDispatcher" >
-                <param name="filter" value="+(+_groupOwner:13 +keyword:INSPIRE)"/>
-            </class>
-        </service>
+        <!--<service name="csw-liechtenstein">-->
+            <!--<class name=".services.main.CswDiscoveryDispatcher" >-->
+                <!--<param name="filter" value="+_groupOwner:13"/>-->
+            <!--</class>-->
+        <!--</service>-->
+        <!--<service name="csw-liechtenstein-inspire-strict-valid">-->
+            <!--<class name=".services.main.CswDiscoveryDispatcher" >-->
+                <!--<param name="filter" value="+(_groupOwner:13 _valid_schematron-rules-inspire-strict:1)"/>-->
+            <!--</class>-->
+        <!--</service>-->
+        <!--<service name="csw-liechtenstein-inspire">-->
+            <!--<class name=".services.main.CswDiscoveryDispatcher" >-->
+                <!--<param name="filter" value="+(+_groupOwner:13 +keyword:INSPIRE)"/>-->
+            <!--</class>-->
+        <!--</service>-->
     </services>
 </geonet>

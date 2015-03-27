@@ -3,8 +3,16 @@ package org.fao.geonet.domain;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.entitylistener.AddressEntityListenerManager;
 
-import javax.persistence.*;
 import java.io.Serializable;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 /**
  * Represents an address. This is a JPA Entity object and is contained in a database table.
@@ -25,39 +33,7 @@ public class Address extends GeonetEntity implements Serializable {
     private String _state;
     private String _zip;
     private String _country;
-    // GEOCAT
-    private String streetnumber;
-    private String streetname;
-    private String postbox;
 
-    public String getPostbox() {
-        return postbox;
-    }
-
-    public Address setPostbox(String postbox) {
-        this.postbox = postbox;
-        return this;
-    }
-
-    public String getStreetname() {
-        return streetname;
-    }
-
-    public Address setStreetname(String streetname) {
-        this.streetname = streetname;
-        return this;
-    }
-
-    public String getStreetnumber() {
-        return streetnumber;
-    }
-
-    public Address setStreetnumber(String streetnumber) {
-        this.streetnumber = streetnumber;
-        return this;
-    }
-
-    // END GEOCAT
     /**
      * Id of the address. This is automatically generated so when creating a new object leave this blank and allow the database or JPA set
      * the value for you on save.
