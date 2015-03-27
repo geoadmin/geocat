@@ -6,11 +6,14 @@ import java.util.List;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -20,27 +23,65 @@ import javax.persistence.Table;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "ServiceParameters")
+@SequenceGenerator(name=ServiceParam.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class ServiceParam extends GeonetEntity {
+    static final String ID_SEQ_NAME = "serviceparameters_id_seq";
     private static final List<Character> LEGALVALUES = Lists.newArrayList('+', '-', ' ', null);
-    private ServiceParamId id;
+    private int id;
     private Service service;
+    private String name;
+    private String value;
     private Character occur = '+';
 
     public ServiceParam() {
         // for JPA
     }
     public ServiceParam(String name, String value) {
-        this.id = new ServiceParamId(name, value);
+        this.name = name;
+        this.value = value;
     }
-
-
-    @EmbeddedId
-    public ServiceParamId getId() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    public int getId() {
         return id;
     }
 
-    public void setId(ServiceParamId id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    /**
+     * Get the name of the service.
+     *
+     * @return the name of the service.
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Set the name of the service.
+     *
+     * @param name the name of the service.
+     */
+    public ServiceParam setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    /**
+     * Get the parameter value
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * Set the parameter value
+     */
+    public ServiceParam setValue(String value) {
+        this.value = value;
+        return this;
     }
 
     /**

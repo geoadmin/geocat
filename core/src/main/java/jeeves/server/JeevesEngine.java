@@ -644,14 +644,14 @@ public class JeevesEngine {
                         filter.append(service.getExplicitQuery());
                     }
                     for (ServiceParam serviceParam : paramList) {
-                        if (serviceParam.getId().getValue() != null && !serviceParam.getId().getValue().trim().isEmpty()) {
+                        if (serviceParam.getValue() != null && !serviceParam.getValue().trim().isEmpty()) {
                             filter.append(" ");
                             if (serviceParam.getOccur() == null ) {
                                 filter.append("+");
                             } else {
                                 filter.append(serviceParam.getOccur());
                             }
-                            filter.append(serviceParam.getId().getName()).append(":").append(serviceParam.getId().getValue());
+                            filter.append(serviceParam.getName()).append(":").append(serviceParam.getValue());
                         }
                     }
                     cls.addContent(new Element("param").

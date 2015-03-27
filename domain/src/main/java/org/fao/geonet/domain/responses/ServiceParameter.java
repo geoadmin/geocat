@@ -56,8 +56,8 @@ public  class ServiceParameter implements Serializable {
     }
 
     public ServiceParameter(ServiceParam param) {
-        this.name = param.getId().getName();
-        this.value = param.getId().getValue();
+        this.name = param.getName();
+        this.value = param.getValue();
         this.occur = param.getOccur();
     }
 }
