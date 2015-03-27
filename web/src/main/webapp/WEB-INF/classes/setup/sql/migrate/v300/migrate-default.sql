@@ -47,6 +47,41 @@ INSERT INTO groupsdes(iddes, langid, label) VALUES (-1, 'ger', 'Gast');
 INSERT INTO groupsdes(iddes, langid, label) VALUES (-1, 'roh', '');
 
 DELETE FROM validation;
+CREATE TABLE services
+(
+  id integer PRIMARY KEY,
+  class character varying(1024) NOT NULL,
+  description character varying(1024),
+  explicitquery character varying(255),
+  name character varying(255) NOT NULL,
+  CONSTRAINT uk_j180x109do4umtn4ppnmepoyf UNIQUE (name)
+)
+WITH (
+  OIDS=FALSE
+);
+CREATE TABLE serviceparameters
+(
+  id integer PRIMARY KEY,
+  name character varying(255) NOT NULL,
+  value character varying(255) NOT NULL,
+  occur character(1),
+  service integer,
+  CONSTRAINT fk_t32t4xtdqmjhl8xmjpe95e474 FOREIGN KEY (service)
+      REFERENCES services (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+INSERT INTO services(id, class, description, name) VALUES (125806, '.services.main.CswDiscoveryDispatcher','All liechtenstein metadata','csw-liechtenstein');
+INSERT INTO services(id, class, description, name) VALUES (125807, '.services.main.CswDiscoveryDispatcher','All Liechtenstein metadata that are inspire valid','csw-liechtenstein-inspire-strict-valid');
+INSERT INTO services(id, class, description, name) VALUES (125808, '.services.main.CswDiscoveryDispatcher','All Liechtenstein metadata that have INSPIRE keyword','csw-liechtenstein-inspire');
+
+INSERT INTO serviceparameters(id, service, value, name, occur) VALUES (1, 125806,'13','_groupOwner', '+');
+INSERT INTO serviceparameters(id, service, value, name, occur) VALUES (2, 125808,'13','_groupOwner', '+');
+INSERT INTO serviceparameters(id, service, value, name, occur) VALUES (3, 125808,'INSPIRE','keyword', '+');
+INSERT INTO serviceparameters(id, service, value, name, occur) VALUES (4, 125807,'1','_valid_schematron-rules-inspire-strict', '+');
+INSERT INTO serviceparameters(id, service, value, name, occur) VALUES (5, 125807,'13','_groupOwner', '+');
 -- END GEOCAT
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/ignorehostlist', NULL, 0, 560, 'y');
@@ -68,5 +103,3 @@ WHERE
 -- END GEOCAT
 INSERT INTO settings (name, value, datatype, position, internal) VALUES ('system/server/log','log4j',0,250,'y');
 
-ALTER TABLE ServiceParameters ADD COLUMN occur varchar(1) default '+';
-UPDATE ServiceParameters SET occur='+';
