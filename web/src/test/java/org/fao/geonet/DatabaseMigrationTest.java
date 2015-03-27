@@ -11,6 +11,7 @@ import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.domain.Service;
+import org.fao.geonet.domain.ServiceParam;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.SettingDataType;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -212,9 +213,9 @@ public class DatabaseMigrationTest extends AbstractSpringDataTest {
         _searchRequestRepo.saveAndFlush(SearchRequestRepositoryTest.newSearchRequest(_inc));
         assertEquals(0, _serviceRepo.count());
         Service service = ServiceRepositoryTest.newService(_inc);
-        service.getParameters().clear();
+        service.clearParameters();
         service = _serviceRepo.saveAndFlush(service);
-        service.getParameters().put("p1", "p2");
+        service.addParameter(new ServiceParam("p1", "p2"));
         _serviceRepo.saveAndFlush(service);
         assertTrue(_settingRepo.count() > 0);
         _settingRepo.update("system/csw/metadataPublic", new Updater<Setting>() {
