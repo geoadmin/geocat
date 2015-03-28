@@ -496,15 +496,6 @@
           scope.links = [];
           scope.downloads = scope.md.getLinksByType('DOWNLOAD', 'FILE');
 
-          angular.forEach(links, function(l) {
-            if(l.url && l.url != '' && l.url != '-') {
-              if(l.desc == '' || l.desc == '-') {
-                l.desc = l.url;
-              }
-              scope.links.push(l);
-            }
-          });
-
           if (scope.md.type.indexOf('service') >= 0) {
             scope.layers = [];
             angular.forEach(scope.md.wmsuri, function(uri) {
@@ -519,6 +510,31 @@
           } else {
             scope.layers = scope.md.getLinksByType('OGC:WMS', 'kml');
           }
+
+          angular.forEach(links, function(l) {
+            if(l.url && l.url != '' && l.url != '-') {
+              if(l.desc == '' || l.desc == '-') {
+                l.desc = l.url;
+              }
+              scope.links.push(l);
+            }
+          });
+
+          angular.forEach(scope.downloads, function(l) {
+            if(l.url && l.url != '' && l.url != '-') {
+              if(l.desc == '' || l.desc == '-') {
+                l.desc = l.url;
+              }
+            }
+          });
+
+          angular.forEach(scope.layers, function(l) {
+            if(l.url && l.url != '' && l.url != '-') {
+              if(l.desc == '' || l.desc == '-') {
+                l.desc = l.url;
+              }
+            }
+          });
 
           var d;
           if (scope.md['geonet:info'].changeDate) {
