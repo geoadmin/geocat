@@ -532,9 +532,26 @@
       },
       getLinksByType: function() {
         var ret = [];
+        // GEOCAT
+        var unique = {};
+        // END GEOCAT
         var types = Array.prototype.splice.call(arguments, 0);
         angular.forEach(this.link, function(link) {
           var linkInfo = formatLink(link);
+          // GEOCAT
+          if (angular.isDefined(unique[linkInfo.url])) {
+            var otherInfo = unique[linkInfo.url];
+            if (otherInfo.desc != '' && otherInfo.desc != '-') {
+              return;
+            } else if (linkInfo.desc != '' && linkInfo != '-') {
+              var idx = ret.indexOf(otherInfo);
+              if (idx > -1) {
+                ret = ret.splice(idx, 1);
+              }
+            }
+          }
+          unique[linkInfo.url] = linkInfo;
+          // END GEOCAT
           types.forEach(function(type) {
             if (type.substr(0, 1) == '#') {
               if (linkInfo.protocol == type.substr(1, type.length - 1)) {

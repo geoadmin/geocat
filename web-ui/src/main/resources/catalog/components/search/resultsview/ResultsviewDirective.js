@@ -182,7 +182,7 @@
         restrict: 'A',
         scope: false,
         link: function(scope) {
-          scope.links = scope.md.getLinksByType('LINK');
+          scope.links = scope.md.getLinksByType('LINK', 'CHTOPO:specialised-geoportal');
           scope.downloads = scope.md.getLinksByType('DOWNLOAD');
           scope.layers = scope.md.getLinksByType('OGC', 'kml');
 
