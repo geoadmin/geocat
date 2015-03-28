@@ -548,6 +548,8 @@
               if (idx > -1) {
                 ret = ret.splice(idx, 1);
               }
+            } else {
+              return;
             }
           }
           unique[linkInfo.url] = linkInfo;

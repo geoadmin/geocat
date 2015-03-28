@@ -493,6 +493,7 @@
       beschrieben.</help>
     <condition>Obligatorisch</condition>
     <description>Basisinformation zur Ressource, auf die sich die Metadaten beziehen</description>
+    <abbrLabel>Basisinfo</abbrLabel>
   </element>
   <element name="gmd:attributes" context="gmd:MD_ScopeDescription" id="150">
     <label>Attribute</label>
@@ -645,6 +646,7 @@
   </element>
   <element name="gmd:distributionInfo" id="17">
     <label>Vertriebsinformation</label>
+    <abbrLabel>Vertriebsinfo</abbrLabel>
     <help/>
     <condition/>
     <description>Information zum Vertrieb und Bezug der Ressource</description>
