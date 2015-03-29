@@ -1,8 +1,10 @@
 package iso19139
-
 import org.fao.geonet.services.metadata.format.FormatType
 import org.fao.geonet.services.metadata.format.groovy.Environment
 import org.fao.geonet.services.metadata.format.groovy.util.*
+
+import java.util.regex.Pattern
+
 /**
  * Creates the {@link org.fao.geonet.services.metadata.format.groovy.util.Summary} instance for the iso19139 class.
  *
@@ -50,7 +52,30 @@ class SummaryFactory {
         configureFormats(metadata, summary)
         configureExtent(metadata, summary)
         configureThumbnails(metadata, summary)
-        configureLinks(summary)
+
+
+        LinkBlock linkBlock = new LinkBlock('links', "fa fa-link");
+        configureLinks(linkBlock, 'link', {
+            def linkParts = it.split("\\|")
+            [
+                    title   : isoHandlers.isofunc.clean(linkParts[0]),
+                    desc    : isoHandlers.isofunc.clean(linkParts[1]),
+                    href    : isoHandlers.isofunc.clean(linkParts[2]),
+                    protocol: isoHandlers.isofunc.clean(linkParts[3])
+            ]
+        })
+        configureLinks(linkBlock, 'wms_uri', {
+            def linkParts = it.split(Pattern.quote("###"))
+            [
+                    title   : isoHandlers.isofunc.clean(linkParts[1]),
+                    desc    : isoHandlers.isofunc.clean(linkParts[1]),
+                    href    : isoHandlers.isofunc.clean(linkParts[2]),
+                    protocol: isoHandlers.isofunc.clean(linkParts[2])
+            ]
+        });
+        if (!linkBlock.links.isEmpty()) {
+            summary.links.add(linkBlock)
+        }
 
         /*
          * TODO fix the xslt transform required by loadHierarchyLinkBlocks when running tests.
@@ -106,17 +131,15 @@ class SummaryFactory {
         summary.extent = extent
     }
 
-    def configureLinks(Summary summary) {
-        Collection<String> links = this.env.indexInfo['link'];
+    def configureLinks(linkBlock, indexKey, objParser) {
+        Collection<String> links = this.env.indexInfo[indexKey];
         if (links != null && !links.isEmpty()) {
-            LinkBlock linkBlock = new LinkBlock("links", "fa fa-link");
-            summary.links.add(linkBlock)
 
             links.each { link ->
-                def linkParts = link.split("\\|")
-                def title = isoHandlers.isofunc.clean(linkParts[0]);
-                def desc = isoHandlers.isofunc.clean(linkParts[1]);
-                def href = isoHandlers.isofunc.clean(linkParts[2]);
+                def linkParts = objParser(link)
+                def title = linkParts.title
+                def desc = linkParts.desc
+                def href = linkParts.href
                 if (title.isEmpty()) {
                     title = desc;
                 }
@@ -125,7 +148,7 @@ class SummaryFactory {
                 }
 
                 if (href != '') {
-                    def protocol = linkParts[3].toLowerCase();
+                    def protocol = linkParts.protocol;
                     def linkClass = href.isEmpty() ? 'text-muted' : '';
 
                     def imagesDir = "../../images/formatter/"
@@ -147,8 +170,13 @@ class SummaryFactory {
                         type = "wfs";
                         icon = imagesDir + "wfs.png";
                     } else {
-                        type = "link";
-                        iconClasses = "fa fa-link"
+                        if (indexKey == 'wms_uri' ) {
+                            type = "wms";
+                            icon = imagesDir + "wms.png";
+                        } else {
+                            type = "link";
+                            iconClasses = "fa fa-link"
+                        }
                     }
 
                     def linkType = new LinkType(type, icon, iconClasses)

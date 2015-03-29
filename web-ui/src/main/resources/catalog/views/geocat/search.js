@@ -498,6 +498,9 @@
 
           if (scope.md.type.indexOf('service') >= 0) {
             scope.layers = [];
+            if (angular.isDefined(scope.md.wmsuri) && !angular.isArray(scope.md.wmsuri)) {
+              scope.md.wmsuri = [scope.md.wmsuri];
+            }
             angular.forEach(scope.md.wmsuri, function(uri) {
               var e = uri.split('###');
               scope.layers.push({
