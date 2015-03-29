@@ -180,7 +180,13 @@ class SummaryFactory {
                     }
 
                     def linkType = new LinkType(type, icon, iconClasses)
-                    linkBlock.put(linkType, new Link(href, title, linkClass))
+
+                    def linkObj = new Link(href, title, linkClass)
+                    if (indexKey == "wms_uri") {
+                        linkBlock.linkMap.put(linkType, linkObj);
+                    } else {
+                        linkBlock.put(linkType, linkObj)
+                    }
                 }
             }
         }

@@ -61,4 +61,9 @@ public class Link {
         result = 31 * result + (text != null ? text.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "[" + href + "](" + text + ')';
+    }
 }
