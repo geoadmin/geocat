@@ -492,7 +492,7 @@
         restrict: 'A',
         scope: false,
         link: function(scope) {
-          var links = scope.md.getLinksByType('LINK', 'CHTOPO:specialised-geoportal', "OGC:WFS");
+          var links = scope.md.getLinksByType('LINK', 'CHTOPO:specialised-geoportal', "OGC:WFS", "OGC:WMTS");
           scope.links = [];
           scope.downloads = scope.md.getLinksByType('DOWNLOAD', 'FILE');
 
