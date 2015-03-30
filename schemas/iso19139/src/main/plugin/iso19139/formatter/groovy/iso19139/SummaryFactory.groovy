@@ -148,7 +148,7 @@ class SummaryFactory {
                 }
 
                 if (href != '') {
-                    def protocol = linkParts.protocol;
+                    def protocol = linkParts.protocol != null ? linkParts.protocol.toLowerCase() : '';
                     def linkClass = href.isEmpty() ? 'text-muted' : '';
 
                     def imagesDir = "../../images/formatter/"
@@ -158,8 +158,6 @@ class SummaryFactory {
                     if (protocol.contains("kml")) {
                         type = "kml";
                         icon = imagesDir + "kml.png";
-                    } else if (protocol.contains("ogc:")) {
-                        type = "ogc";
                     } else if (protocol.contains("wms")) {
                         type = "wms";
                         icon = imagesDir + "wms.png";
@@ -169,6 +167,8 @@ class SummaryFactory {
                     } else if (protocol.contains("wfs")) {
                         type = "wfs";
                         icon = imagesDir + "wfs.png";
+                    } else if (protocol.contains("ogc:")) {
+                        type = "ogc";
                     } else {
                         if (indexKey == 'wms_uri' ) {
                             type = "wms";
