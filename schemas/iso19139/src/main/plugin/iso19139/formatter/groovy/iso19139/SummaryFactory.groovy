@@ -55,7 +55,7 @@ class SummaryFactory {
 
 
         LinkBlock linkBlock = new LinkBlock('links', "fa fa-link");
-        configureLinks(linkBlock, 'link', {
+        configureLinks(linkBlock, 'link', false, {
             def linkParts = it.split("\\|")
             [
                     title   : isoHandlers.isofunc.clean(linkParts[0]),
@@ -64,7 +64,7 @@ class SummaryFactory {
                     protocol: isoHandlers.isofunc.clean(linkParts[3])
             ]
         })
-        configureLinks(linkBlock, 'wms_uri', {
+        configureLinks(linkBlock, 'wms_uri', true, {
             def linkParts = it.split(Pattern.quote("###"))
             [
                     title   : isoHandlers.isofunc.clean(linkParts[1]),
@@ -131,7 +131,7 @@ class SummaryFactory {
         summary.extent = extent
     }
 
-    def configureLinks(linkBlock, indexKey, objParser) {
+    def configureLinks(linkBlock, indexKey, urlAndTextEquals, objParser) {
         Collection<String> links = this.env.indexInfo[indexKey];
         if (links != null && !links.isEmpty()) {
 
@@ -182,7 +182,7 @@ class SummaryFactory {
                     def linkType = new LinkType(type, icon, iconClasses)
 
                     def linkObj = new Link(href, title, linkClass)
-                    if (indexKey == "wms_uri") {
+                    if (urlAndTextEquals) {
                         linkBlock.linkMap.put(linkType, linkObj);
                     } else {
                         linkBlock.put(linkType, linkObj)
