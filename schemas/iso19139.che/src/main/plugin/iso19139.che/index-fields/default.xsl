@@ -549,7 +549,7 @@
         <Field name="linkage" string="{$linkage[1]}" store="true" index="true"/>
 
         <!-- Add KML link if WMS -->
-        <xsl:if test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage)!='' and string($title)!=''">
+        <xsl:if test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage[1])!='' and string($title[1])!=''">
 
             <Field name="wms_uri" string="{/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:fileIdentifier/gco:CharacterString}###{$title}###{$linkage[1]}" store="true" index="true"/>
 

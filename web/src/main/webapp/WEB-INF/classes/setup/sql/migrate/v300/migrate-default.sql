@@ -93,7 +93,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 
 -- GEOCAT
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('map/isMapViewerEnabled', 'false', 2, 9592, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/allThesaurus', 'false', 2, 9160, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/allThesaurus', 'true', 2, 9160, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/ui/defaultView', 'geocat', 0, 10100, 'n');
 UPDATE Settings
 SET

@@ -492,11 +492,11 @@
         restrict: 'A',
         scope: false,
         link: function(scope) {
-          var links = scope.md.getLinksByType('LINK', 'CHTOPO:specialised-geoportal');
+          var links = scope.md.getLinksByType('LINK', 'CHTOPO:specialised-geoportal', "OGC:WFS");
           scope.links = [];
           scope.downloads = scope.md.getLinksByType('DOWNLOAD', 'FILE');
 
-          if (scope.md.type.indexOf('service') >= 0) {
+          if (angular.isDefined(scope.md.type) && scope.md.type.indexOf('service') >= 0) {
             scope.layers = [];
             if (angular.isDefined(scope.md.wmsuri) && !angular.isArray(scope.md.wmsuri)) {
               scope.md.wmsuri = [scope.md.wmsuri];
