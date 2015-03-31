@@ -248,6 +248,7 @@
       <name>che:individualFirstName</name>
       <name>che:individualLastName</name>
       <name>che:mobile</name>
+      <name parent="che:CHE_CI_Telephone">gmd:voice</name>
     </exclude>
   </multilingualFields>
 
