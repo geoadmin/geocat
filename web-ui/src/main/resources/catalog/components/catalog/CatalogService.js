@@ -116,7 +116,15 @@
         importFromDir: function(data) {
           return $http({
             url: 'md.import@json?' + data,
-            method: 'GET'
+            method: 'GET',
+            transformResponse: function (defaults) {
+              try {
+                return JSON.parse(defaults);
+              }
+              catch(e) {
+                return defaults;
+              }
+            }
           });
         },
 
@@ -134,7 +142,16 @@
         importFromXml: function(data) {
           return $http.post('md.insert?_content_type=json', data, {
             headers: {'Content-Type':
-                  'application/x-www-form-urlencoded'}
+                  'application/x-www-form-urlencoded'},
+            transformResponse: function (defaults) {
+              try {
+                return JSON.parse(defaults);
+              }
+              catch(e) {
+                return defaults;
+              }
+            }
+
           });
         },
 
@@ -490,6 +507,7 @@
         'denominator', 'resolution', 'geoDesc', 'geoBox',
         'mdLanguage', 'datasetLang', 'type'];
       var record = this;
+      this.linksCache = [];
       $.each(listOfArrayFields, function(idx) {
         var field = listOfArrayFields[idx];
         if (angular.isDefined(record[field]) &&
@@ -536,6 +554,10 @@
         var unique = {};
         // END GEOCAT
         var types = Array.prototype.splice.call(arguments, 0);
+        var key = types.join('|');
+        if (this.linksCache[key]) {
+          return this.linksCache[key];
+        }
         angular.forEach(this.link, function(link) {
           var linkInfo = formatLink(link);
           // GEOCAT
@@ -567,6 +589,7 @@
             }
           });
         });
+        this.linksCache[key] = ret;
         return ret;
       },
       getThumbnails: function() {

@@ -123,12 +123,12 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
             dataMan.flush();
         }
 
+        Element request = new Element("request");
+
 		// --- Search remote node
-		MetaSearcher s = searchMan.newSearcher(SearcherType.Z3950, Geonet.File.SEARCH_Z3950_CLIENT);
+		try (MetaSearcher s = searchMan.newSearcher(SearcherType.Z3950, Geonet.File.SEARCH_Z3950_CLIENT)) {
 
 		ServiceConfig config = new ServiceConfig();
-
-		Element request = new Element("request");
 
 		// --- Z39.50 servers from harvest params
 		for (String id : params.getRepositories()) {
@@ -146,7 +146,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 		// --- set timeout to be 100 seconds
 		request.addContent(new Element(Geonet.SearchResult.TIMEOUT).setText("100"));  
 		// --- set hitsPerPage
-		request.addContent(new Element(Geonet.SearchResult.HITS_PER_PAGE).setText(groupSize+""));  
+            request.addContent(new Element(Geonet.SearchResult.HITS_PER_PAGE).setText(groupSize + ""));
 
 		// --- do the search
 		s.search(context, request, config);
@@ -158,11 +158,10 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 				throw new Exception("Bad luck, Search failed or returned 0 results");
 			}
 		}
-
         if(log.isDebugEnabled()) log.debug("Search returned "+s.getSize()+" hits");
 
 		// -- process the hits in groups of groupSize
-		int numberOfHits = Math.min(Integer.parseInt(params.maximumHits),s.getSize());
+            int numberOfHits = Math.min(Integer.parseInt(params.maximumHits), s.getSize());
 		// -- add from and to placeholders to request
 
 		request.addContent(new Element("from"));
@@ -367,8 +366,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
                     metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
                     id = String.valueOf(metadata.getId());
-                }
-                catch (Exception e) {
+                    } catch (Exception e) {
                     HarvestError error = new HarvestError(e, log);
                     error.setDescription("Unable to insert metadata. "+e.getMessage());
                     this.errors.add(error);
@@ -403,6 +401,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
         context.getBean(SearchManager.class).forceIndexChanges();
 
 		return serverResults;
+	}
 	}
 
 	// ---------------------------------------------------------------------------

@@ -2,4 +2,11 @@
         xsi:noNamespaceSchemaLocation="wro-sources.xsd" >
     <include file="classpath:web-ui-wro-sources.xml" />
     <!--<include file="classpath:web-client-wro-sources.xml" />-->
+
+  <require>
+    <jsSource webappPath="{{schemaPluginsDir}}" />
+    <jsSource webappPath="{{formatterDir}}" />
+    <cssSource webappPath="{{schemaPluginsDir}}" />
+    <cssSource webappPath="{{formatterDir}}" />
+  </require>
 </sources>

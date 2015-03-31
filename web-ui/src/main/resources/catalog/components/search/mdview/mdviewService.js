@@ -80,6 +80,9 @@
        */
       this.removeLocationUuid = function() {
         gnSearchLocation.path(gnMdViewObj.from || gnSearchLocation.SEARCH);
+        if (gnSearchLocation.isSearch()) {
+          gnSearchLocation.setSearch(lastSearchParams);
+        }
       };
 
       /**
@@ -95,7 +98,7 @@
           var uuid = gnSearchLocation.getUuid();
           if (uuid) {
             if (!gnMdViewObj.current.record ||
-              gnMdViewObj.current.record.getUuid() != uuid) {
+                gnMdViewObj.current.record.getUuid() != uuid) {
 
               // Check if the md is in current search
               if (angular.isArray(gnMdViewObj.records)) {
@@ -134,7 +137,7 @@
           var uuid = gnSearchLocation.getUuid();
           if (uuid) {
             gnMdFormatter.load(gnSearchSettings.formatter.defaultUrl + uuid,
-              selector);
+                selector);
           }
           else {
             $rootScope.$broadcast('closeMdView');
@@ -180,7 +183,7 @@
         $rootScope.$broadcast('mdLoadingStart');
         $http.get(url).then(function(response) {
           $rootScope.$broadcast('mdLoadingEnd');
-          var scope = angular.element($(selector)).scope();
+          var scope = $rootScope.$new();
           scope.fragment = $sce.trustAsHtml(response.data);
           var el = document.createElement('div');
           el.setAttribute('gn-metadata-display', '');
@@ -191,7 +194,7 @@
           gnAlertService.addAlert({
             msg: 'Erreur de chargement de la métadonnée.',
             type: 'danger'
-          });
+        });
         });
       };
     }
