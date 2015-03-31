@@ -82,6 +82,8 @@ public class SharedObjects implements DatabaseMigrationTask {
                 System.err.println("-------------------------------  Next error   ---------------------------");
                 next.printStackTrace();
             }
+
+            throw new RuntimeException(e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -200,6 +202,7 @@ public class SharedObjects implements DatabaseMigrationTask {
                         numInBatch++;
                         if (numInBatch > 200) {
                             update.executeBatch();
+                            numInBatch = 0;
                     }
                 }
                 update.executeBatch();

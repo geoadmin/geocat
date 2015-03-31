@@ -140,7 +140,7 @@ import static org.fao.geonet.constants.Geonet.IndexFieldNames.DATABASE_CHANGE_DA
  * Indexes metadata using Lucene.
  */
 public class SearchManager {
-    private static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
+    public static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
 	public static final String INDEXING_ERROR_FIELD = "_indexingError";
 
     private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";

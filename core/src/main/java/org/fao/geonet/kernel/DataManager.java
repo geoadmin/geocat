@@ -686,6 +686,12 @@ public class DataManager implements ApplicationEventPublisherAware {
                 moreFields.add(SearchManager.makeField("_catalog", String.valueOf(groupOwner), true, true));
             }
             moreFields.add(SearchManager.makeField("_catalog", source, true, true));
+            if (md.getName().equals("MD_Metadata")) {
+                moreFields.add(SearchManager.makeField(SearchManager.INDEXING_ERROR_FIELD, "1", true, true));
+                moreFields.add(SearchManager.makeField(SearchManager.INDEXING_ERROR_MSG,
+                        "Only iso19139.che metadata are allowed in geocat database, this metadata is not iso19139.che.  "
+                        + "Its root element is " + md.getName() + " and has the schema: " + schema, true, false));
+            }
             // END GEOCAT
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.ROOT,        root,        true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.SCHEMA,      schema,      true, true));
