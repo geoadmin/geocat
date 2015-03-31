@@ -366,6 +366,10 @@
         <section xpath="/che:CHE_MD_Metadata/gmd:applicationSchemaInfo" or="applicationSchemaInfo"
           in="/che:CHE_MD_Metadata"/>
       </tab>
+      <tab id="legislationInformation" toggle="true">
+        <section xpath="/che:CHE_MD_Metadata/che:legislationInformation" or="legislationInformation"
+          in="/che:CHE_MD_Metadata"/>
+      </tab>
     </view>
     <view name="inspire">
       <tab id="inspire" default="true" href="inspire.edit?id=$mdId"/>
