@@ -16,16 +16,17 @@
   <resource>Resource</resource>
   <xml>XML</xml>
   <metadata>Metadata</metadata>
-  <identificationInfo>Identification</identificationInfo>
-  <distributionInfo>Distribution</distributionInfo>
-  <dataQualityInfo>Quality</dataQualityInfo>
-  <spatialRepresentationInfo>Spatial rep.</spatialRepresentationInfo>
-  <referenceSystemInfo>Ref. system</referenceSystemInfo>
-  <contentInfo>Content</contentInfo>
-  <portrayalCatalogueInfo>Portrayal</portrayalCatalogueInfo>
-  <metadataConstraints>Md. constraints</metadataConstraints>
-  <metadataMaintenance>Md. maintenance</metadataMaintenance>
-  <applicationSchemaInfo>Schema info</applicationSchemaInfo>
+  <identificationInfo>Identificazione</identificationInfo>
+  <distributionInfo>Distribuzione</distributionInfo>
+  <dataQualityInfo>Qualità dei dati</dataQualityInfo>
+  <spatialRepresentationInfo>Sis. di riferimento</spatialRepresentationInfo>
+  <referenceSystemInfo>Rapp. Spaziale</referenceSystemInfo>
+  <contentInfo>Info. sul contenuto</contentInfo>
+  <portrayalCatalogueInfo>Rapp. del catalogo</portrayalCatalogueInfo>
+  <metadataConstraints>Vincoli</metadataConstraints>
+  <metadataMaintenance>Manutenzione</metadataMaintenance>
+  <applicationSchemaInfo>Schema dell'app.</applicationSchemaInfo>
+  <legislationInformation>Base giuridica</legislationInformation>
 
   <!-- XSD error translation -->
   <invalidElement>Invalid element. Invalid content was found starting with element: </invalidElement>

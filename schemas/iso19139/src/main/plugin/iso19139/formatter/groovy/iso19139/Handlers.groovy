@@ -65,6 +65,21 @@ public class Handlers {
         addExtentHandlers()
 
         handlers.sort name: 'Text Elements', select: matchers.isContainerEl, priority: -1, sortContainerEl
+        // GEOCAT
+        def priority = ['gmd:identificationInfo', 'gmd:distributionInfo', 'gmd:spatialRepresentationInfo', 'gmd:referenceSystemInfo',
+        'gmd:dataQualityInfo', 'gmd:contentInfo', 'che:legislationInformation', 'gmd:metadataMaintenance', 'gmd:applicationSchemaInfo',
+        'gmd:metadataConstraints', 'gmd:portrayalCatalogueInfo']
+        handlers.sort name: 'Sort Sections', select: {it.parent() is it}, priority: 5, {el1, el2 ->
+            def v1 = priority.indexOf(el1.name());
+            def v2 = priority.indexOf(el2.name());
+
+            if (v1 == -1 || v2 == -1) {
+                return sortContainerEl(el1, el2);
+            } else {
+                return v1 - v2
+            }
+        }
+        // END GEOCAT
     }
 
     def sortContainerEl = {el1, el2 ->
@@ -421,6 +436,6 @@ public class Handlers {
             def rootPackageOutput = handlers.fileResult('html/2-level-entry.html',
                     [label: f.nodeLabel(el), childData: rootPackageData, name: rootEl.replace(":", "_")])
 
-            return  rootPackageOutput.toString() + otherPackageData
+            return  otherPackageData.toString() + rootPackageOutput.toString()
     }
 }

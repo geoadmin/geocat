@@ -15,17 +15,18 @@
   <inspire>INSPIRE</inspire>
   <resource>Resource</resource>
   <xml>XML</xml>
-  <metadata>Metadata</metadata>
-  <identificationInfo>Identification</identificationInfo>
-  <distributionInfo>Distribution</distributionInfo>
-  <dataQualityInfo>Quality</dataQualityInfo>
-  <spatialRepresentationInfo>Spatial rep.</spatialRepresentationInfo>
-  <referenceSystemInfo>Ref. system</referenceSystemInfo>
-  <contentInfo>Content</contentInfo>
-  <portrayalCatalogueInfo>Portrayal</portrayalCatalogueInfo>
-  <metadataConstraints>Md. constraints</metadataConstraints>
-  <metadataMaintenance>Md. maintenance</metadataMaintenance>
-  <applicationSchemaInfo>Schema info</applicationSchemaInfo>
+  <metadata>Metadaten</metadata>
+  <identificationInfo>Basisinfo</identificationInfo>
+  <distributionInfo>Vertriebsinfo</distributionInfo>
+  <dataQualityInfo>Datenqualität</dataQualityInfo>
+  <spatialRepresentationInfo>Struktur der räumlichen Daten</spatialRepresentationInfo>
+  <referenceSystemInfo>Referenzsystem</referenceSystemInfo>
+  <contentInfo>Dateninhalt</contentInfo>
+  <portrayalCatalogueInfo>Darstellungskatalog</portrayalCatalogueInfo>
+  <metadataConstraints>Metadateneinschränkungen</metadataConstraints>
+  <metadataMaintenance>Metadatenpflege</metadataMaintenance>
+  <applicationSchemaInfo>Anwendungsschema</applicationSchemaInfo>
+  <legislationInformation>Gesetzgebung</legislationInformation>
 
   <!-- XSD error translation -->
   <invalidElement>Invalid element. Invalid content was found starting with element: </invalidElement>
