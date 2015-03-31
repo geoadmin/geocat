@@ -136,7 +136,14 @@
             <xsl:choose>
               <xsl:when test="$isMultilingual">
                 <xsl:for-each select="$value/values/value">
-                  <xsl:sort select="@lang"/>
+                  <xsl:sort data-type="number" order="ascending"
+                    select="if (@lang = $mainLangCode) then 1
+                            else if (@lang = 'DE') then 2
+                            else if (@lang = 'FR') then 3
+                            else if (@lang = 'IT') then 4
+                            else if (@lang = 'NE') then 5
+                            else if (@lang = 'RM') then 6
+                            else 50"/>
                   
                   <xsl:call-template name="render-form-field">
                     <xsl:with-param name="name" select="@ref"/>

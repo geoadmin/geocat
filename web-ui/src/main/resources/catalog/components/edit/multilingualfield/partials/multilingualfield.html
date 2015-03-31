@@ -5,11 +5,11 @@
             data-ng-click="displayAllLanguages(undefined, true)"
             data-translate="" 
             title="{{languageSwitchHelp}}">{{languageSwitchLabel}}</a></li>
-        <li data-ng-repeat="(key, value) in languages"
+        <li data-ng-repeat="lang in sortedLanguages"
             data-ng-hide="expanded"
-            data-ng-class="{'active': value === '#' + currentLanguage, 'no-data': value !== '#' + currentLanguage && !hasData[value]}">
+            data-ng-class="{'active': lang.short === '#' + currentLanguage, 'no-data': lang.short !== '#' + currentLanguage && !hasData[lang.short]}">
             <a href=""
-                data-ng-click="switchToLanguage(value)">{{key | translate}}</a>
+                data-ng-click="switchToLanguage(lang.short)">{{lang.long | translate}}</a>
         </li>
     </ul>
 </div>

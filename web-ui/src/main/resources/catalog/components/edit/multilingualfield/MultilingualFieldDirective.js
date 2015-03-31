@@ -163,6 +163,36 @@
               }
             });
           };
+
+          scope.sortedLanguages = [];
+          angular.forEach(scope.languages, function(short, long) {
+            scope.sortedLanguages.push({
+              long: long,
+              short: short
+            })
+          });
+          var sortVal = function (o) {
+            if (o.long === scope.mainLanguage) {
+              return -1;
+            }
+            if (o.long.charAt(0) == 'g') {
+              return 0;
+            } else if (o.long.charAt(0) == 'f') {
+              return 2;
+            } else  if (o.long.charAt(0) == 'i') {
+              return 3;
+            } else if (o.long.charAt(0) == 'e') {
+              return 4;
+            } else if (o.long.charAt(0) == 'r') {
+              return 5;
+            } else {
+              return 50;
+            }
+          };
+          scope.sortedLanguages.sort(function(o1, o2){
+            return sortVal(o1) - sortVal(o2);
+          });
+
         }
       };
     }]);
