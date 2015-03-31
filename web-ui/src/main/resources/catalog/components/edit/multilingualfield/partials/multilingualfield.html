@@ -7,9 +7,9 @@
             title="{{languageSwitchHelp}}">{{languageSwitchLabel}}</a></li>
         <li data-ng-repeat="lang in sortedLanguages"
             data-ng-hide="expanded"
-            data-ng-class="{'active': lang.short === '#' + currentLanguage, 'no-data': lang.short !== '#' + currentLanguage && !hasData[lang.short]}">
+            data-ng-class="{'active': lang.shortLang === '#' + currentLanguage, 'no-data': lang.shortLang !== '#' + currentLanguage && !hasData[lang.shortLang]}">
             <a href=""
-                data-ng-click="switchToLanguage(lang.short)">{{lang.long | translate}}</a>
+                data-ng-click="switchToLanguage(lang.shortLang)">{{lang.longLang | translate}}</a>
         </li>
     </ul>
 </div>

@@ -23,15 +23,15 @@
   <xsl:template mode="mode-iso19139" match="gn:child" priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
-    
-    
+
+
     <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
     <xsl:variable name="flatModeException" select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name)"/>
 
     <!-- TODO: this should be common to all schemas -->
 	<xsl:if test="$isEditing and
       (not($isFlatMode) or $flatModeException)">
-      
+
       <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
 
       <xsl:call-template name="render-element-to-add">
@@ -90,13 +90,13 @@
         <xsl:with-param name="insertRef" select="gn:element/@ref"/>
       </xsl:apply-templates>
     </xsl:variable>
-    
+
     <xsl:variable name="errors">
       <xsl:if test="$showValidationErrors">
         <xsl:call-template name="get-errors"/>
       </xsl:if>
     </xsl:variable>
-    
+
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
         select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
@@ -118,8 +118,8 @@
 
   </xsl:template>
 
-  
-  
+
+
   <!-- Render simple element which usually match a form field -->
   <xsl:template mode="mode-iso19139" priority="200"
     match="*[gco:CharacterString|gco:Integer|gco:Decimal|
@@ -132,7 +132,7 @@
     <xsl:variable name="elementName" select="name()"/>
     <xsl:variable name="exclusionMatchesParent">
       <xsl:variable name="parent">
-        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude[name = $elementName]/name/@parent" />
+        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/name/@parent" />
       </xsl:variable>
       <xsl:choose>
         <xsl:when test="string-length($parent) > 0">
@@ -143,7 +143,7 @@
     </xsl:variable>
     <xsl:variable name="exclusionMatchesAncestor">
       <xsl:variable name="ancestor">
-        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude[name = $elementName]/name/@ancestor" />
+        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/name/@ancestor" />
       </xsl:variable>
       <xsl:choose>
         <xsl:when test="string-length($ancestor) > 0 and count(ancestor::*[contains($ancestor, name())]) != 0">
@@ -154,7 +154,7 @@
     </xsl:variable>
     <xsl:variable name="exclusionMatchesChild">
       <xsl:variable name="child">
-        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude[name = $elementName]/name/@child" />
+        <xsl:value-of separator="," select="$editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/name/@child" />
       </xsl:variable>
       <xsl:choose>
         <xsl:when test="string-length($child) > 0 and count(*[contains($child, name())]) != 0">
@@ -165,22 +165,22 @@
     </xsl:variable>
     <xsl:variable name="excluded"
                   select="(
-                    count($editorConfig/editor/multilingualFields/exclude[name = $elementName]) > 0 and
-                    not($editorConfig/editor/multilingualFields/exclude[name = $elementName]/name/@ancestor) and
-                    not($editorConfig/editor/multilingualFields/exclude[name = $elementName]/name/@child) and
-                    not($editorConfig/editor/multilingualFields/exclude[name = $elementName]/name/parent)) or
+                    count($editorConfig/editor/multilingualFields/exclude/name[. = $elementName]) > 0 and
+                    not($editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/@ancestor) and
+                    not($editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/@child) and
+                    not($editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/@parent)) or
                       $exclusionMatchesAncestor = true() or $exclusionMatchesParent = true() or $exclusionMatchesChild = true()"/>
 
     <xsl:variable name="hasPTFreeText"
                   select="count(gmd:PT_FreeText) > 0"/>
     <xsl:variable name="hasOnlyPTFreeText"
                   select="count(gmd:PT_FreeText) > 0 and count(gco:CharacterString) = 0"/>
-    <xsl:variable name="isMultilingualElement" 
+    <xsl:variable name="isMultilingualElement"
                   select="$metadataIsMultilingual and $excluded = false()"/>
-    <xsl:variable name="isMultilingualElementExpanded" 
+    <xsl:variable name="isMultilingualElementExpanded"
                   select="count($editorConfig/editor/multilingualFields/expanded[name = $elementName]) > 0"/>
-    
-    <!-- For some fields, always display attributes. 
+
+    <!-- For some fields, always display attributes.
     TODO: move to editor config ? -->
     <xsl:variable name="forceDisplayAttributes" select="count(gmx:FileName) > 0"/>
 
@@ -200,9 +200,9 @@
     <xsl:variable name="labelConfig"
       select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
     <xsl:variable name="helper" select="gn-fn-metadata:getHelper($labelConfig/helper, .)"/>
-    
+
     <xsl:variable name="attributes">
-        
+
       <!-- Create form for all existing attribute (not in gn namespace)
       and all non existing attributes not already present for the
       current element and its children (eg. @uom in gco:Distance).
@@ -222,7 +222,7 @@
         <xsl:with-param name="insertRef" select="$theElement/gn:element/@ref"/>
       </xsl:apply-templates>
     </xsl:variable>
-    
+
     <xsl:variable name="errors">
       <xsl:if test="$showValidationErrors">
         <xsl:call-template name="get-errors">
@@ -230,10 +230,10 @@
         </xsl:call-template>
       </xsl:if>
     </xsl:variable>
-    
+
     <xsl:variable name="values">
       <xsl:if test="$isMultilingualElement">
-        
+
         <values>
           <!-- Or the PT_FreeText element matching the main language -->
           <xsl:if test="gco:CharacterString">
@@ -244,7 +244,7 @@
           <xsl:for-each select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
             <value ref="{gn:element/@ref}" lang="{substring-after(@locale, '#')}"><xsl:value-of select="."/></value>
           </xsl:for-each>
-          
+
           <!-- and create field for none translated language -->
           <xsl:for-each select="$metadataOtherLanguages/lang">
             <xsl:variable name="currentLanguageId" select="@id"/>
@@ -257,7 +257,7 @@
         </values>
       </xsl:if>
     </xsl:variable>
-        
+
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="if ($overrideLabel != '') then $overrideLabel else $labelConfig/label"/>
       <xsl:with-param name="value" select="if ($isMultilingualElement) then $values else *"/>
@@ -353,8 +353,8 @@
     </xsl:call-template>
 
   </xsl:template>
-  
-  
+
+
   <!-- 
     Take care of enumerations.
     

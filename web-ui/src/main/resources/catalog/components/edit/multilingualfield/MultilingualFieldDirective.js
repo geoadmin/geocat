@@ -165,25 +165,25 @@
           };
 
           scope.sortedLanguages = [];
-          angular.forEach(scope.languages, function(short, long) {
+          angular.forEach(scope.languages, function(shortLang, longLang) {
             scope.sortedLanguages.push({
-              long: long,
-              short: short
+              longLang: longLang,
+              shortLang: shortLang
             })
           });
           var sortVal = function (o) {
-            if (o.long === scope.mainLanguage) {
+            if (o.longLang === scope.mainLanguage) {
               return -1;
             }
-            if (o.long.charAt(0) == 'g') {
+            if (o.longLang.charAt(0) == 'g') {
               return 0;
-            } else if (o.long.charAt(0) == 'f') {
+            } else if (o.longLang.charAt(0) == 'f') {
               return 2;
-            } else  if (o.long.charAt(0) == 'i') {
+            } else  if (o.longLang.charAt(0) == 'i') {
               return 3;
-            } else if (o.long.charAt(0) == 'e') {
+            } else if (o.longLang.charAt(0) == 'e') {
               return 4;
-            } else if (o.long.charAt(0) == 'r') {
+            } else if (o.longLang.charAt(0) == 'r') {
               return 5;
             } else {
               return 50;
