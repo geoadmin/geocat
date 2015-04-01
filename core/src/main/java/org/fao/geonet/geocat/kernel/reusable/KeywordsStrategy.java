@@ -540,6 +540,9 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
     public Function<String, String> numericIdToConcreteId(final UserSession session) {
         return new Function<String, String>() {
             public String apply(String id) {
+                if (!id.contains("=") && !id.contains("&")) {
+                    return id;
+                }
                 try {
                     return URLEncoder.encode(splitUriAndThesaurusName(id).one(), "UTF-8");
                 } catch (UnsupportedEncodingException e) {

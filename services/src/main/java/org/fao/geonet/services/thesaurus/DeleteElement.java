@@ -71,7 +71,7 @@ public class DeleteElement implements Service {
             if(!Boolean.parseBoolean(Util.getParam(params, "forceDelete", "false"))) {
                 String msg = LangUtils.loadString("reusable.rejectDefaultMsg", context.getAppPath(), context.getLanguage());
 
-                String id = Util.getParam(params, "id", "");
+                String id = "id="+Util.getParam(params, "id", "") + "&thesaurus=" + sThesaurusName;
                 final SharedObjectApi bean = context.getBean(SharedObjectApi.class);
                 bean.reject(context, ReusableTypes.keywords, new String[]{id}, msg, null, isValidatedThesaurus, testing);
             }
