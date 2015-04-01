@@ -35,6 +35,14 @@
               data: data
             })
           },
+          formatTemplate:  '<gmd:MD_Format xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">' +
+          '  <gmd:name>' +
+          '    <gco:CharacterString >-- Template Name --</gco:CharacterString>' +
+          '  </gmd:name>' +
+          '  <gmd:version>' +
+          '    <gco:CharacterString>-- Template Version --</gco:CharacterString>' +
+          '  </gmd:version>' +
+          '</gmd:MD_Format>',
           contactTemplate: '<che:CHE_CI_ResponsibleParty xmlns:che="http://www.geocat.ch/2008/che"' +
           '                             xmlns:gco="http://www.isotc211.org/2005/gco"' +
           '                             xmlns:gmd="http://www.isotc211.org/2005/gmd"' +
