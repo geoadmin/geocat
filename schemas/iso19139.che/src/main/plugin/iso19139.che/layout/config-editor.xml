@@ -190,6 +190,7 @@
     <exclude>
       <name>gmd:identifier</name>
       <name>gmd:metadataStandardName</name>
+      <name parent="gmd:MD_Resolution">gmd:distance</name>
       <name>gmd:metadataStandardVersion</name>
       <name>gmd:hierarchyLevelName</name>
       <name>gmd:dataSetURI</name>
