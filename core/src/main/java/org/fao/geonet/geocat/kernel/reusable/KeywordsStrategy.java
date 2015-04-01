@@ -30,6 +30,7 @@ import jeeves.xlink.XLink;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.AllThesaurus;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusFinder;
@@ -162,6 +163,9 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
         Collection<Thesaurus> thesauri = new ArrayList<>(_thesaurusMan.getThesauriMap().values());
         for (Iterator<Thesaurus> iterator = thesauri.iterator(); iterator.hasNext(); ) {
             Thesaurus thesaurus = iterator.next();
+            if (thesaurus instanceof AllThesaurus) {
+                continue;
+            }
             String type = thesaurus.getType();
 
             if (type.equals("external")) {
@@ -173,6 +177,9 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
         }
 
         for (Thesaurus thesaurus : thesauri) {
+            if (thesaurus instanceof AllThesaurus) {
+                continue;
+            }
             builder.addThesaurus(thesaurus.getKey());
         }
 
@@ -403,7 +410,7 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
 
         descriptiveKeywords.setAttribute(XLink.HREF,
                 XLink.LOCAL_PROTOCOL + "xml.keyword.get?thesaurus=" + thesaurus +
-                "&id=" + encoded + "&multiple=false&lang=fre,eng,ger,ita,roh&textgroupOnly", XLink.NAMESPACE_XLINK);
+                "&id=" + encoded + "&multiple=false&lang=fre,eng,ger,ita,roh&textgroupOnly&skipdescriptivekeywords", XLink.NAMESPACE_XLINK);
 
         if (!validated) {
             descriptiveKeywords.setAttribute(XLink.ROLE, ReusableObjManager.NON_VALID_ROLE,
