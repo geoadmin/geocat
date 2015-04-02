@@ -54,6 +54,17 @@ form.gn-editor {
     color: @gray-light;
     cursor: not-allowed;
   }
+
+  // Hide time
+  .gn-date-picker {
+    > input.gn-date {
+      width: 100%;
+    }
+    > input[type="time"] {
+      display: none;
+    }
+  }
+
 }
 
 .gc-extent {
