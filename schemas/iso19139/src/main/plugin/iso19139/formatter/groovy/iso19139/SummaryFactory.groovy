@@ -152,43 +152,43 @@ class SummaryFactory {
                     def protocol = linkParts.protocol != null ? linkParts.protocol.toLowerCase() : '';
                     def linkClass = href.isEmpty() ? 'text-muted' : '';
 
-                def imagesDir = "../../images/formatter/"
-                def type;
-                def icon = "";
-                def iconClasses = "";
-                if (protocol.contains("kml")) {
-                    type = "kml";
-                    icon = imagesDir + "kml.png";
-                } else if (protocol.contains("wms")) {
-                    type = "wms";
-                    icon = imagesDir + "wms.png";
-                } else if (protocol.contains("download")) {
-                    type = "download";
-                    iconClasses = "fa fa-download"
-                } else if (protocol.contains("wfs")) {
-                    type = "wfs";
-                    icon = imagesDir + "wfs.png";
+                    def imagesDir = "../../images/formatter/"
+                    def type;
+                    def icon = "";
+                    def iconClasses = "";
+                    if (protocol.contains("kml")) {
+                        type = "kml";
+                        icon = imagesDir + "kml.png";
+                    } else if (protocol.contains("wms")) {
+                        type = "wms";
+                        icon = imagesDir + "wms.png";
+                    } else if (protocol.contains("download")) {
+                        type = "download";
+                        iconClasses = "fa fa-download"
+                    } else if (protocol.contains("wfs")) {
+                        type = "wfs";
+                        icon = imagesDir + "wfs.png";
                     } else if (protocol.contains("ogc:")) {
                         type = "ogc";
-                } else {
+                    } else {
                         if (indexKey == 'wms_uri' ) {
                             type = "wms";
                             icon = imagesDir + "wms.png";
                         } else {
-                    type = "link";
-                    iconClasses = "fa fa-link"
-                }
+                            type = "link";
+                            iconClasses = "fa fa-link"
+                        }
                     }
 
-                def linkType = new LinkType(type, icon, iconClasses)
+                    def linkType = new LinkType(type, icon, iconClasses)
 
                     def linkObj = new Link(href, title, linkClass)
                     if (urlAndTextEquals) {
                         linkBlock.linkMap.put(linkType, linkObj);
                     } else {
                         linkBlock.put(linkType, linkObj)
-            }
-        }
+                    }
+                }
             }
         }
     }

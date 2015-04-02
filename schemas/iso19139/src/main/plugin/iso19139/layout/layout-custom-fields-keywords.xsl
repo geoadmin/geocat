@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd"
-  xmlns:gco="http://www.isotc211.org/2005/gco"
-  xmlns:gmx="http://www.isotc211.org/2005/gmx"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:gn="http://www.fao.org/geonetwork"
-  xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
   xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
-  exclude-result-prefixes="#all">
+                exclude-result-prefixes="#all">
 
   <!-- Custom rendering of keyword section 
     * gmd:descriptiveKeywords is boxed element and the title 
@@ -17,7 +18,7 @@
     * if the thesaurus is available in the catalog, display
     the advanced editor which provides easy selection of 
     keywords.
-
+  
   -->
 
 
@@ -107,13 +108,13 @@
           then $thesaurusIdentifier
           else thesaurusConfig/key"/>
         <xsl:variable name="thesaurusKey"
-          select="if (starts-with($thesaurusInternalKey, 'geonetwork.thesaurus.'))
+                      select="if (starts-with($thesaurusInternalKey, 'geonetwork.thesaurus.'))
                       then substring-after($thesaurusInternalKey, 'geonetwork.thesaurus.')
                       else $thesaurusInternalKey"/>
 
         <!-- if gui lang eng > #EN -->
         <xsl:variable name="guiLangId"
-          select="
+                      select="
                       if (count($metadata/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue = $lang]) = 1)
                         then $metadata/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue = $lang]/@id
                         else $metadata/gmd:locale/gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue = $metadataLanguage]/@id"/>
@@ -127,7 +128,7 @@
 
         <!-- Define the list of transformation mode available. -->
         <xsl:variable name="transformations"
-          as="xs:string"
+                      as="xs:string"
           select="'to-iso19139-keyword-as-xlink'"/>
 
         <!-- Get current transformation mode based on XML fragment analysis -->
@@ -144,8 +145,8 @@
         -->
         <xsl:variable name="widgetMode" select="'tagsinput'"/>
         <xsl:variable name="maxTags"
-          as="xs:string"
-          select="if ($thesaurusConfig/@maxtags)
+                      as="xs:string"
+                      select="if ($thesaurusConfig/@maxtags)
                               then $thesaurusConfig/@maxtags
                               else ''"/>
         <!--

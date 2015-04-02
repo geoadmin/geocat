@@ -23,15 +23,15 @@
   <xsl:template mode="mode-iso19139" match="gn:child" priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
-
-
+    
+    
     <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
     <xsl:variable name="flatModeException" select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name)"/>
 
     <!-- TODO: this should be common to all schemas -->
 	<xsl:if test="$isEditing and
       (not($isFlatMode) or $flatModeException)">
-
+      
       <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
 
       <xsl:call-template name="render-element-to-add">
@@ -90,13 +90,13 @@
         <xsl:with-param name="insertRef" select="gn:element/@ref"/>
       </xsl:apply-templates>
     </xsl:variable>
-
+    
     <xsl:variable name="errors">
       <xsl:if test="$showValidationErrors">
         <xsl:call-template name="get-errors"/>
       </xsl:if>
     </xsl:variable>
-
+    
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
         select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
@@ -118,8 +118,8 @@
 
   </xsl:template>
 
-
-
+  
+  
   <!-- Render simple element which usually match a form field -->
   <xsl:template mode="mode-iso19139" priority="200"
     match="*[gco:CharacterString|gco:Integer|gco:Decimal|
@@ -200,9 +200,9 @@
     <xsl:variable name="labelConfig"
       select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
     <xsl:variable name="helper" select="gn-fn-metadata:getHelper($labelConfig/helper, .)"/>
-
+    
     <xsl:variable name="attributes">
-
+        
       <!-- Create form for all existing attribute (not in gn namespace)
       and all non existing attributes not already present for the
       current element and its children (eg. @uom in gco:Distance).
@@ -222,7 +222,7 @@
         <xsl:with-param name="insertRef" select="$theElement/gn:element/@ref"/>
       </xsl:apply-templates>
     </xsl:variable>
-
+    
     <xsl:variable name="errors">
       <xsl:if test="$showValidationErrors">
         <xsl:call-template name="get-errors">
@@ -230,10 +230,10 @@
         </xsl:call-template>
       </xsl:if>
     </xsl:variable>
-
+    
     <xsl:variable name="values">
       <xsl:if test="$isMultilingualElement">
-
+        
         <values>
           <!-- Or the PT_FreeText element matching the main language -->
           <xsl:if test="gco:CharacterString">
@@ -244,7 +244,7 @@
           <xsl:for-each select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
             <value ref="{gn:element/@ref}" lang="{substring-after(@locale, '#')}"><xsl:value-of select="."/></value>
           </xsl:for-each>
-
+          
           <!-- and create field for none translated language -->
           <xsl:for-each select="$metadataOtherLanguages/lang">
             <xsl:variable name="currentLanguageId" select="@id"/>
@@ -257,7 +257,7 @@
         </values>
       </xsl:if>
     </xsl:variable>
-
+        
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="if ($overrideLabel != '') then $overrideLabel else $labelConfig/label"/>
       <xsl:with-param name="value" select="if ($isMultilingualElement) then $values else *"/>
@@ -353,8 +353,8 @@
     </xsl:call-template>
 
   </xsl:template>
-
-
+  
+  
   <!-- 
     Take care of enumerations.
     
