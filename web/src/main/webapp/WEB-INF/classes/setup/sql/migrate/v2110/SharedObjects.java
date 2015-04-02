@@ -564,7 +564,7 @@ public class SharedObjects implements DatabaseMigrationTask {
     }
 
     private void addMissingCharString(Element elem) {
-        elem.addContent(new Element("CharacterString", GCO).setAttribute("nilReason", "missing", GCO));
+        elem.setAttribute("nilReason", "missing", GCO).addContent(new Element("CharacterString", GCO));
     }
 
     private static final class SharedObject {
