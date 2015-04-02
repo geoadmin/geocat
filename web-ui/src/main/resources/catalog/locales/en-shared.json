@@ -26,7 +26,7 @@
   "performingOperation" : "Performing Operation",
   "geometry": "Geometry",
   "projection": "Projection",
-  "geoId": "Geo Id",
+  "code": "Code",
   "loadReferenceCounts": "Load Reference Counts",
   "ordering": "Order by:",
   "mostReferenceCount": "Most References",
