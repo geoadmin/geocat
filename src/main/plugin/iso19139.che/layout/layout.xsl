@@ -53,11 +53,11 @@
 
           <xsl:choose>
             <xsl:when test="gmd:EX_GeographicBoundingBox">
-                <img src="region.getmap.png?mapsrs=EPSG:21781&amp;width=250&amp;background=geocat&amp;geom=Polygon(({*/gmd:westBoundLongitude/gco:Decimal}%20{*/gmd:northBoundLatitude/gco:Decimal},{*/gmd:eastBoundLongitude/gco:Decimal}%20{*/gmd:northBoundLatitude/gco:Decimal},{*/gmd:eastBoundLongitude/gco:Decimal}%20{*/gmd:southBoundLatitude/gco:Decimal},{*/gmd:westBoundLongitude/gco:Decimal}%20{*/gmd:southBoundLatitude/gco:Decimal},{*/gmd:westBoundLongitude/gco:Decimal}%20{*/gmd:northBoundLatitude/gco:Decimal}))&amp;geomsrs=EPSG:4326"/>
+                <img src="region.getmap.png?mapsrs=EPSG:21781&amp;width=250&amp;background=settings&amp;geom=Polygon(({*/gmd:westBoundLongitude/gco:Decimal}%20{*/gmd:northBoundLatitude/gco:Decimal},{*/gmd:eastBoundLongitude/gco:Decimal}%20{*/gmd:northBoundLatitude/gco:Decimal},{*/gmd:eastBoundLongitude/gco:Decimal}%20{*/gmd:southBoundLatitude/gco:Decimal},{*/gmd:westBoundLongitude/gco:Decimal}%20{*/gmd:southBoundLatitude/gco:Decimal},{*/gmd:westBoundLongitude/gco:Decimal}%20{*/gmd:northBoundLatitude/gco:Decimal}))&amp;geomsrs=EPSG:4326"/>
             </xsl:when>
             <xsl:when test="gmd:EX_BoundingPolygon">
                 <img class="gn-img-extent"
-                     src="region.getmap.png?mapsrs=EPSG:21781&amp;width=250&amp;background=geocat&amp;id=metadata:@id{$metadataId}:@xpathgmd:identificationInfo{$xpath}/gmd:EX_BoundingPolygon"/>
+                     src="region.getmap.png?mapsrs=EPSG:21781&amp;width=250&amp;background=settings&amp;id=metadata:@id{$metadataId}:@xpathgmd:identificationInfo{$xpath}/gmd:EX_BoundingPolygon"/>
             </xsl:when>
           </xsl:choose>
         </xsl:with-param>
