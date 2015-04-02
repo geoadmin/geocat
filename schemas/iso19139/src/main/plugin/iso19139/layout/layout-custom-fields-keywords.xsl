@@ -9,7 +9,6 @@
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-  xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="#all">
 
   <!-- Custom rendering of keyword section 
