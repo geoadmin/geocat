@@ -135,6 +135,9 @@
 
             <xsl:choose>
               <xsl:when test="$isMultilingual">
+
+                <xsl:variable name="tooltip" select="concat($schema, '|', name(.), '|', name(..), '|', $xpath)"></xsl:variable>
+
                 <xsl:for-each select="$value/values/value">
                   <xsl:sort data-type="number" order="ascending"
                     select="if (@lang = $mainLangCode) then 1
@@ -144,13 +147,14 @@
                             else if (@lang = 'NE') then 5
                             else if (@lang = 'RM') then 6
                             else 50"/>
-                  
+
+
                   <xsl:call-template name="render-form-field">
                     <xsl:with-param name="name" select="@ref"/>
                     <xsl:with-param name="lang" select="@lang"/>
                     <xsl:with-param name="value" select="."/>
                     <xsl:with-param name="type" select="$type"/>
-                    <xsl:with-param name="tooltip" select="concat($schema, '|', name(.), '|', name(..), '|', $xpath)"/>
+                    <xsl:with-param name="tooltip" select="$tooltip"/>
                     <xsl:with-param name="isRequired" select="$isRequired"/>
                     <xsl:with-param name="isDisabled" select="$isDisabled"/>
                     <xsl:with-param name="editInfo" select="$editInfo"/>
