@@ -164,7 +164,7 @@
                 for (i = 0; i < added.length; i++) {
                   $(element).tagsinput('add', {
                     id: added[i],
-                    name: findLabel(data, added[i])
+                    name: data ? findLabel(data, added[i]) : added[i]
                   });
                 }
               }, true);

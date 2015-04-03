@@ -186,7 +186,7 @@
           gnAlertService.addAlert({
             msg: 'Erreur de chargement de la métadonnée.',
             type: 'danger'
-        });
+          });
         });
       };
     }
