@@ -232,7 +232,10 @@
                   formScope: $scope.$new(),
                   sessionStartTime: moment(),
                   formLoadExtraFn: setViewMenuInTopToolbar,
-                  working: false
+                  working: false,
+                  // specific GEOCAT
+                  displayTooltips: true
+                  // end specific GEOCAT
                 });
 
                 $scope.gnCurrentEdit = gnCurrentEdit;
