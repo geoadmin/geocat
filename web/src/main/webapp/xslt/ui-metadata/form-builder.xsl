@@ -139,6 +139,8 @@
                 <xsl:variable name="tooltip" select="concat($schema, '|', name(.), '|', name(..), '|', $xpath)"></xsl:variable>
 
                 <xsl:for-each select="$value/values/value">
+
+                  <!--Specific GEOCAT-->
                   <xsl:sort data-type="number" order="ascending"
                     select="if (@lang = $mainLangCode) then 1
                             else if (@lang = 'DE') then 2
@@ -147,7 +149,7 @@
                             else if (@lang = 'NE') then 5
                             else if (@lang = 'RM') then 6
                             else 50"/>
-
+                  <!--end Specific GEOCAT-->
 
                   <xsl:call-template name="render-form-field">
                     <xsl:with-param name="name" select="@ref"/>
