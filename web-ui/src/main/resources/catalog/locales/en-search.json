@@ -1,4 +1,5 @@
 {
+  "metadataManagement": "Metadata Management",
   "bbox": "BBOX",
   "within": "Completely within or equal",
   "intersection": "Intersects",
