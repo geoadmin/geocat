@@ -11,7 +11,7 @@ import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.ByteArrayOutputStream;
@@ -45,7 +45,7 @@ public class DatabaseMigration implements BeanPostProcessor {
     @Autowired
     private SystemInfo systemInfo;
     @Autowired
-    private ApplicationContext _applicationContext;
+    private ConfigurableApplicationContext _applicationContext;
 
     private Callable<LinkedHashMap<String, List<String>>> _migration;
 
@@ -66,7 +66,7 @@ public class DatabaseMigration implements BeanPostProcessor {
                 ServletContext servletContext;
                 Path path;
 
-
+                ApplicationContextHolder.set(_applicationContext);
                 try {
                     servletContext = _applicationContext.getBean(ServletContext.class);
                 } catch (NoSuchBeanDefinitionException e) {

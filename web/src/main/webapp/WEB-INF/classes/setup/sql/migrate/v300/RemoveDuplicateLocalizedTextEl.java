@@ -32,6 +32,8 @@ public class RemoveDuplicateLocalizedTextEl implements DatabaseMigrationTask {
     public static final String GE = "#GE";
     public static final String DE = "#DE";
 
+    public static boolean UPGRADE_RAN = false;
+
     @Override
     public void update(Connection connection) throws SQLException {
         try (PreparedStatement update = connection.prepareStatement("UPDATE metadata SET data=? WHERE id=?")
@@ -73,6 +75,8 @@ public class RemoveDuplicateLocalizedTextEl implements DatabaseMigrationTask {
                 throw new Error(e);
             }
         }
+
+        UPGRADE_RAN = true;
     }
 
     private boolean removeEmptyGraphicOverview(Element xml) throws JDOMException {

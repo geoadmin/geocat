@@ -103,6 +103,7 @@
             <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v300/migrate-</value>
                 <value>java:v300.RemoveDuplicateLocalizedTextEl</value>
+                <value>java:org.fao.geonet.RepairRdfFiles</value>
             </list>
         </entry>
     </util:map>

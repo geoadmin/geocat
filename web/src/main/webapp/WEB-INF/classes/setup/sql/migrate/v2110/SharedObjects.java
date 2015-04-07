@@ -298,14 +298,14 @@ public class SharedObjects implements DatabaseMigrationTask {
                 ciContactEl.addContent(onlineResourceEl.addContent(ciOnlineResourceEl));
 
                 addLocalizedURL(contacts, ciOnlineResourceEl, "onlineresource", "linkage", GMD, false);
-                addLocalizedEl(contacts, ciOnlineResourceEl, "onlinename", "name", GMD, false);
-                addLocalizedEl(contacts, ciOnlineResourceEl, "onlinedescription", "description", GMD, false);
-                cleanContact(ciOnlineResourceEl);
                 if (!ciOnlineResourceEl.getChildren().isEmpty()) {
                     ciOnlineResourceEl.addContent(
                             new Element("protocol", GMD).addContent(
                                     new Element("CharacterString", GCO).setText("text/html")));
                 }
+                addLocalizedEl(contacts, ciOnlineResourceEl, "onlinename", "name", GMD, false);
+                addLocalizedEl(contacts, ciOnlineResourceEl, "onlinedescription", "description", GMD, false);
+                cleanContact(ciOnlineResourceEl);
 
                 addCharacterString(contacts, ciContactEl, "hoursofservice", "hoursOfService", GMD, false);
                 addLocalizedEl(contacts, ciContactEl, "contactinstructions", "contactInstructions", GMD, false);
@@ -403,7 +403,9 @@ public class SharedObjects implements DatabaseMigrationTask {
     }
 
     private void cleanContact(Element contactEl) {
-        if (contactEl.getName().equalsIgnoreCase("CI_RoleCode")) {
+        if (contactEl.getName().equalsIgnoreCase("protocol") ||
+            contactEl.getName().equalsIgnoreCase("linkage") ||
+            contactEl.getName().equalsIgnoreCase("CI_RoleCode")) {
             return;
         }
         if (contactEl.getName().equalsIgnoreCase("CharacterString") ||
