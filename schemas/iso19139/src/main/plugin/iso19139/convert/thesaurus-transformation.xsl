@@ -11,24 +11,24 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
 								exclude-result-prefixes="#all">
-	
-	
+
+
 	<!-- A set of templates use to convert thesaurus concept to ISO19139 fragments. -->
-	
-	
-	
+
+
+
 	<xsl:include href="../process/process-utility.xsl"/>
-	
-	
-	<!-- Convert a concept to an ISO19139 fragment with an Anchor 
+
+
+	<!-- Convert a concept to an ISO19139 fragment with an Anchor
         for each keywords pointing to the concept URI-->
 	<xsl:template name="to-iso19139-keyword-with-anchor">
 		<xsl:call-template name="to-iso19139-keyword">
 			<xsl:with-param name="withAnchor" select="true()"/>
 		</xsl:call-template>
 	</xsl:template>
-	
-	
+
+
 	<!-- Convert a concept to an ISO19139 gmd:MD_Keywords with an XLink which
     will be resolved by XLink resolver. -->
 	<xsl:template name="to-iso19139-keyword-as-xlink">
@@ -36,15 +36,15 @@
 			<xsl:with-param name="withXlink" select="true()"/>
 		</xsl:call-template>
 	</xsl:template>
-	
-	
+
+
 	<!-- Convert a concept to an ISO19139 keywords.
     If no keyword is provided, only thesaurus section is adaded.
     -->
 	<xsl:template name="to-iso19139-keyword">
 		<xsl:param name="withAnchor" select="false()"/>
 		<xsl:param name="withXlink" select="false()"/>
-		<!-- Add thesaurus identifier using an Anchor which points to the download link. 
+		<!-- Add thesaurus identifier using an Anchor which points to the download link.
         It's recommended to use it in order to have the thesaurus widget inline editor
         which use the thesaurus identifier for initialization. -->
 		<xsl:param name="withThesaurusAnchor" select="true()"/>
@@ -195,10 +195,11 @@
     <xsl:param name="textgroupOnly"/>
     <xsl:param name="listOfLanguage"/>
 
+    <xsl:variable name="thesaurusEl" select="$thesauri/thesaurus[key = $currentThesaurus]"/>
     <!-- Add thesaurus theme -->
     <gmd:type>
       <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
-        codeListValue="{$thesauri/thesaurus[key = $currentThesaurus]/dname}" />
+        codeListValue="{$thesaurusEl/dname}" />
     </gmd:type>
     <xsl:if test="$thesaurusInfo">
       <gmd:thesaurusName>
@@ -209,17 +210,17 @@
             </xsl:if>
             <xsl:if test="not($textgroupOnly)">
               <gco:CharacterString>
-                <xsl:value-of select="$thesauri/thesaurus[key = $currentThesaurus]/title" />
+                <xsl:value-of select="$thesaurusEl/title" />
               </gco:CharacterString>
             </xsl:if>
 
             <gmd:PT_FreeText>
               <xsl:for-each select="$listOfLanguage">
                 <xsl:variable name="lang" select="." />
-                <xsl:if test="$textgroupOnly or $lang != $listOfLanguage[1]">
+                <xsl:if test="($textgroupOnly or $lang != $listOfLanguage[1]) and ($thesaurusEl/labels/label[@language = $lang]/text() != '')">
                   <gmd:textGroup>
                     <gmd:LocalisedCharacterString locale="#{upper-case(util:twoCharLangCode($lang))}">
-                      <xsl:value-of select="$thesauri/labels/label[@language = $lang]/text()"></xsl:value-of>
+                      <xsl:value-of select="$thesaurusEl/labels/label[@language = $lang]/text()"></xsl:value-of>
                     </gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                 </xsl:if>
@@ -275,7 +276,7 @@
   <!-- Convert a concept to an ISO19139 extent -->
 	<xsl:template name="to-iso19139-extent">
 		<xsl:param name="isService" select="false()"/>
-		
+
 		<xsl:variable name="currentThesaurus" select="thesaurus/key"/>
 		<!-- Loop on all keyword from the same thesaurus -->
 		<xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
