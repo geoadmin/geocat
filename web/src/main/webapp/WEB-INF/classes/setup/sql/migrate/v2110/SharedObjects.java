@@ -378,12 +378,14 @@ public class SharedObjects implements DatabaseMigrationTask {
             final Element translations = loadInternalMultiLingualElem(value);
             if (!translations.getChildren().isEmpty()) {
                 Element ptFreeURL = new Element("PT_FreeURL", CHE);
-                newEl.addContent(ptFreeURL);
                 addPtFreeURL(ptFreeURL, translations.getChildText("EN"), "#EN");
                 addPtFreeURL(ptFreeURL, translations.getChildText("DE"), "#DE");
                 addPtFreeURL(ptFreeURL, translations.getChildText("FR"), "#FR");
                 addPtFreeURL(ptFreeURL, translations.getChildText("IT"), "#IT");
                 addPtFreeURL(ptFreeURL, translations.getChildText("RM"), "#RM");
+                if (ptFreeURL.getContentSize() > 0) {
+                    newEl.addContent(ptFreeURL);
+                }
             }
         }
 
@@ -484,6 +486,13 @@ public class SharedObjects implements DatabaseMigrationTask {
             } catch (JDOMException e) {
                 Element en = new Element("EN").setText("Error setting parsing text: " + basicValue);
                 desc = new Element("description").addContent(en);
+            }
+        }
+
+        for (Object o : Lists.newArrayList(desc.getChildren())) {
+            Element el = (Element) o;
+            if (el.getTextTrim().isEmpty()) {
+                el.detach();
             }
         }
         return desc;

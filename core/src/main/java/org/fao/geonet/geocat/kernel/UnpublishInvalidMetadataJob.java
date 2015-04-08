@@ -50,6 +50,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.isPublic;
 import static org.quartz.TriggerBuilder.newTrigger;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
@@ -61,6 +63,8 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
     private ConfigurableApplicationContext context;
     @Autowired
     private ServiceManager serviceManager;
+    @Autowired
+    private OperationAllowedRepository operationAllowedRepository;
     static final String AUTOMATED_ENTITY = "Automated";
 
     AtomicBoolean running = new AtomicBoolean(false);
@@ -183,6 +187,13 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
                 todayRecord.setPublished(published);
                 todayRecord.setValidated(PublishRecord.Validity.fromBoolean(validated));
                 context.getBean(PublishRecordRepository.class).save(todayRecord);
+
+                final Specifications<OperationAllowed> publicOps = Specifications.where(isPublic(ReservedOperation.view)).
+                        or(isPublic(ReservedOperation.download)).
+                        or(isPublic(ReservedOperation.editing)).
+                        or(isPublic(ReservedOperation.featured)).
+                        or(isPublic(ReservedOperation.dynamic));
+                operationAllowedRepository.deleteAll(Specifications.where(hasMetadataId(metadataRecord.getId())).and(publicOps));
                 return true;
             }
         }
@@ -193,7 +204,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
     public static boolean isPublished(String id, ServiceContext context) throws SQLException {
         final OperationAllowedRepository allowedRepository = context.getBean(OperationAllowedRepository.class);
 
-        final Specifications<OperationAllowed> idAndPublishedSpec = where(OperationAllowedSpecs.isPublic(ReservedOperation.view)).and
+        final Specifications<OperationAllowed> idAndPublishedSpec = where(isPublic(ReservedOperation.view)).and
                 (OperationAllowedSpecs.hasMetadataId(id));
         return allowedRepository.count(idAndPublishedSpec) > 0;
     }
