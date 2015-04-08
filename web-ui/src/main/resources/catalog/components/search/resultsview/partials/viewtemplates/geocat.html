@@ -17,7 +17,8 @@
           <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('software')>=0" class="fa fa-hdd-o" title="software"></span>
           <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('basicgeodata')>=0" class="fa fa-globe" title="geodata"></span>
           <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('service')>=0" class="fa fa-globe" title="service"></span>
-          <a href="md.viewer#/full_view/{{md.getUuid()}}" gn-metadata-open="md" gn-metadata-open-selector=".gn-resultview" title="{{md.title || md.defaultTitle}}">{{md.title || md.defaultTitle}}</a>
+          <a href="md.viewer#/full_view/{{md.getUuid()}}" data-ng-click="collapsed.beforeedit = collapsed.facet; collapsed.facet=true" gn-metadata-open="md"
+             gn-metadata-open-selector=".gn-resultview" title="{{md.title || md.defaultTitle}}">{{md.title || md.defaultTitle}}</a>
         </h4>
 
         <a class="pull-left" ng-if="md.groupWebsite" href="{{md.groupWebsite}}" target="_blank">
@@ -28,7 +29,7 @@
         </a>
 
         <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350" dd-text-collapse-text="{{md.abstract || md.defaultAbstract}}"></p>
-        <p class="md-owner">
+        <p data-ng-if="user.isUserAdminOrMore()" class="md-owner">
           (<i translate>owner</i> : <a href="{{pages.admin}}#/organization/users?userOrGroupId={{md.owner}}" target="_blank">{{md.getOwnername()}}</a>)</p>
       </div>
     </div>

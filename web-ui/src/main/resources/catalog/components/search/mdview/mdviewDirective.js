@@ -43,6 +43,9 @@
           var unRegister;
 
           scope.dismiss = function() {
+            if (angular.isDefined(scope.collapsed)) {
+              scope.collapsed.facet = angular.isDefined(scope.collapsed.beforeedit) ? scope.collapsed.beforeedit : false;
+            }
             unRegister();
             gnMdView.removeLocationUuid();
             element.remove();
