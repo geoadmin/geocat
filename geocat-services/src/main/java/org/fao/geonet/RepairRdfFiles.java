@@ -11,7 +11,10 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import v300.RemoveDuplicateLocalizedTextEl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -28,8 +31,8 @@ import static org.jdom.Namespace.XML_NAMESPACE;
 /**
  * @author Jesse on 4/7/2015.
  */
+@Controller
 public class RepairRdfFiles {
-    private static final List<Namespace> NSs = Lists.newArrayList();
     public static final String RDF_NAMESPACE_URI = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
     public static final Namespace RDF_NAMESPACE = Namespace.getNamespace("rdf", RDF_NAMESPACE_URI);
     private static final Namespace SKOS_NAMESPACE = Namespace.getNamespace("skos", "http://www.w3.org/2004/02/skos/core#");
@@ -54,8 +57,12 @@ public class RepairRdfFiles {
             return iso639_2;
         }
     };
+    @Autowired
+    private GeonetworkDataDirectory dataDirectory;
 
-    public void repair(GeonetworkDataDirectory dataDirectory) throws SQLException {
+    @RequestMapping("/{lang}/repair.rdf")
+    @ResponseBody
+    public void repair() throws SQLException {
         final Path localThesauri = dataDirectory.getThesauriDir().resolve("local");
 
         try {
@@ -75,10 +82,6 @@ public class RepairRdfFiles {
 
     @SuppressWarnings("unchecked")
     private void updateRDF(Path thesaurusFile) {
-        if (!RemoveDuplicateLocalizedTextEl.UPGRADE_RAN) {
-            return;
-        }
-
         final Element element;
         try {
             element = Xml.loadFile(thesaurusFile);

@@ -392,8 +392,6 @@ public class Geonetwork implements ApplicationHandler {
 
         fillCaches(context);
 
-        new RepairRdfFiles().repair(dataDirectory);
-
         AbstractEntityListenerManager.setSystemRunning(true);
         return gnContext;
     }
