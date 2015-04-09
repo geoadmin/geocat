@@ -1,7 +1,8 @@
-package org.fao.geonet;
+package org.fao.geonet.geocat.services.thesaurus;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.KeywordBean;
@@ -60,9 +61,10 @@ public class RepairRdfFiles {
     @Autowired
     private GeonetworkDataDirectory dataDirectory;
 
-    @RequestMapping("/{lang}/repair.rdf")
+    @RequestMapping(value = "/{lang}/repair.rdf")
     @ResponseBody
     public void repair() throws SQLException {
+        Log.info(Geonet.GEONETWORK, "Repairing all RDF files");
         final Path localThesauri = dataDirectory.getThesauriDir().resolve("local");
 
         try {
@@ -70,6 +72,7 @@ public class RepairRdfFiles {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     if (file.getFileName().toString().endsWith(".rdf")) {
+                        Log.info(Geonet.GEONETWORK, "Repairing all "+file+" thesaurus file");
                         updateRDF(file);
                     }
                     return super.visitFile(file, attrs);
@@ -78,6 +81,7 @@ public class RepairRdfFiles {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        Log.info(Geonet.GEONETWORK, "Finished repairing RDF files");
     }
 
     @SuppressWarnings("unchecked")
