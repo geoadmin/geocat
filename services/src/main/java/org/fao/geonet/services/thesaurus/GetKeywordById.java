@@ -76,7 +76,7 @@ public class GetKeywordById implements Service {
             if (!multiple) {
                 kb = searcher.searchById(uri, sThesaurusName, lang);
                 if (kb == null) {
-                    root = new Element("descKeys");
+                    throw new IllegalArgumentException("No Keyword found with id: " + uri + " in thesaurus " + sThesaurusName);
                 } else {
                     root = KeywordsSearcher.toRawElement(new Element("descKeys"), kb);
                 }
@@ -87,6 +87,8 @@ public class GetKeywordById implements Service {
                     kb = searcher.searchById(currentUri, sThesaurusName, lang);
                     if (kb != null) {
                         kbList.add(kb);
+                    } else {
+                        throw new IllegalArgumentException("No Keyword found with id: " + currentUri + " in thesaurus " + sThesaurusName);
                     }
                 }
                 root = new Element("descKeys");
