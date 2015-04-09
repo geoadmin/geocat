@@ -1992,9 +1992,9 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
 
         String schema = getMetadataSchema(metadataId);
+        Integer intId = Integer.valueOf(metadataId);
         if(ufo) {
             String parentUuid = null;
-            Integer intId = Integer.valueOf(metadataId);
             metadataXml = updateFixedInfo(schema, Optional.of(intId), null, metadataXml, parentUuid, (updateDateStamp ? UpdateDatestamp.YES : UpdateDatestamp.NO), context);
         }
         // GEOCAT
@@ -2026,6 +2026,9 @@ public class DataManager implements ApplicationEventPublisherAware {
             //--- do the validation last - it throws exceptions
             if (session != null && validate) {
                 doValidate(context, schema,metadataId,metadataXml,lang, false);
+            } else {
+                final MetadataValidationRepository validationRepository = _applicationContext.getBean(MetadataValidationRepository.class);
+                validationRepository.deleteAllById_MetadataId(intId);
             }
         } finally {
             if(index) {
