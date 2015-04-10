@@ -63,22 +63,27 @@ public class ISO19139SchemaPlugin
 
             for (Object o : sibs) {
                 try {
-                if (o instanceof Element) {
-                    Element sib = (Element) o;
-                    Element agId = (Element) sib.getChild("aggregateDataSetIdentifier", ISO19139Namespaces.GMD)
-                            .getChildren().get(0);
-                    String sibUuid = getChild(agId, "code", ISO19139Namespaces.GMD)
-                            .getChildText("CharacterString", ISO19139Namespaces.GCO);
-                    final Element associationTypeEl = getChild(sib, "associationType", ISO19139Namespaces.GMD);
-                    String associationType = getChild(associationTypeEl, "DS_AssociationTypeCode", ISO19139Namespaces.GMD)
-                            .getAttributeValue("codeListValue");
-
-                    AssociatedResource resource = new AssociatedResource(sibUuid, "", associationType);
-                    listOfResources.add(resource);
-                }
+                    if (o instanceof Element) {
+                        Element sib = (Element) o;
+                        Element agId = (Element) sib.getChild("aggregateDataSetIdentifier", ISO19139Namespaces.GMD)
+                                .getChildren().get(0);
+                        String sibUuid = getChild(agId, "code", ISO19139Namespaces.GMD)
+                                .getChildText("CharacterString", ISO19139Namespaces.GCO);
+                        final Element associationTypeEl = getChild(sib, "associationType", ISO19139Namespaces.GMD);
+                        String associationType = getChild(associationTypeEl, "DS_AssociationTypeCode", ISO19139Namespaces.GMD)
+                                .getAttributeValue("codeListValue");
+                        final Element initiativeTypeEl = getChild(sib, "initiativeType", ISO19139Namespaces.GMD);
+                        String initiativeType = "";
+                        if (initiativeTypeEl != null) {
+                            initiativeType = getChild(initiativeTypeEl, "DS_InitiativeTypeCode", ISO19139Namespaces.GMD)
+                                    .getAttributeValue("codeListValue");
+                        }
+                        AssociatedResource resource = new AssociatedResource(sibUuid, initiativeType, associationType);
+                        listOfResources.add(resource);
+                    }
                 } catch (Exception e) {
                     Log.error(Log.JEEVES, "Error getting resources UUIDs", e);
-            }
+                }
             }
         } catch (Exception e) {
             Log.error(Log.JEEVES, "Error getting resources UUIDs", e);
