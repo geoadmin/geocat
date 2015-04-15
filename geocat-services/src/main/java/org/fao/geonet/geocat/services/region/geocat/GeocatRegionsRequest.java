@@ -1,18 +1,24 @@
 package org.fao.geonet.geocat.services.region.geocat;
 
 
+import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
+import org.fao.geonet.domain.geocat.GeomTableLastModified;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.Request;
+import org.fao.geonet.repository.geocat.GeomTableLastModifiedRepository;
 import org.opengis.filter.Filter;
 import org.opengis.filter.MultiValuedFilter.MatchAction;
 import org.opengis.filter.Or;
 import org.opengis.filter.expression.PropertyName;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -20,6 +26,7 @@ import static org.fao.geonet.geocat.services.region.geocat.DatastoreMapper.SEARC
 
 public class GeocatRegionsRequest extends Request {
 
+    private final GeomTableLastModifiedRepository lastModifiedRepository;
     Set<String> labels = new HashSet<String>();
     Set<String> categoryIds = new HashSet<String>();
     Multimap<DatastoreMapper, Filter> ids = HashMultimap.create();
@@ -27,8 +34,9 @@ public class GeocatRegionsRequest extends Request {
     private boolean all = true;
     private final MapperState state;
 
-    public GeocatRegionsRequest(MapperState state) {
+    public GeocatRegionsRequest(MapperState state, GeomTableLastModifiedRepository lastModifiedRepository) {
         this.state = state;
+        this.lastModifiedRepository = lastModifiedRepository;
     }
 
     @Override
@@ -58,6 +66,48 @@ public class GeocatRegionsRequest extends Request {
         this.ids.put(mapper, mapper.idFilter(state, regionId));
 
         return this;
+    }
+
+    @Override
+    public Optional<Long> getLastModified() throws Exception {
+        Optional<Long> lastModified = Optional.absent();
+         Collection<String> regionAndCategoryIds = getRegionIdFromIdAndCategory();
+        for (String regionAndCategoryId : regionAndCategoryIds) {
+            DatastoreMapper datastoreMapper = null;
+            for (DatastoreMappers mappers : DatastoreMappers.values()) {
+                if (mappers.mapper.categoryId().equalsIgnoreCase(regionAndCategoryId) || mappers.mapper.accepts(regionAndCategoryId)) {
+                    datastoreMapper = mappers.mapper;
+                    break;
+                }
+            }
+            if (datastoreMapper == null) {
+                continue;
+            }
+            String[] tableNames = {
+                    datastoreMapper.getBackingDatastoreName(true, true),
+                    datastoreMapper.getBackingDatastoreName(true, false),
+                    datastoreMapper.getBackingDatastoreName(false, true),
+                    datastoreMapper.getBackingDatastoreName(false, false),
+            };
+            final List<GeomTableLastModified> lastModifieds = this.lastModifiedRepository.findAll(Arrays.asList(tableNames));
+            for (GeomTableLastModified modified : lastModifieds) {
+                final long time = modified.getLastmodified().getTime();
+                if (!lastModified.isPresent() || time > lastModified.get()) {
+                    lastModified = Optional.of(time);
+                }
+            }
+        }
+        return lastModified;
+
+    }
+
+    private Collection<String> getRegionIdFromIdAndCategory() {
+        Set<String> regions = Sets.newHashSet();
+        regions.addAll(this.categoryIds);
+        for (DatastoreMapper mapper : this.ids.keySet()) {
+            regions.add(mapper.categoryId());
+        }
+        return regions;
     }
 
     @Override
