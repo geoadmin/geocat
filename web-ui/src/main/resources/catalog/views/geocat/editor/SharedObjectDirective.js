@@ -117,6 +117,8 @@
           scope.selectEntry = function(entry) {
             scope.searchValue = entry.desc;
             scope.entry = entry;
+            var role = angular.isDefined(scope.role) ? scope.role.code : undefined;
+            scope.addEntry(entry, role, true);
           };
 
           // <request><codelist schema="iso19139"
@@ -172,9 +174,7 @@
               }
               else if(scope.templateType == 'extents') {
 
-                c.xlink = c.xlink.replace('*',
-                    'format='+scope.prop.extentFormat+'&extentTypeCode=' +
-                    scope.prop.extentTypeCode);
+                c.xlink = c.xlink.replace('*', 'format=GMD_COMPLETE&extentTypeCode=true');
 
                 var extUrl = c.xlink.replace(/local:\/\//g, '');
 

@@ -346,7 +346,8 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
             booleanQuery.add(new TermQuery(new Term(LUCENE_SCHEMA_FIELD, ISO19139cheSchemaPlugin.IDENTIFIER)), BooleanClause.Occur.MUST);
             booleanQuery.add(new TermQuery(new Term(LUCENE_SCHEMA_FIELD, ISO19139cheSchemaPlugin.IDENTIFIER)), BooleanClause.Occur.MUST);
 
-            final TopFieldDocs topDocs = searcher.search(booleanQuery, 30000, new Sort(new SortField(LUCENE_EXTRA_FIELD,
+            int finalMaxResults = maxResults < 1 ? 30000 : maxResults * 5;
+            final TopFieldDocs topDocs = searcher.search(booleanQuery, finalMaxResults, new Sort(new SortField(LUCENE_EXTRA_FIELD,
                     SortField.Type.STRING, true)));
 
             Map<String, DescData> descDatas = Maps.newLinkedHashMap();

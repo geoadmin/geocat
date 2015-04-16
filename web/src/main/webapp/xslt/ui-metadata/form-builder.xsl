@@ -615,15 +615,25 @@
       <xsl:variable name="isRequired" select="$childEditInfo/@min = 1 and $childEditInfo/@max = 1"/>
 
       <!-- This element is replaced by the content received when clicking add -->
-      <div class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'} gn-add-field"
+      <!-- GEOCAT -->
+      <div class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst or $directive/@addDirective = 'gc-add-sharedobject') then '' else 'gn-extra-field'} gn-add-field"
            id="gn-el-{$id}"
            data-gn-field-highlight="">
         <label class="col-sm-2 control-label"
           data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|">
-          <xsl:if test="normalize-space($label) != ''">
-                  <xsl:value-of select="$label"/>
-          </xsl:if>
+          <xsl:choose>
+            <xsl:when test="$directive/@addDirective = 'gc-add-sharedobject'">
+              <i class="gc-add-sharedobject">
+                <xsl:value-of select="$label" />
+              </i>
+            </xsl:when>
+            <xsl:when test="normalize-space($label) != ''">
+              <xsl:value-of select="$label"/>
+            </xsl:when>
+          </xsl:choose>
         </label>
+        <!-- END GEOCAT -->
+
         <div class="col-sm-9">
           <xsl:choose>
             <!-- When element have different types, provide

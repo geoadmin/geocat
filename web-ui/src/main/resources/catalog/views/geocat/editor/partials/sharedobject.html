@@ -1,24 +1,3 @@
-<!--Additional extent forms input-->
-<div class="gn-required" data-ng-if="templateType == 'extents'">
-  <label class="gc-sharedobject-label" translate>soExtent</label>
-  <div class="form-group">
-    <div class="col-sm-8">
-      <select class="form-control" data-ng-model="prop.extentFormat">
-        <option value="GMD_BBOX" translate="">bboxOnly</option>
-        <option value="GMD_COMPLETE" translate="">bboxPolygon</option>
-      </select>
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="col-sm-6">
-      <select class="form-control" data-ng-model="prop.extentTypeCode">
-        <option value="true" translate="">include</option>
-        <option value="false" translate="">exclude</option>
-      </select>
-    </div>
-  </div>
-</div>
-
 <!--Main search input that trigger the shared object XML push-->
 <div class="gc-shared-object" data-ng-class="{'input-group' : templateType == 'contacts' || templateType == 'extents'}">
 
@@ -83,11 +62,6 @@
     <input name="{{snippetRef}}" type="hidden" value="{{snippet}}"/>
   </div>
 </div>
-
-<button class="btn btn-default gc-sharedobject-addbtn" data-ng-click="addEntry(entry, role.code, true)"
-        data-ng-disabled="!entry">
-  <i class="fa fa-plus"/>&nbsp;<span>{{(templateType + 'AddBtn') | translate}}</span>
-</button>
 
 <div class="gn-addextent-btn">
   <button class="btn btn-default gc-sharedobject-addbtn" data-ng-if="templateType == 'extents'" data-ng-click="addExtent()">

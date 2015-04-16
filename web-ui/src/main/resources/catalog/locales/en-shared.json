@@ -47,5 +47,6 @@
   "searchAcontacts": "Search a shared Contact",
   "addEntry": "Create a new entry",
   "bboxOnly": "Bounding box only",
-  "bboxPolygon": "Bounding box and bounding polygon"
+  "bboxPolygon": "Bounding box and bounding polygon",
+  "addSharedObjectInEditor": "Add {{label}}"
 }
