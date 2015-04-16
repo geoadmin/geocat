@@ -1,12 +1,16 @@
 package v2110;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import jeeves.xlink.XLink;
 import org.fao.geonet.DatabaseMigrationTask;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -19,8 +23,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
@@ -29,7 +37,6 @@ import java.util.regex.Pattern;
 import static jeeves.xlink.XLink.HREF;
 import static jeeves.xlink.XLink.LOCAL_PROTOCOL;
 import static jeeves.xlink.XLink.NAMESPACE_XLINK;
-import static jeeves.xlink.XLink.ROLE;
 import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_EXTRA_NON_VALIDATED;
 import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_EXTRA_VALIDATED;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
@@ -109,7 +116,53 @@ public class SharedObjects implements DatabaseMigrationTask {
                             if (node instanceof Element) {
                                 Element el = (Element) node;
                                 final String atValue = el.getAttributeValue(HREF, NAMESPACE_XLINK);
-                                if (atValue != null && atValue.contains("xml.format.get")) {
+                                if (el.getName().equals("identificationInfo")) {
+                                    final List<Namespace> namespaces = Lists.newArrayList(ISO19139Namespaces.GMD);
+                                    @SuppressWarnings("unchecked")
+                                    final List<Element> keywordEls = Lists.newArrayList((List<Element>)
+                                            Xml.selectNodes(el, "*/gmd:descriptiveKeywords", namespaces));
+
+                                    Multimap<String, Keyword> keywordsByThesaurus = LinkedHashMultimap.create();
+                                    int index = Integer.MAX_VALUE;
+                                    Element parent = null;
+                                    for (Element keywordEl : keywordEls) {
+                                        final int currentIndex = keywordEl.getParentElement().indexOf(keywordEl);
+                                        if (currentIndex < index) {
+                                            index = currentIndex;
+                                            parent = keywordEl.getParentElement();
+                                        }
+
+                                        final String attributeValue = keywordEl.getAttributeValue(HREF, NAMESPACE_XLINK);
+                                        if (attributeValue!= null && !attributeValue.trim().isEmpty()) {
+                                            Keyword keyword = new Keyword(attributeValue);
+                                            if (keyword.thesaurus != null) {
+                                                keywordsByThesaurus.put(keyword.thesaurus, keyword);
+                                            }
+                                        }
+                                        keywordEl.detach();
+                                    }
+
+                                    if (parent != null) {
+                                        for (String thesaurus : keywordsByThesaurus.keySet()) {
+                                            HashSet<String> langs = Sets.newHashSet();
+                                            Set<String> ids = Sets.newLinkedHashSet();
+                                            for (Keyword keyword : keywordsByThesaurus.get(thesaurus)) {
+                                                langs.addAll(keyword.langs);
+                                                ids.add(keyword.id);
+                                            }
+
+                                            String keywordIds = Joiner.on(',').join(ids);
+                                            String joinedLangs = Joiner.on(',').join(langs);
+                                            String href = "local://eng/xml.keyword.get?thesaurus=" + thesaurus + "&id=" + keywordIds +
+                                                          "&multiple=true&lang=" + joinedLangs + "&textgroupOnly&skipdescriptivekeywords";
+
+                                            parent.addContent(index, new Element("descriptiveKeywords", GMD).
+                                                    setAttribute(HREF, href, NAMESPACE_XLINK));
+
+                                            index++;
+                                        }
+                                    }
+                                } else if (atValue != null && atValue.contains("xml.format.get")) {
                                     String formatId = extractId(atValue);
                                     final String subtemplateUUID = formatIdMap.get(formatId);
                                     if (subtemplateUUID == null) {
@@ -130,66 +183,6 @@ public class SharedObjects implements DatabaseMigrationTask {
                                             href += "&process=*//gmd:CI_RoleCode/@codeListValue~" + role;
                                         }
                                         el.setAttribute(HREF, href, NAMESPACE_XLINK);
-                                    }
-                                } else if (atValue != null && atValue.contains("che.keyword.get")) {
-                                    String thesaurus = null;
-                                    String keywordId = null;
-                                    String langs = null;
-                                    final Matcher matcher = PARAMS_PATTERN.matcher(atValue);
-                                    while(matcher.find()) {
-                                        String key = matcher.group(2);
-                                        String value = matcher.group(3);
-
-                                        switch (key) {
-                                            case "thesaurus" :
-                                                thesaurus = value;
-                                                break;
-                                            case "id" :
-                                                keywordId = value;
-                                                break;
-                                            case "locales" :
-                                                String[] twoLetterLocales = value.split(",");
-                                                for (int i = 0; i < twoLetterLocales.length; i++) {
-                                                    String twoLetterLocale = twoLetterLocales[i];
-                                                    switch (twoLetterLocale.toLowerCase()) {
-                                                        case "de":
-                                                        case "ge":
-                                                            twoLetterLocales[i] = "ger";
-                                                            break;
-                                                        case "fr":
-                                                            twoLetterLocales[i] = "fre";
-                                                            break;
-                                                        case "it":
-                                                            twoLetterLocales[i] = "ita";
-                                                            break;
-                                                        case "en":
-                                                            twoLetterLocales[i] = "eng";
-                                                            break;
-                                                        case "rm":
-                                                            twoLetterLocales[i] = "roh";
-                                                            break;
-                                                        default:
-                                                            // skip
-                                                    }
-                                                }
-                                                langs = Joiner.on(',').join(twoLetterLocales);
-                                                break;
-                                            default:
-                                                break;
-                                        }
-                                    }
-
-
-                                    if (thesaurus != null && keywordId != null) {
-                                        if (langs == null) {
-                                            langs = "ger,fre,ita,eng";
-                                        }
-                                        String href = "local://eng/xml.keyword.get?thesaurus=" + thesaurus + "&id=" + keywordId +
-                                                      "&multiple=false&lang=" + langs + "&textgroupOnly&skipdescriptivekeywords";
-                                        el.setAttribute(HREF, href, NAMESPACE_XLINK);
-                                    } else {
-                                        el.removeAttribute(HREF, NAMESPACE_XLINK);
-                                        el.removeAttribute(ROLE, NAMESPACE_XLINK);
                                     }
                                 }
                             }
@@ -600,6 +593,59 @@ public class SharedObjects implements DatabaseMigrationTask {
 
         public String getXml() {
             return Xml.getString(this.xml);
+        }
+    }
+
+    private static final class Keyword {
+        String thesaurus;
+        String id;
+        final Set<String> langs = Sets.newHashSet();
+
+        public Keyword(String atValue) {
+            final Matcher matcher = PARAMS_PATTERN.matcher(atValue);
+            while(matcher.find()) {
+                String key = matcher.group(2);
+                String value = matcher.group(3);
+
+                switch (key) {
+                    case "thesaurus" :
+                        thesaurus = value;
+                        break;
+                    case "id" :
+                        id = value;
+                        break;
+                    case "locales" :
+                        String[] twoLetterLocales = value.split(",");
+                        for (int i = 0; i < twoLetterLocales.length; i++) {
+                            String twoLetterLocale = twoLetterLocales[i];
+                            switch (twoLetterLocale.toLowerCase()) {
+                                case "de":
+                                case "ge":
+                                    twoLetterLocales[i] = "ger";
+                                    break;
+                                case "fr":
+                                    twoLetterLocales[i] = "fre";
+                                    break;
+                                case "it":
+                                    twoLetterLocales[i] = "ita";
+                                    break;
+                                case "en":
+                                    twoLetterLocales[i] = "eng";
+                                    break;
+                                case "rm":
+                                    twoLetterLocales[i] = "roh";
+                                    break;
+                                default:
+                                    // skip
+                            }
+                        }
+
+                        langs.addAll(Arrays.asList(twoLetterLocales));
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 }

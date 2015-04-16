@@ -116,23 +116,6 @@
         </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <!-- Add an xlink to a metadata                                    -->
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="metadata.xlink.add">
-            <class name=".geocat.services.metadata.AddXLink"/>
-
-			<output sheet="metadata-edit-embedded.xsl">
-				<call name="currTab"       class =".guiservices.util.GetCurrentMDTab"/>
-				<call name="position" 		 class =".guiservices.util.GetPositionMD"/>
-				<call name="groups"        class =".guiservices.groups.GetMine"/>
-				<call name="regions"       class =".guiservices.regions.Get"/>
-				<call name="sources"       class =".guiservices.util.Sources"/>
-				<call name="isoLang"       class =".guiservices.isolanguages.Get"/>
-			</output>
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- Search for shared objects in metadata and replace with XLINK  -->
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
