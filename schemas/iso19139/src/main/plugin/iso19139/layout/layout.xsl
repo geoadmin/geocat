@@ -30,6 +30,7 @@
 
     <!-- TODO: this should be common to all schemas -->
 	<xsl:if test="$isEditing and
+	     not(@name = 'geographicElement' and @namespace = 'http://www.isotc211.org/2005/gmd') and
       (not($isFlatMode) or $flatModeException)">
       
       <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
