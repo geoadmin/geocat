@@ -401,7 +401,7 @@
               var resetForm = function() {
                 if (scope.params) {
                   scope.params.desc = scope.mdLangs ? {} : '';
-                  scope.params.url = '';
+                  scope.params.url = scope.mdLangs ? {} : '';
                   scope.params.name = scope.mdLangs ? {} : '';
                   scope.params.protocol = '';
                 }
@@ -455,6 +455,13 @@
                       desc.push(p + '#' + scope.params.desc[p])
                     }
                     scope.params.desc = desc.join('|');
+                  }
+                  if(angular.isObject(scope.params.url)) {
+                    var url = [];
+                    for(var p in scope.params.url) {
+                      url.push(p + '#' + scope.params.url[p])
+                    }
+                    scope.params.url = url.join('|');
                   }
                   return gnOnlinesrc.addOnlinesrc(scope.params, scope.popupid).
                       then(function() {

@@ -36,10 +36,15 @@
       <div class="form-group" data-ng-show="mode == 'url'">
         <label for="onlinesrcUrl" class="col-sm-2 control-label"
             data-translate="">url</label>
-        <div class="col-sm-10">
+        <div class="col-sm-10" data-ng-if="!mdLangs">
           <input data-ng-model="params.url" class="" type="text"
-            id="onlinesrcUrl" placeholder="http://">
+                 id="onlinesrcUrl" placeholder="http://">
         </div>
+        <div class="col-sm-10" data-ng-if="mdLangs" gn-multilingual-field="{{mdOtherLanguages}}"
+             data-main-language="{{mdLang}}" expanded="false">
+          <input data-ng-repeat="(key, val) in mdLangs" class="form-control input-sm" placeholder="http://" lang="{{val}}" data-ng-model="params.url[val]" >
+        </div>
+
       </div>
       
       <!-- Upload panel -->
