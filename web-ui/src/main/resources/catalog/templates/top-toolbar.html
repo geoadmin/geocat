@@ -33,6 +33,8 @@
            title="{{'map' | translate}}">
           <i class="fa fa-globe"></i>
           <span class="visible-lg" data-translate="">makeYourMap</span>
+
+          <span data-gnv-layer-indicator=""/>
         </a>
       </li>
       <li data-ng-show="authenticated">
@@ -77,12 +79,13 @@
     <form class="navbar-form navbar-right" role="language">
       <div class="form-group pull-right"
            data-gn-language-switcher="lang"
-           data-langs="langs"/>
+           data-langs="langs"
+           data-lang-labels="langLabels"/>
     </form>
 
     <ul class="nav navbar-nav navbar-right">
       <li data-ng-show="authenticated">
-        <a href="{{pages.admin}}#/organization/users?userOrGroup={{user.username}}"
+        <a href="admin.console#/organization/users?userOrGroup={{user.username}}"
            title="{{'userDetails' | translate}}"
            class="hidden-xs btn btn-link">
           <img class="img-circle"

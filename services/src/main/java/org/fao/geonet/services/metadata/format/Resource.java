@@ -23,10 +23,11 @@
 
 package org.fao.geonet.services.metadata.format;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,35 +47,32 @@ import static com.google.common.io.Files.getFileExtension;
 @Controller("md.formatter.resource")
 public class Resource extends AbstractFormatService {
 
-    @Autowired
-    private SchemaManager schemaManager;
-    @Autowired
-    private GeonetworkDataDirectory dataDirectory;
-
     @RequestMapping(value = "/{lang}/md.formatter.resource")
     public void exec(
             @RequestParam(Params.ID) String xslid,
             @RequestParam(Params.FNAME) String fileName,
             @RequestParam(value = Params.SCHEMA, required = false) String schema,
-            HttpServletResponse response) throws Exception {
+            HttpServletResponse response
+            ) throws Exception {
+        final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         Path schemaDir = null;
         if (schema != null) {
-            schemaDir = schemaManager.getSchemaDir(schema);
+            schemaDir = applicationContext.getBean(SchemaManager.class).getSchemaDir(schema);
         }
 
-        Path formatDir = getAndVerifyFormatDir(dataDirectory, Params.ID, xslid, schemaDir);
+        Path formatDir = getAndVerifyFormatDir(applicationContext.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);
         Path desiredFile = formatDir.resolve(fileName);
 
         if(!Files.isRegularFile(desiredFile)) {
             response.sendError(404, fileName+" does not identify a file in formatter bundle: " + xslid);
             return;
         }
-        
+
         if(!containsFile(formatDir, desiredFile)) {
             response.sendError(403, fileName+" does not identify a file in the "+xslid+" format bundle");
             return;
         }
-
+        
         response.setStatus(200);
         setContentType(response, getFileExtension(desiredFile.getFileName().toString()));
 

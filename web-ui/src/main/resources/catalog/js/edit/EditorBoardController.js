@@ -19,11 +19,12 @@
     '$q',
     'gnSearchSettings',
     'gnMetadataActions',
+    'gnGlobalSettings',
     function($scope, $location, $rootScope, $translate, $q,
-        gnSearchSettings, gnMetadataActions) {
+        gnSearchSettings, gnMetadataActions, gnGlobalSettings) {
       $scope.onlyMyRecord = false;
-
-      var defaultSearchObj = {
+      $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
+      $scope.defaultSearchObj = {
         permalink: false,
         sortbyValues: gnSearchSettings.sortbyValues,
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
@@ -37,12 +38,11 @@
           to: 20
         }
       };
-      angular.extend($scope.searchObj, defaultSearchObj);
+      angular.extend($scope.searchObj, $scope.defaultSearchObj);
 
       $scope.toggleOnlyMyRecord = function() {
         $scope.onlyMyRecord = !$scope.onlyMyRecord;
       };
-
       var setOwner = function() {
         $scope.searchObj.params['_owner'] = $scope.user.id;
       };

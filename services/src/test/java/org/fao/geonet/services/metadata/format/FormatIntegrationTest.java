@@ -183,7 +183,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         fparams.context = this.serviceContext;
         fparams.webRequest = webRequest;
         // make sure context is cleared
-        EnvironmentProxy.setCurrentEnvironment(fparams, mapper);
+        EnvironmentProxy.setCurrentEnvironment(fparams);
 
 
         final String formatterName = "groovy-illegal-env-access-formatter";
@@ -210,7 +210,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             fparams.context = this.serviceContext;
             fparams.webRequest = request;
             // make sure context is cleared
-            EnvironmentProxy.setCurrentEnvironment(fparams, mapper);
+            EnvironmentProxy.setCurrentEnvironment(fparams);
 
 
             final String formatterName = "logging-null-pointer";

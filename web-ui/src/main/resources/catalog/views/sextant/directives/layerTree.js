@@ -7,16 +7,23 @@
     'gnLayerFilters',
     '$filter',
     'gnWmsQueue',
-    function (gnLayerFilters, $filter, gnWmsQueue) {
+    '$timeout',
+    function (gnLayerFilters, $filter, gnWmsQueue, $timeout) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/views/sextant/directives/' +
             'partials/layertree.html',
         controller: [ '$scope', function($scope) {
+
           this.setNCWMS = function(layer) {
             $scope.active.layersTools = false;
             $scope.active.NCWMS = layer;
           };
+
+          this.addToPanier = function(md, link) {
+            $scope.resultviewFns.addMdLayerToPanier(link, md);
+          }
+
         }],
         link: function(scope, element, attrs) {
 
@@ -52,24 +59,36 @@
             }
           };
 
+          // on OWS Context loading, we don't want to build the tree on each
+          // layer remove or add. The delay also helps to get layer properties
+          // (i.e 'group') that are set after layer is added to map.
+          var debounce = 0;
+
           // Build the layer manager tree depending on layer groups
           scope.map.getLayers().on('change:length', function(e) {
-            scope.layerTree = {
-              nodes: []
-            };
-            var sep = '/';
-            var fLayers = $filter('filter')(scope.layers, scope.layerFilterFn);
-            for (var i = 0; i < fLayers.length; i++) {
-              var l = fLayers[i];
-              var groups = l.get('group');
-              if (!groups) {
-                scope.layerTree.nodes.push(l);
-              }
-              else {
-                var g = groups.split(sep);
-                createNode(l, scope.layerTree, g, 1);
-              }
+            if(debounce > 0) {
+              return;
             }
+            debounce++;
+            $timeout(function() {
+              scope.layerTree = {
+                nodes: []
+              };
+              var sep = '/';
+              var fLayers = $filter('filter')(scope.layers, scope.layerFilterFn);
+              for (var i = 0; i < fLayers.length; i++) {
+                var l = fLayers[i];
+                var groups = l.get('group');
+                if (!groups) {
+                  scope.layerTree.nodes.push(l);
+                }
+                else {
+                  var g = groups.split(sep);
+                  createNode(l, scope.layerTree, g, 1);
+                }
+              }
+              debounce--;
+            }, 100);
           });
 
           scope.failedLayers = gnWmsQueue.errors;
@@ -128,6 +147,18 @@
           scope.mapService = gnMap;
 
           scope.setNCWMS = controller.setNCWMS;
+
+          if(!scope.isParentNode()) {
+            var d =  scope.member.get('downloads');
+            if(angular.isArray(d)) {
+              scope.download = d[0];
+
+            }
+          }
+
+          scope.addToPanier = function(download) {
+            controller.addToPanier(scope.member.get('md'), download);
+          };
 
           scope.showMetadata = function() {
             gnMdView.openMdFromLayer(scope.member);

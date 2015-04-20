@@ -11,24 +11,24 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
 								exclude-result-prefixes="#all">
-
-
+	
+	
 	<!-- A set of templates use to convert thesaurus concept to ISO19139 fragments. -->
-
-
-
+	
+	
+	
 	<xsl:include href="../process/process-utility.xsl"/>
-
-
-	<!-- Convert a concept to an ISO19139 fragment with an Anchor
+	
+	
+	<!-- Convert a concept to an ISO19139 fragment with an Anchor 
         for each keywords pointing to the concept URI-->
 	<xsl:template name="to-iso19139-keyword-with-anchor">
 		<xsl:call-template name="to-iso19139-keyword">
 			<xsl:with-param name="withAnchor" select="true()"/>
 		</xsl:call-template>
 	</xsl:template>
-
-
+	
+	
 	<!-- Convert a concept to an ISO19139 gmd:MD_Keywords with an XLink which
     will be resolved by XLink resolver. -->
 	<xsl:template name="to-iso19139-keyword-as-xlink">
@@ -36,21 +36,31 @@
 			<xsl:with-param name="withXlink" select="true()"/>
 		</xsl:call-template>
 	</xsl:template>
-
-
+	
+	
 	<!-- Convert a concept to an ISO19139 keywords.
     If no keyword is provided, only thesaurus section is adaded.
     -->
 	<xsl:template name="to-iso19139-keyword">
 		<xsl:param name="withAnchor" select="false()"/>
 		<xsl:param name="withXlink" select="false()"/>
-		<!-- Add thesaurus identifier using an Anchor which points to the download link.
+		<!-- Add thesaurus identifier using an Anchor which points to the download link. 
         It's recommended to use it in order to have the thesaurus widget inline editor
         which use the thesaurus identifier for initialization. -->
 		<xsl:param name="withThesaurusAnchor" select="true()"/>
 
+
+    <!-- The lang parameter contains a list of languages
+    with the main one as the first element. If only one element
+    is provided, then CharacterString or Anchor are created.
+    If more than one language is provided, then PT_FreeText
+    with or without CharacterString can be created. -->
     <xsl:variable name="listOfLanguage" select="tokenize(/root/request/lang, ',')"/>
-    <xsl:variable name="textgroupOnly" select="/root/request/textgroupOnly"/>
+    <xsl:variable name="textgroupOnly"
+                  as="xs:boolean"
+                  select="if (/root/request/textgroupOnly)
+                          then /root/request/textgroupOnly
+                          else false()"/>
 
 
     <xsl:apply-templates mode="to-iso19139-keyword" select="." >
@@ -106,6 +116,7 @@
     <xsl:param name="listOfLanguage"/>
     <xsl:param name="withAnchor"/>
     <xsl:param name="withThesaurusAnchor"/>
+
           <xsl:call-template name="to-md-keywords">
             <xsl:with-param name="withAnchor" select="$withAnchor"/>
             <xsl:with-param name="withThesaurusAnchor" select="$withThesaurusAnchor"/>
@@ -138,8 +149,9 @@
             <xsl:attribute name="xsi:type">gmd:PT_FreeText_PropertyType</xsl:attribute>
           </xsl:if>
 
+          <!-- Multilingual output if more than one requested language -->
           <xsl:choose>
-            <xsl:when test="/root/request/lang">
+            <xsl:when test="count($listOfLanguage) > 1">
 
               <xsl:variable name="keyword" select="." />
 
@@ -163,6 +175,7 @@
               </gmd:PT_FreeText>
             </xsl:when>
             <xsl:otherwise>
+              <!-- ... default mode -->
               <xsl:choose>
                 <xsl:when test="$withAnchor">
                   <!-- TODO multilingual Anchor ? -->
@@ -178,8 +191,6 @@
               </xsl:choose>
             </xsl:otherwise>
           </xsl:choose>
-
-
         </gmd:keyword>
       </xsl:for-each>
       <xsl:copy-of select="geonet:add-thesaurus-info($currentThesaurus, $withThesaurusAnchor, /root/gui/thesaurus/thesauri,
@@ -209,9 +220,9 @@
               <xsl:attribute name="xsi:type">gmd:PT_FreeText_PropertyType</xsl:attribute>
             </xsl:if>
             <xsl:if test="not($textgroupOnly)">
-              <gco:CharacterString>
+            <gco:CharacterString>
                 <xsl:value-of select="$thesaurusEl/title" />
-              </gco:CharacterString>
+            </gco:CharacterString>
             </xsl:if>
 
             <gmd:PT_FreeText>
@@ -276,7 +287,7 @@
   <!-- Convert a concept to an ISO19139 extent -->
 	<xsl:template name="to-iso19139-extent">
 		<xsl:param name="isService" select="false()"/>
-
+		
 		<xsl:variable name="currentThesaurus" select="thesaurus/key"/>
 		<!-- Loop on all keyword from the same thesaurus -->
 		<xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">

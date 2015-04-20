@@ -91,7 +91,7 @@
                          thesaurusIdentifier;
                } else {
                  gnCurrentEdit.working = true;
-                 gnThesaurusService
+                 return gnThesaurusService
                          .getXML(thesaurusIdentifier,  null,
                                  attrs.transformation).then(
                          function(data) {
@@ -107,7 +107,6 @@
                      // Save the metadata and refresh the form
                      gnEditor.save(gnCurrentEdit.id, true);
                    });
-
                      });
                }
                return false;

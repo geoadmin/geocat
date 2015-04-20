@@ -34,6 +34,7 @@
               data-ng-change="triggerSearch()" type="text"
               data-toggle="dropdown"
               data-ng-model="searchObj.params.any"
+              data-ng-model-options="modelOptions"
               placeholder="{{'search' | translate}}"/>
             <ul class="dropdown-menu" role="menu">
               <li data-ng-repeat="md in searchResults.records"><a
@@ -59,7 +60,7 @@
       </div>
       <div class="">
         <button type="button" class="btn navbar-btn btn-success"
-          data-ng-click="linkToResource()"
+          data-gn-click-and-spin="linkToResource()"
           data-ng-class="{'disabled': (selection.length < 1)}">
           <i class="fa fa-sign-out" />&nbsp;
           <span data-translate="">linkToSibling</span>

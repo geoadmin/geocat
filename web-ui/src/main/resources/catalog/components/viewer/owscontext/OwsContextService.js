@@ -13,7 +13,7 @@
           'http://www.opengis.net/ows': 'ows'
         }
       }
-  );
+      );
   var unmarshaller = context.createUnmarshaller();
   var marshaller = context.createMarshaller();
 
@@ -76,7 +76,7 @@
               if (type != 'wmts') {
                 var olLayer = gnMap.createLayerForType(type);
                 if (olLayer) {
-                  bgLayers.push({layer:olLayer, idx: i});
+                  bgLayers.push({layer: olLayer, idx: i});
                   olLayer.displayInLayerManager = false;
                   olLayer.background = true;
                   olLayer.set('group', 'Background layers');
@@ -86,7 +86,10 @@
               else {
                 promises.push(this.createLayer(layer, map, i).then(
                     function(olLayer) {
-                      bgLayers.push({layer:olLayer, idx: olLayer.get('bgIdx')});
+                      bgLayers.push({
+                        layer: olLayer,
+                        idx: olLayer.get('bgIdx')
+                      });
                       olLayer.displayInLayerManager = false;
                       olLayer.background = true;
                     }));
@@ -102,7 +105,7 @@
 
         // if there's at least one valid bg layer in the context use them for
         // the application otherwise use the defaults from config
-        $q.all(promises).finally(function() {
+        $q.all(promises).finally (function() {
           if (bgLayers.length > 0) {
             // make sure we remove any existing bglayer
             if (map.getLayers().getLength() > 0) {
@@ -232,6 +235,7 @@
             name: name,
             title: layer.get('title'),
             group: layer.get('group'),
+            groupcombo: layer.get('groupcombo'),
             server: [{
               onlineResource: [{
                 href: url
@@ -297,13 +301,14 @@
             return gnMap.addWmtsFromScratch(map, res.href, name, createOnly).
                 then(function(olL) {
                   olL.set('group', layer.group);
+                  olL.set('groupcombo', layer.groupcombo);
                   olL.setOpacity(layer.opacity);
                   olL.setVisible(!layer.hidden);
                   if (layer.title) {
                     olL.set('title', layer.title);
                     olL.set('label', layer.title);
                   }
-                  if(bgIdx) {
+                  if (bgIdx) {
                     olL.set('bgIdx', bgIdx);
                   }
                   return olL;
@@ -315,6 +320,7 @@
           return gnMap.addWmsFromScratch(map, res.href, layer.name, createOnly).
               then(function(olL) {
                 olL.set('group', layer.group);
+                olL.set('groupcombo', layer.groupcombo);
                 olL.setOpacity(layer.opacity);
                 olL.setVisible(!layer.hidden);
                 if (layer.title) {

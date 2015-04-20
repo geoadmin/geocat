@@ -56,7 +56,7 @@
                 $scope.harvesterNew = false;
                 $scope.harvesterHistory = {};
                 $scope.searchResults = null;
-                gnUtilityService.parseBoolean($scope.$parent.harvesters);
+                gnUtilityService.parseBoolean($scope.harvesterSelected);
               }
               $scope.isLoadingOneHarvester = false;
             }).error(function(data) {
@@ -286,8 +286,8 @@
               $scope.$parent.loadHarvesters();
             }).error(function(data) {
               console.log(data);
-            }).then(function(){
-              $scope.deleting.splice($scope.deleting.indexOf(3), 1)
+            }).then(function() {
+              $scope.deleting.splice($scope.deleting.indexOf(3), 1);
             });
       };
 

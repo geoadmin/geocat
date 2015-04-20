@@ -101,5 +101,5 @@ SET
 WHERE
   name = 'metadata/editor/schemaConfig';
 -- END GEOCAT
-INSERT INTO settings (name, value, datatype, position, internal) VALUES ('system/server/log','log4j',0,250,'y');
+INSERT INTO settings (name, value, datatype, position, internal) VALUES ('system/server/log','log4j.xml',0,250,'y');
 

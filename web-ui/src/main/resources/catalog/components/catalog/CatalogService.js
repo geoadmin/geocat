@@ -117,11 +117,11 @@
           return $http({
             url: 'md.import@json?' + data,
             method: 'GET',
-            transformResponse: function (defaults) {
+            transformResponse: function(defaults) {
               try {
                 return JSON.parse(defaults);
               }
-              catch(e) {
+              catch (e) {
                 return defaults;
               }
             }
@@ -143,11 +143,11 @@
           return $http.post('md.insert?_content_type=json', data, {
             headers: {'Content-Type':
                   'application/x-www-form-urlencoded'},
-            transformResponse: function (defaults) {
+            transformResponse: function(defaults) {
               try {
                 return JSON.parse(defaults);
               }
-              catch(e) {
+              catch (e) {
                 return defaults;
               }
             }
@@ -524,7 +524,8 @@
         url: linkInfos[2],
         desc: linkInfos[1],
         protocol: linkInfos[3],
-        contentType: linkInfos[4]
+        contentType: linkInfos[4],
+        group: linkInfos[5] ? parseInt(linkInfos[5]) : undefined
       };
     }
     function parseLink(sLink) {
@@ -559,8 +560,15 @@
         // GEOCAT
         var unique = {};
         // END GEOCAT
+
         var types = Array.prototype.splice.call(arguments, 0);
+        var groupId;
+
         var key = types.join('|');
+        if (angular.isNumber(types[0])) {
+          groupId = types[0];
+          types.splice(0, 1);
+        }
         if (this.linksCache[key]) {
           return this.linksCache[key];
         }
@@ -584,12 +592,14 @@
           // END GEOCAT
           types.forEach(function(type) {
             if (type.substr(0, 1) == '#') {
-              if (linkInfo.protocol == type.substr(1, type.length - 1)) {
+              if (linkInfo.protocol == type.substr(1, type.length - 1) &&
+                  (!groupId || groupId == linkInfo.group)) {
                 ret.push(linkInfo);
               }
             }
             else {
-              if (linkInfo.protocol.indexOf(type) >= 0) {
+              if (linkInfo.protocol.indexOf(type) >= 0 &&
+                  (!groupId || groupId == linkInfo.group)) {
                 ret.push(linkInfo);
               }
             }
