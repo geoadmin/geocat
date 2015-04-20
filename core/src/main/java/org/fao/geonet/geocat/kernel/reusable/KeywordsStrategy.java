@@ -62,7 +62,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public final class KeywordsStrategy extends SharedObjectStrategy {
-    private static final String NAMESPACE = "http://custom.shared.obj.ch/concept#";
+    public static final String NAMESPACE = "http://custom.shared.obj.ch/concept#";
     public static final String GEOCAT_THESAURUS_NAME = "local._none_.geocat.ch";
     public static final String NON_VALID_THESAURUS_NAME = "local._none_.non_validated";
 

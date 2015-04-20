@@ -1,34 +1,46 @@
 package v2110;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 import jeeves.xlink.XLink;
+import org.fao.geonet.Constants;
 import org.fao.geonet.DatabaseMigrationTask;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.KeywordBean;
+import org.fao.geonet.kernel.Thesaurus;
+import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.util.GeocatXslUtil;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.openrdf.model.GraphException;
+import org.openrdf.sesame.config.AccessDeniedException;
+import org.openrdf.sesame.config.ConfigurationException;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
@@ -41,6 +53,7 @@ import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_
 import static org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy.LUCENE_EXTRA_VALIDATED;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.SRV;
 import static org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces.CHE;
 
 /**
@@ -48,7 +61,6 @@ import static org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces.CHE;
  */
 public class SharedObjects implements DatabaseMigrationTask {
 
-    private final static Pattern PARAMS_PATTERN = Pattern.compile("(\\?|\\&)([^=]+)=([^\\&]+)");
     private final static Pattern ID_PATTERN = Pattern.compile(".*id=(\\d+).*");
     private final static Pattern ROLE_PATTERN = Pattern.compile(".*role=([^&]+).*");
     protected static final String PREPARED_STATEMENT_SQL = "INSERT INTO public.metadata(" +
@@ -97,7 +109,67 @@ public class SharedObjects implements DatabaseMigrationTask {
     }
 
     private void updateMetadata(Connection conn, Map<String, String> formatIdMap, Map<String, String> contactIdMap) throws
-            SQLException, IOException, JDOMException {
+            SQLException, IOException, JDOMException, AccessDeniedException, GraphException, ConfigurationException {
+        Path thesauriDir = Paths.get(System.getProperty("geonetwork.dir") + "/config/codelist");
+        IsoLanguagesMapper mapper = new IsoLanguagesMapper(){
+            {
+                iso639_1_to_iso639_2IsoLanguagesMap.put("en", "eng");
+                iso639_1_to_iso639_2IsoLanguagesMap.put("fr", "fre");
+                iso639_1_to_iso639_2IsoLanguagesMap.put("it", "ita");
+                iso639_1_to_iso639_2IsoLanguagesMap.put("de", "ger");
+                iso639_1_to_iso639_2IsoLanguagesMap.put("ge", "ger");
+                iso639_1_to_iso639_2IsoLanguagesMap.put("rm", "roh");
+
+                iso639_2_to_iso639_1IsoLanguagesMap.put("eng", "en");
+                iso639_2_to_iso639_1IsoLanguagesMap.put("fre", "fr");
+                iso639_2_to_iso639_1IsoLanguagesMap.put("ger", "de");
+                iso639_2_to_iso639_1IsoLanguagesMap.put("deu", "de");
+                iso639_2_to_iso639_1IsoLanguagesMap.put("roh", "rm");
+                iso639_2_to_iso639_1IsoLanguagesMap.put("ita", "it");
+            }
+        };
+
+        String fname = "local";
+        String type = "_none_";
+        String dname = "non_validated";
+        Path thesaurusFile = thesauriDir.resolve(fname + "/thesauri/" + type + "/" + dname + ".rdf");
+        String siteURL = "http://site.uri.com";
+        Thesaurus thesaurus = new Thesaurus(mapper, fname, type, dname, thesaurusFile, siteURL);
+        thesaurus.initRepository();
+
+        final Multimap<String, String> allKeywordIds = HashMultimap.create();
+
+        Files.walkFileTree(thesauriDir, new SimpleFileVisitor<Path>(){
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if (file.getFileName().toString().endsWith(".rdf")) {
+                    try {
+                        Path thesaurusFileNamePath = file.getName(file.getNameCount() - 1);
+                        String thesaurusFileName = thesaurusFileNamePath.toString().substring(0, thesaurusFileNamePath.toString()
+                                .lastIndexOf(".rdf"));
+                        Path thesaurusCategory = file.getName(file.getNameCount() - 2);
+                        Path localOrExternal = file.getName(file.getNameCount() - 4);
+                        String thesaurusName = localOrExternal + "." + thesaurusCategory + "." + thesaurusFileName;
+
+                        Element xml = Xml.loadFile(file);
+                        ArrayList<Namespace> nSs = Lists.newArrayList(Namespace.getNamespace("rdf",
+                                "http://www.w3.org/1999/02/22-rdf-syntax-ns#"));
+                        List<?> objects = Xml.selectNodes(xml, "*//node()[normalize-space(@rdf:about) != ''] | node()[normalize-space(@rdf:about) != '']", nSs);
+                        for (Object object : objects) {
+                            if (object instanceof Element) {
+                                Element element = (Element) object;
+                                String about = element.getAttributeValue("about", nSs.get(0));
+                                allKeywordIds.put(thesaurusName, about);
+                            }
+                        }
+                    } catch (JDOMException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                return super.visitFile(file, attrs);
+            }
+        });
+        Map<String, Pair<String, Element>> missingKeywords = Maps.newHashMap();
         try (
                 Statement select = conn.createStatement();
                 PreparedStatement update = conn.prepareStatement("UPDATE metadata SET data=? WHERE id=?")
@@ -117,51 +189,7 @@ public class SharedObjects implements DatabaseMigrationTask {
                                 Element el = (Element) node;
                                 final String atValue = el.getAttributeValue(HREF, NAMESPACE_XLINK);
                                 if (el.getName().equals("identificationInfo")) {
-                                    final List<Namespace> namespaces = Lists.newArrayList(ISO19139Namespaces.GMD);
-                                    @SuppressWarnings("unchecked")
-                                    final List<Element> keywordEls = Lists.newArrayList((List<Element>)
-                                            Xml.selectNodes(el, "*/gmd:descriptiveKeywords", namespaces));
-
-                                    Multimap<String, Keyword> keywordsByThesaurus = LinkedHashMultimap.create();
-                                    int index = Integer.MAX_VALUE;
-                                    Element parent = null;
-                                    for (Element keywordEl : keywordEls) {
-                                        final int currentIndex = keywordEl.getParentElement().indexOf(keywordEl);
-                                        if (currentIndex < index) {
-                                            index = currentIndex;
-                                            parent = keywordEl.getParentElement();
-                                        }
-
-                                        final String attributeValue = keywordEl.getAttributeValue(HREF, NAMESPACE_XLINK);
-                                        if (attributeValue!= null && !attributeValue.trim().isEmpty()) {
-                                            Keyword keyword = new Keyword(attributeValue);
-                                            if (keyword.thesaurus != null) {
-                                                keywordsByThesaurus.put(keyword.thesaurus, keyword);
-                                            }
-                                        }
-                                        keywordEl.detach();
-                                    }
-
-                                    if (parent != null) {
-                                        for (String thesaurus : keywordsByThesaurus.keySet()) {
-                                            HashSet<String> langs = Sets.newHashSet();
-                                            Set<String> ids = Sets.newLinkedHashSet();
-                                            for (Keyword keyword : keywordsByThesaurus.get(thesaurus)) {
-                                                langs.addAll(keyword.langs);
-                                                ids.add(keyword.id);
-                                            }
-
-                                            String keywordIds = Joiner.on(',').join(ids);
-                                            String joinedLangs = Joiner.on(',').join(langs);
-                                            String href = "local://eng/xml.keyword.get?thesaurus=" + thesaurus + "&id=" + keywordIds +
-                                                          "&multiple=true&lang=" + joinedLangs + "&textgroupOnly&skipdescriptivekeywords";
-
-                                            parent.addContent(index, new Element("descriptiveKeywords", GMD).
-                                                    setAttribute(HREF, href, NAMESPACE_XLINK));
-
-                                            index++;
-                                        }
-                                    }
+                                    GeocatXslUtil.mergeKeywords(el, true, allKeywordIds, missingKeywords);
                                 } else if (atValue != null && atValue.contains("xml.format.get")) {
                                     String formatId = extractId(atValue);
                                     final String subtemplateUUID = formatIdMap.get(formatId);
@@ -201,6 +229,27 @@ public class SharedObjects implements DatabaseMigrationTask {
                 update.executeBatch();
             }
         }
+        if (!missingKeywords.isEmpty()) {
+            KeywordBean keyword = new KeywordBean(mapper);
+            for (Map.Entry<String, Pair<String, org.jdom.Element>> entry : missingKeywords.entrySet()) {
+                keyword.setUriCode(URLDecoder.decode(entry.getValue().one(), Constants.ENCODING));
+                List<?> nodes = Xml.selectNodes(entry.getValue().two(), "*//gmd:keyword//gmd:LocalisedCharacterString",
+                        Arrays.asList(GMD, SRV, GCO));
+                for (Object node : nodes) {
+                    Element el = (Element) node;
+                    String locale = el.getAttributeValue("locale");
+                    String textTrim = el.getTextTrim();
+                    if (locale != null && !locale.isEmpty() && !textTrim.isEmpty()) {
+                        keyword.setValue(textTrim, locale);
+                        keyword.setDefinition(textTrim, locale);
+                    }
+                }
+
+                thesaurus.addElement(keyword);
+            }
+
+        }
+        thesaurus.getRepository().shutDown();
     }
 
     private void removeBrokenXLink(Element el) {
@@ -593,59 +642,6 @@ public class SharedObjects implements DatabaseMigrationTask {
 
         public String getXml() {
             return Xml.getString(this.xml);
-        }
-    }
-
-    private static final class Keyword {
-        String thesaurus;
-        String id;
-        final Set<String> langs = Sets.newHashSet();
-
-        public Keyword(String atValue) {
-            final Matcher matcher = PARAMS_PATTERN.matcher(atValue);
-            while(matcher.find()) {
-                String key = matcher.group(2);
-                String value = matcher.group(3);
-
-                switch (key) {
-                    case "thesaurus" :
-                        thesaurus = value;
-                        break;
-                    case "id" :
-                        id = value;
-                        break;
-                    case "locales" :
-                        String[] twoLetterLocales = value.split(",");
-                        for (int i = 0; i < twoLetterLocales.length; i++) {
-                            String twoLetterLocale = twoLetterLocales[i];
-                            switch (twoLetterLocale.toLowerCase()) {
-                                case "de":
-                                case "ge":
-                                    twoLetterLocales[i] = "ger";
-                                    break;
-                                case "fr":
-                                    twoLetterLocales[i] = "fre";
-                                    break;
-                                case "it":
-                                    twoLetterLocales[i] = "ita";
-                                    break;
-                                case "en":
-                                    twoLetterLocales[i] = "eng";
-                                    break;
-                                case "rm":
-                                    twoLetterLocales[i] = "roh";
-                                    break;
-                                default:
-                                    // skip
-                            }
-                        }
-
-                        langs.addAll(Arrays.asList(twoLetterLocales));
-                        break;
-                    default:
-                        break;
-                }
-            }
         }
     }
 }

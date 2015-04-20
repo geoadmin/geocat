@@ -128,6 +128,8 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
+import org.fao.geonet.util.GeocatXslUtil;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -138,7 +140,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.jdom.filter.ElementFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
@@ -160,7 +161,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -767,7 +767,7 @@ public class DataManager implements ApplicationEventPublisherAware {
              */
             metadataEl = Xml.transform(metadataEl, stylePath.resolve("characterstring-to-localisedcharacterstring.xsl"));
 
-            xmlSerializer.update(metadataId, metadataEl, new ISODate().toString(), false, uuid, servContext);
+            getXmlSerializer().update(metadataId, metadataEl, new ISODate().toString(), false, uuid, servContext);
             return metadataEl;
         }
         if (!metadata.getHarvestInfo().isHarvested() && metadata.getDataInfo().getType() == MetadataType.METADATA &&
@@ -780,7 +780,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
                 if (modified != null && !modified.isEmpty()) {
                     metadataEl = modified.get(0);
-                    xmlSerializer.update(metadataId, metadataEl, new ISODate().toString(), false, null, servContext);
+                    getXmlSerializer().update(metadataId, metadataEl, new ISODate().toString(), false, null, servContext);
                 }
             } catch (Exception e) {
                 Log.error(Geonet.DATA_MANAGER, "error while trying to update shared objects of metadata, " + metadataId, e); //DEBUG
@@ -790,7 +790,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             if (xlinks.size() > 0) {
                 moreFields.add(SearchManager.makeField("_hasxlinks", "1", true, true));
                 Processor.processXLink(metadataEl, servContext);
-                xmlSerializer.update(metadataId, metadataEl, new ISODate().toString(), false, null, servContext);
+                getXmlSerializer().update(metadataId, metadataEl, new ISODate().toString(), false, null, servContext);
             } else {
                 moreFields.add(SearchManager.makeField("_hasxlinks", "0", true, true));
             }
@@ -810,7 +810,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 metadataEl = updateFixedInfo(schemaId, Optional.of(Integer.parseInt(metadataId)), uuid, metadataEl, parentUuid,
                         UpdateDatestamp.NO, servContext);
 
-                xmlSerializer.update(metadataId, metadataEl, new ISODate().toString(), false, uuid, servContext);
+                getXmlSerializer().update(metadataId, metadataEl, new ISODate().toString(), false, uuid, servContext);
             } catch (Throwable t) {
                 Log.error(Geonet.DATA_MANAGER, "Error converting Characterstring to PTFreeText elements. For metadata " + metadataId, t);
             }
@@ -3091,6 +3091,12 @@ public class DataManager implements ApplicationEventPublisherAware {
             }
             // END GEOCAT
             result = Xml.transform(result, styleSheet);
+
+            final Element identificationInfo = result.getChild("identificationInfo", ISO19139Namespaces.GMD);
+            if (identificationInfo != null) {
+                GeocatXslUtil.mergeKeywords(identificationInfo, false, null, null);
+            }
+
             return result;
         } else {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {

@@ -1,7 +1,11 @@
 package org.fao.geonet.util;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -20,6 +24,7 @@ import net.sf.saxon.om.SingletonIterator;
 import net.sf.saxon.om.UnfailingIterator;
 import net.sf.saxon.type.Type;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -27,16 +32,21 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.impl.client.HttpClients;
+import org.fao.geonet.Constants;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
+import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
+import org.fao.geonet.utils.Xml;
 import org.geotools.gml3.GMLConfiguration;
 import org.geotools.xml.Encoder;
 import org.geotools.xml.Parser;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.json.XML;
 import org.w3c.dom.DOMImplementation;
@@ -47,13 +57,22 @@ import org.w3c.dom.Node;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
@@ -67,7 +86,11 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import static jeeves.xlink.XLink.HREF;
+import static jeeves.xlink.XLink.NAMESPACE_XLINK;
 import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.ExtentTypeCode;
+import static org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy.NON_VALID_THESAURUS_NAME;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 
 public class GeocatXslUtil {
 
@@ -723,6 +746,198 @@ public class GeocatXslUtil {
             return response.getStatusLine().getStatusCode() != HttpStatus.SC_NOT_FOUND;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    /**
+     * Merges the keywords in the metadata document by thesaurus so that all keywords from the same thesaurus are in the same
+     * keyword block.
+     *  @param el the identification info element
+     * @param removeEmpty if true then any empty descriptiveKeyword block (by empty I mean no keywords for that thesaurus) then remove
+     *                    the block
+     * @param thesaurusKeys should be null except for SharedObjects.  All the keywords in the system.  Used to check if a keyword is valid.
+     * @param missingKeywords
+     */
+    public static void mergeKeywords(
+            org.jdom.Element el, boolean removeEmpty,Multimap<String, String> thesaurusKeys, Map<String,
+            Pair<String, org.jdom.Element>> missingKeywords) throws JDOMException {
+        final List<Namespace> namespaces = Lists.newArrayList(ISO19139Namespaces.GMD);
+        @SuppressWarnings("unchecked")
+        final List<org.jdom.Element> keywordEls = Lists.newArrayList((List<org.jdom.Element>)
+                Xml.selectNodes(el, "*/gmd:descriptiveKeywords", namespaces));
+
+        Multimap<String, Keyword> keywordsByThesaurus = LinkedHashMultimap.create();
+        int index = Integer.MAX_VALUE;
+        org.jdom.Element parent = null;
+        for (org.jdom.Element keywordEl : keywordEls) {
+            final int currentIndex = keywordEl.getParentElement().indexOf(keywordEl);
+            if (currentIndex < index) {
+                index = currentIndex;
+                parent = keywordEl.getParentElement();
+            }
+
+            final String attributeValue = keywordEl.getAttributeValue(HREF, NAMESPACE_XLINK);
+            if (attributeValue!= null && !attributeValue.trim().isEmpty()) {
+                Keyword keyword = new Keyword(attributeValue);
+                if (keyword.thesaurus != null && keyword.id != null && !keyword.id.isEmpty()) {
+                    // remove after 3.0 is deployed into production
+                    ensureKeywordExistsInThesauri(thesaurusKeys, missingKeywords, keywordsByThesaurus, keywordEl, keyword);
+                    if (!keyword.id.isEmpty()) {
+                        keywordsByThesaurus.put(keyword.thesaurus, keyword);
+                    }
+                }
+            }
+            keywordEl.detach();
+        }
+
+        if (parent != null) {
+            for (String thesaurus : keywordsByThesaurus.keySet()) {
+                Set<String> ids = Sets.newLinkedHashSet();
+                for (Keyword keyword : keywordsByThesaurus.get(thesaurus)) {
+                    if (keyword.id != null) {
+                        for (String id : keyword.id) {
+                            if (id != null && !id.trim().isEmpty()) {
+                                ids.add(id);
+                            }
+                        }
+                    }
+                }
+
+                if (!removeEmpty || !ids.isEmpty()) {
+                    String keywordIds = Joiner.on(',').join(ids);
+                    String joinedLangs = "eng,ger,ita,fre,roh";
+                    String href = "local://eng/xml.keyword.get?thesaurus=" + thesaurus + "&id=" + keywordIds +
+                                  "&multiple=true&lang=" + joinedLangs + "&textgroupOnly&skipdescriptivekeywords";
+
+                    parent.addContent(index, new org.jdom.Element("descriptiveKeywords", GMD).
+                            setAttribute(HREF, href, NAMESPACE_XLINK));
+
+                    index++;
+                }
+            }
+        }
+    }
+
+    private static void ensureKeywordExistsInThesauri(Multimap<String, String> thesaurusKeys, Map<String, Pair<String, org.jdom.Element>>
+            missingKeywords, Multimap<String, Keyword> keywordsByThesaurus, org.jdom.Element keywordEl, Keyword keyword) {
+        try {
+            final Iterator<String> iterator = keyword.id.iterator();
+            while (iterator.hasNext()) {
+                String keywordId = iterator.next();
+                if (thesaurusKeys != null) {
+                    Collection<String> keywordsForThesaurus = thesaurusKeys.get(keyword.thesaurus);
+                    String decodedId = URLDecoder.decode(keywordId, Constants.ENCODING);
+
+                    if (keywordsForThesaurus == null || !keywordsForThesaurus.contains(decodedId)) {
+                        if (keywordsForThesaurus != null && decodedId.startsWith("file:")) {
+                            List<String> split = Arrays.asList(decodedId.split("/"));
+                            boolean found = false;
+                            for (int i = 1; !found && i < split.size(); i++) {
+                                String idFrag = Joiner.on("/").join(split.subList(split.size() - i, split.size()));
+                                if (keywordsForThesaurus.contains(idFrag)) {
+                                    if (SystemUtils.IS_OS_WINDOWS) {
+                                        iterator.remove();
+                                        String[] thesPars = keyword.thesaurus.split("\\.");
+                                        String path = System.getProperty("geonetwork.dir") + "/config/codelist/" + thesPars[0] +
+                                                      "/thesauri/" + "/" + thesPars[1] + "/" + thesPars[2] + ".rdf";
+
+                                        String newId = "file://" + Paths.get(path).toString() + "/" + idFrag;
+                                        Keyword newKeyword = new Keyword(keyword.thesaurus, Lists.newArrayList(URLEncoder.encode(newId, Constants.ENCODING)));
+                                        keywordsByThesaurus.put(keyword.thesaurus, newKeyword);
+                                    }
+                                    found = true;
+                                }
+                            }
+                            if (found) {
+                                continue;
+                            }
+                        }
+
+                        if (missingKeywords.containsKey(keywordId)) {
+                            String newId = missingKeywords.get(keywordId).one();
+                            Keyword newKeyword = new Keyword(NON_VALID_THESAURUS_NAME, Lists.newArrayList(newId));
+                            keywordsByThesaurus.put(NON_VALID_THESAURUS_NAME, newKeyword);
+                        } else {
+                            String newId = URLEncoder.encode(KeywordsStrategy.NAMESPACE + UUID.randomUUID(), Constants.ENCODING);
+                            missingKeywords.put(keywordId, Pair.read(newId, keywordEl));
+                            iterator.remove();
+                            Keyword newKeyword = new Keyword(NON_VALID_THESAURUS_NAME, Lists.newArrayList(newId));
+                            keywordsByThesaurus.put(NON_VALID_THESAURUS_NAME, newKeyword);
+                        }
+                    }
+                }
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
+}
+
+    private static final class Keyword {
+        private final static Pattern PARAMS_PATTERN = Pattern.compile("(\\?|\\&)([^=]+)=([^\\&]+)");
+        String thesaurus;
+        Collection<String> id;
+        final Set<String> langs = Sets.newHashSet();
+
+        public Keyword(String thesaurus, Collection<String> id) {
+            this.thesaurus = thesaurus;
+            this.id = id;
+        }
+
+        public Keyword(String atValue) {
+            String[] twoLetterLocales;
+            final Matcher matcher = PARAMS_PATTERN.matcher(atValue);
+            while(matcher.find()) {
+                String key = matcher.group(2);
+                String value = matcher.group(3);
+
+                switch (key) {
+                    case "thesaurus" :
+                        thesaurus = value;
+                        break;
+                    case "id" :
+                        id = Lists.newArrayList(value.split(","));
+                        break;
+                    case "lang" :
+                        twoLetterLocales = value.split(",");
+                        langs.addAll(Arrays.asList(twoLetterLocales));
+                        break;
+                    case "locales" :
+                        twoLetterLocales = value.split(",");
+                        for (int i = 0; i < twoLetterLocales.length; i++) {
+                            String twoLetterLocale = twoLetterLocales[i];
+                            if (twoLetterLocale.length() > 2) {
+                                twoLetterLocale = twoLetterLocale.substring(0, 2);
+                            }
+
+                            switch (twoLetterLocale.toLowerCase()) {
+                                case "de":
+                                case "ge":
+                                    twoLetterLocales[i] = "ger";
+                                    break;
+                                case "fr":
+                                    twoLetterLocales[i] = "fre";
+                                    break;
+                                case "it":
+                                    twoLetterLocales[i] = "ita";
+                                    break;
+                                case "en":
+                                    twoLetterLocales[i] = "eng";
+                                    break;
+                                case "rm":
+                                    twoLetterLocales[i] = "roh";
+                                    break;
+                                default:
+                                    // skip
+                            }
+                        }
+
+                        langs.addAll(Arrays.asList(twoLetterLocales));
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 }
