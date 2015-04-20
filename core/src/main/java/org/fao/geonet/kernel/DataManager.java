@@ -542,11 +542,6 @@ public class DataManager implements ApplicationEventPublisherAware {
 
             // get metadata, extracting and indexing any xlinks
             Element md   = getXmlSerializer().selectNoXLinkResolver(metadataId, true);
-            // GEOCAT
-            if (getXmlSerializer().resolveXLinks()) {
-                Processor.processXLink(md, servContext);
-            }
-            // END GEOCAT
 
             fullMd = getMetadataRepository().findOne(id$);
 
@@ -748,7 +743,6 @@ public class DataManager implements ApplicationEventPublisherAware {
     }
 
     // GEOCAT
-
     private Element indexMetadataProcessSharedObjects(String metadataId, boolean processSharedObjects, boolean fastIndex,
                                                       Vector<Element> moreFields, Element metadataEl,
                                                       Metadata metadata) throws Exception {
@@ -760,6 +754,9 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
 
         if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
+            if (getXmlSerializer().resolveXLinks()) {
+                Processor.processXLink(metadataEl, servContext);
+            }
 
             /*
              * Geocat doesn't permit multilingual elements to have characterString elements only LocalizedString elements.
@@ -770,6 +767,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             getXmlSerializer().update(metadataId, metadataEl, new ISODate().toString(), false, uuid, servContext);
             return metadataEl;
         }
+
         if (!metadata.getHarvestInfo().isHarvested() && metadata.getDataInfo().getType() == MetadataType.METADATA &&
             processSharedObjects) {
             try {
@@ -780,7 +778,6 @@ public class DataManager implements ApplicationEventPublisherAware {
 
                 if (modified != null && !modified.isEmpty()) {
                     metadataEl = modified.get(0);
-                    getXmlSerializer().update(metadataId, metadataEl, new ISODate().toString(), false, null, servContext);
                 }
             } catch (Exception e) {
                 Log.error(Geonet.DATA_MANAGER, "error while trying to update shared objects of metadata, " + metadataId, e); //DEBUG
@@ -790,7 +787,6 @@ public class DataManager implements ApplicationEventPublisherAware {
             if (xlinks.size() > 0) {
                 moreFields.add(SearchManager.makeField("_hasxlinks", "1", true, true));
                 Processor.processXLink(metadataEl, servContext);
-                getXmlSerializer().update(metadataId, metadataEl, new ISODate().toString(), false, null, servContext);
             } else {
                 moreFields.add(SearchManager.makeField("_hasxlinks", "0", true, true));
             }
@@ -809,14 +805,18 @@ public class DataManager implements ApplicationEventPublisherAware {
                 String parentUuid = null;
                 metadataEl = updateFixedInfo(schemaId, Optional.of(Integer.parseInt(metadataId)), uuid, metadataEl, parentUuid,
                         UpdateDatestamp.NO, servContext);
-
-                getXmlSerializer().update(metadataId, metadataEl, new ISODate().toString(), false, uuid, servContext);
             } catch (Throwable t) {
                 Log.error(Geonet.DATA_MANAGER, "Error converting Characterstring to PTFreeText elements. For metadata " + metadataId, t);
             }
         }
 
         // GEOCAT
+        if (getXmlSerializer().resolveXLinks()) {
+            Processor.processXLink(metadataEl, servContext);
+        }
+
+        getXmlSerializer().update(metadataId, metadataEl, new ISODate().toString(), false, null, servContext);
+
         final Specification<MetadataValidation> mvSpec = MetadataValidationSpecs.hasMetadataId(Integer.valueOf(metadataId));
         final String schema = metadata.getDataInfo().getSchemaId();
 
@@ -1533,6 +1533,8 @@ public class DataManager implements ApplicationEventPublisherAware {
             // And register the metadata to be indexed in the near future
             final IndexingList list = srvContext.getBean(IndexingList.class);
             list.add(iId);
+
+
         } else {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "GeoNetwork is operating in read-only mode. IncreasePopularity is skipped.");

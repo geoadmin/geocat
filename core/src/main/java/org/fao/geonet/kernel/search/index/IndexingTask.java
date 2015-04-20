@@ -23,6 +23,8 @@
 
 package org.fao.geonet.kernel.search.index;
 
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -33,6 +35,7 @@ import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.springframework.transaction.TransactionStatus;
 
 import java.io.IOException;
 import java.util.Date;
@@ -58,28 +61,37 @@ public class IndexingTask extends QuartzJobBean {
 
     private void indexRecords() {
         ApplicationContextHolder.set(applicationContext);
-        IndexingList list = applicationContext.getBean(IndexingList.class);
-        Set<Integer> metadataIdentifiers = list.getIdentifiers();
-        if (metadataIdentifiers.size() > 0) {
-            if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                Log.debug(Geonet.INDEX_ENGINE, "Indexing task / List of records to index: "
-                        + metadataIdentifiers.toString() + ".");
-            }
+        TransactionManager.runInTransaction("IndexingTask", applicationContext,
+                TransactionManager.TransactionRequirement.CREATE_NEW,
+                TransactionManager.CommitBehavior.ALWAYS_COMMIT, false, new TransactionTask<Void>() {
+                    @Override
+                    public Void doInTransaction(TransactionStatus transaction) throws Throwable {
+                        IndexingList list = applicationContext.getBean(IndexingList.class);
+                        Set<Integer> metadataIdentifiers = list.getIdentifiers();
+                        if (metadataIdentifiers.size() > 0) {
+                            if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+                                Log.debug(Geonet.INDEX_ENGINE, "Indexing task / List of records to index: "
+                                                               + metadataIdentifiers.toString() + ".");
+                            }
 
-            for (Integer metadataIdentifier : metadataIdentifiers) {
-                try {
-                    _dataManager.indexMetadata(String.valueOf(metadataIdentifier), false);
-                } catch (Exception e) {
-                    Log.error(Geonet.INDEX_ENGINE, "Indexing task / An error happens indexing the metadata "
-                            + metadataIdentifier + ". Error: " + e.getMessage(), e);
-                }
-            }
-            try {
-                this.applicationContext.getBean(SearchManager.class).forceIndexChanges();
-            } catch (IOException e) {
-                Log.error(Geonet.INDEX_ENGINE, "Error forcing index changes", e);
-            }
-        }
+                            for (Integer metadataIdentifier : metadataIdentifiers) {
+                                try {
+                                    _dataManager.indexMetadata(String.valueOf(metadataIdentifier), false);
+                                } catch (Exception e) {
+                                    Log.error(Geonet.INDEX_ENGINE, "Indexing task / An error happens indexing the metadata "
+                                                                   + metadataIdentifier + ". Error: " + e.getMessage(), e);
+                                }
+                            }
+
+                            try {
+                                applicationContext.getBean(SearchManager.class).forceIndexChanges();
+                            } catch (IOException e) {
+                                Log.error(Geonet.INDEX_ENGINE, "Error forcing index changes", e);
+                            }
+                        }
+                        return null;
+                    }
+                });
     }
 
     @Override
