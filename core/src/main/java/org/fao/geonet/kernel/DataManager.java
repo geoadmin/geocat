@@ -827,7 +827,6 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
         // END GEOCAT
 
-
         return metadataEl;
     }
 

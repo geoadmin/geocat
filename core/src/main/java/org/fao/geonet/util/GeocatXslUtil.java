@@ -857,6 +857,7 @@ public class GeocatXslUtil {
                             String newId = missingKeywords.get(keywordId).one();
                             Keyword newKeyword = new Keyword(NON_VALID_THESAURUS_NAME, Lists.newArrayList(newId));
                             keywordsByThesaurus.put(NON_VALID_THESAURUS_NAME, newKeyword);
+                            iterator.remove();
                         } else {
                             String newId = URLEncoder.encode(KeywordsStrategy.NAMESPACE + UUID.randomUUID(), Constants.ENCODING);
                             missingKeywords.put(keywordId, Pair.read(newId, keywordEl));
@@ -870,8 +871,7 @@ public class GeocatXslUtil {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
-
-}
+    }
 
     private static final class Keyword {
         private final static Pattern PARAMS_PATTERN = Pattern.compile("(\\?|\\&)([^=]+)=([^\\&]+)");

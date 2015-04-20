@@ -189,7 +189,7 @@
         <appender-ref ref="fileAppender" />
     </logger>
     <logger name="org.hibernate.SQL">
-        <level value="TRACE" />
+        <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
