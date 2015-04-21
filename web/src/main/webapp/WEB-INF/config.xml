@@ -32,7 +32,7 @@
 		  <call name="systemConfig" class="org.fao.geonet.services.config.Get" />
 			<call name="results" class="org.fao.geonet.guiservices.search.GetResultsInfo" />
 			<call name="schemalist" class="org.fao.geonet.guiservices.schemas.Get" />
-			<call name="svnmanager" class="org.fao.geonet.guiservices.util.GetSvnDetails"/>
+			<!--<call name="svnmanager" class="org.fao.geonet.guiservices.util.GetSvnDetails"/>-->
 
 			<!-- this service adds labels and codelists from all schemas -->
 			<call name="schemas" class="org.fao.geonet.guiservices.schemas.GetSchemaInfo" />
