@@ -152,10 +152,16 @@ attached it to the metadata for data.
                         </xsl:if>
 
                         <xsl:if test="$name != ''">
-                          <gmd:name>
-                            <gco:CharacterString>
-                              <xsl:value-of select="$name"/>
-                            </gco:CharacterString>
+                          <gmd:name xsi:type="gmd:PT_FreeText_PropertyType">
+                            <gmd:PT_FreeText>
+                              <xsl:for-each select="tokenize($name, $separator)">
+                                <xsl:variable name="nameLang" select="substring-before(., '#')"></xsl:variable>
+                                <xsl:variable name="nameValue" select="substring-after(., '#')"></xsl:variable>
+                                <gmd:textGroup>
+                                  <gmd:LocalisedCharacterString locale="{concat('#', $nameLang)}"><xsl:value-of select="$nameValue" /></gmd:LocalisedCharacterString>
+                                </gmd:textGroup>
+                              </xsl:for-each>
+                            </gmd:PT_FreeText>
                           </gmd:name>
                         </xsl:if>
 
