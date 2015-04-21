@@ -235,7 +235,6 @@
       <name>gmd:transformationDimensionDescription</name>
       <name>gmd:orientationParameterDescription</name>
       <name parent="gmd:MD_Format">gmd:name</name>
-      <name parent="gmd:CI_OnlineResource">gmd:name</name>
       <name ancestor="gmd:thesaurusName">gmd:code</name>
       <name>gmd:language</name>
       <name>srv:name</name>
