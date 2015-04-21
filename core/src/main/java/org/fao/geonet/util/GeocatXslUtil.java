@@ -37,6 +37,7 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.geocat.kernel.extent.ExtentHelper;
 import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
+import org.fao.geonet.kernel.AllThesaurus;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces;
@@ -66,6 +67,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -783,7 +785,22 @@ public class GeocatXslUtil {
                     // remove after 3.0 is deployed into production
                     ensureKeywordExistsInThesauri(thesaurusKeys, missingKeywords, keywordsByThesaurus, keywordEl, keyword);
                     if (!keyword.id.isEmpty()) {
-                        keywordsByThesaurus.put(keyword.thesaurus, keyword);
+                        if (keyword.thesaurus.equals(AllThesaurus.ALL_THESAURUS_KEY)) {
+                            for (String id : keyword.id) {
+                                AllThesaurus.DecomposedAllUri decomposed = new AllThesaurus.DecomposedAllUri(id);
+                                String keywordId = null;
+                                try {
+                                    keywordId = URLEncoder.encode(decomposed.keywordUri, Constants.ENCODING);
+                                } catch (UnsupportedEncodingException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                keywordsByThesaurus.put(decomposed.thesaurusKey,
+                                        new Keyword(
+                                                decomposed.thesaurusKey, Collections.singleton(keywordId)));
+                            }
+                        } else {
+                            keywordsByThesaurus.put(keyword.thesaurus, keyword);
+                        }
                     }
                 }
             }
@@ -803,7 +820,8 @@ public class GeocatXslUtil {
                     }
                 }
 
-                if (!removeEmpty || !ids.isEmpty()) {
+                boolean canRemoveEmpty = removeEmpty || thesaurus.equals(AllThesaurus.ALL_THESAURUS_KEY);
+                if (!canRemoveEmpty || !ids.isEmpty()) {
                     String keywordIds = Joiner.on(',').join(ids);
                     String joinedLangs = "eng,ger,ita,fre,roh";
                     String href = "local://eng/xml.keyword.get?thesaurus=" + thesaurus + "&id=" + keywordIds +
@@ -820,6 +838,9 @@ public class GeocatXslUtil {
 
     private static void ensureKeywordExistsInThesauri(Multimap<String, String> thesaurusKeys, Map<String, Pair<String, org.jdom.Element>>
             missingKeywords, Multimap<String, Keyword> keywordsByThesaurus, org.jdom.Element keywordEl, Keyword keyword) {
+        if (keywordsByThesaurus == null || missingKeywords == null) {
+            return;
+        }
         try {
             final Iterator<String> iterator = keyword.id.iterator();
             while (iterator.hasNext()) {
@@ -886,7 +907,7 @@ public class GeocatXslUtil {
 
         public Keyword(String atValue) {
             String[] twoLetterLocales;
-            final Matcher matcher = PARAMS_PATTERN.matcher(atValue);
+            final Matcher matcher = PARAMS_PATTERN.matcher(atValue.replace("&amp;", "&"));
             while(matcher.find()) {
                 String key = matcher.group(2);
                 String value = matcher.group(3);

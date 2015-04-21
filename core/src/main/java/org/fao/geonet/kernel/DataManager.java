@@ -128,7 +128,6 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.util.GeocatXslUtil;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
@@ -154,6 +153,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.Assert;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -181,6 +181,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.Root;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
@@ -1813,6 +1814,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     public Element getGeocatMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean keepXlinkAttributes) throws Exception {
         // GEOCAT
         boolean withEditorValidationErrors = false;
+        String metadataSchema = getMetadataSchema(id);
         // END GEOCAT
 
         boolean doXLinks = getXmlSerializer().resolveXLinks();
@@ -1830,6 +1832,11 @@ public class DataManager implements ApplicationEventPublisherAware {
             if (withEditorValidationErrors) {
                 version = doValidate(srvContext, schema, id, metadataXml, srvContext.getLanguage(), forEditing).two();
             } else {
+                // GEOCAT
+                if (forEditing && metadataSchema.equals("iso19139.che")) {
+                    addAllThesaurusBlock(metadataXml, metadataSchema);
+                }
+                // END GEOCAT
                 editLib.expandElements(schema, metadataXml);
                 version = editLib.getVersionForEditing(schema, id, metadataXml);
             }
@@ -1842,9 +1849,9 @@ public class DataManager implements ApplicationEventPublisherAware {
                 }
             }
             // GEOCAT
-            if( getMetadataSchema(id).equals("iso19139.che")) {
+            if( metadataSchema.equals("iso19139.che")) {
                 metadataXml = Xml.transform(metadataXml, stylePath.resolve("add-charstring.xsl"));
-        }
+            }
             // END GEOCAT
         }
 
@@ -1856,6 +1863,71 @@ public class DataManager implements ApplicationEventPublisherAware {
     }
 
     // GEOCAT
+
+    /**
+     * Add a descriptiveKeyword block with the ALL thesaurus when editing so that there is always a search box for all keywords
+     * as the first keyword block in editor.
+     */
+    @SuppressWarnings("unchecked")
+    private void addAllThesaurusBlock(Element metadataXml, String metadataSchema) throws IOException, JDOMException {
+        Element child = metadataXml.getChild("identificationInfo", GMD);
+        if (child != null) {
+            List children = child.getChildren();
+            if (!children.isEmpty()) {
+                Element identification = (Element) children.get(0);
+                List<Element> descriptiveKeywords = identification.getChildren("descriptiveKeywords", GMD);
+                Element allKeywords = Xml.loadString(
+                        "<gmd:descriptiveKeywords "
+                        + "xmlns:gco=\"http://www.isotc211.org/2005/gco\" "
+                        + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                        + "xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" "
+                        + "xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n"
+                        + "   <gmd:MD_Keywords>\n"
+                        + "      <gmd:type>\n"
+                        + "         <gmd:MD_KeywordTypeCode codeList=\"http://www.isotc211.org/2005/resources/codeList"
+                        + ".xml#MD_KeywordTypeCode\" codeListValue=\"none\"/>\n"
+                        + "      </gmd:type>\n"
+                        + "      <gmd:thesaurusName>\n"
+                        + "         <gmd:CI_Citation>\n"
+                        + "            <gmd:title xsi:type=\"gmd:PT_FreeText_PropertyType\">\n"
+                        + "               <gmd:PT_FreeText>\n"
+                        + "                  <gmd:textGroup>\n"
+                        + "                     <gmd:LocalisedCharacterString locale=\"#EN\">All Keywords</gmd:LocalisedCharacterString>\n"
+                        + "                  </gmd:textGroup>\n"
+                        + "                  <gmd:textGroup>\n"
+                        + "                     <gmd:LocalisedCharacterString locale=\"#DE\">Alle Schlüsselwörter</gmd:LocalisedCharacterString>\n"
+                        + "                  </gmd:textGroup>\n"
+                        + "                  <gmd:textGroup>\n"
+                        + "                     <gmd:LocalisedCharacterString locale=\"#IT\">Tutte le Parole chiave</gmd:LocalisedCharacterString>\n"
+                        + "                  </gmd:textGroup>\n"
+                        + "                  <gmd:textGroup>\n"
+                        + "                     <gmd:LocalisedCharacterString locale=\"#FR\">Tous les Mots-clés</gmd:LocalisedCharacterString>\n"
+                        + "                  </gmd:textGroup>\n"
+                        + "               </gmd:PT_FreeText>\n"
+                        + "            </gmd:title>\n"
+                        + "            <gmd:identifier>\n"
+                        + "               <gmd:MD_Identifier>\n"
+                        + "                  <gmd:code>\n"
+                        + "                     <gmx:Anchor xmlns:gmx=\"http://www.isotc211.org/2005/gmx\" xlink:href=\"http://www"
+                        + ".geocat.ch/geonetwork/srv/eng//thesaurus.download?ref=external.none.allThesaurus\">external.none.allThesaurus</gmx:Anchor>\n"
+                        + "                  </gmd:code>\n"
+                        + "               </gmd:MD_Identifier>\n"
+                        + "            </gmd:identifier>\n"
+                        + "         </gmd:CI_Citation>\n"
+                        + "      </gmd:thesaurusName>\n"
+                        + "   </gmd:MD_Keywords>\n"
+                        + "</gmd:descriptiveKeywords>", false);
+                if (!descriptiveKeywords.isEmpty()) {
+                    int positionToAdd = identification.indexOf(descriptiveKeywords.get(0));
+                    identification.addContent(positionToAdd, allKeywords);
+                } else {
+                    MetadataSchema schema = getSchemaManager().getSchema(metadataSchema);
+                    String xpath = identification.getParentElement().getQualifiedName() + "/" + identification.getQualifiedName();
+                    editLib.addElementOrFragmentFromXpath(metadataXml, schema, xpath, new AddElemValue(allKeywords), false);
+                }
+            }
+        }
+    }
 
     public Element processSharedObjects(String id, Element md, String lang) throws Exception {
         ProcessParams processParameters = new ProcessParams(ReusableObjectLogger.THREAD_SAFE_LOGGER, id, md, md, false, lang, servContext);
@@ -3093,7 +3165,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             // END GEOCAT
             result = Xml.transform(result, styleSheet);
 
-            final Element identificationInfo = result.getChild("identificationInfo", ISO19139Namespaces.GMD);
+            final Element identificationInfo = result.getChild("identificationInfo", GMD);
             if (identificationInfo != null) {
                 GeocatXslUtil.mergeKeywords(identificationInfo, false, null, null);
             }

@@ -224,11 +224,13 @@ public abstract class SharedObjectStrategy implements FindMetadataReferences {
     }
 
     protected final void sortResults(Element search, String searchTerm) {
-        @SuppressWarnings("unchecked")
-        java.util.List<Element> children = Lists.newArrayList(search.getChildren());
-        Collections.sort(children, new ElementComparator(searchTerm));
-        search.removeContent();
-        search.addContent(children);
+        if (search.getContentSize() < 1000) {
+            @SuppressWarnings("unchecked")
+            java.util.List<Element> children = Lists.newArrayList(search.getChildren());
+            Collections.sort(children, new ElementComparator(searchTerm));
+            search.removeContent();
+            search.addContent(children);
+        }
     }
 
     protected static class ElementComparator implements Comparator<Element> {
