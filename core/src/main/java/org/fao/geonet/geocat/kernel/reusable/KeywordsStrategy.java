@@ -227,6 +227,7 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
             addSearchResults(thesaurusName, keywords, searcher, !thesaurusName.equals(NON_VALID_THESAURUS_NAME));
         }
 
+        sortResults(keywords, null);
         return keywords;
     }
 
@@ -287,6 +288,7 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
         doSearch(session, search, results, searcher, GEOCAT_THESAURUS_NAME, true, maxResults);
         doSearch(session, search, results, searcher, NON_VALID_THESAURUS_NAME, false, maxResults);
 
+        sortResults(results, search);
         return results;
     }
 

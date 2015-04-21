@@ -55,7 +55,6 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -346,7 +345,7 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
             booleanQuery.add(new TermQuery(new Term(LUCENE_SCHEMA_FIELD, ISO19139cheSchemaPlugin.IDENTIFIER)), BooleanClause.Occur.MUST);
             booleanQuery.add(new TermQuery(new Term(LUCENE_SCHEMA_FIELD, ISO19139cheSchemaPlugin.IDENTIFIER)), BooleanClause.Occur.MUST);
 
-            int finalMaxResults = maxResults < 1 ? 30000 : maxResults * 5;
+            int finalMaxResults = 30000;
             final TopFieldDocs topDocs = searcher.search(booleanQuery, finalMaxResults, new Sort(new SortField(LUCENE_EXTRA_FIELD,
                     SortField.Type.STRING, true)));
 
@@ -362,47 +361,13 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
                     descDatas.put(uuid, new DescData(language, uuid, docLang, doc));
                 }
             }
-            Set<Element> records = Sets.newTreeSet(new Comparator<Element>() {
-                @Override
-                public int compare(Element o1, Element o2) {
-                    boolean valid1 = Boolean.parseBoolean(o1.getChildText(REPORT_VALIDATED).trim());
-                    String desc1 = o1.getChildText(REPORT_DESC).trim();
-                    String uuid1 = o1.getChildText(REPORT_ID);
-
-                    boolean valid2 = Boolean.parseBoolean(o2.getChildText(REPORT_VALIDATED).trim());
-                    String desc2 = o2.getChildText(REPORT_DESC).trim();
-                    String uuid2 = o2.getChildText(REPORT_ID);
-
-                    if (valid1 != valid2) {
-                        if (valid1) {
-                            return -1;
-                        } else {
-                            return 1;
-                        }
-                    }
-
-                    if (desc1.startsWith("(")) {
-                        return 1;
-                    }
-                    if (desc2.startsWith("(")) {
-                        return -1;
-                    }
-
-                    int descCompare = desc1.compareToIgnoreCase(desc2);
-
-                    if (descCompare == 0) {
-                        return uuid1.compareToIgnoreCase(uuid2);
-                    }
-
-                    return descCompare;
-                }
-            });
+            Set<Element> records = Sets.newTreeSet(new ElementComparator(searchTerm));
             for (DescData descData : descDatas.values()) {
                 String desc = describer.apply(descData);
                 String uuid = descData.uuid;
                 final Document doc = descData.langToDoc.values().iterator().next();
 
-                if (searchTerm == null || (desc != null && desc.toLowerCase().contains(searchTerm.toLowerCase()))) {
+                if (searchTerm == null || (desc != null && normalizeDesc(desc).contains(normalizeDesc(searchTerm)))) {
                     Element e = new Element(REPORT_ELEMENT);
                     String id = doc.get("_id");
                     String url = XLink.LOCAL_PROTOCOL + "catalog.edit#/metadata/" + id + "/tab/simple";
@@ -431,6 +396,7 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
 
         return results;
     }
+
     private String getSourceId() {
         return this.settingRepository.findOne(SettingManager.SYSTEM_SITE_SITE_ID_PATH).getValue();
     }

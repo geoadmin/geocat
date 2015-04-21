@@ -24,6 +24,7 @@
 package org.fao.geonet.geocat.kernel.reusable;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import jeeves.server.UserSession;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
@@ -34,6 +35,7 @@ import org.jdom.Element;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 
 import static org.apache.lucene.search.WildcardQuery.WILDCARD_STRING;
@@ -176,5 +178,111 @@ public abstract class SharedObjectStrategy implements FindMetadataReferences {
     public Query createFindMetadataQuery(String field, String concreteId, boolean isValidated) {
         Term term = new Term(field, WILDCARD_STRING + "id=" + concreteId + WILDCARD_STRING);
         return new WildcardQuery(term);
+    }
+
+
+    protected static String normalizeDesc(String rawDesc) {
+        String lowercase = rawDesc.toLowerCase();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < lowercase.length(); i++) {
+            char currChar = lowercase.charAt(i);
+            switch (currChar) {
+                case 'ö':
+                case 'ò':
+                case 'ô':
+                    builder.append('o');
+                    break;
+                case 'ü':
+                case 'ù':
+                case 'û':
+                    builder.append('u');
+                    break;
+                case 'é':
+                case 'ê':
+                case 'è':
+                    builder.append('e');
+                    break;
+                case 'ä':
+                case 'à':
+                case 'â':
+                case 'á':
+                    builder.append('a');
+                    break;
+                case 'ç':
+                    builder.append('c');
+                    break;
+                case 'ì':
+                case 'î':
+                    builder.append('i');
+                    break;
+                default:
+                    builder.append(currChar);
+                    break;
+            }
+        }
+        return builder.toString().trim();
+    }
+
+    protected final void sortResults(Element search, String searchTerm) {
+        @SuppressWarnings("unchecked")
+        java.util.List<Element> children = Lists.newArrayList(search.getChildren());
+        Collections.sort(children, new ElementComparator(searchTerm));
+        search.removeContent();
+        search.addContent(children);
+    }
+
+    protected static class ElementComparator implements Comparator<Element> {
+        private final String lowerCaseSearchTerm;
+
+        public ElementComparator(String searchTerm) {
+            this.lowerCaseSearchTerm = searchTerm != null ? searchTerm.toLowerCase() : null;
+        }
+
+        @Override
+        public int compare(Element o1, Element o2) {
+            boolean valid1 = Boolean.parseBoolean(o1.getChildText(REPORT_VALIDATED).trim());
+            String desc1 = getDesc(o1);
+            String uuid1 = o1.getChildText(REPORT_ID);
+
+            boolean valid2 = Boolean.parseBoolean(o2.getChildText(REPORT_VALIDATED).trim());
+            String desc2 = getDesc(o2);
+            String uuid2 = o2.getChildText(REPORT_ID);
+
+            if (valid1 != valid2) {
+                if (valid1) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+
+            if (desc1.startsWith("(")) {
+                return 1;
+            }
+            if (desc2.startsWith("(")) {
+                return -1;
+            }
+
+            if (lowerCaseSearchTerm != null) {
+                int sim1 = desc1.startsWith(lowerCaseSearchTerm) ? 1 : 0;
+                int sim2 = desc2.startsWith(lowerCaseSearchTerm) ? 1 : 0;
+                if (sim1 != sim2) {
+                    return sim2 - sim1;
+                }
+            }
+
+            int descCompare = desc1.compareTo(desc2);
+
+            if (descCompare == 0) {
+                return uuid1.compareToIgnoreCase(uuid2);
+            }
+
+            return descCompare;
+        }
+
+        private String getDesc(Element o1) {
+            String rawDesc = o1.getChildText(SharedObjectStrategy.REPORT_DESC);
+            return normalizeDesc(rawDesc);
+        }
     }
 }

@@ -534,6 +534,8 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
                 features.close();
             }
         }
+
+        sortResults(extents, null);
         return extents;
 
     }
@@ -1198,6 +1200,8 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
             searchFeatureStore(session, search, factory2, results, _extentMan.getSource().getFeatureType(XLINK_TYPE), true, maxResults);
             searchFeatureStore(session, search, factory2, results, _extentMan.getSource().getFeatureType(NON_VALIDATED_TYPE), false, maxResults);
         }
+
+        sortResults(results, search);
         return results;
     }
 
