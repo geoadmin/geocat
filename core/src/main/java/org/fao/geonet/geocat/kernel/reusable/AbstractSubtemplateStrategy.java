@@ -33,6 +33,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
+import org.fao.geonet.kernel.search.keyword.KeywordSort;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
@@ -367,7 +368,7 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
                 String uuid = descData.uuid;
                 final Document doc = descData.langToDoc.values().iterator().next();
 
-                if (searchTerm == null || (desc != null && normalizeDesc(desc).contains(normalizeDesc(searchTerm)))) {
+                if (searchTerm == null || (desc != null && KeywordSort.normalizeDesc(desc).contains(KeywordSort.normalizeDesc(searchTerm)))) {
                     Element e = new Element(REPORT_ELEMENT);
                     String id = doc.get("_id");
                     String url = XLink.LOCAL_PROTOCOL + "catalog.edit#/metadata/" + id + "/tab/simple";

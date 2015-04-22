@@ -30,6 +30,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.search.keyword.KeywordSort;
 import org.jdom.Element;
 
 import java.io.UnsupportedEncodingException;
@@ -181,48 +182,6 @@ public abstract class SharedObjectStrategy implements FindMetadataReferences {
     }
 
 
-    protected static String normalizeDesc(String rawDesc) {
-        String lowercase = rawDesc.toLowerCase();
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < lowercase.length(); i++) {
-            char currChar = lowercase.charAt(i);
-            switch (currChar) {
-                case 'ö':
-                case 'ò':
-                case 'ô':
-                    builder.append('o');
-                    break;
-                case 'ü':
-                case 'ù':
-                case 'û':
-                    builder.append('u');
-                    break;
-                case 'é':
-                case 'ê':
-                case 'è':
-                    builder.append('e');
-                    break;
-                case 'ä':
-                case 'à':
-                case 'â':
-                case 'á':
-                    builder.append('a');
-                    break;
-                case 'ç':
-                    builder.append('c');
-                    break;
-                case 'ì':
-                case 'î':
-                    builder.append('i');
-                    break;
-                default:
-                    builder.append(currChar);
-                    break;
-            }
-        }
-        return builder.toString().trim();
-    }
-
     protected final void sortResults(Element search, String searchTerm) {
         if (search.getContentSize() < 1000) {
             @SuppressWarnings("unchecked")
@@ -266,9 +225,11 @@ public abstract class SharedObjectStrategy implements FindMetadataReferences {
             }
 
             if (lowerCaseSearchTerm != null) {
-                int sim1 = desc1.startsWith(lowerCaseSearchTerm) ? 1 : 0;
-                int sim2 = desc2.startsWith(lowerCaseSearchTerm) ? 1 : 0;
+                int sim1 = calcSim(desc1, lowerCaseSearchTerm);
+                int sim2 = calcSim(desc2, lowerCaseSearchTerm);
                 if (sim1 != sim2) {
+                    sim1 = sim1 * (desc1.length() - lowerCaseSearchTerm.length());
+                    sim2 = sim2 * (desc1.length() - lowerCaseSearchTerm.length());
                     return sim2 - sim1;
                 }
             }
@@ -282,9 +243,20 @@ public abstract class SharedObjectStrategy implements FindMetadataReferences {
             return descCompare;
         }
 
+        private static int calcSim(String val, String normSearchTerm) {
+            if (val.equals(normSearchTerm)) {
+                return 100;
+            }
+            if (val.startsWith(normSearchTerm)) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
         private String getDesc(Element o1) {
             String rawDesc = o1.getChildText(SharedObjectStrategy.REPORT_DESC);
-            return normalizeDesc(rawDesc);
+            return KeywordSort.normalizeDesc(rawDesc);
         }
     }
 }
