@@ -428,9 +428,12 @@
         // Close the editor tab
         window.onbeforeunload = null;
         // Go to editor home
-        $location.path('');
+        // GEOCAT
+        window.location = 'md.viewer#/full_view/' + gnCurrentEdit.id;
+        //$location.path('');
         // Tentative to close the browser tab
-        window.close();
+        // window.close();
+        // END GEOCAT
         // This last point may trigger
         // "Scripts may close only the windows that were opened by it."
         // when the editor was not opened by a script.
