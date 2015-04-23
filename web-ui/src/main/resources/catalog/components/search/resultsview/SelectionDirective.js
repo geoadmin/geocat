@@ -136,9 +136,8 @@
       link: function(scope, element, attrs) {
 
         scope.change = function() {
-          scope.md['geonet:info'].selected = !scope.md['geonet:info'].selected;
           gnHttp.callService('mdSelect', {
-            selected: scope.md['geonet:info'].selected ? 'add' : 'remove',
+            selected: element[0].checked ? 'add' : 'remove',
             id: scope.md.getUuid()
           }).success(function(res) {
             scope.searchResults.selectedCount = parseInt(res[0], 10);
