@@ -136,10 +136,9 @@
       link: function(scope, element, attrs) {
 
         scope.change = function() {
-          element.toggleClass('fa-square-o');
-          element.toggleClass('fa-check-square-o');
+          scope.md['geonet:info'].selected = !scope.md['geonet:info'].selected;
           gnHttp.callService('mdSelect', {
-            selected: element.hasClass('fa-check-square-o') ? 'add' : 'remove',
+            selected: scope.md['geonet:info'].selected ? 'add' : 'remove',
             id: scope.md.getUuid()
           }).success(function(res) {
             scope.searchResults.selectedCount = parseInt(res[0], 10);
