@@ -236,6 +236,7 @@
       <name>gmd:orientationParameterDescription</name>
       <name parent="gmd:MD_Format">gmd:name</name>
       <name ancestor="gmd:thesaurusName">gmd:code</name>
+      <name ancestor="gmd:aggregateDataSetIdentifier">gmd:code</name>
       <name>gmd:language</name>
       <name>srv:name</name>
       <name>srv:invocationName</name>
@@ -245,9 +246,11 @@
       <name>che:streetName</name>
       <name>che:streetNumber</name>
       <name>che:addressLine</name>
+      <name>che:postBox</name>
       <name>gmd:electronicMailAddress</name>
       <name>che:individualFirstName</name>
       <name>che:individualLastName</name>
+      <name>che:directNumber</name>
       <name>che:mobile</name>
       <name>che:basicGeodataID</name>
       <name parent="che:CHE_CI_Telephone">gmd:voice</name>
