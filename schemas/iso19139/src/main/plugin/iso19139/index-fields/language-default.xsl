@@ -375,11 +375,11 @@
                 </xsl:for-each>
             </xsl:for-each>
 
-            </xsl:for-each>
-          <xsl:variable name="identification" select="." />
-          <Field name="anylight" store="false" index="true">
-            <xsl:attribute name="string">
-              <xsl:for-each
+        </xsl:for-each>
+        <xsl:variable name="identification" select="." />
+        <Field name="anylight" store="false" index="true">
+          <xsl:attribute name="string">
+            <xsl:for-each
                 select="$identification/gmd:citation/gmd:CI_Citation/gmd:title//gmd:LocalisedCharacterString[@locale=$langId]|
                         $identification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle//gmd:LocalisedCharacterString[@locale=$langId]|
                         $identification/gmd:abstract//gmd:LocalisedCharacterString[@locale=$langId]|
@@ -387,11 +387,14 @@
                         $identification//gmd:organisationName//gmd:LocalisedCharacterString[@locale=$langId]|
                         $identification/gmd:supplementalInformation//gmd:LocalisedCharacterString[@locale=$langId]|
                         $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword//gmd:LocalisedCharacterString[@locale=$langId]|
-                        $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor">
-                <xsl:value-of select="concat(., ' ')"/>
-              </xsl:for-each>
-            </xsl:attribute>
-          </Field>
+                              $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor">
+              <xsl:value-of select="concat(., ' ')"/>
+            </xsl:for-each>
+
+        <!-- === Data Quality  === -->
+        <xsl:for-each select="gmd:dataQualityInfo/*/gmd:lineage//gmd:source[@uuidref]">
+            <Field  name="hassource" string="{string(@uuidref)}" store="false" index="true"/>
+        </xsl:for-each>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- === Content info === -->

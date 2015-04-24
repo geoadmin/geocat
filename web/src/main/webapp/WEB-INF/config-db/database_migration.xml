@@ -101,6 +101,7 @@
         </entry>
         <entry key="3.0.0">
             <list>
+              <value>java:v300.SetSequenceValueToMaxOfMetadataAndStats</value>
                 <value>WEB-INF/classes/setup/sql/migrate/v300/migrate-</value>
                 <value>java:v300.RemoveDuplicateLocalizedTextEl</value>
             </list>

@@ -29,12 +29,12 @@
         tabs:
             [{
               type: 'harvest-settings',
-              label: 'harvester',
-              icon: 'fa-dashboard',
+              label: 'harvesterSetting',
+              icon: 'fa-cloud-download',
               href: '#/harvest/harvest-settings'
             },{
               type: 'harvest-report',
-              label: 'report',
+              label: 'harvesterReport',
               icon: 'fa-th',
               href: '#/harvest/harvest-report'
             }]
