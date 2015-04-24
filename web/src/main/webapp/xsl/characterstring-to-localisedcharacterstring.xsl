@@ -242,6 +242,7 @@
     <xsl:template priority="100" match="gmd:identifier|
         gmd:fileIdentifier|
         gmd:code[../../name() != 'gmd:referenceSystemIdentifier']|
+        gmd:code[../../name() != 'gmd:aggregateDataSetIdentifier']|
         gmd:metadataStandardName|
         gmd:metadataStandardVersion|
         gmd:hierarchyLevelName|
@@ -305,7 +306,16 @@
         gmd:version[count(ancestor::gmd:MD_Format) > 0] |
         gmd:electronicMailAddress">
         <xsl:copy>
-            <xsl:apply-templates select="@*|node()" />
+            <xsl:choose>
+                <xsl:when test="not(gco:CharacterString) and gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
+                    <gco:CharacterString>
+                        <xsl:value-of select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space(.) != ''][1]" />
+                    </gco:CharacterString>
+                </xsl:when>
+                <xsl:otherwise>
+                        <xsl:apply-templates select="@*|node()" />
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:copy>
     </xsl:template>
     <!-- The following are NOT multilingual -->
