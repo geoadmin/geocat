@@ -414,6 +414,16 @@
       </Field>
 
     </xsl:for-each>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- === Content info === -->
+		<xsl:for-each select="gmd:contentInfo/*/gmd:featureCatalogueCitation[@uuidref]">
+			<Field  name="hasfeaturecat" string="{string(@uuidref)}" store="false" index="true"/>
+		</xsl:for-each>
+
+		<!-- === Data Quality  === -->
+		<xsl:for-each select="gmd:dataQualityInfo/*/gmd:lineage//gmd:source[@uuidref]">
+			<Field  name="hassource" string="{string(@uuidref)}" store="false" index="true"/>
+		</xsl:for-each>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 		<!-- === Distribution === -->		
