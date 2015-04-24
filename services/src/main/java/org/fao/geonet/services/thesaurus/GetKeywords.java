@@ -43,6 +43,8 @@ import org.jdom.Element;
 
 import java.nio.file.Path;
 
+import java.util.ArrayList;
+
 /**
  * Returns a list of keywords given a list of thesaurus
  */
@@ -78,7 +80,7 @@ public class GetKeywords implements Service {
 		    }
 		}
 		// END
-		if (newSearch) {			
+		if (newSearch) {
 			// perform the search and save search result into session
 			GeonetContext gc = (GeonetContext) context
 					.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -87,12 +89,11 @@ public class GetKeywords implements Service {
             if(Log.isDebugEnabled("KeywordsManager")) Log.debug("KeywordsManager","Creating new keywords searcher");
 			searcher = new KeywordsSearcher(context, thesaurusMan);
 			searcher.search(context.getLanguage(), params);
-
 			String searchTerm = params.getChildText(XmlParams.pKeyword);
 			if (searchTerm == null || searchTerm.trim().isEmpty()) {
-			searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
+				searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
 			} else {
-				searcher.sortResults(KeywordSort.searchResultsSorter(searchTerm, SortDirection.DESC));
+				searcher.sortResults(KeywordSort.searchResultsSorter(SortDirection.DESC));
 			}
 			session
 					.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
@@ -123,239 +124,6 @@ public class GetKeywords implements Service {
 		return response;
 	}
 }
-
-import java.util.ArrayList;
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
-
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		Element response = new Element(Jeeves.Elem.RESPONSE);
-		UserSession session = context.getUserSession();
-
-		KeywordsSearcher searcher = null;
-		
-		boolean newSearch = Util.getParam(params, "pNewSearch").equals("true");
-
-		// For GEOCAT to handle search for *
-		if ("*".equals(Util.getParam(params, XmlParams.pLanguages, ""))) {
-			params.removeChildren(XmlParams.pLanguages);
-
-            final ArrayList<String> langs = Lists.newArrayList("eng", "fre", "ger", "ita", "rom");
-            langs.remove(context.getLanguage());
-            params.addContent(new Element(XmlParams.pLanguages).setText(context.getLanguage()));
-            for (String lang : langs) {
-                params.addContent(new Element(XmlParams.pLanguages).setText(lang));
-		    }
-		}
-		// END
-		if (newSearch) {			
-			// perform the search and save search result into session
-			GeonetContext gc = (GeonetContext) context
-					.getHandlerContext(Geonet.CONTEXT_NAME);
-			ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
-
-            if(Log.isDebugEnabled("KeywordsManager")) Log.debug("KeywordsManager","Creating new keywords searcher");
-			searcher = new KeywordsSearcher(context, thesaurusMan);
-			searcher.search(context.getLanguage(), params);
-
-			String searchTerm = params.getChildText(XmlParams.pKeyword);
-			if (searchTerm == null || searchTerm.trim().isEmpty()) {
-			searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
-			} else {
-				searcher.sortResults(KeywordSort.searchResultsSorter(searchTerm, SortDirection.DESC));
-			}
-			session
-					.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
-							searcher);
-		} else {
-			searcher = (KeywordsSearcher) session
-					.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-		}
-
-		// get the results
-		response.addContent(searcher.getXmlResults());
-
-		
-		
-		// If editing
-		if (params.getChild("pMode") != null) {
-			String mode = Util.getParam(params, "pMode");
-			if (mode.equals("edit") || mode.equals("consult")) {
-				String thesaurus = Util.getParam(params, "pThesauri","");
-				
-				response.addContent(new Element("thesaurus")
-						.addContent(thesaurus));
-				
-				response.addContent((new Element("mode")).addContent(mode));
-			}
-		}
-
-		return response;
-	}
-}
-
-import java.util.ArrayList;
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
-
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		Element response = new Element(Jeeves.Elem.RESPONSE);
-		UserSession session = context.getUserSession();
-
-		KeywordsSearcher searcher = null;
-		
-		boolean newSearch = Util.getParam(params, "pNewSearch").equals("true");
-
-		// For GEOCAT to handle search for *
-		if ("*".equals(Util.getParam(params, XmlParams.pLanguages, ""))) {
-			params.removeChildren(XmlParams.pLanguages);
-
-            final ArrayList<String> langs = Lists.newArrayList("eng", "fre", "ger", "ita", "rom");
-            langs.remove(context.getLanguage());
-            params.addContent(new Element(XmlParams.pLanguages).setText(context.getLanguage()));
-            for (String lang : langs) {
-                params.addContent(new Element(XmlParams.pLanguages).setText(lang));
-		    }
-		}
-		// END
-		if (newSearch) {			
-			// perform the search and save search result into session
-			GeonetContext gc = (GeonetContext) context
-					.getHandlerContext(Geonet.CONTEXT_NAME);
-			ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
-
-            if(Log.isDebugEnabled("KeywordsManager")) Log.debug("KeywordsManager","Creating new keywords searcher");
-			searcher = new KeywordsSearcher(context, thesaurusMan);
-			searcher.search(context.getLanguage(), params);
-
-			String searchTerm = params.getChildText(XmlParams.pKeyword);
-			if (searchTerm == null || searchTerm.trim().isEmpty()) {
-			searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
-			} else {
-				searcher.sortResults(KeywordSort.searchResultsSorter(searchTerm, SortDirection.DESC));
-			}
-			session
-					.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
-							searcher);
-		} else {
-			searcher = (KeywordsSearcher) session
-					.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-		}
-
-		// get the results
-		response.addContent(searcher.getXmlResults());
-
-		
-		
-		// If editing
-		if (params.getChild("pMode") != null) {
-			String mode = Util.getParam(params, "pMode");
-			if (mode.equals("edit") || mode.equals("consult")) {
-				String thesaurus = Util.getParam(params, "pThesauri","");
-				
-				response.addContent(new Element("thesaurus")
-						.addContent(thesaurus));
-				
-				response.addContent((new Element("mode")).addContent(mode));
-			}
-		}
-
-		return response;
-	}
-}
-
-import java.util.ArrayList;
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
-
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		Element response = new Element(Jeeves.Elem.RESPONSE);
-		UserSession session = context.getUserSession();
-
-		KeywordsSearcher searcher = null;
-		
-		boolean newSearch = Util.getParam(params, "pNewSearch").equals("true");
-
-		// For GEOCAT to handle search for *
-		if ("*".equals(Util.getParam(params, XmlParams.pLanguages, ""))) {
-			params.removeChildren(XmlParams.pLanguages);
-
-            final ArrayList<String> langs = Lists.newArrayList("eng", "fre", "ger", "ita", "rom");
-            langs.remove(context.getLanguage());
-            params.addContent(new Element(XmlParams.pLanguages).setText(context.getLanguage()));
-            for (String lang : langs) {
-                params.addContent(new Element(XmlParams.pLanguages).setText(lang));
-		    }
-		}
-		// END
-		if (newSearch) {			
-			// perform the search and save search result into session
-			GeonetContext gc = (GeonetContext) context
-					.getHandlerContext(Geonet.CONTEXT_NAME);
-			ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
-
-            if(Log.isDebugEnabled("KeywordsManager")) Log.debug("KeywordsManager","Creating new keywords searcher");
-			searcher = new KeywordsSearcher(context, thesaurusMan);
-			searcher.search(context.getLanguage(), params);
-
-			String searchTerm = params.getChildText(XmlParams.pKeyword);
-			if (searchTerm == null || searchTerm.trim().isEmpty()) {
-			searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
-			} else {
-				searcher.sortResults(KeywordSort.searchResultsSorter(searchTerm, SortDirection.DESC));
-			}
-			session
-					.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
-							searcher);
-		} else {
-			searcher = (KeywordsSearcher) session
-					.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-		}
-
-		// get the results
-		response.addContent(searcher.getXmlResults());
-
-		
-		
-		// If editing
-		if (params.getChild("pMode") != null) {
-			String mode = Util.getParam(params, "pMode");
-			if (mode.equals("edit") || mode.equals("consult")) {
-				String thesaurus = Util.getParam(params, "pThesauri","");
-				
-				response.addContent(new Element("thesaurus")
-						.addContent(thesaurus));
-				
-				response.addContent((new Element("mode")).addContent(mode));
-			}
-		}
-
-		return response;
-	}
-}
-
-import java.util.ArrayList;
 
 // =============================================================================
 
