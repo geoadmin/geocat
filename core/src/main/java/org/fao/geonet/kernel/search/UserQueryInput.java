@@ -185,6 +185,8 @@ public class UserQueryInput {
                 String nodeValue = StringUtils.trim(node.getText());
                 if (SearchParameter.SIMILARITY.equals(nodeName)) {
                     setSimilarity(jdom.getChildText(SearchParameter.SIMILARITY));
+                } else if (Geonet.SearchResult.EXTRA_DUMP_FIELDS.equals(nodeName)) {
+                    // ignore this.  it is for presentation
                 } else {
                     if (StringUtils.isNotBlank(nodeValue)) {
                     	// Handles operation parameters. These parameters are safe, because
