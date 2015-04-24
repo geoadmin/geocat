@@ -371,7 +371,7 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
                 if (searchTerm == null || (desc != null && KeywordSort.normalizeDesc(desc).contains(KeywordSort.normalizeDesc(searchTerm)))) {
                     Element e = new Element(REPORT_ELEMENT);
                     String id = doc.get("_id");
-                    String url = XLink.LOCAL_PROTOCOL + "catalog.edit#/metadata/" + id + "/tab/simple";
+                    String url = XLink.LOCAL_PROTOCOL + "catalog.edit#/metadata/" + id + "/tab/simple?closeWindow=true";
                     Utils.addChild(e, REPORT_URL, url);
                     Utils.addChild(e, REPORT_ID, uuid);
                     Utils.addChild(e, REPORT_TYPE, "contact");

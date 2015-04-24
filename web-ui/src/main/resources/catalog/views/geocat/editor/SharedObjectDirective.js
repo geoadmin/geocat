@@ -578,7 +578,7 @@
                   _isTemplate: 's'
                 }).then(function(data) {
                   window.open('catalog.edit#/metadata/' +
-                      data.metadata[0]['geonet:info'].id+'/tab/simple');
+                      data.metadata[0]['geonet:info'].id+'/tab/simple?closeWindow=true');
                 });
               } else {
                 gcSharedobject.editEntry(undefined, scope.href);

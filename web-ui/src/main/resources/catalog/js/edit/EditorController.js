@@ -429,7 +429,11 @@
         window.onbeforeunload = null;
         // Go to editor home
         // GEOCAT
-        window.location = 'md.viewer#/full_view/' + gnCurrentEdit.id;
+        if ($routeParams['closeWindow']) {
+          window.close();
+        } else {
+          window.location = 'md.viewer#/full_view/' + gnCurrentEdit.id;
+        }
         //$location.path('');
         // Tentative to close the browser tab
         // window.close();
