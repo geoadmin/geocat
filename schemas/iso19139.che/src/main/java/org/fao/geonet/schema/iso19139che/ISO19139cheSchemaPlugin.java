@@ -69,31 +69,28 @@ public class ISO19139cheSchemaPlugin
      */
     @Override
     public void addTranslationToElement(Element element, String languageIdentifier, String value) {
-        final List<Element> translationForElement = getTranslationForElement(element, languageIdentifier);
+        if (element.getChild("PT_FreeText", ISO19139Namespaces.GMD) != null ||
+            element.getChild("CharacterString", ISO19139Namespaces.GCO) != null) {
+            super.addTranslationToElement(element, languageIdentifier, value);
+        } else {
+            // An ISO19139 element containing translation has an xsi:type attribute
+            element.setAttribute("type", "che:PT_FreeURL_PropertyType",
+                    Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
 
-        if (translationForElement != null && !translationForElement.isEmpty()) {
-            if (translationForElement.get(0).getName().equals("LocalisedCharacterString")){
-                super.addTranslationToElement(element, languageIdentifier, value);
-            } else {
-                // An ISO19139 element containing translation has an xsi:type attribute
-                element.setAttribute("type", "che:PT_FreeURL_PropertyType",
-                        Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
+            // Create a new translation for the language
+            Element langElem = new Element("LocalisedURL", ISO19139cheNamespaces.CHE);
+            langElem.setAttribute("locale", "#" + languageIdentifier);
+            langElem.setText(value);
+            Element textGroupElement = new Element("URLGroup", ISO19139cheNamespaces.CHE);
+            textGroupElement.addContent(langElem);
 
-                // Create a new translation for the language
-                Element langElem = new Element("LocalisedURL", ISO19139cheNamespaces.CHE);
-                langElem.setAttribute("locale", "#" + languageIdentifier);
-                langElem.setText(value);
-                Element textGroupElement = new Element("URLGroup", ISO19139cheNamespaces.CHE);
-                textGroupElement.addContent(langElem);
-
-                // Get the PT_FreeURL node where to insert the translation into
-                Element freeTextElement = element.getChild("PT_FreeURL", ISO19139cheNamespaces.CHE);
-                if (freeTextElement == null) {
-                    freeTextElement = new Element("PT_FreeURL", ISO19139cheNamespaces.CHE);
-                    element.addContent(freeTextElement);
-                }
-                freeTextElement.addContent(textGroupElement);
+            // Get the PT_FreeURL node where to insert the translation into
+            Element freeTextElement = element.getChild("PT_FreeURL", ISO19139cheNamespaces.CHE);
+            if (freeTextElement == null) {
+                freeTextElement = new Element("PT_FreeURL", ISO19139cheNamespaces.CHE);
+                element.addContent(freeTextElement);
             }
+            freeTextElement.addContent(textGroupElement);
         }
     }
 }

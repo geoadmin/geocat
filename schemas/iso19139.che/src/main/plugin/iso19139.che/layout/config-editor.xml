@@ -87,6 +87,12 @@
         data-template-type="contacts"
         data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
+    <for name="che:parentResponsibleParty" addDirective="gc-add-sharedobject">
+      <directiveAttributes
+        data-template-add-action="true"
+        data-template-type="contacts"
+        data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+    </for>
     <for name="srv:extent" addDirective="gc-add-sharedobject">
       <directiveAttributes
         data-template-add-action="true"

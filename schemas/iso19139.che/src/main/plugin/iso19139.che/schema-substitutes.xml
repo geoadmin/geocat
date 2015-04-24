@@ -54,7 +54,7 @@
         <substitute name="gmd:MD_ScopeCode"/>
     </field>
   <field name="gmd:URL">
-    <substitute name="che:LocalisedURL"/>
+    <substitute name="che:PT_FreeURL"/>
   </field>
 
     <field name="gmd:MD_Identifier">

@@ -4,6 +4,7 @@
   var module = angular.module('gn_schema_manager_service', []);
 
   module.value('gnNamespaces', {
+    che: 'http://www.geocat.ch/2008/che',
     gmd: 'http://www.isotc211.org/2005/gmd',
     gco: 'http://www.isotc211.org/2005/gco',
     gfc: 'http://www.isotc211.org/2005/gfc',
