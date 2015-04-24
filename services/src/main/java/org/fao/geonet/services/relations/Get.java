@@ -26,8 +26,8 @@ package org.fao.geonet.services.relations;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataRelation;
 import org.fao.geonet.kernel.DataManager;
@@ -35,12 +35,13 @@ import org.fao.geonet.repository.MetadataRelationRepository;
 import org.fao.geonet.repository.specification.MetadataRelationSpecs;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
-import org.jdom.Namespace;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 //=============================================================================
 
@@ -143,74 +144,4 @@ public class Get implements Service {
         return results;
 	}
 
-    // GEOCAT
-    /**
-     * Looks for all gmd:aggregationInfo elements and returns them in the form
-     * of Elements
-     *
-     * Created for {@link GetRelated}
-     *
-     * @param md
-     * @param fast
-     * @param to
-     * @param from
-     * @param context
-     *
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    public static List<String> getAggregationInfos(Element md) {
-        List<String> res = new LinkedList<String>();
-
-        final Namespace gmd = md.getNamespace("gmd");
-        final Namespace gco = md.getNamespace("gco");
-        final Namespace che = md.getNamespace("che");
-        Element identificationInfo = md.getChild("identificationInfo", gmd);
-
-        if (identificationInfo == null) {
-            return res;
-        }
-
-        Element che_md_dataIdentification = identificationInfo.getChild(
-                "CHE_MD_DataIdentification", che);
-
-        if (che_md_dataIdentification == null) {
-            che_md_dataIdentification = identificationInfo.getChild(
-                    "CHE_SV_ServiceIdentification", che);
-        }
-
-        if (che_md_dataIdentification == null) {
-            return res;
-        }
-
-        List<Element> aggregationInfos = che_md_dataIdentification.getChildren(
-                "aggregationInfo", gmd);
-
-        for (Element e : aggregationInfos) {
-            try {
-                Element md_AggregateInformation = e.getChild(
-                        "MD_AggregateInformation", gmd);
-                Element aggregateDataSetIdentifier = md_AggregateInformation
-                        .getChild("aggregateDataSetIdentifier", gmd);
-                Element identifier = aggregateDataSetIdentifier.getChild(
-                        "MD_Identifier", gmd);
-                Element asocType = md_AggregateInformation.getChild(
-                        "associationType", gmd);
-                asocType = asocType.getChild("DS_AssociationTypeCode", gmd);
-
-                Element uuid = identifier.getChild("code", gmd);
-                String type = asocType.getAttributeValue("codeListValue");
-
-                String uuid_ = uuid.getChildText("CharacterString", gco);
-                if (uuid_ != null) {
-                    res.add(type + " " + uuid_);
-                }
-
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
-        }
-        return res;
-    }
-    // END GEOCAT
 }

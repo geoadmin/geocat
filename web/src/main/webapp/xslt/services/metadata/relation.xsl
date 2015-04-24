@@ -26,7 +26,11 @@
     </relations>
   </xsl:template>
 
-  <xsl:template mode="relation" match="related|services|datasets|children|parent|sources|fcats|hasfeaturecat|siblings|associated|source|hassource">
+  <!--GEOCAT-->
+  <xsl:template mode="relation" match="related|services|datasets|children|parent|sources|fcats|hasfeaturecat|siblings|associated|
+                                       source|hassource|largerWorkCitation|isTemporalStatOf|isDescriptionOf|stereoMate|
+                                       partOfSeamlessDatabase|crossReference|hasfeaturecat">
+    <!--END GEOCAT-->
     <xsl:apply-templates mode="relation" select="response/*">
       <xsl:with-param name="type" select="name(.)"/>
     </xsl:apply-templates>
