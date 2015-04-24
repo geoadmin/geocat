@@ -99,7 +99,7 @@ import javax.servlet.http.HttpServletRequest;
  * association, the target document may be in a different schema
  * (eg. ISO19110 for feature catalog, Dublin core for cross reference
  * to a document, SensorML for a sensor description, ...).
- * 
+ *
  * 3 types of relations may be used:
  * <ul>
  *     <li>Relation to a metadata record stored in the metadata document to be analyzed.
@@ -266,8 +266,7 @@ public class GetRelated implements Service, org.fao.geonet.kernel.RelatedMetadat
         int from = Util.getParam(params, "from", 1);
         int to = Util.getParam(params, "to", maxRecords);
 
-        Log.info(Geonet.SEARCH_ENGINE,
-                "GuiService param is " + _config.getValue("guiService"));
+        Log.info(Geonet.SEARCH_ENGINE, "GuiService param is " + _config.getValue("guiService"));
 
         Element info = params.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
         int iId;
@@ -297,7 +296,7 @@ public class GetRelated implements Service, org.fao.geonet.kernel.RelatedMetadat
     @Override
     public Element getRelated(ServiceContext context, int iId, String uuid, String type, int from_, int to_, boolean fast_)
             throws Exception {
-        final String sId = String.valueOf(iId);
+        final String id = String.valueOf(iId);
         final String from = "" + from_;
         final String to = "" + to_;
         final String fast = "" + fast_;
@@ -306,14 +305,14 @@ public class GetRelated implements Service, org.fao.geonet.kernel.RelatedMetadat
         Element relatedRecords = new Element("relations");
 
         // Get the cached version (use by classic GUI)
-        Element md = Show.getCached(context.getUserSession(), sId);
+        Element md = Show.getCached(context.getUserSession(), id);
         if (md == null) {
             // Get from DB
-            md = dm.getMetadata(context, sId, forEditing, withValidationErrors,
+            md = dm.getMetadata(context, id, forEditing, withValidationErrors,
                     keepXlinkAttributes);
         }
 
-        String schemaIdentifier = dm.getMetadataSchema(sId);
+        String schemaIdentifier = dm.getMetadataSchema(id);
         SchemaPlugin instance = SchemaManager.getSchemaPlugin(schemaIdentifier);
         AssociatedResourcesSchemaPlugin schemaPlugin = null;
         if (instance instanceof AssociatedResourcesSchemaPlugin) {
@@ -361,11 +360,10 @@ public class GetRelated implements Service, org.fao.geonet.kernel.RelatedMetadat
 
         // Search for services
         if (type.equals("") || type.contains("service")) {
-            relatedRecords.addContent(search(uuid, "services", context, from,
-                    to, fast));
+            relatedRecords.addContent(search(uuid, "services", context, from, to, fast));
         }
 
-        // Related record from uuiref attributes in metadata record
+        // Related record from uuidref attributes in metadata record
         if (schemaPlugin != null && (
                 type.equals("") || type.contains("dataset") || type.contains("fcat") || type.contains("source")
         )) {
@@ -407,42 +405,7 @@ public class GetRelated implements Service, org.fao.geonet.kernel.RelatedMetadat
             relatedRecords.addContent(new Element("related").addContent(Get.getRelation(iId, "full", context)));
             // Or feature catalogue define in feature catalogue citation
             relatedRecords.addContent(search(uuid, "hasfeaturecat", context, from, to, fast));
-
-            //Now, add the aggregationInfo elements
-            if(md != null) {
-                for(String e : Get.getAggregationInfos(md)) {
-                    String[] tmp = e.split(" ");
-                    String type_ = tmp[0];
-                    String uuid_ = tmp[1];
-
-                    Element element = new Element(type_);
-                    Element metadata = search(uuid_, "sources", context, from,
-                            to, fast);
-                    Element response = metadata.getChild("response");
-                    response.detach();
-                    element.addContent(response);
-
-                    element.setAttribute("parent", "true");
-                    relatedRecords.addContent(element);
         }
-            }
-        }
-
-        //And lucene ones:
-        relatedRecords.addContent(search(uuid, "crossReference", context, from,
-                to, fast));
-        relatedRecords.addContent(search(uuid, "partOfSeamlessDatabase", context,
-                from, to, fast));
-        relatedRecords.addContent(search(uuid, "source", context, from,
-                to, fast));
-        relatedRecords.addContent(search(uuid, "stereoMate", context, from,
-                to, fast));
-        relatedRecords.addContent(search(uuid, "isDescriptionOf", context,
-                from, to, fast));
-        relatedRecords.addContent(search(uuid, "isTemporalStatOf", context, from,
-                to, fast));
-        relatedRecords.addContent(search(uuid, "largerWorkCitation", context, from,
-                to, fast));
 
         // XSL transformation is used on the metadata record to extract
         // distribution information or thumbnails
@@ -452,6 +415,7 @@ public class GetRelated implements Service, org.fao.geonet.kernel.RelatedMetadat
 
         return relatedRecords;
     }
+
 
     private Element search(String uuid, String type, ServiceContext context, String from, String to, String fast) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -472,16 +436,13 @@ public class GetRelated implements Service, org.fao.geonet.kernel.RelatedMetadat
                 parameters.addContent(new Element("hasfeaturecat").setText(uuid));
             else if ("hassource".equals(type))
                 parameters.addContent(new Element("hassource").setText(uuid));
-            else if ("associated".equals(type))
+            else if ("associated".equals(type)) {
                 parameters.addContent(new Element("agg_associated").setText(uuid));
-            else if ("datasets".equals(type) || "fcats".equals(type) ||
+                parameters.addContent(new Element(Geonet.SearchResult.EXTRA_DUMP_FIELDS).setText("agg_*"));
+            } else if ("datasets".equals(type) || "fcats".equals(type) ||
                     "sources".equals(type) || "siblings".equals(type) ||
                     "parent".equals(type))
                 parameters.addContent(new Element("uuid").setText(uuid));
-            else if ("crossReference".equals(type) || "partOfSeamlessDatabase".equals(type)
-            			|| "source".equals(type) || "stereoMate".equals(type) || "isDescriptionOf".equals(type)
-                        || "isTemporalStatOf".equals(type) || "largerWorkCitation".equals(type))
-            	parameters.addContent(new Element(type).setText(uuid));
 
             parameters.addContent(new Element("fast").addContent("index"));
             parameters.addContent(new Element("sortBy").addContent("title"));
@@ -492,8 +453,7 @@ public class GetRelated implements Service, org.fao.geonet.kernel.RelatedMetadat
             searcher.search(context, parameters, _config);
 
             Element response = new Element(type);
-            Element relatedElement = searcher.present(context, parameters,
-                    _config);
+            Element relatedElement = searcher.present(context, parameters, _config);
             response.addContent(relatedElement);
             return response;
         }
@@ -509,7 +469,7 @@ public class GetRelated implements Service, org.fao.geonet.kernel.RelatedMetadat
             content = dm.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
         } catch (Exception e) {
             if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-					Log.debug(Geonet.SEARCH_ENGINE, "Metadata "+uuid+" record is not visible for user.");
+                Log.debug(Geonet.SEARCH_ENGINE, "Metadata " + uuid + " record is not visible for user.");
         }
         return content;
     }
