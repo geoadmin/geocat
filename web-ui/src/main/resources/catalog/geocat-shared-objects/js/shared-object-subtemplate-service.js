@@ -79,6 +79,9 @@
           '               <gmd:city>' +
           '                  <gco:CharacterString/>' +
           '               </gmd:city>' +
+          '               <gmd:postalCode>' +
+          '                 <gco:CharacterString/>' +
+          '               </gmd:postalCode>' +
           '               <gmd:electronicMailAddress>' +
           '                  <gco:CharacterString>~~ Template Email ~~</gco:CharacterString>' +
           '               </gmd:electronicMailAddress>' +
