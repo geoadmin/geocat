@@ -62,37 +62,38 @@ public class Index implements Service {
 
     public Element exec(Element params, final ServiceContext context) throws Exception {
         final SelectionManager manager = SelectionManager.getManager(context.getUserSession());
-        final Set<String> selection = manager.getSelection(SelectionManager.SELECTION_METADATA);
+        Set<String> selection = manager.getSelection(SelectionManager.SELECTION_METADATA);
         int index = 0;
         if (selection != null) {
             synchronized (selection) {
-                if (!selection.isEmpty()) {
-                    if (false && selection.size() > maxToIndex) {
-                        return new Element("error").setText("Attempted to index " + selection.size() + ".  The maximum allowed elements: " +
+                selection = Sets.newHashSet(selection);
+            }
+            if (!selection.isEmpty()) {
+                if (false && selection.size() > maxToIndex) {
+                    return new Element("error").setText("Attempted to index " + selection.size() + ".  The maximum allowed elements: " +
 
-                                                            maxToIndex);
-                    }
-                    final DataManager dataManager = context.getBean(DataManager.class);
-                    Set<Integer> ids = Sets.newHashSet();
+                                                        maxToIndex);
+                }
+                final DataManager dataManager = context.getBean(DataManager.class);
+                Set<Integer> ids = Sets.newHashSet();
 
-                    for (String uuid : selection) {
+                for (String uuid : selection) {
+                    try {
+                        final String metadataId = dataManager.getMetadataId(uuid);
+                        if (metadataId != null) {
+                            ids.add(Integer.valueOf(metadataId));
+                        }
+                    } catch (Exception e) {
                         try {
-                            final String metadataId = dataManager.getMetadataId(uuid);
-                            if (metadataId != null) {
-                                ids.add(Integer.valueOf(metadataId));
-                            }
-                        } catch (Exception e) {
-                            try {
-                                ids.add(Integer.valueOf(uuid));
-                            } catch (NumberFormatException nfe) {
-                                // skip
-                            }
+                            ids.add(Integer.valueOf(uuid));
+                        } catch (NumberFormatException nfe) {
+                            // skip
                         }
                     }
-
-                    index = ids.size();
-                    new BatchOpsMetadataReindexer(dataManager, ids).process();
                 }
+
+                index = ids.size();
+                new BatchOpsMetadataReindexer(dataManager, ids).process();
             }
         }
 
