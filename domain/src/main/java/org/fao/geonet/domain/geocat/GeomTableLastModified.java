@@ -30,10 +30,10 @@ public class GeomTableLastModified {
 
     @Temporal(TemporalType.TIMESTAMP)
     public Date getLastmodified() {
-        return lastmodified;
+        return (Date) lastmodified.clone();
     }
 
     public void setLastmodified(Date lastmodified) {
-        this.lastmodified = lastmodified;
+        this.lastmodified = (Date) lastmodified.clone();
     }
 }
