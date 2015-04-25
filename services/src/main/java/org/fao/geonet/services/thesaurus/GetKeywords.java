@@ -93,7 +93,7 @@ public class GetKeywords implements Service {
 			if (searchTerm == null || searchTerm.trim().isEmpty()) {
 				searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
 			} else {
-				searcher.sortResults(KeywordSort.searchResultsSorter(SortDirection.DESC));
+				searcher.sortResults(KeywordSort.searchResultsSorter(searchTerm, SortDirection.DESC));
 			}
 			session
 					.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
