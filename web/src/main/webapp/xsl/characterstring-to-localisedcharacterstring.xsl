@@ -55,8 +55,7 @@
 	gmd:userNote[gco:CharacterString] | 
 	gmd:handlingDescription[gco:CharacterString] | 
 	gmd:operationDescription[gco:CharacterString] | 
-	gmd:maintenanceNote[gco:CharacterString] |
-	gmd:code[gco:CharacterString and ../../name() = 'gmd:referenceSystemIdentifier']">
+	gmd:maintenanceNote[gco:CharacterString]">
         <xsl:variable name="mainLang">
             <xsl:call-template name="langId19139"/>
         </xsl:variable>
@@ -243,6 +242,7 @@
         gmd:fileIdentifier|
         gmd:code[../../name() != 'gmd:referenceSystemIdentifier']|
         gmd:code[../../name() != 'gmd:aggregateDataSetIdentifier']|
+        gmd:code[ancestor::gmd:CI_Citation]|
         gmd:metadataStandardName|
         gmd:metadataStandardVersion|
         gmd:hierarchyLevelName|
@@ -307,7 +307,7 @@
         gmd:electronicMailAddress">
         <xsl:copy>
             <xsl:choose>
-                <xsl:when test="not(gco:CharacterString) and gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
+                <xsl:when test="(normalize-space(gco:CharacterString[1]) = '' or not(gco:CharacterString)) and gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
                     <gco:CharacterString>
                         <xsl:value-of select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space(.) != ''][1]" />
                     </gco:CharacterString>
@@ -344,6 +344,9 @@
         <gmd:LocalisedCharacterString locale="#RM">
             <xsl:value-of select="."/>
         </gmd:LocalisedCharacterString>
+    </xsl:template>
+
+    <xsl:template match="gmd:PT_FreeText[count(gmd:textGroup/gmd:LocalisedCharacterString[normalize-space(.) != '']) = 0]" priority="10000">
     </xsl:template>
 
 
