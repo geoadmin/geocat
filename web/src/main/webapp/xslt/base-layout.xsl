@@ -29,6 +29,7 @@
         <meta name="keywords" content=""/>
 
 
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
         <link rel="icon" sizes="16x16 32x32 48x48" type="image/png" href="../../images/logos/favicon.png"/>
         <link href="rss.search?sortBy=changeDate" rel="alternate" type="application/rss+xml"
           title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
