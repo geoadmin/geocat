@@ -67,7 +67,7 @@
           }
 
           if (!text || text.length === 0) {
-            return 'warning';
+            return 'no-data';
           }
         };
         $scope.cls = undefined;
