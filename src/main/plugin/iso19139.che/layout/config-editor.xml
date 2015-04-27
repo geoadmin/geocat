@@ -243,6 +243,8 @@
       <name parent="gmd:MD_Format">gmd:name</name>
       <name ancestor="gmd:thesaurusName">gmd:code</name>
       <name ancestor="gmd:aggregateDataSetIdentifier">gmd:code</name>
+      <name ancestor="gmd:CI_Citation">gmd:code</name>
+      <name ancestor="gmd:referenceSystemIdentifier">gmd:code</name>
       <name>gmd:language</name>
       <name>srv:name</name>
       <name>srv:invocationName</name>
