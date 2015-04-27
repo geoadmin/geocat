@@ -170,6 +170,15 @@
   </xsl:template>
 
   <!--GEOCAT Topic category-->
+  <xsl:template mode="mode-iso19139" match="gmd:topicCategory[
+                                              gmd:MD_TopicCategoryCode[1] = 'environment' or
+                                              gmd:MD_TopicCategoryCode[1] = 'envirogeoscientificInformationnment' or
+                                              gmd:MD_TopicCategoryCode[1] = 'planningCadastre' or
+                                              gmd:MD_TopicCategoryCode[1] = 'imageryBaseMapsEarthCover' or
+                                              gmd:MD_TopicCategoryCode[1] = 'utilitiesCommunication']" priority="2000">
+    <!-- do nothing -->
+  </xsl:template>
+
   <xsl:template mode="mode-iso19139" match="gmd:MD_TopicCategoryCode" priority="2000">
 
     <xsl:param name="schema" select="$schema" required="no"/>
