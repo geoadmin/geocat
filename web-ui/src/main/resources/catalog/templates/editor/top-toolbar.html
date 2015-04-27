@@ -15,13 +15,15 @@
     </button>-->
 
 
-    <div data-gn-metadata-category-updater="mdCategories"
+    <!--GEOCAT Remove these changes when editing subtemplates are in dialog in editor and shared objects UI -->
+    <div data-gn-metadata-category-updater="mdCategories" data-ng-if="!isSubTemplate()"
          data-metadata-id="gnCurrentEdit.id" title="{{'categories'|translate}}"/>
 
-    <div data-gn-metadata-group-updater="groupOwner"
+    <div data-gn-metadata-group-updater="groupOwner" data-ng-if="!isSubTemplate()"
          data-metadata-id="gnCurrentEdit.id" title="{{'group'|translate}}"/>
 
-    <div class="btn-group">
+    <div class="btn-group" data-ng-if="!isSubTemplate()">
+      <!--END GEOCAT-->
       <button class="btn btn-default dropdown-toggle"
               type="button"
               data-toggle="dropdown" aria-expanded="true">
@@ -40,8 +42,10 @@
       </ul>
     </div>
 
-    <button type="button" class="btn btn-default navbar-btn"
+    <!--GEOCAT Remove these changes when editing subtemplates are in dialog in editor and shared objects UI -->
+    <button type="button" class="btn btn-default navbar-btn" data-ng-if="!isSubTemplate()"
             title="{{'validate'|translate}}" gn-click-and-spin="validate()">
+      <!--END GEOCAT-->
       <i class="fa fa-check"/>&nbsp;
       <span class="visible-lg" data-translate=""
             title="{{'validate-help' | translate}}">validate</span>
@@ -53,12 +57,17 @@
       <i class="fa fa-undo"/>&nbsp;
       <span class="visible-lg" data-translate="">cancel</span>
     </button>
-    <button type="button" class="btn btn-default navbar-btn gn-tooltip"
+
+    <!--GEOCAT Remove these changes when editing subtemplates are in dialog in editor and shared objects UI -->
+    <button type="button" class="btn btn-default navbar-btn gn-tooltip" data-ng-class="isSubTemplate()? 'btn-primary' : ''"
         title="{{'closeEditor'|translate}}" gn-click-and-spin="close()">
+      <!--END GEOCAT-->
       <i class="fa fa-sign-out"/>&nbsp;
       <span class="visible-lg" data-translate="">closeEditor</span>
     </button>
-    <div class="btn-group" title="{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}">
+    <!--GEOCAT Remove these changes when editing subtemplates are in dialog in editor and shared objects UI -->
+    <div class="btn-group" title="{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}" data-ng-if="!isSubTemplate()">
+      <!--END GEOCAT-->
       <button type="button"
               data-gn-click-and-spin="save(true)"
               class="btn btn-primary">

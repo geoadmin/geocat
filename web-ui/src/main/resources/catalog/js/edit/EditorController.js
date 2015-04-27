@@ -334,6 +334,9 @@
       $scope.isTemplate = function() {
         return gnCurrentEdit.isTemplate === 'y';
       };
+      $scope.isSubTemplate = function() {
+        return gnCurrentEdit.isTemplate === 's';
+      };
 
 
       /**
