@@ -473,7 +473,7 @@
 
         subtemplateService.createNewSubtemplate(template, false, function(){}).
         success(function(data) {
-            var win = window.open('catalog.edit#/metadata/' + data.id +'/tab/simple');
+            var win = window.open('catalog.edit#/metadata/' + data.id +'/tab/simple?closeWindow=true');
 
             var intervalId = setInterval(function() {
               if (win.closed) {
