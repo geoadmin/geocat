@@ -380,7 +380,7 @@
             if (editTab === 'default') {
               tab = '';
             }
-            if (window.location.search.contains('debug')) {
+            if (window.location.search.indexOf('debug') > -1) {
               debug = '?debug=true';
             }
 
