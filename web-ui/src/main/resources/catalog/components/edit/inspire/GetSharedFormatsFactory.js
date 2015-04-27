@@ -33,15 +33,14 @@
             formats = [];
             for (i = 0; i < data.length; i++) {
               if (data[i].desc) {
-                parts = /(.*) \((.*)\)/.exec(data[i].desc);
+                parts = /(.*)( \((.*)\))?/.exec(data[i].desc)
               } else {
                 parts = ["", "", ""];
               }
 
               format = {};
               format.id = data[i].id;
-              format.name = parts[1];
-              format.version = parts[2];
+              format.name = data[i].desc;
               format.validated = validated;
 
               formats.push(format);

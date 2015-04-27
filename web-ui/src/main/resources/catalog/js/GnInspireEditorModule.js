@@ -576,7 +576,7 @@
     function($scope, inspireGetExtentsFactory) {
       $scope.loadingExtents = false;
       $scope.extentImgSrc = function (width, extent) {
-        return $scope.url + 'region.getmap.png?mapsrs=EPSG:21781&background=geocat&width=' + width + '&id=' + extent.geom;
+        return $scope.url + 'region.getmap.png?mapsrs=EPSG:21781&background=settings&width=' + width + '&id=' + extent.geom;
       };
       $scope.editExtent = function(extent) {
         $scope.extentUnderEdit = extent;

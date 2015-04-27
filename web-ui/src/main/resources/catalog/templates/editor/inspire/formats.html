@@ -15,7 +15,7 @@
                            data-ng-class="selectedFormat === format ? 'active' : ''"
                            data-ng-dblclick="linkToOtherFormat()"
                            data-ng-click="selectFormat(format)">
-                            <i class="fa fa-check-circle-o" style="color: green"></i> {{format.name}} ({{format.version}})
+                            <i class="fa fa-check-circle-o" style="color: green"></i> {{format.name}}
                         </a>
                     </div>
                     <div class="list-group well" data-ng-show="allFormats.nonValidated.length > 0">
@@ -24,7 +24,7 @@
                            data-ng-class="selectedFormat === format ? 'active' : ''"
                            data-ng-dblclick="linkToOtherFormat()"
                            data-ng-click="selectFormat(format)">
-                            <i class="fa fa-circle-o" style="color: red"></i>{{format.name}} ({{format.version}})
+                            <i class="fa fa-circle-o" style="color: red"></i>{{format.name}}
                         </a>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                         <td width="98%">
                             <input disabled="true"
                                    class="form-control"
-                                   value="{{format.name}} {{format.version ? '('+format.version+')':''}}"/>
+                                   value="{{format.name}}"/>
                         </td>
                         <td width="24px">
                             <a class="inspire-input-group" data-ng-click="editFormat(format)">
