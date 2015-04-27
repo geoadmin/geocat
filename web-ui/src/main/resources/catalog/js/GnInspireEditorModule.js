@@ -86,6 +86,9 @@
       $scope.url = "";
       $scope.lang = location.href.split('/')[5].substring(0, 3) || 'eng';
       $scope.langs = {ger: 'ger', fre:'fre', ita:'ita', eng:'eng'};
+      $scope.langLabels = {'eng': 'English', 'ita': 'Italiano',
+        'fre': 'Français', 'ger': 'Deutsch'};
+
       var allowUnload = false;
       window.onbeforeunload = function() {
         if (!allowUnload) {
