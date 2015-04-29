@@ -160,26 +160,24 @@ public final class Processor {
         if (failures.size()>MAX_FAILURES) {
             throw new RuntimeException("There have been "+failures.size()+" timeouts resolving xlinks in the last "+ELAPSE_TIME+" ms");
         }
+        Element remoteFragment = null;
+        try {
+            if(uri.startsWith(XLink.LOCAL_PROTOCOL)) {
+                LocalServiceRequest request = LocalServiceRequest.create(uri.replaceAll("&amp;", "&"));
+                request.setDebug(false);
+                if(request.getLanguage() == null) {
+                    request.setLanguage(srvContext.getLanguage());
+                }
+                request.setInputMethod(InputMethod.GET);
+                remoteFragment = srvContext.execute(request);
+            } else {
+                uri = uri.replaceAll("&+","&");
+                String mappedURI = mapURI(uri);
 
-        uri = uri.replaceAll("&+","&");
-        String mappedURI = mapURI(uri);
-
-        JeevesJCS xlinkCache = JeevesJCS.getInstance(XLINK_JCS);
-        Element remoteFragment = (Element) xlinkCache.getFromGroup(uri.toLowerCase(), mappedURI);
-
-        if (remoteFragment == null) {
-            Log.info(Log.XLINK_PROCESSOR, "cache MISS on "+uri.toLowerCase());
-
-            try {
-                if(uri.startsWith(XLink.LOCAL_PROTOCOL)) {
-                    LocalServiceRequest request = LocalServiceRequest.create(uri.replaceAll("&amp;", "&"));
-                    request.setDebug(false);
-                    if(request.getLanguage() == null) {
-                        request.setLanguage(srvContext.getLanguage());
-                    }
-                    request.setInputMethod(InputMethod.GET);
-                    remoteFragment = srvContext.execute(request);
-                } else {
+                JeevesJCS xlinkCache = JeevesJCS.getInstance(XLINK_JCS);
+                remoteFragment = (Element) xlinkCache.getFromGroup(uri.toLowerCase(), mappedURI);
+                if (remoteFragment == null) {
+                    Log.info(Log.XLINK_PROCESSOR, "cache MISS on "+uri.toLowerCase());
                     URL url = new URL(uri.replaceAll("&amp;", "&"));
 
                     URLConnection conn = url.openConnection();
@@ -193,25 +191,25 @@ public final class Processor {
                     } finally {
                         in.close();
                     }
-                }
-            } catch (Exception e) {	// MalformedURLException, IOException
-                synchronized(Processor.class) {
-                    failures.add (System.currentTimeMillis());
+                } else {
+                    Log.debug(Log.XLINK_PROCESSOR, "cache HIT on "+uri.toLowerCase());
                 }
 
-                Log.error(Log.XLINK_PROCESSOR,"Failed on " + uri, e);
+                if (remoteFragment != null && !remoteFragment.getName().equalsIgnoreCase("error")) {
+                    xlinkCache.putInGroup(uri.toLowerCase(), mappedURI, remoteFragment);
+                    if(Log.isDebugEnabled(Log.XLINK_PROCESSOR))
+                        Log.debug(Log.XLINK_PROCESSOR,"cache miss for "+uri);
+                } else {
+                    return null;
+                }
+
+            }
+        } catch (Exception e) {	// MalformedURLException, IOException
+            synchronized(Processor.class) {
+                failures.add (System.currentTimeMillis());
             }
 
-            if (remoteFragment != null && !remoteFragment.getName().equalsIgnoreCase("error")) {
-                xlinkCache.putInGroup(uri.toLowerCase(), mappedURI, remoteFragment);
-                if(Log.isDebugEnabled(Log.XLINK_PROCESSOR))
-                    Log.debug(Log.XLINK_PROCESSOR,"cache miss for "+uri);
-            } else {
-                return null;
-            }
-
-        } else {
-            Log.debug(Log.XLINK_PROCESSOR, "cache HIT on "+uri.toLowerCase());
+            Log.error(Log.XLINK_PROCESSOR,"Failed on " + uri, e);
         }
 
         // search for and return only the xml fragment that has @id=idSearch

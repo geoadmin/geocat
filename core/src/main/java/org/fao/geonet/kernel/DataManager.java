@@ -96,14 +96,14 @@ import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
 import org.fao.geonet.geocat.kernel.reusable.ProcessParams;
 import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
-import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.geocat.kernel.reusable.log.ReusableObjectLogger;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.InspireAtomFeedRepository;
@@ -129,6 +129,7 @@ import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.GeocatXslUtil;
+import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -153,7 +154,6 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.Assert;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -2090,6 +2090,16 @@ public class DataManager implements ApplicationEventPublisherAware {
                 indexMetadata(metadataId, true, processSharedObjects, false, false);
             }
         }
+        // GEOCAT
+        if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
+            if (!index) {
+                indexMetadata(metadataId, true, false, false, false);
+            }
+            Processor.uncacheXLinkUri("local://subtemplate?uuid=" + metadata.getUuid());
+
+            getServiceContext().getBean(ThreadPool.class).runTask(new UpdateReferencedMetadata(metadata.getUuid(), this));
+        }
+        // END GEOCAT
         // Return an up to date metadata record
         return getMetadataRepository().findOne(metadataId);
     }
