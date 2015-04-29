@@ -1,0 +1,14 @@
+<gmd:identificationInfo xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://toignore">
+  <che:CHE_MD_DataIdentification xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" gco:isoType="gmd:MD_DataIdentification">
+    <gmd:abstract xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+      <gmd:PT_FreeText>
+        <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#DE">-- Zusammenfassung --</gmd:LocalisedCharacterString>
+        </gmd:textGroup>
+      </gmd:PT_FreeText>
+    </gmd:abstract>
+    <gmd:descriptiveKeywords xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://ger/xml.keyword.get?thesaurus=external.none.allThesaurus&amp;amp;id=http://org.fao.geonet.thesaurus.all/external.theme.inspire-service-taxonomy@@@urn%3Ainspire%3Aservice%3Ataxonomy%3AcomEncodingService,http://org.fao.geonet.thesaurus.all/local._none_.geocat.ch@@@http%3A%2F%2Fgeocat.ch%2Fconcept%238,http://org.fao.geonet.thesaurus.all/local._none_.geocat.ch@@@http%3A%2F%2Fgeocat.ch%2Fconcept%23105,http://org.fao.geonet.thesaurus.all/local._none_.geocat.ch@@@http%3A%2F%2Fgeocat.ch%2Fconcept%23152,http://org.fao.geonet.thesaurus.all/local._none_.geocat.ch@@@http%3A%2F%2Fgeocat.ch%2Fconcept%23200&amp;amp;multiple=true&amp;amp;lang=ger,fre,ita,eng,roh" xlink:show="replace" />
+    <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://ger/xml.keyword.get?thesaurus=local._none_.geocat.ch&amp;amp;id=http://geocat.ch/concept%237,http://geocat.ch/concept%235,http://geocat.ch/concept%234,http://geocat.ch/concept%2340,http://geocat.ch/concept%232&amp;amp;multiple=true&amp;amp;lang=ger,fre,ita,eng,roh" xlink:show="replace" />
+    <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://ger/xml.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&amp;amp;id=urn:inspire:service:taxonomy:comMessagingService&amp;amp;multiple=false&amp;amp;lang=ger,fre,ita,eng,roh" xlink:show="replace" />
+  </che:CHE_MD_DataIdentification>
+</gmd:identificationInfo>

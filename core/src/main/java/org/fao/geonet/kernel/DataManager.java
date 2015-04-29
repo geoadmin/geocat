@@ -3165,13 +3165,16 @@ public class DataManager implements ApplicationEventPublisherAware {
             } else {
                 styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_FIXED_INFO);
             }
-            // END GEOCAT
-            result = Xml.transform(result, styleSheet);
-
-            final Element identificationInfo = result.getChild("identificationInfo", GMD);
+            final Element identificationInfo = md.getChild("identificationInfo", GMD);
             if (identificationInfo != null) {
                 GeocatXslUtil.mergeKeywords(identificationInfo, false, null, null);
+                List<?> keywords = Xml.selectNodes(identificationInfo, "*/gmd:descriptiveKeywords", Arrays.asList(GMD));
+                for (Object keyword : keywords) {
+                    Processor.processXLink((Element) keyword, context);
+                }
             }
+            // END GEOCAT
+            result = Xml.transform(result, styleSheet);
 
             return result;
         } else {
