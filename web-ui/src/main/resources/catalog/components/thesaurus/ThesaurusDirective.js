@@ -321,6 +321,13 @@
                      source: keywordsAutocompleter.ttAdapter()
                    }).bind('typeahead:selected',
                    $.proxy(function(obj, keyword) {
+                     // specific GEOCAT
+                     // add entry button
+                     if(!keyword.props) {
+                       this.tagsinput('input').typeahead('val', '');
+                       gcSharedobject.editEntry('keywords');
+                       return;
+                     }
                      // Add to tags
                      this.tagsinput('add', keyword);
 

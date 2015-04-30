@@ -45,7 +45,9 @@
           'gnUrlUtils',
           'Keyword',
           'Thesaurus',
-          function($q, $rootScope, $http, gnUrlUtils, Keyword, Thesaurus) {
+          '$translate',
+          function($q, $rootScope, $http, gnUrlUtils, Keyword, Thesaurus,
+              $translate) {
             var getKeywordsSearchUrl = function(filter, 
                 thesaurus, max, typeSearch) {
               return gnUrlUtils.append('keywords@json',
@@ -103,7 +105,12 @@
                         config.thesaurusKey || '',
                         config.max || this.DEFAULT_NUMBER_OF_RESULTS),
                     filter: function(data) {
-                      return parseKeywordsResponse(data, config.dataToExclude);
+                      //Specific GEOCAT
+                      var datums = parseKeywordsResponse(
+                          data, config.dataToExclude);
+                      datums.push({label: $translate(
+                          'addKeywordNotFromThesaurus')});
+                      return datums;
                     }
                   }
                 });

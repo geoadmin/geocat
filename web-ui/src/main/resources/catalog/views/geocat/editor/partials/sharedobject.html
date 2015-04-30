@@ -3,7 +3,7 @@
 
   <!--search input-->
   <input class="form-control input-sm main-input" type="text" data-toggle="dropdown" data-ng-model="searchValue"
-         data-ng-click="loadSO($event)" data-ng-change="loadSO()" placeholder="{{('searchA' + templateType) | translate}}"
+         data-ng-click="loadSO($event)" ng-model-options="{ debounce: 300 }" data-ng-change="loadSO()" placeholder="{{('searchA' + templateType) | translate}}"
           data-ng-class="{'disabled' : (templateType == 'contacts' && !role)}" ng-disabled="templateType == 'contacts' && !role"/>
   <ul class="dropdown-menu" role="menu">
     <li data-ng-repeat="o in objects">

@@ -64,6 +64,37 @@ form.gn-editor {
       display: none;
     }
   }
+  * [data-gn-keyword-selector] {
+    margin-bottom: 10px;
+    .tt-dropdown-menu {
+      margin-left: -8px;
+      padding: 8px 0;
+      -webkit-border-radius: 0;
+      -moz-border-radius: 0;
+      border-radius: 0;
+      max-height: 250px;
+      width: 100%;
+    }
+    .tt-suggestion {
+      padding: 1px 10px;
+      font-size: 0.9em;
+      line-height: 1.2em;
+
+      &:last-child {
+        display: none;
+      }
+    }
+
+    &[data-thesaurus-key="external.none.allThesaurus"] .tt-suggestion:last-child,
+    &[data-thesaurus-key="local._none_.geocat.ch"] .tt-suggestion:last-child {
+      font-weight: bold;
+      margin-top: 4px;
+      padding-top: 4px;
+      display: block;
+      border-top: 1px solid #d3d3d3;
+    }
+
+  }
 
 }
 
@@ -151,3 +182,5 @@ label > i.gc-add-sharedobject:after {
   color: #5489a9;
   font-weight: normal;
 }
+
+
