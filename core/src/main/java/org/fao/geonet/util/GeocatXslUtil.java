@@ -825,7 +825,7 @@ public class GeocatXslUtil {
                     String keywordIds = Joiner.on(',').join(ids);
                     String joinedLangs = "eng,ger,ita,fre,roh";
                     String href = "local://eng/xml.keyword.get?thesaurus=" + thesaurus + "&id=" + keywordIds +
-                                  "&multiple=true&lang=" + joinedLangs + "&textgroupOnly&skipdescriptivekeywords";
+                                  "&multiple=true&lang=" + joinedLangs + "&textgroupOnly=true&skipdescriptivekeywords=true";
 
                     parent.addContent(index, new org.jdom.Element("descriptiveKeywords", GMD).
                             setAttribute(HREF, href, NAMESPACE_XLINK));
