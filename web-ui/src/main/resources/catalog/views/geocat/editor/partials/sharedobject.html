@@ -7,7 +7,11 @@
           data-ng-class="{'disabled' : (templateType == 'contacts' && !role)}" ng-disabled="templateType == 'contacts' && !role"/>
   <ul class="dropdown-menu" role="menu">
     <li data-ng-repeat="o in objects">
-      <a href="" data-ng-click="selectEntry(o)" title="{{o.desc}}">
+      <a data-ng-if="templateType != 'extents'" href="" data-ng-click="selectEntry(o)" title="{{o.desc}}">
+        <span class="label pull-right" data-ng-class="{'label-danger' : !o.validated, 'label-success' : o.validated}">&nbsp;</span>
+        {{o.desc}}
+      </a>
+      <a data-ng-if="templateType == 'extents'" href="" title="{{o.desc}}" data-toggle="modal" data-target="#soExtentLinkModal" data-ng-click="prop.tmpExtent = o">
         <span class="label pull-right" data-ng-class="{'label-danger' : !o.validated, 'label-success' : o.validated}">&nbsp;</span>
         {{o.desc}}
       </a>
@@ -63,6 +67,53 @@
   </div>
 </div>
 
+
+<!--Modal to add information on extent adding-->
+<div class="modal fade" id="soExtentLinkModal" data-ng-if="templateType == 'extents'">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" translate="">soExtent</h4>
+      </div>
+
+      <div class="modal-body">
+        <form class="form-horizontal">
+          <!--Additional extent forms input-->
+          <div class="form-group">
+            <div class="col-sm-8">
+              <select class="form-control" data-ng-model="prop.extentFormat">
+                <option value="GMD_BBOX" translate="">bboxOnly</option>
+                <option value="GMD_COMPLETE" translate="">bboxPolygon</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-6">
+              <select class="form-control" data-ng-model="prop.extentTypeCode">
+                <option value="true" translate="">include</option>
+                <option value="false" translate="">exclude</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" data-dismiss="modal" translate="">cancel</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                ng-click="selectEntry(prop.tmpExtent)" ng-disabled="downloadDisabled" translate="">extentsAddBtn</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!--Add classic extent button-->
 <div class="gn-addextent-btn">
   <button class="btn btn-default gc-sharedobject-addbtn" data-ng-if="templateType == 'extents'" data-ng-click="addExtent()">
     <i class="fa fa-plus"/>&nbsp;<span translate>addClassicExtent</span>
