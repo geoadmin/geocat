@@ -9,6 +9,7 @@
   xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
   xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
+  xmlns:util="java:org.fao.geonet.util.GeocatXslUtil"
   xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="#all">
 
 
@@ -41,6 +42,7 @@
 
       <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(., true())"/>
       <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+      <xsl:variable name="regionId" select="util:parseRegionIdFromXLink(../../@xlink:href)"/>
 
       <xsl:call-template name="render-boxed-element">
         <xsl:with-param name="label"
@@ -57,7 +59,7 @@
             </xsl:when>
             <xsl:when test="gmd:EX_BoundingPolygon">
                 <img class="gn-img-extent"
-                     src="region.getmap.png?mapsrs=EPSG:21781&amp;width=250&amp;background=settings&amp;id=metadata:@id{$metadataId}:@xpathgmd:identificationInfo{$xpath}/gmd:EX_BoundingPolygon"/>
+                     src="region.getmap.png?mapsrs=EPSG:21781&amp;width=250&amp;background=settings&amp;id={$regionId}"/>
             </xsl:when>
           </xsl:choose>
         </xsl:with-param>
