@@ -321,7 +321,7 @@ public class Format extends AbstractFormatService implements ApplicationListener
         Validator validator;
         if (changeDate != null) {
             final long changeDateAsTime = changeDate.toDate().getTime();
-            long roundedChangeDate = changeDateAsTime / 1000 * 1000;
+            long roundedChangeDate = (changeDateAsTime / 1000) * 1000;
             if (request.checkNotModified(roundedChangeDate) && context.getBean(CacheConfig.class).allowCaching(key)) {
                 if (!skipPopularityBool) {
                     context.getBean(DataManager.class).increasePopularity(context, resolvedId);
