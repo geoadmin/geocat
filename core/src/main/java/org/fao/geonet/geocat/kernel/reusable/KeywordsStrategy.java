@@ -186,9 +186,8 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
         builder.addThesaurus(NON_VALID_THESAURUS_NAME);
 
         KeywordsSearcher searcher = new KeywordsSearcher(this._isoLanguagesMapper, _thesaurusMan);
-
+        builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.DESC));
         searcher.search(builder.build());
-        searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
         return searcher;
     }
 
@@ -219,9 +218,9 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
             builder.addLang(_currentLocale).addLang("fre").addLang("eng").addLang("ger").addLang("ita")
                     .keyword("*", KeywordSearchType.MATCH, false).maxResults(maxResults - keywords.getContentSize())
                     .addThesaurus(thesaurusName);
+            builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.DESC));
             KeywordSearchParams params = builder.build();
             searcher.search(params);
-            searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
             session.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT, searcher);
 
             addSearchResults(thesaurusName, keywords, searcher, !thesaurusName.equals(NON_VALID_THESAURUS_NAME));
@@ -300,11 +299,10 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
 
             builder.addThesaurus(thesaurusKey);
             builder.maxResults(maxResults - results.getContentSize());
-
+            builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.DESC));
             KeywordSearchParams params = builder.build();
             searcher.search(params);
 
-            searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
             session.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT, searcher);
 
             addSearchResults(thesaurusKey, results, searcher, validated);
