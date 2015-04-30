@@ -95,6 +95,8 @@ import static org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy.NON_VALID_T
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 
 public class GeocatXslUtil {
+    private static Pattern ID_EXTRACTOR = Pattern.compile(".*id=([^&]+).*");
+    private static Pattern TYPENAME_EXTRACTOR = Pattern.compile(".*typename=([^&]+).*");
 
     interface GeomWriter {
         Object write(ExtentTypeCode code, MultiPolygon geometry) throws Exception;
@@ -749,6 +751,47 @@ public class GeocatXslUtil {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public static String parseRegionIdFromXLink(String xlink) {
+
+        if (xlink != null && !xlink.isEmpty()) {
+            String typeName = extractFromHref(xlink, TYPENAME_EXTRACTOR);
+            String id = extractFromHref(xlink, ID_EXTRACTOR);
+            switch (typeName) {
+                case "gn:countries":
+                    typeName = "country";
+                    break;
+                case "gn:gemeindenBB":
+                    typeName = "gemeinden";
+                    break;
+                case "gn:kantoneBB":
+                    typeName = "kantone";
+                    break;
+                case "gn:xlinks":
+                    typeName = "xlinks";
+                    break;
+                case "gn:non_validated":
+                    typeName = "non_validated";
+                    break;
+                default:
+                    typeName = null;
+            }
+            if (typeName != null) {
+                return typeName + ":" + id;
+            }
+        }
+
+        return null;
+    }
+
+    private static String extractFromHref(String xlink, Pattern pattern) {
+        String typeName = null;
+        Matcher matcher = pattern.matcher(xlink);
+        if (matcher.matches()) {
+            typeName = matcher.group(1);
+        }
+        return typeName;
     }
 
     /**
