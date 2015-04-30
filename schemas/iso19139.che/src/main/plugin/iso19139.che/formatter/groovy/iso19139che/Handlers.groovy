@@ -1,4 +1,7 @@
 package iso19139che
+import groovy.util.slurpersupport.GPathResult
+import org.fao.geonet.services.metadata.format.groovy.MapConfig
+import org.fao.geonet.util.GeocatXslUtil
 
 public class Handlers extends iso19139.Handlers {
     public Handlers(handlers, f, env) {
@@ -25,5 +28,37 @@ public class Handlers extends iso19139.Handlers {
         }
         def childData = name.toString() + handlers.processElements(generalChildren)
         handlers.fileResult('html/2-level-entry.html', [label: f.translate('general'), childData: childData])
+    }
+    def polygonEl(thumbnail) {
+        return { el ->
+            MapConfig mapConfig = env.mapConfiguration
+            def mapproj = mapConfig.mapproj
+            def background = mapConfig.background
+            def width = thumbnail? mapConfig.thumbnailWidth : mapConfig.width
+            String xlink = findParentXLink(el)
+
+            def geomId = GeocatXslUtil.parseRegionIdFromXLink(xlink)
+            if (geomId == null) {
+                def mdId = env.getMetadataId();
+                def xpath = f.getXPathFrom(el);
+                geomId = "metadata:@id$mdId:@xpath$xpath";
+            }
+
+            if (geomId != null) {
+                def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=$geomId\"\n" +
+                        "         style=\"min-width:${width/4}px; min-height:${width/4}px;\" />"
+                handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: image])
+            }
+        }
+    }
+
+    def findParentXLink(GPathResult el) {
+        if (el.name() != 'gmd:extent' || el['@xlink:href'].text().isEmpty()) {
+            if (el.parent().is(el)) {
+                return "";
+            }
+            return findParentXLink(el.parent())
+        }
+        return el['@xlink:href'].text()
     }
 }
