@@ -115,15 +115,18 @@ angular.module('geocat_shared_objects_factories', ['geocat_shared_objects_transl
                   $scope.open(row.url);
               };
               $scope.open = function (url, params) {
-                  var finalUrl = baseUrl + '/' + url;
-                  if (params) {
-                      if (finalUrl.indexOf("?") > -1) {
-                          finalUrl += "&" + jQuery.param(params);
-                      } else {
-                          finalUrl += "?" + jQuery.param(params);
-                      }
+                $scope.openInTab(url, '_blank', params);
+              };
+              $scope.openInTab = function (url, tab, params) {
+                var finalUrl = baseUrl + '/' + url;
+                if (params) {
+                  if (finalUrl.indexOf("?") > -1) {
+                    finalUrl += "&" + jQuery.param(params);
+                  } else {
+                    finalUrl += "?" + jQuery.param(params);
                   }
-                  return window.open(finalUrl, '_blank');
+                }
+                return window.open(finalUrl, tab);
               };
               $scope.editTitle = $translate('createNewSharedObject');
               $scope.startCreateNew = function () {
