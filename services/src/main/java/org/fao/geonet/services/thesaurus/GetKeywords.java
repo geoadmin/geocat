@@ -29,6 +29,8 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -40,15 +42,24 @@ import org.fao.geonet.kernel.search.keyword.SortDirection;
 import org.fao.geonet.kernel.search.keyword.XmlParams;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.WebRequest;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Returns a list of keywords given a list of thesaurus
  */
-
+@Controller
 public class GetKeywords implements Service {
 	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
@@ -58,15 +69,24 @@ public class GetKeywords implements Service {
 	// --- Service
 	// ---
 	// --------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context)
+	@RequestMapping(value = "/{lang}/xml.search.keywords")
+	@ResponseBody
+	public Element deprecatedAPI(Element params, ServiceContext context) throws Exception {
+		return exec(params, context);
+	}
+	@RequestMapping(value = "/{lang}/keywords")
+	@ResponseBody
+	public Element exec(
+			@PathVariable String lang,
+			@RequestParam(value = "pNewSearch", defaultValue = "true") boolean newSearch,
+			NativeWebRequest webRequest)
 			throws Exception {
+		ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+		ServiceContext context = applicationContext.getBean(ServiceManager.class).createServiceContext("keywords", lang, webRequest.getNativeRequest(HttpServletRequest.class))
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 		UserSession session = context.getUserSession();
 
 		KeywordsSearcher searcher = null;
-		
-		boolean newSearch = Util.getParam(params, "pNewSearch").equals("true");
 
 		// For GEOCAT to handle search for *
 		if ("*".equals(Util.getParam(params, XmlParams.pLanguages, ""))) {
