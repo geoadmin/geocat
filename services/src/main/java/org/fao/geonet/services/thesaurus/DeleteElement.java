@@ -28,8 +28,8 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.geocat.SharedObjectApi;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
@@ -69,11 +69,12 @@ public class DeleteElement implements Service {
         final boolean isValidatedThesaurus = sThesaurusName.equals("local._none_.geocat.ch");
         if(isNonValidatedThesaurus || isValidatedThesaurus) {
             if(!Boolean.parseBoolean(Util.getParam(params, "forceDelete", "false"))) {
-                String msg = LangUtils.loadString("reusable.rejectDefaultMsg", context.getAppPath(), context.getLanguage());
+                String msg = LangUtils.translateAndJoin(context.getApplicationContext(), "geocat",
+                        "reusable_rejectDefaultMsg", "\n\n");
 
                 String id = "id="+Util.getParam(params, "id", "") + "&thesaurus=" + sThesaurusName;
                 final SharedObjectApi bean = context.getBean(SharedObjectApi.class);
-                bean.reject(context, ReusableTypes.keywords, new String[]{id}, msg, null, isValidatedThesaurus, testing);
+                bean.reject(context, ReusableTypes.keywords, new String[]{id}, msg.toString(), null, isValidatedThesaurus, testing);
             }
         }
         // END GEOCAT

@@ -148,7 +148,7 @@ public abstract class AbstractSubtemplateStrategy extends SharedObjectStrategy {
         final Specification<Metadata> spec = where(MetadataSpecs.hasMetadataUuidIn(Arrays.asList(uuids)));
         final List<Integer> idsBy = this.metadataRepository.findAllIdsBy(spec);
         for (Integer id : idsBy) {
-            this.dataManager.deleteMetadata(ServiceContext.get(), String.valueOf(id));
+            this.dataManager.deleteMetadata(ServiceContext.get(), String.valueOf(id), true);
         }
     }
 

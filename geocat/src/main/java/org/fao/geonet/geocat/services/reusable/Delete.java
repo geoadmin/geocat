@@ -23,6 +23,7 @@
 
 package org.fao.geonet.geocat.services.reusable;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import jeeves.interfaces.Service;
@@ -32,7 +33,6 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
-import org.fao.geonet.geocat.kernel.reusable.SendEmailParameter;
 import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.DataManager;
@@ -91,23 +91,13 @@ public class Delete implements Service {
             }
         }
 
-        if (!emailInfo.isEmpty()) {
-            String msg = Utils.translate(context.getAppPath(), context.getLanguage(), "unpublishMetadata/message",
-                    " / ");
-            String msgHeader = "";
-            String subject = Utils.translate(context.getAppPath(), context.getLanguage(), "unpublishMetadata/subject",
-                    " / ");
-
-            SendEmailParameter args = new SendEmailParameter(context, msg, emailInfo, baseUrl, msgHeader, subject, testing);
-            Utils.sendEmail(args);
-        }
-
-        Utils.unpublish(metadataIds, context);
+        Utils.unpublish(metadataIds, context, "Metadata unpublished by system because a Shared Object was deleted that the metadata "
+                                              + "referenced.  Ids are:  " + Joiner.on(", ").join(ids));
         for (Integer metadataId : metadataIds) {
             context.getBean(DataManager.class).indexMetadata("" + metadataId, false, true, false, true);
         }
-        DeletedObjects.delete(context, ids);
 
+        DeletedObjects.delete(context, ids);
         Log.debug(Geocat.Module.REUSABLE, "Successfully deleted following rejected objects: \n("
                                           + Arrays.toString(ids) + ")");
 

@@ -48,6 +48,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.ID;
@@ -76,9 +77,15 @@ public class Delete implements Service {
 
         if (!Boolean.parseBoolean(Util.getParam(params, "forceDelete", "false"))) {
             final String id = Util.getParamText(params, ID);
-            String msg = LangUtils.loadString("reusable.rejectDefaultMsg", context.getAppPath(), context.getLanguage());
+            Map<String, String> translations = LangUtils.translate(context.getApplicationContext(), "geocat",
+                    "reusable_rejectDefaultMsg");
+            StringBuilder msg = new StringBuilder();
+            for (String translation : translations.values()) {
+                msg.append('\n').append(translation).append('\n');
+            }
             boolean isValidated = !Util.getParamText(params, TYPENAME).contains("non_validated");
-            return new Reject().reject(context, ReusableTypes.extents, new String[]{id}, msg, "", null, isValidated, testing);
+            return new Reject().reject(context, ReusableTypes.extents, new String[]{id}, msg.toString(),
+                    "", null, isValidated, testing);
         } else {
             return deleteSingle(params, extentMan);
         }
@@ -162,10 +169,12 @@ public class Delete implements Service {
 
     private void doDelete(FilterFactory2 filterFactory, FeatureType currentType, Set<String> ids, ServiceContext context, boolean testing)
             throws Exception {
+        String msg = LangUtils.translateAndJoin(context.getApplicationContext(), "geocat",
+                "reusable_rejectDefaultMsg", "\n\n");
 
-        String msg = "";// TODO
         boolean isValidated = !currentType.typename.contains("non_validated");
-        new Reject().reject(context, ReusableTypes.extents, ids.toArray(new String[0]), msg, "", currentType.typename, isValidated, testing);
+        new Reject().reject(context, ReusableTypes.extents, ids.toArray(new String[ids.size()]), msg,
+                "", currentType.typename, isValidated, testing);
         // java.util.List<Filter> filters = new ArrayList<Filter>();
         // for (String id : ids) {
         // filters.add(currentType.createFilter(id));

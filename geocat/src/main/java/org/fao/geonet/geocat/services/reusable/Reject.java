@@ -46,6 +46,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.geocat.RejectedSharedObjectRepository;
+import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
@@ -216,9 +217,10 @@ public class Reject implements Service {
         if (msg == null) {
             msg = "";
         }
-        String msgHeader = Utils.translate(context.getAppPath(), context.getLanguage(), "deletedSharedObject/msg",
+
+        String msgHeader = LangUtils.translateAndJoin(context.getApplicationContext(), "geocat", "deletedSharedObject_msg",
                 "\n\n");
-        String subject = Utils.translate(context.getAppPath(), context.getLanguage(), "deletedSharedObject/subject",
+        String subject = LangUtils.translateAndJoin(context.getApplicationContext(), "geocat", "deletedSharedObject_subject",
                 " / ");
 
         Utils.sendEmail(new SendEmailParameter(context, msg, emailInfo, baseURL, msgHeader, subject, testing));

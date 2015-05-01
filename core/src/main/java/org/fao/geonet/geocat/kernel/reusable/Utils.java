@@ -38,8 +38,10 @@ import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.geocat.PublishRecord;
 import org.fao.geonet.geocat.kernel.Email;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -48,17 +50,15 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.util.LangUtils;
+import org.fao.geonet.repository.geocat.PublishRecordRepository;
 import org.fao.geonet.utils.Log;
 import org.geotools.gml3.GMLConfiguration;
 import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jdom.filter.Filter;
 import org.springframework.data.jpa.domain.Specifications;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -68,6 +68,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -333,7 +334,7 @@ public final class Utils {
         return idString;
     }
 
-    public static void unpublish( Collection<Integer> results, ServiceContext context ) throws Exception {
+    public static void unpublish(Collection<Integer> results, ServiceContext context, String msg) throws Exception {
         if (results.size() > 0) {
 
             Specifications spec = where(hasGroupId(ReservedGroup.all.getId()));
@@ -344,6 +345,21 @@ public final class Utils {
                 mdIdSpec = mdIdSpec.or(hasMetadataId(ids.next()));
             }
             context.getBean(OperationAllowedRepository.class).deleteAll(spec.and(mdIdSpec));
+
+            for (Integer mdId : results) {
+                final PublishRecord record = new PublishRecord();
+                record.setChangedate(new Date());
+                record.setChangetime(new Date());
+                record.setEntity(context.getUserSession().getUsername());
+                record.setFailurereasons(msg);
+                record.setFailurerule("");
+                record.setPublished(false);
+                record.setUuid(context.getBean(DataManager.class).getMetadataUuid("" + mdId));
+                record.setValidated(PublishRecord.Validity.UNKNOWN);
+                final PublishRecordRepository publishRecordRepository = context.getBean(PublishRecordRepository.class);
+                publishRecordRepository.save(record);
+
+            }
         }
     }
 
@@ -411,23 +427,6 @@ public final class Utils {
             Log.error(Geocat.Module.REUSABLE, "The System Configuration is not correctly configured and there for emails cannot be sent.  "
                     + "Make sure the email/feedback settings are configured");
         }
-    }
-
-    public static String translate(Path appPath, String langCode, String key, String separator ) throws IOException, JDOMException {
-        String[] translations = {LangUtils.translate(appPath, "ger", key, ""), LangUtils.translate(appPath, "fre", key, ""),
-                LangUtils.translate(appPath, "eng", key, ""), LangUtils.translate(appPath, "ita", key, "")};
-
-        StringBuilder result = new StringBuilder();
-
-        for( String string : translations ) {
-            if (string != null && string.trim().length() > 0) {
-                if (result.length() > 0) {
-                    result.append(separator);
-                }
-                result.append(string);
-            }
-        }
-        return result.toString();
     }
 
     @SuppressWarnings("unchecked")

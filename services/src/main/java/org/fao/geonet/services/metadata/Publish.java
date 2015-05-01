@@ -12,10 +12,12 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.geocat.PublishRecord;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.geocat.PublishRecordRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -197,6 +200,9 @@ public class Publish {
                 operationAllowedRepository.save(operationAllowed);
                 report.incDisallowed();
             } else {
+                // GEOCAT
+                recordPublishEvent(serviceContext, mdId, true);
+                // END GEOCAT
                 report.incUnpublished();
                 toIndex.add(mdId);
             }
@@ -218,12 +224,34 @@ public class Publish {
                 operationAllowedRepository.save(operationAllowed);
                 report.incDisallowed();
             } else {
+                // GEOCAT
+                recordPublishEvent(serviceContext, mdId, true);
+                // END GEOCAT
                 toIndex.add(mdId);
                 report.incPublished();
             }
         }
     }
 
+    // GEOCAT
+    private void recordPublishEvent(ServiceContext serviceContext, int mdId, boolean published) throws Exception {
+        final PublishRecord record = new PublishRecord();
+        record.setChangedate(new Date());
+        record.setChangetime(new Date());
+        record.setEntity(serviceContext.getUserSession().getUsername());
+        if (published) {
+            record.setFailurereasons("Metadata published by user");
+        } else {
+            record.setFailurereasons("Metadata unpublished by user");
+        }
+        record.setFailurerule("");
+        record.setPublished(published);
+        record.setUuid(serviceContext.getBean(DataManager.class).getMetadataUuid("" + mdId));
+        record.setValidated(PublishRecord.Validity.UNKNOWN);
+        final PublishRecordRepository publishRecordRepository = serviceContext.getBean(PublishRecordRepository.class);
+        publishRecordRepository.save(record);
+    }
+    // END GEOCAT
     private boolean updateOps(ServiceContext serviceContext, boolean publish, ArrayList<Integer> groupIds, Collection<Integer>
             operationIds, int metadataId) throws Exception {
         final DataManager dataManager = serviceContext.getBean(DataManager.class);

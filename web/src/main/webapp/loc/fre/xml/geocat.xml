@@ -23,6 +23,11 @@
     <reusable_nonValidDesc js="true">Valider/rejeter les objets réutilisables</reusable_nonValidDesc>
     <reusable_rejectTitle js="true">Message de rejet</reusable_rejectTitle>
     <reusable_rejectDefaultMsg js="true">Choisissez un autre objet réutilisable...</reusable_rejectDefaultMsg>
+    <deletedSharedObject_msg>Certains objets réutilisables de vos métadonnées ont été rejetés.
+Merci d’adapter ces métadonnées (voir liste jointe) en fonction du commentaire ci-dessous, et de les republier.
+En cas de questions, n’hésitez pas à nous contacter : geocat@swisstopo.ch
+    </deletedSharedObject_msg>
+    <deletedSharedObject_subject>Objet réutilisable rejeté</deletedSharedObject_subject>
     <archived>Archived</archived>
     <performingOperation js="true">Performing Operation.  Please wait...</performingOperation>
     <description js="true">Description</description>

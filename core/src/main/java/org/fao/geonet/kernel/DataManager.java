@@ -48,6 +48,7 @@ import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
@@ -92,10 +93,13 @@ import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
+import org.fao.geonet.geocat.SharedObjectApi;
 import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
 import org.fao.geonet.geocat.kernel.reusable.ProcessParams;
 import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
+import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.geocat.kernel.reusable.log.ReusableObjectLogger;
 import org.fao.geonet.kernel.schema.MetadataSchema;
@@ -129,6 +133,7 @@ import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.GeocatXslUtil;
+import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
@@ -2418,14 +2423,36 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @param metadataId
      * @throws Exception
      */
-    public synchronized void deleteMetadata(ServiceContext context, String metadataId) throws Exception {
+    // GEOCAT
+    public void deleteMetadata(ServiceContext context, String metadataId) throws Exception {
+        deleteMetadata(context, metadataId, false);
+    }
+    public synchronized void deleteMetadata(ServiceContext context, String metadataId, boolean force) throws Exception {
+        // END GEOCAT
         String uuid = getMetadataUuid(metadataId);
-        boolean isMetadata = getMetadataRepository().findOne(metadataId).getDataInfo().getType() == MetadataType.METADATA;
+        // GEOCAT
+        Metadata metadata = getMetadataRepository().findOne(metadataId);
+        MetadataDataInfo dataInfo = metadata.getDataInfo();
+        MetadataType mdType = dataInfo.getType();
+        if (!force && mdType == MetadataType.SUB_TEMPLATE) {
+            String msg = LangUtils.translateAndJoin(getApplicationContext(), "geocat", "deletedSharedObject_msg", "\n\n");
+            ReusableTypes type;
+            if (dataInfo.getRoot().toLowerCase().contains("format")) {
+                type = ReusableTypes.formats;
+            } else {
+                type = ReusableTypes.contacts;
+            }
 
+            boolean isValid = SharedObjectStrategy.LUCENE_EXTRA_VALIDATED.equals(dataInfo.getExtra());
+            context.getBean(SharedObjectApi.class).reject(context, type, new String[]{metadata.getUuid()}, msg,
+                    null, isValid, false);
+            return;
+        }
+        // END GEOCAT
         deleteMetadataFromDB(context, metadataId);
 
         // Notifies the metadata change to metatada notifier service
-        if (isMetadata) {
+        if (mdType == MetadataType.METADATA) {
             context.getBean(MetadataNotifierManager.class).deleteMetadata(metadataId, uuid, context);
         }
 

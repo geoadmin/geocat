@@ -18,6 +18,12 @@
     <reusable_nonValidDesc js="true">Validare/Rifiutare oggetti riutilizzabili non ancore convalidati</reusable_nonValidDesc>
     <reusable_rejectTitle js="true">Messago di rifiuto</reusable_rejectTitle>
     <reusable_rejectDefaultMsg js="true">Selezionare un'altro oggetto riutilizzabile...</reusable_rejectDefaultMsg>
+    <deletedSharedObject_msg>Messaggio inviato automaticamente.
+Oggetti riutilizzabili utilizzati nei Suoi metadati sono eliminati.
+La lista completa dei metadati toccati si trova sottostante.
+Voglia per favore attualizzare questi metadati.
+    </deletedSharedObject_msg>
+    <deletedSharedObject_subject>Oggetto riutilizzabile eliminato</deletedSharedObject_subject>
     <archived>Archived</archived>
     <performingOperation js="true">Performing Operation.  Please wait...</performingOperation>
     <description js="true">Descrizione</description>

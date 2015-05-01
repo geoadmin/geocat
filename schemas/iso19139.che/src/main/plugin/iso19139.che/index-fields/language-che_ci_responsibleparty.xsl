@@ -26,6 +26,11 @@
                         $root//gco:CharacterString[not(ancestor::che:parentResponsibleParty)] |
                         $root//gmd:CI_RoleCode[not(ancestor::che:parentResponsibleParty)]
                     "/>
+                    <Field name="any" store="false" index="true">
+                        <xsl:attribute name="string">
+                            <xsl:value-of select="$root//(gco:CharacterString|gmd:LocalisedCharacterString)"/>
+                        </xsl:attribute>
+                    </Field>
                 </Document>
             </xsl:for-each>
         </Documents>

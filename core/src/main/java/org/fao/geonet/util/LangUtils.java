@@ -3,20 +3,20 @@ package org.fao.geonet.util;
 import com.google.common.collect.Maps;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import org.apache.lucene.analysis.TokenStream;
-import org.fao.geonet.Constants;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.AttributeImpl;
+import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.search.GeoNetworkAnalyzer;
 import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
 import org.fao.geonet.utils.Log;
-import org.jdom.JDOMException;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
+import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.context.ApplicationContext;
@@ -28,7 +28,6 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -92,23 +91,28 @@ public final class LangUtils
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static List<Element> loadStrings(Path appDir, String langCode) throws IOException, JDOMException
-    {
-        Path file = appDir.resolve("loc").resolve(langCode).resolve("xml/strings.xml");
-        if (Files.exists(file)) {
-            return Xml.loadFile(file).getChildren();
-
-        }
-        return Collections.emptyList();
-    }
     private static final Map<TranslationKey, Map<String, String>> translationsCache = Maps.newConcurrentMap();
 
-    public static String translate(Path appDir, String langCode, String key, String defaultVal) throws IOException,
-            JDOMException
-    {
-        String[] path = key.split("/");
-        return translate(path, defaultVal, loadStrings(appDir, langCode));
+    public static String translateAndJoin(ApplicationContext context, String type, String key, String separator) throws IOException,
+            JDOMException {
+        Map<String, String> translations = LangUtils.translate(context, type, key);
+        StringBuilder msg = new StringBuilder();
+
+        addTranslation(separator, msg, translations.get("ger"));
+        addTranslation(separator, msg, translations.get("fre"));
+        addTranslation(separator, msg, translations.get("ita"));
+        addTranslation(separator, msg, translations.get("eng"));
+
+        return msg.toString();
+    }
+
+    private static void addTranslation(String separator, StringBuilder msg, String translation) {
+        if (translation != null && !translation.isEmpty()) {
+            if (msg.length() > 0) {
+                msg.append(separator);
+            }
+            msg.append(translation);
+        }
     }
 
     /**
@@ -237,7 +241,7 @@ public final class LangUtils
         final String descIt = encodeXmlText(Util.getParam(params, paramBaseName + "IT",""));
         final String descFr = encodeXmlText(Util.getParam(params, paramBaseName + "FR",""));
         final String descEn = encodeXmlText(Util.getParam(params, paramBaseName + "EN",""));
-        final String descRm = encodeXmlText(Util.getParam(params, paramBaseName + "RM",""));
+        final String descRm = encodeXmlText(Util.getParam(params, paramBaseName + "RM", ""));
 
         return String.format("<DE>%s</DE><FR>%s</FR><IT>%s</IT><EN>%s</EN><RM>%s</RM>", descDe, descFr, descIt, descEn, descRm);
     }
@@ -360,32 +364,6 @@ public final class LangUtils
         }
         desc = builder.toString();
         return desc;
-    }
-
-    public static String loadString(String string, Path appPath, String language) throws IOException, JDOMException {
-        String[] keys = string.split(".",2);
-        List<Element> strings = loadStrings(appPath,language);
-        for (Element element : strings) {
-            if(element.getName().equals(keys[0])) {
-                if(keys.length > 1) {
-                    String value = loadString(keys[1],appPath,language);
-                    if(value != null) {
-                        return value;
-                    }
-                } else {
-                    return element.getText();
-                }
-            }
-            if(element.getName().equals(string)) {
-                return element.getText();
-            }
-        }
-
-        if(!"eng".equalsIgnoreCase(language)) {
-            return loadString(string, appPath, "eng");
-        }
-
-        return null;
     }
 
     /**
