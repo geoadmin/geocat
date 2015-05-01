@@ -16,7 +16,7 @@ public class SetSequenceValueToMaxOfMetadataAndStats implements DatabaseMigratio
 
         try (Statement statement = connection.createStatement()) {
             final String numberOfMetadataSQL = "SELECT max(id) as NB FROM Metadata";
-            final String numberOfParamsSQL = "SELECT max(id) as NB FROM Params";
+            final String numberOfParamsSQL = "SELECT max(id) as NB FROM params_v2";
 
             ResultSet metadataResultSet = statement.executeQuery(numberOfMetadataSQL);
             int numberOfMetadata = 0;
