@@ -133,9 +133,9 @@
   module.directive('gnKeywordSelector',
       ['$timeout', '$translate',
        'gnThesaurusService', 'gnEditor',
-       'Keyword', 'gcSharedobject',
+       'Keyword', 'gcSharedobject', '$templateCache',
        function($timeout, $translate,
-               gnThesaurusService, gnEditor, Keyword, gcSharedobject) {
+               gnThesaurusService, gnEditor, Keyword, gcSharedobject, $templateCache) {
 
          return {
            restrict: 'A',
@@ -325,6 +325,12 @@
                      // add entry button
                      if(!keyword.props) {
                        this.tagsinput('input').typeahead('val', '');
+                       var autocompleter = gnThesaurusService.getKeywordAutocompleter({
+                         thesaurusKey: scope.thesaurusKey,
+                         dataToExclude: scope.selected
+                       });
+                       autocompleter.clearRemoteCache();
+                       autocompleter.clearPrefetchCache();
                        gcSharedobject.editEntry('keywords');
                        return;
                      }
