@@ -3930,12 +3930,6 @@ l’IGN (WPS)
     <ul>
     ]]></help>
         <condition/>
-        <helper>
-            <option value="Aucune condition ne s’applique">Aucune condition ne s’applique</option>
-            <option value="Conditions inconnues">Conditions inconnues</option>
-            <option value="Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour" title="Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour">Utilisation libre sous réserve de mentionner la source ...</option>
-            <option value="Données ouvertes">Données ouvertes</option>
-        </helper>
     </element>
     <element name="gmd:userContactInfo" id="66.0">
         <label>Contact concernant la ressource</label>
