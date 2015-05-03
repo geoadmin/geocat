@@ -30,6 +30,8 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
 import org.fao.geonet.Util;
@@ -51,6 +53,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.springframework.transaction.TransactionStatus;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -61,6 +64,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static jeeves.transaction.TransactionManager.CommitBehavior.ALWAYS_COMMIT;
+import static jeeves.transaction.TransactionManager.TransactionRequirement.CREATE_NEW;
 
 /**
  * Makes a list of all the non-validated elements
@@ -154,42 +160,49 @@ public class Reject implements Service {
 
     }
 
-    private Element updateHrefs(ServiceContext context, String oldDesc, String msg,
+    private Element updateHrefs(final ServiceContext context, final String oldDesc, final String msg,
                                 Set<MetadataRecord> results) throws Exception {
-        Element newIds = new Element("newIds");
+        final Element newIds = new Element("newIds");
         // Move the reusable object to the DeletedObjects table and update
         // the xlink attribute information so that the objects are obtained from that table
-        Map<String/* oldHref */, String/* newHref */> updatedHrefs = new HashMap<String, String>();
-        for (MetadataRecord metadataRecord : results) {
-            for (String href : metadataRecord.xlinks) {
-                @SuppressWarnings("unchecked")
-                Iterator<Element> xlinks = metadataRecord.xml.getDescendants(new FindXLinks(href));
-                while (xlinks.hasNext()) {
-                    Element xlink = xlinks.next();
-                    String oldHRef = xlink.getAttributeValue(XLink.HREF, XLink.NAMESPACE_XLINK);
-                    String newHref;
-                    if (!updatedHrefs.containsKey(oldHRef)) {
-                        Element fragment = Processor.resolveXLink(oldHRef, context);
+        final Map<String/* oldHref */, String/* newHref */> updatedHrefs = new HashMap<String, String>();
+        for (final MetadataRecord metadataRecord : results) {
+            TransactionManager.runInTransaction("Updating HREFS", context.getApplicationContext(), CREATE_NEW, ALWAYS_COMMIT, false,
+                    new TransactionTask<Void>() {
+                @Override
+                public Void doInTransaction(TransactionStatus transaction) throws Throwable {
+                    for (String href : metadataRecord.xlinks) {
+                        @SuppressWarnings("unchecked")
+                        Iterator<Element> xlinks = metadataRecord.xml.getDescendants(new FindXLinks(href));
+                        while (xlinks.hasNext()) {
+                            Element xlink = xlinks.next();
+                            String oldHRef = xlink.getAttributeValue(XLink.HREF, XLink.NAMESPACE_XLINK);
+                            String newHref;
+                            if (!updatedHrefs.containsKey(oldHRef)) {
+                                Element fragment = Processor.resolveXLink(oldHRef, context);
 
-                        updateChildren(fragment);
-                        // update xlink service
-                        int newId = DeletedObjects.insert(
-                                context.getBean(RejectedSharedObjectRepository.class),
-                                Xml.getString(fragment), oldDesc + " - " + href, msg);
-                        newIds.addContent(new Element("id").setText(String.valueOf(newId)));
-                        newHref = DeletedObjects.href(newId);
-                        updatedHrefs.put(oldHRef, newHref);
-                    } else {
-                        newHref = updatedHrefs.get(oldHRef);
+                                updateChildren(fragment);
+                                // update xlink service
+                                int newId = DeletedObjects.insert(
+                                        context.getBean(RejectedSharedObjectRepository.class),
+                                        Xml.getString(fragment), oldDesc + " - " + href, msg);
+                                newIds.addContent(new Element("id").setText(String.valueOf(newId)));
+                                newHref = DeletedObjects.href(newId);
+                                updatedHrefs.put(oldHRef, newHref);
+                            } else {
+                                newHref = updatedHrefs.get(oldHRef);
+                            }
+
+                            // Remove non_validated role value (if necessary) so that
+                            // xlink is not editable
+                            xlink.removeAttribute(XLink.ROLE, XLink.NAMESPACE_XLINK);
+                            xlink.setAttribute(XLink.HREF, newHref, XLink.NAMESPACE_XLINK);
+                            xlink.setAttribute(XLink.TITLE, "rejected", XLink.NAMESPACE_XLINK);
+                        }
                     }
-
-                    // Remove non_validated role value (if necessary) so that
-                    // xlink is not editable
-                    xlink.removeAttribute(XLink.ROLE, XLink.NAMESPACE_XLINK);
-                    xlink.setAttribute(XLink.HREF, newHref, XLink.NAMESPACE_XLINK);
-                    xlink.setAttribute(XLink.TITLE, "rejected", XLink.NAMESPACE_XLINK);
+                    return null;
                 }
-            }
+            });
 
             metadataRecord.commit(context);
         }

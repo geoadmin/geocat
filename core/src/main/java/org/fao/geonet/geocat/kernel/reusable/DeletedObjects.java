@@ -62,7 +62,12 @@ public final class DeletedObjects {
     }
 
     public static Element get(RejectedSharedObjectRepository repo, String id) throws Exception {
-        return repo.findOne(Integer.parseInt(id)).getXmlElement(false);
+        RejectedSharedObject sharedObject = repo.findOne(Integer.parseInt(id));
+        if (sharedObject != null) {
+            return sharedObject.getXmlElement(false);
+        } else {
+            return new Element("ERROR").setText("no deleted object with id: '" + id + "' exists");
+        }
     }
 
     public static Element list(RejectedSharedObjectRepository repo) throws SQLException {
