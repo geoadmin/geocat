@@ -31,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -131,7 +132,7 @@ public class GetKeywords {
 			KeywordSearchParamsBuilder builder = parseBuilder(uiLang, searchTerm, maxResults, offset,
 					targetLangs, thesauri, thesauriDomainName, typeSearch, keywordUriCode, languagesMapper);
 
-			if (checkModified(webRequest, thesaurusMan, builder)) {
+			if (!applicationContext.getBean(SystemInfo.class).isDevMode() && checkModified(webRequest, thesaurusMan, builder)) {
 				return null;
 			}
 

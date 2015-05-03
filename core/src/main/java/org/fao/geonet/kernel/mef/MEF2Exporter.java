@@ -24,6 +24,14 @@
 package org.fao.geonet.kernel.mef;
 
 import jeeves.server.context.ServiceContext;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.ZipUtil;
@@ -35,10 +43,13 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
+import org.fao.geonet.kernel.search.NoFilterFilter;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRelationRepository;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
@@ -48,6 +59,8 @@ import java.util.List;
 import java.util.Set;
 
 import static org.fao.geonet.Constants.CHARSET;
+import static org.fao.geonet.constants.Geonet.IndexFieldNames.LOCALE;
+import static org.fao.geonet.constants.Geonet.IndexFieldNames.UUID;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
 import static org.fao.geonet.kernel.mef.MEFConstants.MD_DIR;
@@ -72,10 +85,47 @@ class MEF2Exporter {
             boolean skipError) throws Exception {
 
 		Path file = Files.createTempFile("mef-", ".mef");
-        try (FileSystem zipFs = ZipUtil.createZipFs(file)) {
+        // GEOCAT
+        SearchManager searchManager = context.getBean(SearchManager.class);
+        try (
+                FileSystem zipFs = ZipUtil.createZipFs(file);
+                IndexAndTaxonomy indexReaderAndTaxonomy = searchManager.getNewIndexReader(context.getLanguage());
+        ) {
+            StringBuilder builder = new StringBuilder("schema;uuid;id;title;abstract\n");
+            // END GEOCAT
             for (Object uuid1 : uuids) {
                 String uuid = (String) uuid1;
                 try {
+                    // GEOCAT
+                    IndexSearcher searcher = new IndexSearcher(indexReaderAndTaxonomy.indexReader);
+                    BooleanQuery query = new BooleanQuery();
+                    query.add(new BooleanClause(new TermQuery(new Term(UUID, uuid)), BooleanClause.Occur.MUST));
+                    query.add(new BooleanClause(new TermQuery(new Term(LOCALE, context.getLanguage())), BooleanClause.Occur.SHOULD));
+                    TopDocs topDocs = searcher.search(query, NoFilterFilter.instance(), 5);
+                    String mdSchema = null, mdTitle = null, mdAbstract = null, id = null;
+
+                    for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
+                        Document doc = searcher.doc(scoreDoc.doc);
+                        if (mdSchema == null) {
+                            mdSchema = doc.get(Geonet.IndexFieldNames.SCHEMA);
+                        }
+                        if (mdTitle == null) {
+                            mdTitle = doc.get("_title");
+                        }
+                        if (mdAbstract == null) {
+                            mdAbstract = doc.get("abstract");
+                        }
+                        if (id == null) {
+                            id = doc.get("_id");
+                        }
+
+                    }
+                    builder.append(mdSchema).append(";").
+                            append(uuid).append(";").
+                            append(id).append(";").
+                            append(mdTitle).append(";").
+                            append(mdAbstract).append("\n");
+                    // END GEOCAT
                     createMetadataFolder(context, uuid, zipFs, skipUUID, stylePath,
                             format, resolveXlink, removeXlinkAttribute);
                 } catch (Throwable t) {
@@ -89,8 +139,10 @@ class MEF2Exporter {
                     }
                 }
             }
+            // GEOCAT
+            Files.write(zipFs.getPath("/index.csv"), builder.toString().getBytes(Constants.CHARSET));
+            // END GEOCAT
         }
-
 		return file;
 	}
 
