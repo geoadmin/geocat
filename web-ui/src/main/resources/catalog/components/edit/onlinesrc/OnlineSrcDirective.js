@@ -365,9 +365,15 @@
                 scope.metadataId = gnCurrentEdit.id;
                 scope.schema = gnCurrentEdit.schema;
 
-                if(!scope.mdLangs && gnCurrentEdit.mdOtherLanguages) {
+                if (angular.isUndefined(scope.isMdMultilingual) &&
+                    gnCurrentEdit.mdOtherLanguages) {
+
                   scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
                   scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
+
+                  // not multilingual {"fre":"#"}
+                  if (Object.keys(scope.mdLangs).length > 1) {
+                    scope.isMdMultilingual = true;
                   scope.mdLang = gnCurrentEdit.mdLanguage;
 
                   for(var p in scope.mdLangs) {
@@ -380,7 +386,11 @@
                       scope.mdLangs[p] = l;
                     }
                   }
-                };
+                }
+                  else {
+                    scope.isMdMultilingual = false;
+                  }
+                }
 
                 $(scope.popupid).modal('show');
 
@@ -566,7 +576,7 @@
                     params: {}
                   };
                   scope.modelOptions =
-                    angular.copy(gnGlobalSettings.modelOptions);
+                      angular.copy(gnGlobalSettings.modelOptions);
                 },
                 post: function postLink(scope, iElement, iAttrs) {
                   scope.mode = iAttrs['gnLinkServiceToDataset'];
@@ -700,7 +710,7 @@
    * then the form and online resource list are refreshed.
    */
   .directive('gnLinkToMetadata', [
-      'gnOnlinesrc', '$translate', 'gnGlobalSettings',
+        'gnOnlinesrc', '$translate', 'gnGlobalSettings',
         function(gnOnlinesrc, $translate, gnGlobalSettings) {
           return {
             restrict: 'A',
@@ -714,7 +724,7 @@
                     params: {}
                   };
                   scope.modelOptions =
-                    angular.copy(gnGlobalSettings.modelOptions);
+                      angular.copy(gnGlobalSettings.modelOptions);
                 },
                 post: function postLink(scope, iElement, iAttrs) {
                   scope.mode = iAttrs['gnLinkToMetadata'];
@@ -799,7 +809,7 @@
                     params: {}
                   };
                   scope.modelOptions =
-                    angular.copy(gnGlobalSettings.modelOptions);
+                      angular.copy(gnGlobalSettings.modelOptions);
                 },
                 post: function postLink(scope, iElement, iAttrs) {
                   scope.popupid = iAttrs['gnLinkToSibling'];

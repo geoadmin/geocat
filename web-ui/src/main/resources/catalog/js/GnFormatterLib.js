@@ -108,7 +108,8 @@
       parentParam = '&parentUuid=' + parentUuid;
     }
 
-    $.ajax('md.format.xml?xsl=hierarchy_view&skipPopularity=y&id=' + metadataId + parentParam, {
+    $.ajax('md.format.xml?xsl=hierarchy_view&skipPopularity=y&id=' +
+        metadataId + parentParam, {
       dataType: 'text',
       success: function(html) {
         if (spinnerSel) {
@@ -128,7 +129,7 @@
           }
         } else {
           linkBlockEl.replaceWith(html);
-          linkBlockEl = $('.summary-links-associated-link');
+        linkBlockEl = $('.summary-links-associated-link');
         }
         var togglerElements = linkBlockEl.find('.toggler');
         togglerElements.off('click', gnFormatter.formatterSectionTogglersEventHandler);
@@ -136,7 +137,8 @@
 
         if (linkBlockEl.find('table').children().length == 0) {
           linkBlockEl.hide();
-          $('a[rel = ".container > .associated"]').attr('disabled', 'disabled');
+              $('a[rel = ".container > .associated"]').
+                 attr('disabled', 'disabled');
         }
       },
       error: function(req, status, error) {
