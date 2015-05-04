@@ -1581,6 +1581,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             f) {
         if (f != null) {
             if(addedTranslation == null || !addedTranslation.contains(fieldName)) {
+                if (outputName.trim().isEmpty()) {
+                    outputName = fieldName;
+                }
                 md.addContent(new Element(outputName).setText(f.stringValue()));
             }
         }

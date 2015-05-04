@@ -60,7 +60,7 @@
          var indexField = isNaN(mdId) ? '_uuid' : '_id';
          $http.get('qi?_content_type=json&fast=index&' + indexField + '=' +
          mdId).success(function(data) {
-           $scope.md = new Metadata(data.metadata);
+           angular.copy(data.metadata, $scope.md);
          });
 
        }]);
