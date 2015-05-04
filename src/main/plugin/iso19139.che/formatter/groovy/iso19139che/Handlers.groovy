@@ -13,6 +13,24 @@ public class Handlers extends iso19139.Handlers {
         this.packageViews << 'che:legislationInformation'
         this.packageViews << this.rootEl
     }
+    def addDefaultHandlers() {
+        super.addDefaultHandlers();
+        handlers.add name: 'Color Rejected Elements', select: matchers.isRejected, priority: 100, rejectedElementHandler
+    }
+
+    def rejectedElementHandler = { el ->
+        try {
+            matchers.handlingRejectedEls.set(true)
+            def childData = handlers.processElements([el]);
+            return handlers.fileResult('html/rejected.html', [
+                childData: childData,
+                label: f.translate("rejectedTitle"),
+                rejectedDesc: f.translate("rejectedDesc")
+            ])
+        } finally {
+            matchers.handlingRejectedEls.set(false)
+        }
+    }
 
     def pointOfContactGeneralData(party) {
         def generalChildren = [
