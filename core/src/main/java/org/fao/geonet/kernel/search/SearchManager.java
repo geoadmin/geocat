@@ -1409,7 +1409,31 @@ public class SearchManager {
      * @throws Exception
      */
 	private void setupIndex(boolean rebuild) throws Exception {
+        boolean badIndex = false;
+        LuceneIndexLanguageTracker _tracker = ServiceContext.get().getBean(LuceneIndexLanguageTracker.class);
+        try {
+            IndexAndTaxonomy reader = _tracker.acquire(null, -1);
+            reader.indexReader.releaseToNRTManager();
+        } catch (Throwable e) {
+            badIndex = true;
+            Log.error(Geonet.INDEX_ENGINE,
+                    "Exception while opening lucene index, going to rebuild it: " , e);
+        }
 
+        // if rebuild forced or bad index then rebuild index
+        if (rebuild || badIndex) {
+            Log.error(Geonet.INDEX_ENGINE, "Rebuilding lucene index");
+
+            _tracker.reset(TimeUnit.MINUTES.toMillis(5));
+            if (_spatial != null){
+                try {
+                    _spatial.writer().reset();
+                } catch (Exception e) {
+                    Log.error(Geonet.INDEX_ENGINE, "Failure resetting spatial index.", e);
+                }
+            }
+            _tracker.open(Geonet.DEFAULT_LANGUAGE);
+        }
     }
 
     /**
