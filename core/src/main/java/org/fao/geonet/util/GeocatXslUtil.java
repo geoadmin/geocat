@@ -758,27 +758,29 @@ public class GeocatXslUtil {
         if (xlink != null && !xlink.isEmpty()) {
             String typeName = extractFromHref(xlink, TYPENAME_EXTRACTOR);
             String id = extractFromHref(xlink, ID_EXTRACTOR);
-            switch (typeName) {
-                case "gn:countries":
-                    typeName = "country";
-                    break;
-                case "gn:gemeindenBB":
-                    typeName = "gemeinden";
-                    break;
-                case "gn:kantoneBB":
-                    typeName = "kantone";
-                    break;
-                case "gn:xlinks":
-                    typeName = "xlinks";
-                    break;
-                case "gn:non_validated":
-                    typeName = "non_validated";
-                    break;
-                default:
-                    typeName = null;
-            }
-            if (typeName != null) {
-                return typeName + ":" + id;
+            if (typeName != null && id != null) {
+                switch (typeName) {
+                    case "gn:countries":
+                        typeName = "country";
+                        break;
+                    case "gn:gemeindenBB":
+                        typeName = "gemeinden";
+                        break;
+                    case "gn:kantoneBB":
+                        typeName = "kantone";
+                        break;
+                    case "gn:xlinks":
+                        typeName = "xlinks";
+                        break;
+                    case "gn:non_validated":
+                        typeName = "non_validated";
+                        break;
+                    default:
+                        typeName = null;
+                }
+                if (typeName != null) {
+                    return typeName + ":" + id;
+                }
             }
         }
 
