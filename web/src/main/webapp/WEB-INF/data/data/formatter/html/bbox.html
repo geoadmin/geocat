@@ -1,4 +1,10 @@
 <div fmt-transclude="html/2-level-entry.html" fmt-transclude-model="childData">
+  <div fmt-if="!pdfOutput" class="btn-group projection-choice" role="group">
+    <button type="button" class="btn btn-default active"
+            onclick="gnFormatter.updateBbox(event, '{{n}}', '{{e}}', '{{s}}', '{{w}}')">WGS84</button>
+    <button type="button" class="btn btn-default"
+            onclick="gnFormatter.reprojectBbox(event, '{{n}}', '{{e}}', '{{s}}', '{{w}}')">CH03</button>
+  </div>
   <div class="thumbnail extent">
     <span fmt-if="!pdfOutput">
       <div class="input-group coord coord-north">

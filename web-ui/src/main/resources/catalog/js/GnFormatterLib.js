@@ -151,5 +151,26 @@
       }
     });
   };
+  gnFormatter.updateBbox = function(event, n, e, s, w) {
+    var button = $(event.target);
 
+    button.parent().find('button').removeClass('active');
+    button.addClass("active");
+
+    button.parent().next().find(".coord-north input.form-control").val(n);
+    button.parent().next().find(".coord-east input.form-control").val(e);
+    button.parent().next().find(".coord-south input.form-control").val(s);
+    button.parent().next().find(".coord-west input.form-control").val(w);
+  };
+  gnFormatter.reprojectBbox = function(event, n, e, s, w) {
+    var button = $(event.target);
+    if (!button.hasClass("active")) {
+      var transform = proj4('EPSG:4326', '+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs');
+      var ur = transform.forward([e, n]);
+      var ll = transform.forward([w, s]);
+
+      var round = Math.round;
+      gnFormatter.updateBbox(event, round(ur[1]), round(ur[0]), round(ll[1]), round(ll[0]));
+    }
+  };
 })();
