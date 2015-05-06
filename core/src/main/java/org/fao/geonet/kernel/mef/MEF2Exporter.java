@@ -63,6 +63,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
 import static org.fao.geonet.Constants.CHARSET;
 import static org.fao.geonet.constants.Geonet.IndexFieldNames.LOCALE;
 import static org.fao.geonet.constants.Geonet.IndexFieldNames.UUID;
@@ -85,10 +86,11 @@ class MEF2Exporter {
 	 * @return MEF2 File
 	 * @throws Exception
 	 */
+    // GEOCAT
 	public static Path doExport(ServiceContext context, Set<String> uuids,
             Format format, boolean skipUUID, Path stylePath, boolean resolveXlink, boolean removeXlinkAttribute,
             boolean skipError) throws Exception {
-
+        // END GEOCAT
 		Path file = Files.createTempFile("mef-", ".mef");
         // GEOCAT
         SearchManager searchManager = context.getBean(SearchManager.class);
@@ -115,13 +117,18 @@ class MEF2Exporter {
                                                  + "  border-left-width: 5px;\n"
                                                  + "  border-radius: 3px;\n"
                                                  + "  border-left-color: #1b809e;\n"
+                                                 + "}\n"
+                                                 + ".entry:hover {\n"
+                                                 + "  background-color: #f5f5f5;\n"
                                                  + "}\n")
             )));
             Element body = new Element("body");
             html.addContent(body);
             for (Object uuid1 : uuids) {
                 String uuid = (String) uuid1;
+                // GEOCAT
                 try {
+                    // END GEOCAT
                     IndexSearcher searcher = new IndexSearcher(indexReaderAndTaxonomy.indexReader);
                     BooleanQuery query = new BooleanQuery();
                     query.add(new BooleanClause(new TermQuery(new Term(UUID, uuid)), BooleanClause.Occur.MUST));
@@ -168,27 +175,29 @@ class MEF2Exporter {
 
                     body.addContent(new Element("div").setAttribute("class", "entry").addContent(Arrays.asList(
                             new Element("h4").setAttribute("class", "title").addContent(
-                                    new Element("a").setAttribute("href", uuid).setText(mdTitle)),
-                            new Element("p").setAttribute("class", "abstract").setText(mdAbstract),
+                                    new Element("a").setAttribute("href", uuid).setText(cleanXml(mdTitle))),
+                            new Element("p").setAttribute("class", "abstract").setText(cleanXml(mdAbstract)),
                             new Element("table").setAttribute("class", "table").addContent(Arrays.asList(
                                     new Element("thead").addContent(
-                                        new Element("tr").addContent(Arrays.asList(
-                                                new Element("th").setText("ID"),
-                                                new Element("th").setText("UUID"),
-                                                new Element("th").setText("Type"),
-                                                new Element("th").setText("isHarvested")
-                                    ))),
+                                            new Element("tr").addContent(Arrays.asList(
+                                                    new Element("th").setText("ID"),
+                                                    new Element("th").setText("UUID"),
+                                                    new Element("th").setText("Type"),
+                                                    new Element("th").setText("isHarvested")
+                                            ))),
                                     new Element("tbody").addContent(
-                                        new Element("tr").addContent(Arrays.asList(
-                                                new Element("td").setAttribute("class", "id").setText(id),
-                                                new Element("td").setAttribute("class", "uuid").setText(uuid),
-                                                new Element("td").setAttribute("class", "type").setText(mdType.toString()),
-                                                new Element("td").setAttribute("class", "isHarvested").setText(isHarvested)
-                                    )))
+                                            new Element("tr").addContent(Arrays.asList(
+                                                    new Element("td").setAttribute("class", "id").setText(id),
+                                                    new Element("td").setAttribute("class", "uuid").setText(xmlContentEscaper().escape
+                                                            (uuid)),
+                                                    new Element("td").setAttribute("class", "type").setText(mdType.toString()),
+                                                    new Element("td").setAttribute("class", "isHarvested").setText(isHarvested)
+                                            )))
                             ))
                     )));
                     createMetadataFolder(context, uuid, zipFs, skipUUID, stylePath,
                             format, resolveXlink, removeXlinkAttribute);
+                    // GEOCAT
                 } catch (Throwable t) {
                     if (skipError) {
                         Log.error(Geonet.MEF, "Error exporting metadata to MEF file: " + uuid1, t);
@@ -199,6 +208,7 @@ class MEF2Exporter {
                         throw new RuntimeException(t);
                     }
                 }
+                // END GEOCAT
             }
             Files.write(zipFs.getPath("/index.csv"), csvBuilder.toString().getBytes(Constants.CHARSET));
             Files.write(zipFs.getPath("/index.html"), Xml.getString(html).getBytes(Constants.CHARSET));
@@ -206,12 +216,20 @@ class MEF2Exporter {
 		return file;
 	}
 
-    private static String cleanForCsv(String mdSchema) {
-        if (mdSchema != null) {
-            return mdSchema.replace("\"", "'");
+    private static String cleanXml(String xmlTextContent) {
+        if (xmlTextContent != null) {
+            return xmlContentEscaper().escape(xmlTextContent);
         }
         return "-";
     }
+
+    private static String cleanForCsv(String csvColumnText) {
+        if (csvColumnText != null) {
+            return csvColumnText.replace("\"", "'");
+        }
+        return "-";
+    }
+
 
     /**
 	 * Create a metadata folder according to MEF {@link Version} 2
