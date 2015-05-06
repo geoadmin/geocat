@@ -38,22 +38,27 @@ import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataRelation;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
+import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.NoFilterFilter;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRelationRepository;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -87,45 +92,101 @@ class MEF2Exporter {
 		Path file = Files.createTempFile("mef-", ".mef");
         // GEOCAT
         SearchManager searchManager = context.getBean(SearchManager.class);
+        String contextLang = context.getLanguage() == null ? Geonet.DEFAULT_LANGUAGE : context.getLanguage();
         try (
                 FileSystem zipFs = ZipUtil.createZipFs(file);
-                IndexAndTaxonomy indexReaderAndTaxonomy = searchManager.getNewIndexReader(context.getLanguage());
+                IndexAndTaxonomy indexReaderAndTaxonomy = searchManager.getNewIndexReader(contextLang);
         ) {
-            StringBuilder builder = new StringBuilder("schema;uuid;id;title;abstract\n");
-            // END GEOCAT
+            StringBuilder csvBuilder = new StringBuilder("\"schema\";\"uuid\";\"id\";\"type\";\"isHarvested\";\"title\";\"abstract\"\n");
+            Element html = new Element("html").addContent(new Element("head").addContent(Arrays.asList(
+                    new Element("title").setText("Export Index"),
+                    new Element("link").setAttribute("rel", "stylesheet").
+                            setAttribute("href", "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"),
+                    new Element("style").setText("body {\n"
+                                                 + "  padding-left: 10px;\n"
+                                                 + "}\n"
+                                                 + "p.abstract {\n"
+                                                 + "  font-style: italic;\n"
+                                                 + "}\n"
+                                                 + ".entry {\n"
+                                                 + "  padding: 20px;\n"
+                                                 + "  margin: 20px 0;\n"
+                                                 + "  border: 1px solid #eee;\n"
+                                                 + "  border-left-width: 5px;\n"
+                                                 + "  border-radius: 3px;\n"
+                                                 + "  border-left-color: #1b809e;\n"
+                                                 + "}\n")
+            )));
+            Element body = new Element("body");
+            html.addContent(body);
             for (Object uuid1 : uuids) {
                 String uuid = (String) uuid1;
                 try {
-                    // GEOCAT
                     IndexSearcher searcher = new IndexSearcher(indexReaderAndTaxonomy.indexReader);
                     BooleanQuery query = new BooleanQuery();
                     query.add(new BooleanClause(new TermQuery(new Term(UUID, uuid)), BooleanClause.Occur.MUST));
-                    query.add(new BooleanClause(new TermQuery(new Term(LOCALE, context.getLanguage())), BooleanClause.Occur.SHOULD));
+                    query.add(new BooleanClause(new TermQuery(new Term(LOCALE, contextLang)), BooleanClause.Occur.SHOULD));
                     TopDocs topDocs = searcher.search(query, NoFilterFilter.instance(), 5);
-                    String mdSchema = null, mdTitle = null, mdAbstract = null, id = null;
+                    String mdSchema = null, mdTitle = null, mdAbstract = null, id = null, isHarvested = null;
+                    MetadataType mdType = null;
 
                     for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
                         Document doc = searcher.doc(scoreDoc.doc);
+                        String locale = doc.get(Geonet.IndexFieldNames.LOCALE);
                         if (mdSchema == null) {
                             mdSchema = doc.get(Geonet.IndexFieldNames.SCHEMA);
                         }
-                        if (mdTitle == null) {
-                            mdTitle = doc.get("_title");
+                        if (mdTitle == null || contextLang.equals(locale)) {
+                            mdTitle = doc.get(LuceneIndexField.TITLE);
                         }
-                        if (mdAbstract == null) {
-                            mdAbstract = doc.get("abstract");
+                        if (mdAbstract == null || contextLang.equals(locale)) {
+                            mdAbstract = doc.get(LuceneIndexField.ABSTRACT);
                         }
                         if (id == null) {
-                            id = doc.get("_id");
+                            id = doc.get(LuceneIndexField.ID);
+                        }
+                        if (isHarvested == null) {
+                            isHarvested = doc.get(Geonet.IndexFieldNames.IS_HARVESTED);
+                        }
+                        if (mdType == null) {
+                            String tmp = doc.get(LuceneIndexField.IS_TEMPLATE);
+                            mdType = MetadataType.lookup(tmp.charAt(0));
                         }
 
                     }
-                    builder.append(mdSchema).append(";").
-                            append(uuid).append(";").
-                            append(id).append(";").
-                            append(mdTitle).append(";").
-                            append(mdAbstract).append("\n");
-                    // END GEOCAT
+
+                    if (mdType == null) {
+                        mdType = MetadataType.METADATA;
+                    }
+                    csvBuilder.append('"').append(cleanForCsv(mdSchema)).append("\";\"").
+                            append(cleanForCsv(uuid)).append("\";\"").
+                            append(cleanForCsv(id)).append("\";\"").
+                            append(mdType.toString()).append("\";\"").
+                            append(cleanForCsv(isHarvested)).append("\";\"").
+                            append(cleanForCsv(mdTitle)).append("\";\"").
+                            append(cleanForCsv(mdAbstract)).append("\"\n");
+
+                    body.addContent(new Element("div").setAttribute("class", "entry").addContent(Arrays.asList(
+                            new Element("h4").setAttribute("class", "title").addContent(
+                                    new Element("a").setAttribute("href", uuid).setText(mdTitle)),
+                            new Element("p").setAttribute("class", "abstract").setText(mdAbstract),
+                            new Element("table").setAttribute("class", "table").addContent(Arrays.asList(
+                                    new Element("thead").addContent(
+                                        new Element("tr").addContent(Arrays.asList(
+                                                new Element("th").setText("ID"),
+                                                new Element("th").setText("UUID"),
+                                                new Element("th").setText("Type"),
+                                                new Element("th").setText("isHarvested")
+                                    ))),
+                                    new Element("tbody").addContent(
+                                        new Element("tr").addContent(Arrays.asList(
+                                                new Element("td").setAttribute("class", "id").setText(id),
+                                                new Element("td").setAttribute("class", "uuid").setText(uuid),
+                                                new Element("td").setAttribute("class", "type").setText(mdType.toString()),
+                                                new Element("td").setAttribute("class", "isHarvested").setText(isHarvested)
+                                    )))
+                            ))
+                    )));
                     createMetadataFolder(context, uuid, zipFs, skipUUID, stylePath,
                             format, resolveXlink, removeXlinkAttribute);
                 } catch (Throwable t) {
@@ -139,14 +200,20 @@ class MEF2Exporter {
                     }
                 }
             }
-            // GEOCAT
-            Files.write(zipFs.getPath("/index.csv"), builder.toString().getBytes(Constants.CHARSET));
-            // END GEOCAT
+            Files.write(zipFs.getPath("/index.csv"), csvBuilder.toString().getBytes(Constants.CHARSET));
+            Files.write(zipFs.getPath("/index.html"), Xml.getString(html).getBytes(Constants.CHARSET));
         }
 		return file;
 	}
 
-	/**
+    private static String cleanForCsv(String mdSchema) {
+        if (mdSchema != null) {
+            return mdSchema.replace("\"", "'");
+        }
+        return "-";
+    }
+
+    /**
 	 * Create a metadata folder according to MEF {@link Version} 2
 	 * specification. If current record is based on an ISO profil, the
 	 * stylesheet /convert/to19139.xsl is used to map to ISO. Both files are
