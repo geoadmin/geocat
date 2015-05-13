@@ -662,7 +662,7 @@
                     $(scope.popupid).modal('show');
 
                     // parameters of the online resource form
-                    scope.srcParams = {};
+                    scope.srcParams = {selectedLayers: []};
 
                     var searchParams = {
                       type: scope.mode,
@@ -686,9 +686,15 @@
                    */
                   scope.loadWMSCapabilities = function(url) {
                     gnOwsCapabilities.getWMSCapabilities(url)
-                        .then(function(layers) {
-                          scope.layers = layers;
+                        .then(function(capabilities) {
+                          scope.layers = [];
+                          scope.srcParams.selectedLayers = [];
+                          scope.layers.push(capabilities.Layer[0]);
+                          angular.forEach(scope.layers[0].Layer, function (l) {
+                            scope.layers.push(l);
+                            // TODO: We may have more than one level
                           });
+                        });
                   };
 
                   /**
@@ -703,8 +709,6 @@
                         scope.stateObj.selectRecords.length > 0) {
                       var md = new Metadata(scope.stateObj.selectRecords[0]);
                       var links = [];
-                      links = links.concat(md.getLinksByType('OGC:WMS'));
-                      links = links.concat(md.getLinksByType('wms'));
 
                       // specific GEOCAT
                       var wmsUris;
@@ -722,21 +726,39 @@
                       }
                       // end - specific GEOCAT
 
+                      scope.srcParams.selectedLayers = [];
+
                       if (scope.mode == 'service') {
+                        links = links.concat(md.getLinksByType('OGC:WMS'));
+                        links = links.concat(md.getLinksByType('wms'));
                         scope.srcParams.uuidSrv = md.getUuid();
                         scope.srcParams.uuidDS = gnCurrentEdit.uuid;
 
-                        if (links || wmsUris) { // specific GEOCAT
+                        if ((angular.isArray(links) && links.length == 1)
+                            || wmsUris) { // specific GEOCAT
                           if(!wmsUris) {
-                          scope.loadWMSCapabilities(links[0].url);
-                        }
+                            scope.loadWMSCapabilities(links[0].url);
+                            scope.srcParams.url = links[0].url;
+                          }
                           else {
                             scope.layers = wmsUris;
-                      }
+                          }
+                        } else {
+                          scope.srcParams.url = '';
+                          scope.alertMsg =
+                              $translate('linkToServiceWithoutURLError');
                         }
                       }
                       else {
-                        scope.layers = links;
+                        // TODO: Check the appropriate WMS service
+                        // or list URLs if many
+                        links = links.concat(
+                            gnCurrentEdit.metadata.getLinksByType('OGC:WMS'));
+                        links = links.concat(
+                            gnCurrentEdit.metadata.getLinksByType('wms'));
+                        var serviceUrl = links[0].url;
+                        scope.loadWMSCapabilities(serviceUrl);
+                        scope.srcParams.url = serviceUrl;
                         scope.srcParams.uuidDS = md.getUuid();
                         scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
                       }
