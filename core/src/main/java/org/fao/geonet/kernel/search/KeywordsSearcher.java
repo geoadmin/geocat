@@ -30,6 +30,7 @@ import org.fao.geonet.exceptions.TermNotFoundException;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusFinder;
+import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParams;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
@@ -43,6 +44,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 
 /**
@@ -88,10 +90,21 @@ public class KeywordsSearcher {
 
         Thesaurus thesaurus = _thesaurusFinder.getThesaurusByName(sThesaurusName);
 
-        try {
-            result = thesaurus.getKeyword(id, languages);
-        } catch (TermNotFoundException e) {
-        }
+		if (thesaurus == null) {
+			if (_thesaurusFinder instanceof ThesaurusManager) {
+				ThesaurusManager thesaurusManager = (ThesaurusManager) _thesaurusFinder;
+				thesaurusManager.waitForThesauriLoading(TimeUnit.SECONDS.toMillis(30));
+			}
+			thesaurus = _thesaurusFinder.getThesaurusByName(sThesaurusName);
+		}
+		try {
+			if (thesaurus != null) {
+				result = thesaurus.getKeyword(id, languages);
+			} else {
+				System.out.println("Not found: ");
+			}
+		} catch (TermNotFoundException e) {
+		}
 
         return result;
     }

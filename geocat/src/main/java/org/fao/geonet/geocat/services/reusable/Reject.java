@@ -149,7 +149,7 @@ public class Reject implements Service {
         strategy.performDelete(ids, session, strategySpecificData);
 
         final DataManager dataManager = context.getBean(DataManager.class);
-        dataManager.indexMetadata(allAffectedMdIds, true, false, true);
+        dataManager.indexMetadata(allAffectedMdIds, true, false);
         context.getBean(SearchManager.class).forceIndexChanges();
 
         if (!emailInfo.isEmpty()) {

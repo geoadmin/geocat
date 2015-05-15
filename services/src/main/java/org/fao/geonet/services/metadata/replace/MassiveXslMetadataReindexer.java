@@ -210,7 +210,7 @@ public class MassiveXslMetadataReindexer extends MetadataIndexerProcessor {
                     dataMan.updateMetadata(context, id, processedMetadata,
                             false, true, true,
                             context.getLanguage(),
-                            new ISODate().toString(), true, false);
+                            new ISODate().toString(), true);
                 }
 
 

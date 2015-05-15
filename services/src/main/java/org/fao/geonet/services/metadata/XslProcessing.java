@@ -247,7 +247,7 @@ public class XslProcessing {
 	                String language = context.getLanguage();
 	                // Always udpate metadata date stamp on metadata processing (minor edit has no effect).
 	                boolean updateDateStamp = true;
-	                dataMan.updateMetadata(context, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp, true);
+	                dataMan.updateMetadata(context, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
                     dataMan.indexMetadata(id, true);
 	            }
 	

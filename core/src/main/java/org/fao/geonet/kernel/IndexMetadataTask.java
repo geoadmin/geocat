@@ -5,8 +5,6 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.transaction.TransactionStatus;
 
@@ -76,8 +74,6 @@ final class IndexMetadataTask implements Runnable {
                 }
             }
 
-            final MetadataValidationRepository mvRepo = _context.getBean(MetadataValidationRepository.class);
-            final MetadataRepository metadataRepository= _context.getBean(MetadataRepository.class);
             DataManager dataManager = _context.getBean(DataManager.class);
             // servlet up so safe to index all metadata that needs indexing
             for (Object metadataId : _metadataIds) {
@@ -91,7 +87,9 @@ final class IndexMetadataTask implements Runnable {
                 }
 
                 try {
-                    dataManager.indexMetadata(metadataId.toString(), false);
+                    // GEOCAT
+                    dataManager.indexMetadata(metadataId.toString(), false, true, false, true);
+                    // END GEOCAT
                 } catch (Exception e) {
                     Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '" + metadataId + "': " + e.getMessage()
                                                    + "\n" + Util.getStackTrace(e));

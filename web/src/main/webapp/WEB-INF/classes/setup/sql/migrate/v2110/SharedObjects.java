@@ -10,6 +10,7 @@ import org.fao.geonet.DatabaseMigrationTask;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.geocat.services.thesaurus.RepairRdfFiles;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -134,8 +135,6 @@ public class SharedObjects implements DatabaseMigrationTask {
         String dname = "non_validated";
         Path thesaurusFile = thesauriDir.resolve(fname + "/thesauri/" + type + "/" + dname + ".rdf");
         String siteURL = "http://site.uri.com";
-        Thesaurus thesaurus = new Thesaurus(mapper, fname, type, dname, thesaurusFile, siteURL);
-        thesaurus.initRepository();
 
         final Multimap<String, String> allKeywordIds = HashMultimap.create();
 
@@ -152,6 +151,9 @@ public class SharedObjects implements DatabaseMigrationTask {
                         String thesaurusName = localOrExternal + "." + thesaurusCategory + "." + thesaurusFileName;
 
                         Element xml = Xml.loadFile(file);
+                        if (localOrExternal.toString().equals("local")) {
+                            RepairRdfFiles.repairRdfFile(file, xml);
+                        }
                         ArrayList<Namespace> nSs = Lists.newArrayList(Namespace.getNamespace("rdf",
                                 "http://www.w3.org/1999/02/22-rdf-syntax-ns#"));
                         List<?> objects = Xml.selectNodes(xml, "*//node()[normalize-space(@rdf:about) != ''] | node()[normalize-space(@rdf:about) != '']", nSs);
@@ -169,6 +171,9 @@ public class SharedObjects implements DatabaseMigrationTask {
                 return super.visitFile(file, attrs);
             }
         });
+        Thesaurus thesaurus = new Thesaurus(mapper, fname, type, dname, thesaurusFile, siteURL);
+        thesaurus.initRepository();
+
         Map<String, Pair<String, Element>> missingKeywords = Maps.newHashMap();
         try (
                 Statement select = conn.createStatement();

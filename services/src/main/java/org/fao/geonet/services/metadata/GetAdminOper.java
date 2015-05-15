@@ -100,7 +100,7 @@ public class GetAdminOper implements Service
         Element md = dm.getGeocatMetadata(context, metadataId, false, false);
         md.removeChild("info", Edit.NAMESPACE);
         md = Xml.transform(md, context.getAppPath().resolve("xsl/characterstring-to-localisedcharacterstring.xsl"));  // HACK I thin
-        dm.doValidate(context, info.getDataInfo().getSchemaId(), metadataId,md,context.getLanguage(), false);
+        dm.doValidate(context, info.getDataInfo().getSchemaId(), metadataId,md,context.getLanguage(), false, true);
         // END GEOCAT
 
         Element ownerId = new Element("ownerid").setText(info.getSourceInfo().getOwner() + "");

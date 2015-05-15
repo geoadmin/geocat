@@ -811,7 +811,7 @@ public class GeocatXslUtil {
         final List<Namespace> namespaces = Lists.newArrayList(ISO19139Namespaces.GMD);
         @SuppressWarnings("unchecked")
         final List<org.jdom.Element> keywordEls = Lists.newArrayList((List<org.jdom.Element>)
-                Xml.selectNodes(el, "*/gmd:descriptiveKeywords", namespaces));
+                Xml.selectNodes(el, "*/gmd:descriptiveKeywords|*/srv:keywords", namespaces));
 
         Multimap<String, Keyword> keywordsByThesaurus = LinkedHashMultimap.create();
         int index = Integer.MAX_VALUE;

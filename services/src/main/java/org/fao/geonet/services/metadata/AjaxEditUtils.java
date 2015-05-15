@@ -722,8 +722,8 @@ public class AjaxEditUtils extends EditUtils {
         md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
 
 		//--- do the validation on the metadata
-        md = Processor.processXLink(md, context);
-		return dataManager.doValidate(context, schema, id, md, lang, false).one();
+        Processor.processXLink(md, context);
+		return dataManager.doValidate(context, schema, id, md, lang, false, false).one();
 
 	}
 
@@ -773,10 +773,6 @@ public class AjaxEditUtils extends EditUtils {
         editLib.contractElements(md);
         String parentUuid = null;
 		md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
-
-		// GEOCAT
-		md = dataManager.processSharedObjects(id, md, context.getLanguage());
-        // END GEOCAT
 
         String changeDate = null;
         xmlSerializer.update(id, md, changeDate, false, null, context);
@@ -833,10 +829,6 @@ public class AjaxEditUtils extends EditUtils {
 		editLib.contractElements(md);
         String parentUuid = null;
         md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
-
-        // GEOCAT
-        md = dataManager.processSharedObjects(id, md, context.getLanguage());
-        // END GEOCAT
 
         String changeDate = null;
 				xmlSerializer.update(id, md, changeDate, false, null, context);

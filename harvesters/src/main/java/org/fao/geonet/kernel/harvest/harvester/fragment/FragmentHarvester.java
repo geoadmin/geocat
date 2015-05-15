@@ -570,7 +570,7 @@ public class FragmentHarvester extends BaseAligner {
          boolean ufo = false;
          boolean index = false;
          String language = context.getLanguage();
-         dataMan.updateMetadata(context, id, template, validate, ufo, index, language, df.format(date), false, false);
+         dataMan.updateMetadata(context, id, template, validate, ufo, index, language, df.format(date), false);
 
          int iId = Integer.parseInt(id);
 

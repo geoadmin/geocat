@@ -146,7 +146,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
                 final String id = "" + metadataRecord.getId();
                 try {
                      if(checkIfNeedsUnpublishingAndSavePublishedRecord(serviceContext, metadataRecord, dataManager)) {
-                         dataManager.indexMetadata(id, false, false, true, true);
+                         dataManager.indexMetadata(id, false, false, true, false);
                      }
                 } catch (Exception e) {
                     String error = Xml.getString(JeevesException.toElement(e));
@@ -168,7 +168,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
         boolean published = isPublished(id, context);
 
         if (published) {
-            Element report = dataManager.doValidate(null, schema, id, md, "eng", false).one();
+            Element report = dataManager.doValidate(null, schema, id, md, "eng", false, true).one();
 
             Pair<String, String> failureReport = failureReason(context, report);
             String failureRule = failureReport.one();

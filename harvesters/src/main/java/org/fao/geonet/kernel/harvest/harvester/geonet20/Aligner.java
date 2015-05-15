@@ -307,7 +307,7 @@ public class Aligner
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                dataMan.updateMetadata(context, id, md, validate, ufo, index, language, changeDate, false, false);
+                dataMan.updateMetadata(context, id, md, validate, ufo, index, language, changeDate, false);
 
 				result.updatedMetadata++;
 			}

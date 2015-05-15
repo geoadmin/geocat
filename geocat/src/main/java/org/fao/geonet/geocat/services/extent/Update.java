@@ -194,7 +194,7 @@ public class Update implements Service {
                 try {
                     for (MetadataRecord metadataRecord : referencingMetadata) {
                         try {
-                            dm.indexMetadata(String.valueOf(metadataRecord.id), false, true, false, true);
+                            dm.indexMetadata(String.valueOf(metadataRecord.id), false, true, false, false);
                         } catch (Exception e) {
                             // we want to continue indexing so log and continue on
                             Log.error("Error indexing metadata after updating extent:\n\tMetadata Id: " + metadataRecord.id

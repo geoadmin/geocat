@@ -94,7 +94,7 @@ public class Delete implements Service {
         Utils.unpublish(metadataIds, context, "Metadata unpublished by system because a Shared Object was deleted that the metadata "
                                               + "referenced.  Ids are:  " + Joiner.on(", ").join(ids));
         for (Integer metadataId : metadataIds) {
-            context.getBean(DataManager.class).indexMetadata("" + metadataId, false, true, false, true);
+            context.getBean(DataManager.class).indexMetadata("" + metadataId, false, true, false, false);
         }
 
         DeletedObjects.delete(context, ids);

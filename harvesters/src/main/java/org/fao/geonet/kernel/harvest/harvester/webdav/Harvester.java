@@ -408,7 +408,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             }
 
             final Metadata metadata = dataMan.updateMetadata(context, record.id, md, validate, ufo, index, language,
-                    date, false, false);
+                    date, false);
 
             //--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both

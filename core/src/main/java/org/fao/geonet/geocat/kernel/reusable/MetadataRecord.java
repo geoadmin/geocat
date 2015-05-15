@@ -6,8 +6,6 @@ import java.util.Collections;
 import jeeves.server.context.ServiceContext;
 
 import org.apache.lucene.document.Document;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;

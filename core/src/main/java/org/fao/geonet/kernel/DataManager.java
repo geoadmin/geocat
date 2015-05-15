@@ -48,7 +48,6 @@ import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
-import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
@@ -231,7 +230,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
         DataManager dm = context.getBean(DataManager.class);
         for (MetadataRecord metadataRecord : referencingMetadata) {
-            dm.indexMetadata("" + metadataRecord.id, true, false, false, true);
+            dm.indexMetadata("" + metadataRecord.id, true, false, false, false);
         }
     }
     private ApplicationEventPublisher applicationEventPublisher;
@@ -491,9 +490,9 @@ public class DataManager implements ApplicationEventPublisherAware {
     }
 
     public void indexMetadata(final List<String> metadataIds, final boolean processSharedObjects,
-                              final boolean fastIndex, final boolean reloadXLinks) throws Exception {
+                              final boolean fastIndex) throws Exception {
         for (String metadataId : metadataIds) {
-            indexMetadata(metadataId, false, processSharedObjects, fastIndex, reloadXLinks);
+            indexMetadata(metadataId, false, processSharedObjects, fastIndex, false);
         }
     }
 
@@ -513,13 +512,12 @@ public class DataManager implements ApplicationEventPublisherAware {
     public void indexMetadata(final String metadataId, boolean forceRefreshReaders) throws Exception {
         boolean processSharedObjects = true;
         boolean fastIndex = false;
-        boolean reloadXLinks = true;
 
-        indexMetadata(metadataId, forceRefreshReaders, processSharedObjects, fastIndex, reloadXLinks);
+        indexMetadata(metadataId, forceRefreshReaders, processSharedObjects, fastIndex, false);
 
     }
     public void indexMetadata(final String metadataId, boolean forceRefreshReaders, boolean processSharedObjects,
-                              boolean fastIndex, boolean reloadXLinks) throws Exception {
+                              boolean fastIndex, boolean runValidation) throws Exception {
         indexLock.lock();
         try {
             if (waitForIndexing.contains(metadataId)) {
@@ -574,7 +572,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 Log.debug(Geonet.DATA_MANAGER, "record createDate (" + createDate + ")"); //DEBUG
             }
             // GEOCAT
-            md = indexMetadataProcessSharedObjects(metadataId, processSharedObjects, fastIndex, moreFields, md, fullMd);
+            md = indexMetadataProcessSharedObjects(metadataId, processSharedObjects, fastIndex, moreFields, md, fullMd, runValidation);
 
             if (isHarvested.contains("n") && groupOwner != null) {
                 moreFields.add(SearchManager.makeField("_catalog", String.valueOf(groupOwner), true, true));
@@ -751,7 +749,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     // GEOCAT
     private Element indexMetadataProcessSharedObjects(String metadataId, boolean processSharedObjects, boolean fastIndex,
                                                       Vector<Element> moreFields, Element metadataEl,
-                                                      Metadata metadata) throws Exception {
+                                                      Metadata metadata, boolean runValidation) throws Exception {
         final String schemaId = metadata.getDataInfo().getSchemaId();
         final String uuid = metadata.getUuid();
 
@@ -761,7 +759,8 @@ public class DataManager implements ApplicationEventPublisherAware {
 
         if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
             if (getXmlSerializer().resolveXLinks()) {
-                Processor.processXLink(metadataEl, servContext);
+                Set<String> errors = Processor.processXLink(metadataEl, servContext);
+                addBrokenXLinkLuceneFields(moreFields, errors);
             }
 
             /*
@@ -792,7 +791,6 @@ public class DataManager implements ApplicationEventPublisherAware {
             List<Attribute> xlinks = Processor.getXLinks(metadataEl);
             if (xlinks.size() > 0) {
                 moreFields.add(SearchManager.makeField("_hasxlinks", "1", true, true));
-                Processor.processXLink(metadataEl, servContext);
             } else {
                 moreFields.add(SearchManager.makeField("_hasxlinks", "0", true, true));
             }
@@ -818,22 +816,31 @@ public class DataManager implements ApplicationEventPublisherAware {
 
         // GEOCAT
         if (getXmlSerializer().resolveXLinks()) {
-            Processor.processXLink(metadataEl, servContext);
+            Set<String> errors = Processor.processXLink(metadataEl, servContext);
+            addBrokenXLinkLuceneFields(moreFields, errors);
+
         }
 
         getXmlSerializer().update(metadataId, metadataEl, new ISODate().toString(), false, null, servContext);
 
-        final Specification<MetadataValidation> mvSpec = MetadataValidationSpecs.hasMetadataId(Integer.valueOf(metadataId));
-        final String schema = metadata.getDataInfo().getSchemaId();
+        if (runValidation) {
+            final Specification<MetadataValidation> mvSpec = MetadataValidationSpecs.hasMetadataId(Integer.valueOf(metadataId));
+            final String schema = metadata.getDataInfo().getSchemaId();
 
-        final MetadataValidationRepository mvRepo = _applicationContext.getBean(MetadataValidationRepository.class);
-        if (!metadata.getHarvestInfo().isHarvested() && mvRepo.count(mvSpec) == 0) {
-
-            doValidate(servContext, schema, metadataId, metadataEl, "eng", false);
+            final MetadataValidationRepository mvRepo = _applicationContext.getBean(MetadataValidationRepository.class);
+            if (!metadata.getHarvestInfo().isHarvested() && mvRepo.count(mvSpec) == 0) {
+                doValidate(servContext, schema, metadataId, metadataEl, "eng", false, false);
+            }
         }
         // END GEOCAT
 
         return metadataEl;
+    }
+
+    private void addBrokenXLinkLuceneFields(Vector<Element> moreFields, Set<String> errors) {
+        for (String error : errors) {
+            moreFields.add(SearchManager.makeField("broken-xlink", error, true, false));
+        }
     }
 
     protected ServiceContext getServiceContext() {
@@ -1092,7 +1099,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 metadataBeforeAnyChanges.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
                 updateMetadata(context, id, metadataBeforeAnyChanges,
                     validate, ufo, index,
-                    context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE), false, false);
+                    context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE), false);
                 endEditingSession(id, session);
         } else {
             if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
@@ -1835,7 +1842,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             metadataXml = Xml.transform(metadataXml, stylePath.resolve("characterstring-to-localisedcharacterstring.xsl"));
             // END GEOCAT
             if (withEditorValidationErrors) {
-                version = doValidate(srvContext, schema, id, metadataXml, srvContext.getLanguage(), forEditing).two();
+                version = doValidate(srvContext, schema, id, metadataXml, srvContext.getLanguage(), forEditing, true).two();
             } else {
                 // GEOCAT
                 if (forEditing && metadataSchema.equals("iso19139.che")) {
@@ -1937,20 +1944,6 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
     }
 
-    public Element processSharedObjects(String id, Element md, String lang) throws Exception {
-        ProcessParams processParameters = new ProcessParams(ReusableObjectLogger.THREAD_SAFE_LOGGER, id, md, md, false, lang, servContext);
-
-        final ReusableObjManager objManager = servContext.getBean(ReusableObjManager.class);
-
-        List<Element> modified = objManager.process(processParameters);
-
-        if(!modified.isEmpty()) {
-            md = modified.get(0);
-            Processor.processXLink(md, servContext);
-            servContext.getEntityManager().flush();
-        }
-        return md;
-    }
     // END GEOCAT
 
     /**
@@ -2039,8 +2032,8 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @throws Exception
      */
     public synchronized Metadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
-                                               final boolean validate, final boolean ufo, final boolean index, final String lang,
-                                               final String changeDate, final boolean updateDateStamp, final boolean processSharedObject) throws Exception {
+                                                final boolean validate, final boolean ufo, final boolean index, final String lang,
+                                                final String changeDate, final boolean updateDateStamp) throws Exception {
         Element metadataXml = md;
 
         // when invoked from harvesters, session is null?
@@ -2053,13 +2046,9 @@ public class DataManager implements ApplicationEventPublisherAware {
         Integer intId = Integer.valueOf(metadataId);
         if(ufo) {
             String parentUuid = null;
-            metadataXml = updateFixedInfo(schema, Optional.of(intId), null, metadataXml, parentUuid, (updateDateStamp ? UpdateDatestamp.YES : UpdateDatestamp.NO), context);
+            metadataXml = updateFixedInfo(schema, Optional.of(intId), null, metadataXml, parentUuid, (updateDateStamp ? UpdateDatestamp
+                    .YES : UpdateDatestamp.NO), context);
         }
-        // GEOCAT
-        if(processSharedObject) {
-            metadataXml = processSharedObjects(metadataId, md, lang);
-        }
-        // END GEOCAT
 
         //--- force namespace prefix for iso19139 metadata
         setNamespacePrefixUsingSchemas(schema, metadataXml);
@@ -2082,12 +2071,14 @@ public class DataManager implements ApplicationEventPublisherAware {
 
         try {
             //--- do the validation last - it throws exceptions
-            if (session != null && validate) {
-                doValidate(context, schema,metadataId,metadataXml,lang, false);
-            } else {
-                final MetadataValidationRepository validationRepository = _applicationContext.getBean(MetadataValidationRepository.class);
-                validationRepository.deleteAllById_MetadataId(intId);
-            }
+            // GEOCAT
+//            if (session != null && validate) {
+//                doValidate(context, schema,metadataId,metadataXml,lang, false, true);
+//            } else {
+            final MetadataValidationRepository validationRepository = _applicationContext.getBean(MetadataValidationRepository.class);
+            validationRepository.deleteAllById_MetadataId(intId);
+//            }
+            // END GEOCAT
         } finally {
             if(index) {
                 //--- update search criteria
@@ -2242,7 +2233,8 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @return
      * @throws Exception
      */
-    public Pair <Element, String> doValidate(ServiceContext context, String schema, String metadataId, Element metadata, String lang, boolean forEditing) throws Exception {
+    public Pair <Element, String> doValidate(ServiceContext context, String schema, String metadataId, Element metadata, String lang,
+                                             boolean forEditing, boolean processXLinks) throws Exception {
         int intMetadataId = Integer.parseInt(metadataId);
         String version = null;
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
@@ -2255,7 +2247,9 @@ public class DataManager implements ApplicationEventPublisherAware {
             md = metadata;
         }
         // GEOCAT
-        Processor.processXLink(md, context);
+        if (processXLinks) {
+            Processor.processXLink(md, context);
+        }
         md = Xml.transform(md, this.servContext.getAppPath().resolve("xsl/characterstring-to-localisedcharacterstring.xsl"));
         UserSession session = null;
         if (context != null && context.getUserSession() != null) {

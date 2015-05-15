@@ -1324,7 +1324,7 @@ public class Save implements Service {
     @VisibleForTesting
     protected void saveMetadata(ServiceContext context, AjaxEditUtils ajaxEditUtils, String id, DataManager dataManager, Element metadata,
                                 boolean finished, boolean commitChange) throws Exception {
-        dataManager.updateMetadata(context, id, metadata, false, true, true, context.getLanguage(), null, true, true);
+        dataManager.updateMetadata(context, id, metadata, false, true, true, context.getLanguage(), null, true);
         context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING + id, metadata);
 
         if (finished) {

@@ -248,6 +248,11 @@ public class ServiceContext extends BasicContext {
      */
     public Element execute(LocalServiceRequest request) throws Exception {
         executeOnly(request);
+        int statusCode = request.getStatusCode();
+        if (statusCode != 200) {
+            throw new RuntimeException("status code was not 200 for service: " + request.getService() + ", status was: " +
+                                       request.getStatusCode());
+        }
         try {
             return request.getResult();
         } catch (Exception e) {

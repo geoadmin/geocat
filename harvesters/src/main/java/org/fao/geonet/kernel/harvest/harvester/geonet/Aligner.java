@@ -767,7 +767,7 @@ public class Aligner extends BaseAligner
             boolean updateDateStamp = true;
             String language = context.getLanguage();
             dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate,
-                    updateDateStamp, false);
+                    updateDateStamp);
             metadata = metadataRepository.findOne(id);
             result.updatedMetadata++;
         }

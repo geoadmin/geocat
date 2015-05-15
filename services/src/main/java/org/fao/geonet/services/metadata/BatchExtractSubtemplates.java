@@ -343,7 +343,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 
 		if (doChanges) {
 			boolean validate = false, ufo = false, indexImmediate = false;
-			dataMan.updateMetadata(context, "" + metadataEntity.getId(), md, validate, ufo, indexImmediate, context.getLanguage(), new ISODate().toString(), true, false);
+			dataMan.updateMetadata(context, "" + metadataEntity.getId(), md, validate, ufo, indexImmediate, context.getLanguage(), new ISODate().toString(), true);
 
 			metadata.add(metadataEntity.getId());
 		}

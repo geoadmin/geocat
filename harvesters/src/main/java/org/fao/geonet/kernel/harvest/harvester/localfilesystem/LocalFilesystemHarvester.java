@@ -172,7 +172,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         String language = context.getLanguage();
 
         final Metadata metadata = dataMan.updateMetadata(context, id, xml, false, false, false, language, changeDate,
-                true, false);
+                true);
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));

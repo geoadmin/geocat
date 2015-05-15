@@ -171,9 +171,8 @@ public class Transaction extends AbstractOperation implements CatalogService {
             try {
                 boolean processSharedObjects = true;
                 boolean fastIndex = false;
-                boolean reloadXLinks = true;
 
-                dataMan.indexMetadata(Lists.newArrayList(toIndex), processSharedObjects, fastIndex, reloadXLinks);
+                dataMan.indexMetadata(Lists.newArrayList(toIndex), processSharedObjects, fastIndex);
             } catch (Exception e) {
                 Log.error(Geonet.CSW, "cannot index");
                 Log.error(Geonet.CSW, " (C) StackTrace\n" + Util.getStackTrace(e));
@@ -341,7 +340,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
             boolean ufo = false;
             boolean index = false;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate, false, true);
+            dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate, false);
 
             toIndex.add(id);
 
@@ -438,7 +437,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
                     boolean ufo = false;
                     boolean index = false;
                     String language = context.getLanguage();
-                    dataMan.updateMetadata(context, id, metadata, validate, ufo, index, language, changeDate, false, true);
+                    dataMan.updateMetadata(context, id, metadata, validate, ufo, index, language, changeDate, false);
 
                     updatedMd.add(id);
 

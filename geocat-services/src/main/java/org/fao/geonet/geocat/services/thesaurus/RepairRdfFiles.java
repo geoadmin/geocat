@@ -84,94 +84,99 @@ public class RepairRdfFiles {
         Log.info(Geonet.GEONETWORK, "Finished repairing RDF files");
     }
 
-    @SuppressWarnings("unchecked")
     private void updateRDF(Path thesaurusFile) {
         final Element element;
         try {
             element = Xml.loadFile(thesaurusFile);
 
-            final List<Element> children = Lists.newArrayList(element.getChildren());
-            Map<String, KeywordBean> beans = Maps.newHashMap();
-
-            for (Element child : children) {
-                if (child.getAttribute("nodeID", RDF_NAMESPACE) != null) {
-                    child.detach();
-                } else if (child.getName().equals("Description") &&
-                    child.getNamespaceURI().equals(RDF_NAMESPACE_URI) &&
-                    child.getAttributeValue("about", RDF_NAMESPACE) != null &&
-                    child.getAttributeValue("about", RDF_NAMESPACE).contains("#")) {
-
-                    child.detach();
-                    final String id = child.getAttributeValue("about", RDF_NAMESPACE);
-                    KeywordBean keywordBean = beans.get(id);
-                    if (keywordBean == null) {
-                        keywordBean = new KeywordBean(langMapper);
-
-                        keywordBean.setUriCode(id);
-                        beans.put(id, keywordBean);
-                    }
-
-                    List<Element> prefLabels = child.getChildren("prefLabel", SKOS_NAMESPACE);
-
-                    for (Element prefLabel : prefLabels) {
-                        String lang = prefLabel.getAttributeValue("lang", XML_NAMESPACE);
-
-                        String value = prefLabel.getTextTrim();
-                        if (value != null && !value.isEmpty()) {
-                            if (lang == null) {
-                                Log.error(Geonet.GEONETWORK,
-                                        "No language defined in the RDF file " + thesaurusFile + " for the keyword with id: " +
-                                        id + " and the prefLabel: " + value);
-                            }
-
-                            keywordBean.setValue(value, lang);
-                        }
-                    }
-
-                    List<Element> notes = child.getChildren("scopeNote", SKOS_NAMESPACE);
-                    for (Element note : notes) {
-                        String lang = note.getAttributeValue("lang", XML_NAMESPACE);
-                        String value = note.getTextTrim();
-                        if (value != null && !value.isEmpty()) {
-                            if (lang == null) {
-                                Log.error(Geonet.GEONETWORK, "No language defined in the RDF file " + thesaurusFile + " for the keyword with id: " + id + " and the scopeNote: " + value);
-                            }
-
-                            keywordBean.setDefinition(value, lang);
-                        }
-                    }
-                }
-            }
-
-            for (KeywordBean keywordBean : beans.values()) {
-                final Element desc = new Element("Description", RDF_NAMESPACE).
-                        setAttribute("about", keywordBean.getUriCode(), RDF_NAMESPACE).
-                        addContent(new Element("type", RDF_NAMESPACE).
-                                setAttribute("resource", "http://www.w3.org/2004/02/skos/core#Concept", RDF_NAMESPACE));
-
-                for (Map.Entry<String, String> entry : keywordBean.getValues().entrySet()) {
-                    desc.addContent(
-                            new Element("prefLabel", SKOS_NAMESPACE).
-                                    setAttribute("lang", entry.getKey(), XML_NAMESPACE).
-                                    setText(entry.getValue())
-                    );
-                }
-
-                for (Map.Entry<String, String> entry : keywordBean.getDefinitions().entrySet()) {
-                    desc.addContent(
-                            new Element("scopeNote", SKOS_NAMESPACE).
-                                    setAttribute("lang", entry.getKey(), XML_NAMESPACE).
-                                    setText(entry.getValue())
-                    );
-                }
-
-                element.addContent(desc);
-            }
-
-            Files.write(thesaurusFile, Xml.getString(element).getBytes(Constants.CHARSET));
+            repairRdfFile(thesaurusFile, element);
         } catch (JDOMException | IOException e) {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void repairRdfFile(Path thesaurusFile, Element element) throws IOException {
+        final List<Element> children = Lists.newArrayList(element.getChildren());
+        Map<String, KeywordBean> beans = Maps.newHashMap();
+
+        for (Element child : children) {
+            if (child.getAttribute("nodeID", RDF_NAMESPACE) != null) {
+                child.detach();
+            } else if (child.getName().equals("Description") &&
+                child.getNamespaceURI().equals(RDF_NAMESPACE_URI) &&
+                child.getAttributeValue("about", RDF_NAMESPACE) != null &&
+                child.getAttributeValue("about", RDF_NAMESPACE).contains("#")) {
+
+                child.detach();
+                final String id = child.getAttributeValue("about", RDF_NAMESPACE);
+                KeywordBean keywordBean = beans.get(id);
+                if (keywordBean == null) {
+                    keywordBean = new KeywordBean(langMapper);
+
+                    keywordBean.setUriCode(id);
+                    beans.put(id, keywordBean);
+                }
+
+                List<Element> prefLabels = child.getChildren("prefLabel", SKOS_NAMESPACE);
+
+                for (Element prefLabel : prefLabels) {
+                    String lang = prefLabel.getAttributeValue("lang", XML_NAMESPACE);
+
+                    String value = prefLabel.getTextTrim();
+                    if (value != null && !value.isEmpty()) {
+                        if (lang == null) {
+                            Log.error(Geonet.GEONETWORK,
+                                    "No language defined in the RDF file " + thesaurusFile + " for the keyword with id: " +
+                                    id + " and the prefLabel: " + value);
+                        }
+
+                        keywordBean.setValue(value, lang);
+                    }
+                }
+
+                List<Element> notes = child.getChildren("scopeNote", SKOS_NAMESPACE);
+                for (Element note : notes) {
+                    String lang = note.getAttributeValue("lang", XML_NAMESPACE);
+                    String value = note.getTextTrim();
+                    if (value != null && !value.isEmpty()) {
+                        if (lang == null) {
+                            Log.error(Geonet.GEONETWORK, "No language defined in the RDF file " + thesaurusFile + " for the keyword with id: " + id + " and the scopeNote: " + value);
+                        }
+
+                        keywordBean.setDefinition(value, lang);
+                    }
+                }
+            }
+        }
+
+        for (KeywordBean keywordBean : beans.values()) {
+            final Element desc = new Element("Description", RDF_NAMESPACE).
+                    setAttribute("about", keywordBean.getUriCode(), RDF_NAMESPACE).
+                    addContent(new Element("type", RDF_NAMESPACE).
+                            setAttribute("resource", "http://www.w3.org/2004/02/skos/core#Concept", RDF_NAMESPACE));
+
+            for (Map.Entry<String, String> entry : keywordBean.getValues().entrySet()) {
+                desc.addContent(
+                        new Element("prefLabel", SKOS_NAMESPACE).
+                                setAttribute("lang", entry.getKey(), XML_NAMESPACE).
+                                setText(entry.getValue())
+                );
+            }
+
+            for (Map.Entry<String, String> entry : keywordBean.getDefinitions().entrySet()) {
+                desc.addContent(
+                        new Element("scopeNote", SKOS_NAMESPACE).
+                                setAttribute("lang", entry.getKey(), XML_NAMESPACE).
+                                setText(entry.getValue())
+                );
+            }
+
+            element.addContent(desc);
+        }
+
+
+        Files.write(thesaurusFile, Xml.getString(element).getBytes(Constants.CHARSET));
     }
 }

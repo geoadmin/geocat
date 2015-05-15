@@ -61,6 +61,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -70,10 +72,11 @@ import static com.google.common.io.Files.getNameWithoutExtension;
 public class ThesaurusManager implements ThesaurusFinder {
 
     private SettingManager settingManager;
-	private ConcurrentHashMap<String, Thesaurus> thesauriMap = new ConcurrentHashMap<String, Thesaurus>();
+	private final ConcurrentHashMap<String, Thesaurus> thesauriMap = new ConcurrentHashMap<String, Thesaurus>();
 	private LocalService service = null;
 	private Path thesauriDirectory = null;
-    private boolean initialized = false;
+    private final AtomicBoolean initialized = new AtomicBoolean(false);
+    private final AtomicBoolean thesauriLoaded = new AtomicBoolean(false);
     private AllThesaurus allThesaurus;
 
     /**
@@ -84,10 +87,9 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 */
 	public synchronized void init(boolean isTest, ServiceContext context, String thesauriRepository)
 			throws Exception {
-        if (this.initialized) {
+        if (this.initialized.get()) {
             return;
         }
-        this.initialized = true;
         this.settingManager = context.getBean(SettingManager.class);
 
         final String siteURL = this.settingManager.getSiteURL(context);
@@ -106,9 +108,20 @@ public class ThesaurusManager implements ThesaurusFinder {
 		thesauriDirectory = thesauriDir.toAbsolutePath();
 
 		batchBuildTable(isTest, context, thesauriDir);
+		this.initialized.set(true);
 	}
-	
-  /**
+
+	public void waitForThesauriLoading(long timeToWaitMillis) {
+		while (!thesauriLoaded.get()) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				return;
+			}
+		}
+	}
+
+	/**
    * Start task to build thesaurus table once the servlet is up. 
    *
    * @param isTest
@@ -173,7 +186,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 */
 	private void initThesauriTable(Path thesauriDirectory, ServiceContext context) throws IOException {
 
-		thesauriMap = new ConcurrentHashMap<>();
+		thesauriMap.clear();
 		Log.info(Geonet.THESAURUS_MAN,"Scanning "+thesauriDirectory);
 
 		if (thesauriDirectory != null && Files.isDirectory(thesauriDirectory)) {
@@ -190,6 +203,7 @@ public class ThesaurusManager implements ThesaurusFinder {
                 }
             }
 		}
+		thesauriLoaded.set(true);
 	}
 
 	/**
