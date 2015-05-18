@@ -390,6 +390,8 @@
                               $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor">
               <xsl:value-of select="concat(., ' ')"/>
             </xsl:for-each>
+          </xsl:attribute>
+        </Field>
 
         <!-- === Data Quality  === -->
         <xsl:for-each select="gmd:dataQualityInfo/*/gmd:lineage//gmd:source[@uuidref]">
