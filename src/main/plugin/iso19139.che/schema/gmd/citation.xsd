@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by BRGM SG/DL (BRGM SG/DL) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" targetNamespace="http://www.isotc211.org/2005/gmd" elementFormDefault="qualified" version="0.1">
+<xs:schema targetNamespace="http://www.isotc211.org/2005/gmd" elementFormDefault="qualified" version="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd">
 	<!-- ================================= Annotation ================================ -->
 	<xs:annotation>
 		<xs:documentation>This file was generated from ISO TC/211 UML class diagrams == 01-26-2005 12:40:04 ====== </xs:documentation>
 	</xs:annotation>
 	<!-- ================================== Imports ================================== -->
 	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="../gco/gco.xsd"/>
-	<xs:include schemaLocation="referenceSystem.xsd"/>
+	<xs:include schemaLocation="../gmd/referenceSystem.xsd"/>
 	<!-- ########################################################################### -->
 	<!-- ########################################################################### -->
 	<!-- ================================== Classes ================================= -->
-	<xs:complexType name="CI_ResponsibleParty_Type" abstract="true">
+	<xs:complexType name="CI_ResponsibleParty_Type">
 		<xs:annotation>
 			<xs:documentation>Identification of, and means of communication with, person(s) and organisations associated with the dataset</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="gco:AbstractObject_Type">
 				<xs:sequence>
-					<!--<xs:element name="individualName" type="gco:CharacterString_PropertyType" minOccurs="0"/>-->
+					<xs:element name="individualName" type="gco:CharacterString_PropertyType" minOccurs="0"/>
 					<xs:element name="organisationName" type="gco:CharacterString_PropertyType" minOccurs="0"/>
 					<xs:element name="positionName" type="gco:CharacterString_PropertyType" minOccurs="0"/>
 					<xs:element name="contactInfo" type="gmd:CI_Contact_PropertyType" minOccurs="0"/>
@@ -73,14 +72,14 @@
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
 	<!-- =========================================================================== -->
-	<xs:complexType name="CI_Address_Type" abstract="true">
+	<xs:complexType name="CI_Address_Type">
 		<xs:annotation>
 			<xs:documentation>Location of the responsible individual or organisation</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="gco:AbstractObject_Type">
 				<xs:sequence>
-					<!--<xs:element name="deliveryPoint" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded"/>-->
+					<xs:element name="deliveryPoint" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="city" type="gco:CharacterString_PropertyType" minOccurs="0"/>
 					<xs:element name="administrativeArea" type="gco:CharacterString_PropertyType" minOccurs="0"/>
 					<xs:element name="postalCode" type="gco:CharacterString_PropertyType" minOccurs="0"/>
@@ -156,7 +155,7 @@
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
 	<!-- =========================================================================== -->
-	<xs:complexType name="CI_Telephone_Type" abstract="true">
+	<xs:complexType name="CI_Telephone_Type">
 		<xs:annotation>
 			<xs:documentation>Telephone numbers for contacting the responsible individual or organisation</xs:documentation>
 		</xs:annotation>

@@ -38,7 +38,7 @@
 			</codeEntry>
 			<codeEntry>
 				<CodeDefinition gml:id="CI_DateTypeCode_revision">
-					<gml:description>date identifies when the resource was examined or re-examined and imporved or amended</gml:description>
+					<gml:description>date identifies when the resource was examined or re-examined and improved or amended</gml:description>
 					<gml:identifier codeSpace="ISOTC211/19115">revision</gml:identifier>
 				</CodeDefinition>
 			</codeEntry>
@@ -621,9 +621,9 @@
 				</CodeDefinition>
 			</codeEntry>
 			<codeEntry>
-				<CodeDefinition gml:id="MD_ClassificationCode_confidentiel">
+				<CodeDefinition gml:id="MD_ClassificationCode_confidential">
 					<gml:description>available for someone who can be entrusted with information</gml:description>
-					<gml:identifier codeSpace="ISOTC211/19115">confidentiel</gml:identifier>
+					<gml:identifier codeSpace="ISOTC211/19115">confidential</gml:identifier>
 				</CodeDefinition>
 			</codeEntry>
 			<codeEntry>
@@ -1044,7 +1044,7 @@
 			<codeEntry>
 				<CodeDefinition gml:id="MD_MaintenanceFrequencyCode_unknown">
 					<gml:description>frequency of maintenance for the data is not known</gml:description>
-					<gml:identifier codeSpace="ISOTC211/19115">unknwon</gml:identifier>
+					<gml:identifier codeSpace="ISOTC211/19115">unknown</gml:identifier>
 				</CodeDefinition>
 			</codeEntry>
 		</CodeListDictionary>
@@ -1854,62 +1854,5 @@
 			</codeEntry>
 		</CodeListDictionary>
 	</codelistItem>
-	
-<!--=== CHE_CI_LegislationCode ===-->
-
-	<codelistItem>
-		<CodeListDictionary gml:id="CHE_CI_LegislationCode">
-			<gml:description>identification of different legislation used in switzerland</gml:description>
-			<gml:identifier codeSpace="ISOTC211/19115">CHE_CI_LegislationCode</gml:identifier>
-			<codeEntry>
-				<CodeDefinition gml:id="CHE_CI_LegislationCode_bylawsPrivatLaw">
-					<gml:description>statuts de droit privé</gml:description>
-					<gml:identifier codeSpace="ISOTC211/19115">bylawsPrivatLaw</gml:identifier>
-				</CodeDefinition>
-			</codeEntry>
-			<codeEntry>
-				<CodeDefinition gml:id="CHE_CI_LegislationCode_bylawsPublicLaw">
-					<gml:description>statuts de droit public</gml:description>
-					<gml:identifier codeSpace="ISOTC211/19115">bylawsPublicLaw</gml:identifier>
-				</CodeDefinition>
-			</codeEntry>
-			<codeEntry>
-				<CodeDefinition gml:id="CHE_CI_LegislationCode_communalLaw">
-					<gml:description>loi communale</gml:description>
-					<gml:identifier codeSpace="ISOTC211/19115">communalLaw</gml:identifier>
-				</CodeDefinition>
-			</codeEntry>
-			<codeEntry>
-				<CodeDefinition gml:id="CHE_CI_LegislationCode_cantonalLaw">
-					<gml:description>loi cantonale</gml:description>
-					<gml:identifier codeSpace="ISOTC211/19115">cantonalLaw</gml:identifier>
-				</CodeDefinition>
-			</codeEntry>
-				<codeEntry>
-				<CodeDefinition gml:id="CHE_CI_LegislationCode_nationalLaw">
-					<gml:description>loi nationale</gml:description>
-					<gml:identifier codeSpace="ISOTC211/19115">nationalLaw</gml:identifier>
-				</CodeDefinition>
-			</codeEntry>
-			<codeEntry>
-				<CodeDefinition gml:id="CHE_CI_LegislationCode_nationalDecree">
-					<gml:description>décret national</gml:description>
-					<gml:identifier codeSpace="ISOTC211/19115">nationalDecree</gml:identifier>
-				</CodeDefinition>
-			</codeEntry>
-					<codeEntry>
-				<CodeDefinition gml:id="CHE_CI_LegislationCode_internationalObligation">
-					<gml:description>obligation internationale</gml:description>
-					<gml:identifier codeSpace="ISOTC211/19115">internationalObligation</gml:identifier>
-				</CodeDefinition>
-			</codeEntry>	
-			<codeEntry>
-				<CodeDefinition gml:id="CHE_CI_LegislationCode_otherLegalText">
-					<gml:description>autre texte législatif</gml:description>
-					<gml:identifier codeSpace="ISOTC211/19115">otherLegalText</gml:identifier>
-				</CodeDefinition>
-			</codeEntry>							
-		</CodeListDictionary>
-	</codelistItem>		
 	<!--=== EOF ===-->
 </CT_CodelistCatalogue>

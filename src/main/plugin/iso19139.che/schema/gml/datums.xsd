@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v5 rel. 2 U (http://www.xmlspy.com) by Clemens Portele (interactive instruments) -->
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" targetNamespace="http://www.opengis.net/gml" elementFormDefault="qualified" version="3.2.0" xml:lang="en">
+<schema targetNamespace="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" version="3.2.0" xml:lang="en">
 	<annotation>
 		<appinfo source="urn:ogc:specification:gml:schema-xsd:datums:3.2.0">datums.xsd</appinfo>
 		<documentation>See ISO/DIS 19136 13.5

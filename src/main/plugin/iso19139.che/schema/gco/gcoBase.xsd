@@ -38,8 +38,8 @@
 	<!-- ========================================================================== -->
 	<!-- ====================== Identification of a resource ============================== -->
 	<xs:attributeGroup name="ObjectIdentification">
-		<xs:attribute name="id" type="xs:ID" use="optional"/>
-		<xs:attribute name="uuid" type="xs:string" use="optional"/>
+		<xs:attribute name="id" type="xs:ID"/>
+		<xs:attribute name="uuid" type="xs:string"/>
 	</xs:attributeGroup>
 	<!-- ========================================================================== -->
 	<!-- ====================== The CodeList prototype ================================= -->
@@ -50,7 +50,7 @@
 			<xs:extension base="xs:string">
 				<xs:attribute name="codeList" type="xs:anyURI" use="required"/>
 				<xs:attribute name="codeListValue" type="xs:anyURI" use="required"/>
-				<xs:attribute name="codeSpace" type="xs:anyURI" use="optional"/>
+				<xs:attribute name="codeSpace" type="xs:anyURI"/>
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>

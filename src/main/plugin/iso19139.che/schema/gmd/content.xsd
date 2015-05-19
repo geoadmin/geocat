@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- edited with XMLSpy v2005 rel. 3 U (http://www.altova.com) by STEPHANE BIDAULT (I.G.N/SAF/RECEPTIONS) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" targetNamespace="http://www.isotc211.org/2005/gmd" elementFormDefault="qualified" version="0.1">
+<xs:schema targetNamespace="http://www.isotc211.org/2005/gmd" elementFormDefault="qualified" version="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd">
 	<!-- ================================= Annotation ================================ -->
 	<xs:annotation>
 		<xs:documentation>This file was generated from ISO TC/211 UML class diagrams == 01-26-2005 12:40:03 ====== </xs:documentation>
 	</xs:annotation>
 	<!-- ================================== Imports ================================== -->
 	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="../gco/gco.xsd"/>
-	<xs:include schemaLocation="citation.xsd"/>
+	<xs:include schemaLocation="../gmd/citation.xsd"/>
 	<!-- ########################################################################### -->
 	<!-- ########################################################################### -->
 	<!-- ================================== Classes ================================= -->
-	<xs:complexType name="MD_FeatureCatalogueDescription_Type" abstract="true">
+	<xs:complexType name="MD_FeatureCatalogueDescription_Type">
 		<xs:annotation>
 			<xs:documentation>Information identifing the feature catalogue</xs:documentation>
 		</xs:annotation>
@@ -28,7 +27,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<!-- ........................................................................ -->
-	<xs:element name="MD_FeatureCatalogueDescription" type="gmd:MD_FeatureCatalogueDescription_Type" substitutionGroup="gmd:AbstractMD_ContentInformation" abstract="true"/>
+	<xs:element name="MD_FeatureCatalogueDescription" type="gmd:MD_FeatureCatalogueDescription_Type" substitutionGroup="gmd:AbstractMD_ContentInformation"/>
 	<!-- ........................................................................ -->
 	<xs:complexType name="MD_FeatureCatalogueDescription_PropertyType">
 		<xs:sequence minOccurs="0">
@@ -53,7 +52,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<!-- ........................................................................ -->
-	<xs:element name="MD_CoverageDescription" type="gmd:MD_CoverageDescription_Type" substitutionGroup="gmd:AbstractMD_ContentInformation" abstract="true"/>
+	<xs:element name="MD_CoverageDescription" type="gmd:MD_CoverageDescription_Type" substitutionGroup="gmd:AbstractMD_ContentInformation"/>
 	<!-- ........................................................................ -->
 	<xs:complexType name="MD_CoverageDescription_PropertyType">
 		<xs:sequence minOccurs="0">
@@ -87,7 +86,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<!-- ........................................................................ -->
-	<xs:element name="MD_ImageDescription" type="gmd:MD_ImageDescription_Type" substitutionGroup="gmd:MD_CoverageDescription" abstract="true"/>
+	<xs:element name="MD_ImageDescription" type="gmd:MD_ImageDescription_Type" substitutionGroup="gmd:MD_CoverageDescription"/>
 	<!-- ........................................................................ -->
 	<xs:complexType name="MD_ImageDescription_PropertyType">
 		<xs:sequence minOccurs="0">

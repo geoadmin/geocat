@@ -255,7 +255,7 @@ The gml:startPoint is the index position of a point in the grid that is mapped t
 			<enumeration value="-x-y"/>
 		</restriction>
 	</simpleType>
-<!--	<element name="MultiPointCoverage" type="gml:MultiPointCoverageType" substitutionGroup="gml:AbstractDiscreteCoverage">
+	<element name="MultiPointCoverage" type="gml:MultiPointCoverageType" substitutionGroup="gml:AbstractDiscreteCoverage">
 		<annotation>
 			<documentation>In a gml:MultiPointCoverage the domain set is a gml:MultiPoint, that is a collection of arbitrarily distributed geometric points.
 The content model is derived by restriction from gml:AbstractDiscreteCoverageType. Note that the restriction replaces the generic gml:domainSet by the specific gml:multiPointDomain whose value is a gml:MultiPoint.
@@ -412,7 +412,6 @@ The simple gridded coverage is not geometrically referenced and hence no geometr
 		</complexContent>
 	</complexType>
 	<element name="gridDomain" type="gml:GridDomainType" substitutionGroup="gml:domainSet"/>
-	
 	<complexType name="GridDomainType">
 		<complexContent>
 			<restriction base="gml:DomainSetType">
@@ -459,5 +458,5 @@ The coverage domain is described by gml:rectifiedGridDomain.</documentation>
 				<attributeGroup ref="gml:AssociationAttributeGroup"/>
 			</restriction>
 		</complexContent>
-	</complexType>-->
+	</complexType>
 </schema>
