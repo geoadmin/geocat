@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by BRGM SG/DL (BRGM SG/DL) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" targetNamespace="http://www.isotc211.org/2005/gmd" elementFormDefault="qualified" version="0.1">
+<xs:schema targetNamespace="http://www.isotc211.org/2005/gmd" elementFormDefault="qualified" version="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd">
 	<!-- ================================= Annotation ================================ -->
 	<xs:annotation>
 		<xs:documentation>This file was generated from ISO TC/211 UML class diagrams == 01-26-2005 12:40:05 ====== </xs:documentation>
 	</xs:annotation>
 	<!-- ================================== Imports ================================== -->
 	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="../gco/gco.xsd"/>
-	<xs:include schemaLocation="constraints.xsd"/>
-	<xs:include schemaLocation="distribution.xsd"/>
-	<xs:include schemaLocation="maintenance.xsd"/>
-	<!-- ###########################################################################  -->
-	<!-- ###########################################################################  -->
+	<xs:include schemaLocation="../gmd/constraints.xsd"/>
+	<xs:include schemaLocation="../gmd/distribution.xsd"/>
+	<xs:include schemaLocation="../gmd/maintenance.xsd"/>
+	<!-- ########################################################################### -->
+	<!-- ########################################################################### -->
 	<!-- ================================== Classes ================================= -->
 	<xs:complexType name="AbstractMD_Identification_Type" abstract="true">
 		<xs:annotation>
@@ -73,7 +72,7 @@
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
 	<!-- =========================================================================== -->
-	<xs:complexType name="MD_DataIdentification_Type" abstract="true">
+	<xs:complexType name="MD_DataIdentification_Type">
 		<xs:complexContent>
 			<xs:extension base="gmd:AbstractMD_Identification_Type">
 				<xs:sequence>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CT_CodelistCatalogue xmlns="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.isotc211.org/2005/gmx ../../gmx/gmx.xsd http://www.isotc211.org/2005/gmd ../../gmd/gmd.xsd http://www.isotc211.org/2005/gco ../../gco/gco.xsd http://www.opengis.net/gml ../../gml/gml.xsd http://www.w3.org/1999/xlink ../../xlink/xlinks.xsd">
+<CT_CodelistCatalogue xmlns="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.isotc211.org/2005/gmx ../../gmx/gmx.xsd http://www.isotc211.org/2005/gmd ../../gmd/gmd.xsd http://www.isotc211.org/2005/gco ../../gco/gco.xsd http://www.w3.org/1999/xlink ../../xlink/xlinks.xsd">
 	<!--=====Catalogue description=====-->
 	<name>
 		<gco:CharacterString>ML_gmxCodelists</gco:CharacterString>
@@ -73,7 +73,7 @@
 			</codeEntry>
 			<codeEntry>
 				<ML_CodeDefinition gml:id="CI_DateTypeCode_revision">
-					<gml:description>date identifies when the resource was examined or re-examined and imporved or amended</gml:description>
+					<gml:description>date identifies when the resource was examined or re-examined and improved or amended</gml:description>
 					<gml:identifier codeSpace="ISOTC211/19115">revision</gml:identifier>
 					<gml:name>revision</gml:name>
 					<alternativeExpression>
@@ -742,7 +742,7 @@
 							<gml:description>Anglais</gml:description>
 							<gml:identifier codeSpace="ISO 639-2">eng</gml:identifier>
 							<gml:name>Anglais</gml:name>
-							<locale xlink:href="#fra"/>
+							<locale xlink:href="#xpointer(//*[@id='fra'])"/>
 						</CodeAlternativeExpression>
 					</alternativeExpression>
 				</ML_CodeDefinition>
@@ -757,37 +757,7 @@
 							<gml:description>Français</gml:description>
 							<gml:identifier codeSpace="ISO 639-2">fra</gml:identifier>
 							<gml:name>Français</gml:name>
-								<locale xlink:href="#fra"/>
-						</CodeAlternativeExpression>
-					</alternativeExpression>
-				</ML_CodeDefinition>
-			</codeEntry>
-				<codeEntry>
-				<ML_CodeDefinition gml:id="LanguageCode_ita">
-					<gml:description>Italian</gml:description>
-					<gml:identifier codeSpace="ISO 639-2">ita</gml:identifier>
-					<gml:name>Italian</gml:name>
-					<alternativeExpression>
-						<CodeAlternativeExpression gml:id="LanguageCode_ita_fr" codeSpace="fra">
-							<gml:description>Italien</gml:description>
-							<gml:identifier codeSpace="ISO 639-2">ita</gml:identifier>
-							<gml:name>Italien</gml:name>
-								<locale xlink:href="#fra"/>
-						</CodeAlternativeExpression>
-					</alternativeExpression>
-				</ML_CodeDefinition>
-			</codeEntry>
-				<codeEntry>
-				<ML_CodeDefinition gml:id="LanguageCode_deu">
-					<gml:description>German</gml:description>
-					<gml:identifier codeSpace="ISO 639-2">deu</gml:identifier>
-					<gml:name>German</gml:name>
-					<alternativeExpression>
-						<CodeAlternativeExpression gml:id="LanguageCode_deu_fr" codeSpace="fra">
-							<gml:description>Allemand</gml:description>
-							<gml:identifier codeSpace="ISO 639-2">deu</gml:identifier>
-							<gml:name>Allemand</gml:name>
-							<locale xlink:href="#fra"/>
+							<locale xlink:href="#xpointer(//*[@id='fra'])"/>
 						</CodeAlternativeExpression>
 					</alternativeExpression>
 				</ML_CodeDefinition>

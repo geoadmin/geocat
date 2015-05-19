@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:sch="http://www.ascc.net/xml/schematron" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" targetNamespace="http://www.opengis.net/gml" elementFormDefault="qualified" version="3.2.0">
+<schema targetNamespace="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:sch="http://www.ascc.net/xml/schematron" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" elementFormDefault="qualified" version="3.2.0">
 	<annotation>
 		<appinfo source="urn:ogc:specification:gml:schema-xsd:geometryPrimitives:3.2.0">geometryPrimitives.xsd</appinfo>
 		<documentation>See ISO/DIS 19136 Clause 11.
