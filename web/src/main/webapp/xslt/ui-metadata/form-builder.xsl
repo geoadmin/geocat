@@ -250,6 +250,7 @@
     <xsl:param name="isDisabled" select="ancestor::node()[@xlink:href]"/>
 
 
+    <xsl:variable name="isRejected" select="contains(@xlink:href, 'xml.reusable.deleted')"/>
     <xsl:variable name="hasXlink" select="@xlink:href"/>
     <xsl:variable name="isValidated" select="not(@xlink:role = 'http://www.geonetwork.org/non_valid_obj')"/>
 
@@ -257,6 +258,9 @@
               data-gn-field-highlight=""
       class="{if ($hasXlink) then 'gn-has-xlink' else ''} gn-{substring-after(name(), ':')}">
 
+      <xsl:if test="$isRejected">
+       <xsl:attribute name="rejected-shared-object" />
+      </xsl:if>
       <legend class="{$cls}"
               data-gn-slide-toggle=""
               data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|">
@@ -272,7 +276,7 @@
         </xsl:if>
 
         <xsl:value-of select="$label"/>
-        <xsl:if test="$hasXlink">
+        <xsl:if test="$hasXlink and not($isRejected)">
           <a class="update-shared-object">
               <xsl:choose>
                   <xsl:when test="not($isValidated)">
@@ -286,6 +290,9 @@
               </xsl:choose>
             <i class="fa fa-edit"></i>
           </a>
+        </xsl:if>
+        <xsl:if test="$isRejected">
+          <div class="rejectedText">({{'rejected' | translate}})</div>
         </xsl:if>
         <xsl:if test="$editInfo and not($isDisabled)">
           <xsl:call-template name="render-boxed-element-control">
