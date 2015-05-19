@@ -55,10 +55,10 @@ queryBinding="xslt2">
             <sch:value-of select="$deAltTitle"/>
         </sch:report>
 
-        <sch:assert test="string-length($deAltTitle) &lt; 31">
+        <sch:assert test="string-length($deAltTitle) &lt; 36">
             <sch:value-of select="$loc/strings/deAltTitleMaxLength"/>
         </sch:assert>
-        <sch:report test="string-length($deAltTitle) &lt; 31 and string-length($deAltTitle) &gt; 0">
+        <sch:report test="string-length($deAltTitle) &lt; 36 and string-length($deAltTitle) &gt; 0">
             <sch:value-of select="$loc/strings/deAltTitleMaxLengthReport"/>
             <sch:value-of select="string-length($deAltTitle)"/>
         </sch:report>
@@ -72,10 +72,10 @@ queryBinding="xslt2">
         </sch:report>
 
 
-        <sch:assert test="string-length($frAltTitle) &lt; 31">
+        <sch:assert test="string-length($frAltTitle) &lt; 36">
             <sch:value-of select="$loc/strings/frAltTitleMaxLength"/>
         </sch:assert>
-        <sch:report test="string-length($frAltTitle) &lt; 31 and string-length($frAltTitle) &gt; 0">
+        <sch:report test="string-length($frAltTitle) &lt; 36 and string-length($frAltTitle) &gt; 0">
             <sch:value-of select="$loc/strings/frAltTitleMaxLengthReport"/>
             <sch:value-of select="string-length($frAltTitle)"/>
         </sch:report>
