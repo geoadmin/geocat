@@ -15,6 +15,7 @@
 
   // geocat specific //
   goog.require('gc_sharedobject');
+  goog.require('gc_mdactions_directive');
   // endof geocat specific //
 
   var module = angular.module('gn_editor', [
@@ -29,7 +30,8 @@
     'gn_geopublisher',
     'gn_batch_service',
     'gn_mdactions_directive',
-    'gc_sharedobject'
+    'gc_sharedobject',
+    'gc_mdactions_directive'
   ]);
 
   module.config(['$LOCALES', function($LOCALES) {

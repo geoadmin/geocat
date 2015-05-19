@@ -48,5 +48,7 @@
   "addEntry": "Create a new entry",
   "bboxOnly": "Bounding box only",
   "bboxPolygon": "Bounding box and bounding polygon",
-  "addSharedObjectInEditor": "Add {{label}}"
+  "addSharedObjectInEditor": "Add {{label}}",
+  "translations": "Translations",
+  "showTranslation": "Show All Translations for Language"
 }

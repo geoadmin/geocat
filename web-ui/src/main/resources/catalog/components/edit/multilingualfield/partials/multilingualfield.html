@@ -8,7 +8,7 @@
         <li data-ng-repeat="lang in sortedLanguages"
             data-ng-hide="expanded"
             data-ng-class="{'active': lang.shortLang === '#' + currentLanguage, 'no-data': lang.shortLang !== '#' + currentLanguage && !hasData[lang.shortLang]}">
-            <a href=""
+            <a href="" class="lang-switcher-pill" lang="{{lang.longLang}}"
                 data-ng-click="switchToLanguage(lang.shortLang)">{{lang.longLang | translate}}</a>
         </li>
     </ul>
