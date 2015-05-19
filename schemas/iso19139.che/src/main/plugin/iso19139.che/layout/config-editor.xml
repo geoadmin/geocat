@@ -312,6 +312,7 @@
         <for name="gmd:resourceFormat"/>
         <for name="gmd:distributionFormat"/>
         <for name="gmd:topicCategory"/>
+        <for name="gmd:graphicOverview"/>
       </flatModeExceptions>
 
     </view>
