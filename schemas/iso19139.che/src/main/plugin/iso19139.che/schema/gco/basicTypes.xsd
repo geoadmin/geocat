@@ -309,12 +309,7 @@
 	<xs:complexType name="Date_PropertyType">
 		<xs:sequence minOccurs="0">
 			<xs:element ref="gco:Date"/>
-			<!-- GM03 profil only allows Date element.
-				DateTime elements are 
-				 * usageDateTime, 
-				 * dateTime, 
-				 * plannedAvailableDateTime.
-				<xs:element ref="gco:DateTime"/>-->
+			<xs:element ref="gco:DateTime"/>
 		</xs:sequence>
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
