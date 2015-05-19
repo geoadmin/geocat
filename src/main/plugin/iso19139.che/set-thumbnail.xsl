@@ -97,14 +97,22 @@
 		</xsl:copy>
 	</xsl:template>
 	
+
 	<!-- ================================================================= -->
 	
 	<xsl:template name="fill">
 		<gmd:graphicOverview>
 			<gmd:MD_BrowseGraphic>
 				<gmd:fileName>
-					<gco:CharacterString><xsl:value-of select="/root/env/file"/></gco:CharacterString>
+					<xsl:variable name="metadataId"   select="/root/*/gmd:fileIdentifier/gco:CharacterString/text()" />
+					<gco:CharacterString>
+					  <xsl:value-of select="concat(
+					    /root/env/url, '/resources.get?',
+					    'uuid=', $metadataId,
+					    '&amp;fname=', /root/env/file)"/>
+					</gco:CharacterString>
 				</gmd:fileName>
+
 				<gmd:fileDescription>
 					<gco:CharacterString><xsl:value-of select="/root/env/type"/></gco:CharacterString>
 				</gmd:fileDescription>
