@@ -941,7 +941,7 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
 		<label>Estensione delle risorse online</label>
 		<description>Informazioni sulle fonti on-line contenente il community profile name ed elementi di metadati estesi. Informazioni per tutti i nuovi elementi di metadati.</description>
 	</element>
-	<element name="gmd:extent" id="45.0" context="gmd:MD_DataIdentification">
+	<element name="gmd:extent" id="45.0">
 		<label>Estensione</label>
 		<description>Estensione spaziale e temporale dei dati</description>
 		<_condition>Conditional / if hierarchyLevel equals "dataset"? Either

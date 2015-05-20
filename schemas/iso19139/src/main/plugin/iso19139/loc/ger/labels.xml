@@ -2200,7 +2200,7 @@
     <description>Beschreibung der Bearbeitungsumgebung, in welcher der Datenbestand erstellt wird,
       wie Software, Betriebssystem, Dateinamen oder Grösse des Datenbestands</description>
   </element>
-  <element name="gmd:extent" context="gmd:MD_DataIdentification" id="45">
+  <element name="gmd:extent" id="45">
     <label>Ausdehnung</label>
     <help/>
     <condition>Wenn Hierarchieebene = Datenbestand, muss entweder eine BoundingBox, ein BoundingPolygon oder eine geografische Beschreibung ausgefüllt werden.</condition>

@@ -1964,7 +1964,7 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
         <help>Informations relatives à des sources en ligne contenant le profil de la communauté d'utilisateurs de même que des éléments de métadonnées étendus. Informations concernant tous les nouveaux éléments de métadonnées.</help>
         <condition/>
     </element>
-    <element name="gmd:extent" id="45.0" context="gmd:MD_DataIdentification">
+    <element name="gmd:extent" id="45.0">
         <label>Etendue</label>
         <description>Information complémentaire sur les étendues spatiales et temporelles du jeu de données, incluant le polygone de délimitation et les dimensions verticales et temporelles</description>
         <help>Informations supplémentaires concernant l'extension spatiale et temporelle des données, incluant le polygone de délimitation, les altitudes et la durée de validité. Ces informations sont du type EX_Extent et sont gérées dans la classe du même nom.</help>

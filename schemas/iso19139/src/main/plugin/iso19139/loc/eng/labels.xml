@@ -1036,7 +1036,7 @@
 		<description>Information about on-line sources containing the community profile name and the
             extended metadata elements. Information for all new metadata elements</description>
 	</element>
-	<element name="gmd:extent" id="45.0" context="gmd:MD_DataIdentification">
+	<element name="gmd:extent" id="45.0">
 		<label>Extent</label>
 		<description>Extent information including the bounding polygon, vertical, and temporal
             extent of the dataset</description>
