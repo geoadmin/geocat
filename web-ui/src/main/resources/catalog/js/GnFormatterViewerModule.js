@@ -15,12 +15,11 @@
   goog.require('gn_alert');
   goog.require('gn_catalog_service');
   goog.require('gn_formatter_lib');
-  goog.require('gn_popup_directive');
-  goog.require('gn_popup_service');
+  goog.require('gn_popup');
   goog.require('gn_search_geocat_mdactionmenu');
   goog.require('gn_utility_directive');
   goog.require('gn_search_default_directive');
-  goog.require('gn_mdactions_service');
+  goog.require('gn_mdactions');
 
 
 
@@ -32,17 +31,19 @@
   var module = angular.module('gn_formatter_viewer',
       ['ngRoute', 'gn', 'gn_utility_directive', 'gn_catalog_service',
         'gn_search_default_directive',
-        'gn_popup_service', 'gn_search_geocat_mdactionmenu', 'gn_mdactions_service', 'gn_alert']);
+        'gn_popup', 'gn_search_geocat_mdactionmenu', 'gn_mdactions', 'gn_alert']);
 
   // Define the translation files to load
-  module.constant('$LOCALES', ['core']);
+  module.config(['$LOCALES', function($LOCALES) {
+    $LOCALES.push('search');
+  }]);
 
   module.controller('GnFormatterViewer',
       ['$scope', '$http', '$sce', '$routeParams', 'Metadata',
        function($scope, $http, $sce, $routeParams, Metadata) {
-         $scope.md = {
+        /* $scope.md = {
            'geonet:info': {}
-         };
+         };*/
          $scope.metadata = '';
          $scope.loading = true;
 
@@ -58,10 +59,10 @@
            $scope.metadata = $sce.trustAsHtml(data);
          });
          var indexField = isNaN(mdId) ? '_uuid' : '_id';
-         $http.get('qi?_content_type=json&fast=index&' + indexField + '=' +
+         /*$http.get('qi?_content_type=json&fast=index&' + indexField + '=' +
          mdId).success(function(data) {
-           angular.copy(data.metadata, $scope.md);
-         });
+           $scope.md = new Metadata(data.metadata);
+         });*/
 
        }]);
   module.config(['$routeProvider', function($routeProvider) {
