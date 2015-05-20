@@ -469,8 +469,16 @@
       $scope.$watch('regions.cantons', onRegionSelect);
       $scope.$watch('regions.cities', onRegionSelect);
 
-
-      $scope.searchObj.params.relation = 'within';
+      // Put relation params only if a geometry param is set
+      $scope.spatialRelation = 'within';
+      $scope.$on('beforesearch', function() {
+        if($scope.searchObj.params.geometry) {
+          $scope.searchObj.params.relation = $scope.spatialRelation;
+        }
+        else {
+          delete $scope.searchObj.params.relation;
+        }
+      });
 
       $scope.scrollToBottom = function($event) {
         var elem = $($event.target).parents('.panel-body')[0];
