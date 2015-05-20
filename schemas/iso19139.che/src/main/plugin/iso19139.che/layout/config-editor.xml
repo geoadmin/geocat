@@ -142,6 +142,7 @@
     <name>che:CHE_MD_Metadata</name>
     <name>gmd:identificationInfo</name>
     <name>gmd:distributionInfo</name>
+    <name>che:legislationInformation</name>
     <name>gmd:portrayalCatalogueInfo</name>
     <name>gmd:portrayalCatalogueCitation</name>
     <name>gmd:thesaurusName</name>
@@ -276,6 +277,7 @@
         <section xpath="/che:CHE_MD_Metadata/gmd:identificationInfo"/>
         <section xpath="/che:CHE_MD_Metadata/gmd:distributionInfo"/>
         <section xpath="/che:CHE_MD_Metadata/gmd:dataQualityInfo"/>
+        <section xpath="/che:CHE_MD_Metadata/che:legislationInformation"/>
         <section name="che:CHE_MD_Metadata">
           <field xpath="/che:CHE_MD_Metadata/gmd:fileIdentifier"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:language" or="language" in="/che:CHE_MD_Metadata"/>
