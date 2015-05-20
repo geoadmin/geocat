@@ -70,12 +70,14 @@
        * Called when you want to pass from mdview uuid url back to search.
        * It change path back to search and inject the last parameters saved
        * at last search.
+       *
+       * @param restore ask for a restore
        */
-      this.removeLocationUuid = function() {
+      this.removeLocationUuid = function(restore) {
         if (gnMdViewObj.from && gnMdViewObj.from != gnSearchLocation.SEARCH) {
           gnSearchLocation.path(gnMdViewObj.from);
         }
-        else {
+        else if (restore) {
           gnSearchLocation.restoreSearch();
         }
       };

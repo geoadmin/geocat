@@ -42,12 +42,19 @@
 
           var unRegister;
 
-          scope.dismiss = function() {
+          /**
+           * Close the formatter panel. justClose means the user ask for a
+           * direct closing, the state should be restored. If not provided, it
+           * means the closing results from another search requested by the
+           * user.
+           * @param justClose
+           */
+          scope.dismiss = function(justClose) {
             if (angular.isDefined(scope.collapsed)) {
               scope.collapsed.facet = angular.isDefined(scope.collapsed.beforeedit) ? scope.collapsed.beforeedit : false;
             }
             unRegister();
-            gnMdView.removeLocationUuid();
+            gnMdView.removeLocationUuid(justClose);
             element.remove();
             //TODO: is the scope destroyed ?
           };
