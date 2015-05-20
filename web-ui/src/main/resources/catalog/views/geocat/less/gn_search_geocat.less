@@ -2,6 +2,7 @@
 @import "../../../style/gn_formatter_viewer_geocat.less";
 
 @navbar-height: 34px;
+@header-height: 103px;
 
 body {
   font-family: Arial, @font-family-sans-serif;
@@ -420,10 +421,10 @@ h1, h2, h3, h4, h5, h6,
   .hfull
   {
     height: 100%;
-    overflow: hidden;
   }
   .container-fluid {
-    height: calc(100% ~"-" @navbar-height ~" - 22px - 103px");
+    /* 40 px = 2x 20px for margin top and bottom */
+    height: ~"calc(100% - @{navbar-height} - @{header-height} - 40px)";
   }
   .maincol .panel{
     position: relative;
