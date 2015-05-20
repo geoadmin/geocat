@@ -2757,5 +2757,14 @@ e di trasformazione.</label>
     </element>
     <element name="gmd:Country" >
         <label>Paese</label>
+        <helper>
+          <option value="CH">Switzerland</option>
+          <option value="DE">Germany</option>
+          <option value="LI">Lichtenstein</option>
+          <option value="FR">France</option>
+          <option value="IT">Italy</option>
+          <option value="AT">AT</option>
+        </helper>
+
     </element>
 </labels>

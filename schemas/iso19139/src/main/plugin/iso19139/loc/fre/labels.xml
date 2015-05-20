@@ -1343,6 +1343,15 @@ de métadonnées de données « BD Carthage métropole »
         <description>Pays dans la langue duquel l'URL libre est écrit</description>
         <help>Pays dans la langue duquel l'URL libre est écrit, la sélection s'opère dans la liste des pays ISO.</help>
         <condition/>
+        <helper>
+          <option value="CH">Suisse</option>
+          <option value="DE">Allemagne</option>
+          <option value="LI">Lichtenstein</option>
+          <option value="FR">France</option>
+          <option value="IT">Italie</option>
+          <option value="AT">AT</option>
+        </helper>
+
     </element>
     <element name="gmd:country" id="508.0" context="gmd:MD_Legislation">
         <label>Pays</label>

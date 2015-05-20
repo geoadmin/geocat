@@ -1954,6 +1954,15 @@
     <help>z.B. Schweiz, Österreich oder Deutschland</help>
     <condition/>
     <description>Staat</description>
+    <helper>
+      <option value="CH">Switzerland</option>
+      <option value="DE">Germany</option>
+      <option value="LI">Lichtenstein</option>
+      <option value="FR">France</option>
+      <option value="IT">Italy</option>
+      <option value="AT">AT</option>
+    </helper>
+
   </element>
   <element name="gmd:electronicMailAddress" id="386">
     <label>E-Mail</label>

@@ -263,6 +263,8 @@
       <name>che:mobile</name>
       <name>che:basicGeodataID</name>
       <name parent="che:CHE_CI_Telephone">gmd:voice</name>
+      <name ancestor="gmd:contactInfo">gmd:country</name>
+
     </exclude>
   </multilingualFields>
 
