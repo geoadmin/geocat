@@ -277,7 +277,12 @@
         <section xpath="/che:CHE_MD_Metadata/gmd:identificationInfo"/>
         <section xpath="/che:CHE_MD_Metadata/gmd:distributionInfo"/>
         <section xpath="/che:CHE_MD_Metadata/gmd:dataQualityInfo"/>
-        <section xpath="/che:CHE_MD_Metadata/che:legislationInformation"/>
+
+        <section xpath="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo"/>
+        <section xpath="/che:CHE_MD_Metadata/gmd:referenceSystemInfo" />
+        <section xpath="/che:CHE_MD_Metadata/gmd:contentInfo"/>
+        <section xpath="/che:CHE_MD_Metadata/gmd:portrayalCatalogueInfo"/>
+
         <section name="che:CHE_MD_Metadata">
           <field xpath="/che:CHE_MD_Metadata/gmd:fileIdentifier"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:language" or="language" in="/che:CHE_MD_Metadata"/>
@@ -300,6 +305,12 @@
           <field xpath="/che:CHE_MD_Metadata/gmd:featureType"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:featureAttribute"/>
         </section>
+
+        <section xpath="/che:CHE_MD_Metadata/gmd:metadataConstraints"/>
+        <section xpath="/che:CHE_MD_Metadata/gmd:metadataMaintenance"/>
+        <section xpath="/che:CHE_MD_Metadata/gmd:applicationSchemaInfo"/>
+        <section xpath="/che:CHE_MD_Metadata/che:legislationInformation"/>
+
       </tab>
 
       <!-- Elements that should not use the "flat" mode -->
