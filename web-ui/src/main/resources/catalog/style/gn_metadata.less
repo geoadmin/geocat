@@ -124,8 +124,20 @@
     font-style: italic;
     color: @gray;
     clear: none;
+    float:none;
     padding-left: 15px;
     text-align: left;
+    white-space: normal;
+    width: 180px;
+  }
+
+  div.md-text {
+    display: table;
+    width: 100%;
+    border-spacing: 20px 0;
+    dd, dt {
+      display: table-cell;
+    }
   }
 
   .target {
