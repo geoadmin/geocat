@@ -460,6 +460,9 @@
             });
           }
         }
+        else {
+          $scope.searchObj.params.geometry = '';
+        }
       };
 
       $scope.$watch('regions.countries', onRegionSelect);
