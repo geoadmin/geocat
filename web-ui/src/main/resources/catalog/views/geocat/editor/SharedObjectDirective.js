@@ -174,7 +174,7 @@
               }
               else if(scope.templateType == 'extents') {
 
-                c.xlink = c.xlink.replace('*', 'format=GMD_COMPLETE&extentTypeCode=true');
+                c.xlink = c.xlink.replace('*', 'extentTypeCode=true');
 
                 var extUrl = c.xlink.replace(/local:\/\//g, '');
 
@@ -204,9 +204,6 @@
                 });
           }
           else if(scope.templateType == 'extents') {
-            scope.prop.extentFormat = 'GMD_COMPLETE';
-            scope.prop.extentTypeCode = 'true';
-            extentTypeCode = true;
             $http.get('reusable.object.categories/extents').success(function(data) {
               scope.regionTypes = data;
             });
