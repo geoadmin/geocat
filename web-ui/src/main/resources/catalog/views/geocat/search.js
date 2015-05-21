@@ -14,6 +14,11 @@
     'gn_search_geocat_mdactionmenu'
   ]);
 
+  module.config(['$LOCALES',
+    function($LOCALES) {
+      $LOCALES.push('geocat');
+    }]);
+
   /**
    * @ngdoc controller
    * @name gn_search_geocat.controller:gnsGeocat
