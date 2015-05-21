@@ -415,6 +415,11 @@
               $scope.saveError = false;
               $scope.toggleAttributes();
             }, function(error) {
+              if(error.msg = 'loggedout') {
+                $scope.isLoggedOut = true;
+                return;
+              }
+
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $scope.saveError = true;
               $rootScope.$broadcast('StatusUpdated', {
@@ -472,6 +477,10 @@
           .then(function(form) {
               closeEditor();
             }, function(error) {
+              if(error.msg = 'loggedout') {
+                $scope.isLoggedOut = true;
+                return;
+              }
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('saveMetadataError'),
                 error: error,

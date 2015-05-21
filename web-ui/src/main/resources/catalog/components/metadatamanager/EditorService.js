@@ -130,7 +130,13 @@
                  'application/x-www-form-urlencoded'}
              }).success(function(data) {
 
-                var snippet = $(data);
+               var snippet = $(data);
+                 if(!snippet.is("form")) {
+                   gnCurrentEdit.working = false;
+                   defer.reject({msg: 'loggedout'});
+                   return defer.promise;
+                 }
+
                 if (refreshForm) {
                   scope.refreshEditorForm(snippet);
                 }

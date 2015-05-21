@@ -50,5 +50,6 @@
   "bboxPolygon": "Bounding box and bounding polygon",
   "addSharedObjectInEditor": "Add {{label}}",
   "translations": "Translations",
-  "showTranslation": "Show All Translations for Language"
+  "showTranslation": "Show All Translations for Language",
+  "editorLoggedOut": "Your session has expired. Please reload page to start a new session."
 }

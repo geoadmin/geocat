@@ -8,7 +8,7 @@
   <div
     data-ng-include="'../../catalog/templates/editor/top-toolbar.html'">
   </div>
-  <div class="row gn-editor-container">
+  <div class="row gn-editor-container" data-ng-if="!isLoggedOut">
     <div class="modal-backdrop fade in" data-ng-show="gnCurrentEdit.working"></div>
     <div class="col-md-8">
       
@@ -37,6 +37,9 @@
         <div data-gn-need-help="editor"></div>
       </div>
     </div>
+  </div>
+  <div class="row gn-editor-container" data-ng-if="isLoggedOut">
+    <div class="alert alert-danger" role="alert" translate="">editorLoggedOut</div>
   </div>
 </div>
 
