@@ -177,6 +177,7 @@
     <name>gml:verticalCS</name>
     <name>gml:verticalDatum</name>
     <name>gmd:resourceFormat</name>
+    <name>gmd:graphicOverview</name>
   </fieldsWithFieldset>
 
   <multilingualFields>
@@ -327,7 +328,6 @@
         <for name="gmd:resourceFormat"/>
         <for name="gmd:distributionFormat"/>
         <for name="gmd:topicCategory"/>
-        <for name="gmd:graphicOverview"/>
       </flatModeExceptions>
 
     </view>
