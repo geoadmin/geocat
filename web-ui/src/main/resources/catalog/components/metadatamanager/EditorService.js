@@ -131,7 +131,7 @@
              }).success(function(data) {
 
                var snippet = $(data);
-                 if(!snippet.is("form")) {
+                 if(!snippet.is('form') && !snippet.is('response')) {
                    gnCurrentEdit.working = false;
                    defer.reject({msg: 'loggedout'});
                    return defer.promise;
