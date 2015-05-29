@@ -83,7 +83,7 @@
           '                 <gco:CharacterString/>' +
           '               </gmd:postalCode>' +
           '               <gmd:electronicMailAddress>' +
-          '                  <gco:CharacterString>~~ Template Email ~~</gco:CharacterString>' +
+          '                  <gco:CharacterString></gco:CharacterString>' +
           '               </gmd:electronicMailAddress>' +
           '               <che:streetName>' +
           '                  <gco:CharacterString/>' +
