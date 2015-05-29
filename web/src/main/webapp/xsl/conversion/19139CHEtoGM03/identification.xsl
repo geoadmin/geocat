@@ -5,9 +5,10 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:util="xalan://org.fao.geonet.util.XslUtil"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
-                exclude-result-prefixes="che gco gmd srv util">
+                exclude-result-prefixes="che gco gmd srv util gmx">
 
     <xsl:template mode="DataIdentification" match="gmd:identificationInfo">
         <xsl:apply-templates mode="DataIdentification"/>
@@ -257,10 +258,25 @@
     <xsl:template mode="DataIdentification" match="gmd:MD_Keywords">
         <GM03_2_1Core.Core.MD_Keywords TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:type"/>
-            <!--<xsl:apply-templates mode="text" select="gmd:keyword"/>-->
-            <xsl:apply-templates mode="groupText" select=".">
-                <xsl:with-param name="element">keyword</xsl:with-param>
-            </xsl:apply-templates>
+            <xsl:choose>
+                <xsl:when test="count(gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space(.) != '']) = 0">
+                    <keyword>
+                        <GM03_2_1Core.Core.PT_FreeText>
+                            <textGroup>
+                                <GM03_2_1Core.Core.PT_Group>
+                                    <language><xsl:value-of select="$defaultLanguage"/></language>
+                                    <plainText><xsl:value-of select="gmd:keyword/gco:CharacterString"/></plainText>
+                                </GM03_2_1Core.Core.PT_Group>
+                            </textGroup>
+                        </GM03_2_1Core.Core.PT_FreeText>
+                    </keyword>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates mode="groupText" select=".">
+                        <xsl:with-param name="element">keyword</xsl:with-param>
+                    </xsl:apply-templates>
+                </xsl:otherwise>
+            </xsl:choose>
             <xsl:apply-templates mode="DataIdentification" select="gmd:thesaurusName"/>
         </GM03_2_1Core.Core.MD_Keywords>
     </xsl:template>
@@ -394,7 +410,23 @@
 
     <xsl:template mode="DataIdentification" match="gmd:MD_Identifier">
         <GM03_2_1Core.Core.MD_Identifier TID="x{util:randomId()}">
-            <xsl:apply-templates mode="textGroup" select="gmd:code"/>
+            <xsl:choose>
+                <xsl:when test="gmd:code/gmx:Anchor">
+                    <code>
+                        <GM03_2_1Core.Core.PT_FreeText>
+                            <textGroup>
+                                <GM03_2_1Core.Core.PT_Group>
+                                    <language><xsl:value-of select="$defaultLanguage"/></language>
+                                    <plainText><xsl:value-of select="gmd:code/gmx:Anchor"/></plainText>
+                                </GM03_2_1Core.Core.PT_Group>
+                            </textGroup>
+                        </GM03_2_1Core.Core.PT_FreeText>
+                    </code>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates mode="textGroup" select="gmd:code"/>
+                </xsl:otherwise>
+            </xsl:choose>
         </GM03_2_1Core.Core.MD_Identifier>
     </xsl:template>
 

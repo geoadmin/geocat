@@ -135,6 +135,15 @@ public class ValidateTransformationTest {
     }
 
     @Test
+    public void convertCitationDateTimeToDate() throws Throwable {
+        File file = new File(data, "iso19139/has_datetime.xml");
+        Multimap<String, Requirement> rules = ArrayListMultimap.create();
+        rules.put("DATASECTION", new Not(new ContainsText("ERROR")));
+        rules.put("GM03_2_1Core.Core.CI_Date", new Exists(new Finder("date", new EqualTrimText("2015-05-15"))));
+        testFile(file, Control.ISO_GM03, rules, true);
+    }
+
+    @Test
     public void exportAltTitleDuplicated() throws Throwable {
         File file = new File(data, "non_validating/iso19139che/duplicate_group_text_in_gm03_bug.xml");
         Multimap<String, Requirement> rules = ArrayListMultimap.create();

@@ -45,10 +45,10 @@
 			<xs:documentation>Description of the class of information covered by the information</xs:documentation>
 		</xs:annotation>
 		<xs:choice>
-			<xs:element name="attributes" type="gco:ObjectReference_PropertyType" maxOccurs="unbounded"/>
-			<xs:element name="features" type="gco:ObjectReference_PropertyType" maxOccurs="unbounded"/>
-			<xs:element name="featureInstances" type="gco:ObjectReference_PropertyType" maxOccurs="unbounded"/>
-			<xs:element name="attributeInstances" type="gco:ObjectReference_PropertyType" maxOccurs="unbounded"/>
+			<xs:element name="attributes" type="gco:CharacterString_PropertyType" maxOccurs="unbounded"/>
+			<xs:element name="features" type="gco:CharacterString_PropertyType" maxOccurs="unbounded"/>
+			<xs:element name="featureInstances" type="gco:CharacterString_PropertyType" maxOccurs="unbounded"/>
+			<xs:element name="attributeInstances" type="gco:CharacterString_PropertyType" maxOccurs="unbounded"/>
 			<xs:element name="dataset" type="gco:CharacterString_PropertyType"/>
 			<xs:element name="other" type="gco:CharacterString_PropertyType"/>
 		</xs:choice>

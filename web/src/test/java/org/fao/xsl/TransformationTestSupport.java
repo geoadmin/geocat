@@ -149,8 +149,9 @@ public final class TransformationTestSupport {
     public static final File geonetworkWebapp = findWebappDir(data);
     public static final File toIsoStyleSheet = new File(geonetworkWebapp, "xsl/conversion/import/GM03-to-ISO19139CHE.xsl");
     public static final File toGm03StyleSheet = new File(geonetworkWebapp, "xsl/conversion/import/ISO19139CHE-to-GM03.xsl");
-    public static final File gm03Xsd = new File(geonetworkWebapp, "WEB-INF/data/config/schema_plugins/iso19139.che/GM03_2_1.xsd");
-    public static final File isoXsd = new File(geonetworkWebapp, "WEB-INF/data/config/schema_plugins/iso19139.che/schema.xsd");
+    public static final File SCHEMA_PLUGIN = new File(geonetworkWebapp, "../../../../schemas/iso19139.che/src/main/plugin/iso19139.che");
+    public static final File gm03Xsd = new File(SCHEMA_PLUGIN, "GM03_2_1.xsd");
+    public static final File isoXsd = new File(SCHEMA_PLUGIN, "schema.xsd");
 
     public static Element transform( Class<?> root, String pathToXsl, String testData ) throws IOException, JDOMException, Exception {
         Element xml = getXML(root, testData);

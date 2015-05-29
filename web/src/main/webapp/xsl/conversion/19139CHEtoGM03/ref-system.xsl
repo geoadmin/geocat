@@ -91,6 +91,7 @@
         <xsl:apply-templates mode="RefSystem"/>
     </xsl:template>
 
+
     <xsl:template mode="RefSystem" match="gmd:CI_Series">
         <series REF="?">
 	        <GM03_2_1Comprehensive.Comprehensive.CI_Series TID="x{util:randomId()}">
@@ -103,7 +104,14 @@
 
     <xsl:template mode="RefSystem" match="gmd:CI_Date">
         <GM03_2_1Core.Core.CI_Date TID='x{generate-id(.)}'>
-            <xsl:apply-templates mode="text" select="gmd:date"/>
+            <xsl:choose>
+                <xsl:when test="gmd:date/gco:DateTime">
+                    <date><xsl:value-of select="substring-before(gmd:date/gco:DateTime, 'T')"/></date>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates mode="text" select="gmd:date"/>
+                </xsl:otherwise>
+            </xsl:choose>
             <xsl:apply-templates mode="text" select="gmd:dateType"/>
             <BACK_REF name="CI_Citation"/>
         </GM03_2_1Core.Core.CI_Date>
