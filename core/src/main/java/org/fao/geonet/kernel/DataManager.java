@@ -572,7 +572,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 Log.debug(Geonet.DATA_MANAGER, "record createDate (" + createDate + ")"); //DEBUG
             }
             // GEOCAT
-            md = indexMetadataProcessSharedObjects(metadataId, processSharedObjects, fastIndex, moreFields, md, fullMd, runValidation);
+            md = indexMetadataGeocat(metadataId, processSharedObjects, fastIndex, moreFields, md, fullMd, runValidation);
 
             if (isHarvested.contains("n") && groupOwner != null) {
                 moreFields.add(SearchManager.makeField("_catalog", String.valueOf(groupOwner), true, true));
@@ -747,9 +747,9 @@ public class DataManager implements ApplicationEventPublisherAware {
     }
 
     // GEOCAT
-    private Element indexMetadataProcessSharedObjects(String metadataId, boolean processSharedObjects, boolean fastIndex,
-                                                      Vector<Element> moreFields, Element metadataEl,
-                                                      Metadata metadata, boolean runValidation) throws Exception {
+    private Element indexMetadataGeocat(String metadataId, boolean processSharedObjects, boolean fastIndex,
+                                        Vector<Element> moreFields, Element metadataEl,
+                                        Metadata metadata, boolean runValidation) throws Exception {
         final String schemaId = metadata.getDataInfo().getSchemaId();
         final String uuid = metadata.getUuid();
 
