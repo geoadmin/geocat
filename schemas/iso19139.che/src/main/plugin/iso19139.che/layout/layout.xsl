@@ -33,6 +33,11 @@
     </xsl:apply-templates>
   </xsl:template>
 
+  <xsl:template mode="mode-iso19139" priority="99999"
+    match="che:CHE_CI_ResponsibleParty/gn:child[@name = 'individualName']">
+    <!-- Do nothing -->
+  </xsl:template>
+
   <xsl:template mode="mode-iso19139" match="gmd:geographicElement[gmd:EX_GeographicBoundingBox]|
   gmd:geographicElement[gmd:EX_BoundingPolygon]" priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>

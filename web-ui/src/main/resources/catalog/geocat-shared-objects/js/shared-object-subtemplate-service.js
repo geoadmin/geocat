@@ -52,16 +52,16 @@
           '   <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">' +
           '      <gmd:PT_FreeText>' +
           '         <gmd:textGroup>' +
-          '            <gmd:LocalisedCharacterString locale="#DE">~~ Template Organization Name ~~</gmd:LocalisedCharacterString>' +
+          '            <gmd:LocalisedCharacterString locale="#DE">~~ gmd:organizationName ~~</gmd:LocalisedCharacterString>' +
           '         </gmd:textGroup>' +
           '         <gmd:textGroup>' +
-          '            <gmd:LocalisedCharacterString locale="#FR">~~ Template Organization Name ~~</gmd:LocalisedCharacterString>' +
+          '            <gmd:LocalisedCharacterString locale="#FR">~~ gmd:organizationName ~~</gmd:LocalisedCharacterString>' +
           '         </gmd:textGroup>' +
           '         <gmd:textGroup>' +
-          '            <gmd:LocalisedCharacterString locale="#IT">~~ Template Organization Name ~~</gmd:LocalisedCharacterString>' +
+          '            <gmd:LocalisedCharacterString locale="#IT">~~ gmd:organizationName ~~</gmd:LocalisedCharacterString>' +
           '         </gmd:textGroup>' +
           '         <gmd:textGroup>' +
-          '            <gmd:LocalisedCharacterString locale="#EN">~~ Template Organization Name ~~</gmd:LocalisedCharacterString>' +
+          '            <gmd:LocalisedCharacterString locale="#EN">~~ gmd:organizationName ~~</gmd:LocalisedCharacterString>' +
           '         </gmd:textGroup>' +
           '      </gmd:PT_FreeText>' +
           '   </gmd:organisationName>' +
@@ -100,10 +100,10 @@
           '                       codeListValue="pointOfContact"/>' +
           '  </gmd:role>' +
           '   <che:individualFirstName>' +
-          '      <gco:CharacterString>~~ Template First Name ~~</gco:CharacterString>' +
+          '      <gco:CharacterString></gco:CharacterString>' +
           '  </che:individualFirstName>' +
           '   <che:individualLastName>' +
-          '      <gco:CharacterString>~~ Template Last Name ~~</gco:CharacterString>' +
+          '      <gco:CharacterString></gco:CharacterString>' +
           '  </che:individualLastName>' +
           '</che:CHE_CI_ResponsibleParty>'
         };

@@ -58,10 +58,10 @@
 
     <xsl:choose>
       <xsl:when test="$schemaLabelWithContext">
-        <xsl:copy-of select="$schemaLabelWithContext" copy-namespaces="no"/>
+        <xsl:copy-of select="$schemaLabelWithContext[1]" copy-namespaces="no"/>
       </xsl:when>
       <xsl:when test="$schemaLabel">
-        <xsl:copy-of select="$schemaLabel" copy-namespaces="no"/>
+        <xsl:copy-of select="$schemaLabel[1]" copy-namespaces="no"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:choose>
