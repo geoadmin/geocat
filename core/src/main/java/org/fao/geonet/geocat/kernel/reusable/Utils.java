@@ -410,16 +410,16 @@ public final class Utils {
                 if (!Email.isValidEmailAddress(email)) {
                     unnotifiedIds.addAll(args.emailInfo.get(id));
                 } else {
-                    String emailBody = "\n\n\n"+args.msg + "\n" + args.baseURL + "/srv/eng/metadata.show?id="
-                            + mkString(args.emailInfo.get(id), "\n" + args.baseURL + "/srv/eng/metadata.show?id=");
+                    String emailBody = "\n\n\n"+args.msg + "\n" + args.baseURL + "/srv/ger/metadata.show?id="
+                            + mkString(args.emailInfo.get(id), "\n" + args.baseURL + "/srv/ger/metadata.show?id=");
 
                     gc.getEmail().send(email, args.subject, args.msgHeader + emailBody, args.testing);
                 }
             }
 
             if (!unnotifiedIds.isEmpty()) {
-                String emailBody = args.msg + "\n" + args.baseURL + "/srv/eng/metadata.show?id="
-                        + mkString(unnotifiedIds, "\n" + args.baseURL + "/srv/eng/metadata.show?id=");
+                String emailBody = args.msg + "\n" + args.baseURL + "/srv/ger/metadata.show?id="
+                        + mkString(unnotifiedIds, "\n" + args.baseURL + "/srv/ger/metadata.show?id=");
                 gc.getEmail().sendToAdmin(args.subject, emailBody, args.testing);
                 Log.warning(Geocat.Module.REUSABLE, emailBody);
             }
