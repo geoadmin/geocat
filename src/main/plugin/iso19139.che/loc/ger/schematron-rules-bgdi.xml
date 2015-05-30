@@ -9,11 +9,11 @@
     <translatedAltTitle>Übersetzung Alternativtitel</translatedAltTitle>
     <deAltTitleRequired>Basisinformation zum Datenbestand / Bibliografische Angaben / Alternativitel ist obligatorisch und verlangt eine deutsche Übersetzung</deAltTitleRequired>
     <deAltTitleReport>Deutscher Alternativitel:</deAltTitleReport>
-    <deAltTitleMaxLength>Der deutsche Alternativitel ist zu lang - max. 30 Zeichen</deAltTitleMaxLength>
+    <deAltTitleMaxLength>Der deutsche Alternativitel ist zu lang - max. 35 Zeichen</deAltTitleMaxLength>
     <deAltTitleMaxLengthReport>Länge des deutschen Alternativtitel:</deAltTitleMaxLengthReport>
     <frAltTitleRequired>Basisinformation zum Datenbestand / Bibliografische Angaben / Alternativitel ist obligatorisch und verlangt eine französische Übersetzung</frAltTitleRequired>
     <frAltTitleReport>Französischer Alternativtitel:</frAltTitleReport>
-    <frAltTitleMaxLength>Der französische Alternativitel ist zu lang - max. 30 Zeichen</frAltTitleMaxLength>
+    <frAltTitleMaxLength>Der französische Alternativitel ist zu lang - max. 35 Zeichen</frAltTitleMaxLength>
     <frAltTitleMaxLengthReport>Länge des französischen Alternativtitels:</frAltTitleMaxLengthReport>
 
     <translatedAbstract>Übersetzung der Kurzbeschreibung</translatedAbstract>

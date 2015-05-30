@@ -9,11 +9,11 @@
     <translatedAltTitle>Traduzioni titolo alternativo</translatedAltTitle>
     <deAltTitleRequired>Identificazione dei dati / Citazione / il titolo alternativo è obbligatorio e richiede una traduzione in tedesco</deAltTitleRequired>
     <deAltTitleReport>Titolo alternativo in tedesco:</deAltTitleReport>
-    <deAltTitleMaxLength>Il titolo alternativo in tedesco è troppo lungo: la lunghezza massima è di 30 caratteri</deAltTitleMaxLength>
+    <deAltTitleMaxLength>Il titolo alternativo in tedesco è troppo lungo: la lunghezza massima è di 35 caratteri</deAltTitleMaxLength>
     <deAltTitleMaxLengthReport>Lunghezza titolo alternativo in tedesco:</deAltTitleMaxLengthReport>
     <frAltTitleRequired>Identificazione dei dati / Citazione / il titolo alternativo è obbligatorio e richiede una traduzione in francese</frAltTitleRequired>
     <frAltTitleReport>Titolo alternativo in francese:</frAltTitleReport>
-    <frAltTitleMaxLength>Il titolo alternativo in francese è troppo lungo: la lunghezza massima è di 30 caratteri</frAltTitleMaxLength>
+    <frAltTitleMaxLength>Il titolo alternativo in francese è troppo lungo: la lunghezza massima è di 35 caratteri</frAltTitleMaxLength>
     <frAltTitleMaxLengthReport>Lunghezza titolo alternativo in francese:</frAltTitleMaxLengthReport>
 
     <translatedAbstract>Traduzioni sommario</translatedAbstract>
