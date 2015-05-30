@@ -250,7 +250,7 @@ public class ServiceContext extends BasicContext {
         executeOnly(request);
         int statusCode = request.getStatusCode();
         if (statusCode != 200) {
-            throw new RuntimeException("status code was not 200 for service: " + request.getService() + ", status was: " +
+            throw new RuntimeException("status code was not 200 for service: " + request.toString() + ", status was: " +
                                        request.getStatusCode());
         }
         try {
