@@ -110,7 +110,49 @@ public enum ExtentFormat
         {
             return formatWKT(feature, featureType, wfs, crs, coordPrecision);
         }
+    },
+    AUTO
+    {
+        @Override
+        public Element format(GMLConfiguration gmlConfiguration, Path appPath, SimpleFeature feature, FeatureType featureType, Source wfs,
+                String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision) throws Exception
+        {
+            Geometry geometry = (Geometry) feature.getDefaultGeometry();
+            if (isSquare(geometry, coordPrecision)) {
+                return GMD_BBOX.format(gmlConfiguration, appPath, feature, featureType, wfs, extentTypeCode, crs, coordPrecision);
+            } else {
+                return GMD_COMPLETE.format(gmlConfiguration, appPath, feature, featureType, wfs, extentTypeCode, crs, coordPrecision);
+            }
+        }
     };
+
+    static boolean isSquare(Geometry geometry, int coordPrecision) {
+        if (geometry.getNumPoints() == 5 && geometry.getNumGeometries() == 1
+            && (geometry instanceof Polygon || geometry instanceof MultiPolygon)) {
+            Geometry reducedPrecisionGeom = ExtentHelper.reducePrecision(geometry, coordPrecision);
+            Coordinate[] coords = reducedPrecisionGeom.getCoordinates();
+
+            for (int i = 1; i < coords.length; i++) {
+                Coordinate coord0 = coords[i-1];
+                Coordinate coord1 = coords[i];
+                double xdiff = coord0.x - coord1.x;
+                if (xdiff == 0) {
+                    continue;
+                }
+                double slope = (coord0.y - coord1.y) / xdiff;
+                if (!(eq(slope, 0) || eq(slope, 90) || eq(slope, 180) || eq(slope, 270))) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean eq(double d1, double d2) {
+        return Math.abs(d1 - d2) < 0.0000001;
+    }
 
     public abstract Element format(GMLConfiguration gmlConfiguration, Path appPath, SimpleFeature feature, FeatureType featureType, Source wfs,
             String extentTypeCode, CoordinateReferenceSystem crs, int coordPrecision) throws Exception;

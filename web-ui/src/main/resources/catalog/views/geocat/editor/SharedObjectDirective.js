@@ -174,7 +174,7 @@
               }
               else if(scope.templateType == 'extents') {
 
-                c.xlink = c.xlink.replace('*', 'extentTypeCode=true');
+                c.xlink = c.xlink.replace('*', 'extentTypeCode=true&format=AUTO');
 
                 var extUrl = c.xlink.replace(/local:\/\//g, '');
 

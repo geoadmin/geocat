@@ -30,6 +30,7 @@
   </xsl:variable>
 
   <!--GEOCAT-->
+  <xsl:variable name="currTab" select="/root/gui/currTab" />
   <xsl:variable name="defaultMetadataLanguage" select="'ger'" />
   <xsl:variable name="defaultMetadataOtherLanguages">
     <lang id="DE" code="ger"/>

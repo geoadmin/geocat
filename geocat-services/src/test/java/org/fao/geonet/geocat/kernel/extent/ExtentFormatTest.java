@@ -1,6 +1,7 @@
 package org.fao.geonet.geocat.kernel.extent;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
@@ -11,6 +12,7 @@ import com.vividsolutions.jts.geom.Polygon;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -53,6 +55,43 @@ public class ExtentFormatTest {
         final Point point = factory.createPoint(new Coordinate(1, 2));
 
         assertTrue(point.equalsExact(ExtentFormat.removeDuplicatePoints(point)));
+    }
+
+    @Test
+    public void testIsSquare() throws Exception {
+
+        int prec = 0;
+        assertTrue(ExtentFormat.isSquare(factory.toGeometry(new Envelope(100, 110, 20, 30)), prec));
+        Polygon squarePoly = factory.createPolygon(new Coordinate[]{
+                new Coordinate(100.23, 20), new Coordinate(100.11, 30),
+                new Coordinate(110.54, 30), new Coordinate(110.43, 20), new Coordinate(100.23, 20)
+        });
+        assertTrue(ExtentFormat.isSquare(squarePoly, prec));
+        assertTrue(ExtentFormat.isSquare(factory.createMultiPolygon(new Polygon[]{squarePoly}), prec));
+        assertFalse(ExtentFormat.isSquare(factory.createMultiPolygon(new Polygon[]{squarePoly, (Polygon) squarePoly.clone()}), prec));
+        assertFalse(ExtentFormat.isSquare(squarePoly.getExteriorRing(), prec));
+        assertFalse(ExtentFormat.isSquare(squarePoly.getCentroid(), prec));
+        assertFalse(ExtentFormat.isSquare(factory.createPolygon((LinearRing) squarePoly.getExteriorRing(),
+                new LinearRing[]{factory.createLinearRing(new Coordinate[]{
+                        new Coordinate(105, 21), new Coordinate(105, 26), new Coordinate(106, 26), new Coordinate(105, 21)
+                })}), prec));
+        assertFalse(ExtentFormat.isSquare(factory.createPolygon(new Coordinate[]{
+                new Coordinate(100, 20), new Coordinate(100, 30),
+                new Coordinate(110, 30), new Coordinate(100, 20)
+        }), prec));
+        assertFalse(ExtentFormat.isSquare(factory.createPolygon(new Coordinate[]{
+                new Coordinate(100, 20), new Coordinate(100, 30),
+                new Coordinate(110, 30), new Coordinate(112, 20), new Coordinate(100, 20)
+        }), prec));
+        assertFalse(ExtentFormat.isSquare(factory.createMultiPolygon(new Polygon[]{factory.createPolygon(new Coordinate[]{
+                new Coordinate(100, 20), new Coordinate(100, 30),
+                new Coordinate(110, 30), new Coordinate(100, 20)
+        })}), prec));
+        assertTrue(ExtentFormat.isSquare(factory.createPolygon(new Coordinate[]{
+                new Coordinate(548583, 75270), new Coordinate(548583, 263205),
+                new Coordinate(833855, 263205), new Coordinate(833855, 75270), new Coordinate(548583, 75270)
+        }), prec));
+
     }
 
     private boolean noDuplicates(Geometry geom) {

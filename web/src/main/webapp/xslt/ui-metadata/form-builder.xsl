@@ -621,8 +621,9 @@
     <!-- Hide add element if child of an XLink section. -->
     <xsl:param name="isDisabled" select="ancestor::node()[@xlink:href]"/>
     <xsl:param name="isFirst" required="no" as="xs:boolean" select="true()"/>
-
-    <xsl:if test="not($isDisabled)">
+    <xsl:variable name="isCitedResponsiblePartySimpleView"
+      select="$currTab = 'default' and name() = 'geonet:child' and @name='citedResponsibleParty'"/>
+    <xsl:if test="not($isDisabled) and not($isCitedResponsiblePartySimpleView)">
       <xsl:variable name="id" select="generate-id()"/>
       <xsl:variable name="qualifiedName" select="concat($childEditInfo/@prefix, ':', $childEditInfo/@name)"/>
       <xsl:variable name="isRequired" select="$childEditInfo/@min = 1 and $childEditInfo/@max = 1"/>
@@ -700,7 +701,7 @@
               -->
               <xsl:choose>
                 <xsl:when test="$directive/@addDirective != ''">
-                  <div>
+                 <div>
                     <xsl:attribute name="{$directive/@addDirective}"/>
                     <xsl:copy-of select="$directive/directiveAttributes/@*"/>
                     <xsl:attribute name="data-dom-id" select="$id"/>
