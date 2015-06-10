@@ -8,6 +8,7 @@ import org.fao.xsl.support.Attribute;
 import org.fao.xsl.support.ContainsText;
 import org.fao.xsl.support.Count;
 import org.fao.xsl.support.DoesNotExist;
+import org.fao.xsl.support.EqualAttribute;
 import org.fao.xsl.support.EqualText;
 import org.fao.xsl.support.EqualTrimText;
 import org.fao.xsl.support.Exists;
@@ -78,6 +79,26 @@ public class ValidateTransformationTest {
         rules.put("CHE_MD_Metadata/locale", new Exists(new Attribute("LanguageCode", "codeListValue", "ita")));
         rules.put("CHE_MD_Metadata/locale", new Exists(new Attribute("LanguageCode", "codeListValue", "eng")));
         rules.put("CHE_MD_Metadata/locale", new Exists(new Attribute("LanguageCode", "codeListValue", "roh")));
+        testFile(file, Control.GM03_2_ISO, rules, true);
+    }
+
+    @Test
+    public void maintenanceXmlImportExport() throws Throwable {
+        File file = new File(data, "non_validating/iso19139che/maintenance_export_bug.xml");
+        Multimap<String, Requirement> rules = ArrayListMultimap.create();
+        rules.put("GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConceptarchiveConceptCitation",
+                new Exists(new Finder("archiveConceptCitation")));
+        file = testFile(file, Control.ISO_GM03, rules, false);
+
+        rules.clear();
+        rules.put("resourceMaintenance/CHE_MD_MaintenanceInformation/maintenanceAndUpdateFrequency",
+                new Exists(new Finder("MD_MaintenanceFrequencyCode", new EqualAttribute("codeListValue", "annually"))));
+        String mdArchiveCitation = "resourceMaintenance/CHE_MD_MaintenanceInformation/archiveConcept/CHE_MD_ArchiveConcept/archiveConceptCitation/CI_Citation";
+        rules.put(mdArchiveCitation + "/title", new Exists(new Finder("LocalisedCharacterString", new EqualTrimText("Aufbewahrungs- und Archivierungsplanung des Bundes"))));
+        rules.put(mdArchiveCitation + "/date/CI_Date/date", new Exists(new Finder("Date", new EqualTrimText("2015-04-27"))));
+        rules.put(mdArchiveCitation + "/date/CI_Date/dateType", new Exists(new Finder("CI_DateTypeCode", new EqualAttribute("codeListValue", "publication"))));
+        rules.put("resourceMaintenance/CHE_MD_MaintenanceInformation/archiveConcept/CHE_MD_ArchiveConcept/archiveConceptURL",
+                new Exists(new Finder("LocalisedURL", new EqualTrimText("http://www.geo.admin.ch/internet/geoportal/fr/home/topics/archive_planning.html"))));
         testFile(file, Control.GM03_2_ISO, rules, true);
     }
 

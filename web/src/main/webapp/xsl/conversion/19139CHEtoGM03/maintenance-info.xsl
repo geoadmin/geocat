@@ -86,6 +86,7 @@
     
     <xsl:template mode="MaintenanceInfo" match="che:CHE_MD_ArchiveConcept">
         <GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConcept TID="x{util:randomId()}">
+            <xsl:apply-templates mode="MaintenanceInfo" select="che:archiveConceptCitation"/>
             <xsl:apply-templates mode="MaintenanceInfo" select="che:historyConceptCitation"/>
             <xsl:apply-templates mode="text" select="che:archiveConceptURL"/>
             <BACK_REF name="MD_MaintenanceInformation"/>

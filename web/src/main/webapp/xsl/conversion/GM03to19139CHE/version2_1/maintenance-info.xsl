@@ -17,8 +17,8 @@
             <xsl:apply-templates mode="MaintenanceInfo" select="int:maintenanceNote"/>
             <xsl:apply-templates mode="MaintenanceInfo" select="int:GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationcontact"/>
             <xsl:apply-templates mode="MaintenanceInfo" select="int:dateOfMonitoringState"/>
-            <xsl:apply-templates mode="MaintenanceInfo" select="int:GM03_2_1_2Comprehensive.Comprehensive.MD_HistoryConcept"/>
-            <xsl:apply-templates mode="MaintenanceInfo" select="int:GM03_2_1_2Comprehensive.Comprehensive.MD_ArchiveConcept"/>
+            <xsl:apply-templates mode="MaintenanceInfo" select="int:GM03_2_1Comprehensive.Comprehensive.MD_HistoryConcept"/>
+            <xsl:apply-templates mode="MaintenanceInfo" select="int:GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConcept"/>
         </che:CHE_MD_MaintenanceInformation>
     </xsl:template>
 
@@ -105,6 +105,29 @@
                 <xsl:apply-templates mode="language" select="."/>
             </gmd:maintenanceNote>
         </xsl:for-each>
+    </xsl:template>
+
+    <xsl:template mode="MaintenanceInfo" match="int:GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConcept">
+        <che:archiveConcept>
+            <che:CHE_MD_ArchiveConcept>
+                <xsl:apply-templates select="int:GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConceptarchiveConceptCitation" mode="MaintenanceInfo"/>
+                <xsl:apply-templates select="int:archiveConceptURL" mode="MaintenanceInfo"/>
+            </che:CHE_MD_ArchiveConcept>
+        </che:archiveConcept>
+    </xsl:template>
+    <xsl:template mode="MaintenanceInfo" match="int:GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConceptarchiveConceptCitation">
+        <xsl:apply-templates mode="MaintenanceInfo" select="int:archiveConceptCitation"/>
+    </xsl:template>
+    <xsl:template mode="MaintenanceInfo" match="int:archiveConceptCitation">
+        <che:archiveConceptCitation>
+            <xsl:apply-templates mode="Citation" select="int:GM03_2_1Comprehensive.Comprehensive.CI_Citation"/>
+        </che:archiveConceptCitation>
+    </xsl:template>
+
+    <xsl:template mode="MaintenanceInfo" match="int:archiveConceptURL">
+        <che:archiveConceptURL>
+            <xsl:apply-templates select="." mode="language"/>
+        </che:archiveConceptURL>
     </xsl:template>
 
     <xsl:template mode="MaintenanceInfo" match="text()">
