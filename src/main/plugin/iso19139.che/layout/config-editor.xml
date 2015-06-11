@@ -264,9 +264,9 @@
       <name>che:mobile</name>
       <name>che:basicGeodataID</name>
       <name parent="che:CHE_CI_Telephone">gmd:voice</name>
-      <name ancestor="che:CHE_MD_Class">che:name</name>
-      <name ancestor="che:CHE_MD_Class">che:description</name>
-      <name ancestor="che:CHE_MD_Class">che:type</name>
+      <name>che:name</name>
+      <name>che:description</name>
+      <name>che:type</name>
       <name ancestor="gmd:contactInfo">gmd:country</name>
 
     </exclude>

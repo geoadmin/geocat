@@ -326,8 +326,8 @@
             <xsl:copy-of select="@xlink:href"/>
           </xsl:otherwise>
         </xsl:choose>
-
       </xsl:if>
+      <xsl:copy-of select="./node()" />
     </xsl:copy>
 
   </xsl:template>
