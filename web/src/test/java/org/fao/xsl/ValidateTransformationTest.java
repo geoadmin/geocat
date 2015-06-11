@@ -81,6 +81,23 @@ public class ValidateTransformationTest {
         rules.put("CHE_MD_Metadata/locale", new Exists(new Attribute("LanguageCode", "codeListValue", "roh")));
         testFile(file, Control.GM03_2_ISO, rules, true);
     }
+    @Test
+    public void contentInfoInvalidAfterRountrip() throws Throwable {
+        File file = new File(data, "iso19139/metadata-invalid-afterInfo-export.xml");
+        Multimap<String, Requirement> rules = ArrayListMultimap.create();
+        file = testFile(file, Control.ISO_GM03, rules, true);
+
+        rules.put("CHE_MD_Metadata", new Count(3, new Finder("CHE_MD_FeatureCatalogueDescription")));
+        rules.put("CHE_MD_Metadata", new Count(3, new Finder("CHE_MD_FeatureCatalogueDescription/featureCatalogueCitation")));
+        rules.put("CHE_MD_Metadata", new Count(3, new Finder("CHE_MD_FeatureCatalogueDescription/featureCatalogueCitation/CI_Citation/title")));
+        rules.put("CHE_MD_Metadata", new Count(3, new Finder("CHE_MD_FeatureCatalogueDescription/includedWithDataset")));
+        rules.put("CHE_MD_Metadata", new Count(3, new Finder("CHE_MD_FeatureCatalogueDescription/modelType")));
+        rules.put("CHE_MD_Metadata", new Count(12, new Finder("CHE_MD_FeatureCatalogueDescription/domain")));
+        rules.put("CHE_MD_Metadata", new Count(12, new Finder("CHE_MD_FeatureCatalogueDescription/domain/CHE_MD_CodeDomain/name")));
+        rules.put("CHE_MD_Metadata", new Count(21, new Finder("CHE_MD_FeatureCatalogueDescription/class")));
+        rules.put("CHE_MD_Metadata", new Count(21, new Finder("CHE_MD_FeatureCatalogueDescription/class/CHE_MD_Class/name")));
+        testFile(file, Control.GM03_2_ISO, rules, true);
+    }
 
     @Test
     public void maintenanceXmlImportExport() throws Throwable {

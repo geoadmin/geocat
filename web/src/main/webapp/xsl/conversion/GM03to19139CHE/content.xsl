@@ -198,7 +198,7 @@
 	            </xsl:when>
 	            <xsl:otherwise>
 			        <che:modelType>
-			            <che:CHE_MD_modelTypeCode codeListValue="FeatureDescription" codeList="./resources/codeList.xml#che:CHE_MD_modelTypeCode" />
+			            <che:CHE_MD_modelTypeCode codeListValue="FeatureDescription" codeList="#che:CHE_MD_modelTypeCode" />
 			        </che:modelType>
 		        </xsl:otherwise>
 	        </xsl:choose>
@@ -218,7 +218,7 @@
 
     <xsl:template mode="Content" match="modelType">
         <che:modelType>
-            <che:CHE_MD_modelTypeCode codeListValue="{.}" codeList="./resources/codeList.xml#che:CHE_MD_modelTypeCode" />
+            <che:CHE_MD_modelTypeCode codeListValue="{.}" codeList="#che:CHE_MD_modelTypeCode" />
         </che:modelType>
     </xsl:template>
 

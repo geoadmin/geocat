@@ -42,6 +42,15 @@ public class UpdateFixedInfoTest {
 //		System.out.println(Xml.getString(transformed));
 		assertCorrectElements(transformed);
 	}
+	@Test
+	public void deletesFeatureCatalogueCitationContentBug() throws Exception {
+        String pathToXsl = TransformationTestSupport.geonetworkWebapp+"/WEB-INF/data/config/schema_plugins/iso19139.che/update-fixed-info.xsl";
+
+		Element testData = Xml.loadFile(CharacterStringToLocalisedTest.class.getResource("/mdWithFeatureCatalogueCitation.xml"));
+		Element transformed = Xml.transform(testData, IO.toPath(pathToXsl));
+
+		findAndAssert(transformed, new Count(3, new Finder("CHE_MD_FeatureCatalogueDescription/featureCatalogueCitation/CI_Citation/title")));
+	}
 	private void assertCorrectElements(Element transformed) {
 		findAndAssert(transformed, new Count(1, new Finder("topicCategory/MD_TopicCategoryCode", new EqualTrimText("environment"))));
 		findAndAssert(transformed, new Count(13, new Finder("topicCategory")));

@@ -302,6 +302,8 @@
         che:individualFirstName|
         che:individualLastName|
         che:internalReference | 
+        che:name |
+        che:description |
         gmd:name[count(ancestor::gmd:MD_Format) > 0] |
         gmd:version[count(ancestor::gmd:MD_Format) > 0] |
         gmd:electronicMailAddress">

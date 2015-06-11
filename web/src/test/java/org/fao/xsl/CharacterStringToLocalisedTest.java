@@ -67,6 +67,18 @@ public class CharacterStringToLocalisedTest {
     }
 
     @Test
+    public void deletesFeatureCatalogueCitationContentBug() throws Exception {
+        String pathToXsl = TransformationTestSupport.geonetworkWebapp
+                + "/xsl/characterstring-to-localisedcharacterstring.xsl";
+
+        Element testData = Xml.loadFile(CharacterStringToLocalisedTest.class.getResource("/mdWithFeatureCatalogueCitation.xml"));
+
+        Element transformed = Xml.transform(testData, new File(pathToXsl).toPath());
+
+        findAndAssert(transformed, new Count(3, new Finder("CHE_MD_FeatureCatalogueDescription/featureCatalogueCitation/CI_Citation/title")));
+    }
+
+    @Test
     public void removeLocalizedStringFromRefSysCode() throws Exception {
         String pathToXsl = TransformationTestSupport.geonetworkWebapp
                 + "/xsl/characterstring-to-localisedcharacterstring.xsl";

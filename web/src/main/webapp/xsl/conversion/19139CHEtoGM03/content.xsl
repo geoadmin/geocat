@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
                 xmlns="http://www.interlis.ch/INTERLIS2.3"
                 xmlns:che="http://www.geocat.ch/2008/che"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
@@ -52,6 +52,9 @@
                 </featureTypes>
             </xsl:if>
             <xsl:choose>
+	            <xsl:when test="lower-case(che:modelType/che:CHE_MD_modelTypeCode/@codeListValue) = 'other'">
+	                <modelType>other</modelType>
+	            </xsl:when>
 	            <xsl:when test="che:modelType">
 	                <modelType><xsl:value-of select="che:modelType/che:CHE_MD_modelTypeCode/@codeListValue"/></modelType>
 	            </xsl:when>
@@ -116,7 +119,7 @@
     <xsl:template mode="Content" match="che:CHE_MD_Class">
         <GM03_2_1Comprehensive.Comprehensive.MD_Class TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="che:name"/>
-            <xsl:apply-templates mode="text" select="che:description"/>
+            <xsl:apply-templates mode="forceGroupText" select="che:description"/>
             <xsl:apply-templates mode="Content" select="che:baseClass"/>
             <xsl:apply-templates mode="Content" select="che:subClass"/>
             <xsl:apply-templates mode="Content" select="che:attribute"/>
@@ -126,11 +129,33 @@
     <xsl:template mode="Content" match="che:attribute">
         <GM03_2_1Comprehensive.Comprehensive.MD_Attribute TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="che:name"/>
-            <xsl:apply-templates mode="text" select="che:description"/>
+            <xsl:apply-templates mode="forceGroupText" select="che:description"/>
             <xsl:apply-templates mode="Content" select="che:namedType"/> 
             <BACK_REF name="MD_AbstractClass"/>
             <xsl:apply-templates mode="Content" select="che:anonymousType"/>
         </GM03_2_1Comprehensive.Comprehensive.MD_Attribute>
+    </xsl:template>
+
+    <xsl:template mode="forceGroupText" match="*">
+        <xsl:choose>
+            <xsl:when test="gmd:PT_FreeText">
+               <xsl:apply-templates mode="groupText" select=".">
+                 <xsl:with-param name="element" select="local-name(.)"/>
+               </xsl:apply-templates>
+            </xsl:when>
+            <xsl:when test="gco:CharacterString[normalize-space(.) != '']">
+                <xsl:element name="{local-name(.)}">
+                    <GM03_2_1Core.Core.PT_FreeText>
+                        <textGroup>
+                            <GM03_2_1Core.Core.PT_Group>
+                                <language><xsl:value-of select="$defaultLanguage"/></language>
+                                <plainText><xsl:value-of select="gco:CharacterString"/></plainText>
+                            </GM03_2_1Core.Core.PT_Group>
+                        </textGroup>
+                    </GM03_2_1Core.Core.PT_FreeText>
+                </xsl:element>
+            </xsl:when>
+        </xsl:choose>
     </xsl:template>
 
 	<xsl:template mode="Content" match="che:domain">
@@ -143,12 +168,14 @@
 	</xsl:template>
 
     <xsl:template mode="Content" match="che:type">
-      <type REF="?">
-        <GM03_2_1Comprehensive.Comprehensive.MD_Type TID="x{util:randomId()}">
-            <xsl:apply-templates mode="text" select="che:type"/>
-            <xsl:apply-templates mode="Content" select="che:value/che:CHE_MD_CodeValue"/>
-        </GM03_2_1Comprehensive.Comprehensive.MD_Type>
-      </type>
+      <xsl:if test="normalize-space(gco:CharacterString) != ''">
+        <type REF="?">
+          <GM03_2_1Comprehensive.Comprehensive.MD_Type TID="x{util:randomId()}">
+              <xsl:apply-templates mode="text" select="che:type"/>
+              <xsl:apply-templates mode="Content" select="che:value/che:CHE_MD_CodeValue"/>
+          </GM03_2_1Comprehensive.Comprehensive.MD_Type>
+        </type>
+      </xsl:if>
     </xsl:template>
     
     <xsl:template mode="Content" match="che:anonymousType">
