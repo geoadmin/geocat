@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.ServletWebRequest;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
@@ -49,6 +51,7 @@ public class TestPdfExportAllMd {
                 }
             }
         }
+        Files.write(Paths.get("/tmp/PDFExportReport.txt"), response.toString().getBytes());
         return response.toString();
     }
 
