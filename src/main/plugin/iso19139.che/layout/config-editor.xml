@@ -251,6 +251,7 @@
       <name>srv:name</name>
       <name>srv:invocationName</name>
       <name>srv:serviceTypeVersion</name>
+      <name>srv:serviceType</name>
       <name>srv:operationName</name>
       <name>srv:identifier</name>
       <name>che:streetName</name>
@@ -315,6 +316,7 @@
         <section xpath="/che:CHE_MD_Metadata/gmd:metadataConstraints"/>
         <section xpath="/che:CHE_MD_Metadata/gmd:metadataMaintenance"/>
         <section xpath="/che:CHE_MD_Metadata/gmd:applicationSchemaInfo"/>
+        <section xpath="/che:CHE_MD_Metadata/gmd:metadataExtensionInfo"/>
         <section xpath="/che:CHE_MD_Metadata/che:legislationInformation"/>
 
       </tab>
@@ -396,6 +398,10 @@
       </tab>
       <tab id="applicationSchemaInfo" toggle="true">
         <section xpath="/che:CHE_MD_Metadata/gmd:applicationSchemaInfo" or="applicationSchemaInfo"
+          in="/che:CHE_MD_Metadata"/>
+      </tab>
+      <tab id="metadataExtensionInfo" toggle="true">
+        <section xpath="/che:CHE_MD_Metadata/gmd:metadataExtensionInfo" or="metadataExtensionInfo"
           in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="legislationInformation" toggle="true">

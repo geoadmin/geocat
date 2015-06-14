@@ -26,6 +26,7 @@
   <metadataConstraints>Metadateneinschränkungen</metadataConstraints>
   <metadataMaintenance>Metadatenpflege</metadataMaintenance>
   <applicationSchemaInfo>Anwendungsschema</applicationSchemaInfo>
+  <metadataExtensionInfo>Metadatenerweiterungen</metadataExtensionInfo>
   <legislationInformation>Gesetzgebung</legislationInformation>
 
   <!-- XSD error translation -->
