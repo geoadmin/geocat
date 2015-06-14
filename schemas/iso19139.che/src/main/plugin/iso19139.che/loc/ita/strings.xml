@@ -26,6 +26,7 @@
   <metadataConstraints>Vincoli</metadataConstraints>
   <metadataMaintenance>Manutenzione</metadataMaintenance>
   <applicationSchemaInfo>Schema dell'app.</applicationSchemaInfo>
+  <metadataExtensionInfo>Info sull'estensione</metadataExtensionInfo>
   <legislationInformation>Base giuridica</legislationInformation>
 
   <!-- XSD error translation -->

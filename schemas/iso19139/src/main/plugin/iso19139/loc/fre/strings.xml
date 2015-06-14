@@ -28,6 +28,7 @@
   <metadataConstraints>Md. contraintes</metadataConstraints>
   <metadataMaintenance>Md. maintenance</metadataMaintenance>
   <applicationSchemaInfo>Extension</applicationSchemaInfo>
+  <metadataExtensionInfo>Ext. Info</metadataExtensionInfo>
   <noThesaurusName>Mots clés</noThesaurusName>
   <bboxesSection>Zone géographique</bboxesSection>
 

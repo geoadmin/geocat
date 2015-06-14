@@ -26,6 +26,7 @@
   <metadataConstraints>Md. constraints</metadataConstraints>
   <metadataMaintenance>Md. maintenance</metadataMaintenance>
   <applicationSchemaInfo>Schema info</applicationSchemaInfo>
+  <metadataExtensionInfo>Ext. Info</metadataExtensionInfo>
   <legislationInformation>Legislation info</legislationInformation>
 
   <!-- XSD error translation -->

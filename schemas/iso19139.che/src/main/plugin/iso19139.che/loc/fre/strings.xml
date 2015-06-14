@@ -25,7 +25,8 @@
   <portrayalCatalogueInfo>Représentation</portrayalCatalogueInfo>
   <metadataConstraints>Md. contraintes</metadataConstraints>
   <metadataMaintenance>Md. maintenance</metadataMaintenance>
-  <applicationSchemaInfo>Extension</applicationSchemaInfo>
+  <applicationSchemaInfo>Schéma d'app.</applicationSchemaInfo>
+  <metadataExtensionInfo>Extension</metadataExtensionInfo>
   <legislationInformation>Info sur la législation</legislationInformation>
 
   <!-- XSD error translation -->
