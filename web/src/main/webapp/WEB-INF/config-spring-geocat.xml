@@ -81,47 +81,46 @@
     </bean>
     <bean id="reusableObjectManager" class="org.fao.geonet.geocat.kernel.reusable.ReusableObjManager"/>
 
-    <bean id="geocatBackgroundJobScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="schedulerName" value="geocatBackgroundJobScheduler"/>
-        <property name="jobFactory">
-            <bean class="org.fao.geonet.util.spring.AutowiringSpringBeanJobFactory"/>
-        </property>
-        <property name="quartzProperties">
-            <props>
-                <prop key="org.quartz.threadPool.threadCount">1</prop>
-            </props>
-        </property>
-        <property name="triggers">
-            <list>
-                <ref bean="unpublishMetadataCronTrigger" />
-                <ref bean="backupMetadataCronTrigger" />
-            </list>
-        </property>
-    </bean>
+    <!--<bean id="geocatBackgroundJobScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">-->
+        <!--<property name="schedulerName" value="geocatBackgroundJobScheduler"/>-->
+        <!--<property name="jobFactory">-->
+            <!--<bean class="org.fao.geonet.util.spring.AutowiringSpringBeanJobFactory"/>-->
+        <!--</property>-->
+        <!--<property name="quartzProperties">-->
+            <!--<props>-->
+                <!--<prop key="org.quartz.threadPool.threadCount">1</prop>-->
+            <!--</props>-->
+        <!--</property>-->
+        <!--<property name="triggers">-->
+            <!--<list>-->
+                <!--<ref bean="unpublishMetadataCronTrigger" />-->
+                <!--<ref bean="backupMetadataCronTrigger" />-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
 
+    <!--<bean id="unpublishMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">-->
+        <!--<property name="jobDetail">-->
+            <!--<bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">-->
+                <!--<property name="jobClass" value="org.fao.geonet.geocat.kernel.UnpublishInvalidMetadataJob"/>-->
+                <!--<property name="name" value="unpublishInvalidMetadata" />-->
+                <!--<property name="group" value="geocatBackgroundTasks" />-->
+            <!--</bean>-->
+        <!--</property>-->
+        <!--&lt;!&ndash;<property name="cronExpression" value="0 * * * * ?" />&ndash;&gt;-->
+        <!--<property name="cronExpression" value="0 0 23 ? * *" />-->
+    <!--</bean>-->
 
-    <bean id="unpublishMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail">
-            <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-                <property name="jobClass" value="org.fao.geonet.geocat.kernel.UnpublishInvalidMetadataJob"/>
-                <property name="name" value="unpublishInvalidMetadata" />
-                <property name="group" value="geocatBackgroundTasks" />
-            </bean>
-        </property>
-        <!--<property name="cronExpression" value="0 * * * * ?" />-->
-        <property name="cronExpression" value="0 0 23 ? * *" />
-    </bean>
-
-    <bean id="backupMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail">
-            <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-                <property name="jobClass" value="org.fao.geonet.geocat.ArchiveAllMetadataJob"/>
-                <property name="name" value="archiveAllMetadata" />
-                <property name="group" value="geocatBackgroundTasks" />
-            </bean>
-        </property>
-        <!--<property name="cronExpression" value="0 * * * * ?" />-->
-        <property name="cronExpression" value="0 0 2 ? * *" />
-    </bean>
+    <!--<bean id="backupMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">-->
+        <!--<property name="jobDetail">-->
+            <!--<bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">-->
+                <!--<property name="jobClass" value="org.fao.geonet.geocat.ArchiveAllMetadataJob"/>-->
+                <!--<property name="name" value="archiveAllMetadata" />-->
+                <!--<property name="group" value="geocatBackgroundTasks" />-->
+            <!--</bean>-->
+        <!--</property>-->
+        <!--&lt;!&ndash;<property name="cronExpression" value="0 * * * * ?" />&ndash;&gt;-->
+        <!--<property name="cronExpression" value="0 0 2 ? * *" />-->
+    <!--</bean>-->
 
 </beans>
