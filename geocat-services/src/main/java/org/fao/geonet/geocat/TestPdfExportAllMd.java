@@ -35,13 +35,18 @@ public class TestPdfExportAllMd {
         MetadataRepository repo = context.getBean(MetadataRepository.class);
         List<Integer> ids = repo.findAllIdsBy(MetadataSpecs.hasType(MetadataType.METADATA));
         StringBuilder response = new StringBuilder("Failures: ");
-        long startTime = System.currentTimeMillis();
+        long lastPrintProgress = System.currentTimeMillis();
+        long lastFlushResults = lastPrintProgress;
         int i = 0;
         for (Integer id : ids) {
             i++;
-            if (System.currentTimeMillis() - startTime > 30000) {
+            if (System.currentTimeMillis() - lastPrintProgress > 30000) {
                 System.out.println("\n\n==============\n" + i + " / " + ids.size() + " \n===================\n");
-                startTime = System.currentTimeMillis();
+                lastPrintProgress = System.currentTimeMillis();
+            }
+            if (System.currentTimeMillis() - lastFlushResults > (60000 * 10)) {
+                Files.write(Paths.get("/tmp/PDFExportReport.txt"), response.toString().getBytes());
+                lastFlushResults = System.currentTimeMillis();
             }
             for (String l : new String[]{"eng", "ger", "fra", "ita"}) {
                 try {
