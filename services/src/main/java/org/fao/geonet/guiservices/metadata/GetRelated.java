@@ -47,6 +47,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
+import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
@@ -449,7 +450,7 @@ public class GetRelated implements Service, org.fao.geonet.kernel.RelatedMetadat
             parameters.addContent(new Element("sortOrder").addContent("reverse"));
             parameters.addContent(new Element("from").addContent(from));
             parameters.addContent(new Element("to").addContent(to));
-
+            ((LuceneSearcher)searcher).setLogSearch(false);
             searcher.search(context, parameters, _config);
 
             Element response = new Element(type);

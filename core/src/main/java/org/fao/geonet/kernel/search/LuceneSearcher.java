@@ -1899,6 +1899,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      return result.toString();
   }
 
+    public void setLogSearch(boolean enableLogging) {
+        this._logSearch = enableLogging;
+    }
+
     public static class LanguageSelection {
         public final String analyzerLanguage;
         public final String presentationLanguage;
