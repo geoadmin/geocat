@@ -2936,6 +2936,11 @@
     <description>Angabe ob die Daten eng, gemischt oder lose an den Dienst gekoppelt sind</description>
     <condition>Obligatorisch</condition>
   </element>
+  <element name="srv:SV_CouplingType">
+    <label>Art der Kopplung</label>
+    <description>Angabe ob die Daten eng, gemischt oder lose an den Dienst gekoppelt sind</description>
+    <condition>Obligatorisch</condition>
+  </element>
   <element name="srv:extent">
     <label>Ausdehnung</label>
     <description>Geografische und/oder zeitliche Ausdehnung des Dienstes</description>
