@@ -631,4 +631,8 @@
 		<condition/>
 		<description>Informazione sul contenuto di una cella (pixel) di un dato raster</description>
     </element>
+    <element name="che:basicGeodataIDTypeCode">
+        <label>Geodata Type Code</label>
+        <description>Basic Geodata ID Type Code</description>
+    </element>
 </labels>

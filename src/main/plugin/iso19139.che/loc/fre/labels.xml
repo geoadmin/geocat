@@ -707,4 +707,8 @@ ce qui concerne les métadonnées"</description>
     <help>Classe contenant les informations relatives aux possibilités d'utilisation d'une image.</help>
     <condition/>
  </element>
+ <element name="che:basicGeodataIDTypeCode">
+  <label>Genere dell'identificatore </label>
+  <description>Genere dell'identificatore </description>
+ </element>
 </labels>

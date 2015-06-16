@@ -631,4 +631,8 @@
 		<condition/>
 		<description>Information zum Inhalt einer Rasterdatenzelle</description>
     </element>
+    <element name="che:basicGeodataIDTypeCode">
+        <label>Art des Identifikators</label>
+        <description>Art des Identifikators</description>
+    </element>
 </labels>
