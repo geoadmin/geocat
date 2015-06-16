@@ -543,4 +543,8 @@
         <label>Inspire Service Type</label>
         <description></description>
     </element>
+    <element name="che:basicGeodataIDTypeCode">
+        <label>Geodata Type Code</label>
+        <description>Basic Geodata ID Type Code</description>
+    </element>
 </labels>
