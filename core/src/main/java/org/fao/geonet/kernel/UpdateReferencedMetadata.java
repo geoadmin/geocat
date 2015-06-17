@@ -45,7 +45,8 @@ public class UpdateReferencedMetadata implements Runnable {
         final ServiceContext context = dm.getServiceContext();
         context.setAsThreadLocal();
 
-        TransactionManager.runInTransaction("IndexingTask", context.getApplicationContext(),
+        final Set<Integer> mdIds = Sets.newHashSet();
+        TransactionManager.runInTransaction("Update Referenced Metadata Task", context.getApplicationContext(),
                 TransactionManager.TransactionRequirement.CREATE_NEW,
                 TransactionManager.CommitBehavior.ALWAYS_COMMIT, false, new TransactionTask<Void>() {
                     @Override
@@ -57,7 +58,6 @@ public class UpdateReferencedMetadata implements Runnable {
                         Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, strategy, luceneFields,
                                 uuid, null, false, Functions.<String>identity());
 
-                        Set<Integer> mdIds = Sets.newHashSet();
                         for (MetadataRecord metadataRecord : referencingMetadata) {
                             mdIds.add(metadataRecord.id);
                         }
@@ -69,9 +69,18 @@ public class UpdateReferencedMetadata implements Runnable {
                                 return root.get(Metadata_.dataInfo).get(MetadataDataInfo_.changeDate);
                             }
                         }, new ISODate());
-
                         query.setSpecification(MetadataSpecs.hasMetadataIdIn(mdIds));
-                        dm.flush();
+                        query.execute();
+
+                        return null;
+                    }
+                });
+        dm.flush();
+        TransactionManager.runInTransaction("IndexingTask", context.getApplicationContext(),
+                TransactionManager.TransactionRequirement.CREATE_NEW,
+                TransactionManager.CommitBehavior.ALWAYS_COMMIT, false, new TransactionTask<Void>() {
+                    @Override
+                    public Void doInTransaction(TransactionStatus transaction) throws Throwable {
 
                         for (Integer id : mdIds) {
                             dm.indexMetadata(id + "", false);
