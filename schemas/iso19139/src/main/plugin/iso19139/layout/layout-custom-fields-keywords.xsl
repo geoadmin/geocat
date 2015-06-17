@@ -130,12 +130,19 @@
         get keyword in gui lang
         in default language
         -->
-        <xsl:variable name="keywords" select="string-join(
-                  if ($guiLangId and gmd:keyword//gmd:LocalisedCharacterString[@locale = concat('#', $guiLangId) and normalize-space(text()) != '']) then
-                    gmd:keyword//*[@locale = concat('#', $guiLangId)]/replace(text(), ',', ',,')
-                  else if (gmd:keyword//gmd:LocalisedCharacterString[normalize-space(text()) != '']) then
-                    gmd:keyword//gmd:LocalisedCharacterString[normalize-space(text()) != '']
-                  else gmd:keyword/gco:CharacterString/replace(text(), ',', ',,'), ',')"/>
+        <xsl:variable name="keywords">
+          <xsl:variable name="keywordList">
+            <xsl:for-each select="gmd:keyword">
+              <xsl:value-of select="if ($guiLangId and .//gmd:LocalisedCharacterString[@locale = concat('#', $guiLangId) and normalize-space(text()) != '']) then
+                    .//*[@locale = concat('#', $guiLangId)]/replace(text(), ',', ',,')
+                  else if (.//gmd:LocalisedCharacterString[normalize-space(text()) != '']) then
+                   .//gmd:LocalisedCharacterString[normalize-space(text()) != '']/replace(text(), ',', ',,')
+                  else ./gco:CharacterString/replace(text(), ',', ',,')"/>
+              <xsl:value-of select="','"/>
+            </xsl:for-each>
+           </xsl:variable>
+          <xsl:value-of select="if (string-length($keywordList) > 0) then substring($keywordList, 0, string-length($keywordList)) else $keywordList" />
+        </xsl:variable>
 
         <!-- Define the list of transformation mode available. -->
         <xsl:variable name="transformations"
