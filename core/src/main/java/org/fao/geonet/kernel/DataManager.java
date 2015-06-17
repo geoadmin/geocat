@@ -93,6 +93,7 @@ import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.geocat.SharedObjectApi;
+import org.fao.geonet.geocat.kernel.reusable.ContactsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
 import org.fao.geonet.geocat.kernel.reusable.ProcessParams;
@@ -212,27 +213,6 @@ public class DataManager implements ApplicationEventPublisherAware {
 
     private String baseURL;
 
-    public static void reindex(ServiceContext context, String newid, ThesaurusManager manager) throws Exception {
-        Processor.clearCache();
-
-        final Path appPath1 = context.getAppPath();
-        final String baseUrl = context.getBaseUrl();
-        final String language = context.getLanguage();
-        final IsoLanguagesMapper isolangMapper = context.getBean(IsoLanguagesMapper.class);
-        final KeywordsStrategy strategy = new KeywordsStrategy(isolangMapper, manager, appPath1, baseUrl, language);
-        ArrayList<String> fields = new ArrayList<String>();
-
-        fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
-        fields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
-        final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, strategy, fields, newid, null, false,
-                Functions.<String>identity());
-
-
-        DataManager dm = context.getBean(DataManager.class);
-        for (MetadataRecord metadataRecord : referencingMetadata) {
-            dm.indexMetadata("" + metadataRecord.id, true, false, false, false);
-        }
-    }
     private ApplicationEventPublisher applicationEventPublisher;
 
     //--------------------------------------------------------------------------
@@ -2093,7 +2073,8 @@ public class DataManager implements ApplicationEventPublisherAware {
             }
             Processor.uncacheXLinkUri("local://subtemplate?uuid=" + metadata.getUuid());
 
-            getServiceContext().getBean(ThreadPool.class).runTask(new UpdateReferencedMetadata(metadata.getUuid(), this));
+            ContactsStrategy strategy = new ContactsStrategy(context.getApplicationContext());
+            getServiceContext().getBean(ThreadPool.class).runTask(new UpdateReferencedMetadata(metadata.getUuid(), this, strategy));
         }
         // END GEOCAT
         // Return an up to date metadata record

@@ -23,7 +23,6 @@
 
 package org.fao.geonet.geocat.services.extent;
 
-import com.google.common.base.Functions;
 import com.vividsolutions.jts.geom.Geometry;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -37,11 +36,10 @@ import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.geocat.kernel.extent.FeatureType;
 import org.fao.geonet.geocat.kernel.extent.Source;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
-import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
-import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.UpdateReferencedMetadata;
 import org.fao.geonet.util.LangUtils;
-import org.fao.geonet.utils.Log;
+import org.fao.geonet.util.ThreadPool;
 import org.geotools.data.FeatureStore;
 import org.geotools.util.logging.Logging;
 import org.jdom.Element;
@@ -53,8 +51,6 @@ import org.opengis.feature.type.Name;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -115,9 +111,10 @@ public class Update implements Service {
         final java.util.List<Element> changes = new ArrayList<Element>();
 
         Geometry geometry = null;
+        SimpleFeatureType schema = store.getSchema();
         if (geomParam != null) {
             final Add.Format format = Add.Format.lookup(Util.getParamText(params, FORMAT));
-            final GeometryDescriptor descriptor = store.getSchema().getGeometryDescriptor();
+            final GeometryDescriptor descriptor = schema.getGeometryDescriptor();
             geometry = format.parse(geomParam);
 
             geometry = ExtentHelper.prepareGeometry(requestCrsCode, featureType, geometry, featureType
@@ -136,7 +133,7 @@ public class Update implements Service {
             String encodeDescription = ExtentHelper.encodeDescription(desc);
             newValues.add(encodeDescription);
             searchAt += ExtentHelper.encodeDescription(ExtentHelper.reduceDesc(desc));
-            final AttributeDescriptor descriptor = store.getSchema().getDescriptor(featureType.descColumn);
+            final AttributeDescriptor descriptor = schema.getDescriptor(featureType.descColumn);
             attributes.add(descriptor.getName());
 
             final Element change = new Element("change");
@@ -151,7 +148,7 @@ public class Update implements Service {
 
             searchAt += ExtentHelper.encodeDescription(ExtentHelper.reduceDesc(geoId));
 
-            final AttributeDescriptor descriptor = store.getSchema().getDescriptor(featureType.geoIdColumn);
+            final AttributeDescriptor descriptor = schema.getDescriptor(featureType.geoIdColumn);
             attributes.add(descriptor.getName());
 
             final Element change = new Element("change");
@@ -160,7 +157,7 @@ public class Update implements Service {
         }
 
         newValues.add(searchAt);
-        final AttributeDescriptor searchDescriptor = store.getSchema().getDescriptor(featureType.searchColumn);
+        final AttributeDescriptor searchDescriptor = schema.getDescriptor(featureType.searchColumn);
         attributes.add(searchDescriptor.getName());
 
         if (attributes.isEmpty()) {
@@ -179,34 +176,8 @@ public class Update implements Service {
 
         final ExtentsStrategy strategy = new ExtentsStrategy(context.getAppPath(),
                 extentMan, context.getLanguage());
-        ArrayList<String> fields = new ArrayList<String>();
 
-        fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
-        fields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
-        final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, strategy, fields, id, null, false,
-                Functions.<String>identity());
-
-        gc.getThreadPool().runTask(new Runnable() {
-            @Override
-            public void run() {
-                DataManager dm = context.getBean(DataManager.class);
-
-                try {
-                    for (MetadataRecord metadataRecord : referencingMetadata) {
-                        try {
-                            dm.indexMetadata(String.valueOf(metadataRecord.id), false, true, false, false);
-                        } catch (Exception e) {
-                            // we want to continue indexing so log and continue on
-                            Log.error("Error indexing metadata after updating extent:\n\tMetadata Id: " + metadataRecord.id
-                                      + "\n\tExtent Id: " + id + "\n\tExtent typename: " + typename, e);
-                        }
-                    }
-                } catch (Exception e) {
-                    Log.error("Error opening database when trying to index metadata after updating extent"
-                              + "\n\tExtent Id: " + id + "\n\tExtent typename: " + typename, e);
-                }
-            }
-        });
+        context.getBean(ThreadPool.class).runTask(new UpdateReferencedMetadata(id, context.getBean(DataManager.class), strategy));
 
         return responseElem;
     }

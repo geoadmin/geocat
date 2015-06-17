@@ -11,8 +11,8 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo_;
 import org.fao.geonet.domain.Metadata_;
-import org.fao.geonet.geocat.kernel.reusable.ContactsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
+import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.repository.BatchUpdateQuery;
 import org.fao.geonet.repository.MetadataRepository;
@@ -35,10 +35,12 @@ public class UpdateReferencedMetadata implements Runnable {
 
     private final String uuid;
     private final DataManager dm;
+    private final SharedObjectStrategy strategy;
 
-    UpdateReferencedMetadata(String uuid, DataManager dm) {
+    public UpdateReferencedMetadata(String uuid, DataManager dm, SharedObjectStrategy strategy) {
         this.uuid = uuid;
         this.dm = dm;
+        this.strategy = strategy;
     }
 
     public void call() throws Exception {
@@ -51,27 +53,27 @@ public class UpdateReferencedMetadata implements Runnable {
                 TransactionManager.CommitBehavior.ALWAYS_COMMIT, false, new TransactionTask<Void>() {
                     @Override
                     public Void doInTransaction(TransactionStatus transaction) throws Throwable {
-                        ContactsStrategy strategy = new ContactsStrategy(context.getApplicationContext());
+
                         List<String> luceneFields = Lists.newArrayList(strategy.getValidXlinkLuceneField(),
                                 strategy.getInvalidXlinkLuceneField());
 
                         Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, strategy, luceneFields,
                                 uuid, null, false, Functions.<String>identity());
-
-                        for (MetadataRecord metadataRecord : referencingMetadata) {
-                            mdIds.add(metadataRecord.id);
-                        }
-
-                        MetadataRepository repository = context.getBean(MetadataRepository.class);
-                        BatchUpdateQuery<Metadata> query = repository.createBatchUpdateQuery(new PathSpec<Metadata, ISODate>() {
-                            @Override
-                            public Path<ISODate> getPath(Root<Metadata> root) {
-                                return root.get(Metadata_.dataInfo).get(MetadataDataInfo_.changeDate);
+                        if (!referencingMetadata.isEmpty()) {
+                            for (MetadataRecord metadataRecord : referencingMetadata) {
+                                mdIds.add(metadataRecord.id);
                             }
-                        }, new ISODate());
-                        query.setSpecification(MetadataSpecs.hasMetadataIdIn(mdIds));
-                        query.execute();
 
+                            MetadataRepository repository = context.getBean(MetadataRepository.class);
+                            BatchUpdateQuery<Metadata> query = repository.createBatchUpdateQuery(new PathSpec<Metadata, ISODate>() {
+                                @Override
+                                public Path<ISODate> getPath(Root<Metadata> root) {
+                                    return root.get(Metadata_.dataInfo).get(MetadataDataInfo_.changeDate);
+                                }
+                            }, new ISODate());
+                            query.setSpecification(MetadataSpecs.hasMetadataIdIn(mdIds));
+                            query.execute();
+                        }
                         return null;
                     }
                 });

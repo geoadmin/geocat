@@ -30,15 +30,20 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
+import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.UpdateReferencedMetadata;
+import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.util.ThreadPool;
 import org.jdom.Element;
 
 import java.net.URLEncoder;
@@ -139,9 +144,11 @@ public class UpdateElement implements Service {
 		elResp.addContent(new Element("selected").setText(ref));
 		elResp.addContent(new Element("mode").setText("edit"));
 
-        DataManager.reindex(context, newid, manager);
+        final KeywordsStrategy strategy = new KeywordsStrategy(context.getBean(IsoLanguagesMapper.class), manager, context.getAppPath(), context.getBaseUrl(), context.getLanguage());
 
-		return elResp;
+        context.getBean(ThreadPool.class).runTask(new UpdateReferencedMetadata(URLEncoder.encode(newid, Constants.ENCODING), context.getBean(DataManager.class), strategy));
+
+        return elResp;
 	}
 }
 

@@ -27,15 +27,20 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.UpdateReferencedMetadata;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.util.ThreadPool;
 import org.jdom.Element;
 
+import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
@@ -110,7 +115,8 @@ public class GeocatUpdateElement implements Service {
             uri = thesaurus.addElement(bean).getURI();
         }
 
-        DataManager.reindex(context, newid, manager);
+        final KeywordsStrategy strategy = new KeywordsStrategy(context.getBean(IsoLanguagesMapper.class), manager, context.getAppPath(), context.getBaseUrl(), context.getLanguage());
+        context.getBean(ThreadPool.class).runTask(new UpdateReferencedMetadata(URLEncoder.encode(uri, Constants.ENCODING), context.getBean(DataManager.class), strategy));
 
         Element elResp = new Element(Jeeves.Elem.RESPONSE);
 
