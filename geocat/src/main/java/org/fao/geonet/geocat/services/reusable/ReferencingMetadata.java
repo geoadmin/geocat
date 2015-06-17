@@ -107,6 +107,7 @@ public class ReferencingMetadata implements Service {
                 records.addContent(record);
 
                 Utils.addChild(record, "id", "" + metadataRecord.id);
+                Utils.addChild(record, "uuid", "" + metadataRecord.uuid);
 
                 try {
                     Element titleElement = metadataRecord.xml.getChild("identificationInfo", Geonet.Namespaces.GMD).getChild(

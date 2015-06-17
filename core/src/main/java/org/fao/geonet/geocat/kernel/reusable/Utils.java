@@ -215,6 +215,7 @@ public final class Utils {
             for( String field : fields ) {
                 Set<String> requiredFields = new HashSet<String>();
                 requiredFields.add("_id");
+                requiredFields.add("_uuid");
                 requiredFields.add("_owner");
                 requiredFields.add(field);
                 Query query;

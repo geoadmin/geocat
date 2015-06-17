@@ -440,7 +440,7 @@
         if ($routeParams['closeWindow']) {
           window.close();
         } else {
-          window.location = 'md.viewer#/full_view/' + gnCurrentEdit.id;
+          window.location = 'md.viewer#/full_view/' + gnCurrentEdit.uuid;
         }
         //$location.path('');
         // Tentative to close the browser tab

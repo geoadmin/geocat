@@ -27,6 +27,10 @@ public class MetadataRecord
      */
     public final Integer id;
     /**
+     * Metadata uuid
+     */
+    public final String uuid;
+    /**
      * Owner of metadata
      */
     public final Integer ownerId;
@@ -46,6 +50,7 @@ public class MetadataRecord
     {
         this.xmlSerializer = context.getBean(XmlSerializer.class);
         id = Integer.parseInt(element.get("_id"));
+        uuid = element.get("_uuid");
         ownerId = Integer.parseInt(element.get("_owner"));
         this.xlinks = Collections.unmodifiableCollection(xlinks);
         if(loadMetadata) {
