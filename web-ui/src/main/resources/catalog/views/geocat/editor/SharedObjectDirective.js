@@ -316,12 +316,10 @@
                 params.xlink = data[0];
 
                 // get the first extent directive to insert XML snippet once.
-                var directiveScope = angular.element($(
-                    '[gc-add-sharedobject][data-template-type="extents"]').
-                    first().children()[0]).
-                    scope().$parent;
-
-                directiveScope.addEntry(params, undefined, true);
+                angular.element(
+                    $('[gc-add-sharedobject][data-template-type="extents"]').
+                        first()).isolateScope().
+                    addEntry(params, undefined, true);
               }
               else {
                 gnEditor.save(true);

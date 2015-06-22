@@ -278,7 +278,6 @@
 
                  //specific geocat
                  $(id).on('itemAdded', function(e,o) {
-                   console.log(e);
                    if(e.item.props.thesaurus.key ==
                        'local._none_.non_validated') {
                      var editSpan = $('<span />').addClass('fa fa-edit');
