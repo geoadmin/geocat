@@ -84,6 +84,11 @@
           },{
             url: link.url
           }));
+        },
+        addAllMdLayersToMap: function (layers) {
+          angular.forEach(layers, function (layer) {
+            $scope.resultviewFns.addMdLayerToMap(layer, md);
+          });
         }
       };
 

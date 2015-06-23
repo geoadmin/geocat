@@ -76,9 +76,18 @@
           <li ng-repeat="layer in layers"><a href="" ng-click="resultviewFns.addMdLayerToMap(layer)" title="{{layer.desc || layer.name}}">
             <span class="fa fa-google" ng-if="layer.contentType=='application/vnd.google-earth.kml+xml'"></span>
             <span class="fa fa-globe" ng-if="layer.contentType=='application/vnd.ogc.wms_xml'"></span>
-            {{layer.desc}} </a></li>
-          <li class="divider"></li>
-          <li><a href="#">Add all layers</a></li>
+            {{layer.desc || layer.name}} </a></li>
+          <li data-ng-show="layers.length > 1"
+              class="divider"></li>
+          <li data-ng-show="layers.length > 1">
+            <a href=""
+               data-ng-click="resultviewFns.addAllMdLayersToMap(layers, md)">
+              <i class="fa fa-plus"></i>&nbsp;
+                  <span data-translate=""
+                        data-translate-values="{number: '{{layers.length}}'}">
+                    addAllLayersToMap</span>
+            </a>
+          </li>
         </ul>
       </div>
 
