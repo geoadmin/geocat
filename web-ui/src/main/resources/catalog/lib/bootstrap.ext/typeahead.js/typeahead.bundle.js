@@ -1476,9 +1476,12 @@
                 if (_.isMsie() && (isActive || hasActive)) {
                     $e.preventDefault();
                     $e.stopImmediatePropagation();
+
+/*  Remove this to avoid dropdown flickering
                     _.defer(function() {
                         $input.focus();
                     });
+*/
                 }
             });
             $menu.on("mousedown.tt", function($e) {
