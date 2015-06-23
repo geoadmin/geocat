@@ -576,8 +576,12 @@
 			gmd:linkage//che:LocalisedURL[@locale=$langId]  |
 			gmd:linkage//che:LocalisedURL[not(ancestor::gmd:linkage//che:LocalisedURL[@locale=$langId]) and @locale!=$langId]" />
 
-		<xsl:variable name="title" select="normalize-space(gmd:name//gmd:LocalisedCharacterString[@locale=$langId])"/>
-		<xsl:variable name="desc" select="normalize-space(gmd:description//gmd:LocalisedCharacterString[@locale=$langId])"/>
+    <xsl:variable name="desc" select="normalize-space(gmd:description/gco:CharacterString |
+       gmd:description//gmd:LocalisedCharacterString[not(ancestor::gmd:description/gco:CharacterString) and @locale=$langId] |
+       gmd:description//gmd:LocalisedCharacterString[not(ancestor::gmd:description//gmd:LocalisedCharacterString[@locale=$langId]) and @locale!=$langId])" />
+
+
+    <xsl:variable name="title" select="normalize-space(gmd:name//gmd:LocalisedCharacterString[@locale=$langId])"/>
 		<xsl:variable name="protocol" select="normalize-space(gmd:protocol/gco:CharacterString)"/>
 
         <xsl:variable name="mimetype">
