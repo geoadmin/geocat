@@ -35,7 +35,9 @@
     'gnSearchSettings',
     '$window',
     'gnMdView',
-    function($scope, $timeout, gnMap, gnSearchSettings, $window, gnMdView) {
+    'gnUrlUtils',
+    function($scope, $timeout, gnMap, gnSearchSettings, $window, gnMdView,
+             gnUrlUtils) {
 
       var localStorage = $window.localStorage || {};
 
@@ -79,6 +81,15 @@
       var map = $scope.searchObj.searchMap;
       $scope.resultviewFns = {
         addMdLayerToMap: function(link) {
+          // manage bad formed onlineresource where name is in the url getMap
+          if(!link.name) {
+            var parts = link.url.split('?');
+            if(parts.length == 2) {
+              var p = gnUrlUtils.parseKeyValue(parts[1]);
+              link.name = p.layers;
+              link.url = parts[0]
+            }
+          }
           map.addLayer(gnMap.createOlWMS(gnSearchSettings.searchMap, {
             LAYERS: link.name
           },{
