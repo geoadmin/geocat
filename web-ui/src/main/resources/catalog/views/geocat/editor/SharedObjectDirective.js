@@ -239,6 +239,8 @@
     'extentsService',
     'keywordsService',
     'subtemplateService',
+    'gnThesaurusService',
+    'Keyword',
     function ($q,
               $http,
               $rootScope,
@@ -251,7 +253,9 @@
               gnCurrentEdit,
               extentsService,
               keywordsService,
-              subtemplateService) {
+              subtemplateService,
+              gnThesaurusService,
+              Keyword) {
 
 
       /**
@@ -348,8 +352,41 @@
             params: {
               _content_type: 'json'
             }
-          }).success(function () {
+          }).success(function (data) {
+
             $('#sharedobjectModal').modal('hide');
+            var kwUrl = gnThesaurusService.getKeywordsSearchUrl('',
+                'local._none_.non_validated', 1, 2);
+
+            kwUrl = kwUrl.replace('pKeyword=', 'pUri=' +
+                encodeURIComponent(data.id));
+
+            $http.get(kwUrl).success(function(data) {
+              if(data && angular.isArray(data))
+
+              var newKw = new Keyword(data[0][0]);
+                var s = angular.element(
+                    $('[data-thesaurus-key="'+ params.params.ref +'"]').
+                        first()).isolateScope();
+
+              // Case where the non-validated thesaurus exists
+              if(s) {
+                s.addKeyword(newKw);
+              }
+
+              // We add it into All thesaurus
+              else {
+                s = angular.element(
+                  $('[data-thesaurus-key="external.none.allThesaurus"]').
+                        first()).isolateScope();
+
+                newKw.props.uri = 'http://org.fao.geonet.thesaurus.all/' +
+                    'local._none_.non_validated@@@' +
+                    encodeURIComponent(newKw.props.uri);
+
+                s.addKeyword(newKw);
+              }
+            });
           });
         }
       };

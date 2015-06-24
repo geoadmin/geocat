@@ -217,6 +217,23 @@
                checkState();
              };
 
+             /**
+              * Add a keywords into multi select input. Add it to tagsinput
+              * and add XML snippet to document.
+              * This can be called on keyword selection, or after new keyword
+              * creation.
+              */
+             scope.addKeyword = function(keyword) {
+               $(scope.tagsInputElt).tagsinput('add', keyword);
+
+               // Update selection and snippet
+               angular.copy($(scope.tagsInputElt).tagsinput('items'), scope.selected);
+               getSnippet(); // FIXME: should not be necessary
+               // as there is a watch on it ?
+
+               // Clear typeahead
+               $(scope.tagsInputElt).tagsinput('input').typeahead('val', '');
+             };
 
              var init = function() {
 
@@ -269,6 +286,7 @@
              // Init typeahead and tag input
              var initTagsInput = function() {
                var id = '#tagsinput_' + scope.elementRef;
+               scope.tagsInputElt = id;
                $timeout(function() {
                  $(id).tagsinput({
                    itemValue: 'label',
@@ -338,16 +356,7 @@
                        gcSharedobject.editEntry('keywords');
                        return;
                      }
-                     // Add to tags
-                     this.tagsinput('add', keyword);
-
-                     // Update selection and snippet
-                     angular.copy(this.tagsinput('items'), scope.selected);
-                     getSnippet(); // FIXME: should not be necessary
-                     // as there is a watch on it ?
-
-                     // Clear typeahead
-                     this.tagsinput('input').typeahead('val', '');
+                     scope.addKeyword(keyword);
                    }, $(id))
                    );
 
