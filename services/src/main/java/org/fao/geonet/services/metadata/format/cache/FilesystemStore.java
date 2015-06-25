@@ -123,6 +123,9 @@ public class FilesystemStore implements PersistentStore {
         init();
         StoreInfo info = getInfo(key);
         if (info == null) {
+            if (Log.isDebugEnabled(Geonet.FORMATTER)) {
+                Log.debug(Geonet.FORMATTER, "No Cached format data found in FilesystemStore for: " + key);
+            }
             return null;
         }
         byte[] data = Files.readAllBytes(getPrivatePath(key));

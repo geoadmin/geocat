@@ -7,7 +7,9 @@ import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 
@@ -126,6 +128,9 @@ public class FormatterCache {
         try {
             readLock.lock();
             if (!cacheConfig.allowCaching(key)) {
+                if (Log.isDebugEnabled(Geonet.FORMATTER)) {
+                    Log.debug(Geonet.FORMATTER, "Format caching disabled according to cache config for key: " + key);
+                }
                 return loader.call().data;
             }
 
@@ -134,9 +139,15 @@ public class FormatterCache {
             if (cached != null && !validator.isCacheVersionValid(cached)) {
                 cached = null;
                 invalid = true;
+                if (Log.isDebugEnabled(Geonet.FORMATTER)) {
+                    Log.debug(Geonet.FORMATTER, "Format cached in memory is invalid for: " + key);
+                }
             }
 
             if (!invalid && cached == null) {
+                if (Log.isDebugEnabled(Geonet.FORMATTER)) {
+                    Log.debug(Geonet.FORMATTER, "Trying to load formatted metadata from Persistent cache: " + key);
+                }
                 cached = loadFromPersistentCache(key, validator);
             }
 
@@ -147,6 +158,10 @@ public class FormatterCache {
         if (cached == null) {
             try {
                 writeLock.lock();
+
+                if (Log.isDebugEnabled(Geonet.FORMATTER)) {
+                    Log.debug(Geonet.FORMATTER, "Formatting Metadata for: " + key);
+                }
                 StoreInfoAndDataLoadResult loaded = loader.call();
                 cached = loaded;
                 push(key, loaded, writeToStoreInCurrentThread);

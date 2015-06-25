@@ -321,6 +321,11 @@ public class Format extends AbstractFormatService implements ApplicationListener
             final long changeDateAsTime = changeDate.toDate().getTime();
             long roundedChangeDate = (changeDateAsTime / 1000) * 1000;
             if (request.checkNotModified(roundedChangeDate) && context.getBean(CacheConfig.class).allowCaching(key)) {
+                if (Log.isDebugEnabled(Geonet.FORMATTER)) {
+                    Log.debug(Geonet.FORMATTER, "Sending Not-Modified response to browser for: " + key +
+                                                "\nMetadata change date: " + changeDateAsTime +
+                                                "\nbrowser change date: " + request.getHeader("If-Modified-Since"));
+                }
                 if (!skipPopularityBool) {
                     context.getBean(DataManager.class).increasePopularity(context, resolvedId);
                 }
@@ -331,6 +336,8 @@ public class Format extends AbstractFormatService implements ApplicationListener
         } else {
             validator = new NoCacheValidator();
         }
+        Log.debug(Geonet.FORMATTER, "Loading Format from FormatCache for " + key);
+
         final FormatMetadata formatMetadata = new FormatMetadata(context, key, request);
 
         byte[] bytes;
