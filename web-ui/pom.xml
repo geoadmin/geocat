@@ -254,5 +254,74 @@
           </plugins>
         </build>
       </profile>
+      <!--GEOCAT-->
+      <profile>
+        <id>geocat-transifex</id>
+        <activation>
+          <property>
+            <name>transifex-username</name>
+          </property>
+        </activation>
+        <build>
+          <plugins>
+            <plugin>
+              <groupId>${groupId}</groupId>
+              <artifactId>transifex</artifactId>
+              <version>${version}</version>
+              <executions>
+                <execution>
+                  <id>get-translations</id>
+                  <goals>
+                    <goal>get-translations</goal>
+                    <goal>update-transifex</goal>
+                  </goals>
+                </execution>
+              </executions>
+              <configuration>
+                <project>geocat</project>
+                <files>
+                  <file>
+                    <id>en-geocatjson</id>
+                    <name>Geocat web-ui Strings</name>
+                    <format-class>JsonFormat</format-class>
+                    <path>src/main/resources/catalog/locales</path>
+                    <categories>
+                      <category>angularjs</category>
+                      <category>geocat</category>
+                    </categories>
+                    <file-name>geocat.json</file-name>
+                  </file>
+                  <file>
+                    <id>en-sharedjson</id>
+                    <name>en-shared.json</name>
+                    <format-class>JsonFormat</format-class>
+                    <path>src/main/resources/catalog/locales</path>
+                    <categories>
+                      <category>angularjs</category>
+                      <category>geocat</category>
+                      <category>shared</category>
+                    </categories>
+                    <file-name>shared.json</file-name>
+                  </file>
+                  <file>
+                    <id>en-inspirejson</id>
+                    <name>en-inspire.json</name>
+                    <format-class>JsonFormat</format-class>
+                    <path>src/main/resources/catalog/locales</path>
+                    <categories>
+                      <category>angularjs</category>
+                      <category>geocat</category>
+                      <category>inspire</category>
+                      <category>editor</category>
+                    </categories>
+                    <file-name>inspire.json</file-name>
+                  </file>
+                </files>
+              </configuration>
+            </plugin>
+          </plugins>
+        </build>
+      </profile>
+      <!--END GEOCAT-->
     </profiles>
 </project>

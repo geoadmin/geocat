@@ -60,6 +60,7 @@
               </execution>
             </executions>
             <configuration>
+              <project>geocat</project>
               <files>
                 <file>
                   <id>iso19193-label-xml</id>
@@ -144,6 +145,42 @@
                     <category>schematron-iso</category>
                   </categories>
                   <file-name>schematron-iso.xml</file-name>
+                </file>
+                <file>
+                  <id>iso19193-schematron-bgdi-xml</id>
+                  <name>Iso19139 Schematron-bgdi.xml</name>
+                  <format-class>SimpleElementFormat</format-class>
+                  <path>src/main/plugin/iso19139/loc</path>
+                  <categories>
+                    <category>iso19139</category>
+                    <category>schema_plugin</category>
+                    <category>schematron-rules-bgdi</category>
+                  </categories>
+                  <file-name>schematron-rules-bgdi.xml</file-name>
+                </file>
+                <file>
+                  <id>iso19193-schematron-geobasisdatensatz-xml</id>
+                  <name>Iso19139 Schematron-geobasisdatensatz.xml</name>
+                  <format-class>SimpleElementFormat</format-class>
+                  <path>src/main/plugin/iso19139/loc</path>
+                  <categories>
+                    <category>iso19139</category>
+                    <category>schema_plugin</category>
+                    <category>schematron-rules-geobasisdatensatz</category>
+                  </categories>
+                  <file-name>schematron-rules-geobasisdatensatz.xml</file-name>
+                </file>
+                <file>
+                  <id>iso19193-schematron-iso-che-xml</id>
+                  <name>Iso19139 Schematron-iso-che.xml</name>
+                  <format-class>SimpleElementFormat</format-class>
+                  <path>src/main/plugin/iso19139/loc</path>
+                  <categories>
+                    <category>iso19139</category>
+                    <category>schema_plugin</category>
+                    <category>schematron-rules-iso-che</category>
+                  </categories>
+                  <file-name>schematron-rules-iso-che.xml</file-name>
                 </file>
                 <file>
                   <id>iso19193-strings-xml</id>
