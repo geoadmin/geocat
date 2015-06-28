@@ -12,6 +12,7 @@
   <xsl:include href="utility-fn.xsl"/>
   <xsl:include href="utility-tpl.xsl"/>
   <xsl:include href="layout-custom-fields.xsl"/>
+  <xsl:include href="layout-custom-fields-date.xsl"/>
 
   <!-- Ignore all gn element -->
   <xsl:template mode="mode-iso19139" match="gn:*|@gn:*|@*" priority="1000"/>
@@ -284,7 +285,7 @@
 
   </xsl:template>
 
-
+<!--
   <xsl:template mode="mode-iso19139" priority="200"
                 match="*[gco:Date|gco:DateTime]">
     <xsl:param name="schema" select="$schema" required="no"/>
@@ -314,7 +315,7 @@
          data-element-ref="{concat('_X', gn:element/@ref)}"
          data-required="{$isRequired}">
     </div>
-  </xsl:template>
+  </xsl:template>-->
 
 
   <!-- Match codelist values.
