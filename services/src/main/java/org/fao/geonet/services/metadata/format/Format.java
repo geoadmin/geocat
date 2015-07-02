@@ -320,7 +320,8 @@ public class Format extends AbstractFormatService implements ApplicationListener
         if (changeDate != null) {
             final long changeDateAsTime = changeDate.toDate().getTime();
             long roundedChangeDate = (changeDateAsTime / 1000) * 1000;
-            if (request.checkNotModified(roundedChangeDate) && context.getBean(CacheConfig.class).allowCaching(key)) {
+            // GEOCAT - disable caching in browser
+            if (false && request.checkNotModified(roundedChangeDate) && context.getBean(CacheConfig.class).allowCaching(key)) {
                 if (Log.isDebugEnabled(Geonet.FORMATTER)) {
                     Log.debug(Geonet.FORMATTER, "Sending Not-Modified response to browser for: " + key +
                                                 "\nMetadata change date: " + changeDateAsTime +
