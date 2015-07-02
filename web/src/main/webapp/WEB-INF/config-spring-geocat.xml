@@ -93,23 +93,22 @@
         </property>
         <property name="triggers">
             <list>
-                <!--<ref bean="unpublishMetadataCronTrigger" />-->
+                <ref bean="unpublishMetadataCronTrigger" />
                 <ref bean="backupMetadataCronTrigger" />
             </list>
         </property>
     </bean>
 
-    <!--<bean id="unpublishMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">-->
-        <!--<property name="jobDetail">-->
-            <!--<bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">-->
-                <!--<property name="jobClass" value="org.fao.geonet.geocat.kernel.UnpublishInvalidMetadataJob"/>-->
-                <!--<property name="name" value="unpublishInvalidMetadata" />-->
-                <!--<property name="group" value="geocatBackgroundTasks" />-->
-            <!--</bean>-->
-        <!--</property>-->
-        <!--&lt;!&ndash;<property name="cronExpression" value="0 * * * * ?" />&ndash;&gt;-->
-        <!--<property name="cronExpression" value="0 0 23 ? * *" />-->
-    <!--</bean>-->
+    <bean id="unpublishMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+                <property name="jobClass" value="org.fao.geonet.geocat.kernel.UnpublishInvalidMetadataJob"/>
+                <property name="name" value="unpublishInvalidMetadata" />
+                <property name="group" value="geocatBackgroundTasks" />
+            </bean>
+        </property>
+        <property name="cronExpression" value="0 0 2 ? 2,4,6 *" />
+    </bean>
 
     <bean id="backupMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail">
@@ -119,8 +118,7 @@
                 <property name="group" value="geocatBackgroundTasks" />
             </bean>
         </property>
-        <!--<property name="cronExpression" value="0 * * * * ?" />-->
-        <property name="cronExpression" value="0 0 2 ? * *" />
+        <property name="cronExpression" value="0 0 2 ? 1,3,5,7 *" />
     </bean>
 
 </beans>
