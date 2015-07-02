@@ -48,6 +48,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
@@ -123,8 +124,8 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
             throw new IllegalStateException("Unpublish Job is already running");
         }
         try {
+            long startTime = System.currentTimeMillis();
             Log.info(UNPUBLISH_LOG, "Starting Unpublish Invalid Metadata Job");
-            System.out.println("Starting Unpublish Invalid Metadata Job");
             Integer keepDuration = serviceContext.getBean(SettingManager.class).getValueAsInt("system/publish_tracking_duration");
             if (keepDuration == null) {
                 keepDuration = 100;
@@ -150,10 +151,12 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
                      }
                 } catch (Exception e) {
                     String error = Xml.getString(JeevesException.toElement(e));
-                    Log.error(Geonet.INDEX_ENGINE, "Error during Validation/Unpublish process of metadata " + id + ".  Exception: "
+                    Log.error(UNPUBLISH_LOG, "Error during Validation/Unpublish process of metadata " + id + ".  Exception: "
                                                    + error);
                 }
             }
+            long timeMinutes = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
+            Log.info(UNPUBLISH_LOG, "Finishing Unpublish Invalid Metadata Job.  Job took:  " + timeMinutes + " min");
         } finally {
             running.set(false);
         }

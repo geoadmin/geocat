@@ -40,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nullable;
 
@@ -91,6 +92,7 @@ public class ArchiveAllMetadataJob extends QuartzJobBean implements Service {
         if (!backupIsRunning.compareAndSet(false, true)) {
             return;
         }
+        long startTime = System.currentTimeMillis();
         try {
             Log.info(BACKUP_LOG, "Starting backup of all metadata");
             System.out.println("Starting backup of all metadata");
@@ -128,7 +130,8 @@ public class ArchiveAllMetadataJob extends QuartzJobBean implements Service {
             if (!Files.exists(destFile)) {
                 throw new Exception("Moving backup file failed!");
             }
-            Log.info(BACKUP_LOG, "Backup finished.  Backup file: " + destFile);
+            long timeMinutes = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
+            Log.info(BACKUP_LOG, "Backup finished. Backup time: " + timeMinutes + "  Backup file: " + destFile);
         } catch (Throwable t) {
             Log.error(BACKUP_LOG, "Failed to create a back up of metadata", t);
         } finally {
@@ -138,7 +141,7 @@ public class ArchiveAllMetadataJob extends QuartzJobBean implements Service {
 
     private void loginAsAdmin(ServiceContext serviceContext) {
         final User adminUser = serviceContext.getBean(UserRepository.class).findAll(UserSpecs.hasProfile(Profile.Administrator), new
-                PageRequest(0,1)).getContent().get(0);
+                PageRequest(0, 1)).getContent().get(0);
         Assert.isTrue(adminUser != null, "The system does not have an admin user");
         UserSession session = new UserSession();
         session.loginAs(adminUser);
