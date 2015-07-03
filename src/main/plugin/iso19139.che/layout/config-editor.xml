@@ -412,6 +412,70 @@
     <view name="inspire">
       <tab id="inspire" default="true" href="inspire.edit?id=$mdId"/>
     </view>
+    <view name="bgdi">
+      <tab id="bgdi" default="true" mode="flat">
+        <section name="bgdi">
+          <!-- 1 - title -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title" />
+          <!-- 2 - alternate title -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle" />
+          <!-- 3 - Date -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date" />
+          <!-- 4 - Date Type -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/ gmd:date/gmd:CI_Date/gmd:dateType" />
+          <!-- 5 - Collective title -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:collectiveTitle" />
+          <!-- 6 - Abstract -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:abstract" />
+          <!-- 7 - Point of contact -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty" />
+          <!-- 8 - Keywords -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword" />
+          <!-- 9 - Use constraints -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:metadataConstraints/che:CHE_MD_LegalConstraints/gmd:useConstraints/gmd:MD_RestrictionCode" />
+          <!-- 10 - other constraints -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:metadataConstraints/che:CHE_MD_LegalConstraints/gmd:otherConstraints" />
+          <!-- 11 - Use limitation -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:metadataConstraints/che:CHE_MD_LegalConstraints/gmd:useLimitation" />
+          <!-- 12 - Resolution min -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator" />
+          <!-- 13 - Resolution max -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator" />
+          <!-- 14 - Language -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:locale/gmd:PT_Locale/gmd:languageCode" />
+          <!-- 15 - Character Set -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:characterSet/gmd:MD_CharacterSetCode" />
+          <!-- 16 - Topic Category -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode" />
+          <!-- 17 - Extent -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:extent/gmd:EX_Extent" />
+          <!-- 18 - Basic Geodata ID -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/che:basicGeodataID" />
+          <!-- 19 - Basic Geodata type -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/che:basicGeodataIDType/che:basicGeodataIDTypeCode" />
+          <!-- 20 - Distribution format -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name" />
+          <!-- 21 - Transfer option 1 link -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:distributionInfo[/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:online/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString/text()='WWW:LINK-1.0-http--link']" />
+          <!-- 22 - Transfer option 2 download -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:distributionInfo[/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:online/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString/text()='WWW:DOWNLOAD-1.0-http--download']" />
+          <!-- 23 - Transfer option 3 specialised Geoportal -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:distributionInfo[/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:online/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString/text()='CHTOPO:specialised-geoportal']" />
+          <!-- 24 - Geometric object type -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:geometricObjectType" />
+          <!-- 25 - Reference system -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier" />
+          <!-- 26 - File ID UUID -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:fileIdentifier" />
+          <!-- 27 - MD contact -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:contact/che:CHE_CI_ResponsibleParty" />
+          <!-- 28 - Sprachraum ? -->
+<!--           <field xpath="/che:CHE_MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code" /> -->
+          <!-- 29 - Legislation information -->
+          <field xpath="/che:CHE_MD_Metadata/che:legislationInformation/che:CHE_MD_Legislation" />
+        </section>
+      </tab>
+    </view>
     <view name="xml">
       <tab id="xml" default="true"/>
     </view>
