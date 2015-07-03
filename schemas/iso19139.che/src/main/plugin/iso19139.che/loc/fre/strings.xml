@@ -13,6 +13,7 @@
   <default>Simple</default>
   <simple>Simple</simple>
   <inspire>INSPIRE</inspire>
+  <bgdi>BGDI</bgdi>
   <resource>Ressource</resource>
   <xml>XML</xml>
   <metadata>Métadonnées</metadata>
