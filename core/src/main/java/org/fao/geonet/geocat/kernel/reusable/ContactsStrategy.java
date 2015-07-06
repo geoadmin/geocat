@@ -45,18 +45,21 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.jdom.filter.Filter;
 import org.springframework.context.ApplicationContext;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 
 public final class ContactsStrategy extends AbstractSubtemplateStrategy {
     public static final String LUCENE_ROOT_RESPONSIBLE_PARTY = "che:CHE_CI_ResponsibleParty";
@@ -156,39 +159,81 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
 
     @SuppressWarnings("unchecked")
     public static String lookupElement(Element originalElem, String name, final String twoCharLangCode) {
-        Element elem = Utils.nextElement(originalElem.getDescendants(new ContactElementFinder("CharacterString",
-                Geonet.Namespaces.GCO, name)));
-        if (elem == null) {
-            Iterator<Element> freeTexts = originalElem.getDescendants(new ContactElementFinder("PT_FreeText",
-                    Geonet.Namespaces.GMD, name));
-            while (freeTexts.hasNext()) {
-                Element next = freeTexts.next();
-                Iterator<Element> defaultLangElem = next.getDescendants(new Filter() {
-
-                    private static final long serialVersionUID = 1L;
-
-                    public boolean matches(Object arg0) {
-                        if (arg0 instanceof Element) {
-                            Element element = (Element) arg0;
-                            return element.getName().equals("LocalisedCharacterString")
-                                   && ("#" + twoCharLangCode).equalsIgnoreCase(element.getAttributeValue("locale"));
-                        }
-                        return false;
-                    }
-
-                });
-
-                if (defaultLangElem.hasNext()) {
-                    return defaultLangElem.next().getTextTrim();
-                }
-
+        Element elem = findElement(originalElem, name);
+        if (elem != null) {
+            String txt = null;
+            Element charStr = elem.getChild("CharacterString", GCO);
+            if (charStr != null) {
+                txt = charStr.getTextTrim();
             }
 
-            return "";
-        } else {
-            return elem.getTextTrim();
+
+            if (txt == null) {
+                txt = findLanguageInPtFreeText(elem, name, twoCharLangCode);
+                if (txt == null) {
+                    txt = "";
+                }
+            }
+            return txt;
         }
+        return "";
     }
+
+    private static Element findElement(Element originalElem, String name) {
+        if (originalElem.getName().equals("parentResponsibleParty")) {
+            return null;
+        }
+        List children = originalElem.getChildren();
+        for (Object child : children) {
+            Element elem = (Element) child;
+            if (elem.getName().equals(name)) {
+                return elem;
+            }
+        }
+
+        for (Object child : children) {
+            Element element = findElement((Element) child, name);
+            if (element != null) {
+                return element;
+            }
+        }
+        return null;
+    }
+
+
+    @Nullable
+    private static String findLanguageInPtFreeText(Element originalElem, String name, String twoCharLangCode) {
+        Element ptFreeText = originalElem.getChild("PT_FreeText", GMD);
+        if (ptFreeText != null) {
+            List textGroups = ptFreeText.getChildren("textGroup", GMD);
+            Element fallback = null;
+            for (Object textGroup : textGroups) {
+                List localisedCharacterStrings = ((Element) textGroup).getChildren("LocalisedCharacterString", GMD);
+                for (Object lcs : localisedCharacterStrings) {
+                    Element elem = (Element) lcs;
+
+                    if (fallback == null) {
+                        fallback = elem;
+                    }
+                    String code = elem.getAttributeValue("locale");
+                    if (code != null && code.substring(1).equalsIgnoreCase(twoCharLangCode)) {
+                        String textTrim = elem.getTextTrim();
+                        if (!textTrim.isEmpty()) {
+                            return textTrim;
+                        }
+                    }
+                }
+            }
+            if (fallback != null) {
+                return fallback.getTextTrim();
+            }
+        }
+        return null;
+    }
+
+//    private static Element findCharString(Element originalElem, String name, final String twoCharLangCode) {
+//
+//    }
 
     public static String baseHref(String id) {
         return XLink.LOCAL_PROTOCOL + "subtemplate?uuid=" + id;
@@ -286,7 +331,7 @@ public final class ContactsStrategy extends AbstractSubtemplateStrategy {
 
         @Override
         protected boolean otherChecks(Element elem) {
-            return !isParentResponsibleParty(elem);
+            return true; /*!isParentResponsibleParty(elem);*/
         }
 
         public boolean isParentResponsibleParty(Element elem) {
