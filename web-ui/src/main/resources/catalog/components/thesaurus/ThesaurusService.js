@@ -69,6 +69,15 @@
               angular.forEach(data[0], function(k) {
                 if (k.value['#text']) {
                   listOfKeywords.push(new Keyword(k));
+                } else {
+                  // find a translation
+                  angular.forEach(k.values, function(v) {
+                    if (v['#text']) {
+                      k.value['#text'] = v['#text'];
+                      k.value['@language'] = v['@language'];
+                      listOfKeywords.push(new Keyword(k));
+                    }
+                  });
                 }
               });
 
