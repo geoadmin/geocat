@@ -8,7 +8,7 @@
 
     <xsl:template name="title">
         <xsl:variable name="firstName" select="normalize-space((.//che:individualFirstName)[1])" />
-        <xsl:variable name="lastName" select="normalize-space((.//che:individualLastName))[1]" />
+        <xsl:variable name="lastName" select="normalize-space((.//che:individualLastName)[1])" />
         <xsl:variable name="email" select="normalize-space((.//gmd:electronicMailAddress/gco:CharacterString[string-length(text()) > 0])[1])" />
         <xsl:variable name="organization" select="normalize-space((.//gmd:organisationName//gmd:LocalisedCharacterString[string-length(text()) > 0])[1])" />
 
