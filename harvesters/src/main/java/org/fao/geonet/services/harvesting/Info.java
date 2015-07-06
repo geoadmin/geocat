@@ -263,7 +263,9 @@ public class Info implements Service
             for (Path sheet : sheets) {
 
                     String id = sheet.toString();
-                    if (id.endsWith(".xsl")) {
+				// GEOCAT restrict import stylesheets
+                    if (id.toLowerCase().endsWith("iso19139che.xsl")) {
+						// END GEOCAT
                         String name = com.google.common.io.Files.getNameWithoutExtension(sheet.getFileName().toString());
 
                         Element res = new Element(Jeeves.Elem.RECORD);
