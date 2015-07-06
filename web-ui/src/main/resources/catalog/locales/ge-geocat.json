@@ -1,9 +1,9 @@
 {
-  "basicgeodata" : "Basic Geodata",
-  "basicgeodata-federal" : "+ Basic Geodata - federal",
-  "basicgeodata-cantonal" : "+ Basic Geodata - cantonal",
-  "basicgeodata-communal" : "+ Basic Geodata - communal",
-  "service-OGC:WMS" : "+ WMS Services",
-  "service-OGC:WFS" : "+ WFS Services",
-  "any": "- Any -"
+  "basicgeodata": "Geobasisdaten",
+  "basicgeodata-federal": "+ Geobasisdaten - Bund",
+  "basicgeodata-cantonal": "+ Geobasisdaten - Kantone",
+  "basicgeodata-communal": "+ Geobasisdaten - Gemeinden",
+  "service-OGC:WMS": "+ WMS-Dienst",
+  "service-OGC:WFS": "+ WFS-Dienst",
+  "any": "- Alle -"
 }
