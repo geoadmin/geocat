@@ -178,6 +178,7 @@
     <name>gml:verticalDatum</name>
     <name>gmd:resourceFormat</name>
     <name>gmd:graphicOverview</name>
+    <name>gmd:includedWithDataset</name>
   </fieldsWithFieldset>
 
   <multilingualFields>
