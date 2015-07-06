@@ -1410,7 +1410,7 @@ public class SearchManager {
      */
 	private void setupIndex(boolean rebuild) throws Exception {
         boolean badIndex = false;
-        LuceneIndexLanguageTracker _tracker = ServiceContext.get().getBean(LuceneIndexLanguageTracker.class);
+        LuceneIndexLanguageTracker _tracker = ApplicationContextHolder.get().getBean(LuceneIndexLanguageTracker.class);
         try {
             IndexAndTaxonomy reader = _tracker.acquire(null, -1);
             reader.indexReader.releaseToNRTManager();
