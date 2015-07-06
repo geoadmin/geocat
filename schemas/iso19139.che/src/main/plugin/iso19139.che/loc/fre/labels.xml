@@ -95,6 +95,14 @@
   <description>Pays d'où provient la loi</description>
   <help>Pays dans lequel la loi a été promulguée, sélection dans la liste ISO des pays.</help>
   <condition>Obligatoire</condition>
+  <helper>
+   <option value="CH">Suisse</option>
+   <option value="DE">Allemagne</option>
+   <option value="LI">Lichtenstein</option>
+   <option value="FR">France</option>
+   <option value="IT">Italie</option>
+   <option value="AT">Autriche</option>
+  </helper>
  </element>
  <element name="che:language" id="509.0">
   <label>Langue</label>

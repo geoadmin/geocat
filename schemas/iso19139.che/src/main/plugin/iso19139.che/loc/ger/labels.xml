@@ -362,6 +362,14 @@
         <help>Land, in welchem das Gesetz erlassen wurde, Auswahl aus der ISO-Länderliste.</help>
         <condition>Obligatorisch</condition>
         <description>Land in welchem das Gesetz erlassen wurde.</description>
+        <helper>
+            <option value="CH">Switzerland</option>
+            <option value="DE">Germany</option>
+            <option value="LI">Lichtenstein</option>
+            <option value="FR">France</option>
+            <option value="IT">Italy</option>
+            <option value="AT">Österreich</option>
+        </helper>
     </element>
     <element name="che:language" context="che:CHE_MD_Legislation" id="509.0">
         <label>Sprache</label>

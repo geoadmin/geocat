@@ -637,6 +637,14 @@
 	<element name="gmd:country" id="612.0">
 		<label>Nazione</label>
 		<description>Nazione dell'indirizzo fisico</description>
+		<helper>
+			<option value="CH">Svizzera</option>
+			<option value="DE">Germania</option>
+			<option value="LI">Lichtenstein</option>
+			<option value="FR">Francia</option>
+			<option value="IT">Italia</option>
+			<option value="AT">Austria</option>
+		</helper>
 	</element>
 	<element name="gmd:country" id="508.0" context="gmd:MD_Legislation">
 		<label>Nazione</label>

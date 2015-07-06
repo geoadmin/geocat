@@ -362,6 +362,14 @@
         <help>Paese nel quale è stata messa in vigore la legge, selezione dalla lista dei paesi ISO.</help>
         <condition>Obbligatorio</condition>
         <description>Paese nel quale è stata messa in vigore la legge</description>
+        <helper>
+            <option value="CH">Svizzera</option>
+            <option value="DE">Germania</option>
+            <option value="LI">Lichtenstein</option>
+            <option value="FR">Francia</option>
+            <option value="IT">Italia</option>
+            <option value="AT">Austria</option>
+        </helper>
     </element>
     <element name="che:language" context="che:CHE_MD_Legislation" id="509.0">
         <label>Lingua</label>
