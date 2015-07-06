@@ -82,6 +82,15 @@ public class ValidateTransformationTest {
         testFile(file, Control.GM03_2_ISO, rules, true);
     }
     @Test
+    public void roundTripWithCHEDatamodel() throws Throwable {
+        File file = new File(data, "iso19139/with-che_dataModel.xml");
+        Multimap<String, Requirement> rules = ArrayListMultimap.create();
+
+        file = testFile(file, Control.ISO_GM03, rules, true);
+
+        testFile(file, Control.GM03_2_ISO, rules, true);
+    }
+    @Test
     public void contentInfoInvalidAfterRountrip() throws Throwable {
         File file = new File(data, "iso19139/metadata-invalid-afterInfo-export.xml");
         Multimap<String, Requirement> rules = ArrayListMultimap.create();

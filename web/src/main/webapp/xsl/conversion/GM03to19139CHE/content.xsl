@@ -177,6 +177,9 @@
                     <xsl:apply-templates mode="Citation" select="."/>
                 </gmd:featureCatalogueCitation>
             </xsl:for-each>
+            <xsl:if test="not(GM03Comprehensive.Comprehensive.CI_Citation)">
+                <gmd:featureCatalogueCitation/>
+            </xsl:if>
 
             <xsl:for-each select="dataModel">
                 <che:dataModel xsi:type="che:PT_FreeURL_PropertyType">
