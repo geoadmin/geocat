@@ -34,7 +34,8 @@
 	gmd:name[gco:CharacterString] | 
 	gmd:organisationName[gco:CharacterString] | 
 	gmd:positionName[gco:CharacterString] | 
-	che:organisationAcronym[gco:CharacterString] | 
+	gmd:geographicIdentifier/gmd:code[gco:CharacterString] |
+	che:organisationAcronym[gco:CharacterString] |
 	gmd:statement[gco:CharacterString] | 
 	gmd:abstract[gco:CharacterString] | 
 	gmd:purpose[gco:CharacterString] |
@@ -240,8 +241,8 @@
     <!-- The following are NOT multilingual text -->
     <xsl:template priority="100" match="gmd:identifier|
         gmd:fileIdentifier|
-        gmd:code[../../name() != 'gmd:referenceSystemIdentifier']|
-        gmd:code[../../name() != 'gmd:aggregateDataSetIdentifier']|
+        gmd:code[../../name() != 'gmd:referenceSystemIdentifier' and ../../name() != 'gmd:aggregateDataSetIdentifier'
+                    and ../../name() != 'gmd:geographicIdentifier']|
         gmd:code[ancestor::gmd:CI_Citation]|
         gmd:metadataStandardName|
         gmd:metadataStandardVersion|
@@ -307,6 +308,13 @@
         gmd:name[count(ancestor::gmd:MD_Format) > 0] |
         gmd:version[count(ancestor::gmd:MD_Format) > 0] |
         gmd:electronicMailAddress">
+        <xsl:if test="name() = 'gmd:code'">
+            <xsl:message>
+                ======================================================================
+                <xsl:value-of select="../../name()" />
+                ======================================================================
+            </xsl:message>
+        </xsl:if>
         <xsl:copy>
             <xsl:choose>
                 <xsl:when test="(normalize-space(gco:CharacterString[1]) = '' or not(gco:CharacterString)) and gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
