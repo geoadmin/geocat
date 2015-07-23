@@ -96,7 +96,7 @@
             url: link.url
           }));
         },
-        addAllMdLayersToMap: function (layers) {
+        addAllMdLayersToMap: function (layers, md) {
           angular.forEach(layers, function (layer) {
             $scope.resultviewFns.addMdLayerToMap(layer, md);
           });
