@@ -276,6 +276,8 @@
             ngeoDecorateLayer(olLayer);
             olLayer.displayInLayerManager = true;
 
+            // Specific geocat : don't need this as there is no map viewer
+/*
             var unregisterEventKey = olLayer.getSource().on('tileloaderror',
                 function(tileEvent, target) {
                   var msg = $translate('layerTileLoadError', {
@@ -294,6 +296,7 @@
                   olLayer.get('errors').push(msg);
                   olLayer.getSource().unByKey(unregisterEventKey);
                 });
+*/
             return olLayer;
           },
 
