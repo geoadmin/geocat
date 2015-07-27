@@ -241,6 +241,7 @@
     'subtemplateService',
     'gnThesaurusService',
     'Keyword',
+    '$translate',
     function ($q,
               $http,
               $rootScope,
@@ -255,7 +256,7 @@
               keywordsService,
               subtemplateService,
               gnThesaurusService,
-              Keyword) {
+              Keyword, $translate) {
 
 
       /**
@@ -287,6 +288,15 @@
                   if (data[i].desc) {
                     data[i].desc = data[i].desc.replace(/\&lt;/g, '<').
                         replace(/\&gt;/g, '>');
+
+                    // Format extent to tell what kind it is
+                    if(type == 'extents' && angular.isUndefined(validated)) {
+                      var extentType;
+                      if(data[i].xlink.indexOf('gn:gemeindenBB') > 0) {
+                        data[i].desc += ' (' + $translate('gemeinden') + ')';
+                      }
+
+                    }
                   } else {
                     data[i].desc = 'No description provided';
                   }

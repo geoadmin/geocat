@@ -7,11 +7,7 @@
           data-ng-class="{'disabled' : (templateType == 'contacts' && !role)}" ng-disabled="templateType == 'contacts' && !role"/>
   <ul class="dropdown-menu" role="menu">
     <li data-ng-repeat="o in objects">
-      <a data-ng-if="templateType != 'extents'" href="" data-ng-click="selectEntry(o)" title="{{o.desc}}">
-        <span class="label pull-right" data-ng-class="{'label-danger' : !o.validated, 'label-success' : o.validated}">&nbsp;</span>
-        {{o.desc}}
-      </a>
-      <a data-ng-if="templateType == 'extents'" href="" title="{{o.desc}}" data-ng-click="selectEntry(o)">
+      <a href="" data-ng-click="selectEntry(o)" title="{{o.desc}}">
         <span class="label pull-right" data-ng-class="{'label-danger' : !o.validated, 'label-success' : o.validated}">&nbsp;</span>
         {{o.desc}}
       </a>
