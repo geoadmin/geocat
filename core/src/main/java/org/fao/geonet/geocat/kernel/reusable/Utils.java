@@ -92,6 +92,7 @@ public final class Utils {
 
     public static final GMLConfiguration gml3Conf = new GMLConfiguration();
     public static final org.geotools.gml2.GMLConfiguration gml2Conf = new org.geotools.gml2.GMLConfiguration();
+    public static final String VIEW_MD_SERVICE = "/srv/ger/md.viewer#/full_view/";
 
     public static String id( String href ) {
         if (href.indexOf("id=") < 0) {
@@ -411,16 +412,16 @@ public final class Utils {
                 if (!Email.isValidEmailAddress(email)) {
                     unnotifiedIds.addAll(args.emailInfo.get(id));
                 } else {
-                    String emailBody = "\n\n\n"+args.msg + "\n" + args.baseURL + "/srv/ger/metadata.show?id="
-                            + mkString(args.emailInfo.get(id), "\n" + args.baseURL + "/srv/ger/metadata.show?id=");
+                    String emailBody = "\n\n\n"+args.msg + "\n" + args.baseURL + VIEW_MD_SERVICE
+                            + mkString(args.emailInfo.get(id), "\n" + args.baseURL + VIEW_MD_SERVICE);
 
                     gc.getEmail().send(email, args.subject, args.msgHeader + emailBody, args.testing);
                 }
             }
 
             if (!unnotifiedIds.isEmpty()) {
-                String emailBody = args.msg + "\n" + args.baseURL + "/srv/ger/metadata.show?id="
-                        + mkString(unnotifiedIds, "\n" + args.baseURL + "/srv/ger/metadata.show?id=");
+                String emailBody = args.msg + "\n" + args.baseURL + VIEW_MD_SERVICE
+                        + mkString(unnotifiedIds, "\n" + args.baseURL + VIEW_MD_SERVICE);
                 gc.getEmail().sendToAdmin(args.subject, emailBody, args.testing);
                 Log.warning(Geocat.Module.REUSABLE, emailBody);
             }
