@@ -16,6 +16,6 @@
   <alert.M104><div><h2>protezione dell’ambiente e della natura, pianificazione territoriale – catasto fondiario, geologia-suolo-rischi naturali, carte di base-copertura del suolo-immagini aeree non è una categoria tematica valida secondo iso19139.che: selezionare una sotto-categoria </h2></div></alert.M104>
   <report.M104><div><h2>protezione dell’ambiente e della natura, pianificazione territoriale – catasto fondiario, geologia-suolo-rischi naturali, carte di base-copertura del suolo-immagini aeree non è una categoria tematica valida secondo iso19139.che: selezionare una sotto-categoria </h2></div></report.M104>
   <M105>[GM03_2_1] - Contact country code</M105>
-  <alert.M105><div><h2>Country code is not valid for some contact select CH or LI value</h2></div></alert.M105>
-  <report.M105><div><h2>Country code is not valid for some contact select CH or LI value</h2></div></report.M105>
+  <alert.M105><div><h2>Country code is not valid for some contact select CH, LI, IT, AT, DE, FR value</h2></div></alert.M105>
+  <report.M105><div><h2>Country code is not valid for some contact select CH, LI, IT, AT, DE, FR value</h2></div></report.M105>
 </strings>

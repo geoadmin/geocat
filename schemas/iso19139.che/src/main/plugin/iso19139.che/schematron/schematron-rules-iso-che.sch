@@ -82,8 +82,8 @@
             <sch:let name="code" value="gmd:contactInfo/gmd:CI_Contact/gmd:address//gmd:country/gco:CharacterString"/>
 
             <!--  Check that basicGeodataId is defined -->
-            <sch:assert test="($code  = 'CH' or $code  = 'LI')">$loc/strings/alert.M105</sch:assert>
-            <sch:report test="($code  = 'CH' or $code  = 'LI')"><sch:value-of select="$loc/strings/report.M105/div"/></sch:report>
+            <sch:assert test="($code  = 'CH' or $code  = 'LI' or $code  = 'DE' or $code  = 'FR' or $code  = 'IT' or $code  = 'AT')">$loc/strings/alert.M105</sch:assert>
+            <sch:report test="($code  = 'CH' or $code  = 'LI' or $code  = 'DE' or $code  = 'FR' or $code  = 'IT' or $code  = 'AT')"><sch:value-of select="$loc/strings/report.M105/div"/></sch:report>
         </sch:rule>
     </sch:pattern>
 </sch:schema>
