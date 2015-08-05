@@ -15,4 +15,7 @@
   <M104>[GM03_2_1] - Catégorie thématique</M104>
   <alert.M104><div><h2>Environnement, Cadastre - aménagement, Sciences de la terre, Carte de base - imagerie - couverture du sol catégorie thématique non égale à la catégorie thématique pour iso19139.che sélectionner une sous catégorie</h2></div></alert.M104>
   <report.M104><div><h2>Environnement, Cadastre - aménagement, Sciences de la terre, Carte de base - imagerie - couverture du sol atégorie thématique non égale à la catégorie thématique pour iso19139.che sélectionner une sous catégorie</h2></div></report.M104>
+  <M105>[GM03_2_1] - Contact country code</M105>
+  <alert.M105><div><h2>Le Country code n'est pas valide pour un des contacts, les valeurs acceptées sont CH ou LI</h2></div></alert.M105>
+  <report.M105><div><h2>Le Country code n'est pas valide pour un des contacts, les valeurs acceptées sont CH ou LI</h2></div></report.M105>
 </strings>
