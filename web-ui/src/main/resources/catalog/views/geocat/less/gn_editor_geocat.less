@@ -96,6 +96,16 @@ form.gn-editor {
 
   }
 
+  &.gn-tab-bgdi {
+    color: blue;
+    .gn-denominator label:before {
+      content: '(min) ';
+    }
+    div.gn-denominator ~ .gn-denominator label:before {
+      content: '(max) ';
+    }
+  }
+
 }
 
 .gc-extent {
