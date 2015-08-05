@@ -176,17 +176,9 @@
     </xsl:call-template>
   </xsl:template>
 
-  <!--GEOCAT Topic category-->
-  <xsl:template mode="mode-iso19139" match="gmd:topicCategory[
-                                              gmd:MD_TopicCategoryCode[1] = 'environment' or
-                                              gmd:MD_TopicCategoryCode[1] = 'envirogeoscientificInformationnment' or
-                                              gmd:MD_TopicCategoryCode[1] = 'planningCadastre' or
-                                              gmd:MD_TopicCategoryCode[1] = 'imageryBaseMapsEarthCover' or
-                                              gmd:MD_TopicCategoryCode[1] = 'utilitiesCommunication']" priority="2000">
-    <!-- do nothing -->
-  </xsl:template>
 
   <xsl:template mode="mode-iso19139" match="gmd:MD_TopicCategoryCode" priority="2000">
+
 
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="codelists" select="$iso19139codelists" required="no"/>
@@ -227,18 +219,23 @@
     <xsl:variable name="fieldId" select="concat('gn-field-', gn:element/@ref)" />
 
     <xsl:choose>
-      <xsl:when test="$invalidValue and count(//gmd:topicCategory[starts-with(gmd:MD_TopicCategoryCode, concat($value, '_'))]) > 0">
+      <xsl:when test="$invalidValue='true' and count(//gmd:topicCategory[starts-with(gmd:MD_TopicCategoryCode, concat($value, '_'))]) > 0">
+
+        <!-- Not sure why this has been done, cause we just need not to display the element ? -->
 
         <!--Hide the topic cat if it is a root one and one of its children is within the metadata-->
-        <div class="form-group gn-field hidden" data-gn-field-highlight="">
+        <!--<div class="form-group gn-field hidden" data-gn-field-highlight="">
           <label for="{$fieldId}" class="col-sm-2 control-label">
             <xsl:value-of select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), '', '')/label"/>
           </label>
           <div class="col-sm-9 gn-value">
             <input id="{$fieldId}" class="form-control" name="_{gn:element/@ref}"  type="text" value="{$value}"></input>
           </div>
-        </div>
+        </div>-->
       </xsl:when>
+      <xsl:when test="$invalidValue='true'">
+      </xsl:when>
+
       <xsl:otherwise>
         <div class="form-group gn-field {$invalidCls} gn-required" data-gn-field-highlight="">
           <label for="{$fieldId}" class="col-sm-2 control-label">
