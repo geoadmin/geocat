@@ -75,4 +75,15 @@
             <sch:report test="($code and $sibling) or not($code)"><sch:value-of select="$loc/strings/report.M104/div"/></sch:report>
         </sch:rule>
     </sch:pattern>
+    <sch:pattern>
+        <sch:title>$loc/strings/M105</sch:title>
+        <sch:rule
+            context="//che:CHE_CI_ResponsibleParty">
+            <sch:let name="code" value="gmd:contactInfo/gmd:CI_Contact/gmd:address//gmd:country/gco:CharacterString"/>
+
+            <!--  Check that basicGeodataId is defined -->
+            <sch:assert test="($code  = 'CH' or $code  = 'LI')">$loc/strings/alert.M105</sch:assert>
+            <sch:report test="($code  = 'CH' or $code  = 'LI')"><sch:value-of select="$loc/strings/report.M105/div"/></sch:report>
+        </sch:rule>
+    </sch:pattern>
 </sch:schema>
