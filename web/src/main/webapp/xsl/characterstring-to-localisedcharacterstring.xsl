@@ -308,13 +308,7 @@
         gmd:name[count(ancestor::gmd:MD_Format) > 0] |
         gmd:version[count(ancestor::gmd:MD_Format) > 0] |
         gmd:electronicMailAddress">
-        <xsl:if test="name() = 'gmd:code'">
-            <xsl:message>
-                ======================================================================
-                <xsl:value-of select="../../name()" />
-                ======================================================================
-            </xsl:message>
-        </xsl:if>
+
         <xsl:copy>
             <xsl:choose>
                 <xsl:when test="(normalize-space(gco:CharacterString[1]) = '' or not(gco:CharacterString)) and gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
