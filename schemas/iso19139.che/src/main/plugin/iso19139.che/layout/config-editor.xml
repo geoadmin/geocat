@@ -476,6 +476,10 @@
           <field xpath="/che:CHE_MD_Metadata/che:legislationInformation/che:CHE_MD_Legislation" />
         </section>
       </tab>
+      <flatModeExceptions>
+        <for name="gmd:topicCategory"/>
+      </flatModeExceptions>
+
     </view>
     <view name="xml">
       <tab id="xml" default="true"/>
