@@ -191,7 +191,7 @@
     <description>Uniform Resource Identifier (URI) des Datenbestands, auf den sich die Metadaten
       beziehen</description>
   </element>
-  <element name="gmd:locale" context="gmd:MD_Metadata" id="11.2">
+  <element name="gmd:locale" id="11.2">
     <label>Sprachraum</label>
     <help/>
     <condition/>
@@ -803,7 +803,7 @@
     <condition/>
     <description>Eindeutiger Identifikator für diesen Metadatensatz</description>
   </element>
-  <element name="gmd:metadataConstraints" context="gmd:MD_Metadata" id="20">
+  <element name="gmd:metadataConstraints" id="20">
     <label>Metadateneinschränkungen</label>
     <help/>
     <condition/>
@@ -1353,7 +1353,7 @@
     <description>Kosten und Bedingungen für den Bezug der Ressource unter Angabe der Währung, gemäss
       ISO 4217</description>
   </element>
-  <element name="gmd:language" context="gmd:MD_Metadata" id="3">
+  <element name="gmd:language" id="3">
     <label>Sprache</label>
     <help/>
     <condition>Obligatorisch nach INSPIRE</condition>
@@ -1755,13 +1755,13 @@
     <condition/>
     <description>Basisinformation zur eindeutigen Beschreibung des Datenbestands</description>
   </element>
-  <element name="gmd:title" context="gmd:CI_Citation" id="360">
+  <element name="gmd:title" id="360">
     <label>Titel</label>
     <help/>
     <condition>Obligatorisch</condition>
     <description>Bezeichnung, unter der die Ressource bekannt ist</description>
   </element>
-  <element name="gmd:alternateTitle" context="gmd:CI_Citation" id="361">
+  <element name="gmd:alternateTitle" id="361">
     <label>Alternativtitel</label>
     <help>z.B. 'TK 25' als Kurzform für 'Topographische Karte 1:25 000'</help>
     <condition/>
@@ -1855,7 +1855,7 @@
     <description>Information, welche für eine vollständige Ressourcenbeschreibung benötigt wird und
       in keinem anderen Metadatenelement erfasst wurde</description>
   </element>
-  <element name="gmd:collectiveTitle" context="gmd:CI_Citation" id="371">
+  <element name="gmd:collectiveTitle" id="371">
     <label>Gemeinsamer Titel</label>
     <help>Dieses Feld wird in der Schweiz genutzt um Geobasisdatensätze des Bundesrechts zu kennzeichnen (juristische Bezeichnung, Anhang I, GeoIV), da es vorkommt, dass ein Katalogeintrag mehrere physische Datensätze gruppiert. Bsp.: Eintrag 47 "Geophysikalisches Kartenwerk" besteht aus 3 Datenbeständen: "Geophysikalische Karten 1:500000", "Geophysikalische Spezialkarten" und "Gravimetrischer Atlas 1:100000"</help>
     <condition/>
@@ -2259,7 +2259,7 @@
     <condition>Obligatorisch</condition>
     <description>Dateiname der Grafik</description>
   </element>
-  <element name="gmd:parentIdentifier" context="gmd:MD_Metadata" id="5">
+  <element name="gmd:parentIdentifier" id="5">
     <label>Identifikator des übergeordneten Metadatensatzes</label>
     <help>Empfehlung: Verwendung einer UUID Es ist möglich, Metadatensätze hierarchisch zu
       strukturieren. So kann z.B. ein Metadatensatz die Merkmale einer ganzen Kartenserie
@@ -2288,7 +2288,7 @@
     <condition/>
     <description>Schlüsselwörter, ihr Typ und die Referenzquelle</description>
   </element>
-  <element name="gmd:keyword" context="gmd:MD_Keywords" id="53">
+  <element name="gmd:keyword" id="53">
     <label>Schlüsselwort</label>
     <help/>
     <condition>Obligatorisch</condition>
@@ -2315,7 +2315,7 @@
     <description>Hergeleitet vom ISO 19103; Massstab, wobei MD_RepresentativFraction.denominator = 1
       / Scale.measure Und Scale.targetUnits = Scale.sourceUnits</description>
   </element>
-  <element name="gmd:denominator" context="gmd:MD_RepresentativeFraction" id="57">
+  <element name="gmd:denominator" id="57">
     <label>Massstabszahl</label>
     <help>Empfehlung: Falls ein Massstabsbereich angegeben werden soll, ist die Klasse MD_Resolution
       zweifach zu nutzen und jeweils die obere und untere Massstabszahl einzutragen.</help>
@@ -2412,6 +2412,12 @@
       verwenden</description>
   </element>
   <element name="gmd:MD_AggregateInformation" id="66.1">
+    <label>Aggregationsinformation</label>
+    <help/>
+    <condition/>
+    <description>Information zu assoziierten Datenbeständen</description>
+  </element>
+  <element name="gmd:aggregationInfo" id="66.1">
     <label>Aggregationsinformation</label>
     <help/>
     <condition/>
@@ -2544,7 +2550,7 @@
     <condition/>
     <description>Geltungsbereich der Daten, auf die sich die Qualitätsangaben beziehen</description>
   </element>
-  <element name="gmd:contact" context="gmd:MD_Metadata" id="8">
+  <element name="gmd:contact" id="8">
     <label>Metadatenkontakt</label>
     <help/>
     <condition/>
