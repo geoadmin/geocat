@@ -90,11 +90,16 @@
               link.url = parts[0]
             }
           }
-          map.addLayer(gnMap.createOlWMS(gnSearchSettings.searchMap, {
-            LAYERS: link.name
-          },{
-            url: link.url
-          }));
+          if(link.name && link.url) {
+            map.addLayer(gnMap.createOlWMS(gnSearchSettings.searchMap, {
+              LAYERS: link.name
+            },{
+              url: link.url
+            }));
+          }
+          else {
+            console.warn('The layer cannot be added, missing parameters');
+          }
         },
         addAllMdLayersToMap: function (layers, md) {
           angular.forEach(layers, function (layer) {
