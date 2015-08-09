@@ -14,6 +14,7 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.WKTWriter;
 import jeeves.server.context.ServiceContext;
+import jeeves.xlink.XLink;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.om.Axis;
 import net.sf.saxon.om.AxisIterator;
@@ -92,6 +93,7 @@ import static jeeves.xlink.XLink.HREF;
 import static jeeves.xlink.XLink.NAMESPACE_XLINK;
 import static org.fao.geonet.geocat.kernel.extent.ExtentHelper.ExtentTypeCode;
 import static org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy.NON_VALID_THESAURUS_NAME;
+import static org.fao.geonet.geocat.kernel.reusable.ReusableObjManager.NON_VALID_ROLE;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 
 public class GeocatXslUtil {
@@ -872,8 +874,12 @@ public class GeocatXslUtil {
                     String href = "local://eng/xml.keyword.get?thesaurus=" + thesaurus + "&id=" + keywordIds +
                                   "&multiple=true&lang=" + joinedLangs + "&textgroupOnly=true&skipdescriptivekeywords=true";
 
-                    parent.addContent(index, new org.jdom.Element("descriptiveKeywords", GMD).
-                            setAttribute(HREF, href, NAMESPACE_XLINK));
+                    org.jdom.Element descriptiveKeywords = new org.jdom.Element("descriptiveKeywords", GMD).
+                            setAttribute(HREF, href, NAMESPACE_XLINK);
+                    if (thesaurus.equalsIgnoreCase(KeywordsStrategy.NON_VALID_THESAURUS_NAME)) {
+                        descriptiveKeywords.setAttribute(XLink.ROLE, NON_VALID_ROLE, NAMESPACE_XLINK);
+                    }
+                    parent.addContent(index, descriptiveKeywords);
 
                     index++;
                 }
