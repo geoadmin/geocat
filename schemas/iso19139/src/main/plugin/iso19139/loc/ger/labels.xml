@@ -1840,7 +1840,7 @@
     <condition/>
     <description>Angaben zur Serie oder Datensammlung, zu der die Ressource gehört</description>
   </element>
-  <element name="gmd:spatialRepresentationType" context="gmd:MD_Identification" id="37">
+  <element name="gmd:spatialRepresentationType" id="37">
     <label>Räumliche Darstellungsart</label>
     <help/>
     <condition/>
@@ -1962,7 +1962,12 @@
       <option value="IT">Italy</option>
       <option value="AT">Österreich</option>
     </helper>
-
+  </element>
+  <element name="gmd:Country" id="385">
+    <label>Land</label>
+    <help></help>
+    <condition/>
+    <description>Land</description>
   </element>
   <element name="gmd:electronicMailAddress" id="386">
     <label>E-Mail</label>
@@ -2098,6 +2103,20 @@
       WMS, WFS, WCS</help>
     <condition/>
     <description>Bezeichnung eines Anwendungsprofils für die Online-Ressource</description>
+  </element>
+  <element name="gmd:MD_CharacterSetCode" id="4">
+    <label>Zeichensatz</label>
+    <help>Empfehlung: Verwendung von UTF8</help>
+    <condition/>
+    <description>Exakte Bezeichnung des Zeichencodestandards, der im Metadatensatz verwendet
+      wird</description>
+  </element>
+  <element name="gmd:characterSet" id="4">
+    <label>Zeichensatz</label>
+    <help>Empfehlung: Verwendung von UTF8</help>
+    <condition/>
+    <description>Exakte Bezeichnung des Zeichencodestandards, der im Metadatensatz verwendet
+      wird</description>
   </element>
   <element name="gmd:characterSet" context="gmd:MD_Metadata" id="4">
     <label>Zeichensatz</label>
@@ -2716,6 +2735,10 @@
     <label>Sprache</label>
     <description>Das Feld wird automatisch für mehrsprachige Metadaten generiert. Bitte nichts daran ändern.</description>
   </element>
+  <element name="gmd:LanguageCode">
+    <label>Sprache</label>
+    <description>Das Feld wird automatisch für mehrsprachige Metadaten generiert. Bitte nichts daran ändern.</description>
+  </element>
   <element name="gmd:characterEncoding">
     <label>Zeichensatz</label>
     <description>Das Feld wird automatisch für mehrsprachige Metadaten generiert. Bitte nichts daran ändern.</description>
@@ -3146,5 +3169,29 @@
   <element name="gmx:fieldOfApplication">
     <label>Field of application</label>
     <description>Field of application</description>
+  </element>
+  <element name="gmd:MD_ProgressCode">
+    <label>Bearbeitungsstatus</label>
+    <description>Bearbeitungsstatus</description>
+  </element>
+  <element name="gmd:MD_SpatialRepresentationTypeCode">
+    <label>Räumliche Darstellungsart</label>
+    <description>Räumliche Darstellungsart</description>
+  </element>
+  <element name="gmd:CI_RoleCode">
+    <label>Funktion</label>
+    <description>Funktion</description>
+  </element>
+  <element name="gmd:MD_RestrictionCode">
+    <label>Benutzungseinschränkungen</label>
+    <description>Benutzungseinschränkungen</description>
+  </element>
+  <element name="gmd:MD_GeometricObjectTypeCode">
+    <label>Geometrietyp</label>
+    <description>Geometrietyp</description>
+  </element>
+  <element name="gmd:MD_ScopeCode">
+    <label>Bezugsebene</label>
+    <description>Bezugsebene</description>
   </element>
 </labels>

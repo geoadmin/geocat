@@ -518,11 +518,11 @@
         <description></description>
         <help></help>
     </element>
-    <!-- codelist <element name="che:CHE_MD_modelTypeCode" context="che:CHE_MD_FeatureCatalogueDescription">
+    <element name="che:CHE_MD_modelTypeCode" context="che:CHE_MD_FeatureCatalogueDescription">
         <label>Art des Modells</label>
-        <description>Codeliste zur Auswahl</description>
+        <description>Art des Modells</description>
         <help></help>
-    </element>-->
+    </element>
     <element name="che:dateOfMonitoringState" context="che:CHE_MD_MaintenanceInformation">
         <label>Stand Monitoringdaten</label>
         <description>Datum des Erfassungsstandes der Monitoringdaten</description>
@@ -642,5 +642,9 @@
     <element name="che:basicGeodataIDTypeCode">
         <label>Art des Identifikators</label>
         <description>Art des Identifikators</description>
+    </element>
+    <element name="che:CHE_CI_LegislationCode">
+        <label>Gesetzestyp</label>
+        <description>Gesetzestyp</description>
     </element>
 </labels>
