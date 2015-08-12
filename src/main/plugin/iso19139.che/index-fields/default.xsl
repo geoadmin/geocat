@@ -568,7 +568,20 @@
        gmd:description//gmd:LocalisedCharacterString[not(ancestor::gmd:description/gco:CharacterString) and @locale=$langId] |
        gmd:description//gmd:LocalisedCharacterString[not(ancestor::gmd:description//gmd:LocalisedCharacterString[@locale=$langId]) and @locale!=$langId])" />
 
-        <xsl:variable name="title" select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)"/>
+        <xsl:variable name="title" >
+            <xsl:choose>
+                <xsl:when test="normalize-space(gmd:name/gco:CharacterString) != ''">
+                    <xsl:value-of select="normalize-space(gmd:name/gco:CharacterString)"/>
+                </xsl:when>
+                <xsl:when test="normalize-space(gmd:name//gmd:LocalisedCharacterString[not(ancestor::gmd:name//gmd:LocalisedCharacterString[@locale=$langId]) and @locale!=$langId]) != ''">
+                    <xsl:value-of select="normalize-space(gmd:name//gmd:LocalisedCharacterString[not(ancestor::gmd:name//gmd:LocalisedCharacterString[@locale=$langId]) and @locale!=$langId])"/>
+                </xsl:when>
+                <xsl:when test="(gmd:name//gmd:LocalisedCharacterString[normalize-space(.) = ''])[1] != ''">
+                    <xsl:value-of select="(gmd:name//gmd:LocalisedCharacterString[normalize-space(.) = ''])[1]"/>
+                </xsl:when>
+            </xsl:choose>
+        </xsl:variable>
+
         <xsl:variable name="protocol" select="normalize-space(gmd:protocol/gco:CharacterString)"/>
 
         <xsl:variable name="mimetype">
@@ -596,18 +609,18 @@
         <xsl:if test="contains($protocol, 'OGC:WMS')">
             <Field name="dynamic" string="true" store="false" index="true"/>
         </xsl:if>
-        <Field name="link" string="{concat($title, '|', $desc, '|', $linkage[1], '|', $protocol, '|', $mimetype)}" store="true" index="false"/>
-        <Field name="linkage" string="{$linkage[1]}" store="true" index="true"/>
+        <!--<Field name="link" string="{concat($title, '|', $desc, '|', $linkage[1], '|', $protocol, '|', $mimetype)}" store="true" index="false"/>-->
+        <!--<Field name="linkage" string="{$linkage[1]}" store="true" index="true"/>-->
 
         <!-- Add KML link if WMS -->
         <xsl:if test="starts-with($protocol,'OGC:WMS-') and contains($protocol,'-get-map') and string($linkage[1])!='' and string($title[1])!=''">
 
-            <Field name="wms_uri" string="{/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:fileIdentifier/gco:CharacterString}###{$title}###{$linkage[1]}" store="true" index="true"/>
+            <!--<Field name="wms_uri" string="{/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:fileIdentifier/gco:CharacterString}###{$title}###{$linkage[1]}" store="true" index="true"/>-->
 
             <!-- FIXME : relative path -->
-            <Field name="link" string="{concat($title, '|', $desc, '|',
-				'../../srv/en/google.kml?uuid=', /*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:fileIdentifier/gco:CharacterString, '&amp;layers=', $title,
-				'|application/vnd.google-earth.kml+xml|application/vnd.google-earth.kml+xml')}" store="true" index="false"/>
+            <!--<Field name="link" string="{concat($title, '|', $desc, '|',-->
+            <!--'../../srv/en/google.kml?uuid=', /*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:fileIdentifier/gco:CharacterString, '&amp;layers=', $title,-->
+            <!--'|application/vnd.google-earth.kml+xml|application/vnd.google-earth.kml+xml')}" store="true" index="false"/>-->
         </xsl:if>
     </xsl:template>
 

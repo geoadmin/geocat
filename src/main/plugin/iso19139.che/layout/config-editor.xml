@@ -439,7 +439,6 @@
           <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode" />
           <!-- 17 - Extent -->
           <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:extent" />
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/srv:extent" />
           <!-- 18 - Basic Geodata ID -->
           <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/che:basicGeodataID" />
           <!-- 19 - Basic Geodata type -->

@@ -580,9 +580,22 @@
        gmd:description//gmd:LocalisedCharacterString[not(ancestor::gmd:description/gco:CharacterString) and @locale=$langId] |
        gmd:description//gmd:LocalisedCharacterString[not(ancestor::gmd:description//gmd:LocalisedCharacterString[@locale=$langId]) and @locale!=$langId])" />
 
-    <xsl:variable name="title" select="normalize-space(gmd:name/gco:CharacterString |
-       gmd:name//gmd:LocalisedCharacterString[not(ancestor::gmd:name/gco:CharacterString) and @locale=$langId] |
-       gmd:name//gmd:LocalisedCharacterString[not(ancestor::gmd:name//gmd:LocalisedCharacterString[@locale=$langId]) and @locale!=$langId])" />
+    <xsl:variable name="title" >
+      <xsl:choose>
+        <xsl:when test="normalize-space(gmd:name//gmd:LocalisedCharacterString[not(ancestor::gmd:name//gmd:LocalisedCharacterString[@locale=$langId]) and @locale!=$langId]) != ''">
+          <xsl:value-of select="normalize-space(gmd:name//gmd:LocalisedCharacterString[not(ancestor::gmd:name//gmd:LocalisedCharacterString[@locale=$langId]) and @locale!=$langId])"/>
+        </xsl:when>
+				<xsl:when test="normalize-space(gmd:name//gmd:LocalisedCharacterString[@locale=$langId]) != ''">
+					<xsl:value-of select="normalize-space(gmd:name//gmd:LocalisedCharacterString[@locale=$langId])"/>
+				</xsl:when>
+        <xsl:when test="normalize-space(gmd:name/gco:CharacterString) != ''">
+          <xsl:value-of select="normalize-space(gmd:name/gco:CharacterString)"/>
+        </xsl:when>
+        <xsl:when test="(gmd:name//gmd:LocalisedCharacterString[normalize-space(.) = ''])[1] != ''">
+          <xsl:value-of select="(gmd:name//gmd:LocalisedCharacterString[normalize-space(.) = ''])[1]"/>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
 
 		<xsl:variable name="protocol" select="normalize-space(gmd:protocol/gco:CharacterString)"/>
 
