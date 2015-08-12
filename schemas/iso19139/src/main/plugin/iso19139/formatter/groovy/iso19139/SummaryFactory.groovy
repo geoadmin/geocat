@@ -54,7 +54,7 @@ class SummaryFactory {
         configureThumbnails(metadata, summary)
 
         LinkBlock linkBlock = new LinkBlock('links', "fa fa-link");
-        configureLinks(linkBlock, 'link', false, {
+        configureLinks(linkBlock, 'link', true, {
             def linkParts = it.split("\\|")
             [
                     title   : isoHandlers.isofunc.clean(linkParts[0]),

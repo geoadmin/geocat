@@ -575,8 +575,8 @@
         angular.forEach(this.link, function(link) {
           var linkInfo = formatLink(link);
           // GEOCAT
-          if (angular.isDefined(unique[linkInfo.url])) {
-            var otherInfo = unique[linkInfo.url];
+          if (angular.isDefined(unique[linkInfo.url + linkInfo.name])) {
+            var otherInfo = unique[linkInfo.url + linkInfo.name];
             if (otherInfo.desc != '' && otherInfo.desc != '-') {
               return;
             } else if (linkInfo.desc != '' && linkInfo != '-') {
@@ -588,7 +588,7 @@
               return;
             }
           }
-          unique[linkInfo.url] = linkInfo;
+          unique[linkInfo.url + linkInfo.name] = linkInfo;
           // END GEOCAT
           types.forEach(function(type) {
             if (type.substr(0, 1) == '#') {
