@@ -1515,7 +1515,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         addElement(info, Edit.Info.Elem.CREATE_DATE, createDate);
         addElement(info, Edit.Info.Elem.CHANGE_DATE, changeDate);
         addElement(info, Edit.Info.Elem.SOURCE,      source);
-
+        // GEOCAT
+        addElement(info, "logo",      doc.get(Geonet.IndexFieldNames.LOGO));
+        // END GEOCAT
         HashSet<String> addedTranslation = new HashSet<String>();
         if ((dumpAllField || dumpFields != null) && searchLang != null && multiLangSearchTerm != null) {
             // get the translated fields and dump those instead of the non-translated

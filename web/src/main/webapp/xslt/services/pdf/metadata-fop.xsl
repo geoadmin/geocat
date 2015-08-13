@@ -181,7 +181,11 @@
       </xsl:variable>
       <xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
       <xsl:variable name="source" select="string($metadata/geonet:info/source)"/>
-
+      <xsl:message>
+        -------------------------------------------------- source ------------------------------------------
+        <xsl:copy-of select="$metadata/geonet:info" />
+        -------------------------------------------------- source ------------------------------------------
+      </xsl:message>
 
       <xsl:if test="$metadata/geonet:info/id != ''">
         <fo:table-row border-top-style="solid" border-right-style="solid" border-left-style="solid"
@@ -192,7 +196,7 @@
             <fo:block>
               <fo:external-graphic content-width="35pt">
                 <xsl:attribute name="src"> url('<xsl:value-of
-                  select="concat($baseURL, '/images/logos/', $source , '.gif')"
+                  select="concat($baseURL, $metadata/geonet:info/logo)"
                   />')" </xsl:attribute>
               </fo:external-graphic>
             </fo:block>
@@ -404,7 +408,7 @@
               padding-left="4pt">
               <fo:external-graphic padding-right="4pt">
                 <xsl:attribute name="src"> url('<xsl:value-of
-                  select="concat($baseURL, '/images/logos/', $env/system/site/siteId, '.gif')"
+                  select="concat($baseURL, '/images/logos/', $env/system/site/siteId, '.png')"
                   />')" </xsl:attribute>
               </fo:external-graphic>
               <xsl:value-of select="upper-case($env/system/site/name)"/> (<xsl:value-of
