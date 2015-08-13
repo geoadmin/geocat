@@ -65,15 +65,13 @@
           }
         })
           .success(function(data) {
-              // Download the csv file. The AngularJs friendly way!
-              var element = angular.element('<a/>');
-              element.attr({
-                href: 'data:attachment/csv;charset=utf-8,' + encodeURI(data),
-                target: '_blank',
-                download: service
-              })[0].click();
-
-            });
+            var a = document.createElement("a");
+            a.href = 'data:attachment/csv;charset=utf-8,' + encodeURI(data);
+            a.download = service;
+            a.target = "_blank";
+            document.body.appendChild(a);
+            a.click();
+          });
       };
 
       /**
