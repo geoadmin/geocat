@@ -12,7 +12,7 @@
     <ul class="dropdown-menu" role="menu">
       <li data-ng-repeat="v in ::values"
           data-ng-class="v.sortBy === params.sortBy ? 'disabled' : ''">
-        <a data-ng-click="sortBy(v)">{{v.sortBy | translate}}</a></li>
+        <a data-ng-click="sortBy(v)" data-translate="">{{v.sortBy}}</a></li>
     </ul>
   </div>
 </div>
