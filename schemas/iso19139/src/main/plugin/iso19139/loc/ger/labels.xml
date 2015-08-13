@@ -1955,12 +1955,12 @@
     <condition/>
     <description>Staat</description>
     <helper>
-      <option value="CH">Switzerland</option>
-      <option value="DE">Germany</option>
-      <option value="LI">Lichtenstein</option>
-      <option value="FR">France</option>
-      <option value="IT">Italy</option>
-      <option value="AT">Österreich</option>
+      <option value="CH">Schweiz (CH)</option>
+      <option value="DE">Deutschland (DE)</option>
+      <option value="LI">Lichtenstein (LI)</option>
+      <option value="FR">Frankreich (FR)</option>
+      <option value="IT">Italien (IT)</option>
+      <option value="AT">Österreich (AT)</option>
     </helper>
   </element>
   <element name="gmd:Country" id="385">

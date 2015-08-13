@@ -8,6 +8,7 @@
 
   <xsl:include href="../iso19139/convert/functions.xsl"/>
   <xsl:include href="../iso19139/convert/thesaurus-transformation.xsl"/>
+  <xsl:include href="update-sub-template-fixed-info.xsl"/>
 
   <xsl:variable name="serviceUrl" select="/root/env/siteURL" />
   <!-- ================================================================= -->

@@ -715,15 +715,14 @@
 	<element name="gmd:country" id="612.0">
 		<label>Country</label>
 		<description>Country of the physical address</description>
-    <helper>
-      <option value="CH">Switzerland</option>
-      <option value="DE">Germany</option>
-      <option value="LI">Lichtenstein</option>
-      <option value="FR">France</option>
-      <option value="IT">Italy</option>
-      <option value="AT">Austria</option>
-    </helper>
-
+		<helper>
+			<option value="CH">Switzerland (CH)</option>
+			<option value="DE">Germany (DE)</option>
+			<option value="LI">Lichtenstein (LI)</option>
+			<option value="FR">France (FR)</option>
+			<option value="IT">Italy (IT)</option>
+			<option value="AT">Austria (AT)</option>
+		</helper>
   </element>
 	<element name="gmd:country" id="508.0" context="gmd:MD_Legislation">
 		<label>Country</label>

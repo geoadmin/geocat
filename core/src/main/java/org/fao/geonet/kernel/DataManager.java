@@ -3114,15 +3114,17 @@ public class DataManager implements ApplicationEventPublisherAware {
             Metadata metadata = null;
             if (metadataId.isPresent()) {
                 metadata = getMetadataRepository().findOne(metadataId.get());
-                boolean isTemplate = metadata != null && metadata.getDataInfo().getType() != MetadataType.METADATA;
-
-                // don't process templates
-                if(isTemplate) {
-                    if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                        Log.debug(Geonet.DATA_MANAGER, "Not applying update-fixed-info for a template");
-                    }
-                    return md;
-                }
+                // GEOCAT geocat handles templates specially
+//                boolean isTemplate = metadata != null && metadata.getDataInfo().getType() != MetadataType.METADATA;
+//
+//                // don't process templates
+//                if(isTemplate) {
+//                    if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+//                        Log.debug(Geonet.DATA_MANAGER, "Not applying update-fixed-info for a template");
+//                    }
+//                    return md;
+//                }
+                // END GEOCAT
             }
 
             String currentUuid = metadata != null ? metadata.getUuid() : null;
@@ -3157,7 +3159,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             Element result = new Element("root");
             result.addContent(md);
             // add 'environment' to result
-            env.addContent(new Element("siteURL")   .setText(getSettingManager().getSiteURL(context)));
+            env.addContent(new Element("siteURL").setText(getSettingManager().getSiteURL(context)));
 
             // Settings were defined as an XML starting with root named config
             // Only second level elements are defined (under system).
@@ -3172,11 +3174,18 @@ public class DataManager implements ApplicationEventPublisherAware {
 
             // GEOCAT
             Path styleSheet;
-            if(metadata != null && metadata.getDataInfo().getType() == MetadataType.TEMPLATE) {
-                styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_TEMPLATE_FIXED_INFO);
-            } else {
-                styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_FIXED_INFO);
+            switch (metadata.getDataInfo().getType()) {
+                case SUB_TEMPLATE:
+                    styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_SUB_TEMPLATE_FIXED_INFO);
+                    break;
+                case TEMPLATE:
+                    styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_TEMPLATE_FIXED_INFO);
+                    break;
+                default:
+                    styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_FIXED_INFO);
+                    break;
             }
+
             final Element identificationInfo = md.getChild("identificationInfo", GMD);
             if (identificationInfo != null) {
                 GeocatXslUtil.mergeKeywords(identificationInfo, false, null, null);
@@ -3184,6 +3193,9 @@ public class DataManager implements ApplicationEventPublisherAware {
                 for (Object keyword : keywords) {
                     Processor.processXLink((Element) keyword, context);
                 }
+            }
+            if (!Files.exists(styleSheet)) {
+                styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_FIXED_INFO);
             }
             // END GEOCAT
             result = Xml.transform(result, styleSheet);

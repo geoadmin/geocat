@@ -94,6 +94,7 @@ public final class Geonet {
 		public static final int METADATA_MAX_BLANKS 	 = 20;
         // GEOCAT
         public static final String UPDATE_TEMPLATE_FIXED_INFO = "update-template-fixed-info.xsl";
+        public static final String UPDATE_SUB_TEMPLATE_FIXED_INFO = "update-sub-template-fixed-info.xsl";
         // END GEOCAT
 	}
 
