@@ -46,12 +46,6 @@
 
   <xsl:template match="gmd:country/gco:CharacterString" priority="100">
     <xsl:variable name="country" select="lower-case(text())" />
-    <xsl:message>
-      --------------------------------- country -------------------------------
-      country = <xsl:value-of select="$country" />
-      test = <xsl:value-of select="$countryNameMapping/cnt[@name = $country]"/>
-      --------------------------------- end country -------------------------------
-    </xsl:message>
     <xsl:choose>
       <xsl:when test="$countryNameMapping/cnt[@name = $country]">
         <gco:CharacterString><xsl:value-of select="$countryNameMapping/cnt[@name = $country]/text()"/></gco:CharacterString>
