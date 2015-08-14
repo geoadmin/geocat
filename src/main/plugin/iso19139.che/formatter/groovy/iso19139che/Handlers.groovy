@@ -65,7 +65,10 @@ public class Handlers extends iso19139.Handlers {
             if (geomId != null) {
                 def image = "<img src=\"region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=$geomId\"\n" +
                         "         style=\"min-width:${width/4}px; min-height:${width/4}px;\" />"
-                handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: image])
+                def inclusion = el.'gmd:extentTypeCode'.text() == '0' ? 'exclusive' : 'inclusive';
+
+                def label = f.nodeLabel(el) + " (" + f.translate(inclusion) + ")"
+                handlers.fileResult('html/2-level-entry.html', [label: label, childData: image])
             }
         }
     }
