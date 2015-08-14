@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <pdfExportTitle>Metadata Export geocat.ch</pdfExportTitle>
     <recurse>Also search in subfolders</recurse>
     <ara>عربي</ara>
     <!-- Do not translate! -->
@@ -885,7 +886,8 @@
     <resetFeedbackForm>Reset the feedback form</resetFeedbackForm>
     <resetPassword>Reset Password</resetPassword>
     <resetSearch>Reset the search form</resetSearch>
-    <ress>result</ress>
+    <ress1>result</ress1>
+    <ressMany>results</ressMany>
     <restrictTo>Restrict to</restrictTo>
     <result>Last results</result>
     <searchResult>Search results</searchResult>

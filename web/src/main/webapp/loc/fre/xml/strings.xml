@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<pdfExportTitle>Metadata Export geocat.ch</pdfExportTitle>
 	<recurse>Rechercher dans les sous répertoires également</recurse>
 	<ara>عربي</ara> <!-- Do not translate! -->
 	<cat>Català</cat> <!-- Do not translate! -->
@@ -771,7 +772,8 @@ La liste des changements d'état sont accessibles ici :
 	<resetFeedbackForm>Réinitialiser</resetFeedbackForm>
 	<resetPassword>Changer le mot de passe</resetPassword>
 	<resetSearch>Réinitialiser</resetSearch>
-	<ress>résultat</ress>
+	<ress1>résultat</ress1>
+	<ressMany>résultats</ressMany>
 	<restrictTo>Limiter a</restrictTo>
 	<result>Derniers résultats</result>
 	<searchResult>Résultats de recherche</searchResult>

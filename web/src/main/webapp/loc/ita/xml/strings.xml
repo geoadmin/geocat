@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<pdfExportTitle>Metadata Export geocat.ch</pdfExportTitle>
 
 	<ara>عربي</ara> <!-- Do not translate! -->
 	<cat>Català</cat> <!-- Do not translate! -->
@@ -768,7 +769,8 @@
 	<resetFeedbackForm>Pulisci la maschera di feedback</resetFeedbackForm>
 	<resetPassword>Reset password</resetPassword>
 	<resetSearch>Pulisci la maschera di ricerca</resetSearch>
-	<ress>risultato</ress>
+	<ress1>risultato</ress1>
+	<ressMany>risultati</ressMany>
 	<restrictTo>Limita a</restrictTo>
 	<result>Ultimi risultati</result>
 	<searchResult>Risultati dela ricerca</searchResult>

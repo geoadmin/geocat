@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <pdfExportTitle>Metadatenexport geocat.ch</pdfExportTitle>
     <ara>عربي</ara> <!-- Do not translate! -->
     <cat>Català</cat> <!-- Do not translate! -->
     <chi>中文</chi> <!-- Do not translate! -->
@@ -780,7 +781,8 @@
 	<resetFeedbackForm>Feedbackformular zurücksetzen</resetFeedbackForm>
 	<resetPassword>Passwort zurücksetzen</resetPassword>
 	<resetSearch>Suchformular zurücksetzen</resetSearch>
-	<ress>Ergebnis</ress>
+	<ress1>Treffer</ress1>
+	<ressMany>Treffer</ressMany>
 	<restrictTo>Beschränken auf</restrictTo>
 	<result>Letzte Ergebnisse</result>
 	<searchResult>Suchergebnisse</searchResult>

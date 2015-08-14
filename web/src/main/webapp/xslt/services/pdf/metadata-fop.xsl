@@ -180,12 +180,6 @@
         <xsl:copy-of select="." />
       </xsl:variable>
       <xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
-      <xsl:variable name="source" select="string($metadata/geonet:info/source)"/>
-      <xsl:message>
-        -------------------------------------------------- source ------------------------------------------
-        <xsl:copy-of select="$metadata/geonet:info" />
-        -------------------------------------------------- source ------------------------------------------
-      </xsl:message>
 
       <xsl:if test="$metadata/geonet:info/id != ''">
         <fo:table-row border-top-style="solid" border-right-style="solid" border-left-style="solid"
@@ -202,7 +196,7 @@
             </fo:block>
           </fo:table-cell>
           <fo:table-cell display-align="center">
-            <fo:block font-weight="{$title-weight}" font-size="{$title-size}" color="{$title-color}"
+            <fo:block color="{$title-color}"
               padding-top="4pt" padding-bottom="4pt" padding-left="4pt" padding-right="4pt">
               <xsl:value-of select="$metadata/title"/>
             </fo:block>
@@ -339,14 +333,14 @@
         <xsl:choose>
           <xsl:when test="$remote=false()"><fo:basic-link text-decoration="underline" color="blue">
               <xsl:attribute name="external-destination"> url('<xsl:value-of
-                select="concat($baseURL, '?uuid=', $metadata/geonet:info/uuid)"
+                select="concat($baseURL, '/srv/', $lang, '/md.viewer#/full_view/', $metadata/geonet:info/uuid)"
                 />') </xsl:attribute>
-              <xsl:value-of select="$oldGuiStrings/show"/>
+             <xsl:value-of select="$oldGuiStrings/show"/>
           </fo:basic-link> | <fo:basic-link text-decoration="underline" color="blue">
             <xsl:attribute name="external-destination"> url('<xsl:value-of
               select="concat($baseURL, '/srv/', $lang, '/xml.metadata.get?uuid=', $metadata/geonet:info/uuid)"
             />') </xsl:attribute>
-            <xsl:value-of select="$oldGuiStrings/show"/> (XML)
+            <xsl:value-of select="$oldGuiStrings/show"/> ISO19139-CHE (XML)
           </fo:basic-link> | </xsl:when>
           <xsl:otherwise>
             <fo:block text-align="left" font-style="italic">
@@ -406,13 +400,7 @@
             <fo:block font-family="{$font-family}" font-size="{$header-size}" color="{$title-color}"
               font-weight="{$header-weight}" padding-top="4pt" padding-right="4pt"
               padding-left="4pt">
-              <fo:external-graphic padding-right="4pt">
-                <xsl:attribute name="src"> url('<xsl:value-of
-                  select="concat($baseURL, '/images/logos/', $env/system/site/siteId, '.png')"
-                  />')" </xsl:attribute>
-              </fo:external-graphic>
-              <xsl:value-of select="upper-case($env/system/site/name)"/> (<xsl:value-of
-                select="upper-case($env/system/site/organization)"/>) </fo:block>
+              <xsl:value-of select="$oldGuiStrings/pdfExportTitle"/> </fo:block>
           </fo:table-cell>
           <!-- <fo:table-cell display-align="right" text-align="top"
             background-color="{$background-color-banner}">

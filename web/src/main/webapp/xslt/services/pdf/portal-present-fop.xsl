@@ -34,8 +34,14 @@
                     <fo:block text-align="center" color="{$font-color}">
                       <xsl:value-of select="/root/response/summary/@count"/>
                       <xsl:text> </xsl:text>
-                      <xsl:value-of select="/root/gui/strings/ress"/>
-                      <xsl:if test="/root/response/summary/@count &gt; 1">s</xsl:if>
+                      <xsl:choose>
+                        <xsl:when test=" /root/response/summary/@count &gt; 1">
+                          <xsl:value-of select="/root/gui/strings/ressMany"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:value-of select="/root/gui/strings/ress1"/>
+                        </xsl:otherwise>
+                      </xsl:choose>
                     </fo:block>
                   </fo:table-cell>
                 </fo:table-row>
