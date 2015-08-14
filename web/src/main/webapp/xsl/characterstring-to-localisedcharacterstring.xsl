@@ -162,12 +162,12 @@
         this captures all elements with CharacterString and below are the exceptions that should not be caught	
     -->
     <xsl:template priority="5" match="
-		gmd:linkage[gmd:URL] |
-		gmd:archiveConceptURL[gmd:URL] |
-		gmd:historyConceptURL[gmd:URL] |
-		gmd:portrayalCatalogueURL[gmd:URL] |
-		gmd:dataModel[gmd:URL] |
-		gmd:dataModel[gmd:URL]
+		gmd:linkage[gmd:URL[normalize-space(.) != '']] |
+		gmd:archiveConceptURL[gmd:URL[normalize-space(.) != '']] |
+		gmd:historyConceptURL[gmd:URL[normalize-space(.) != '']] |
+		gmd:portrayalCatalogueURL[gmd:URL[normalize-space(.) != '']] |
+		gmd:dataModel[gmd:URL[normalize-space(.) != '']] |
+		gmd:dataModel[gmd:URL[normalize-space(.) != '']]
 	">
         <xsl:variable name="mainLang">
             <xsl:call-template name="langId19139"/>
