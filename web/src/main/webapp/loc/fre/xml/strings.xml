@@ -16,6 +16,7 @@
   <spa>Español</spa> <!-- Do not translate! -->
   <tur>Türkçe</tur> <!-- Do not translate! -->
   <pol>Polski</pol> <!-- Do not translate! -->
+  <pdfExportTitle>Metadata Export geocat.ch</pdfExportTitle>
 
   <statusTitle>/ Modification de l'état d'une fiche</statusTitle>
   <statusUserEdit>L'utilisateur %s (%s) a modifié la métadonnée #%s</statusUserEdit>
@@ -891,6 +892,8 @@
   <resetPassword>Changer le mot de passe</resetPassword>
   <resetSearch>Réinitialiser</resetSearch>
   <ress>résultat</ress>
+  <ress1>résultat</ress1>
+  <ressMany>résultats</ressMany>
   <restrictTo>Limiter a</restrictTo>
   <result>Derniers résultats</result>
   <searchResult>Résultats de recherche</searchResult>
