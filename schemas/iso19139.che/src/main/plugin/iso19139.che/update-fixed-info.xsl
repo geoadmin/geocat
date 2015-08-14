@@ -230,10 +230,10 @@
         <gmd:URL>
           <xsl:choose>
             <xsl:when test="/root/env/system/downloadservice/simple='true'">
-              <xsl:value-of select="concat($serviceUrl,'/resources.get?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=private')"/>
+              <xsl:value-of select="concat($serviceUrl,'/resources.get?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=public')"/>
             </xsl:when>
             <xsl:when test="/root/env/system/downloadservice/withdisclaimer='true'">
-              <xsl:value-of select="concat($serviceUrl,'/file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=private')"/>
+              <xsl:value-of select="concat($serviceUrl,'/file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=public')"/>
             </xsl:when>
             <xsl:otherwise> <!-- /root/env/system/downloadservice/leave='true' -->
               <xsl:value-of select="gmd:linkage/gmd:URL"/>
