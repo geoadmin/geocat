@@ -294,8 +294,9 @@
                       var extentType;
                       if(data[i].xlink.indexOf('gn:gemeindenBB') > 0) {
                         data[i].desc += ' (' + $translate('gemeinden') + ')';
+                      } else if(data[i].xlink.indexOf('gn:kantoneBB') > 0) {
+                        data[i].desc += ' (' + $translate('cantons') + ')';
                       }
-
                     }
                   } else {
                     data[i].desc = 'No description provided';
