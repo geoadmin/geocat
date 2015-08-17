@@ -107,7 +107,7 @@
       searchThesaurusKeyword = function() {
         if ($scope.thesaurusSelected) {
           $scope.recordsRelatedToThesaurus = 0;
-          $http.get('keywords@json?pNewSearch=true&pTypeSearch=1' +
+          $http.get('keywords@json?pNewSearch=true&pLang=eng,ger,ita,fre,roh&pTypeSearch=1' +
               '&pThesauri=' + $scope.thesaurusSelected.key +
                       '&pMode=searchBox' +
                       '&maxResults=' +
@@ -115,7 +115,22 @@
                               defaultMaxNumberOfKeywords) +
                       '&pKeyword=' + (encodeURI($scope.keywordFilter) || '*')
           ).success(function(data) {
-            $scope.keywords = data[0];
+              angular.forEach(data[0], function (kw){
+                kw.loc = {};
+                angular.forEach(kw.values, function(value){
+                  var lang = value['@language'];
+                  kw.loc[lang] = {};
+                  kw.loc[lang].label = value['#text'];
+                });
+                angular.forEach(kw.definitions, function(def){
+                  var lang = def['@language'];
+                  if (!kw.loc[lang]) {
+                    kw.loc[lang] = {};
+                  }
+                  kw.loc[lang].definition = def['#text'];
+                });
+              });
+              $scope.keywords = data[0];
             gnSearchManagerService.gnSearch({
               summaryOnly: 'true',
               thesaurusIdentifier: $scope.thesaurusSelected.key}).
@@ -367,16 +382,27 @@
             '<east>' + $scope.keywordSelected.geo.east + '</east>' +
             '<north>' + $scope.keywordSelected.geo.north + '</north>' : '';
 
+        var definitions = "";
+        var values = "";
+
+        angular.forEach($scope.keywordSelected.loc, function(value, lang){
+          var el;
+          el = "loc_" + lang + "_label>";
+          var label = value.label || "";
+          values += "<" + el + label + "</" + el;
+          el = "loc_" + lang + "_definition>";
+          var def = value.definition || "";
+          definitions += "<" + el + def + "</" + el;
+        });
+
         var xml = '<request><newid>' + $scope.keywordSelected.uri + '</newid>' +
             '<refType>' + $scope.thesaurusSelected.dname + '</refType>' +
-            '<definition>' + $scope.keywordSelected.definition['#text'] +
-                '</definition>' +
-            '<namespace>' + $scope.thesaurusSelected.defaultNamespace +
-                '</namespace>' +
+          definitions +
+            '<namespace>' + $scope.thesaurusSelected.defaultNamespace + '</namespace>' +
             '<ref>' + $scope.thesaurusSelected.key + '</ref>' +
             '<oldid>' + selectedKeywordOldId + '</oldid>' +
             '<lang>' + $scope.lang + '</lang>' +
-            '<label>' + $scope.keywordSelected.value['#text'] + '</label>' +
+            values +
             geoxml +
             '</request>';
 

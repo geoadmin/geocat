@@ -285,15 +285,60 @@
           <form id="gn-edit-keyword" name="gn-edit-keyword">
             <div>
               <label class="control-label" data-translate="">keywordLabel</label>
-              <input type="text" name="name" class="form-control" data-ng-disabled="isExternal()"
-                data-ng-keyup="computeKeywordId()" data-ng-model="keywordSelected.value['#text']"/>
+              <div class="keyword-input-block">
+                <input type="text" name="name" class="form-control" data-ng-disabled="isExternal()"
+                  data-ng-keyup="computeKeywordId()" data-ng-model="keywordSelected.loc.ger.label"/>
+                <label class="overlay-placeholder">Deutsch</label>
+              </div>
+              <div class="keyword-input-block">
+                <input type="text" name="name" class="form-control" data-ng-disabled="isExternal()"
+                  data-ng-keyup="computeKeywordId()" data-ng-model="keywordSelected.loc.fre.label"/>
+                <label class="overlay-placeholder">Français</label>
+              </div>
+              <div class="keyword-input-block">
+                <input type="text" name="name" class="form-control" data-ng-disabled="isExternal()"
+                  data-ng-keyup="computeKeywordId()" data-ng-model="keywordSelected.loc.ita.label"/>
+                <label class="overlay-placeholder">Italiano</label>
+              </div>
+              <div class="keyword-input-block">
+                <input type="text" name="name" class="form-control" data-ng-disabled="isExternal()"
+                  data-ng-keyup="computeKeywordId()" data-ng-model="keywordSelected.loc.eng.label"/>
+                <label class="overlay-placeholder">English</label>
+              </div>
+              <div class="keyword-input-block">
+                <input type="text" name="name" class="form-control" data-ng-disabled="isExternal()"
+                  data-ng-keyup="computeKeywordId()" data-ng-model="keywordSelected.loc.roh.label"/>
+                <label class="overlay-placeholder">Rumantsch</label>
+              </div>
             </div>
 
             <div>
               <label class="control-label" data-translate="">keywordDefinition</label>
-              <input type="text" name="definition" class="form-control"
-                data-ng-disabled="isExternal()" data-ng-model="keywordSelected.definition['#text']"
-              />
+              <div class="keyword-input-block">
+                <input type="text" name="definition" class="form-control" data-ng-disabled="isExternal()"
+                       data-ng-model="keywordSelected.loc.ger.definition"/>
+                <label class="overlay-placeholder">Deutsch</label>
+              </div>
+              <div class="keyword-input-block">
+                <input type="text" name="definition" class="form-control" data-ng-disabled="isExternal()"
+                       data-ng-model="keywordSelected.loc.fre.definition"/>
+                <label class="overlay-placeholder">Français</label>
+              </div>
+              <div class="keyword-input-block">
+                <input type="text" name="definition" class="form-control" data-ng-disabled="isExternal()"
+                       data-ng-model="keywordSelected.loc.ita.definition"/>
+                <label class="overlay-placeholder">Italiano</label>
+              </div>
+              <div class="keyword-input-block">
+                <input type="text" name="definition" class="form-control" data-ng-disabled="isExternal()"
+                       data-ng-model="keywordSelected.loc.eng.definition"/>
+                <label class="overlay-placeholder">English</label>
+              </div>
+              <div class="keyword-input-block">
+                <input type="text" name="definition" class="form-control" data-ng-disabled="isExternal()"
+                       data-ng-model="keywordSelected.loc.roh.definition"/>
+                <label class="overlay-placeholder">Rumantsch</label>
+              </div>
             </div>
             <div>
               <label class="control-label" data-translate="">keywordIdentifier</label>
