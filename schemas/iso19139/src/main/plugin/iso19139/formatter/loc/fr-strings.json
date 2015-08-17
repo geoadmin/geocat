@@ -22,5 +22,7 @@
     "stereoMate-link": "Stéréo restitution",
     "crossReference-link": "Référence croisée",
     "partOfSeamlessDatabase-link": "Partie d'une même base de données",
-    "isDescriptionOf-link": "Description"
+    "isDescriptionOf-link": "Description",
+    "inclusive": "Inclusive",
+    "exclusive": "Exclusive"
 }

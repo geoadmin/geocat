@@ -22,5 +22,7 @@
     "stereoMate-link": "Stereobild",
     "crossReference-link": "Querverweis",
     "partOfSeamlessDatabase-link": "Komponente",
-    "isDescriptionOf-link": "Description"
+    "isDescriptionOf-link": "Description",
+    "inclusive": "Einschliessend",
+    "exclusive": "Ausschliessend"
 }
