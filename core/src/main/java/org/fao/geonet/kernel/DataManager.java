@@ -3174,16 +3174,20 @@ public class DataManager implements ApplicationEventPublisherAware {
 
             // GEOCAT
             Path styleSheet;
-            switch (metadata.getDataInfo().getType()) {
-                case SUB_TEMPLATE:
-                    styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_SUB_TEMPLATE_FIXED_INFO);
-                    break;
-                case TEMPLATE:
-                    styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_TEMPLATE_FIXED_INFO);
-                    break;
-                default:
-                    styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_FIXED_INFO);
-                    break;
+            if (metadata == null) {
+                styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_FIXED_INFO);
+            } else {
+                switch (metadata.getDataInfo().getType()) {
+                    case SUB_TEMPLATE:
+                        styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_SUB_TEMPLATE_FIXED_INFO);
+                        break;
+                    case TEMPLATE:
+                        styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_TEMPLATE_FIXED_INFO);
+                        break;
+                    default:
+                        styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_FIXED_INFO);
+                        break;
+                }
             }
 
             final Element identificationInfo = md.getChild("identificationInfo", GMD);

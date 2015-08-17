@@ -697,7 +697,6 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             StringBuilder sourcesText = new StringBuilder();
 
             for (Element harvester : harvesters) {
-                System.out.println("----" + Xml.getString(harvester));
                 if (sourcesText.length() > 0 ) {
                     sourcesText.append(" or ");
                 }
@@ -706,7 +705,6 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
             String updatedText = sourceParam.getText().replace(Info.HARVESTED_SOURCE, sourcesText.toString());
             sourceParam.setText(updatedText);
-            System.out.println(updatedText);
         }
         // END GEOCAT
 
