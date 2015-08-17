@@ -94,8 +94,10 @@ import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.log.SearcherLogger;
 import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
+import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.languages.LanguageDetector;
+import org.fao.geonet.services.main.Info;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
@@ -685,6 +687,28 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      * @throws Exception
      */
 	private void computeQuery(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
+        // GEOCAT
+        Element sourceParam = request.getChild("_catalog");
+        if (sourceParam != null && sourceParam.getText().contains(Info.HARVESTED_SOURCE)) {
+            HarvesterSettingsManager bean = srvContext.getBean(HarvesterSettingsManager.class);
+            Element list = bean.getList(null);
+            List<Element> harvesters = (List<Element>) Xml.selectNodes(list, "*//uuid/value");
+
+            StringBuilder sourcesText = new StringBuilder();
+
+            for (Element harvester : harvesters) {
+                System.out.println("----" + Xml.getString(harvester));
+                if (sourcesText.length() > 0 ) {
+                    sourcesText.append(" or ");
+                }
+                sourcesText.append(harvester.getTextTrim());
+            }
+
+            String updatedText = sourceParam.getText().replace(Info.HARVESTED_SOURCE, sourcesText.toString());
+            sourceParam.setText(updatedText);
+            System.out.println(updatedText);
+        }
+        // END GEOCAT
 
 //		resultType is not specified in search params - it's in config?
         Content child = request.getChild(Geonet.SearchResult.RESULT_TYPE);

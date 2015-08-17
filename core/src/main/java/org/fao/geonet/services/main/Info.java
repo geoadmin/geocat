@@ -76,6 +76,7 @@ import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -109,6 +110,7 @@ public class Info implements Service {
     public static final String CONFIG = "config";
     public static final String SITE = "site";
     private static final String STAGING_PROFILE = "stagingProfile";
+    public static final String HARVESTED_SOURCE = "harvested";
 
     private Path xslPath;
 	private Path otherSheets;
@@ -451,6 +453,14 @@ public class Info implements Service {
             element.addContent(buildRecord(siteId, siteName, labels, null, null));
         }
 
+        // GEOCAT
+        HashMap<String, String> labels = Maps.newHashMap();
+        labels.put("eng", "~Harvested");
+        labels.put("fre", "~Moissonné");
+        labels.put("ger", "~Harvested");
+        labels.put("ita", "~Harvested");
+        element.addContent(buildRecord(HARVESTED_SOURCE, "~Harvested", labels, null, null));
+        // END GEOCAT
         return element;
     }
 
