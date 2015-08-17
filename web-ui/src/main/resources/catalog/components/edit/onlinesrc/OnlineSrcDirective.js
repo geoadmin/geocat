@@ -452,6 +452,21 @@
                */
               scope.addOnlinesrc = function() {
                 if (scope.mode == 'upload') {
+                  if(angular.isObject(scope.params.desc)) {
+                    var desc = [];
+                    for(var p in scope.params.desc) {
+                      desc.push(p + '#' + scope.params.desc[p])
+                    }
+                    scope.params.desc = desc.join('|');
+
+                    var form = element.find('#gn-upload-onlinesrc');
+                    var descInput = form.find('#gn-upload-desc');
+                    if (descInput) {
+                      descInput.remove();
+                    }
+                    form.append('<input name="title" id="gn-upload-desc"' +
+                        'value="' + scope.params.desc + '" type="hidden" >');
+                  }
                   return scope.submit();
                 } else {
                   if(angular.isObject(scope.params.name)) {
