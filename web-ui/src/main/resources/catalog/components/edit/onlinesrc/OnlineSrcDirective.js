@@ -415,6 +415,7 @@
                   scope.params.url = scope.mdLangs ? {} : '';
                   scope.params.name = scope.mdLangs ? {} : '';
                   scope.params.protocol = '';
+                  scope.params.layers = [];
                 }
                 scope.clear(scope.queue);
               };
@@ -511,15 +512,21 @@
                */
               scope.loadWMSCapabilities = function() {
                 if (scope.isWMSProtocol) {
-                  gnOwsCapabilities.getWMSCapabilities(scope.params.url)
-                  .then(function(capabilities) {
-                        scope.layers = [];
-                        angular.forEach(capabilities.layers, function(l) {
-                          if (angular.isDefined(l.Name)) {
-                            scope.layers.push(l);
-                          }
+                  var lang;
+                  for(lang in scope.params.url) {
+                    if (scope.params.url.hasOwnProperty(lang)) {
+                      gnOwsCapabilities.getWMSCapabilities(scope.params.url[lang])
+                        .then(function(capabilities) {
+                          scope.layers = [];
+                          angular.forEach(capabilities.layers, function(l) {
+                            if (angular.isDefined(l.Name)) {
+                              scope.layers.push(l);
+                            }
+                          });
                         });
-                      });
+                      break;
+                    }
+                  }
                 }
               };
 

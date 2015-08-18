@@ -74,6 +74,8 @@ attached it to the metadata for data.
               </xsl:if>
               <xsl:if test="$url">
 
+                <xsl:variable name="separator" select="'\|'"/>
+
                 <!-- In case the protocol is an OGC protocol
                 the name parameter may contains a list of layers
                 separated by comma.
@@ -91,9 +93,24 @@ attached it to the metadata for data.
                         </xsl:if>
                         <gmd:CI_OnlineResource>
                           <gmd:linkage>
-                            <gmd:URL>
-                              <xsl:value-of select="$url"/>
-                            </gmd:URL>
+                            <xsl:choose>
+                              <xsl:when test="contains($url, '#')">
+                                <che:PT_FreeURL>
+                                  <xsl:for-each select="tokenize($url, $separator)">
+                                    <xsl:variable name="nameLang" select="substring-before(., '#')"></xsl:variable>
+                                    <xsl:variable name="nameValue" select="substring-after(., '#')"></xsl:variable>
+                                    <che:URLGroup>
+                                      <che:LocalisedURL locale="{concat('#', $nameLang)}"><xsl:value-of select="$nameValue" /></che:LocalisedURL>
+                                    </che:URLGroup>
+                                  </xsl:for-each>
+                                </che:PT_FreeURL>
+                              </xsl:when>
+                              <xsl:otherwise>
+                                <gmd:URL>
+                                  <xsl:value-of select="$url"/>
+                                </gmd:URL>
+                              </xsl:otherwise>
+                            </xsl:choose>
                           </gmd:linkage>
                           <gmd:protocol>
                             <gco:CharacterString>
@@ -124,8 +141,6 @@ attached it to the metadata for data.
                     <!-- ... the name is simply added in the newly
                     created online element. -->
 
-                    <xsl:variable name="separator" select="'\|'"/>
-
                     <gmd:onLine>
                       <xsl:if test="$uuidref">
                         <xsl:attribute name="uuidref" select="$uuidref"/>
@@ -153,7 +168,7 @@ attached it to the metadata for data.
 
                         <xsl:if test="$name != ''">
                           <xsl:choose>
-                            <xsl:when test="contains($name, $separator)">
+                            <xsl:when test="contains($name, '#')">
                               <gmd:name xsi:type="gmd:PT_FreeText_PropertyType">
                                 <gmd:PT_FreeText>
                                   <xsl:for-each select="tokenize($name, $separator)">
@@ -177,7 +192,7 @@ attached it to the metadata for data.
 
                         <xsl:if test="$desc != ''">
                           <xsl:choose>
-                            <xsl:when test="contains($name, $separator)">
+                            <xsl:when test="contains($desc, '#')">
                               <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
                                 <gmd:PT_FreeText>
                                   <xsl:for-each select="tokenize($desc, $separator)">
