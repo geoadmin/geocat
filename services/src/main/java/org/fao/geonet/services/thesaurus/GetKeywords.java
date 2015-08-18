@@ -56,6 +56,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -106,7 +108,7 @@ public class GetKeywords {
 			NativeWebRequest webRequest)
 			throws Exception {
 		ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-		ServiceContext context = applicationContext.getBean(ServiceManager.class).createServiceContext("keywords", uiLang,
+		final ServiceContext context = applicationContext.getBean(ServiceManager.class).createServiceContext("keywords", uiLang,
 				webRequest.getNativeRequest(HttpServletRequest.class));
 		Element responseXml = new Element(Jeeves.Elem.RESPONSE);
 		UserSession session = context.getUserSession();
@@ -117,6 +119,19 @@ public class GetKeywords {
 			targetLangs.addAll(Lists.newArrayList("eng", "fre", "ger", "ita", "rom"));
 		}
 		// END GEOCAT
+
+		Collections.sort(targetLangs, new Comparator<String>() {
+			@Override
+			public int compare(String lang1, String lang2) {
+				if (lang1.equalsIgnoreCase(context.getLanguage())) {
+					return -1;
+				}
+				if (lang2.equalsIgnoreCase(context.getLanguage())) {
+					return 1;
+				}
+				return 0;
+			}
+		});
 
 		KeywordsSearcher searcher;
 		if (newSearch) {
