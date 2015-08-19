@@ -144,7 +144,8 @@
                      }
 
                      element.on('shown.bs.popover', function(event) {
-                       if ($('div.popover').css('top').charAt(0) === '-') {
+                       var top = $('div.popover').css('top');
+                       if (top && top.charAt(0) === '-') {
                          // move popover under navbar.
                          var oldTopPopover = $('div.popover').position().top;
                          var newTopPopover =
