@@ -374,7 +374,27 @@
     </xsl:element>
   </xsl:template>
   <xsl:template  match="che:LocalisedURL">
-    <xsl:element name="gmd:{local-name()}">
+    <xsl:element name="che:{local-name()}">
+      <xsl:variable name="currentLocale" >
+        <xsl:variable name="baseLoc" select="upper-case(replace(normalize-space(@locale), '^#', ''))" />
+        <xsl:choose>
+          <xsl:when test="$baseLoc = 'GE'">DE</xsl:when>
+          <xsl:otherwise><xsl:value-of select="$baseLoc"/></xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="ptLocale" select="$language[upper-case(replace(normalize-space(@id), '^#', ''))=string($currentLocale)]"/>
+      <xsl:variable name="id" select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue, ''))"/>
+      <xsl:apply-templates select="@*"/>
+      <xsl:if test="$id != '' and ($currentLocale='' or @locale!=concat('#', $id)) ">
+        <xsl:attribute name="locale">
+          <xsl:value-of select="concat('#',$id)"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates select="node()"/>
+    </xsl:element>
+  </xsl:template>
+  <xsl:template  match="gmd:LocalisedURL">
+    <xsl:element name="che:{local-name()}">
       <xsl:variable name="currentLocale" >
         <xsl:variable name="baseLoc" select="upper-case(replace(normalize-space(@locale), '^#', ''))" />
         <xsl:choose>
