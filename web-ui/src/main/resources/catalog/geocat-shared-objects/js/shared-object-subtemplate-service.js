@@ -55,13 +55,13 @@
           '            <gmd:LocalisedCharacterString locale="#DE">~~ gmd:organizationName ~~</gmd:LocalisedCharacterString>' +
           '         </gmd:textGroup>' +
           '         <gmd:textGroup>' +
-          '            <gmd:LocalisedCharacterString locale="#FR">~~ gmd:organizationName ~~</gmd:LocalisedCharacterString>' +
+          '            <gmd:LocalisedCharacterString locale="#FR">  </gmd:LocalisedCharacterString>' +
           '         </gmd:textGroup>' +
           '         <gmd:textGroup>' +
-          '            <gmd:LocalisedCharacterString locale="#IT">~~ gmd:organizationName ~~</gmd:LocalisedCharacterString>' +
+          '            <gmd:LocalisedCharacterString locale="#IT">  </gmd:LocalisedCharacterString>' +
           '         </gmd:textGroup>' +
           '         <gmd:textGroup>' +
-          '            <gmd:LocalisedCharacterString locale="#EN">~~ gmd:organizationName ~~</gmd:LocalisedCharacterString>' +
+          '            <gmd:LocalisedCharacterString locale="#EN">  </gmd:LocalisedCharacterString>' +
           '         </gmd:textGroup>' +
           '      </gmd:PT_FreeText>' +
           '   </gmd:organisationName>' +
