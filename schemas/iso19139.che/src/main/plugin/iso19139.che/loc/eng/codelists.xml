@@ -4,7 +4,7 @@
 		<codelist name="gmd:CI_DateTypeCode">
 		<entry><code></code><label></label><description></description></entry>
 		</codelist>-->
-    <codelist name="Country">
+    <codelist name="che:Country">
         <entry>
             <code>CH</code>
             <label>Switzerland</label>
@@ -15,7 +15,59 @@
             <label>Liechtenstein</label>
             <description/>
         </entry>
-    </codelist>
+        <entry>
+            <code>DE</code>
+            <label>Germany</label>
+            <description/>
+        </entry>
+        <entry>
+            <code>FR</code>
+            <label>France</label>
+            <description/>
+        </entry>
+        <entry>
+            <code>IT</code>
+            <label>Italy</label>
+            <description/>
+        </entry>
+        <entry>
+            <code>AT</code>
+            <label>Italy</label>
+            <description/>
+        </entry>
+		</codelist>
+    <codelist name="gmd:Country">
+        <entry>
+            <code>CH</code>
+            <label>Switzerland</label>
+            <description/>
+        </entry>
+        <entry>
+            <code>LI</code>
+            <label>Liechtenstein</label>
+            <description/>
+        </entry>
+        <entry>
+            <code>DE</code>
+            <label>Germany</label>
+            <description/>
+        </entry>
+        <entry>
+            <code>FR</code>
+            <label>France</label>
+            <description/>
+        </entry>
+        <entry>
+            <code>IT</code>
+            <label>Italy</label>
+            <description/>
+        </entry>
+        <entry>
+            <code>AT</code>
+            <label>Austria</label>
+            <description/>
+        </entry>
+		</codelist>
 	<codelist name="che:CHE_CI_LegislationCode">
 		<entry>
 			<code>cantonalLaw</code>
