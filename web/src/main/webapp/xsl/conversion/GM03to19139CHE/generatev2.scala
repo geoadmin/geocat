@@ -85,6 +85,9 @@ val specifics = Map(
      "elect=\".//value" -> "elect=\".//int:value",
      "attributes|features|featureInstances|attributeInstances" -> "attributes|int:features|int:featureInstances|int:attributeInstances"
    ),
+  "resolve-refs.xsl" -> Map(
+     "Comprehensive.sourceStepsource[source/@REF = $myTID]/sourceStep" -> "Comprehensive.sourceStepsource[int:source/@REF = $myTID]/int:sourceStep"
+   ),
   "identification.xsl" -> Map(
      "Code_/value" -> "Code_/int:value",
      "Comprehensive.Comprehensive.gml_CodeType/code" -> "Comprehensive.Comprehensive.gml_CodeType/int:code",

@@ -36,7 +36,7 @@
                  
 <!--             Doesn't seem to be part of the gm03 schema    -->
 <!--                 <xsl:apply-templates mode="DataQuality" select="gmd:sourceExtent" />-->
-<!--                 <xsl:apply-templates mode="DataQuality" select="gmd:sourceStep" />-->
+                 <xsl:apply-templates mode="DataQuality" select="gmd:sourceStep" />
                </GM03_2_1Comprehensive.Comprehensive.LI_Source>
             </source>
             <BACK_REF name="LI_Lineage" />
@@ -61,7 +61,17 @@
             <xsl:apply-templates mode="DataIdentification" />
         </sourceCitation>
     </xsl:template>
-    
+
+    <xsl:template mode="DataQuality" match="gmd:sourceStep">
+      <GM03_2_1Comprehensive.Comprehensive.sourceStepsource>
+        <sourceStep REF="?">
+          <xsl:apply-templates mode="DataQuality" select="gmd:LI_ProcessStep" />
+        </sourceStep>
+
+        <source REF="../../?" />
+      </GM03_2_1Comprehensive.Comprehensive.sourceStepsource>
+    </xsl:template>
+
     <xsl:template mode="DataQuality" match="gmd:report">
         <xsl:variable name="report">
             <xsl:apply-templates mode="DataQuality"/>
@@ -356,7 +366,9 @@
 
     <xsl:template mode="DataQuality" match="gmd:LI_Lineage">
         <GM03_2_1Core.Core.LI_Lineage TID="x{util:randomId()}">
-            <xsl:apply-templates mode="textGroup" select="gmd:statement"/>
+            <xsl:apply-templates mode="textGroup" select="gmd:statement">
+              <xsl:with-param name="backref" select="true()" />
+          </xsl:apply-templates>
             <BACK_REF name="DQ_DataQuality"/>
             <xsl:apply-templates mode="DataQuality" select="gmd:processStep"/>
             <xsl:apply-templates mode="DataQuality" select="gmd:source/gmd:LI_Source"/>    
@@ -367,12 +379,33 @@
             <xsl:apply-templates mode="DataQuality" select="gmd:LI_ProcessStep"/>    
      </xsl:template>
      <xsl:template mode="DataQuality" match="gmd:LI_ProcessStep">
+       <xsl:param name="backref" select="false()" />
         <GM03_2_1Comprehensive.Comprehensive.LI_ProcessStep TID="x{util:randomId()}">
-            <xsl:apply-templates mode="text" select="gmd:description"/>
+            <description>
+              <xsl:variable name="locale" >
+                <xsl:call-template name="lang3_to_lang2">
+                  <xsl:with-param name="lang3" select="$defaultLanguage" />
+                </xsl:call-template>
+              </xsl:variable>
+
+              <xsl:choose>
+                <xsl:when test="normalize-space(gco:CharacterString[text()]) != ''">
+                  <xsl:value-of select="gco:CharacterString" />
+                </xsl:when>
+                <xsl:when test="normalize-space(.//gmd:LocalisedCharacterString[@locale = concat('#', upper-case($locale))]) = ''">
+                  <xsl:value-of select=".//gmd:LocalisedCharacterString[@locale = concat('#', upper-case($locale))]" />
+                </xsl:when>
+                <xsl:when test=".//gmd:LocalisedCharacterString[normalize-space(text()) != '']">
+                  <xsl:value-of select="(.//gmd:LocalisedCharacterString[normalize-space(text()) != ''])[1]" />
+                </xsl:when>
+              </xsl:choose>
+            </description>
             <xsl:apply-templates mode="text" select="gmd:dateTime"/>
             <xsl:apply-templates mode="text_" select="gmd:rationale"/>
             <xsl:apply-templates mode="DataQuality" select="processor"/>
+          <xsl:if test="$backref">
             <BACK_REF name="LI_Lineage"/>
+          </xsl:if>
         </GM03_2_1Comprehensive.Comprehensive.LI_ProcessStep>
     </xsl:template>
     

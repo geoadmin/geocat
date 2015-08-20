@@ -268,18 +268,21 @@
 
     <xsl:template mode="DataQuality" match="GM03Comprehensive.Comprehensive.LI_ProcessStep">
         <gmd:processStep>
-            <gmd:LI_ProcessStep>
-                <xsl:apply-templates mode="text" select="description"/>
-                <xsl:apply-templates mode="text" select="rationale"/>
-                <xsl:if test="normalize-space(dateTime) != ''">
-                <gmd:dateTime>
-                     <xsl:apply-templates mode="dateTime" select="dateTime"/>
-                </gmd:dateTime>
-                </xsl:if>
-                <xsl:apply-templates mode="DataQuality" select="processor"/>
-            </gmd:LI_ProcessStep>
+            <xsl:apply-templates mode="ProcessStep" select="." />
         </gmd:processStep>
     </xsl:template>
+
+    <xsl:template mode="ProcessStep" match="GM03Comprehensive.Comprehensive.LI_ProcessStep">
+        <gmd:LI_ProcessStep>
+            <xsl:apply-templates mode="text" select="description"/>
+            <xsl:apply-templates mode="text" select="rationale"/>
+            <xsl:if test="normalize-space(dateTime) != ''">
+                <gmd:dateTime>
+                    <xsl:apply-templates mode="dateTime" select="dateTime"/>
+                </gmd:dateTime>
+            </xsl:if>
+            <xsl:apply-templates mode="DataQuality" select="processor"/>
+        </gmd:LI_ProcessStep>    </xsl:template>
 
     <xsl:template mode="DataQuality" match="source">
         <gmd:source>
@@ -302,6 +305,11 @@
         <gmd:sourceReferenceSystem>
             <xsl:apply-templates mode="RefSystem"/>
         </gmd:sourceReferenceSystem>
+    </xsl:template>
+    <xsl:template mode="DataQuality" match="sourceStep">
+        <gmd:sourceStep>
+            <xsl:apply-templates mode="ProcessStep"/>
+        </gmd:sourceStep>
     </xsl:template>
     <xsl:template mode="DataQuality" match="sourceCitation">
         <gmd:sourceCitation>

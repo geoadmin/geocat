@@ -305,13 +305,8 @@ public class TranslateAndValidate {
             throws Exception {
 
         final String SEP = File.separator;
-        StringBuilder xslFileName = new StringBuilder(SEP).
-                append("xsl").
-                append(SEP).
-                append("conversion").
-                append(SEP).
-                append("GM03to19139CHE").
-                append(SEP);
+        StringBuilder xslFileName = new StringBuilder(SEP).append("xsl").append(SEP).append("conversion").
+                append(SEP).append("GM03to19139CHE").append(SEP);
 
         Path finalWebappDir;
         if (webappDir == null || webappDir.isEmpty()) {

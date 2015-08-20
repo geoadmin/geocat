@@ -27,6 +27,7 @@
         </xsl:element>
     </xsl:template>
 
+
     <!-- back references are dropped -->
     <xsl:template match="*[@REF and (starts-with(name(.), 'CI_') or starts-with(name(.), 'DQ_') or starts-with(name(.), 'EX_') or starts-with(name(.), 'LI_') or starts-with(name(.), 'MD_') or starts-with(name(.), 'SV_'))]" mode="ResolveRefs"/>
 
@@ -55,6 +56,11 @@
                         </xsl:if>
                     </xsl:for-each>
                 </xsl:for-each>
+
+                <xsl:if test="ends-with($selfName, 'Comprehensive.Comprehensive.LI_Source')">
+                    <xsl:apply-templates mode="ResolveRefs" select="/TRANSFER/DATASECTION/GM03Comprehensive.Comprehensive/
+                             GM03Comprehensive.Comprehensive.sourceStepsource[source/@REF = $myTID]/sourceStep" />
+                </xsl:if>
             </xsl:if>
         </xsl:element>
     </xsl:template>

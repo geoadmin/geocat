@@ -82,6 +82,22 @@ public class ValidateTransformationTest {
         testFile(file, Control.GM03_2_ISO, rules, true);
     }
     @Test
+    public void sourceStepMissingBug() throws Throwable {
+        File file = new File(data, "iso19139/sourceStep.xml");
+        Multimap<String, Requirement> rules = ArrayListMultimap.create();
+        rules.put("GM03_2_1Comprehensive.Comprehensive.sourceStepsource", new Exists(new Finder("sourceStep")));
+        rules.put("GM03_2_1Comprehensive.Comprehensive.LI_ProcessStep", new Exists(new Finder("description", new EqualTrimText("Process step description DESC"))));
+        rules.put("DATASECTION", new Not(new ContainsText("ERROR")));
+        file = testFile(file, Control.ISO_GM03, rules, true);
+
+        rules.clear();
+        rules.put("gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage", new Exists(new Finder("gmd:source")));
+        rules.put("gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source/gmd:LI_Source", new Exists(new Finder("gmd:sourceStep")));
+        rules.put("gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source/gmd:LI_Source",
+                new Exists(new Finder("gmd:sourceStep/gmd:LI_ProcessStep/gmd:description")));
+        testFile(file, Control.GM03_2_ISO, rules, false);
+    }
+    @Test
     public void roundTripWithCHEDatamodel() throws Throwable {
         File file = new File(data, "iso19139/with-che_dataModel.xml");
         Multimap<String, Requirement> rules = ArrayListMultimap.create();

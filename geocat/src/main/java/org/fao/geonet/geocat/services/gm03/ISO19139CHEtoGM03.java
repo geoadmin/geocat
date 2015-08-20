@@ -46,6 +46,9 @@ public class ISO19139CHEtoGM03 extends ISO19139CHEtoGM03Base {
             if (ref != null && ref.getTextContent().equals("?")) {
                 replaceByReference(root, parent, cur);
             }
+            if (ref != null && ref.getTextContent().equals("../../?")) {
+                replaceByBackReference(root, parent, cur);
+            }
         }
 
         final Iterator<Node> childsIter = new ChildIterator(cur);
@@ -128,6 +131,21 @@ public class ISO19139CHEtoGM03 extends ISO19139CHEtoGM03Base {
 
         //must flatten the child that we just moved.
         flattenNode(root, root, dest);
+    }
+
+    private void replaceByBackReference(Node root, Node parent, Node cur) throws FlattenerException {
+        Node parentNode = parent.getParentNode();
+
+        Node tidAtt = parentNode.getAttributes().getNamedItem("TID");
+
+        if (tidAtt == null) {
+            throw new FlattenerException("No TID in element " + parentNode.getNodeName() + " from back ref of " + cur.getNodeName());
+        }
+        String tid = tidAtt.getTextContent();
+        cur.getAttributes().getNamedItem("REF").setTextContent(tid);
+
+        parentNode.removeChild(parent);
+        root.appendChild(parent);
     }
 
     protected void removeDuplicates(Document doc) throws FlattenerException {
