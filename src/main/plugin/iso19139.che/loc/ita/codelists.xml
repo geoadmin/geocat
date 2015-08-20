@@ -4,18 +4,38 @@
 		<codelist name="gmd:CI_DateTypeCode">
 		<entry><code></code><label></label><description></description></entry>
 		</codelist>-->
-    <codelist name="Country">
-        <entry>
-            <code>CH</code>
-            <label>Svizzera</label>
-            <description/>
-        </entry>
-        <entry>
-            <code>LI</code>
-            <label>Liechtenstein</label>
-            <description/>
-        </entry>
-    </codelist>
+	<codelist name="gmd:Country">
+		<entry>
+			<code>CH</code>
+			<label>Svizzera</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>LI</code>
+			<label>Liechtenstein</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>DE</code>
+			<label>Germania</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>FR</code>
+			<label>Francia</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>IT</code>
+			<label>Italia</label>
+			<description/>
+		</entry>
+		<entry>
+			<code>AT</code>
+			<label>Austria</label>
+			<description/>
+		</entry>
+	</codelist>
 	<codelist name="gmd:MD_ScopeCode">
 		<entry>
 			<code>attribute</code>
