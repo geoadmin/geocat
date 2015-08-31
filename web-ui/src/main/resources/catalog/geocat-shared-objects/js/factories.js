@@ -62,7 +62,6 @@ angular.module('geocat_shared_objects_factories', ['geocat_shared_objects_transl
 
                 return row.referenceCount;
               };
-              $scope.language = 'eng'; //Geonet.language;
               $scope.search = {
                   search: ''
               };
@@ -72,7 +71,7 @@ angular.module('geocat_shared_objects_factories', ['geocat_shared_objects_transl
               $scope.edit = {
                   
               };
-              var baseUrl = '../../srv/' + $scope.language;
+              var baseUrl = '../../srv/' + $scope.lang;
               $scope.baseUrl = baseUrl;
               $scope.filter = "";
               $scope.selected = null;
