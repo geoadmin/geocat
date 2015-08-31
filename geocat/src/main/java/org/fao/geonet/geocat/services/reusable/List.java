@@ -27,6 +27,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
 import org.fao.geonet.Util;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
 import org.fao.geonet.geocat.kernel.reusable.ContactsStrategy;
@@ -111,7 +112,11 @@ public class List implements Service {
         }
 
         if (searchTerm != null) {
-            return strategy.search(session, searchTerm, language, maxResults);
+            char[] charArray = searchTerm.toCharArray();
+            char[] outArray = new char[charArray.length * 4];
+            int lengthOfOutput = ASCIIFoldingFilter.foldToASCII(charArray, 0, outArray, 0, charArray.length);
+            String processedSearchTerm = new String(outArray, 0, lengthOfOutput);
+            return strategy.search(session, processedSearchTerm, language, maxResults);
         } else {
             return strategy.list(session, validated, language, maxResults);
         }
