@@ -512,6 +512,9 @@
 
       $scope.validate = function() {
         $('#showvalidationerrors')[0].value = 'true';
+        // GEOCAT scroll to top after validation
+        window.scrollTo(0,0);
+        // END GEOCAT
         return $scope.save(true);
       };
 

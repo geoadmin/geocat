@@ -21,6 +21,9 @@
           }).success(function(data) {
             // Empty response return null string.
             var response = data !== 'null' ? data : null;
+            // GEOCAT scroll to top after validation
+            window.scrollTo(0,0);
+            // END GEOCAT
             defer.resolve(response);
           });
           return defer.promise;
