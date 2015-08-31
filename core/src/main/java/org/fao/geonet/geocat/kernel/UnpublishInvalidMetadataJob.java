@@ -171,7 +171,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
         boolean published = isPublished(id, context);
 
         if (published) {
-            Element report = dataManager.doValidate(null, schema, id, md, "eng", false, true).one();
+            Element report = dataManager.doValidate(context, schema, id, md, "eng", false, true).one();
 
             Pair<String, String> failureReport = failureReason(context, report);
             String failureRule = failureReport.one();

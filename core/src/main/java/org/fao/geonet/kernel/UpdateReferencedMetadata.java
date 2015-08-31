@@ -6,6 +6,7 @@ import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
+import jeeves.xlink.Processor;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -54,6 +55,7 @@ public class UpdateReferencedMetadata implements Runnable {
                     @Override
                     public Void doInTransaction(TransactionStatus transaction) throws Throwable {
 
+                        Processor.uncacheXLinkUri("local://subtemplate?uuid=" + UpdateReferencedMetadata.this.uuid);
                         List<String> luceneFields = Lists.newArrayList(strategy.getValidXlinkLuceneField(),
                                 strategy.getInvalidXlinkLuceneField());
 
@@ -90,6 +92,7 @@ public class UpdateReferencedMetadata implements Runnable {
                         return null;
                     }
                 });
+
     }
 
     @Override
