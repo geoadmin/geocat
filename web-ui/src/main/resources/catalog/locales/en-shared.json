@@ -1,6 +1,11 @@
 {
   "all": "All",
   "region": "Region type",
+  "gn:countries": "Countries",
+  "gn:gemeindenBB": "Community",
+  "gn:kantoneBB": "Region",
+  "gn:xlinks": "Validated",
+  "gn:non_validated": "Non Validated",
   "contacts" : "Contacts",
   "formats" : "Formats",
   "extents" : "Extents",
@@ -51,5 +56,6 @@
   "addSharedObjectInEditor": "Add {{label}}",
   "translations": "Translations",
   "showTranslation": "Show All Translations for Language",
-  "editorLoggedOut": "Your session has expired. Please reload page to start a new session."
+  "editorLoggedOut": "Your session has expired. Please reload page to start a new session.",
+  "role": "Role"
 }

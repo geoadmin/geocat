@@ -1,6 +1,11 @@
 {
   "all": "Tout",
   "region": "Type de région",
+  "gn:countries": "Pays",
+  "gn:gemeindenBB": "Canton",
+  "gn:kantoneBB": "Commune",
+  "gn:xlinks": "Validé",
+  "gn:non_validated": "Non validé",
   "contacts": "Contacts",
   "formats": "Formats",
   "extents": "Etendue",
@@ -47,5 +52,10 @@
   "searchAcontacts": "Chercher un contact partagé",
   "addEntry": "Créer une nouvelle entrée",
   "bboxOnly": "Seulement BBox",
-  "bboxPolygon": "Emprise et polygone englobant"
+  "bboxPolygon": "Emprise et polygone englobant",
+  "addSharedObjectInEditor": "Ajout {{label}}",
+  "translations": "Traductions",
+  "showTranslation": "Voir toutes les traductions pour une langue",
+  "editorLoggedOut": "Votre session a expirée. Merci de recharger la page pour démarre une nouvelle session.",
+  "role": "Rôle"
 }
