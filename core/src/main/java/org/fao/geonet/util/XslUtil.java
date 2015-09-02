@@ -524,5 +524,9 @@ public final class XslUtil
             throws Exception {
         return GeocatXslUtil.parse(configuration, string, printError);
     }
+    public static UnfailingIterator parse(NodeInfo textEl)
+            throws Exception {
+        return GeocatXslUtil.parse(textEl);
+    }
 
 }

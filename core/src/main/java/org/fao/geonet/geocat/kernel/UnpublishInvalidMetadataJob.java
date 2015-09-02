@@ -32,7 +32,6 @@ import org.fao.geonet.schema.iso19139che.ISO19139cheSchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.Namespace;
 import org.jdom.filter.Filter;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -180,18 +179,15 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
             String failureRule = failureReport.one();
             String failureReasons = failureReport.two();
             if (!failureRule.isEmpty()) {
-                boolean validated = false;
-                String entity = AUTOMATED_ENTITY;
-                published = false;
                 todayRecord = new PublishRecord();
                 todayRecord.setChangedate(new Date());
                 todayRecord.setChangetime(new Date());
                 todayRecord.setFailurereasons(failureReasons);
                 todayRecord.setFailurerule(failureRule);
                 todayRecord.setUuid(metadataRecord.getUuid());
-                todayRecord.setEntity(entity);
-                todayRecord.setPublished(published);
-                todayRecord.setValidated(PublishRecord.Validity.fromBoolean(validated));
+                todayRecord.setEntity(AUTOMATED_ENTITY);
+                todayRecord.setPublished(false);
+                todayRecord.setValidated(PublishRecord.Validity.fromBoolean(false));
                 context.getBean(PublishRecordRepository.class).save(todayRecord);
 
                 final Specifications<OperationAllowed> publicOps = Specifications.where(isPublic(ReservedOperation.view)).
@@ -239,27 +235,25 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
         @SuppressWarnings("unchecked")
         Iterator<Element> errors = report.getDescendants(new ErrorFinder());
         if (errors.hasNext()) {
-            if (rules.length() > 0)
-                rules.append("\n");
-            rules.append(reportType);
-        }
+            rules.append("<div class=\"rule\">").append(reportType).append("</div>");
 
-        while (errors.hasNext()) {
-            if (failures.length() > 0)
-                failures.append('\n');
-
-            Element error = errors.next();
-            failures.append(error.getChildText("message", Edit.NAMESPACE));
-            failures.append(" xpath[");
-            failures.append(error.getChildText("xpath", Edit.NAMESPACE));
-            failures.append("]");
+            while (errors.hasNext()) {
+                failures.append("<div class=\"failure\">");
+                Element error = errors.next();
+                failures.append("</div><div class=\"xpath\">");
+                failures.append(" XPATH of failure:");
+                failures.append(error.getChildText("xpath", Edit.NAMESPACE));
+                failures.append("</div><h4>Reason</h4><div class=\"reason\">");
+                failures.append(error.getChildText("message", Edit.NAMESPACE));
+                failures.append("</div>");
+                failures.append("</div>");
+            }
         }
     }
 
     private void processSchematronError(Element report, StringBuilder rules, StringBuilder failures) {
         String reportType = report.getAttributeValue("rule", Edit.NAMESPACE);
         reportType = reportType == null ? "No name for rule" : reportType;
-        StringBuilder failure = new StringBuilder();
 
         boolean isMandatory = SchematronRequirement.REQUIRED.name().equals(report.getAttributeValue("required", Edit.NAMESPACE));
 
@@ -267,28 +261,36 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
             @SuppressWarnings("unchecked")
             Iterator<Element> errors = report.getDescendants(new ErrorFinder());
 
-            while (errors.hasNext()) {
-                if (failure.length() > 0 || failures.length() > 0)
-                    failure.append('\n');
+            if (errors.hasNext()) {
+                rules.append("<div class=\"rule\">").append(reportType).append("</div>");
 
-                Element error = errors.next();
+                while (errors.hasNext()) {
+                    failures.append("<div class=\"failure\">\n");
 
-                Element text = error.getChild("text", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl"));
-                if (text == null || !(reportType.equals("schematron-rules-iso-che") && text.getChild("alert.M104") != null)) {
-                    failure.append(error.getAttributeValue("test"));
-                    failure.append(" xpath[");
-                    failure.append(error.getAttributeValue("location"));
-                    failure.append("]");
+                    Element error = errors.next();
+
+                    Element text = error.getChild("text", Geonet.Namespaces.SVRL);
+                    if (text != null) {
+                        failures.append("  <div class=\"test\">Schematron Test: ");
+                        failures.append(error.getAttributeValue("test"));
+                        failures.append("  </div>\n  <div class=\"xpath\">");
+                        failures.append("XPATH of failure: ");
+                        failures.append(error.getAttributeValue("location"));
+                        failures.append("  </div>\n<h4>Reason</h4><div class=\"reason\">");
+                        List children = text.getChildren();
+                        for (Object child : children) {
+                            failures.append(Xml.getString((Element) child));
+                        }
+                        failures.append("  </div>\n");
+                    } else {
+                        failures.append("unknown reason");
+                    }
+                    failures.append("</div>\n");
                 }
-            }
-
-            if (failure.length() > 0) {
-                if (rules.length() > 0)
-                    rules.append("\n");
-                rules.append(reportType);
             }
         }
     }
+
     @SuppressWarnings("unchecked")
     private List<Metadata> lookUpMetadataIds(MetadataRepository repo) throws SQLException {
         final Specification<Metadata> notHarvested = MetadataSpecs.isHarvested(false);

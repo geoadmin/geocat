@@ -701,7 +701,21 @@ public class GeocatXslUtil {
             Log.warning(Log.SERVICE, e.getMessage() + XML.toString(error));
             return null;
         }
+    }
 
+    public static UnfailingIterator parse(NodeInfo text)
+            throws Exception {
+        String resultString = "<div>" + text.getStringValue() + "</div>";
+
+        try {
+            Source xmlSource = new StreamSource(new ByteArrayInputStream(resultString.getBytes("UTF-8")));
+            DocumentInfo doc = text.getConfiguration().buildDocument(xmlSource);
+            return SingletonIterator.makeIterator(doc);
+        } catch (Exception e) {
+            org.jdom.Element error = JeevesException.toElement(e);
+            Log.warning(Log.SERVICE, e.getMessage() + XML.toString(error));
+            return null;
+        }
     }
 
     public static String loadTranslationFile(Object filePattern, Object language) throws IOException {

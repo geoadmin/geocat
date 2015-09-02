@@ -23,6 +23,7 @@
         <addInterceptUrl  pattern="/srv/\w\w\w/unpublish.invalid.metadata!?.*" access="hasRole('Administrator')"/>
         <addInterceptUrl  pattern="/srv/\w\w\w/unpublish.report.xml!?.*" access="hasRole('Administrator')"/>
         <addInterceptUrl  pattern="/srv/\w\w\w/unpublish.report.csv!?.*" access="hasRole('Administrator')"/>
+        <addInterceptUrl  pattern="/srv/\w\w\w/unpublish.report.html!?.*" access="hasRole('Administrator')"/>
 
         <!-- Extent facilities -->
         <addInterceptUrl  pattern="/srv/\w\w\w/xml.extent.add!?.*" access="hasRole('Editor')"/>

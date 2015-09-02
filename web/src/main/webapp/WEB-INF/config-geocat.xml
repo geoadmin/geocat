@@ -245,6 +245,10 @@
             <class name=".geocat.kernel.UnpublishInvalidMetadataReport"/>
 			<output sheet="unpublish-report.xsl" contentType="text/csv; charset=UTF-8"/>
         </service>
+        <service name="unpublish.report.html">
+            <class name=".geocat.kernel.UnpublishInvalidMetadataReport"/>
+			<output sheet="unpublish-report-html.xsl" contentType="text/html; charset=UTF-8"/>
+        </service>
 
         <service name="keywords.duplicate">
             <class name=".geocat.services.thesaurus.Duplicate"/>
