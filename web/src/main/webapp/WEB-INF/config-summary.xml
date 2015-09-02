@@ -73,28 +73,28 @@
         <facet name="format" indexKey="format" label="formats"/>
         <facet name="title" indexKey="title" label="titles"/>
         <facet name="metadataType" indexKey="_isTemplate" label="metadataTypes"/>
-        <facet name="isValid" indexKey="_isValid" label="isValid" localized="true"/>
+        <facet name="isValid" indexKey="_valid" label="isValid"/>
         <facet name="isHarvested" indexKey="_isHarvested" label="isHarvested"/>
         <facet name="status" indexKey="_status" label="status"/>
         <facet name="standard" indexKey="_schema" label="standards"/>
         <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
         <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
         <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup" />
-    </facets>
+      </facets>
 
-    <summaryTypes>
+      <summaryTypes>
         <summaryType name="hits">
-            <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
+          <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
           <!--GEOCAT-->
           <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" sortBy="label" sortOrder="asc"/>
           <!--END GEOCAT-->
-            <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
-            <item facet="keyword" max="15"/>
-            <item facet="orgName" max="25"/>
-            <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
+          <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
+          <item facet="keyword" max="15"/>
+          <item facet="orgName" max="25"/>
+          <item facet="createDateYear" sortBy="value" sortOrder="desc" max="40"/>
             <item facet="format" max="15" sortBy="value"/>
-            <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
-            <item facet="serviceType"/>
+          <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
+          <item facet="serviceType"/>
             <!-- GEOCAT -->
             <item facet="groupOwner" max="99" sortBy="value" translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
             <!-- END GEOCAT -->
@@ -103,22 +103,22 @@
             <item facet="subTemplateType"/>
             <item facet="groupOwner" max="99" sortBy="value"
                 translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
-        </summaryType>
+      </summaryType>
         <summaryType name="manager">
-          <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
-          <item facet="category" max="99" sortBy="value"
-                translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
+        <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
+        <item facet="category" max="99" sortBy="value"
+              translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
           <item facet="status" max="10" sortBy="value"
-                translator="db:org.fao.geonet.repository.StatusValueRepository:findOne:int"/>
-          <item facet="isValid" max="3" sortBy="value"/>
-          <item facet="groupOwner" max="199" sortBy="value"
-                translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
-          <item facet="publishedForGroup" max="199" sortBy="value"
-                translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
-          <item facet="standard" max="15" sortBy="value"/>
-          <item facet="isHarvested" max="2" sortBy="value"/>
-          <item facet="metadataType" max="3" sortBy="value"/>
-        </summaryType>
+              translator="db:org.fao.geonet.repository.StatusValueRepository:findOne:int"/>
+        <item facet="isValid" max="3" sortBy="value" translator="apploc:validStatus-"/>
+        <item facet="groupOwner" max="199" sortBy="value"
+              translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+        <item facet="publishedForGroup" max="199" sortBy="value"
+              translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
+        <item facet="standard" max="15" sortBy="value"/>
+        <item facet="isHarvested" max="2" sortBy="value" translator="apploc:"/>
+        <item facet="metadataType" max="3" sortBy="value" translator="apploc:recordType-"/>
+      </summaryType>
         <summaryType name="titles">
             <item facet="title" sortOrder="desc" max="100"/>
         </summaryType>
