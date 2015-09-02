@@ -14,6 +14,7 @@ import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.SchematronRequirement;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.geocat.PublishRecord;
 import org.fao.geonet.exceptions.JeevesException;
@@ -154,6 +155,8 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
                     Log.error(UNPUBLISH_LOG, "Error during Validation/Unpublish process of metadata " + id + ".  Exception: "
                                                    + error);
                 }
+
+                serviceContext.getBean(DataManager.class).flush();
             }
             long timeMinutes = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
             Log.info(UNPUBLISH_LOG, "Finishing Unpublish Invalid Metadata Job.  Job took:  " + timeMinutes + " min");
@@ -258,7 +261,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
         reportType = reportType == null ? "No name for rule" : reportType;
         StringBuilder failure = new StringBuilder();
 
-        boolean isMandatory = Boolean.parseBoolean(report.getAttributeValue("required", Edit.NAMESPACE));
+        boolean isMandatory = SchematronRequirement.REQUIRED.name().equals(report.getAttributeValue("required", Edit.NAMESPACE));
 
         if (isMandatory) {
             @SuppressWarnings("unchecked")
