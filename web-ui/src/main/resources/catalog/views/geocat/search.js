@@ -224,10 +224,10 @@
         value: '',
         label: 'anyValue'
       }, {
-        value: 'y',
+        value: '1',
         label: 'yes'
       }, {
-        value: 'n',
+        value: '0',
         label: 'no'
       },{
         value: '-1',

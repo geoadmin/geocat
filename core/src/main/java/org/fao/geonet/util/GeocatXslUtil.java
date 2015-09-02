@@ -729,7 +729,7 @@ public class GeocatXslUtil {
 
     public static boolean validateURL(String urlString) {
         try {
-            System.out.println("Testing url : " + urlString);
+//            System.out.println("Testing url : " + urlString);
             HttpHead method = new HttpHead(urlString);
 
             HttpClient client = HttpClients.createDefault();
