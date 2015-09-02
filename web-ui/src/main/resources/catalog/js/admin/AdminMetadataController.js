@@ -213,6 +213,7 @@
       loadFormatterError = function(e, data) {
         $rootScope.$broadcast('StatusUpdated', {
           title: $translate('formatterUploadError'),
+          msg: $translate(data.jqXHR.statusText),
           error: data.jqXHR.responseJSON,
           timeout: 0,
           type: 'danger'});

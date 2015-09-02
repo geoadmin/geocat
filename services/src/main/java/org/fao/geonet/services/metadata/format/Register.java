@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata.format;
 
 import com.google.common.io.ByteStreams;
-import com.vividsolutions.jts.util.Assert;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
@@ -36,7 +35,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.IO;
-import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,9 +49,9 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 
+import static org.fao.geonet.services.metadata.format.FormatterConstants.VIEW_GROOVY_FILENAME;
 import static org.fao.geonet.services.metadata.format.FormatterConstants.VIEW_XSL_FILENAME;
 
 /**
@@ -93,6 +91,10 @@ public class Register extends AbstractFormatService {
         Path userXslDir = context.getBean(GeonetworkDataDirectory.class).getFormatterDir();
         Path newBundle = userXslDir.resolve(xslid);
 
+        if (Files.exists(newBundle)) {
+            throw new IllegalArgumentException("formatterUploadError_AlreadyExisting");
+        }
+
         Path uploadedFile = context.getUploadDir().resolve(file.getOriginalFilename());
         byte[] data = ByteStreams.toByteArray(file.getInputStream());
         Files.write(uploadedFile, data);
@@ -101,12 +103,6 @@ public class Register extends AbstractFormatService {
             Files.createDirectories(newBundle);
 
             try (FileSystem zipFs = ZipUtil.openZipFs(uploadedFile)){
-                Path viewFile = findViewFile(zipFs);
-                if (viewFile == null) {
-                    throw new BadArgumentException(
-                            "A formatter zip file must contain a " + VIEW_XSL_FILENAME + " file as one of its root files");
-                }
-
                 Path viewXslContainerDir = null;
                 for (Path root : zipFs.getRootDirectories()) {
                     viewXslContainerDir = findViewXslContainerDir(root);
@@ -116,7 +112,7 @@ public class Register extends AbstractFormatService {
                 }
 
                 if (viewXslContainerDir == null) {
-                    throw new IllegalArgumentException(uploadedFile + " does not have a view.xsl file within it");
+                    throw new IllegalArgumentException("formatterUploadError_MissingViewFile");
                 }
 
                 IO.copyDirectoryOrFile(viewXslContainerDir, newBundle, false);
@@ -141,7 +137,8 @@ public class Register extends AbstractFormatService {
     }
 
     private Path findViewXslContainerDir(Path dir) throws IOException {
-        if (Files.exists(dir.resolve(FormatterConstants.VIEW_XSL_FILENAME))) {
+        if (Files.exists(dir.resolve(VIEW_XSL_FILENAME)) ||
+            Files.exists(dir.resolve(VIEW_GROOVY_FILENAME))) {
             return dir;
         }
 
@@ -150,37 +147,6 @@ public class Register extends AbstractFormatService {
                 Path container = findViewXslContainerDir(childDir);
                 if (container != null) {
                     return container;
-                }
-            }
-        }
-        return null;
-    }
-
-    private Path findViewFile(FileSystem zipFs) throws IOException {
-        Path rootView = zipFs.getPath(VIEW_XSL_FILENAME);
-        if (Files.exists(rootView)) {
-            return rootView;
-        }
-        final String groovyView = "view.groovy";
-        rootView = zipFs.getPath(groovyView);
-        if (Files.exists(rootView)) {
-            return rootView;
-        }
-        final Path rootDir = zipFs.getRootDirectories().iterator().next();
-        try (DirectoryStream<Path> dirs = Files.newDirectoryStream(rootDir, IO.DIRECTORIES_FILTER)) {
-            Iterator<Path> dirIter = dirs.iterator();
-            if (dirIter.hasNext()) {
-                Path next = dirIter.next();
-                Assert.isTrue(!dirIter.hasNext(),
-                        "The formatter/view zip file must either have a single root directory which contains the view file or " +
-                                "it must have all formatter resources at the root of the directory");
-                rootView = next.resolve(VIEW_XSL_FILENAME);
-                if (Files.exists(rootView)) {
-                    return rootView;
-                }
-                rootView = next.resolve(groovyView);
-                if (Files.exists(rootView)) {
-                    return rootView;
                 }
             }
         }
