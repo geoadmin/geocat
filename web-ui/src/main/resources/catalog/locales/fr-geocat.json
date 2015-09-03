@@ -5,5 +5,7 @@
   "basicgeodata-communal": "+ Géodonnée de base - Communal",
   "service-OGC:WMS": "+ Services WMS",
   "service-OGC:WFS": "+ Services WFS",
-  "any": "- Tout -"
+  "any": "- Tout -",
+  "indexSelectedRecordConfirm": "Voulez-vous vraiment index les {{selectedCount}} fiches sélectionnée(s) ?",
+  "index": "Index"
 }

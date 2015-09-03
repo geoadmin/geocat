@@ -143,6 +143,10 @@
         }
       };
 
+      this.indexMd = function(md, searchParams) {
+        return callBatch('mdIndexBatch');
+      };
+
       this.openPrivilegesPanel = function(md, scope) {
         openModal({
           title: $translate('privileges') + ' - ' +

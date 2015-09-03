@@ -24,6 +24,7 @@
             <class name=".geocat.services.selection.Index">
                 <param name="maxToIndex" value="500" />
             </class>
+          <output sheet="selection-index.xsl" contentType="text/html"/>
         </service>
 
         <service name="metadata.validation.status">

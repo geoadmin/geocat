@@ -5,5 +5,7 @@
   "basicgeodata-communal": "+ Geobasisdaten - Gemeinden",
   "service-OGC:WMS": "+ WMS-Dienst",
   "service-OGC:WFS": "+ WFS-Dienst",
-  "any": "- Alle -"
+  "any": "- Alle -",
+  "indexSelectedRecordConfirm": "Do you really want to index the {{selectedCount}} selected record(s) ?",
+  "index": "Index"
 }

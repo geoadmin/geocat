@@ -253,6 +253,7 @@
     mdInsert: 'md.insert@json',
     mdDelete: 'md.delete@json',
     mdDeleteBatch: 'md.delete.batch',
+    mdIndexBatch: 'metadata.selection.index',
     mdEdit: 'md.edit@json',
     mdEditSave: 'md.edit.save@json',
     mdEditSaveonly: 'md.edit.saveonly@json',

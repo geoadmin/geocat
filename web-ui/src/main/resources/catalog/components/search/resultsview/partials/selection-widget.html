@@ -39,7 +39,7 @@
     <li ng-if="user.isEditorOrMore()">
       <a href="" ng-click="mdService.openPrivilegesBatchPanel(getCatScope())">
       <i class="fa fa-key"></i>&nbsp;<span translate>updatePrivileges</span></a></li>
-    <li ng-if="user.isReviewerOrMore()" class="disabgit led">
+    <li ng-if="user.isReviewerOrMore()" class="disabgiled">
       <a ng-click="mdService.publish(undefined, 'on')" >
       <i class="fa fa-unlock"></i>&nbsp;<span translate>publish</span></a></li>
     <li ng-if="user.isReviewerOrMore()" class="disabgit led">
@@ -56,5 +56,9 @@
       <a href="" ng-click="mdService.deleteMd()"
          data-gn-confirm-click="{{'deleteSelectedRecordConfirm' | translate:searchResults}}">
       <i class="fa fa-trash-o"></i>&nbsp;<span translate>delete</span></a></li>
+      <li ng-if="user.isAdministrator()">
+      <a href="" ng-click="mdService.indexMd()"
+         data-gn-confirm-click="{{'indexSelectedRecordConfirm' | translate:searchResults}}">
+      <i class="fa fa-cogs"></i>&nbsp;<span translate>index</span></a></li>
   </ul>
 </div>
