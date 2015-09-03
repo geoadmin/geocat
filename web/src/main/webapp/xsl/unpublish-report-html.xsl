@@ -211,7 +211,10 @@
 				</script>
 			</head>
 			<body>
-				<a class="help-link" href="javascript:$('#help').toggle()">Help</a>
+				<div class="help-link">
+					<a href="{/root/gui/locService}/admin.console#/geocat">Back</a> <br/>
+					<a  href="javascript:$('#help').toggle()">Help</a>
+				</div>
 				<div id="help" style="display:none">
 					Press a keyboard key for the following functionality:
 					<ul>
@@ -222,7 +225,7 @@
 					</ul>
 				</div>
 				<input id="search" class="search-form" onkeypress="" placeholder="Search"/>
-				<input type="checkbox" id="not" class="search-form">Not</input>
+				<input type="checkbox" id="not" class="search-form">Hide matches</input>
 				<div>
 					<button class="search-form" onmouseup="doSearch()">Search</button>
 				</div>
