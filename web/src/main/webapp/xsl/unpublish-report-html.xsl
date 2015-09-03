@@ -127,8 +127,10 @@
 					font-size: .9em;
 					}
 					form {
-						border-bottom-style: solid;
-						border-bottom-color: #BDBCBC;
+						border-style: solid;
+						border-width: thin;
+						border-color: #BDBCBC;
+						border-bottom-width: 3px;
 						padding: 5px;
 						background-color: #EAE8E8;
 					}
