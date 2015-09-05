@@ -10,6 +10,7 @@
     <sch:ns prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
     <sch:ns prefix="geonet" uri="http://www.fao.org/geonetwork"/>
     <sch:ns prefix="xlink" uri="http://www.w3.org/1999/xlink"/>    
+    <sch:ns prefix="xslutil" uri="java:org.fao.geonet.util.XslUtil"/>
 
     <!-- =============================================================
     CHE schematron rules:
@@ -86,4 +87,19 @@
             <sch:report test="($code  = '' or $code  = 'CH' or $code  = 'LI' or $code  = 'DE' or $code  = 'FR' or $code  = 'IT' or $code  = 'AT')"><sch:value-of select="$loc/strings/report.M105/div"/></sch:report>
         </sch:rule>
     </sch:pattern>
+
+
+    <sch:pattern>
+        <sch:title>$loc/strings/invalidURLCheck</sch:title>
+        <!-- Check specification names and status -->
+        <sch:rule context="/*//gmd:linkage//che:LocalisedURL | *//gmd:linkage//gmd:URL">
+
+            <sch:let name="isValidUrl" value="xslutil:validateURL(string(.))"/>
+            <sch:assert test="$isValidUrl">
+                <sch:value-of select="$loc/strings/alert.invalidURL"/>
+                '<sch:value-of select="string(.)"/>'
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
 </sch:schema>
