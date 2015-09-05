@@ -137,6 +137,7 @@ public class SharedObjects implements DatabaseMigrationTask {
         String siteURL = "http://site.uri.com";
 
         final Multimap<String, String> allKeywordIds = HashMultimap.create();
+        final Map<Pair<String, String>, String> wordToIdLookup = Maps.newHashMap();
 
         Files.walkFileTree(thesauriDir, new SimpleFileVisitor<Path>(){
             @Override
@@ -154,14 +155,36 @@ public class SharedObjects implements DatabaseMigrationTask {
                         if (localOrExternal.toString().equals("local")) {
                             RepairRdfFiles.repairRdfFile(file, xml);
                         }
-                        ArrayList<Namespace> nSs = Lists.newArrayList(Namespace.getNamespace("rdf",
-                                "http://www.w3.org/1999/02/22-rdf-syntax-ns#"));
+                        ArrayList<Namespace> nSs = Lists.newArrayList(
+                                Namespace.getNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"),
+                                Namespace.getNamespace("skos", "http://www.w3.org/2004/02/skos/core#"));
                         List<?> objects = Xml.selectNodes(xml, "*//node()[normalize-space(@rdf:about) != ''] | node()[normalize-space(@rdf:about) != '']", nSs);
                         for (Object object : objects) {
                             if (object instanceof Element) {
                                 Element element = (Element) object;
                                 String about = element.getAttributeValue("about", nSs.get(0));
                                 allKeywordIds.put(thesaurusName, about);
+
+                                List<?> notes = Xml.selectNodes(element, "skos:prefLabel", nSs);
+
+                                for (Object note : notes) {
+                                    Element noteEl = (Element) note;
+
+                                    String noteText = noteEl.getTextTrim().toLowerCase();
+
+                                    if (!noteText.isEmpty()) {
+                                        String lang = noteEl.getAttributeValue("lang", Namespace.XML_NAMESPACE);
+                                        if (lang == null) {
+                                            lang = "de";
+                                        }
+                                        wordToIdLookup.put(Pair.read(lang, noteText), about);
+                                        Pair<String, String> noLang = Pair.read(GeocatXslUtil.NO_LANG, noteText);
+                                        if (!wordToIdLookup.containsKey(noLang)) {
+                                            wordToIdLookup.put(noLang, about);
+                                        }
+                                        wordToIdLookup.put(Pair.read(lang, noteText), about);
+                                    }
+                                }
                             }
                         }
                     } catch (JDOMException e) {
@@ -194,7 +217,7 @@ public class SharedObjects implements DatabaseMigrationTask {
                                 Element el = (Element) node;
                                 final String atValue = el.getAttributeValue(HREF, NAMESPACE_XLINK);
                                 if (el.getName().equals("identificationInfo")) {
-                                    GeocatXslUtil.mergeKeywords(el, true, allKeywordIds, missingKeywords);
+                                    GeocatXslUtil.mergeKeywords(el, true, allKeywordIds, missingKeywords, wordToIdLookup);
                                 } else if (atValue != null && atValue.contains("xml.format.get")) {
                                     String formatId = extractId(atValue);
                                     final String subtemplateUUID = formatIdMap.get(formatId);
@@ -243,10 +266,14 @@ public class SharedObjects implements DatabaseMigrationTask {
                 for (Object node : nodes) {
                     Element el = (Element) node;
                     String locale = el.getAttributeValue("locale");
+                    if (locale != null && locale.length() > 0) {
+                        locale = locale.substring(1).toLowerCase();
+                    } else {
+                        locale = "de";
+                    }
                     String textTrim = el.getTextTrim();
-                    if (locale != null && !locale.isEmpty() && !textTrim.isEmpty()) {
+                    if (!textTrim.isEmpty()) {
                         keyword.setValue(textTrim, locale);
-                        keyword.setDefinition(textTrim, locale);
                     }
                 }
 

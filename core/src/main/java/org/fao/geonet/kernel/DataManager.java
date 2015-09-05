@@ -29,7 +29,6 @@ package org.fao.geonet.kernel;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
-import com.google.common.base.Functions;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -94,19 +93,15 @@ import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.geocat.SharedObjectApi;
 import org.fao.geonet.geocat.kernel.reusable.ContactsStrategy;
-import org.fao.geonet.geocat.kernel.reusable.KeywordsStrategy;
-import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
 import org.fao.geonet.geocat.kernel.reusable.ProcessParams;
 import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
 import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
-import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.geocat.kernel.reusable.log.ReusableObjectLogger;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.GroupRepository;
@@ -3192,7 +3187,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
             final Element identificationInfo = md.getChild("identificationInfo", GMD);
             if (identificationInfo != null) {
-                GeocatXslUtil.mergeKeywords(identificationInfo, false, null, null);
+                GeocatXslUtil.mergeKeywords(identificationInfo, false, null, null, null);
                 List<?> keywords = Xml.selectNodes(identificationInfo, "*/gmd:descriptiveKeywords", Arrays.asList(GMD));
                 for (Object keyword : keywords) {
                     Processor.processXLink((Element) keyword, context);

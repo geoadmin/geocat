@@ -152,6 +152,9 @@ public class RepairRdfFiles {
         }
 
         for (KeywordBean keywordBean : beans.values()) {
+            if (keywordBean.getValues().isEmpty()) {
+                continue;
+            }
             final Element desc = new Element("Description", RDF_NAMESPACE).
                     setAttribute("about", keywordBean.getUriCode(), RDF_NAMESPACE).
                     addContent(new Element("type", RDF_NAMESPACE).

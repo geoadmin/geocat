@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
@@ -97,6 +98,7 @@ import static org.fao.geonet.geocat.kernel.reusable.ReusableObjManager.NON_VALID
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 
 public class GeocatXslUtil {
+    public static final String NO_LANG = "NO_LANG";
     private static Pattern ID_EXTRACTOR = Pattern.compile(".*id=([^&]+).*");
     private static Pattern TYPENAME_EXTRACTOR = Pattern.compile(".*typename=([^&]+).*");
 
@@ -815,15 +817,17 @@ public class GeocatXslUtil {
     /**
      * Merges the keywords in the metadata document by thesaurus so that all keywords from the same thesaurus are in the same
      * keyword block.
-     *  @param el the identification info element
+     * @param el the identification info element
      * @param removeEmpty if true then any empty descriptiveKeyword block (by empty I mean no keywords for that thesaurus) then remove
      *                    the block
      * @param thesaurusKeys should be null except for SharedObjects.  All the keywords in the system.  Used to check if a keyword is valid.
      * @param missingKeywords
+     * @param wordToIdLookup
      */
     public static void mergeKeywords(
-            org.jdom.Element el, boolean removeEmpty,Multimap<String, String> thesaurusKeys, Map<String,
-            Pair<String, org.jdom.Element>> missingKeywords) throws JDOMException {
+            org.jdom.Element el, boolean removeEmpty, Multimap<String, String> thesaurusKeys, Map<String,
+            Pair<String, org.jdom.Element>> missingKeywords,
+            Map<Pair<String, String>, String> wordToIdLookup) throws JDOMException {
         final List<Namespace> namespaces = Lists.newArrayList(ISO19139Namespaces.GMD);
         @SuppressWarnings("unchecked")
         final List<org.jdom.Element> keywordEls = Lists.newArrayList((List<org.jdom.Element>)
@@ -844,7 +848,7 @@ public class GeocatXslUtil {
                 Keyword keyword = new Keyword(attributeValue);
                 if (keyword.thesaurus != null && keyword.id != null && !keyword.id.isEmpty()) {
                     // remove after 3.0 is deployed into production
-                    ensureKeywordExistsInThesauri(thesaurusKeys, missingKeywords, keywordsByThesaurus, keywordEl, keyword);
+                    ensureKeywordExistsInThesauri(thesaurusKeys, wordToIdLookup, missingKeywords, keywordsByThesaurus, keywordEl, keyword);
                     if (!keyword.id.isEmpty()) {
                         if (keyword.thesaurus.equals(AllThesaurus.ALL_THESAURUS_KEY)) {
                             for (String id : keyword.id) {
@@ -901,7 +905,8 @@ public class GeocatXslUtil {
         }
     }
 
-    private static void ensureKeywordExistsInThesauri(Multimap<String, String> thesaurusKeys, Map<String, Pair<String, org.jdom.Element>>
+    private static void ensureKeywordExistsInThesauri(Multimap<String, String> thesaurusKeys, Map<Pair<String, String>, String>
+            wordToIdLookup, Map<String, Pair<String, org.jdom.Element>>
             missingKeywords, Multimap<String, Keyword> keywordsByThesaurus, org.jdom.Element keywordEl, Keyword keyword) {
         if (keywordsByThesaurus == null || missingKeywords == null) {
             return;
@@ -945,11 +950,18 @@ public class GeocatXslUtil {
                             keywordsByThesaurus.put(NON_VALID_THESAURUS_NAME, newKeyword);
                             iterator.remove();
                         } else {
-                            String newId = URLEncoder.encode(KeywordsStrategy.NAMESPACE + UUID.randomUUID(), Constants.ENCODING);
-                            missingKeywords.put(keywordId, Pair.read(newId, keywordEl));
-                            iterator.remove();
-                            Keyword newKeyword = new Keyword(NON_VALID_THESAURUS_NAME, Lists.newArrayList(newId));
-                            keywordsByThesaurus.put(NON_VALID_THESAURUS_NAME, newKeyword);
+                            String locatedId = findKeyword(keyword, keywordEl, thesaurusKeys, wordToIdLookup);
+                            if (locatedId != null) {
+                                Keyword newKeyword = new Keyword(NON_VALID_THESAURUS_NAME, Lists.newArrayList(locatedId));
+                                keywordsByThesaurus.put(NON_VALID_THESAURUS_NAME, newKeyword);
+                                iterator.remove();
+                            } else {
+                                String newId = URLEncoder.encode(KeywordsStrategy.NAMESPACE + UUID.randomUUID(), Constants.ENCODING);
+                                missingKeywords.put(keywordId, Pair.read(newId, keywordEl));
+                                iterator.remove();
+                                Keyword newKeyword = new Keyword(NON_VALID_THESAURUS_NAME, Lists.newArrayList(newId));
+                                keywordsByThesaurus.put(NON_VALID_THESAURUS_NAME, newKeyword);
+                            }
                         }
                     }
                 }
@@ -957,6 +969,74 @@ public class GeocatXslUtil {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static String findKeyword(Keyword keyword, org.jdom.Element keywordEl, Multimap<String, String> thesaurusKeys,
+                                      Map<Pair<String, String>, String> wordToIdLookup) {
+        ArrayList<Namespace> namespaces = Lists.newArrayList(ISO19139Namespaces.GMD, ISO19139Namespaces.GCO);
+        List<?> words = null;
+        try {
+            words = Xml.selectNodes(keywordEl, "*//gmd:keyword//gmd:LocalisedCharacterString", namespaces);
+
+            Map<String, Integer> exactMatches = Maps.newHashMap();
+            Map<String, Integer> backupMatches = Maps.newHashMap();
+
+            for (Object wordObj : words) {
+                org.jdom.Element wordEl = (org.jdom.Element) wordObj;
+                String wd = wordEl.getTextTrim().toLowerCase();
+                if (!wd.isEmpty()) {
+                    String locale = wordEl.getAttributeValue("locale");
+                    if (locale == null) {
+                        locale = "";
+                    } else {
+                        locale = locale.substring(1).toLowerCase();
+                    }
+
+                    String id = wordToIdLookup.get(Pair.read(locale, wd));
+                    if (id != null) {
+                        addMatch(exactMatches, id);
+                    }
+                    id = wordToIdLookup.get(Pair.read(NO_LANG, wd));
+                    if (id != null) {
+                        addMatch(backupMatches, id);
+                    }
+                }
+            }
+
+            if (!exactMatches.isEmpty()) {
+                return bestMatch(exactMatches);
+            } else if (!backupMatches.isEmpty()) {
+                return bestMatch(exactMatches);
+            }
+
+            return null;
+        } catch (JDOMException e) {
+            return null;
+        }
+
+    }
+
+    private static String bestMatch(Map<String, Integer> exactMatches) {
+        Map.Entry<String, Integer> bestMatch = null;
+
+        for (Map.Entry<String, Integer> entry : exactMatches.entrySet()) {
+            if (bestMatch == null || entry.getValue() > bestMatch.getValue()) {
+                bestMatch = entry;
+            }
+        }
+        if (bestMatch != null) {
+            return bestMatch.getKey();
+        }
+        return null;
+    }
+
+    private static void addMatch(Map<String, Integer> exactMatches, String id) {
+        Integer count = exactMatches.get(id);
+        if (count == null) {
+            count = 0;
+        }
+
+        exactMatches.put(id, count + 1);
     }
 
     private static final class Keyword {

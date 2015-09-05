@@ -136,7 +136,7 @@
               <xsl:value-of select="if ($guiLangId and .//gmd:LocalisedCharacterString[@locale = concat('#', $guiLangId) and normalize-space(text()) != '']) then
                     .//*[@locale = concat('#', $guiLangId)]/replace(text(), ',', ',,')
                   else if (.//gmd:LocalisedCharacterString[normalize-space(text()) != '']) then
-                   .//gmd:LocalisedCharacterString[normalize-space(text()) != '']/replace(text(), ',', ',,')
+                   .//gmd:LocalisedCharacterString[normalize-space(text()) != ''][1]/replace(text(), ',', ',,')
                   else ./gco:CharacterString/replace(text(), ',', ',,')"/>
               <xsl:value-of select="','"/>
             </xsl:for-each>

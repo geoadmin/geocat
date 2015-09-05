@@ -23,7 +23,7 @@ public class GeocatXslUtilTest {
     public void testMergeKeywordsSplit() throws Exception {
         Element xml = Xml.loadStream(GeocatXslUtilTest.class.getResourceAsStream("keywords.xml"));
 
-        GeocatXslUtil.mergeKeywords(xml, true, null, null);
+        GeocatXslUtil.mergeKeywords(xml, true, null, null, null);
 
         List<Element> nodes = (List<Element>) Xml.selectNodes(xml, "*/gmd:descriptiveKeywords");
         assertEquals(2, nodes.size());
@@ -44,7 +44,7 @@ public class GeocatXslUtilTest {
         assertEquals(5, thesaurusToIds.get("local._none_.geocat.ch").size());
         assertEquals(1, thesaurusToIds.get("external.theme.inspire-service-taxonomy").size());
 
-        GeocatXslUtil.mergeKeywords(xml, true, null, null);
+        GeocatXslUtil.mergeKeywords(xml, true, null, null, null);
 
         nodes = (List<Element>) Xml.selectNodes(xml, "*/gmd:descriptiveKeywords");
         assertEquals(2, nodes.size());
@@ -77,7 +77,7 @@ public class GeocatXslUtilTest {
     public void testMergeKeywordsNoKeywords() throws Exception {
         Element xml = Xml.loadStream(GeocatXslUtilTest.class.getResourceAsStream("no-keywords.xml"));
 
-        GeocatXslUtil.mergeKeywords(xml, true, null, null);
+        GeocatXslUtil.mergeKeywords(xml, true, null, null, null);
 
         List<Element> nodes = (List<Element>) Xml.selectNodes(xml, "*/gmd:descriptiveKeywords");
         assertEquals(0, nodes.size());
