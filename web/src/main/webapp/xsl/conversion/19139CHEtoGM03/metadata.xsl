@@ -25,7 +25,7 @@
                     </xsl:for-each>
                 </hierarchyLevel>
             </xsl:if>
-            <xsl:if test="gmd:hierarchyLevelName">
+            <xsl:if test="gmd:hierarchyLevelName and normalize-space(gmd:hierarchyLevelName/gco:CharacterString) != ''">
                 <hierarchyLevelName>
                     <xsl:apply-templates mode="metadata" select="gmd:hierarchyLevelName"/>
                 </hierarchyLevelName>

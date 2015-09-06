@@ -82,6 +82,13 @@ public class ValidateTransformationTest {
         testFile(file, Control.GM03_2_ISO, rules, true);
     }
     @Test
+    public void gm03HierarchyLevelName() throws Throwable {
+        File file = new File(data, "iso19139/empty-hierarchy-name.xml");
+        Multimap<String, Requirement> rules = ArrayListMultimap.create();
+        rules.put("GM03_2_1Core.Core.MD_Metadata", new Not(new Exists(new Finder("hierarchyLevelName"))));
+        testFile(file, Control.ISO_GM03, rules, false);
+    }
+    @Test
     public void sourceStepMissingBug() throws Throwable {
         File file = new File(data, "iso19139/sourceStep.xml");
         Multimap<String, Requirement> rules = ArrayListMultimap.create();
