@@ -257,7 +257,7 @@
 
     <xsl:template mode="DataIdentification" match="gmd:MD_Keywords">
         <GM03_2_1Core.Core.MD_Keywords TID="x{util:randomId()}">
-            <xsl:apply-templates mode="text" select="gmd:type"/>
+            <!--<xsl:apply-templates mode="text" select="gmd:type"/>-->
             <xsl:choose>
                 <xsl:when test="count(gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space(.) != '']) = 0">
                     <keyword>

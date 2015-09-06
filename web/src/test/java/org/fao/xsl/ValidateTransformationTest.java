@@ -89,6 +89,12 @@ public class ValidateTransformationTest {
         testFile(file, Control.ISO_GM03, rules, false);
     }
     @Test
+    public void gm03MD_KeywordType() throws Throwable {
+        File file = new File(data, "iso19139/MD_KeywordType.xml");
+        Multimap<String, Requirement> rules = ArrayListMultimap.create();
+        testFile(file, Control.ISO_GM03, rules, true);
+    }
+    @Test
     public void sourceStepMissingBug() throws Throwable {
         File file = new File(data, "iso19139/sourceStep.xml");
         Multimap<String, Requirement> rules = ArrayListMultimap.create();
