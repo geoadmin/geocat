@@ -81,6 +81,7 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.SchematronRequirement;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;
@@ -92,6 +93,7 @@ import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.geocat.SharedObjectApi;
+import org.fao.geonet.geocat.kernel.UnpublishInvalidMetadataJob;
 import org.fao.geonet.geocat.kernel.reusable.ContactsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.ProcessParams;
 import org.fao.geonet.geocat.kernel.reusable.ReusableObjManager;
@@ -127,6 +129,7 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.schema.iso19139che.ISO19139cheSchemaPlugin;
 import org.fao.geonet.util.GeocatXslUtil;
 import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.util.ThreadPool;
@@ -907,7 +910,8 @@ public class DataManager implements ApplicationEventPublisherAware {
             Xml.validate(md);
         } else {
             // if schemaLocation use that
-            if (!schemaLoc.equals("")) {
+            // GEOCAT
+            if (!schema.equals(ISO19139cheSchemaPlugin.IDENTIFIER) && !schemaLoc.equals("")) {
                 Xml.validate(md);
                 // otherwise use supplied schema name
             } else {
@@ -1155,29 +1159,66 @@ public class DataManager implements ApplicationEventPublisherAware {
         //--- Note we have to use uuid here instead of id because we don't have
         //--- an id...
         // GEOCAT
-        Element schemaTronXml = dataMan.doSchemaTronForEditor(schema,xml,context.getLanguage());
+        Element schemaTronReport = dataMan.doSchemaTronForEditor(schema,xml,context.getLanguage());
         xml.detach();
-        if (schemaTronXml != null && schemaTronXml.getContent().size() > 0) {
-			Element schemaTronReport = dataMan.doSchemaTronForEditor(schema,xml,context.getLanguage());
-
+        if (schemaTronReport != null && schemaTronReport.getContent().size() > 0) {
             List<Namespace> theNSs = new ArrayList<Namespace>();
             theNSs.add(Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork"));
             theNSs.add(Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl"));
 
-            ArrayList informationalReports = new ArrayList(Xml.selectNodes(schemaTronReport, "geonet:report[@geonet:required != 'true']", theNSs));
+            List<?> informationalReports = Xml.selectNodes(schemaTronReport,
+                    "geonet:report[@geonet:required != '" + SchematronRequirement.REQUIRED + "']", theNSs);
             for (Object informationalReport : informationalReports) {
                 ((Element)informationalReport).detach();
             }
-            Element failedAssert = Xml.selectElement(schemaTronReport, "geonet:report[@geonet:required = 'true']/svrl:schematron-output/svrl:failed-assert", theNSs);
+            List<?> failedAssert = Xml.selectNodes(schemaTronReport,
+                    "geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED +
+                    "']/svrl:schematron-output/svrl:failed-assert", theNSs);
 
-            Element failedSchematronVerification = Xml.selectElement(schemaTronReport, "geonet:report[@geonet:required = 'true']/geonet:schematronVerificationError", theNSs);
-            // END GEOCAT
+            List<?> failedSchematronVerification = Xml.selectNodes(schemaTronReport,
+                    "geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/geonet:schematronVerificationError", theNSs);
 
-            if ((failedAssert != null) || (failedSchematronVerification != null)) {
+            if ((!failedAssert.isEmpty()) || (!failedSchematronVerification.isEmpty())) {
+                StringBuilder errorReport = new StringBuilder();
+
+                Iterator reports = schemaTronReport.getDescendants(UnpublishInvalidMetadataJob.ReportFinder);
+                while(reports.hasNext()) {
+                    Element report = (Element) reports.next();
+
+                    Iterator errors = report.getDescendants(UnpublishInvalidMetadataJob.ErrorFinder);
+                    while(errors.hasNext()) {
+                        Element err = (Element) errors.next();
+
+                        StringBuilder msg = new StringBuilder();
+                        String reportType;
+                        if (err.getName().equals("failed-assert")) {
+                            reportType = report.getAttributeValue("rule", Edit.NAMESPACE);
+                            reportType = reportType == null ? "No name for rule" : reportType;
+
+                            Iterator descendants = err.getDescendants();
+                            while (descendants.hasNext()) {
+                                Object node = descendants.next();
+                                if (node instanceof Element) {
+                                    String textTrim = ((Element) node).getTextTrim();
+                                    msg.append(textTrim).append(" \n");
+                                }
+                            }
+                        } else {
+                            reportType = "Xsd Error";
+                            msg.append(err.getChildText("message", Edit.NAMESPACE));
+                        }
+
+                        if (msg.length() > 0) {
+                            errorReport.append(reportType).append(':').append(msg);
+                        }
+                    }
+                }
 
                 throw new SchematronValidationErrorEx("Schematron errors detected for file "+fileName+" - "
-                        + Xml.getString(schemaTronReport) + " for more details",schemaTronReport);
+                                                      + errorReport + " for more details",schemaTronReport);
             }
+            // END GEOCAT
+
         }
 
     }

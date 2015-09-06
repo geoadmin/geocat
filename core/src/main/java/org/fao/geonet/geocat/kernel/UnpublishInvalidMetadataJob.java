@@ -58,6 +58,38 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 
 public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Service {
     public static final String UNPUBLISH_LOG = Geonet.GEONETWORK + ".unpublish";
+    public static final Filter ReportFinder = new Filter() {
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public boolean matches(Object obj) {
+            if (obj instanceof Element) {
+                Element element = (Element) obj;
+                String name = element.getName();
+                if (name.equals("report") || name.equals("xsderrors")) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
+    public static final Filter ErrorFinder  = new Filter() {
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public boolean matches(Object obj) {
+            if (obj instanceof Element) {
+                Element element = (Element) obj;
+                String name = element.getName();
+                if (name.equals("error")) {
+                    return true;
+                } else if (name.equals("failed-assert")) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
     @Autowired
     XmlSerializer xmlSerializer;
     @Autowired
@@ -69,6 +101,86 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
     static final String AUTOMATED_ENTITY = "Automated";
 
     AtomicBoolean running = new AtomicBoolean(false);
+
+    public static Pair<String, String> failureReason(ServiceContext context, Element report) {
+
+        @SuppressWarnings("unchecked")
+        Iterator<Element> reports = report.getDescendants(ReportFinder);
+
+        StringBuilder rules = new StringBuilder();
+        StringBuilder failures = new StringBuilder();
+        while (reports.hasNext()) {
+            report = reports.next();
+            if (report.getName().equals("xsderrors")) {
+                processXsdError(report, rules, failures);
+            } else {
+                processSchematronError(report, rules, failures);
+            }
+        }
+
+        return Pair.read(rules.toString(), failures.toString());
+    }
+
+    private static void processXsdError(Element report, StringBuilder rules, StringBuilder failures) {
+        String reportType = "Xsd Error";
+        @SuppressWarnings("unchecked")
+        Iterator<Element> errors = report.getDescendants(ErrorFinder);
+        if (errors.hasNext()) {
+            rules.append("<div class=\"rule\">").append(reportType).append("</div>");
+
+            while (errors.hasNext()) {
+                failures.append("<div class=\"failure\">");
+                Element error = errors.next();
+                failures.append("</div><div class=\"xpath\">");
+                failures.append(" XPATH of failure:");
+                failures.append(error.getChildText("xpath", Edit.NAMESPACE));
+                failures.append("</div><h4>Reason</h4><div class=\"reason\">");
+                failures.append(error.getChildText("message", Edit.NAMESPACE));
+                failures.append("</div>");
+                failures.append("</div>");
+            }
+        }
+    }
+
+    private static void processSchematronError(Element report, StringBuilder rules, StringBuilder failures) {
+        String reportType = report.getAttributeValue("rule", Edit.NAMESPACE);
+        reportType = reportType == null ? "No name for rule" : reportType;
+
+        boolean isMandatory = SchematronRequirement.REQUIRED.name().equals(report.getAttributeValue("required", Edit.NAMESPACE));
+
+        if (isMandatory) {
+            @SuppressWarnings("unchecked")
+            Iterator<Element> errors = report.getDescendants(ErrorFinder);
+
+            if (errors.hasNext()) {
+                rules.append("<div class=\"rule\">").append(reportType).append("</div>");
+
+                while (errors.hasNext()) {
+                    failures.append("<div class=\"failure\">\n");
+
+                    Element error = errors.next();
+
+                    Element text = error.getChild("text", Geonet.Namespaces.SVRL);
+                    if (text != null) {
+                        failures.append("  <div class=\"test\">Schematron Test: ");
+                        failures.append(error.getAttributeValue("test"));
+                        failures.append("  </div>\n  <div class=\"xpath\">");
+                        failures.append("XPATH of failure: ");
+                        failures.append(error.getAttributeValue("location"));
+                        failures.append("  </div>\n<h4>Reason</h4><div class=\"reason\">");
+                        List children = text.getChildren();
+                        for (Object child : children) {
+                            failures.append(Xml.getString((Element) child));
+                        }
+                        failures.append("  </div>\n");
+                    } else {
+                        failures.append("unknown reason");
+                    }
+                    failures.append("</div>\n");
+                }
+            }
+        }
+    }
 
     @Override
     public void init(Path appPath, ServiceConfig params) throws Exception {
@@ -211,86 +323,6 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
         return allowedRepository.count(idAndPublishedSpec) > 0;
     }
 
-    private Pair<String, String> failureReason(ServiceContext context, Element report) {
-
-        @SuppressWarnings("unchecked")
-        Iterator<Element> reports = report.getDescendants(new ReportFinder());
-
-        StringBuilder rules = new StringBuilder();
-        StringBuilder failures = new StringBuilder();
-        while (reports.hasNext()) {
-            report = reports.next();
-            if (report.getName().equals("xsderrors")) {
-                processXsdError(report, rules, failures);
-            } else {
-                processSchematronError(report, rules, failures);
-            }
-        }
-
-        return Pair.read(rules.toString(), failures.toString());
-    }
-
-    private void processXsdError(Element report, StringBuilder rules, StringBuilder failures) {
-        String reportType = "Xsd Error";
-        @SuppressWarnings("unchecked")
-        Iterator<Element> errors = report.getDescendants(new ErrorFinder());
-        if (errors.hasNext()) {
-            rules.append("<div class=\"rule\">").append(reportType).append("</div>");
-
-            while (errors.hasNext()) {
-                failures.append("<div class=\"failure\">");
-                Element error = errors.next();
-                failures.append("</div><div class=\"xpath\">");
-                failures.append(" XPATH of failure:");
-                failures.append(error.getChildText("xpath", Edit.NAMESPACE));
-                failures.append("</div><h4>Reason</h4><div class=\"reason\">");
-                failures.append(error.getChildText("message", Edit.NAMESPACE));
-                failures.append("</div>");
-                failures.append("</div>");
-            }
-        }
-    }
-
-    private void processSchematronError(Element report, StringBuilder rules, StringBuilder failures) {
-        String reportType = report.getAttributeValue("rule", Edit.NAMESPACE);
-        reportType = reportType == null ? "No name for rule" : reportType;
-
-        boolean isMandatory = SchematronRequirement.REQUIRED.name().equals(report.getAttributeValue("required", Edit.NAMESPACE));
-
-        if (isMandatory) {
-            @SuppressWarnings("unchecked")
-            Iterator<Element> errors = report.getDescendants(new ErrorFinder());
-
-            if (errors.hasNext()) {
-                rules.append("<div class=\"rule\">").append(reportType).append("</div>");
-
-                while (errors.hasNext()) {
-                    failures.append("<div class=\"failure\">\n");
-
-                    Element error = errors.next();
-
-                    Element text = error.getChild("text", Geonet.Namespaces.SVRL);
-                    if (text != null) {
-                        failures.append("  <div class=\"test\">Schematron Test: ");
-                        failures.append(error.getAttributeValue("test"));
-                        failures.append("  </div>\n  <div class=\"xpath\">");
-                        failures.append("XPATH of failure: ");
-                        failures.append(error.getAttributeValue("location"));
-                        failures.append("  </div>\n<h4>Reason</h4><div class=\"reason\">");
-                        List children = text.getChildren();
-                        for (Object child : children) {
-                            failures.append(Xml.getString((Element) child));
-                        }
-                        failures.append("  </div>\n");
-                    } else {
-                        failures.append("unknown reason");
-                    }
-                    failures.append("</div>\n");
-                }
-            }
-        }
-    }
-
     @SuppressWarnings("unchecked")
     private List<Metadata> lookUpMetadataIds(MetadataRepository repo) throws SQLException {
         final Specification<Metadata> notHarvested = MetadataSpecs.isHarvested(false);
@@ -305,39 +337,5 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
         final Specification<PublishRecord> daysOldOrOlder = PublishRecordSpecs.daysOldOrOlder(endOffset);
 
         return context.getBean(PublishRecordRepository.class).findAll(where(daysOldOrNewer).and(daysOldOrOlder));
-    }
-
-
-    static class ErrorFinder implements Filter {
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public boolean matches(Object obj) {
-            if (obj instanceof Element) {
-                Element element = (Element) obj;
-                String name = element.getName();
-                if (name.equals("error")) {
-                    return true;
-                } else if (name.equals("failed-assert")) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-    static class ReportFinder implements Filter {
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public boolean matches(Object obj) {
-            if (obj instanceof Element) {
-                Element element = (Element) obj;
-                String name = element.getName();
-                if (name.equals("report") || name.equals("xsderrors")) {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 }
