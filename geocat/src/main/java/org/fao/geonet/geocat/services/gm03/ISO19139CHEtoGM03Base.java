@@ -2,6 +2,7 @@ package org.fao.geonet.geocat.services.gm03;
 
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
+import org.fao.geonet.Constants;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -10,6 +11,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -232,7 +234,26 @@ public abstract class ISO19139CHEtoGM03Base {
         }
     }
 
-    private static void saveDom(Document node, OutputStream outputStream) throws IOException {
+    public static String toString(Element node) throws IOException {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+        try {
+            OutputFormat format = new OutputFormat();
+            format.setIndent(2);
+            format.setIndenting(true);
+            format.setPreserveSpace(false);
+
+            XMLSerializer serializer = new XMLSerializer();
+            serializer.setOutputFormat(format);
+            serializer.setOutputByteStream(stream);
+            serializer.serialize(node);
+        } finally {
+            stream.close();
+        }
+
+        return stream.toString(Constants.ENCODING);
+    }
+    public static void saveDom(Document node, OutputStream outputStream) throws IOException {
         try {
             OutputFormat format = new OutputFormat();
             format.setIndent(2);

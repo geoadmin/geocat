@@ -24,6 +24,8 @@ public class UnDuplifier {
     public boolean addNode(Node root, Node node) throws ISO19139CHEtoGM03.FlattenerException {
         // extents should not be removed because of reusable objects.  A real corner case but possible
         if (node.getNodeName().equals("GM03_2Core.Core.EX_Extent")) return false;
+        if (node.getNodeName().equals("GM03_2_1Core.Core.CI_Contact")) return false;
+        if (node.getNodeName().equals("GM03_2_1Core.Core.CI_Address")) return false;
 
         int hash = computeNodeHash(node);
         List<Node> curSlot = nodesByHash.get(hash);

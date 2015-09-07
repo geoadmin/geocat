@@ -95,6 +95,14 @@ public class ValidateTransformationTest {
         testFile(file, Control.ISO_GM03, rules, true);
     }
     @Test
+    public void sameContact() throws Throwable {
+        File file = new File(data, "iso19139/same-contact.xml");
+        Multimap<String, Requirement> rules = ArrayListMultimap.create();
+        rules.put("DATASECTION", new DifferentTIDForContacts());
+
+        testFile(file, Control.ISO_GM03, rules, false);
+    }
+    @Test
     public void sourceStepMissingBug() throws Throwable {
         File file = new File(data, "iso19139/sourceStep.xml");
         Multimap<String, Requirement> rules = ArrayListMultimap.create();
