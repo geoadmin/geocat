@@ -27,6 +27,11 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import jeeves.server.UserSession;
 import jeeves.xlink.XLink;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
@@ -60,6 +65,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import static org.apache.lucene.search.WildcardQuery.WILDCARD_STRING;
 
 public final class KeywordsStrategy extends SharedObjectStrategy {
     public static final String NAMESPACE = "http://custom.shared.obj.ch/concept#";
@@ -557,5 +564,15 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
                 }
             }
         };
+    }
+
+    @Override
+    public Query createFindMetadataQuery(String field, String concreteId, boolean isValidated) {
+        BooleanQuery query = new BooleanQuery();
+        Term term = new Term(field, WILDCARD_STRING + concreteId + "," + WILDCARD_STRING);
+        Term term2 = new Term(field, WILDCARD_STRING + concreteId + "&" + WILDCARD_STRING);
+        query.add(new WildcardQuery(term), BooleanClause.Occur.SHOULD);
+        query.add(new WildcardQuery(term2), BooleanClause.Occur.SHOULD);
+        return query;
     }
 }

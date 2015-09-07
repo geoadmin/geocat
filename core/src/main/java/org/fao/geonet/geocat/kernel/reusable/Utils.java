@@ -235,8 +235,17 @@ public final class Utils {
 
                     HashSet<String> xlinks = new HashSet<String>();
                     for( String value : element.getValues(field) ) {
-                        if (equalIds(value, concreteId)) {
-                            xlinks.add(value);
+                        // hack for keywords
+                        if (strategy instanceof KeywordsStrategy) {
+                            String keywordCommaSeparatedId = Utils.id(value);
+
+                            if (keywordCommaSeparatedId.contains(concreteId)) {
+                                xlinks.add(value);
+                            }
+                        } else {
+                            if (equalIds(value, concreteId)) {
+                                xlinks.add(value);
+                            }
                         }
                     }
                     if (!xlinks.isEmpty()) {
