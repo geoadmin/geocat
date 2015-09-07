@@ -96,7 +96,7 @@
 
             <sch:let name="isValidUrl" value="xslutil:validateURL(string(.))"/>
             <sch:assert test="$isValidUrl">
-                <sch:value-of select="$loc/strings/alert.invalidURL"/>
+                <sch:value-of select="$loc/strings/alert.invalidURL/div"/>
                 '<sch:value-of select="string(.)"/>'
             </sch:assert>
         </sch:rule>
