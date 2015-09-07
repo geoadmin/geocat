@@ -87,6 +87,12 @@ public class ValidateTransformationTest {
         Multimap<String, Requirement> rules = ArrayListMultimap.create();
         rules.put("GM03_2_1Core.Core.MD_Metadata", new Not(new Exists(new Finder("hierarchyLevelName"))));
         testFile(file, Control.ISO_GM03, rules, false);
+    }    @Test
+    public void legislationConstraints() throws Throwable {
+        File file = new File(data, "iso19139/legislationConstraints.xml");
+        Multimap<String, Requirement> rules = ArrayListMultimap.create();
+//        rules.put("GM03_2_1Core.Core.MD_Metadata", new Not(new Exists(new Finder("hierarchyLevelName"))));
+        testFile(file, Control.ISO_GM03, rules, false);
     }
     @Test
     public void gm03MD_KeywordType() throws Throwable {

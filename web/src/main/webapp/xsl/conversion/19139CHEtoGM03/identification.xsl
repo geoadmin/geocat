@@ -208,10 +208,19 @@
             <xsl:apply-templates mode="groupText" select=".">
                 <xsl:with-param name="element">otherConstraints</xsl:with-param>
             </xsl:apply-templates>
-            <xsl:apply-templates mode="metadata" select="che:legislationConstraints"/>
+            <xsl:apply-templates mode="DataIdentification" select="che:legislationConstraints"/>
         </GM03_2_1Comprehensive.Comprehensive.MD_LegalConstraints>
     </xsl:template>
 
+    <xsl:template mode="DataIdentification" match="che:legislationConstraints">
+        <GM03_2_1Comprehensive.Comprehensive.legislationConstraintsMD_LegalConstraints>
+            <legislationConstraints REF="?">
+                <xsl:apply-templates mode="Legislation" />
+            </legislationConstraints>
+
+            <BACK_REF name="MD_LegalConstraints"/>
+        </GM03_2_1Comprehensive.Comprehensive.legislationConstraintsMD_LegalConstraints>
+    </xsl:template>
 
     <xsl:template mode="DataIdentification" match="gmd:MD_Constraints">
         <GM03_2_1Comprehensive.Comprehensive.MD_Constraints TID="x{util:randomId()}">
