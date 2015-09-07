@@ -208,7 +208,7 @@
             <xsl:apply-templates mode="groupText" select=".">
                 <xsl:with-param name="element">otherConstraints</xsl:with-param>
             </xsl:apply-templates>
-            <!--<xsl:apply-templates mode="metadata" select="che:legislationConstraints"/>-->
+            <xsl:apply-templates mode="metadata" select="che:legislationConstraints"/>
         </GM03_2_1Comprehensive.Comprehensive.MD_LegalConstraints>
     </xsl:template>
 

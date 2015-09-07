@@ -366,17 +366,20 @@
 
     <xsl:template mode="DataQuality" match="gmd:LI_Lineage">
         <GM03_2_1Core.Core.LI_Lineage TID="x{util:randomId()}">
-            <xsl:apply-templates mode="textGroup" select="gmd:statement">
-              <xsl:with-param name="backref" select="true()" />
-          </xsl:apply-templates>
+            <xsl:apply-templates mode="textGroup" select="gmd:statement" />
             <BACK_REF name="DQ_DataQuality"/>
-            <xsl:apply-templates mode="DataQuality" select="gmd:processStep"/>
-            <xsl:apply-templates mode="DataQuality" select="gmd:source/gmd:LI_Source"/>    
+            <xsl:apply-templates mode="DataQuality" select="gmd:processStep">
+                <xsl:with-param name="backref" select="true()" />
+            </xsl:apply-templates>
+            <xsl:apply-templates mode="DataQuality" select="gmd:source/gmd:LI_Source"/>
         </GM03_2_1Core.Core.LI_Lineage>
     </xsl:template>
     
      <xsl:template mode="DataQuality" match="gmd:processStep">
-            <xsl:apply-templates mode="DataQuality" select="gmd:LI_ProcessStep"/>    
+         <xsl:param name="backref" select="false()" />
+            <xsl:apply-templates mode="DataQuality" select="gmd:LI_ProcessStep">
+                <xsl:with-param name="backref" select="$backref" />
+            </xsl:apply-templates>
      </xsl:template>
      <xsl:template mode="DataQuality" match="gmd:LI_ProcessStep">
        <xsl:param name="backref" select="false()" />
@@ -403,6 +406,7 @@
             <xsl:apply-templates mode="text" select="gmd:dateTime"/>
             <xsl:apply-templates mode="text_" select="gmd:rationale"/>
             <xsl:apply-templates mode="DataQuality" select="processor"/>
+
           <xsl:if test="$backref">
             <BACK_REF name="LI_Lineage"/>
           </xsl:if>
