@@ -32,6 +32,7 @@ import org.fao.geonet.schema.iso19139che.ISO19139cheSchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.Text;
 import org.jdom.filter.Filter;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -168,9 +169,14 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
                         failures.append("XPATH of failure: ");
                         failures.append(error.getAttributeValue("location"));
                         failures.append("  </div>\n<h4>Reason</h4><div class=\"reason\">");
-                        List children = text.getChildren();
+                        List children = text.getContent();
+
                         for (Object child : children) {
-                            failures.append(Xml.getString((Element) child));
+                            if (child instanceof Element) {
+                                failures.append(Xml.getString((Element) child));
+                            } else if (child instanceof Text) {
+                                failures.append(((Text) child).getText());
+                            }
                         }
                         failures.append("  </div>\n");
                     } else {

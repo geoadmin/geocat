@@ -29,80 +29,79 @@
 			<head>
 				<style>
 					body {
-					font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-					font-size: 14px;
-					line-height: 1.428571429;
-					color: #333333;
-					background-color: #fff;
-					width: 95%;
+						font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+						font-size: 14px;
+						line-height: 1.428571429;
+						color: #333333;
+						background-color: #fff;
+						width: 95%;
 					}
 					div.failure {
-					border-color: lightgrey;
-					border-style: dashed;
-					border-width: thin;
-					padding: 5px;
-					background-color: #eee;
-					margin-left: 10px;
-					width: 90%;
+						border-color: lightgrey;
+						border-style: dashed;
+						border-width: thin;
+						padding: 5px;
+						background-color: #eee;
+						margin-left: 10px;
+						width: 90%;
 					}
 					div.failureReason {
-					border-color: lightgrey;
-					border-style: dashed;
-					border-width: thin;
-					padding: 5px;
-					background-color: #eee;
-					margin-left: 10px;
-					width: 90%;
+						border-color: lightgrey;
+						border-style: dashed;
+						border-width: thin;
+						padding: 5px;
+						background-color: #eee;
+						margin-left: 10px;
+						width: 90%;
 					}
 					div.details {
-					margin-bottom: 10px;
-					margin-top: 10px;
-					padding: 0 0 5px 5px;
-					border-color: lightgrey;
-					border-style: solid;
-					border-width: thin;
+						margin-bottom: 10px;
+						margin-top: 10px;
+						padding: 0 0 5px 5px;
+						border-color: lightgrey;
+						border-style: solid;
+						border-width: thin;
 					}
 					div.details > a > h3 {
-					margin-top: 0px;
-					margin-bottom: 0px;
+						margin-top: 0px;
+						margin-bottom: 0px;
 					}
 					.reason h1, .reason h2, .reason h3, .reason h4, .reason h5 {
-					font-size: 1em;
+						font-size: 1em;
 					}
 					td.detail-link {
-					font-size: 14px;
-					font-weight: bolder;
+						font-size: 14px;
+						font-weight: bolder;
 					}
 					#detail-container {
-					float: right;
-					width: 66%
+						float: right;
+						width: 66%
 					}
-
 					.details a {
-					text-decoration: initial;
-					color: black;
+						text-decoration: initial;
+						color: black;
 					}
 					.detail-content {
-					text-decoration: initial;
-					color: black;
-					margin-top: 1em;
+						text-decoration: initial;
+						color: black;
+						margin-top: 1em;
 					}
 					.detail-links a {
-					text-decoration: underline;
-					color: blue;
-					padding-right: 10px;
+						text-decoration: underline;
+						color: blue;
+						padding-right: 10px;
 					}
 					#help {
-					padding-left: 5px;
-					padding-right: 5px;
-					position: fixed;
-					top: 2em;
-					left: 66%;
-					width: 20%;
-					border-width: 2px;
-					border-color: #3F3FA5;
-					background-color: #C5D9EC;
-					border-style: outset;
+						padding-left: 5px;
+						padding-right: 5px;
+						position: fixed;
+						top: 4em;
+						left: 66%;
+						width: 20%;
+						border-width: 2px;
+						border-color: #3F3FA5;
+						background-color: #C5D9EC;
+						border-style: outset;
 					}
 					.help-link {
 						position: fixed;
@@ -110,21 +109,21 @@
 						left: 66%;
 					}
 					.search-form {
-					margin-left: 5px;
-					margin-top: 5px;
+						margin-left: 5px;
+						margin-top: 5px;
 					}
 					#found {
-					margin-top: 10px;
+						margin-top: 10px;
 					}
 					#count {
-					font-weight: bold;
+						font-weight: bold;
 					}
 					.test {
-					font-weight: bold;
+						font-weight: bold;
 					}
 					.xpath {
-					font-family: monospace;
-					font-size: .9em;
+						font-family: monospace;
+						font-size: .9em;
 					}
 					form {
 						border-style: solid;
@@ -245,25 +244,25 @@
 							var foundTest = true;
 							var foundEntity = true;
 
-							var ruleText = el.find('.rule').text();
 							var rule = $('#rule-select').val();
 							if (rule !== '') {
+								var ruleText = el.find('failurerule').text();
 								foundRule = ruleText.indexOf(rule) > -1;
 							}
 
-							var testText = el.find('.failure > .test').text()
 							var test = $('#test-select').val();
-							if (test !== '') {
+							if (test !== '' &amp;&amp; test !== null) {
+								var testText = el.find('.failure > .test').text()
 								foundTest = testText.indexOf(test) > -1;
 							}
 
-							var testText = el.find('.entity').text()
 							var entity = $('#entity-select').val();
 							if (entity !== '') {
+								var entityText = el.find('.entity').text()
 								foundEntity = entityText.indexOf(entity) > -1;
 							}
 
-					    var found = foundSearchTerm &amp;&amp; foundRule &amp;&amp; foundTest &amp;&amp; foundEntity;
+							var found = foundSearchTerm &amp;&amp; foundRule &amp;&amp; foundTest &amp;&amp; foundEntity;
 							var match = (found &amp;&amp; !not) || (!found &amp;&amp; not);
 							el.toggle(match)
 							if (match) {
@@ -347,7 +346,7 @@
 			<a href="javascript:showDetail('detail-{uuid}')">
 				<h3 class="uuid"><xsl:value-of select="uuid" /></h3>
 				<div><strong>Changing Entity: </strong><span class="entity"><xsl:value-of select="entity"/></span></div>
-				<xsl:for-each select="failurereasons/div//div[@class = 'test']">
+				<xsl:for-each select="distinct-values(failurereasons/div//div[@class = 'test'])">
 					<div><strong>Test: </strong><xsl:value-of select="."/></div>
 				</xsl:for-each>
 			</a>
@@ -366,6 +365,7 @@
 					<xsl:copy-of select="failurerule" />
 				</div>
 				<h3>Failure Reasons</h3>
+
 				<xsl:copy-of select="failurereasons" />
 			</div>
 		</div>
