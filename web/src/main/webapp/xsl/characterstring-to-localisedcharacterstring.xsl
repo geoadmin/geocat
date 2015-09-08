@@ -350,7 +350,8 @@
         </gmd:LocalisedCharacterString>
     </xsl:template>
 
-    <xsl:template match="gmd:PT_FreeText[count(gmd:textGroup/gmd:LocalisedCharacterString[normalize-space(.) != '']) = 0]" priority="10000">
+    <xsl:template match="gmd:PT_FreeText[../gco:CharacterString and
+                         count(gmd:textGroup/gmd:LocalisedCharacterString[normalize-space(.) != '']) = 0]" priority="10000">
     </xsl:template>
 
 
