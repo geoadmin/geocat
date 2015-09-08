@@ -191,6 +191,9 @@
     <xsl:variable name="invalidValue" select="if($value = 'environment' or $value = 'geoscientificInformation'
         or $value = 'planningCadastre' or $value = 'imageryBaseMapsEarthCover' or $value= 'utilitiesCommunication') then 'true' else 'false'" />
 
+    <xsl:variable name="hasValidValue" select="if(../gmd:MD_TopicCategoryCode[string(.) != 'environment' and string(.) != 'geoscientificInformation'
+        and string(.) != 'planningCadastre' and string(.) != 'imageryBaseMapsEarthCover' and string(.) != 'utilitiesCommunication']) then 'true' else 'false'" />
+
     <xsl:variable name="invalidCls" select="if($invalidValue = 'true') then 'has-error' else ''" />
 
     <xsl:variable name="list">
@@ -233,7 +236,7 @@
           </div>
         </div>-->
       </xsl:when>
-      <xsl:when test="$invalidValue='true'">
+      <xsl:when test="$invalidValue='true' and $hasValidValue='true'">
       </xsl:when>
 
       <xsl:otherwise>
