@@ -105,6 +105,7 @@
                */
               DEFAULT_NUMBER_OF_SUGGESTIONS: 30,
               getKeywordAutocompleter: function(config) {
+                var $this = this;
                 var keywordsAutocompleter = new Bloodhound({
                   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
                   queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -121,7 +122,12 @@
                       datums.push({label: $translate(
                           'addKeywordNotFromThesaurus')});
                       return datums;
-                    }
+                    },
+                    replace: config.activeThesaurus ? function(url, filter) {
+                      return $this.getKeywordsSearchUrl(filter,
+                              config.activeThesaurus() || '',
+                              config.max || $this.DEFAULT_NUMBER_OF_RESULTS)
+                    } : undefined
                   }
                 });
                 keywordsAutocompleter.initialize();
@@ -209,7 +215,24 @@
                       //                defer.reject(error);
                     });
                 return defer.promise;
+              },
+
+              buildKeywordUri: function(keyword) {
+                var allUrl = 'http://org.fao.geonet.thesaurus.all/';
+                var key = keyword.props.thesaurus.key;
+                var uri = keyword.props.uri;
+
+                // Case when the keyword has just been created
+                if(uri.indexOf(allUrl) == 0) {
+                  return keyword.getId();
+                }
+
+                key = encodeURIComponent(key);
+                uri = encodeURIComponent(uri);
+                return allUrl + key + '@@@' + uri;
               }
+
+
             };
           }];
       });

@@ -115,6 +115,8 @@
          };
        }]);
 
+  var ALL_THESAURUS_KEY = 'external.none.allThesaurus';
+  var LOCAL_THESAURUS_KEY = 'local._none_.non_validated';
 
   /**
    * The keyword selector could be of 2 types:
@@ -168,6 +170,9 @@
              scope.invalidKeywordMatch = false;
              scope.selected = [];
              scope.initialKeywords = [];
+
+             var isAllT = scope.thesaurusKey == ALL_THESAURUS_KEY;
+
              if (scope.keywords) {
                var buffer = "";
                for (var i = 0; i < scope.keywords.length; i++) {
@@ -190,6 +195,19 @@
              scope.transformations.indexOf(',') !== -1 ?
              scope.transformations.split(',') : [scope.transformations];
              scope.maxTagsLabel = scope.maxTags || '∞';
+
+             // Load thesaurus selector
+             if(isAllT) {
+               gnThesaurusService.getAll().then(
+                   function(listOfThesaurus) {
+                     scope.thesaurus = listOfThesaurus;
+                     for(var i=0;i<listOfThesaurus.length;i++) {
+                       if(listOfThesaurus[i].getKey() == ALL_THESAURUS_KEY) {
+                         scope.activeThesaurus = listOfThesaurus[i];
+                       }
+                     }
+                   });
+             }
 
              //Get langs of metadata
              var langs = [];
@@ -279,6 +297,7 @@
 
                // Then register search filter change
                // Only applies to multiselect mode
+               // TODO: seems never triggered
                scope.$watch('filter', search);
              };
 
@@ -328,7 +347,11 @@
                    var keywordsAutocompleter =
                    gnThesaurusService.getKeywordAutocompleter({
                      thesaurusKey: scope.thesaurusKey,
-                     dataToExclude: scope.selected
+                     dataToExclude: scope.selected,
+                     activeThesaurus: isAllT ? function() {
+                       return scope.activeThesaurus ?
+                             scope.activeThesaurus.props.key : scope.thesaurusKey;
+                     }: undefined
                    });
 
                    // Init typeahead
@@ -403,7 +426,8 @@
 
              var search = function() {
                gnThesaurusService.getKeywords(scope.filter,
-               scope.thesaurusKey, scope.max)
+                   (scope.activeThesaurus && scope.activeThesaurus.props.key) ||
+                       scope.thesaurusKey, scope.max)
                 .then(function(listOfKeywords) {
                  // Remove from search already selected keywords
                  scope.results = $.grep(listOfKeywords, function(n) {
@@ -430,7 +454,13 @@
              var getKeywordIds = function() {
                var ids = [];
                angular.forEach(scope.selected, function(k) {
-                 ids.push(k.getId());
+                 var tKey = k.props.thesaurus.key;
+                 if(isAllT && tKey != ALL_THESAURUS_KEY) {
+                   ids.push(gnThesaurusService.buildKeywordUri(k));
+                 }
+                 else {
+                   ids.push(k.getId());
+                 }
                });
                return ids;
              };
@@ -445,6 +475,9 @@
                });
              };
 
+             scope.setActive = function(t) {
+               scope.activeThesaurus = t;
+             }
              if (scope.thesaurusKey) {
                init();
              }

@@ -12,6 +12,22 @@
       <div class="col-sm-9 col-sm-offset-2"
            data-ng-class="maxTags && selected.length == maxTags ? 'gn-maxtags' : ''"
            title="{{selected.length}}/{{maxTagsLabel}} {{'tagsAllowed' | translate}}">
+
+        <!--Thesaurus selector-->
+        <div data-ng-if="thesaurusKey == 'external.none.allThesaurus'">
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              <span>{{activeThesaurus.getTitle()}}</span>
+              <span class="caret"/>
+            </button>
+            <ul class="dropdown-menu">
+              <li data-ng-repeat="t in thesaurus | orderBy:'props.title'">
+                <a href="" ng-click="setActive(t)">{{t.getTitle()}}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <input type="text" id="tagsinput_{{elementRef}}"
                class="form-control"></input>
       </div>
@@ -67,5 +83,6 @@
     <div>
       <input name="{{elementRef}}" type="hidden" value="{{snippet}}"/>
     </div>
+
   </span>
 </div>
