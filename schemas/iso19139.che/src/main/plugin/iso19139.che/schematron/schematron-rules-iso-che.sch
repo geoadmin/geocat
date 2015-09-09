@@ -70,10 +70,12 @@
             	normalize-space(.)='imageryBaseMapsEarthCover' or
             	normalize-space(.)='environment']"/>
         	<sch:let name="sibling" value="../gmd:topicCategory/gmd:MD_TopicCategoryCode[starts-with(normalize-space(.), concat(normalize-space($code), '_'))]"/>
-   
+
+            <sch:let name="legalTopicCategory" value="($code and $sibling) or not($code)"/>
+
             <!--  Check that basicGeodataId is defined -->
-            <sch:assert test="($code and $sibling) or not($code)">$loc/strings/alert.M104</sch:assert>
-            <sch:report test="($code and $sibling) or not($code)"><sch:value-of select="$loc/strings/report.M104/div"/></sch:report>
+            <sch:assert test="$legalTopicCategory">$loc/strings/alert.M104</sch:assert>
+            <sch:report test="$legalTopicCategory"><sch:value-of select="$loc/strings/report.M104/div"/></sch:report>
         </sch:rule>
     </sch:pattern>
     <sch:pattern>
@@ -89,17 +91,17 @@
     </sch:pattern>
 
 
-    <sch:pattern>
-        <sch:title>$loc/strings/invalidURLCheck</sch:title>
-        <!-- Check specification names and status -->
-        <sch:rule context="/*//gmd:linkage//che:LocalisedURL | *//gmd:linkage//gmd:URL">
+    <!--<sch:pattern>-->
+        <!--<sch:title>$loc/strings/invalidURLCheck</sch:title>-->
+        <!--&lt;!&ndash; Check specification names and status &ndash;&gt;-->
+        <!--<sch:rule context="/*//gmd:linkage//che:LocalisedURL | *//gmd:linkage//gmd:URL">-->
 
-            <sch:let name="isValidUrl" value="xslutil:validateURL(string(.))"/>
-            <sch:assert test="$isValidUrl">
-                <sch:value-of select="$loc/strings/alert.invalidURL/div"/>
-                '<sch:value-of select="string(.)"/>'
-            </sch:assert>
-        </sch:rule>
-    </sch:pattern>
+            <!--<sch:let name="isValidUrl" value="xslutil:validateURL(string(.))"/>-->
+            <!--<sch:assert test="$isValidUrl">-->
+                <!--<sch:value-of select="$loc/strings/alert.invalidURL/div"/>-->
+                <!--'<sch:value-of select="string(.)"/>'-->
+            <!--</sch:assert>-->
+        <!--</sch:rule>-->
+    <!--</sch:pattern>-->
 
 </sch:schema>
