@@ -258,10 +258,14 @@ public class DataManager implements ApplicationEventPublisherAware {
             Log.debug(Geonet.DATA_MANAGER, "INDEX CONTENT:");
 
 
-        Sort sortByMetadataChangeDate = SortUtils.createSort(Metadata_.dataInfo, MetadataDataInfo_.changeDate);
+        Sort.Order sortSubtemplatesFirst = new Sort.Order(Sort.Direction.DESC,
+                SortUtils.createPath(Metadata_.dataInfo, MetadataDataInfo_.type_JPAWorkaround));
+        Sort.Order sortByMetadataChangeDate = new Sort.Order(SortUtils.createPath(Metadata_.dataInfo, MetadataDataInfo_.changeDate));
+        Sort metadataSort = new Sort(Lists.newArrayList(sortSubtemplatesFirst, sortByMetadataChangeDate));
         int currentPage=0;
+
         Page<Pair<Integer, ISODate>> results = getMetadataRepository().findAllIdsAndChangeDates(new PageRequest(currentPage,
-                METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
+                METADATA_BATCH_PAGE_SIZE, metadataSort));
 
 
         // index all metadata in DBMS if needed
@@ -304,7 +308,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
             currentPage++;
             results = getMetadataRepository().findAllIdsAndChangeDates(new PageRequest(currentPage, METADATA_BATCH_PAGE_SIZE,
-                    sortByMetadataChangeDate));
+                    metadataSort));
         }
 
         // if anything to index then schedule it to be done after servlet is
