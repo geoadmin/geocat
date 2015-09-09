@@ -83,12 +83,8 @@
               }
             }
 
-            var validated;
-            if(scope.templateType == 'extents' && scope.regionType) {
-              validated = 'gn:' + scope.regionType;
-            }
             gcSharedobject.loadRecords(scope.templateType, scope.searchValue,
-            validated).
+                scope.regionType).
                 then(function(data) {
                   scope.objects = data;
                 }
