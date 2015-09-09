@@ -56,21 +56,21 @@ public class ExtentsStrategyTest extends AbstractSharedObjectTest {
         final ExtentsStrategy extentsStrategy = new ExtentsStrategy(geonetworkDataDirectory.getWebappDir(), extentManager, "eng");
         UserSession session = new UserSession();
 
-        Element result = extentsStrategy.search(session, "bern", "eng", 10);
+        Element result = extentsStrategy.search(session, null, "bern", "eng", 10);
         assertEquals(Xml.getString(result), 3, result.getContentSize());
 
-        result = extentsStrategy.search(session, "@id@" + OTHERTYPE + "@2", "eng", 10);
+        result = extentsStrategy.search(session, null, "@id@" + OTHERTYPE + "@2", "eng", 10);
         assertEquals(Xml.getString(result), 1, result.getContentSize());
         assertEquals("true", result.getChild(REPORT_ELEMENT).getChildText(REPORT_VALIDATED));
 
-        result = extentsStrategy.search(session, "b2", "eng", 1);
+        result = extentsStrategy.search(session, null, "b2", "eng", 1);
         assertEquals(Xml.getString(result), 1, result.getContentSize());
         assertEquals("true", result.getChild(REPORT_ELEMENT).getChildText(REPORT_VALIDATED));
 
-        result = extentsStrategy.search(session, "b", "eng", 1);
+        result = extentsStrategy.search(session, null, "b", "eng", 1);
         assertEquals(Xml.getString(result), 1, result.getContentSize());
 
-        result = extentsStrategy.search(session, "b", "eng", 10);
+        result = extentsStrategy.search(session, null, "b", "eng", 10);
         assertEquals(Xml.getString(result), 4, result.getContentSize());
         assertEquals("true", result.getChild(REPORT_ELEMENT).getChildText(REPORT_VALIDATED));
         assertEquals("true", ((Element) result.getChildren().get(1)).getChildText(REPORT_VALIDATED));

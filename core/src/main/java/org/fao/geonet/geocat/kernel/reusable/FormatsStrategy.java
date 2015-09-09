@@ -110,7 +110,7 @@ public final class FormatsStrategy extends AbstractSubtemplateStrategy {
     }
 
     @Override
-    public Element search(UserSession session, String search, String language, int maxResults) throws Exception {
+    public Element search(UserSession session, String validated, String search, String language, int maxResults) throws Exception {
         return super.listFromIndex(searchManager, "gmd:MD_Format", null, language, session, this,
                 maxResults, new FormatDescFunction(), search);
     }

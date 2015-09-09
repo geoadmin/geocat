@@ -128,7 +128,7 @@ public class KeywordsStrategyTest extends AbstractThesaurusBasedTest {
 
     @Test
     public void testMarkAsValidated() throws Exception {
-        final Element found = this.strategy.search(session, "9" + NON_VALID_THESAURUS_NAME, "eng", 100);
+        final Element found = this.strategy.search(session, null, "9" + NON_VALID_THESAURUS_NAME, "eng", 100);
         List<String> ids = Lists.newArrayList();
         for (Object o : found.getContent()) {
             Element e = (Element) o;
@@ -142,7 +142,7 @@ public class KeywordsStrategyTest extends AbstractThesaurusBasedTest {
 
     @Test
     public void testDelete() throws Exception {
-        final Element found = this.strategy.search(session, "9" + NON_VALID_THESAURUS_NAME, "eng", 100);
+        final Element found = this.strategy.search(session, null, "9" + NON_VALID_THESAURUS_NAME, "eng", 100);
         List<String> ids = Lists.newArrayList();
         for (Object o : found.getContent()) {
             Element e = (Element) o;
@@ -155,7 +155,7 @@ public class KeywordsStrategyTest extends AbstractThesaurusBasedTest {
     }
 
     private void doSearch(KeywordsStrategy strategy, UserSession session, String searchTerm, boolean validated, int expected) throws Exception {
-        final Element search = strategy.search(session, searchTerm, "eng", 10);
+        final Element search = strategy.search(session, null, searchTerm, "eng", 10);
 
         assertEquals(expected, search.getContentSize());
 

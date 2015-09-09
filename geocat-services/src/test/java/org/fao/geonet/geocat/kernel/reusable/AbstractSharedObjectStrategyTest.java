@@ -60,7 +60,7 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
 
         final SharedObjectStrategy strategy = createReplacementStrategy();
         UserSession session = new UserSession();
-        Element search = strategy.search(session, searchTerm, "eng", 10);
+        Element search = strategy.search(session, null, searchTerm, "eng", 10);
 
         assertEquals(2, search.getContentSize());
         assertEquals("true", ((Element)search.getChildren().get(0)).getChildText(SharedObjectStrategy.REPORT_VALIDATED));
@@ -70,7 +70,7 @@ public abstract class AbstractSharedObjectStrategyTest extends AbstractSharedObj
             assertTrue(e.getChildText(SharedObjectStrategy.REPORT_DESC).contains(searchTerm));
         }
 
-        search = strategy.search(session, searchTerm, "eng", 1);
+        search = strategy.search(session, null, searchTerm, "eng", 1);
         assertEquals(1, search.getContentSize());
         assertEquals("true", ((Element)search.getChildren().get(0)).getChildText(SharedObjectStrategy.REPORT_VALIDATED));
     }

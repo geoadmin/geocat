@@ -1162,7 +1162,7 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
 
     private Pattern searchByIdPattern = Pattern.compile("@id@(.+)@(.+?)");
     @Override
-    public Element search(UserSession session, String search, String language, int maxResults) throws Exception {
+    public Element search(UserSession session, String validated, String search, String language, int maxResults) throws Exception {
         final FilterFactory2 factory2 = CommonFactoryFinder.getFilterFactory2();
 
         Element results = new Element(REPORT_ROOT);
@@ -1188,17 +1188,22 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
                 toResults(session, results, featureType, !featureType.typename.equals(NON_VALIDATED_TYPE), filter, maxResults);
             }
         } else {
-            for (FeatureType featureType : _extentMan.getSource().getFeatureTypes()) {
-                if (results.getContentSize() < maxResults) {
-                    if (!featureType.typename.equalsIgnoreCase(NON_VALIDATED_TYPE) && !featureType.typename.equalsIgnoreCase(XLINK_TYPE)) {
+            if(validated != null) {
+                searchFeatureStore(session, search, factory2, results, _extentMan.getSource().getFeatureType(validated), true, maxResults);
+            }
+            else {
+                for (FeatureType featureType : _extentMan.getSource().getFeatureTypes()) {
+                    if (results.getContentSize() < maxResults) {
+                        if (!featureType.typename.equalsIgnoreCase(NON_VALIDATED_TYPE) && !featureType.typename.equalsIgnoreCase(XLINK_TYPE)) {
 
-                        searchFeatureStore(session, search, factory2, results, featureType, true, maxResults);
+                            searchFeatureStore(session, search, factory2, results, featureType, true, maxResults);
+                        }
                     }
                 }
-            }
 
-            searchFeatureStore(session, search, factory2, results, _extentMan.getSource().getFeatureType(XLINK_TYPE), true, maxResults);
-            searchFeatureStore(session, search, factory2, results, _extentMan.getSource().getFeatureType(NON_VALIDATED_TYPE), false, maxResults);
+                searchFeatureStore(session, search, factory2, results, _extentMan.getSource().getFeatureType(XLINK_TYPE), true, maxResults);
+                searchFeatureStore(session, search, factory2, results, _extentMan.getSource().getFeatureType(NON_VALIDATED_TYPE), false, maxResults);
+            }
         }
 
         sortResults(results, search);

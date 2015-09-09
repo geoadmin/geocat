@@ -279,7 +279,7 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
     }
 
     @Override
-    public Element search(UserSession session, String search, String language, int maxResults) throws Exception {
+    public Element search(UserSession session, String validated, String search, String language, int maxResults) throws Exception {
         Element results = new Element(REPORT_ELEMENT);
 
         KeywordsSearcher searcher = new KeywordsSearcher(this._isoLanguagesMapper, _thesaurusMan);

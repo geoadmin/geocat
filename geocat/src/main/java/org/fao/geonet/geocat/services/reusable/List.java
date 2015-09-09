@@ -116,7 +116,7 @@ public class List implements Service {
             char[] outArray = new char[charArray.length * 4];
             int lengthOfOutput = ASCIIFoldingFilter.foldToASCII(charArray, 0, outArray, 0, charArray.length);
             String processedSearchTerm = new String(outArray, 0, lengthOfOutput);
-            return strategy.search(session, processedSearchTerm, language, maxResults);
+            return strategy.search(session, validated, processedSearchTerm, language, maxResults);
         } else {
             return strategy.list(session, validated, language, maxResults);
         }
