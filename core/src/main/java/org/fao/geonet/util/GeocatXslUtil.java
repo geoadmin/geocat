@@ -746,7 +746,7 @@ public class GeocatXslUtil {
     public static boolean validateURL(String urlString) {
         try {
 //            System.out.println("Testing url : " + urlString);
-            HttpHead method = new HttpHead(urlString);
+            HttpHead head = new HttpHead(urlString);
 
             HttpClient client = HttpClients.createDefault();
 
@@ -761,11 +761,21 @@ public class GeocatXslUtil {
             if (proxyHost != null && proxyPort != null) {
                 requestConfig.setProxy(new HttpHost(proxyHost, Integer.valueOf(proxyPort)));
             }
-            method.setConfig(requestConfig.build());
+            RequestConfig builtRequestConfig = requestConfig.build();
+            head.setConfig(builtRequestConfig);
 
-            final HttpResponse response = client.execute(method);
+            HttpResponse response = client.execute(head);
 
-            return response.getStatusLine().getStatusCode() != HttpStatus.SC_NOT_FOUND;
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                HttpHead get = new HttpHead(urlString);
+                get.setConfig(builtRequestConfig);
+
+                response = client.execute(head);
+
+                return response.getStatusLine().getStatusCode() != HttpStatus.SC_NOT_FOUND;
+            } else {
+                return true;
+            }
         } catch (Exception e) {
             return false;
         }

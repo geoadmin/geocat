@@ -3194,4 +3194,8 @@
     <label>Bezugsebene</label>
     <description>Bezugsebene</description>
   </element>
+  <element name="gmd:DS_AssociationTypeCode">
+    <label>Assoziationstyp</label>
+    <description>Assoziationstyp</description>
+  </element>
 </labels>
