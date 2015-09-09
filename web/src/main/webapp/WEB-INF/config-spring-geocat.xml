@@ -107,7 +107,7 @@
                 <property name="group" value="geocatBackgroundTasks" />
             </bean>
         </property>
-        <property name="cronExpression" value="0 30 20 ? * *" />
+        <property name="cronExpression" value="0 30 21 ? * *" />
     </bean>
 
     <bean id="backupMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
