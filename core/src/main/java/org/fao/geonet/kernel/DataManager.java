@@ -364,7 +364,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @param clearXlink
      * @throws Exception
      */
-    public synchronized void rebuildIndexForSelection(final ServiceContext context,
+    public void rebuildIndexForSelection(final ServiceContext context,
                                                       boolean clearXlink)
             throws Exception {
 
@@ -496,12 +496,13 @@ public class DataManager implements ApplicationEventPublisherAware {
     }
     public void indexMetadata(final String metadataId, boolean forceRefreshReaders, boolean processSharedObjects,
                               boolean fastIndex, boolean runValidation) throws Exception {
+        long startWait = System.currentTimeMillis();
         indexLock.lock();
         try {
             if (waitForIndexing.contains(metadataId)) {
                 return;
             }
-            while (indexing.contains(metadataId)) {
+            while (indexing.contains(metadataId) && (System.currentTimeMillis() - startWait) < 10000) {
                 try {
                     waitForIndexing.add(metadataId);
                     // don't index the same metadata 2x
@@ -1232,7 +1233,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @return
      * @throws Exception
      */
-    private synchronized Element getXSDXmlReport(String schema, Element md) {
+    private Element getXSDXmlReport(String schema, Element md) {
         // NOTE: this method assumes that enumerateTree has NOT been run on the metadata
         ErrorHandler errorHandler = new ErrorHandler();
         errorHandler.setNs(Edit.NAMESPACE);
@@ -2023,7 +2024,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @param groupOwner
      * @throws Exception
      */
-    public synchronized void updateMetadataOwner(final int id, final String owner, final String groupOwner) throws Exception {
+    public void updateMetadataOwner(final int id, final String owner, final String groupOwner) throws Exception {
         getMetadataRepository().update(id, new Updater<Metadata>() {
             @Override
             public void apply(@Nonnull Metadata entity) {
@@ -2047,22 +2048,24 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @return metadata if the that was updated
      * @throws Exception
      */
-    public synchronized Metadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
+    public Metadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
                                                 final boolean validate, final boolean ufo, final boolean index, final String lang,
                                                 final String changeDate, final boolean updateDateStamp) throws Exception {
+        // GEOCAT
         Element metadataXml = md;
 
         // when invoked from harvesters, session is null?
         UserSession session = context.getUserSession();
-        if(session != null) {
+        if (session != null) {
             session.removeProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
         }
 
         String schema = getMetadataSchema(metadataId);
         Integer intId = Integer.valueOf(metadataId);
-        if(ufo) {
+        if (ufo) {
             String parentUuid = null;
             metadataXml = updateFixedInfo(schema, Optional.of(intId), null, metadataXml, parentUuid, (updateDateStamp ? UpdateDatestamp
+
                     .YES : UpdateDatestamp.NO), context);
         }
 
@@ -2071,10 +2074,9 @@ public class DataManager implements ApplicationEventPublisherAware {
 
         // Notifies the metadata change to metatada notifier service
         final Metadata metadata = getMetadataRepository().findOne(metadataId);
-
         String uuid = null;
         if (getSchemaManager().getSchema(schema).isReadwriteUUID()
-                && metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
+            && metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
             uuid = extractUUID(schema, metadataXml);
         }
 
@@ -2084,25 +2086,17 @@ public class DataManager implements ApplicationEventPublisherAware {
             // Notifies the metadata change to metatada notifier service
             notifyMetadataChange(metadataXml, metadataId);
         }
-
         try {
             //--- do the validation last - it throws exceptions
-            // GEOCAT
-//            if (session != null && validate) {
-//                doValidate(context, schema,metadataId,metadataXml,lang, false, true);
-//            } else {
             final MetadataValidationRepository validationRepository = _applicationContext.getBean(MetadataValidationRepository.class);
             validationRepository.deleteAllById_MetadataId(intId);
-//            }
-            // END GEOCAT
         } finally {
-            if(index) {
+            if (index) {
                 //--- update search criteria
                 boolean processSharedObjects = false;
                 indexMetadata(metadataId, true, processSharedObjects, false, false);
             }
         }
-        // GEOCAT
         if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
             if (!index) {
                 indexMetadata(metadataId, true, false, false, false);
@@ -2112,9 +2106,9 @@ public class DataManager implements ApplicationEventPublisherAware {
             ContactsStrategy strategy = new ContactsStrategy(context.getApplicationContext());
             getServiceContext().getBean(ThreadPool.class).runTask(new UpdateReferencedMetadata(metadata.getUuid(), this, strategy));
         }
-        // END GEOCAT
         // Return an up to date metadata record
         return getMetadataRepository().findOne(metadataId);
+        // END GEOCAT
     }
 
     /**
