@@ -178,7 +178,7 @@
         <xsl:variable name="charStringAbstract" select="$identification/gmd:abstract/gco:CharacterString"/>
         <xsl:variable name="locStringAbstracts" select="$identification/gmd:abstract//gmd:LocalisedCharacterString"/>
         <xsl:choose>
-            <xsl:when    test="string-length(string($docLangAbstract)) != 0">
+            <xsl:when    test="string-length(string($docLangAbstract[1])) != 0">
                 <xsl:value-of select="$docLangAbstract[1]"/>
             </xsl:when>
             <xsl:when    test="string-length(string($charStringAbstract[1])) != 0">
