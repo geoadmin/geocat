@@ -9,6 +9,6 @@
 		<xsl:apply-templates select="/root/report/allElements/record"/> 
 	</xsl:template>
 	<xsl:template match="record">
-"<xsl:value-of select="uuid"/>";"<xsl:value-of select="entity"/>";"<xsl:value-of select="validated"/>";"<xsl:value-of select="published"/>";"<xsl:value-of select="changedate"/>";"<xsl:value-of select="changetime"/>";"<xsl:value-of select="failurerule"/>";"<xsl:value-of select="failurereasons"/>"</xsl:template>
+"<xsl:value-of select="uuid"/>";"<xsl:value-of select="entity"/>";"<xsl:value-of select="validated"/>";"<xsl:value-of select="published"/>";"<xsl:value-of select="changedate"/>";"<xsl:value-of select="changetime"/>";"<xsl:value-of select="failurerule"/>";"<xsl:value-of select="replace(failurereasons, '&quot;', '`')"/>"</xsl:template>
 
 </xsl:stylesheet>
