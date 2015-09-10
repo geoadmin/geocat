@@ -401,7 +401,9 @@ span.gn-facet-label:first-letter {
   position:relative;
 }
 .dropdown-submenu>.dropdown-menu {
-  top:0;
+  top: auto;
+  bottom: 0;
+  margin-bottom: 1px;
   left:100%;
   margin-top:-6px;
   margin-left:-1px;
@@ -409,6 +411,7 @@ span.gn-facet-label:first-letter {
   -moz-border-radius:0 6px 6px 6px;
   border-radius:0 6px 6px 6px;
 }
+
 .dropdown-submenu:hover>.dropdown-menu {
   display:block;
 }

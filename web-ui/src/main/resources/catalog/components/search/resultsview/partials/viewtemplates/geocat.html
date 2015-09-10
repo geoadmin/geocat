@@ -5,7 +5,7 @@
     <div class="media">
 
       <div class="media-body">
-        <div gc-md-actions-menu="md" class="pull-right">
+        <div data-ng-class="{dropup: $last && !$first}" gc-md-actions-menu="md" class="pull-right">
         </div>
 
         <h4>
@@ -38,7 +38,7 @@
     <div class="md-links">
 
       <!--HTTP Links-->
-      <div class="btn-group clearfix" ng-if="links.length > 0">
+      <div data-ng-class="{dropup: $last && !$first}" class="btn-group clearfix" ng-if="links.length > 0">
         <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
           <span class="fa fa-link"></span>
           {{links.length}}
@@ -52,7 +52,7 @@
       </div>
 
       <!--Downloads-->
-      <div class="btn-group clearfix" ng-if="downloads.length > 0">
+      <div data-ng-class="{dropup: $last && !$first}" class="btn-group clearfix" ng-if="downloads.length > 0">
         <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
           <span class="fa fa-download"></span>
           {{downloads.length}}
@@ -68,7 +68,7 @@
       </div>
 
       <!--Layers-->
-      <div class="btn-group clearfix" ng-if="layers.length > 0">
+      <div data-ng-class="{dropup: $last && !$first}" class="btn-group clearfix" ng-if="layers.length > 0">
         <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
           <span class="fa fa-globe"></span>
           {{layers.length}}
