@@ -821,6 +821,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 						grpList.append(" or ");
 					grpList.append(g);
 				}
+
 				String grps = grpList.toString();
 				for (Content elem : operations) {
 					if (elem.getValue().equalsIgnoreCase("view")) {
@@ -838,7 +839,22 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 					}
 				}
 			}
+            // GEOCAT Hack to get editable MD. This is required because geocat doesn't really use the editing privilege
+            // so if gcediting == y then get all MD that are owned by one of the groups the current user is part of then
+            if (request.getChildText("gcediting") != null) {
+                StringBuilder grpList = new StringBuilder();
+                for (Integer g : userGroups) {
+                    if (grpList.length() > 0)
+                        grpList.append(" or ");
+                    grpList.append(g);
+                }
 
+                request.removeChild("gcediting");
+                request.addContent(new Element(Geonet.IndexFieldNames.GROUP_OWNER).setText(grpList.toString()));
+                request.addContent(new Element(Geonet.IndexFieldNames.IS_HARVESTED).setText("n"));
+                request.addContent(new Element(Geonet.IndexFieldNames.IS_TEMPLATE).setText("n"));
+            }
+            // END GEOCAT
             if (_styleSheetName.equals(Geonet.File.SEARCH_Z3950_SERVER)) {
 				// Construct Lucene query by XSLT, not Java, for Z3950 anyway :-)
 				Element xmlQuery = _sm.transform(_styleSheetName, request);
