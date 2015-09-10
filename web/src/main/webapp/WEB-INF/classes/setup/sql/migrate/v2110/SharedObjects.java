@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import jeeves.xlink.XLink;
 import org.fao.geonet.Constants;
 import org.fao.geonet.DatabaseMigrationTask;
@@ -42,6 +43,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
@@ -71,6 +73,35 @@ public class SharedObjects implements DatabaseMigrationTask {
                                                            "    VALUES (" +
                                                            "              ?, ?, 'iso19139.che', 's', 'n', ?, ?, ?, ?, ?, ?, ?, " +
                                                            "              1, 0, 0, 0)";
+    private static final Set<String> COUNTRIES = Sets.newHashSet("LI", "DE", "CH", "FR", "AT", "IT");
+    private static final Map<String, String> COUNTRY_MAP = Maps.newHashMap();
+    static {
+        COUNTRY_MAP.put("schweiz", "CH");
+        COUNTRY_MAP.put("suisse", "CH");
+        COUNTRY_MAP.put("switzerland", "CH");
+        COUNTRY_MAP.put("svizzera", "CH");
+
+        COUNTRY_MAP.put("deutschland", "DE");
+        COUNTRY_MAP.put("germany", "DE");
+        COUNTRY_MAP.put("allemagne", "DE");
+        COUNTRY_MAP.put("germania", "DE");
+
+        COUNTRY_MAP.put("france", "FR");
+        COUNTRY_MAP.put("frankreich", "FR");
+        COUNTRY_MAP.put("francia", "FR");
+
+        COUNTRY_MAP.put("austria", "AT");
+        COUNTRY_MAP.put("osterreich", "AT");
+        COUNTRY_MAP.put("österreich", "AT");
+        COUNTRY_MAP.put("autriche", "AT");
+
+        COUNTRY_MAP.put("italie", "IT");
+        COUNTRY_MAP.put("italy", "IT");
+        COUNTRY_MAP.put("italien", "IT");
+        COUNTRY_MAP.put("italia", "IT");
+
+        COUNTRY_MAP.put("liechtenstein", "LI");
+    }
 
     @Override
     public void update(Connection connection) throws SQLException {
@@ -360,7 +391,10 @@ public class SharedObjects implements DatabaseMigrationTask {
                 addCharacterString(contacts, cheAddressEl, "city", "city", GMD, false);
                 addCharacterString(contacts, cheAddressEl, "state", "administrativeArea", GMD, false);
                 addCharacterString(contacts, cheAddressEl, "zip", "postalCode", GMD, false);
-                addCharacterString(contacts, cheAddressEl, "country", "country", GMD, false);
+                String country = addCharacterString(contacts, cheAddressEl, "country", "country", GMD, false);
+                if (!country.trim().isEmpty() && !COUNTRIES.contains(country) && COUNTRY_MAP.containsKey(country.toLowerCase())) {
+                    cheAddressEl.getChild("country", GMD).getChild("CharacterString", GCO).setText(COUNTRY_MAP.get(country.toLowerCase()));
+                }
                 String email = addCharacterString(contacts, cheAddressEl, "email", "electronicMailAddress", GMD, false);
                 addCharacterString(contacts, cheAddressEl, "email1", "electronicMailAddress", GMD, false);
                 addCharacterString(contacts, cheAddressEl, "email2", "electronicMailAddress", GMD, false);
