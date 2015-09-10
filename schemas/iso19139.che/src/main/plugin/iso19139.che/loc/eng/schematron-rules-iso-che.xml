@@ -18,4 +18,7 @@
   <M105>[GM03_2_1] - Contact country code</M105>
   <alert.M105><div><h2>Country code is not valid for some contact select CH, LI, IT, AT, DE, FR value</h2></div></alert.M105>
   <report.M105><div><h2>Country code is not valid for some contact select CH, LI, IT, AT, DE, FR value</h2></div></report.M105>
+  <hierarchyLevelName>Dataset Hierarchy Level Name</hierarchyLevelName>
+  <alert.needsHierarchyLevelName><div>A hierarchyLevelName is required because hierarchyLevel is dataset</div></alert.needsHierarchyLevelName>
+  <report.needsHierarchyLevelName><div>hierarchyLevelName is defined or hierarchyLevel is not dataset</div></report.needsHierarchyLevelName>
 </strings>

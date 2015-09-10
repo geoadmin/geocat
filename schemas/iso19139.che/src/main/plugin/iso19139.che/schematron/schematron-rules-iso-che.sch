@@ -91,17 +91,20 @@
     </sch:pattern>
 
 
-    <!--<sch:pattern>-->
-        <!--<sch:title>$loc/strings/invalidURLCheck</sch:title>-->
-        <!--&lt;!&ndash; Check specification names and status &ndash;&gt;-->
-        <!--<sch:rule context="/*//gmd:linkage//che:LocalisedURL | *//gmd:linkage//gmd:URL">-->
+    <sch:pattern>
+        <sch:title>$loc/strings/hierarchyLevelName</sch:title>
+        <!-- Check specification names and status -->
+        <sch:rule context="/node()">
 
-            <!--<sch:let name="isValidUrl" value="xslutil:validateURL(string(.))"/>-->
-            <!--<sch:assert test="$isValidUrl">-->
-                <!--<sch:value-of select="$loc/strings/alert.invalidURL/div"/>-->
-                <!--'<sch:value-of select="string(.)"/>'-->
-            <!--</sch:assert>-->
-        <!--</sch:rule>-->
-    <!--</sch:pattern>-->
+            <sch:let name="dataset" value="count(gmd:hierarchyLevel/gmd:MD_ScopeCode[@codeListValue='dataset'])"/>
+            <sch:let name="hierarchyLevelNames" value="count(gmd:hierarchyLevelName[normalize-space(gco:CharacterString[1]) != ''])"/>
+            <sch:assert test="$dataset = 0 or ($dataset > 0 and $hierarchyLevelNames > 0)">
+                <sch:value-of select="$loc/strings/alert.needsHierarchyLevelName/div"/>
+            </sch:assert>
+            <sch:report test="$dataset = 0 or ($dataset > 0 and $hierarchyLevelNames > 0)">
+                <sch:value-of select="$loc/strings/report.needsHierarchyLevelName/div"/>
+            </sch:report>
+        </sch:rule>
+    </sch:pattern>
 
 </sch:schema>
