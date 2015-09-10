@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
@@ -497,7 +498,7 @@ public final class XslUtil
         return GeocatXslUtil.writeXml(doc);
     }
 
-    public static boolean validateURL(String urlString) {
+    public static boolean validateURL(String urlString) throws ExecutionException {
         return GeocatXslUtil.validateURL(urlString);
     }
 

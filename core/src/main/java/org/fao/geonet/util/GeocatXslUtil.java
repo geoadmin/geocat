@@ -1,6 +1,8 @@
 package org.fao.geonet.util;
 
 import com.google.common.base.Joiner;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
@@ -77,6 +79,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
@@ -743,42 +748,57 @@ public class GeocatXslUtil {
     }
 
 
-    public static boolean validateURL(String urlString) {
-        try {
+    private static final Cache<String, Boolean> URL_VALIDATION_CACHE;
+
+    static {
+        URL_VALIDATION_CACHE = CacheBuilder.<String, Boolean>newBuilder().
+                maximumSize(100000).
+                expireAfterAccess(25, TimeUnit.HOURS).
+                build();
+    }
+
+    public static boolean validateURL(final String urlString) throws ExecutionException {
+        return URL_VALIDATION_CACHE.get(urlString, new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+
+                try {
 //            System.out.println("Testing url : " + urlString);
-            HttpHead head = new HttpHead(urlString);
+                    HttpHead head = new HttpHead(urlString);
 
-            HttpClient client = HttpClients.createDefault();
+                    HttpClient client = HttpClients.createDefault();
 
-            String proxyHost = System.getProperty("http.proxyHost");
-            String proxyPort = System.getProperty("http.proxyPort");
+                    String proxyHost = System.getProperty("http.proxyHost");
+                    String proxyPort = System.getProperty("http.proxyPort");
 
-            final RequestConfig.Builder requestConfig = RequestConfig.custom();
-            requestConfig.setRedirectsEnabled(true);
-            requestConfig.setConnectTimeout(10000);
+                    final RequestConfig.Builder requestConfig = RequestConfig.custom();
+                    requestConfig.setRedirectsEnabled(true);
+                    requestConfig.setConnectTimeout(10000);
 
-            // Added support for proxy
-            if (proxyHost != null && proxyPort != null) {
-                requestConfig.setProxy(new HttpHost(proxyHost, Integer.valueOf(proxyPort)));
+                    // Added support for proxy
+                    if (proxyHost != null && proxyPort != null) {
+                        requestConfig.setProxy(new HttpHost(proxyHost, Integer.valueOf(proxyPort)));
+                    }
+                    RequestConfig builtRequestConfig = requestConfig.build();
+                    head.setConfig(builtRequestConfig);
+
+                    HttpResponse response = client.execute(head);
+
+                    if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                        HttpHead get = new HttpHead(urlString);
+                        get.setConfig(builtRequestConfig);
+
+                        response = client.execute(head);
+
+                        return response.getStatusLine().getStatusCode() != HttpStatus.SC_NOT_FOUND;
+                    } else {
+                        return true;
+                    }
+                } catch (Exception e) {
+                    return false;
+                }
             }
-            RequestConfig builtRequestConfig = requestConfig.build();
-            head.setConfig(builtRequestConfig);
-
-            HttpResponse response = client.execute(head);
-
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
-                HttpHead get = new HttpHead(urlString);
-                get.setConfig(builtRequestConfig);
-
-                response = client.execute(head);
-
-                return response.getStatusLine().getStatusCode() != HttpStatus.SC_NOT_FOUND;
-            } else {
-                return true;
-            }
-        } catch (Exception e) {
-            return false;
-        }
+        });
     }
 
     public static String parseRegionIdFromXLink(String xlink) {
