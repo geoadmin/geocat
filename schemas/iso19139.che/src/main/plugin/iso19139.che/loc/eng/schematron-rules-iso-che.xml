@@ -18,6 +18,4 @@
   <M105>[GM03_2_1] - Contact country code</M105>
   <alert.M105><div><h2>Country code is not valid for some contact select CH, LI, IT, AT, DE, FR value</h2></div></alert.M105>
   <report.M105><div><h2>Country code is not valid for some contact select CH, LI, IT, AT, DE, FR value</h2></div></report.M105>
-  <invalidURLCheck>Online Resource Link Check</invalidURLCheck>
-  <alert.invalidURL><div>Url is invalid, a 404 or some other error: </div></alert.invalidURL>
 </strings>
