@@ -4,10 +4,13 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.geocat.PublishRecord;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -39,7 +42,22 @@ public class UnpublishInvalidMetadataReport implements Service {
                 throw new IllegalArgumentException("The legal values for the includes parameter are: "+INCLUDE_OPTIONS);
             } 
         }
-        List<PublishRecord> records = UnpublishInvalidMetadataJob.values(context, 100, 0);
+        Integer keepDuration = context.getBean(SettingManager.class).getValueAsInt("system/publish_tracking_duration");
+        if (keepDuration == null) {
+            keepDuration = 100;
+        }
+
+        List<PublishRecord> records = UnpublishInvalidMetadataJob.values(context, keepDuration, 0);
+        Collections.sort(records, new Comparator<PublishRecord>() {
+            @Override
+            public int compare(PublishRecord o1, PublishRecord o2) {
+                int changeDateComparisonVal = o2.getChangedate().compareTo(o1.getChangedate());
+                if (changeDateComparisonVal == 0) {
+                    return o2.getChangetime().compareTo(o1.getChangetime());
+                }
+                return changeDateComparisonVal;
+            }
+        });
         
         Element report = new Element("report");
         
