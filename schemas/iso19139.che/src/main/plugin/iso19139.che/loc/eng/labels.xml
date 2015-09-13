@@ -552,7 +552,15 @@
         <description></description>
     </element>
     <element name="che:basicGeodataIDTypeCode">
-        <label>Geodata Type Code</label>
+        <label>Basic Geodata Type Code</label>
         <description>Basic Geodata ID Type Code</description>
+    </element>
+    <element name="che:MD_geodataTypeCode">
+        <label>Geodata Type Code</label>
+        <description>Geodata ID Type Code</description>
+    </element>
+    <element name="che:geodataType">
+        <label>Geodata Type</label>
+        <description>Geodata Type</description>
     </element>
 </labels>

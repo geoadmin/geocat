@@ -259,5 +259,32 @@ une interface externe du service internet pour le processus ou la chaîne de ser
             <description>Référence provenant d’un jeu de données décrivant les données référencées.</description>
         </entry>
     </codelist>
+
+	<codelist name="che:MD_geodataTypeCode">
+		<entry>
+			<code>basicGeodata</code>
+			<label>Basic Geodata</label>
+		</entry>
+		<entry>
+			<code>oereb</code>
+			<label>oereb</label>
+		</entry>
+		<entry>
+			<code>oerebRegister</code>
+			<label>oereb Register</label>
+		</entry>
+		<entry>
+			<code>openGovernmentData</code>
+			<label>Open Government Data</label>
+		</entry>
+		<entry>
+			<code>openData</code>
+			<label>Open Data</label>
+		</entry>
+		<entry>
+			<code>referenceGeodata</code>
+			<label>Reference Geodata</label>
+		</entry>
+	</codelist>
 </codelists>
 

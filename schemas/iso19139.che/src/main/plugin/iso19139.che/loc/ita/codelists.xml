@@ -423,4 +423,30 @@
             <description>Riferimento da un set di dati che descrive i dati referenziati.</description>
         </entry>
     </codelist>
+	<codelist name="che:MD_geodataTypeCode">
+		<entry>
+			<code>basicGeodata</code>
+			<label>Basic Geodata</label>
+		</entry>
+		<entry>
+			<code>oereb</code>
+			<label>oereb</label>
+		</entry>
+		<entry>
+			<code>oerebRegister</code>
+			<label>oereb Register</label>
+		</entry>
+		<entry>
+			<code>openGovernmentData</code>
+			<label>Open Government Data</label>
+		</entry>
+		<entry>
+			<code>openData</code>
+			<label>Open Data</label>
+		</entry>
+		<entry>
+			<code>referenceGeodata</code>
+			<label>Reference Geodata</label>
+		</entry>
+	</codelist>
 </codelists>
