@@ -184,6 +184,9 @@
             <xsl:for-each select="che:basicGeodataIDType/che:basicGeodataIDTypeCode[@codeListValue!='']">
                 <Field name="type" string="basicgeodata-{@codeListValue}" store="true" index="true"/>
             </xsl:for-each>
+            <xsl:for-each select="che:geodataType/che:MD_geodataTypeCode[@codeListValue!='']">
+                <Field name="geodataType" string="geodata-{@codeListValue}" store="false" index="true"/>
+            </xsl:for-each>
 
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
