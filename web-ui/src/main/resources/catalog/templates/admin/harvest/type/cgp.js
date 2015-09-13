@@ -66,6 +66,7 @@ var gnHarvestercgp = {
       '   <site>' +
       '      <name>' + h.site.name + '</name>' +
       '      <url>' + h.site.url + '</url>' +
+      $scope.buildTranslations(h) +
       '      <account>' +
       '         <use>' + h.site.account.use + '</use>' +
       '         <username>' + h.site.account.username + '</username>' +

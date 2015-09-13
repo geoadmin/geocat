@@ -1,6 +1,7 @@
 package org.fao.geonet.geocat.cgp;
 
 import org.fao.geonet.utils.Xml;
+import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -190,13 +191,13 @@ public class CGPQueryCriteria {
             expressionElm = expressionElms.get(i);
             if (i == 0) {
                 // First expression is always added directly to parent criteria Element
-                criteriaElm.addContent(expressionElm);
+                criteriaElm.addContent((Content) expressionElm.clone());
             } else {
                 // We have more than one expressions.
                 // Add concatenated expression, using AND-ing.
                 Element concatExpressionElm = new Element("concatenatedExpression", CGPRequest.NAMESPACE_GCQ);
                 addTextChild(concatExpressionElm, "concatenationOperator", "and");
-                concatExpressionElm.addContent(expressionElm);
+                concatExpressionElm.addContent((Content) expressionElm.clone());
                 criteriaElm.addContent(concatExpressionElm);
             }
         }
