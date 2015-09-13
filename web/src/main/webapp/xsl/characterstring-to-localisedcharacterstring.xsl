@@ -119,6 +119,10 @@
     </xsl:template>
 
     <xsl:template mode="copy" match="gmd:LocalisedURL" priority="5">
+
+        <xsl:message>
+            0000000000000000000000000000000000000000
+        </xsl:message>
         <xsl:variable name="locale" select="@locale"/>
         <xsl:choose>
             <xsl:when test="normalize-space(.) = ''">
@@ -238,6 +242,14 @@
     </xsl:template>
 
 
+    <xsl:template priority="10" match="*[gmd:URL[normalize-space(.) = ''] and che:PT_FreeURL]">
+        <xsl:copy>
+            <xsl:apply-templates mode="copy" select="@*"/>
+            <xsl:apply-templates mode="copy" select="che:PT_FreeURL"/>
+        </xsl:copy>
+    </xsl:template>
+
+
     <!-- The following are NOT multilingual text -->
     <xsl:template priority="100" match="gmd:identifier|
         gmd:fileIdentifier|
@@ -345,6 +357,7 @@
     </xsl:template>
 
     <xsl:template match="gmd:LocalisedCharacterString[@locale='#RO']">
+
         <gmd:LocalisedCharacterString locale="#RM">
             <xsl:value-of select="."/>
         </gmd:LocalisedCharacterString>
