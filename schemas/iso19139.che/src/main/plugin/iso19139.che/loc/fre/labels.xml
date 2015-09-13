@@ -721,10 +721,10 @@ ce qui concerne les métadonnées"</description>
  </element>
  <element name="che:MD_geodataTypeCode">
   <label>Geodata Type Code</label>
-  <description>Geodata ID Type Code</description>
  </element>
  <element name="che:geodataType">
   <label>Geodata Type</label>
-  <description>Geodata Type</description>
+  <description>Characterization of a Dataset</description>
+  <help>Classification of the dataset in a larger group of similar datasets with the help of the enclosed codelist</help>
  </element>
 </labels>
