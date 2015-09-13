@@ -207,6 +207,16 @@
         'service-OGC:WFS'
       ];
 
+      // data store for types field
+      $scope.geodataTypes = [
+        'basicGeodata',
+        'oereb',
+        'oerebRegister',
+        'openGovernmentData',
+        'openData',
+        'referenceGeodata'
+      ];
+
       // data store for archives field
       $scope.archives = [{
         value: '',
