@@ -158,6 +158,7 @@
 					<xs:element name="revision" type="che:CHE_MD_Revision_PropertyType" minOccurs="0"/>
 					<xs:element name="basicGeodataID" type="gco:CharacterString_PropertyType" minOccurs="0"/>
 					<xs:element name="basicGeodataIDType" type="che:basicGeodataIDType_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="geodataType" type="che:geodataType_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
 					<!-- CHEKME no or non -->
 				</xs:sequence>
 				<xs:attribute ref="gco:isoType" use="required" fixed="gmd:MD_DataIdentification"/>
@@ -170,6 +171,14 @@
 	<xs:complexType name="basicGeodataIDType_PropertyType">
 		<xs:sequence minOccurs="0">
 			<xs:element ref="che:basicGeodataIDTypeCode"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="MD_geodataTypeCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<xs:complexType name="geodataType_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="che:MD_geodataTypeCode"/>
 		</xs:sequence>
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
