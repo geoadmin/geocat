@@ -165,15 +165,17 @@ public class HttpProxyServlet extends HttpServlet {
                     // Sets response contentType
                     response.setContentType(getResponseContentType(contentTypesReturned));
 
-                    final String bodyAsString = IOUtils.toString(httpResponse.getEntity().getContent(), Constants.ENCODING).trim();
-                    if (bodyAsString != null) {
-                        String responseBody = bodyAsString.trim();
+                    if (httpResponse.getEntity() != null) {
+                        final String bodyAsString = IOUtils.toString(httpResponse.getEntity().getContent(), Constants.ENCODING).trim();
+                        if (bodyAsString != null) {
+                            String responseBody = bodyAsString.trim();
 
-                        PrintWriter out = response.getWriter();
-                        out.print(responseBody);
+                            PrintWriter out = response.getWriter();
+                            out.print(responseBody);
 
-                        out.flush();
-                        out.close();
+                            out.flush();
+                            out.close();
+                        }
                     }
 
                 } else {
