@@ -166,16 +166,18 @@
                   inputEl.attr('dir', 'rtl');
                 }
 
-                var setNoDataClass = function() {
+                var setNoDataClass = function(validateUrl) {
                   var code = ('#' + langId);
                   scope.hasData[code] = inputEl.val().trim().length > 0;
 
-                  scope.validateUrl(langId);
+                  if (validateUrl !== false) {
+                    scope.validateUrl(langId);
+                  }
                 };
 
                 inputEl.on('keyup', setNoDataClass);
 
-                setNoDataClass();
+                setNoDataClass(false);
               }
             });
 
