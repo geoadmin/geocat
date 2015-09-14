@@ -96,12 +96,13 @@
         <!-- Check specification names and status -->
         <sch:rule context="/node()">
 
+            <sch:let name="hierarchyLevels" value="count(gmd:hierarchyLevel/gmd:MD_ScopeCode)"/>
             <sch:let name="dataset" value="count(gmd:hierarchyLevel/gmd:MD_ScopeCode[@codeListValue='dataset'])"/>
             <sch:let name="hierarchyLevelNames" value="count(gmd:hierarchyLevelName[normalize-space(gco:CharacterString[1]) != ''])"/>
-            <sch:assert test="$dataset = 0 or ($dataset > 0 and $hierarchyLevelNames > 0)">
+            <sch:assert test="hierarchyLevels = 0 or $dataset = 1 or ($dataset != 1 and $hierarchyLevelNames &gt; 0)">
                 <sch:value-of select="$loc/strings/alert.needsHierarchyLevelName/div"/>
             </sch:assert>
-            <sch:report test="$dataset = 0 or ($dataset > 0 and $hierarchyLevelNames > 0)">
+            <sch:report test="hierarchyLevels = 0 or $dataset = 1 or ($dataset != 1 and $hierarchyLevelNames &gt; 0)">
                 <sch:value-of select="$loc/strings/report.needsHierarchyLevelName/div"/>
             </sch:report>
         </sch:rule>
