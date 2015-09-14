@@ -96,7 +96,7 @@
                       if (new RegExp("^https?://.+").test(url)) {
                         element.addClass('testing-url');
                         element.removeClass('has-error');
-                        var proxiedURL = "/geonetwork/proxy?url=" + url;
+                        var proxiedURL = "/geonetwork/proxy?url=" + encodeURIComponent(url);
                         $http.head(proxiedURL).then(function () {
                           setError();
                         }).catch(function () {
