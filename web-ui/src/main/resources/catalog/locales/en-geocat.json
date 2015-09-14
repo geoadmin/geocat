@@ -7,5 +7,12 @@
   "service-OGC:WFS" : "+ WFS Services",
   "any": "- Any -",
   "indexSelectedRecordConfirm": "Do you really want to index the {{selectedCount}} selected record(s) ?",
-  "index": "Index"
+  "index": "Index",
+  "geodataType": "Geodata",
+  "basicGeodata": "Basic Geodata",
+  "oereb": "OEREB",
+  "oerebRegister": "OEREB Register",
+  "openGovernmentData": "Open Government Data",
+  "openData": "Open Data",
+  "referenceGeodata": "Reference Geodata"
 }

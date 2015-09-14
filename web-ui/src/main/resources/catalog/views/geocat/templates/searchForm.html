@@ -132,6 +132,17 @@
           </div>
         </div>
 
+        <!-- Types Combo (from a local scope array) -->
+        <div class="form-group">
+          <label for="typeGD" class="col-md-4 col-sm-12 control-label" translate>geodataType</label>
+          <div class="col-sm-8" id="typeGD">
+            <select class="form-control" data-ng-model="searchObj.params.geodataType">
+              <option value="" translate="">any</option>
+              <option data-ng-repeat="t in geodataTypes" ng-value="'geodata-'+t">{{t|translate}}</option>
+            </select>
+          </div>
+        </div>
+
         <!-- Valid Combo (from a local scope array) -->
         <div class="form-group" ng-if="user['@authenticated'] == 'true'">
           <label class="col-md-4 col-sm-12 control-label" translate>valid</label>

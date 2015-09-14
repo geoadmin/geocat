@@ -120,9 +120,6 @@
 
     <xsl:template mode="copy" match="gmd:LocalisedURL" priority="5">
 
-        <xsl:message>
-            0000000000000000000000000000000000000000
-        </xsl:message>
         <xsl:variable name="locale" select="@locale"/>
         <xsl:choose>
             <xsl:when test="normalize-space(.) = ''">

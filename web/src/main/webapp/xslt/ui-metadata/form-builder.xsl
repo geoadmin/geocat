@@ -130,6 +130,9 @@
               <xsl:attribute name="data-main-language" select="$metadataLanguage"/>
               <xsl:attribute name="data-expanded" select="$toggleLang"/>
             </xsl:if>
+            <xsl:if test="name() = 'gmd:linkage'">
+              <xsl:attribute name="data-validate-url" select="'true'"/>
+            </xsl:if>
 
             <xsl:variable name="mainLangCode" select="upper-case(java-xsl-util:twoCharLangCode($metadataLanguage, substring($metadataLanguage,0,2)))"/>
 
