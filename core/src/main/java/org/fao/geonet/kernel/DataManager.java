@@ -506,7 +506,9 @@ public class DataManager implements ApplicationEventPublisherAware {
                 try {
                     waitForIndexing.add(metadataId);
                     // don't index the same metadata 2x
-                    wait(200);
+                    synchronized (this) {
+                        wait(200);
+                    }
                 } catch (InterruptedException e) {
                     return;
                 } finally {
