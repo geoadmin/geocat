@@ -66,15 +66,28 @@
 
           scope.hasData = {};
 
-          var toTest, urlTestTimer, validUrls;
+          var toTest, urlTestTimer;
 
           scope.currentLanguage = mainLanguage;
-          var setError = function() {
-            element.removeClass('testing-url');
-            if (validUrls) {
-              element.removeClass('has-error');
+          var setError = function(inEl, err) {
+            inEl.attr('invalid-url', '' + err);
+            var allValid = true;
+            var stillProcessing = false;
+            $(element).find(formFieldsSelector).each(function () {
+              var error = $(this).attr['invalid-url'];
+              allValid = allValid && (error !== 'true');
+              stillProcessing = stillProcessing || (error !== 'waiting');
+            });
+
+            if (stillProcessing) {
+              element.addClass('testing-url');
             } else {
-              element.addClass('has-error');
+              element.removeClass('testing-url');
+              if (allValid) {
+                element.removeClass('has-error');
+              } else {
+                element.addClass('has-error');
+              }
             }
           };
           scope.validateUrl = function(langId) {
@@ -86,30 +99,31 @@
                 toTest = {};
               }
               toTest[langId] = true;
-              validUrls = true;
               urlTestTimer = $timeout(function() {
                 if (toTest !== undefined) {
                   $(element).find(formFieldsSelector).each(function () {
                     var inEl = $(this);
                     var url = inEl.val();
+                    url = url ? url.trim() : '';
                     if (toTest[inEl.attr('lang')] && url !== '') {
                       if (new RegExp("^https?://.+").test(url)) {
                         element.addClass('testing-url');
                         element.removeClass('has-error');
+                        inEl.attr('invalid-url', 'testing');
+
                         var proxiedURL = "/geonetwork/proxy?url=" + encodeURIComponent(url);
                         $http.head(proxiedURL).then(function () {
-                          setError();
+                          setError(inEl, false);
                         }).catch(function () {
                           // head sometimes returns 404 even if it is a redirect (using the http client java library which the proxy is doing)
                           $http.get(proxiedURL).then(function () {
-                            setError();
+                            setError(inEl, false);
                           }).catch(function () {
-                            validUrls = false;
-                            setError();
+                            setError(inEl, true);
                           });
                         });
                       } else {
-                        element.addClass('has-error');
+                        setError(inEl, true);
                       }
                     }
                   });
@@ -162,7 +176,6 @@
                 inputEl.on('keyup', setNoDataClass);
 
                 setNoDataClass();
-                scope.validateUrl(langId);
               }
             });
 
