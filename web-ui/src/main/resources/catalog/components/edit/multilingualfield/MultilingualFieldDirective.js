@@ -15,8 +15,8 @@
    * It also set direction attribute for RTL language.
    *
    */
-  module.directive('gnMultilingualField', ['$timeout', '$translate',
-    function($timeout, $translate) {
+  module.directive('gnMultilingualField', ['$timeout', '$translate', '$http',
+    function($timeout, $translate, $http) {
 
       return {
         restrict: 'A',
@@ -66,8 +66,58 @@
 
           scope.hasData = {};
 
-          scope.currentLanguage = mainLanguage;
+          var toTest, urlTestTimer, validUrls;
 
+          scope.currentLanguage = mainLanguage;
+          var setError = function() {
+            element.removeClass('testing-url');
+            if (validUrls) {
+              element.removeClass('has-error');
+            } else {
+              element.addClass('has-error');
+            }
+          };
+          scope.validateUrl = function(langId) {
+            if (attrs['validateUrl'] === 'true') {
+              if (urlTestTimer !== undefined) {
+                $timeout.cancel(urlTestTimer);
+              }
+              if (toTest === undefined) {
+                toTest = {};
+              }
+              toTest[langId] = true;
+              validUrls = true;
+              urlTestTimer = $timeout(function() {
+                if (toTest !== undefined) {
+                  $(element).find(formFieldsSelector).each(function () {
+                    var inEl = $(this);
+                    var url = inEl.val();
+                    if (toTest[inEl.attr('lang')] && url !== '') {
+                      if (new RegExp("^https?://.+").test(url)) {
+                        element.addClass('testing-url');
+                        element.removeClass('has-error');
+                        var proxiedURL = "/geonetwork/proxy?url=" + url;
+                        $http.head(proxiedURL).then(function () {
+                          setError();
+                        }).catch(function () {
+                          // head sometimes returns 404 even if it is a redirect (using the http client java library which the proxy is doing)
+                          $http.get(proxiedURL).then(function () {
+                            setError();
+                          }).catch(function () {
+                            validUrls = false;
+                            setError();
+                          });
+                        });
+                      } else {
+                        element.addClass('has-error');
+                      }
+                    }
+                  });
+                  toTest = undefined;
+                }
+              }, 1000);
+            }
+          };
           /**
            * Get the 3 letter code set in codeListValue
            * from a lang identifier eg. "EN"
@@ -105,11 +155,14 @@
                 var setNoDataClass = function() {
                   var code = ('#' + langId);
                   scope.hasData[code] = inputEl.val().trim().length > 0;
+
+                  scope.validateUrl(langId);
                 };
 
                 inputEl.on('keyup', setNoDataClass);
 
                 setNoDataClass();
+                scope.validateUrl(langId);
               }
             });
 
