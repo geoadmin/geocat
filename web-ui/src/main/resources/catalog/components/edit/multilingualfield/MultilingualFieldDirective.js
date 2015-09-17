@@ -74,9 +74,9 @@
             var allValid = true;
             var stillProcessing = false;
             $(element).find(formFieldsSelector).each(function () {
-              var error = $(this).attr['invalid-url'];
+              var error = $(this).attr('invalid-url');
               allValid = allValid && (error !== 'true');
-              stillProcessing = stillProcessing || (error !== 'waiting');
+              stillProcessing = stillProcessing || (error === 'waiting');
             });
 
             if (stillProcessing) {
@@ -100,6 +100,7 @@
               }
               toTest[langId] = true;
               urlTestTimer = $timeout(function() {
+                urlTestTimer = undefined;
                 if (toTest !== undefined) {
                   $(element).find(formFieldsSelector).each(function () {
                     var inEl = $(this);
