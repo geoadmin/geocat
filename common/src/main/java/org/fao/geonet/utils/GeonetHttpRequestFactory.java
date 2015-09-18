@@ -9,11 +9,22 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
 import org.apache.http.config.SocketConfig;
 import org.apache.http.conn.ConnectionRequest;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.routing.HttpRoute;
-import org.apache.http.impl.client.*;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
 import org.springframework.http.HttpHeaders;
@@ -23,10 +34,17 @@ import org.springframework.http.client.ClientHttpResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PreDestroy;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * Factory interface for making different kinds of requests.  This is an interface so that tests can mock their own implementations.
@@ -39,6 +57,7 @@ public class GeonetHttpRequestFactory {
     private int numberOfConcurrentRequests = 20;
     private PoolingHttpClientConnectionManager connectionManager;
     private volatile HttpClientConnectionManager nonShutdownableConnectionManager;
+    private volatile SSLContext sslContext;
 
     @PreDestroy
     public synchronized void shutdown() {
@@ -168,7 +187,16 @@ public class GeonetHttpRequestFactory {
 
         synchronized (this) {
             if (connectionManager == null) {
-                connectionManager = new PoolingHttpClientConnectionManager();
+                // GEOCAT: BIG HACK.  For some reason the certs that httpcomponents downloaded were
+                // not the same as the browser,
+                initSSLContext();
+
+                Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
+                        .register("https", getSslConnectionSocketFactory())
+                        .register("http", new PlainConnectionSocketFactory())
+                        .build();
+
+                connectionManager = new PoolingHttpClientConnectionManager(registry);
                 connectionManager.setMaxTotal(this.numberOfConcurrentRequests);
                 nonShutdownableConnectionManager = new HttpClientConnectionManager() {
                     public void closeExpiredConnections() {
@@ -205,11 +233,46 @@ public class GeonetHttpRequestFactory {
                 };
             }
             connectionManager.setDefaultSocketConfig(SocketConfig.custom().setSoTimeout((int) TimeUnit.MINUTES.toMillis(3)).build());
+
             builder.setConnectionManager(nonShutdownableConnectionManager);
+            builder.setSslcontext(this.sslContext);
+            builder.setSSLSocketFactory(getSslConnectionSocketFactory());
         }
 
 
         return builder;
+    }
+
+    private SSLConnectionSocketFactory getSslConnectionSocketFactory() {
+        X509HostnameVerifier hostnameVerifier = new AllowAllHostnameVerifier();
+        return new SSLConnectionSocketFactory(this.sslContext, hostnameVerifier);
+    }
+
+    private void initSSLContext() {
+        try {
+            this.sslContext = SSLContext.getInstance("SSL");
+
+// set up a TrustManager that trusts everything
+            sslContext.init(null, new TrustManager[]{new X509TrustManager() {
+                public X509Certificate[] getAcceptedIssuers() {
+                    System.out.println("getAcceptedIssuers =============");
+                    return null;
+                }
+
+                public void checkClientTrusted(X509Certificate[] certs,
+                                               String authType) {
+                    System.out.println("checkClientTrusted =============");
+                }
+
+                public void checkServerTrusted(X509Certificate[] certs,
+                                               String authType) {
+                    System.out.println("checkServerTrusted =============");
+                }
+            }}, new SecureRandom());
+
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static class AdaptingResponse extends AbstractClientHttpResponse {
