@@ -415,7 +415,11 @@
               $scope.saveError = false;
               $scope.toggleAttributes();
             }, function(error) {
-              if(error.msg = 'loggedout') {
+              if (error.error.message !== undefined) {
+                error = error.error;
+                error.msg = error.message;
+              }
+              if(error.msg === 'loggedout') {
                 $scope.isLoggedOut = true;
                 return;
               }
@@ -424,7 +428,8 @@
               $scope.saveError = true;
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('saveMetadataError'),
-                error: error,
+                //error: error,
+                msg: error.msg,
                 timeout: 0,
                 type: 'danger'});
             });
