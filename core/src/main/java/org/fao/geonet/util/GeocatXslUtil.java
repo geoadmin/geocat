@@ -29,13 +29,9 @@ import net.sf.saxon.om.UnfailingIterator;
 import net.sf.saxon.type.Type;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.SystemUtils;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpHead;
-import org.apache.http.impl.client.HttpClients;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.JeevesException;
@@ -45,6 +41,7 @@ import org.fao.geonet.kernel.AllThesaurus;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
@@ -54,6 +51,7 @@ import org.geotools.xml.Parser;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.json.XML;
+import org.springframework.http.client.ClientHttpResponse;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -763,34 +761,16 @@ public class GeocatXslUtil {
             public Boolean call() throws Exception {
 
                 try {
-//            System.out.println("Testing url : " + urlString);
                     HttpHead head = new HttpHead(urlString);
+                    GeonetHttpRequestFactory requestFactory = ApplicationContextHolder.get().getBean(GeonetHttpRequestFactory.class);
+                    ClientHttpResponse response = requestFactory.execute(head);
 
-                    HttpClient client = HttpClients.createDefault();
-
-                    String proxyHost = System.getProperty("http.proxyHost");
-                    String proxyPort = System.getProperty("http.proxyPort");
-
-                    final RequestConfig.Builder requestConfig = RequestConfig.custom();
-                    requestConfig.setRedirectsEnabled(true);
-                    requestConfig.setConnectTimeout(10000);
-
-                    // Added support for proxy
-                    if (proxyHost != null && proxyPort != null) {
-                        requestConfig.setProxy(new HttpHost(proxyHost, Integer.valueOf(proxyPort)));
-                    }
-                    RequestConfig builtRequestConfig = requestConfig.build();
-                    head.setConfig(builtRequestConfig);
-
-                    HttpResponse response = client.execute(head);
-
-                    if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                    if (response.getRawStatusCode() == HttpStatus.SC_NOT_FOUND || response.getRawStatusCode() > 499) {
                         HttpHead get = new HttpHead(urlString);
-                        get.setConfig(builtRequestConfig);
 
-                        response = client.execute(head);
+                        response = requestFactory.execute(get);
 
-                        return response.getStatusLine().getStatusCode() != HttpStatus.SC_NOT_FOUND;
+                        return response.getRawStatusCode() != HttpStatus.SC_NOT_FOUND && response.getRawStatusCode() < 500;
                     } else {
                         return true;
                     }
