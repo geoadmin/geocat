@@ -244,7 +244,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
         try {
             long startTime = System.currentTimeMillis();
             Log.info(UNPUBLISH_LOG, "Starting Unpublish Invalid Metadata Job");
-            Integer keepDuration = serviceContext.getBean(SettingManager.class).getValueAsInt("system/publish_tracking_duration");
+            Integer keepDuration = serviceContext.getBean(SettingManager.class).getValueAsInt("system/metadata/publish_tracking_duration");
             if (keepDuration == null) {
                 keepDuration = 100;
             }
@@ -254,7 +254,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
 
             // clean up expired changes
             final PublishRecordRepository publishRepository = serviceContext.getBean(PublishRecordRepository.class);
-            publishRepository.deleteAll(PublishRecordSpecs.daysOldOrNewer(Math.max(2, keepDuration)));
+            publishRepository.deleteAll(PublishRecordSpecs.daysOldOrOlder(keepDuration));
 
             metadataToTest = lookUpMetadataIds(serviceContext.getBean(MetadataRepository.class));
 
@@ -269,8 +269,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
                      }
                 } catch (Exception e) {
                     String error = Xml.getString(JeevesException.toElement(e));
-                    Log.error(UNPUBLISH_LOG, "Error during Validation/Unpublish process of metadata " + id + ".  Exception: "
-                                                   + error);
+                    Log.error(UNPUBLISH_LOG, "Error during Validation/Unpublish process of metadata " + id + ".  Exception: " + error);
                 }
 
                 serviceContext.getBean(DataManager.class).flush();

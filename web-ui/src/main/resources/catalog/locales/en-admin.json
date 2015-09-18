@@ -1040,8 +1040,11 @@
     "region/getmap/mapproj": "Map projection",
     "region/getmap/summaryWidth": "Summary width",
     "region/getmap/width": "Width",
+    "system/metadata/publish_tracking_duration": "Publish Tracking Duration (Days)",
+    "system/ui": "Deprecated",
+    "system/ui/defaultView": "Deprecated",
     "metadata/editor": "Metadata editor configuration",
     "metadata/editor/schemaConfig": "Configuration par standard",
-	  "logActivity" : "Activity",
+    "logActivity" : "Activity",
     "selectExistingLogo": "Select from existing logos"
 }

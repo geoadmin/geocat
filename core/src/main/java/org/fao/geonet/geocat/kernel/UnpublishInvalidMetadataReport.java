@@ -42,7 +42,7 @@ public class UnpublishInvalidMetadataReport implements Service {
                 throw new IllegalArgumentException("The legal values for the includes parameter are: "+INCLUDE_OPTIONS);
             } 
         }
-        Integer keepDuration = context.getBean(SettingManager.class).getValueAsInt("system/publish_tracking_duration");
+        Integer keepDuration = context.getBean(SettingManager.class).getValueAsInt("system/metadata/publish_tracking_duration");
         if (keepDuration == null) {
             keepDuration = 100;
         }
