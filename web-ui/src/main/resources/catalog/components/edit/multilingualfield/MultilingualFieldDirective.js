@@ -90,7 +90,7 @@
               }
             }
           };
-          scope.validateUrl = function(langId) {
+          scope.validateUrl = function(timeout, langId) {
             if (attrs['validateUrl'] === 'true') {
               if (urlTestTimer !== undefined) {
                 $timeout.cancel(urlTestTimer);
@@ -119,8 +119,8 @@
                           // head sometimes returns 404 even if it is a redirect (using the http client java library which the proxy is doing)
                           $http.get(proxiedURL).then(function () {
                             setError(inEl, false);
-                          }).catch(function () {
-                            setError(inEl, true);
+                          }).catch(function (e) {
+                            setError(inEl, e.status == 404 || e.status > 499);
                           });
                         });
                       } else {
@@ -130,7 +130,7 @@
                   });
                   toTest = undefined;
                 }
-              }, 1000);
+              }, timeout);
             }
           };
           /**
@@ -167,18 +167,17 @@
                   inputEl.attr('dir', 'rtl');
                 }
 
-                var setNoDataClass = function(validateUrl) {
+                var setNoDataClass = function() {
                   var code = ('#' + langId);
                   scope.hasData[code] = inputEl.val().trim().length > 0;
 
-                  if (validateUrl !== false) {
-                    scope.validateUrl(langId);
-                  }
                 };
 
                 inputEl.on('keyup', setNoDataClass);
+                inputEl.on('focus', function() {scope.validateUrl(0, langId)});
+                inputEl.on('input', function() {scope.validateUrl(700, langId)});
 
-                setNoDataClass(false);
+                setNoDataClass();
               }
             });
 
