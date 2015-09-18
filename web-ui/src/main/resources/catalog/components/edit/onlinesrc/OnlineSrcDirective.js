@@ -354,7 +354,9 @@
         'gnOwsCapabilities',
         'gnEditor',
         'gnCurrentEdit',
-        function(gnOnlinesrc, gnOwsCapabilities, gnEditor, gnCurrentEdit) {
+        '$rootScope',
+        '$translate',
+        function(gnOnlinesrc, gnOwsCapabilities, gnEditor, gnCurrentEdit, $rootScope, $translate) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -411,6 +413,8 @@
               scope.onlinesrcService = gnOnlinesrc;
 
               var resetForm = function() {
+
+                scope.layers = [];
                 if (scope.params) {
                   scope.params.desc = scope.mdLangs ? {} : '';
                   scope.params.url = scope.mdLangs ? {} : '';
@@ -505,6 +509,18 @@
                 scope.onlinesrcService.reload = true;
               };
 
+              function handleError(reportError, done, error) {
+                if (reportError && done == 0 && error != undefined) {
+                  var errorMsg = !isNaN(parseFloat(error)) && isFinite(error) ?
+                                    $translate('linkToServiceWithoutURLError') + ": " + error :
+                                    $translate(error);
+                  $rootScope.$broadcast('StatusUpdated', {
+                    title: $translate('error'),
+                    timeout: 0,
+                    msg: errorMsg,
+                    type: 'danger'});
+                }
+              }
               /**
                * loadWMSCapabilities
                *
@@ -512,19 +528,28 @@
                * Update params.layers scope value, that will be also
                * passed to the layers grid directive.
                */
-              scope.loadWMSCapabilities = function() {
+              scope.loadWMSCapabilities = function(reportError) {
                 if (scope.isWMSProtocol) {
-                  var lang;
+                  var lang, urlError, remaining = 0;
                   for(lang in scope.params.url) {
                     if (scope.params.url.hasOwnProperty(lang)) {
+
+                      scope.layers = [];
+                      remaining++;
                       gnOwsCapabilities.getWMSCapabilities(scope.params.url[lang])
                         .then(function(capabilities) {
-                          scope.layers = [];
                           angular.forEach(capabilities.layers, function(l) {
                             if (angular.isDefined(l.Name)) {
                               scope.layers.push(l);
                             }
                           });
+
+                          remaining--;
+                          handleError(reportError, remaining, urlError);
+                        }).catch(function(error) {
+                          urlError = error;
+                          remaining--;
+                          handleError(reportError, remaining, urlError);
                         });
                       break;
                     }

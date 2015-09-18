@@ -195,5 +195,6 @@
     "minorEdit": "Modification mineure",
     "notEvaluated": "Non évaluée",
     "notConformant": "Non conforme",
+    "capabilitiesParseError": "Error parsing WMS capabilities",
     "conformant": "Conforme"
 }
