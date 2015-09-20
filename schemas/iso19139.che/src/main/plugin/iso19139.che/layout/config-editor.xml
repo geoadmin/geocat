@@ -428,7 +428,8 @@
           <!-- 6 - Abstract -->
           <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:abstract" />
           <!-- 7 - Point of contact -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty" or="citedResponsibleParty"
+            in="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation" />
           <!-- 8 - Keywords -->
           <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:descriptiveKeywords" />
           <!-- 12 - Resolution min -->
@@ -438,7 +439,8 @@
           <!-- 16 - Topic Category -->
           <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode" />
           <!-- 17 - Extent -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:extent" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:extent" or="extent"
+            in="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification" />
           <!-- 18 - Basic Geodata ID -->
           <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/che:basicGeodataID" />
           <!-- 19 - Basic Geodata type -->
@@ -448,7 +450,7 @@
           <!-- 26 - File ID UUID -->
           <field xpath="/che:CHE_MD_Metadata/gmd:fileIdentifier" />
           <!-- 27 - MD contact -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:contact" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:contact" or="contact" in="/che:CHE_MD_Metadata" />
           <!-- 14 - Language -->
           <field xpath="/che:CHE_MD_Metadata/gmd:locale" />
           <!-- 15 - Character Set -->
@@ -474,7 +476,8 @@
 
         <section name="gmd:distributionInfo">
           <!-- 20 - Distribution format -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat" or="distributionFormat"
+            in="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution" />
           <!-- 21 - Transfer option 1 link -->
           <field xpath="/che:CHE_MD_Metadata/gmd:distributionInfo[/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:online/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString/text()='WWW:LINK-1.0-http--link']" />
           <!-- 22 - Transfer option 2 download -->
