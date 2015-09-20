@@ -12,7 +12,7 @@
     <xsl:param name="labels" as="node()"/>
     
     <xsl:value-of
-      select="string($labels/schemas/*[name(.)=$schema]/labels/element[@name=$name and not(@context)]/label)"
+      select="string(($labels/schemas/*[name(.)=$schema]/labels/element[@name=$name and not(@context)]/label)[1])"
     />
   </xsl:function>
   

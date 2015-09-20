@@ -11,7 +11,7 @@
     <xsl:param name="name" as="xs:string"/>
     <xsl:param name="labels" as="node()"/>
     <xsl:value-of
-      select="string($labels/element[@name=$name and not(@context)]/label)"
+      select="string(($labels/element[@name=$name and not(@context)]/label)[1])"
     />
   </xsl:function>
 
