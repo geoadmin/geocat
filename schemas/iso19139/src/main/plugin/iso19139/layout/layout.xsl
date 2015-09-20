@@ -345,7 +345,7 @@
       <xsl:with-param name="xpath" select="$xpath"/>
       <xsl:with-param name="type" select="gn-fn-iso19139:getCodeListType(name())"/>
       <xsl:with-param name="name"
-        select="if ($isEditing) then concat(*/gn:element/@ref, '_codeListValue') else ''"/>
+        select="if ($isEditing) then concat((*/gn:element/@ref)[1], '_codeListValue') else ''"/>
       <xsl:with-param name="editInfo" select="*/gn:element"/>
       <xsl:with-param name="parentEditInfo" select="gn:element"/>
       <xsl:with-param name="listOfValues"
