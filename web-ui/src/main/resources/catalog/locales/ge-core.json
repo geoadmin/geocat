@@ -268,6 +268,6 @@
     "addRecord": "Neue Metadaten erfassen",
     "ImportRecord": "Metadaten importieren",
     "directoryManager": "Verzeichnis verwalten",
-    "typeOfRecord": "Type of record",
+    "typeOfRecord": "Datensatz-Typ",
     "load": "Load"
 }
