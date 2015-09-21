@@ -1,10 +1,18 @@
 package org.fao.geonet.geocat.kernel;
 
+import com.google.common.collect.Sets;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -20,6 +28,9 @@ import org.fao.geonet.domain.geocat.PublishRecord;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.search.DuplicateDocFilter;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -49,6 +60,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -274,11 +286,40 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
 
                 serviceContext.getBean(DataManager.class).flush();
             }
-            long timeMinutes = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
-            Log.info(UNPUBLISH_LOG, "Finishing Unpublish Invalid Metadata Job.  Job took:  " + timeMinutes + " min");
+
+            long timeSec = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
+            Log.info(UNPUBLISH_LOG, "Finishing Unpublish Invalid Metadata Job.  Job took:  " + timeSec + " sec");
+
+            indexNonValidatedMetadata(serviceContext, dataManager);
         } finally {
             running.set(false);
         }
+    }
+
+    private void indexNonValidatedMetadata(ServiceContext serviceContext, DataManager dataManager) throws Exception {
+        Log.info(UNPUBLISH_LOG, "Start Unpublish Invalid Metadata Job.");
+        long startTime = System.currentTimeMillis();
+        SearchManager searchManager = serviceContext.getBean(SearchManager.class);
+        Set<String> ids = Sets.newHashSet();
+        try (IndexAndTaxonomy iat = searchManager.getNewIndexReader(null)) {
+            IndexSearcher searcher = new IndexSearcher(iat.indexReader);
+            BooleanQuery query = new BooleanQuery();
+            query.add(new BooleanClause(new TermQuery(new Term("_valid", "-1")), BooleanClause.Occur.MUST));
+            query.add(new BooleanClause(new TermQuery(new Term(Geonet.IndexFieldNames.IS_HARVESTED, "n")), BooleanClause.Occur.MUST));
+            query.add(new BooleanClause(new TermQuery(new Term(Geonet.IndexFieldNames.IS_TEMPLATE, "n")), BooleanClause.Occur.MUST));
+            query.add(new BooleanClause(new TermQuery(new Term(Geonet.IndexFieldNames.SCHEMA, "iso19139.che")), BooleanClause.Occur.MUST));
+            TopDocs topDocs = searcher.search(query, new DuplicateDocFilter(query), Integer.MAX_VALUE);
+            for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
+                ids.add(searcher.doc(scoreDoc.doc).get(Geonet.IndexFieldNames.ID));
+            }
+        }
+
+        for (String mdId : ids) {
+            dataManager.indexMetadata(mdId, false, true, false, true);
+        }
+        long timeSec = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
+        Log.info(UNPUBLISH_LOG, "Finishing Indexing metadata that have not been validated in for index.  "
+                                + "Job took:  " + timeSec + " sec");
     }
 
     private boolean checkIfNeedsUnpublishingAndSavePublishedRecord(ServiceContext context, Metadata metadataRecord,
