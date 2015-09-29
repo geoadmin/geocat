@@ -159,6 +159,8 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
         final PublishRecord record = new PublishRecord();
         record.setChangedate(new Date());
         record.setChangetime(new Date());
+		record.setGroupOwner(info.getSourceInfo().getGroupOwner());
+		record.setSource(info.getSourceInfo().getSourceId());
         record.setEntity(context.getUserSession().getUsername());
         record.setFailurereasons("Manually unpublished by user");
         record.setFailurerule("");

@@ -345,6 +345,8 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
                 todayRecord.setUuid(metadataRecord.getUuid());
                 todayRecord.setEntity(AUTOMATED_ENTITY);
                 todayRecord.setPublished(false);
+                todayRecord.setGroupOwner(metadataRecord.getSourceInfo().getGroupOwner());
+                todayRecord.setSource(metadataRecord.getSourceInfo().getSourceId());
                 todayRecord.setValidated(PublishRecord.Validity.fromBoolean(false));
                 context.getBean(PublishRecordRepository.class).save(todayRecord);
 

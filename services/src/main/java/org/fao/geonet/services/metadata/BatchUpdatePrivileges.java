@@ -145,6 +145,8 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
                     // GEOCAT
                     final PublishRecord record = new PublishRecord();
                     record.setEntity(context.getUserSession().getUsername());
+                    record.setGroupOwner(info.getSourceInfo().getGroupOwner());
+                    record.setSource(info.getSourceInfo().getSourceId());
                     record.setFailurereasons("Manually unpublished by user");
                     record.setFailurerule("");
                     record.setUuid(uuid);

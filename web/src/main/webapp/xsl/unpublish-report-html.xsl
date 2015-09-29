@@ -243,6 +243,7 @@
 							var foundRule = true;
 							var foundTest = true;
 							var foundEntity = true;
+							var foundSource = true;
 
 							var rule = $('#rule-select').val();
 							if (rule !== '') {
@@ -262,7 +263,13 @@
 								foundEntity = entityText.indexOf(entity) > -1;
 							}
 
-							var found = foundSearchTerm &amp;&amp; foundRule &amp;&amp; foundTest &amp;&amp; foundEntity;
+							var source = $('#source-select').val();
+							if (source !== '') {
+								var sourceText = el.find('.sourceName').text()
+								foundSource = sourceText.indexOf(source) > -1;
+							}
+
+							var found = foundSearchTerm &amp;&amp; foundRule &amp;&amp; foundTest &amp;&amp; foundEntity &amp;&amp; foundSource;
 							var match = (found &amp;&amp; !not) || (!found &amp;&amp; not);
 							el.toggle(match)
 							if (match) {
@@ -293,6 +300,11 @@
 						<xsl:with-param name="id" select="'entity-select'"/>
 						<xsl:with-param name="name" select="'Entity'"/>
 						<xsl:with-param name="elements" select="distinct-values(/root/report/allElements/record/entity/text())" />
+					</xsl:call-template>
+					<xsl:call-template name="select">
+						<xsl:with-param name="id" select="'source-select'"/>
+						<xsl:with-param name="name" select="'Source'"/>
+						<xsl:with-param name="elements" select="distinct-values(/root/report/allElements/record/sourceName/text())" />
 					</xsl:call-template>
 					<xsl:call-template name="select">
 						<xsl:with-param name="id" select="'rule-select'"/>
@@ -344,7 +356,12 @@
 		<div id="detail-{uuid}" class="details">
 
 			<a href="javascript:showDetail('detail-{uuid}')">
-				<h3 class="uuid"><xsl:value-of select="uuid" /></h3>
+
+				<h3 class="uuid">
+					<xsl:if test="logo">
+						<img src="{/root/gui/url}{logo}" title="{sourceName}"/>
+					</xsl:if>
+					<xsl:value-of select="uuid" /></h3>
 				<div><strong>Changing Entity: </strong><span class="entity"><xsl:value-of select="entity"/></span></div>
 				<xsl:for-each select="distinct-values(failurereasons/div//div[@class = 'test'])">
 					<div><strong>Test: </strong><xsl:value-of select="."/></div>
@@ -355,6 +372,7 @@
 					<a href="{/root/gui/locService}/md.viewer#/full_view/{uuid}">View</a>
 					<a href="{/root/gui/locService}/xml.metadata.get?uuid={uuid}">XML</a>
 				</div>
+				<div class="sourceName"><strong>Source Name: </strong><xsl:value-of select="sourceName"/></div>
 				<div><strong>Valid: </strong><xsl:value-of select="validated"/></div>
 				<div><strong>Published: </strong><xsl:value-of select="published"/></div>
 				<div><strong>Change Date: </strong><xsl:value-of select="changedate"/></div>

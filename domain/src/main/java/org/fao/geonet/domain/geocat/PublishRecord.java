@@ -5,10 +5,20 @@ import org.fao.geonet.domain.GeonetEntity;
 import org.fao.geonet.domain.ISODate;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.persistence.*;
 import java.util.Date;
 import java.util.IdentityHashMap;
+import javax.annotation.Nonnull;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 /**
  * Represents a record of a metadata that was published or unpublished.
@@ -23,6 +33,8 @@ import java.util.IdentityHashMap;
 @SequenceGenerator(name=PublishRecord.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class PublishRecord extends GeonetEntity {
     static final String ID_SEQ_NAME = "publish_record_id_seq";
+    private Integer groupOwner;
+    private String source;
     private int id;
     private String uuid;
     private String entity;
@@ -60,6 +72,34 @@ public class PublishRecord extends GeonetEntity {
     public PublishRecord setEntity(String entity) {
         this.entity = entity;
         return this;
+    }
+
+    /**
+     * Get the group the metadata belongs to.
+     */
+    public Integer getGroupOwner() {
+        return groupOwner;
+    }
+
+    /**
+     * Set the group the metadata belongs to.
+     */
+    public void setGroupOwner(Integer groupOwner) {
+        this.groupOwner = groupOwner;
+    }
+
+    /**
+     * Get the source instance of the metadata that has been unpublished or published
+     */
+    public String getSource() {
+        return source;
+    }
+
+    /**
+     * Set the source instance of the metadata that has been unpublished or published
+     */
+    public void setSource(String source) {
+        this.source = source;
     }
 
     @Transient
@@ -146,7 +186,7 @@ public class PublishRecord extends GeonetEntity {
     @Nonnull
     @Override
     protected Element asXml(IdentityHashMap<Object, Void> alreadyEncoded) {
-        return new Element("record")
+        Element el = new Element("record")
                 .addContent(new Element("uuid").setText("" + uuid))
                 .addContent(new Element("entity").setText(entity))
                 .addContent(new Element("validated").setText("" + isValidated()))
@@ -155,6 +195,15 @@ public class PublishRecord extends GeonetEntity {
                 .addContent(new Element("changetime").setText(new ISODate(changetime.getTime(), false).getDateAndTime()))
                 .addContent(new Element("failurerule").setText(failurerule))
                 .addContent(new Element("failurereasons").setText(failurereasons));
+
+        if (groupOwner != null) {
+            el.addContent(new Element("groupOwner").setText(groupOwner.toString()));
+        }
+
+        if (source != null) {
+            el.addContent(new Element("source").setText(source));
+        }
+        return el;
     }
 
     public static enum Validity {

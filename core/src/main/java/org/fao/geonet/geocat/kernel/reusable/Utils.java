@@ -36,18 +36,19 @@ import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.geocat.PublishRecord;
 import org.fao.geonet.geocat.kernel.Email;
 import org.fao.geonet.geocat.kernel.extent.ExtentManager;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.geocat.PublishRecordRepository;
@@ -356,16 +357,21 @@ public final class Utils {
                 mdIdSpec = mdIdSpec.or(hasMetadataId(ids.next()));
             }
             context.getBean(OperationAllowedRepository.class).deleteAll(spec.and(mdIdSpec));
+            MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
             for (Integer mdId : results) {
+                Metadata info = metadataRepository.findOne(mdId);
+
                 final PublishRecord record = new PublishRecord();
+                record.setGroupOwner(info.getSourceInfo().getGroupOwner());
+                record.setSource(info.getSourceInfo().getSourceId());
                 record.setChangedate(new Date());
                 record.setChangetime(new Date());
                 record.setEntity(context.getUserSession().getUsername());
                 record.setFailurereasons(msg);
                 record.setFailurerule("");
                 record.setPublished(false);
-                record.setUuid(context.getBean(DataManager.class).getMetadataUuid("" + mdId));
+                record.setUuid(info.getUuid());
                 record.setValidated(PublishRecord.Validity.UNKNOWN);
                 final PublishRecordRepository publishRecordRepository = context.getBean(PublishRecordRepository.class);
                 publishRecordRepository.save(record);

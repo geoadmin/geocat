@@ -4,11 +4,13 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.geocat.PublishRecord;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.geocat.PublishRecordRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
@@ -65,7 +67,9 @@ public class Unpublish implements Service {
         for (Iterator<String> iter = selection.iterator(); iter.hasNext(); ) {
 
             String uuid = iter.next();
-            String id = dm.getMetadataId(uuid);
+            // GEOCAT
+            Metadata md = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
+            int id = md.getId();
 
             final Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasMetadataId(id);
             final Specification<OperationAllowed> isAllGroup = OperationAllowedSpecs.hasGroupId(ReservedGroup.all.getId());
@@ -73,6 +77,8 @@ public class Unpublish implements Service {
             operationAllowedRepo.deleteAll(Specifications.where(hasMetadataId).and(isAllGroup).and(isGuestGroup));
 
             final PublishRecord record = new PublishRecord();
+            record.setGroupOwner(md.getSourceInfo().getGroupOwner());
+            record.setSource(md.getSourceInfo().getSourceId());
             record.setEntity(context.getUserSession().getUsername());
             record.setFailurereasons("");
             record.setFailurerule("manual unpublish by administrator");

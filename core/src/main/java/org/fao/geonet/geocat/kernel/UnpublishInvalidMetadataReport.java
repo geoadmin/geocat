@@ -1,12 +1,18 @@
 package org.fao.geonet.geocat.kernel;
 
+import com.google.common.collect.Maps;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.geocat.PublishRecord;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,6 +20,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class UnpublishInvalidMetadataReport implements Service {
@@ -84,7 +91,67 @@ public class UnpublishInvalidMetadataReport implements Service {
                 manualUnpublishedToday.addContent(todayRecord.asXml());
             }  
         }
-        
+
+        Map<String, String> sourceAndGroupToLogo = Maps.newHashMap();
+
+        @SuppressWarnings("unchecked")
+        List groupsAndSources = Xml.selectNodes(all, "*//record|record");
+
+        Map<String, String> nameMap = Maps.newHashMap();
+
+        for (Object obj : groupsAndSources) {
+            Element el = (Element) obj;
+            String groupOwner = el.getChildText("groupOwner");
+
+            String logoUUID = null;
+            String logoUrl = null;
+            String name = null;
+            if (groupOwner != null) {
+                logoUrl = sourceAndGroupToLogo.get(groupOwner);
+                if (logoUrl == null) {
+                    GroupRepository groupRepository = context.getBean(GroupRepository.class);
+                    final Group group = groupRepository.findOne(Integer.parseInt(groupOwner));
+                    logoUUID = group.getLogo();
+                    nameMap.put(groupOwner, group.getName());
+                }
+                name = nameMap.get(groupOwner);
+            }
+
+            String source = el.getChildText("source");
+            if (logoUUID == null && logoUrl == null) {
+                if (source != null) {
+                    logoUrl = sourceAndGroupToLogo.get(source);
+                }
+            }
+
+            if (name == null && source != null) {
+                name = "Site: " + source;
+            }
+
+            if (logoUrl == null && logoUUID != null) {
+                final Path logosDir = Resources.locateLogosDir(context);
+                final String[] logosExt = {"png", "PNG", "gif", "GIF", "jpg", "JPG", "jpeg", "JPEG", "bmp", "BMP",
+                        "tif", "TIF", "tiff", "TIFF"};
+                for (String ext : logosExt) {
+                    final Path logoPath = logosDir.resolve(logoUUID + "." + ext);
+                    if (Files.exists(logoPath)) {
+                        logoUrl = "/images/logos/" + logoUUID + "." + ext;
+                        sourceAndGroupToLogo.put(logoUUID, logoUrl);
+                        break;
+                    }
+                }
+            }
+
+            if (logoUrl != null) {
+                el.addContent(new Element("logo").setText(logoUrl));
+            }
+
+            if (name != null) {
+                el.addContent(new Element("sourceName").setText(name));
+            }
+        }
+
+
         return report;
     }
 

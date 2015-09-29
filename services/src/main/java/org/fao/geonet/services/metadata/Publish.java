@@ -9,6 +9,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
@@ -16,6 +17,7 @@ import org.fao.geonet.domain.geocat.PublishRecord;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.geocat.PublishRecordRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
@@ -236,6 +238,11 @@ public class Publish {
     // GEOCAT
     private void recordPublishEvent(ServiceContext serviceContext, int mdId, boolean published) throws Exception {
         final PublishRecord record = new PublishRecord();
+        Metadata metadata = serviceContext.getBean(MetadataRepository.class).findOne(mdId);
+        if (metadata != null) {
+            record.setGroupOwner(metadata.getSourceInfo().getGroupOwner());
+            record.setSource(metadata.getSourceInfo().getSourceId());
+        }
         record.setChangedate(new Date());
         record.setChangetime(new Date());
         record.setEntity(serviceContext.getUserSession().getUsername());
