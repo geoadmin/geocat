@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
 	xmlns:java="java:org.fao.geonet.util.XslUtil"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
@@ -27,6 +27,7 @@
 	<xsl:template mode="build" match="/">
 		<html>
 			<head>
+				<link href="../../catalog/lib/style/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 				<style>
 					body {
 						font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -244,6 +245,7 @@
 							var foundTest = true;
 							var foundEntity = true;
 							var foundSource = true;
+							var foundIspublished = true;
 
 							var rule = $('#rule-select').val();
 							if (rule !== '') {
@@ -268,8 +270,13 @@
 								var sourceText = el.find('.sourceName').text()
 								foundSource = sourceText.indexOf(source) > -1;
 							}
+							var ispublished = $('#ispublished-select').val();
+							if (ispublished !== '') {
+								var ispublishedText = el.find('.ispublished').text()
+								foundIspublished = ispublishedText.indexOf(ispublished) > -1;
+							}
 
-							var found = foundSearchTerm &amp;&amp; foundRule &amp;&amp; foundTest &amp;&amp; foundEntity &amp;&amp; foundSource;
+							var found = foundSearchTerm &amp;&amp; foundRule &amp;&amp; foundTest &amp;&amp; foundEntity &amp;&amp; foundSource &amp;&amp; foundIspublished;
 							var match = (found &amp;&amp; !not) || (!found &amp;&amp; not);
 							el.toggle(match)
 							if (match) {
@@ -316,6 +323,16 @@
 						<xsl:with-param name="name" select="'Test'"/>
 						<xsl:with-param name="elements" select="distinct-values(/root/report/allElements/record/failurereasons//div[@class = 'test']/text())" />
 					</xsl:call-template>
+					<xsl:variable name="booleanOpts">
+						<v>true</v>
+						<v>false</v>
+					</xsl:variable>
+
+					<xsl:call-template name="select">
+						<xsl:with-param name="id" select="'ispublished-select'"/>
+						<xsl:with-param name="name" select="'Is Published'"/>
+						<xsl:with-param name="elements" select="distinct-values($booleanOpts/v/text())"/>
+					</xsl:call-template>
 					<div><label for="id">Hide matches:</label><input type="checkbox" id="not" class="search-form" onchange="doSearch()"/></div>
 					<div>
 						<button class="search-form" onmouseup="doSearch()">Search</button>
@@ -355,17 +372,22 @@
 	<xsl:template mode="entry" match="record">
 		<div id="detail-{uuid}" class="details">
 
-			<a href="javascript:showDetail('detail-{uuid}')">
+			<a href="javascript:showDetail('detail-{uuid}')" style="text-decoration: none">
 
-				<h3 class="uuid">
-					<xsl:if test="logo">
-						<img src="{/root/gui/url}{logo}" title="{sourceName}"/>
-					</xsl:if>
-					<xsl:value-of select="uuid" /></h3>
-				<div><strong>Changing Entity: </strong><span class="entity"><xsl:value-of select="entity"/></span></div>
-				<xsl:for-each select="distinct-values(failurereasons/div//div[@class = 'test'])">
-					<div><strong>Test: </strong><xsl:value-of select="."/></div>
-				</xsl:for-each>
+				<xsl:variable name="validIcon" select="if (published = 'true') then 'fa-unlock' else 'fa-lock'" />
+
+				<xsl:if test="logo">
+					<img src="{/root/gui/url}{logo}" title="{sourceName}" style="max-height: 50px; padding: 5px 10px; display: inline"/>
+				</xsl:if>
+				<div style="display: inline-block">
+					<i class="fa {$validIcon}" style="display: inline; padding-right:5px"/>
+					<h3 class="uuid" style="display: inline">
+						<xsl:value-of select="uuid" /></h3>
+					<div><strong>Changing Entity: </strong><span class="entity"><xsl:value-of select="entity"/></span></div>
+					<xsl:for-each select="distinct-values(failurereasons/div//div[@class = 'test'])">
+						<div><strong>Test: </strong><xsl:value-of select="."/></div>
+					</xsl:for-each>
+				</div>
 			</a>
 			<div id="content-detail-{uuid}" class="detail-content" style="display:none">
 				<div class="detail-links">
@@ -374,7 +396,7 @@
 				</div>
 				<div class="sourceName"><strong>Source Name: </strong><xsl:value-of select="sourceName"/></div>
 				<div><strong>Valid: </strong><xsl:value-of select="validated"/></div>
-				<div><strong>Published: </strong><xsl:value-of select="published"/></div>
+				<div><strong>Published: </strong><span class="ispublished"><xsl:value-of select="published"/></span></div>
 				<div><strong>Change Date: </strong><xsl:value-of select="changedate"/></div>
 				<div><strong>Change Time: </strong><xsl:value-of select="changetime"/></div>
 
