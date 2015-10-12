@@ -92,7 +92,7 @@ attached it to the metadata for data.
                           <xsl:attribute name="uuidref" select="$uuidref"/>
                         </xsl:if>
                         <gmd:CI_OnlineResource>
-                          <gmd:linkage>
+                          <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
                             <xsl:choose>
                               <xsl:when test="contains($url, '#')">
                                 <che:PT_FreeURL>
