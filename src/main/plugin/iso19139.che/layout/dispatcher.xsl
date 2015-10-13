@@ -26,7 +26,12 @@
   <!-- Dispatch to the current profile mode -->
   <xsl:template name="dispatch-iso19139.che">
     <xsl:param name="base" as="node()"/>
-    <xsl:apply-templates mode="mode-iso19139.che" select="$base"/>
+    <xsl:param name="overrideLabel" as="xs:string" required="no" select="''"/>
+
+    <xsl:apply-templates mode="mode-iso19139.che" select="$base">
+      <xsl:with-param name="overrideLabel" select="$overrideLabel"/>
+    </xsl:apply-templates>
+
   </xsl:template>
 
 
