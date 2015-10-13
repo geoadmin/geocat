@@ -14,10 +14,10 @@
            'partials/layersGrid.html',
            scope: {
              selection: '=',
-             layers: '='
+             layers: '=',
+             "prop": '='
            },
            link: function(scope, element, attrs) {
-
 
              // Manage layers selection
              scope.selectionMode = attrs.gnSelectionMode;

@@ -9,10 +9,7 @@
             {{(layerSelected.Name == layer.Name) ? 'success ' : ''}}
             {{(layerHovered.Name == layer.Name) ? 'pending ' : ''}}"
           data-ng-class="{'success': selection.indexOf(layer) >= 0}">
-        <td class="add col-first">
-          <div class="icon-zoom-in"></div>
-        </td>
-        <td>{{layer.Title ? layer.Title : layer.Name}}</td>
+        <td>{{layer[prop]}}</td>
       </tr>
     </tbody>
   </table>

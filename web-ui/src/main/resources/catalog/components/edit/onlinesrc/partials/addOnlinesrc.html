@@ -102,19 +102,34 @@
         </div>
       </div>
 
-
       <!-- Refresh Grid Button -->
       <button type="button" class="btn navbar-btn btn-warning"
               data-ng-click="loadWMSCapabilities(true)" data-ng-show="isWMSProtocol && mode == 'url'">
         <i class="fa fa-refresh" /> <span data-translate=""></span>
       </button>
 
+      <div class="row" data-ng-show="isWMSProtocol && mode == 'url'">
+        <div class="col-md-3">
+          <span class="btn btn-default" translate="" data-ng-click="changeLayerPropDisplayed('Title')" data-ng-class="{active : layerPropDisplayed == 'Title'}">title</span>
+          <span class="btn btn-default" translate="" data-ng-click="changeLayerPropDisplayed('Name')" data-ng-class="{active : layerPropDisplayed == 'Name'}">name</span>
+        </div>
+        <div class="col-md-5 gn-filter-input">
+          <i class="fa fa-search"></i>
+          <i class="close" data-ng-click="resetWmsFilter()">&times;</i>
+          <input class="form-control" ng-model="wmsFilter" data-ng-change="onWmsFilterChange()">
+        </div>
+        <div class="col-md-2">
+          {{filteredLayers.length}}&nbsp;<span translate="">layers</span>
+        </div>
+      </div>
+
       <!-- Layers grid directive -->
       <div data-gn-layers-grid
            data-ng-show="isWMSProtocol && mode == 'url'"
            data-gn-selection-mode="multiple"
-           data-layers="layers"
-           data-selection="params.layers">
+           data-layers="filteredLayers"
+           data-selection="params.layers"
+           prop="layerPropDisplayed">
       </div>
 
       <!-- Description Text area -->

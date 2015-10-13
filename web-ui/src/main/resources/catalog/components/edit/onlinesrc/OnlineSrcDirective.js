@@ -356,7 +356,9 @@
         'gnCurrentEdit',
         '$rootScope',
         '$translate',
-        function(gnOnlinesrc, gnOwsCapabilities, gnEditor, gnCurrentEdit, $rootScope, $translate) {
+        '$filter',
+        function(gnOnlinesrc, gnOwsCapabilities, gnEditor, gnCurrentEdit,
+                 $rootScope, $translate, $filter) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -521,6 +523,27 @@
                     type: 'danger'});
                 }
               }
+
+              scope.resetWmsFilter = function() {
+                scope.wmsFilter = '';
+                scope.filteredLayers = scope.layers;
+              };
+              scope.resetWmsFilter();
+
+              // Could be title or name
+              scope.layerPropDisplayed = 'Title';
+              scope.changeLayerPropDisplayed = function(value) {
+                scope.layerPropDisplayed = value;
+              };
+
+              scope.onWmsFilterChange = function(o,n) {
+                scope.filteredLayers = $filter('filter')(scope.layers,
+                    function(l) {
+                      return l[scope.layerPropDisplayed].indexOf(
+                          scope.wmsFilter) >= 0;
+                    });
+              };
+
               /**
                * loadWMSCapabilities
                *
@@ -543,6 +566,7 @@
                               scope.layers.push(l);
                             }
                           });
+                          scope.filteredLayers = scope.layers;
 
                           remaining--;
                           handleError(reportError, remaining, urlError);
