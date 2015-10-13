@@ -10,6 +10,7 @@
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
   xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
   xmlns:util="java:org.fao.geonet.util.GeocatXslUtil"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="#all">
 
 
@@ -19,17 +20,22 @@
   <xsl:template mode="mode-iso19139.che" match="*|@*">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:param name="overrideLabel" as="xs:string" required="no" select="''"/>
 
     <xsl:apply-templates mode="mode-iso19139" select=".">
       <xsl:with-param name="schema" select="$schema"/>
       <xsl:with-param name="labels" select="$labels"/>
+      <xsl:with-param name="overrideLabel" select="$overrideLabel"/>
     </xsl:apply-templates>
   </xsl:template>
 
   <xsl:template mode="mode-iso19139.che" match="che:*">
+    <xsl:param name="overrideLabel" as="xs:string" required="no" select="''"/>
+
     <xsl:apply-templates mode="mode-iso19139" select=".">
       <xsl:with-param name="schema" select="$schema"/>
       <xsl:with-param name="labels" select="$labels"/>
+      <xsl:with-param name="overrideLabel" select="$overrideLabel"/>
     </xsl:apply-templates>
   </xsl:template>
 
