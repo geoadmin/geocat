@@ -29,6 +29,8 @@
   <applicationSchemaInfo>Schéma d'app.</applicationSchemaInfo>
   <metadataExtensionInfo>Extension</metadataExtensionInfo>
   <legislationInformation>Info sur la législation</legislationInformation>
+  <rsIdentifier>Référentiel de coordonnées</rsIdentifier>
+  <spatialResolution>Scale (min or max)</spatialResolution>
 
   <!-- XSD error translation -->
   <invalidElement>Élément invalide. Contenu invalide pour l'élément : </invalidElement>
