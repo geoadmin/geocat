@@ -247,7 +247,6 @@
       <name ancestor="gmd:thesaurusName">gmd:code</name>
       <name ancestor="gmd:aggregateDataSetIdentifier">gmd:code</name>
       <name ancestor="gmd:CI_Citation">gmd:code</name>
-      <name ancestor="gmd:referenceSystemIdentifier">gmd:code</name>
       <name>gmd:language</name>
       <name>srv:name</name>
       <name>srv:invocationName</name>
@@ -433,9 +432,55 @@
           <!-- 8 - Keywords -->
           <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:descriptiveKeywords" />
           <!-- 12 - Resolution min -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator[0]" />
+
+          <action type="add"
+                  name="spatialResolution"
+                  forceLabel="true"
+                  if="not(count(che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale) = 2)"
+                  or="spatialResolution"
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification">
+
+            <template>
+              <snippet>
+                <gmd:spatialResolution>
+                  <gmd:MD_Resolution>
+                    <gmd:equivalentScale>
+                      <gmd:MD_RepresentativeFraction>
+                        <gmd:denominator>
+                          <gco:Integer/>
+                        </gmd:denominator>
+                      </gmd:MD_RepresentativeFraction>
+                    </gmd:equivalentScale>
+                  </gmd:MD_Resolution>
+                </gmd:spatialResolution>
+              </snippet>
+            </template>
+          </action>
+
+
+
           <!-- 13 - Resolution max -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator[1]" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution">
+            <template>
+              <values>
+                <key label="scale"
+                     xpath="gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer"
+                     tooltip="gmd:denominator"/>
+              </values>
+              <snippet>
+                <gmd:MD_Resolution>
+                  <gmd:equivalentScale>
+                    <gmd:MD_RepresentativeFraction>
+                      <gmd:denominator>
+                        <gco:Integer>{{scale}}</gco:Integer>
+                      </gmd:denominator>
+                    </gmd:MD_RepresentativeFraction>
+                  </gmd:equivalentScale>
+                </gmd:MD_Resolution>
+              </snippet>
+            </template>
+
+          </field>
           <!-- 16 - Topic Category -->
           <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode" />
           <!-- 17 - Extent -->
@@ -456,9 +501,61 @@
           <!-- 15 - Character Set -->
           <field xpath="/che:CHE_MD_Metadata/gmd:characterSet" />
           <!-- 24 - Geometric object type -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:geometricObjectType" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation" />
+          <action type="add"
+                  if="count(che:CHE_MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:geometricObjectType) = 0"
+                  name="geometricObjectType" or="geometricObjectType"
+                  in="/che:CHE_MD_Metadata">
+            <template>
+              <snippet>
+                <gmd:MD_VectorSpatialRepresentation>
+                  <gmd:geometricObjects>
+                    <gmd:MD_GeometricObjects>
+                      <gmd:geometricObjectType>
+                        <gmd:MD_GeometricObjectTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_GeometricObjectTypeCode"
+                                                        codeListValue="surface"/>
+                      </gmd:geometricObjectType>
+                      <gmd:geometricObjectCount>
+                        <gco:Integer>1</gco:Integer>
+                      </gmd:geometricObjectCount>
+                    </gmd:MD_GeometricObjects>
+                  </gmd:geometricObjects>
+                </gmd:MD_VectorSpatialRepresentation>
+              </snippet>
+            </template>
+          </action>
+
           <!-- 25 - Reference system -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier" />
+          <field name="rsIdentifier" templateModeOnly="true"
+                 xpath="/che:CHE_MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier"
+                 del="../..">
+            <template>
+              <values>
+                <key label="code"
+                     xpath="gmd:RS_Identifier/gmd:code/gco:CharacterString"
+                     tooltip="gmd:MD_ReferenceSystem"/>
+                <!-- TODO: Get the helper -->
+              </values>
+              <snippet>
+                <gmd:referenceSystemIdentifier>
+                  <gmd:RS_Identifier>
+                    <gmd:code>
+                      <gco:CharacterString>{{code}}</gco:CharacterString>
+                      <gmd:PT_FreeText>
+                        <gmd:textGroup>
+                          <gmd:LocalisedCharacterString locale="#FR">{{code}}</gmd:LocalisedCharacterString>
+                        </gmd:textGroup>
+                        <gmd:textGroup>
+                          <gmd:LocalisedCharacterString locale="#DE">{{code}}</gmd:LocalisedCharacterString>
+                        </gmd:textGroup>
+                      </gmd:PT_FreeText>
+
+                    </gmd:code>
+                  </gmd:RS_Identifier>
+                </gmd:referenceSystemIdentifier>
+              </snippet>
+            </template>
+          </field>
 
           <!-- 28 - Sprachraum ? -->
           <!--           <field xpath="/che:CHE_MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code" /> -->
@@ -479,11 +576,13 @@
           <field xpath="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat" or="distributionFormat"
             in="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution" />
           <!-- 21 - Transfer option 1 link -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:distributionInfo[/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:online/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString/text()='WWW:LINK-1.0-http--link']" />
+          <field name="onlineLink"
+                 xpath="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions"
+                 or="onlineLink" in="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution">
+          </field>
+
           <!-- 22 - Transfer option 2 download -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:distributionInfo[/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:online/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString/text()='WWW:DOWNLOAD-1.0-http--download']" />
           <!-- 23 - Transfer option 3 specialised Geoportal -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:distributionInfo[/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:online/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString/text()='CHTOPO:specialised-geoportal']" />
         </section>
         <section xpath="/che:CHE_MD_Metadata/che:legislationInformation" />
       </tab>
