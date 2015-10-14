@@ -121,7 +121,8 @@ public class UpdateTopicCategories implements DatabaseMigrationTask {
                 Element ee = new Element("MD_TopicCategoryCode", GMD);
                 e.addContent(ee);
                 ee.setText(INVALID_TOPICCAT_MAP.get(value));
-                identificationInfo.get(0).addContent(e);
+                Element idElt = identificationInfo.get(0);
+                idElt.addContent(idElt.indexOf(element.getParentElement()) + 1, e);
                 changed = true;
             }
         }
