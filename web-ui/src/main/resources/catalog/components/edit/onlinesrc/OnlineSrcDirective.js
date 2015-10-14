@@ -534,13 +534,14 @@
               scope.layerPropDisplayed = 'Title';
               scope.changeLayerPropDisplayed = function(value) {
                 scope.layerPropDisplayed = value;
+                scope.resetWmsFilter();
               };
 
               scope.onWmsFilterChange = function(o,n) {
                 scope.filteredLayers = $filter('filter')(scope.layers,
                     function(l) {
-                      return l[scope.layerPropDisplayed].indexOf(
-                          scope.wmsFilter) >= 0;
+                      return l[scope.layerPropDisplayed].toLowerCase().indexOf(
+                          scope.wmsFilter.toLowerCase()) >= 0;
                     });
               };
 
