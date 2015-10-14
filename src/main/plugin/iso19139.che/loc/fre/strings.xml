@@ -30,7 +30,8 @@
   <metadataExtensionInfo>Extension</metadataExtensionInfo>
   <legislationInformation>Info sur la législation</legislationInformation>
   <rsIdentifier>Référentiel de coordonnées</rsIdentifier>
-  <spatialResolution>Scale (min or max)</spatialResolution>
+  <spatialResolution>Échelle (min ou max)</spatialResolution>
+  <geometricObjectType>Type de géométrie</geometricObjectType>
 
   <!-- XSD error translation -->
   <invalidElement>Élément invalide. Contenu invalide pour l'élément : </invalidElement>
