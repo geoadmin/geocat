@@ -433,6 +433,27 @@
           <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:descriptiveKeywords" />
           <!-- 12 - Resolution min -->
           <!-- 13 - Resolution max -->
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution">
+            <template>
+              <values>
+                <key label="scale"
+                     xpath="gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer"
+                     tooltip="gmd:denominator"/>
+              </values>
+              <snippet>
+                <gmd:MD_Resolution>
+                  <gmd:equivalentScale>
+                    <gmd:MD_RepresentativeFraction>
+                      <gmd:denominator>
+                        <gco:Integer>{{scale}}</gco:Integer>
+                      </gmd:denominator>
+                    </gmd:MD_RepresentativeFraction>
+                  </gmd:equivalentScale>
+                </gmd:MD_Resolution>
+              </snippet>
+            </template>
+          </field>
+
           <action type="add"
                   name="spatialResolution"
                   forceLabel="true"
@@ -457,27 +478,6 @@
             </template>
           </action>
 
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution">
-            <template>
-              <values>
-                <key label="scale"
-                     xpath="gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer"
-                     tooltip="gmd:denominator"/>
-              </values>
-              <snippet>
-                <gmd:MD_Resolution>
-                  <gmd:equivalentScale>
-                    <gmd:MD_RepresentativeFraction>
-                      <gmd:denominator>
-                        <gco:Integer>{{scale}}</gco:Integer>
-                      </gmd:denominator>
-                    </gmd:MD_RepresentativeFraction>
-                  </gmd:equivalentScale>
-                </gmd:MD_Resolution>
-              </snippet>
-            </template>
-
-          </field>
           <!-- 16 - Topic Category -->
           <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode" />
           <!-- 17 - Extent -->
@@ -497,31 +497,37 @@
           <field xpath="/che:CHE_MD_Metadata/gmd:locale" />
           <!-- 15 - Character Set -->
           <field xpath="/che:CHE_MD_Metadata/gmd:characterSet" />
+
           <!-- 24 - Geometric object type -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects"
-                 or="geometricObjects" in="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation"
-                 templateModeOnly="true"
-              name="geometricObjectType">
+          <field xpath="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:MD_GeometricObjects/gmd:geometricObjectType"
+                 or="geometricObjectType" in="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:MD_GeometricObjects"
+                 name="geometricObjectType">
+          </field>
+
+          <action type="add"
+                  name="geometricObjectType"
+                  forceLabel="true"
+                  if="count(//gmd:geometricObjects) = 0"
+                  or="spatialRepresentationInfo"
+                  in="/che:CHE_MD_Metadata">
 
             <template>
-              <values>
-                <key label="type"
-                     xpath="gmd:MD_GeometricObjects/gmd:geometricObjectType/gmd:MD_GeometricObjectTypeCode/@codeListValue"
-                     tooltip="gmd:geometricObjectType"/>
-                <!-- TODO: Get the helper -->
-              </values>
               <snippet>
-                    <gmd:geometricObjects>
-                      <gmd:MD_GeometricObjects>
-                        <gmd:geometricObjectType>
-                          <gmd:MD_GeometricObjectTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_GeometricObjectTypeCode"
-                                                          codeListValue="{{type}}"/>
-                        </gmd:geometricObjectType>
-                      </gmd:MD_GeometricObjects>
-                    </gmd:geometricObjects>
+                <gmd:spatialRepresentationInfo>
+                <gmd:MD_VectorSpatialRepresentation>
+                <gmd:geometricObjects>
+                  <gmd:MD_GeometricObjects>
+                    <gmd:geometricObjectType>
+                      <gmd:MD_GeometricObjectTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_GeometricObjectTypeCode"
+                                                      codeListValue="surface"/>
+                    </gmd:geometricObjectType>
+                  </gmd:MD_GeometricObjects>
+                </gmd:geometricObjects>
+                </gmd:MD_VectorSpatialRepresentation>
+                </gmd:spatialRepresentationInfo>
               </snippet>
             </template>
-          </field>
+          </action>
 
           <!-- 25 - Reference system -->
           <field name="rsIdentifier" templateModeOnly="true"
