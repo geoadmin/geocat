@@ -31,6 +31,7 @@
   <legislationInformation>Legislation info</legislationInformation>
   <rsIdentifier>Projection code</rsIdentifier>
   <spatialResolution>Scale (min or max)</spatialResolution>
+  <geometricObjectType>Geometry type</geometricObjectType>
 
   <!-- XSD error translation -->
   <invalidElement>Invalid element. Invalid content was found starting with element: </invalidElement>

@@ -427,12 +427,12 @@
           <!-- 6 - Abstract -->
           <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:abstract" />
           <!-- 7 - Point of contact -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty" or="citedResponsibleParty"
-            in="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:pointOfContact" or="pointOfContact"
+            in="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification" />
           <!-- 8 - Keywords -->
           <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:descriptiveKeywords" />
           <!-- 12 - Resolution min -->
-
+          <!-- 13 - Resolution max -->
           <action type="add"
                   name="spatialResolution"
                   forceLabel="true"
@@ -457,9 +457,6 @@
             </template>
           </action>
 
-
-
-          <!-- 13 - Resolution max -->
           <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution">
             <template>
               <values>
@@ -501,50 +498,45 @@
           <!-- 15 - Character Set -->
           <field xpath="/che:CHE_MD_Metadata/gmd:characterSet" />
           <!-- 24 - Geometric object type -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation" />
-          <action type="add"
-                  if="count(che:CHE_MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:geometricObjectType) = 0"
-                  name="geometricObjectType" or="geometricObjectType"
-                  in="/che:CHE_MD_Metadata">
+          <field xpath="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects"
+                 or="geometricObjects" in="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation"
+                 templateModeOnly="true"
+              name="geometricObjectType">
+
             <template>
+              <values>
+                <key label="type"
+                     xpath="gmd:MD_GeometricObjects/gmd:geometricObjectType/gmd:MD_GeometricObjectTypeCode/@codeListValue"
+                     tooltip="gmd:geometricObjectType"/>
+                <!-- TODO: Get the helper -->
+              </values>
               <snippet>
-                <gmd:MD_VectorSpatialRepresentation>
-                  <gmd:geometricObjects>
-                    <gmd:MD_GeometricObjects>
-                      <gmd:geometricObjectType>
-                        <gmd:MD_GeometricObjectTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_GeometricObjectTypeCode"
-                                                        codeListValue="surface"/>
-                      </gmd:geometricObjectType>
-                      <gmd:geometricObjectCount>
-                        <gco:Integer>1</gco:Integer>
-                      </gmd:geometricObjectCount>
-                    </gmd:MD_GeometricObjects>
-                  </gmd:geometricObjects>
-                </gmd:MD_VectorSpatialRepresentation>
+                    <gmd:geometricObjects>
+                      <gmd:MD_GeometricObjects>
+                        <gmd:geometricObjectType>
+                          <gmd:MD_GeometricObjectTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_GeometricObjectTypeCode"
+                                                          codeListValue="{{type}}"/>
+                        </gmd:geometricObjectType>
+                      </gmd:MD_GeometricObjects>
+                    </gmd:geometricObjects>
               </snippet>
             </template>
-          </action>
+          </field>
 
           <!-- 25 - Reference system -->
           <field name="rsIdentifier" templateModeOnly="true"
-                 xpath="/che:CHE_MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier"
-                 del="../..">
+                 xpath="/che:CHE_MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier">
             <template>
               <values>
                 <key label="code"
-                     xpath="gmd:RS_Identifier/gmd:code/gco:CharacterString"
-                     tooltip="gmd:MD_ReferenceSystem"/>
-                <!-- TODO: Get the helper -->
+                     xpath="gmd:RS_Identifier/gmd:code/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#DE']"
+                     tooltip="gmd:referenceSystemIdentifier"/>
               </values>
               <snippet>
                 <gmd:referenceSystemIdentifier>
                   <gmd:RS_Identifier>
                     <gmd:code>
-                      <gco:CharacterString>{{code}}</gco:CharacterString>
                       <gmd:PT_FreeText>
-                        <gmd:textGroup>
-                          <gmd:LocalisedCharacterString locale="#FR">{{code}}</gmd:LocalisedCharacterString>
-                        </gmd:textGroup>
                         <gmd:textGroup>
                           <gmd:LocalisedCharacterString locale="#DE">{{code}}</gmd:LocalisedCharacterString>
                         </gmd:textGroup>
