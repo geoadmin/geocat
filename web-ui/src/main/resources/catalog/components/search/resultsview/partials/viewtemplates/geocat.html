@@ -5,7 +5,9 @@
     <div class="media">
 
       <div class="media-body">
-        <div data-ng-class="{dropup: $last && !$first}" gc-md-actions-menu="md" class="pull-right">
+        <div data-ng-class="{dropup: $last && !$first}" gc-md-actions-menu="md" class="pull-right"></div>
+        <div ng-if="user['@authenticated'] == 'true'" class="pull-right gn-publishinfo">
+          <span class="fa" data-ng-class="md.isPublished() ? 'fa-unlock' : 'fa-lock'"></span>
         </div>
 
         <h4>

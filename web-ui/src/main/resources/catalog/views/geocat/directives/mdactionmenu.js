@@ -21,6 +21,7 @@
             var uuid = url.substring(url.lastIndexOf('/') + 1);
             $http.get('q?_uuid=' + uuid + '&fast=index&_content_type=json&buildSummary=false').success (function (resp) {
               scope.md = new Metadata(resp.metadata);
+              scope.$parent.md = scope.md;
             });
           }
         }
