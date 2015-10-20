@@ -1,4 +1,6 @@
 -- GEOCAT
+DROP TABLE IF EXISTS geom_table_lastmodified;
+
 CREATE TABLE geom_table_lastmodified (
   name varchar(40),
   lastmodified timestamp,
@@ -14,12 +16,25 @@ INSERT INTO geom_table_lastmodified VALUES ('kantone_search', now());
 INSERT INTO geom_table_lastmodified VALUES ('non_validated', now());
 INSERT INTO geom_table_lastmodified VALUES ('xlinks', now());
 
-CREATE FUNCTION update_geom_lastmodified() RETURNS trigger AS $$
+
+
+CREATE OR REPLACE FUNCTION update_geom_lastmodified() RETURNS trigger AS $$
   BEGIN
     UPDATE geom_table_lastmodified SET lastmodified = now() WHERE name = TG_TABLE_NAME;
     RETURN NULL;
   END
 $$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS lastmodified_updater ON countries;
+DROP TRIGGER IF EXISTS lastmodified_updater ON "countriesBB";
+DROP TRIGGER IF EXISTS lastmodified_updater ON countries_search;
+DROP TRIGGER IF EXISTS lastmodified_updater ON "gemeindenBB";
+DROP TRIGGER IF EXISTS lastmodified_updater ON gemeinden_search;
+DROP TRIGGER IF EXISTS lastmodified_updater ON "kantoneBB";
+DROP TRIGGER IF EXISTS lastmodified_updater ON kantone_search;
+DROP TRIGGER IF EXISTS lastmodified_updater ON non_validated;
+DROP TRIGGER IF EXISTS lastmodified_updater ON xlinks;
+
 
 CREATE TRIGGER lastmodified_updater AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE ON countries EXECUTE PROCEDURE update_geom_lastmodified();
 CREATE TRIGGER lastmodified_updater AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE ON "countriesBB" EXECUTE PROCEDURE update_geom_lastmodified();
@@ -31,7 +46,9 @@ CREATE TRIGGER lastmodified_updater AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE
 CREATE TRIGGER lastmodified_updater AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE ON non_validated EXECUTE PROCEDURE update_geom_lastmodified();
 CREATE TRIGGER lastmodified_updater AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE ON xlinks EXECUTE PROCEDURE update_geom_lastmodified();
 
+
 ALTER TABLE groups RENAME logouuid TO logo;
+
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/publish_tracking_duration', '100', 0, 10100, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/background', 'http://wms.geo.admin.ch/?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.0&LAYERS=ch.swisstopo.pixelkarte-farbe-pk1000.noscale&STYLES=default&SRS={srs}&BBOX={minx},{miny},{maxx},{maxy}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png', 0, 9590, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/width', '500', 0, 9590, 'n');
@@ -45,6 +62,9 @@ INSERT INTO groupsdes(iddes, langid, label) VALUES (-1, 'ger', 'Gast');
 INSERT INTO groupsdes(iddes, langid, label) VALUES (-1, 'roh', '');
 
 DELETE FROM validation;
+
+DROP TABLE IF EXISTS  services CASCADE;
+
 CREATE TABLE services
 (
   id integer PRIMARY KEY,
@@ -57,6 +77,9 @@ CREATE TABLE services
 WITH (
   OIDS=FALSE
 );
+
+DROP TABLE IF EXISTS serviceparameters CASCADE ;
+
 CREATE TABLE serviceparameters
 (
   id integer PRIMARY KEY,
