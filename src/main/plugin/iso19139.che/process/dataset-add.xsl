@@ -90,29 +90,44 @@ attached it to the metadata for data.
 							gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent|
 							gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:extent"/>
 
-
 							<!-- Handle SV_CoupledResource -->
 							<xsl:variable name="coupledResource">
-								<xsl:for-each select="tokenize($scopedName, ',')">
-									<srv:coupledResource>
-										<srv:SV_CoupledResource>
-											<srv:operationName>
-												<gco:CharacterString>GetCapabilities</gco:CharacterString>
-											</srv:operationName>
-											<srv:identifier>
-												<gco:CharacterString>
-													<xsl:value-of select="$uuidref"/>
-												</gco:CharacterString>
-											</srv:identifier>
-											<gco:ScopedName>
-												<xsl:value-of select="."/>
-											</gco:ScopedName>
-										</srv:SV_CoupledResource>
-									</srv:coupledResource>
-								</xsl:for-each>
+                <xsl:if test="$scopedName">
+                  <xsl:for-each select="tokenize($scopedName, ',')">
+                    <srv:coupledResource>
+                      <srv:SV_CoupledResource>
+                        <srv:operationName>
+                          <gco:CharacterString>GetCapabilities</gco:CharacterString>
+                        </srv:operationName>
+                        <srv:identifier>
+                          <gco:CharacterString>
+                            <xsl:value-of select="$uuidref"/>
+                          </gco:CharacterString>
+                        </srv:identifier>
+                        <gco:ScopedName>
+                          <xsl:value-of select="."/>
+                        </gco:ScopedName>
+                      </srv:SV_CoupledResource>
+                    </srv:coupledResource>
+                  </xsl:for-each>
+                </xsl:if>
+                <xsl:if test="not($scopedName)">
+                    <srv:coupledResource>
+                      <srv:SV_CoupledResource>
+                        <srv:operationName>
+                          <gco:CharacterString>GetCapabilities</gco:CharacterString>
+                        </srv:operationName>
+                        <srv:identifier>
+                          <gco:CharacterString>
+                            <xsl:value-of select="$uuidref"/>
+                          </gco:CharacterString>
+                        </srv:identifier>
+                      </srv:SV_CoupledResource>
+                    </srv:coupledResource>
+                </xsl:if>
 							</xsl:variable>
 
-							<xsl:choose>
+              <xsl:choose>
 								<xsl:when
 									test="gmd:identificationInfo/srv:SV_ServiceIdentification/srv:coupledResource|
 								gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:coupledResource">
