@@ -1,13 +1,370 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-  <skos:ConceptScheme rdf:about="http://custom.shared.obj.ch/concept">
-    <dc:title>Non Validated Keywords</dc:title>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns3="http://www.opengis.net/gml#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme" />
+    <dc:title>Geocat Non Validated Keywords</dc:title>
     <dc:description>Geocat Non Validated Keywords.</dc:description>
-    <dc:creator>
-      <foaf:Organization>
-        <foaf:name>Swisstopo</foaf:name>
-      </foaf:Organization>
-    </dc:creator>
+    <dc:creator rdf:nodeID="node19vsjm6n1x1" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept">
     <dc:uri>http://www.geocat.ch</dc:uri>
-  </skos:ConceptScheme>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#9e8fc3b7-3df9-4e92-bf30-c1cdb8c83be7">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">itinéraire pédestre</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">itinéraire pédestre</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#4ae9bb4b-36ad-4ce7-88f1-3273d04cf426">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Aufnahmedokument</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Aufnahmedokument</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#273a7c76-54ef-4a1c-ad9c-d5037d9a33f7">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Kabelkommunikation</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Kabelkommunikation</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#6b6d9b72-663e-455b-98f3-7150e3cdc62f">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Strassennetz</skos:prefLabel>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#895421e3-d8e9-4438-9c2a-153012305ed8">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Bauernhausforschung (BHF)</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Bauernhausforschung (BHF)</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#da6696be-ba81-483a-8361-ac13577eb719">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Bauernhausforschung</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Bauernhausforschung</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#e6b70a64-ad28-44e6-a844-6465875d235d">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Inertstoffdeponie (Aushubmaterial/Inertstoffe)</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Inertstoffdeponie (Aushubmaterial/Inertstoffe)</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#025b2be2-0a54-4b45-be55-3bf94d67a7dd">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Baukontrolleure</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Baukontrolleure</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#84795192-a5d6-4252-a7aa-74151f3a172c">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">raquette</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">racchetta</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">snowshoe</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Schneeschuh</skos:prefLabel>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#19002174-c70c-4a44-a44c-705bd12db424">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">cadastre limitation obstacles</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">cadastre limitation obstacles</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c844de93-9625-4736-b454-b8f3eb521fb1">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Wuhrperimeter</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Wuhrperimeter</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#8c834702-4de8-4268-a4e0-aa9abcffc23e">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">état révision des PAL</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">état révision des PAL</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#f67babe2-b15a-4558-ae31-57fe4bd1324a">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">schützenswerte Bauten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">schützenswerte Bauten</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#f6ca85d1-9133-49dc-9ae2-485a17c7b4b9">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">randonnée pédestre</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">randonnée pédestre</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#912f7247-a725-4d68-8212-ec64a53897bc">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Nachführung</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Nachführung</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#088f4638-f3b5-4150-add5-f220e51bf06a">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Historische Pläne</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Historische Pläne</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0872a4c3-4259-41a6-8a6b-9011c3523597">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">ISOS-Inventar</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">ISOS-Inventar</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c61bd245-02a7-49df-a7b0-9cb710d9b945">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Bruchlinie</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Bruchlinie</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b3df68a6-759e-4c90-8a90-490c2385ba64">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Retablierungsstellen</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Postes de rétablissement</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Postes de rétablissement</skos:scopeNote>
+    <skos:scopeNote xml:lang="de">Retablierungsstellen</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#bd5fb23a-002a-4fec-b23e-aeb6e23c42c4">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">1G-E</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">1G-E</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#18ad71ef-5328-44ea-b8b3-203a568c7c38">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">chevreuil</skos:prefLabel>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#7ad6ef3c-6d5c-4393-ae2a-6080580ecded">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">zr</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">zr</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#9e75d5dc-29f5-44fb-9eea-ccaee4ecfebc">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">geschützte Bauten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">geschützte Bauten</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#a7b7c0fd-0162-4209-b5d9-87ac8f9f1756">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">OneGeology</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">OneGeology</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">OneGeology</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">OneGeology</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">OneGeology</skos:scopeNote>
+    <skos:scopeNote xml:lang="en">OneGeology</skos:scopeNote>
+    <skos:scopeNote xml:lang="it">OneGeology</skos:scopeNote>
+    <skos:scopeNote xml:lang="de">OneGeology</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#4ce2ffff-5fb4-4adb-8d81-811a03316153">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">harmonisierte Daten</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">harmonisierte Daten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">harmonisierte Daten</skos:scopeNote>
+    <skos:scopeNote xml:lang="en">harmonisierte Daten</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#3805344e-8deb-48ab-ac38-fbfa48c867c1">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Nutzungspläne</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Nutzungspläne</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#e570537d-bfb3-4ddd-a0c2-23b3d5243611">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Gründigkeit</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Gründigkeit</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#6a292931-2a8b-45e3-8219-954d89ecc5fd">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Nutzungsfläche</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Superficie d'utilizzazione</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Surface d'affectation</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">Surface of utilisation</skos:prefLabel>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#abba257b-e9f4-4b64-ac63-4c22f51e9706">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Brandschutzexperte</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Brandschutzexperte</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#50fd25dd-f72d-494d-8e5c-422db835fbfa">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">plan d'affectation communal</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">plan d'affectation communal</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#9bd3e05e-8b53-4bfa-af61-de3710f28146">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Allmend</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Allmend</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Almenda</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Allmend</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Allmend</skos:scopeNote>
+    <skos:scopeNote xml:lang="en">Allmend</skos:scopeNote>
+    <skos:scopeNote xml:lang="it">Almenda</skos:scopeNote>
+    <skos:scopeNote xml:lang="fr">Allmend</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#3be05f8f-a399-48b9-926a-effe5c6df6cc">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">Sondes géothermiques</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Sondes géothermiques</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#4deec269-f678-4eac-8d6c-9690ba6a32be">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Oberfläche</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Oberfläche</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#afb95b60-b832-4457-b99d-2b4e52910578">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">zone de protection des rives</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">zone de protection des rives</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#63e3a0d7-159f-40fe-b11e-5e8cbb300a9d">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">harmonisiertes Zeitalter</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">harmonisiertes Zeitalter</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c689897e-d48d-4dda-b0b2-181330551843">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">manifestation sportive</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">manifestation sportive</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fc368a71-9f70-42e0-82cc-c1a1ed444bbd">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Trinationaler Eurodistrickt Basel</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Trinationaler Eurodistrickt Basel</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#a2e4fa3c-2f4f-4677-a2fc-94de15c9b015">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">SIA405</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">SIA405</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ec664d59-d78e-49fc-95cf-7f883bb4bb8e">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">harmonisierte gologische Einheiten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">harmonisierte gologische Einheiten</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#30d05268-7ae7-448f-b3d9-73d346cc2148">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="it">eliporto</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">héliport</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">heliport</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Helikopterlandeplatz</skos:prefLabel>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c6aa00f4-47a8-474b-974f-5a65693cb68c">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">CNR</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">CNR</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fb81c1a4-d869-4be4-a94d-a2985fbada3d">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">harmonisierte Struktur</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">harmonisierte Struktur</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#5b3febc9-a6d0-47ae-b151-6f51e02c65b0">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Planrahmen</skos:prefLabel>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#86a64841-0b80-4c47-8d1a-d10710a7dd26">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">exploitation</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">exploitation</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#f515fd90-f706-4b2d-855d-4df0aae0c7d7">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">état révision</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">état révision</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#727d11e0-c596-4b28-b6b4-9f44c788c9f3">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Polluted site</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Belasteter Standort</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Site pollué</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Sito inquinato</skos:prefLabel>
+    <skos:prefLabel xml:lang="rm">Lieu contaminad</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Belasteter Standort</skos:scopeNote>
+    <skos:scopeNote xml:lang="en">Polluted site</skos:scopeNote>
+    <skos:scopeNote xml:lang="it">Sito inquinato</skos:scopeNote>
+    <skos:scopeNote xml:lang="fr">Site pollué</skos:scopeNote>
+    <skos:scopeNote xml:lang="rm">Lieu contaminad</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#732293ba-68e1-4475-9d5c-858a58c98790">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">construction</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">construction</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#396879c2-1a1a-4568-bff8-473abeddbfc0">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">halbautomatische Defibrillatoren</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">halbautomatische Defibrillatoren</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#77091b92-7475-4d55-a94a-db8e9e6a4fdd">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Orthofotos</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Orthofotos</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fed4e2d6-2fcd-4b9f-b1e8-18ac9ec3a482">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">protection naturelle et paysagère</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">protection naturelle et paysagère</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0d9decee-f763-4586-a270-95cecd86eb98">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">convention Confédération - Etat de Neuchâtel</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">convention Confédération - Etat de Neuchâtel</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c806316f-0390-4e1a-bc72-71e66c2003aa">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Gasleitung</skos:prefLabel>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b4280e61-e712-4bd9-b5ef-c52f2892ae58">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">AED</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">AED</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#53db3bc7-fc94-46e5-ad7f-e1059ecd7519">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">vigne</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">vigne</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c2b40a5a-46f2-4acb-9bdb-c3f39067f5a3">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Schweiz</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Schweiz</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#a262dd78-0847-49a6-b4a1-4a56b6d1466a">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">guide manifestations sportives</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">guide manifestations sportives</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ee6ae606-8bee-4004-896e-4680d463ac5e">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Höhenmodelle</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Höhenmodelle</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#6a71eb70-3103-432a-bf96-4ab92b6fc954">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">harmonisierte Gologie</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">harmonisierte Gologie</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">harmonisierte Gologie</skos:scopeNote>
+    <skos:scopeNote xml:lang="de">harmonisierte Gologie</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#e5216725-1d1d-4124-ad39-20ce084d2456">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Zonenplanrevision</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Zonenplanrevision</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#df7e9fe5-5492-43e5-9d0f-7ce92ac480a8">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">Spezialpläne</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Spezialpläne</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b867c681-9b7b-4bed-adf0-d3e9e69fac23">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="de">OneGeology-Europe</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">OneGeology-Europe</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#03024771-01fe-4576-a37b-da1bbcb68b39">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">numéro police bâtiments</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">numéro police bâtiments</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#37fb8091-efd8-465c-a8c2-3327fea33403">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Construction method</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Bauverfahren</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Procédé d'exécution</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Procedimento di costruzione</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Bauverfahren</skos:scopeNote>
+    <skos:scopeNote xml:lang="it">Procedimento di costruzione</skos:scopeNote>
+    <skos:scopeNote xml:lang="fr">Procédé d'exécution</skos:scopeNote>
+    <skos:scopeNote xml:lang="en">Construction method</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#119675d8-3bda-44b8-88b1-a2c6075a1866">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">balisage pédestre</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">balisage pédestre</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#96a4e215-13fc-44d9-b990-5a51773b0c32">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="fr">secteur sensible</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">secteur sensible</skos:scopeNote>
+  </rdf:Description>
 </rdf:RDF>
