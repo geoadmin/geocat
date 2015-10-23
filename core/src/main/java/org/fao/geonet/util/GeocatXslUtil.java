@@ -3,12 +3,7 @@ package org.fao.geonet.util;
 import com.google.common.base.Joiner;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
+import com.google.common.collect.*;
 import com.google.common.io.Resources;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -962,8 +957,11 @@ public class GeocatXslUtil {
                         } else {
                             String locatedId = findKeyword(keyword, keywordEl, thesaurusKeys, wordToIdLookup);
                             if (locatedId != null) {
-                                Keyword newKeyword = new Keyword(NON_VALID_THESAURUS_NAME, Lists.newArrayList(locatedId));
-                                keywordsByThesaurus.put(NON_VALID_THESAURUS_NAME, newKeyword);
+                                Multimap<String, String> invertedMultimap = Multimaps.invertFrom(thesaurusKeys, ArrayListMultimap.<String, String>create());
+                                Collection<String> matchedThesauri = invertedMultimap.get(locatedId);
+                                String matchedThesaurus = (String) matchedThesauri.toArray()[0];
+                                Keyword newKeyword = new Keyword(matchedThesaurus, Lists.newArrayList(locatedId));
+                                keywordsByThesaurus.put(matchedThesaurus, newKeyword);
                                 iterator.remove();
                             } else {
                                 String newId = URLEncoder.encode(KeywordsStrategy.NAMESPACE + UUID.randomUUID(), Constants.ENCODING);
