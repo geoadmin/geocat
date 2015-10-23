@@ -6,6 +6,6 @@
   "service-OGC:WMS": "+ Services WMS",
   "service-OGC:WFS": "+ Services WFS",
   "any": "- Tout -",
-  "indexSelectedRecordConfirm": "Voulez-vous vraiment index les {{selectedCount}} fiches sélectionnée(s) ?",
-  "index": "Index"
+  "indexSelectedRecordConfirm": "Voulez-vous vraiment indexer les {{selectedCount}} fiches sélectionnées ?",
+  "index": "Indexer"
 }
