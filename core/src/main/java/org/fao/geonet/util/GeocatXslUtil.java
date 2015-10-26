@@ -960,7 +960,7 @@ public class GeocatXslUtil {
                                 Multimap<String, String> invertedMultimap = Multimaps.invertFrom(thesaurusKeys, ArrayListMultimap.<String, String>create());
                                 Collection<String> matchedThesauri = invertedMultimap.get(locatedId);
                                 String matchedThesaurus = (String) matchedThesauri.toArray()[0];
-                                Keyword newKeyword = new Keyword(matchedThesaurus, Lists.newArrayList(locatedId));
+                                Keyword newKeyword = new Keyword(matchedThesaurus, Lists.newArrayList(URLEncoder.encode(locatedId)));
                                 keywordsByThesaurus.put(matchedThesaurus, newKeyword);
                                 iterator.remove();
                             } else {
