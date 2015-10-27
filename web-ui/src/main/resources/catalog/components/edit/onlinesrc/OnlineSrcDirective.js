@@ -407,6 +407,7 @@
 
               // the form parms that will be submited
               scope.params = {};
+              scope.params.selectedLayers = [];
 
               // Tells if we need to display layer grid and send
               // layers to the submit
@@ -422,6 +423,7 @@
                   scope.params.url = scope.mdLangs ? {} : '';
                   scope.params.name = scope.mdLangs ? {} : '';
                   scope.params.protocol = '';
+                  scope.params.selectedLayers = [];
                   scope.params.layers = [];
                 }
                 scope.clear(scope.queue);

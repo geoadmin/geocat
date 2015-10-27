@@ -1,18 +1,17 @@
 <div class="table-content-container gn-layers-grid-container">
   <table
-    class="table-content table table-striped table-hover table-condensed">
+          class="table-content table table-striped table-hover table-condensed">
     <tbody>
-      <tr data-ng-repeat="layer in layers | orderBy:'title':reverse"
-          data-ng-click="select(layer)"
-          title="{{layer.abstract}}"
-          class="
-            {{isSelected(layer.Name) ? 'success ' : ''}}
-            {{(layerHovered.Name == layer.Name) ? 'pending ' : ''}}">
-        <td class="add col-first">
-          <div class="icon-zoom-in"></div>
-        </td>
-        <td>{{layer.Title}} ({{layer.Name}})</td>
-      </tr>
+    <tr data-ng-repeat="layer in layers | orderBy:'title':reverse"
+        data-ng-click="select(layer)"
+        title="{{layer.abstract}}"
+        class="
+            {{(layerSelected.Name == layer.Name) ? 'success ' : ''}}
+            {{(layerHovered.Name == layer.Name) ? 'pending ' : ''}}"
+        data-ng-class="{'success': selection.indexOf(layer) >= 0}">
+      <td data-ng-if="prop">{{layer[prop]}}</td>
+      <td data-ng-if="!prop">{{layer.Title}} ({{layer.Name}})</td>
+    </tr>
     </tbody>
   </table>
 </div>
