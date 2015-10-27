@@ -20,6 +20,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.jdom.output.XMLOutputter;
 import org.openrdf.model.GraphException;
 import org.openrdf.sesame.config.AccessDeniedException;
 import org.openrdf.sesame.config.ConfigurationException;
@@ -289,8 +290,8 @@ public class SharedObjects implements DatabaseMigrationTask {
             }
         }
         if (!missingKeywords.isEmpty()) {
-            KeywordBean keyword = new KeywordBean(mapper);
             for (Map.Entry<String, Pair<String, org.jdom.Element>> entry : missingKeywords.entrySet()) {
+                KeywordBean keyword = new KeywordBean(mapper);
                 keyword.setUriCode(URLDecoder.decode(entry.getValue().one(), Constants.ENCODING));
                 List<?> nodes = Xml.selectNodes(entry.getValue().two(), "*//gmd:keyword//gmd:LocalisedCharacterString",
                         Arrays.asList(GMD, SRV, GCO));
@@ -710,4 +711,301 @@ public class SharedObjects implements DatabaseMigrationTask {
             return Xml.getString(this.xml);
         }
     }
+
+    public void updateRdf(Path path) throws
+            SQLException, IOException, JDOMException, AccessDeniedException, GraphException, ConfigurationException {
+        Path thesauriDir = Paths.get("/home/fgravin/gc_data/config/codelist");
+        IsoLanguagesMapper mapper = new IsoLanguagesMapper(){
+            {
+                iso639_1_to_iso639_2IsoLanguagesMap.put("en", "eng");
+                iso639_1_to_iso639_2IsoLanguagesMap.put("fr", "fre");
+                iso639_1_to_iso639_2IsoLanguagesMap.put("it", "ita");
+                iso639_1_to_iso639_2IsoLanguagesMap.put("de", "ger");
+                iso639_1_to_iso639_2IsoLanguagesMap.put("ge", "ger");
+                iso639_1_to_iso639_2IsoLanguagesMap.put("rm", "roh");
+
+                iso639_2_to_iso639_1IsoLanguagesMap.put("eng", "en");
+                iso639_2_to_iso639_1IsoLanguagesMap.put("fre", "fr");
+                iso639_2_to_iso639_1IsoLanguagesMap.put("ger", "de");
+                iso639_2_to_iso639_1IsoLanguagesMap.put("deu", "de");
+                iso639_2_to_iso639_1IsoLanguagesMap.put("roh", "rm");
+                iso639_2_to_iso639_1IsoLanguagesMap.put("ita", "it");
+            }
+        };
+
+        String fname = "local";
+        String type = "_none_";
+        String dname = "non_validated";
+        Path thesaurusFile = thesauriDir.resolve(fname + "/thesauri/" + type + "/" + dname + ".rdf");
+        String siteURL = "http://site.uri.com";
+
+        final Multimap<String, String> allKeywordIds = HashMultimap.create();
+        final Map<Pair<String, String>, String> wordToIdLookup = Maps.newHashMap();
+
+        Files.walkFileTree(thesauriDir, new SimpleFileVisitor<Path>(){
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if (file.getFileName().toString().endsWith(".rdf")) {
+                    try {
+                        Path thesaurusFileNamePath = file.getName(file.getNameCount() - 1);
+                        String thesaurusFileName = thesaurusFileNamePath.toString().substring(0, thesaurusFileNamePath.toString()
+                                .lastIndexOf(".rdf"));
+                        Path thesaurusCategory = file.getName(file.getNameCount() - 2);
+                        Path localOrExternal = file.getName(file.getNameCount() - 4);
+                        String thesaurusName = localOrExternal + "." + thesaurusCategory + "." + thesaurusFileName;
+
+                        Element xml = Xml.loadFile(file);
+                        if (localOrExternal.toString().equals("local")) {
+                            RepairRdfFiles.repairRdfFile(file, xml);
+                        }
+                        ArrayList<Namespace> nSs = Lists.newArrayList(
+                                Namespace.getNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"),
+                                Namespace.getNamespace("skos", "http://www.w3.org/2004/02/skos/core#"));
+                        List<?> objects = Xml.selectNodes(xml, "*//node()[normalize-space(@rdf:about) != ''] | node()[normalize-space(@rdf:about) != '']", nSs);
+                        for (Object object : objects) {
+                            if (object instanceof Element) {
+                                Element element = (Element) object;
+                                String about = element.getAttributeValue("about", nSs.get(0));
+                                allKeywordIds.put(thesaurusName, about);
+
+                                List<?> notes = Xml.selectNodes(element, "skos:prefLabel", nSs);
+
+                                for (Object note : notes) {
+                                    Element noteEl = (Element) note;
+
+                                    String noteText = noteEl.getTextTrim().toLowerCase();
+
+                                    if (!noteText.isEmpty()) {
+                                        String lang = noteEl.getAttributeValue("lang", Namespace.XML_NAMESPACE);
+                                        if (lang == null) {
+                                            lang = "de";
+                                        }
+                                        wordToIdLookup.put(Pair.read(lang, noteText), about);
+                                        Pair<String, String> noLang = Pair.read(GeocatXslUtil.NO_LANG, noteText);
+                                        if (!wordToIdLookup.containsKey(noLang)) {
+                                            wordToIdLookup.put(noLang, about);
+                                        }
+                                        wordToIdLookup.put(Pair.read(lang, noteText), about);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (JDOMException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                return super.visitFile(file, attrs);
+            }
+        });
+        Thesaurus thesaurus = new Thesaurus(mapper, fname, type, dname, thesaurusFile, siteURL);
+        thesaurus.initRepository();
+
+        Map<String, Pair<String, Element>> missingKeywords = Maps.newHashMap();
+
+        final Element md = Xml.loadFile(path);
+
+        final Iterator descendants = md.getDescendants();
+        while (descendants.hasNext()) {
+            Object node = descendants.next();
+            if (node instanceof Element) {
+                Element el = (Element) node;
+                final String atValue = el.getAttributeValue(HREF, NAMESPACE_XLINK);
+                if (el.getName().equals("identificationInfo")) {
+                    GeocatXslUtil.mergeKeywords(el, true, allKeywordIds, missingKeywords, wordToIdLookup);
+                }
+            }
+        }
+        String finalMD = new XMLOutputter().outputString(md);
+
+        if (!missingKeywords.isEmpty()) {
+            KeywordBean keyword = new KeywordBean(mapper);
+            for (Map.Entry<String, Pair<String, org.jdom.Element>> entry : missingKeywords.entrySet()) {
+                keyword.setUriCode(URLDecoder.decode(entry.getValue().one(), Constants.ENCODING));
+                List<?> nodes = Xml.selectNodes(entry.getValue().two(), "*//gmd:keyword//gmd:LocalisedCharacterString",
+                        Arrays.asList(GMD, SRV, GCO));
+                for (Object node : nodes) {
+                    Element el = (Element) node;
+                    String locale = el.getAttributeValue("locale");
+                    if (locale != null && locale.length() > 0) {
+                        locale = locale.substring(1).toLowerCase();
+                    } else {
+                        locale = "de";
+                    }
+                    String textTrim = el.getTextTrim();
+                    if (!textTrim.isEmpty()) {
+                        keyword.setValue(textTrim, locale);
+                    }
+                }
+
+                thesaurus.addElement(keyword);
+            }
+
+        }
+        thesaurus.getRepository().shutDown();
+    }
+
+    public void updateMetadataTest(Connection conn) throws
+            SQLException, IOException, JDOMException, AccessDeniedException, GraphException, ConfigurationException {
+        System.setProperty("geonetwork.dir", "/home/fgravin/gc_data");
+        Path thesauriDir = Paths.get(System.getProperty("geonetwork.dir") + "/config/codelist");
+
+        IsoLanguagesMapper mapper = new IsoLanguagesMapper(){
+            {
+                iso639_1_to_iso639_2IsoLanguagesMap.put("en", "eng");
+                iso639_1_to_iso639_2IsoLanguagesMap.put("fr", "fre");
+                iso639_1_to_iso639_2IsoLanguagesMap.put("it", "ita");
+                iso639_1_to_iso639_2IsoLanguagesMap.put("de", "ger");
+                iso639_1_to_iso639_2IsoLanguagesMap.put("ge", "ger");
+                iso639_1_to_iso639_2IsoLanguagesMap.put("rm", "roh");
+
+                iso639_2_to_iso639_1IsoLanguagesMap.put("eng", "en");
+                iso639_2_to_iso639_1IsoLanguagesMap.put("fre", "fr");
+                iso639_2_to_iso639_1IsoLanguagesMap.put("ger", "de");
+                iso639_2_to_iso639_1IsoLanguagesMap.put("deu", "de");
+                iso639_2_to_iso639_1IsoLanguagesMap.put("roh", "rm");
+                iso639_2_to_iso639_1IsoLanguagesMap.put("ita", "it");
+            }
+        };
+
+        String fname = "local";
+        String type = "_none_";
+        String dname = "non_validated";
+        Path thesaurusFile = thesauriDir.resolve(fname + "/thesauri/" + type + "/" + dname + ".rdf");
+        String siteURL = "http://site.uri.com";
+
+        final Multimap<String, String> allKeywordIds = HashMultimap.create();
+        final Map<Pair<String, String>, String> wordToIdLookup = Maps.newHashMap();
+
+        Files.walkFileTree(thesauriDir, new SimpleFileVisitor<Path>(){
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if (file.getFileName().toString().endsWith(".rdf")) {
+                    try {
+                        Path thesaurusFileNamePath = file.getName(file.getNameCount() - 1);
+                        String thesaurusFileName = thesaurusFileNamePath.toString().substring(0, thesaurusFileNamePath.toString()
+                                .lastIndexOf(".rdf"));
+                        Path thesaurusCategory = file.getName(file.getNameCount() - 2);
+                        Path localOrExternal = file.getName(file.getNameCount() - 4);
+                        String thesaurusName = localOrExternal + "." + thesaurusCategory + "." + thesaurusFileName;
+
+                        Element xml = Xml.loadFile(file);
+                        if (localOrExternal.toString().equals("local")) {
+                            RepairRdfFiles.repairRdfFile(file, xml);
+                        }
+                        ArrayList<Namespace> nSs = Lists.newArrayList(
+                                Namespace.getNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"),
+                                Namespace.getNamespace("skos", "http://www.w3.org/2004/02/skos/core#"));
+                        List<?> objects = Xml.selectNodes(xml, "*//node()[normalize-space(@rdf:about) != ''] | node()[normalize-space(@rdf:about) != '']", nSs);
+                        for (Object object : objects) {
+                            if (object instanceof Element) {
+                                Element element = (Element) object;
+                                String about = element.getAttributeValue("about", nSs.get(0));
+                                allKeywordIds.put(thesaurusName, about);
+
+                                List<?> notes = Xml.selectNodes(element, "skos:prefLabel", nSs);
+
+                                for (Object note : notes) {
+                                    Element noteEl = (Element) note;
+
+                                    String noteText = noteEl.getTextTrim().toLowerCase();
+
+                                    if (!noteText.isEmpty()) {
+                                        String lang = noteEl.getAttributeValue("lang", Namespace.XML_NAMESPACE);
+                                        if (lang == null) {
+                                            lang = "de";
+                                        }
+                                        wordToIdLookup.put(Pair.read(lang, noteText), about);
+                                        Pair<String, String> noLang = Pair.read(GeocatXslUtil.NO_LANG, noteText);
+                                        if (!wordToIdLookup.containsKey(noLang)) {
+                                            wordToIdLookup.put(noLang, about);
+                                        }
+                                        wordToIdLookup.put(Pair.read(lang, noteText), about);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (JDOMException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                return super.visitFile(file, attrs);
+            }
+        });
+        Thesaurus thesaurus = new Thesaurus(mapper, fname, type, dname, thesaurusFile, siteURL);
+        thesaurus.initRepository();
+
+        Map<String, Pair<String, Element>> missingKeywords = Maps.newHashMap();
+        try (
+                Statement select = conn.createStatement();
+                PreparedStatement update = conn.prepareStatement("UPDATE metadata SET data=? WHERE id=?")
+        ) {
+            int numInBatch = 0;
+            try (ResultSet results = select.executeQuery("select id, uuid, data from metadata where schemaid='iso19139.che' and isharvested='n'")) {
+                while (results.next()) {
+                    int id = results.getInt("id");
+                    String uuid = results.getString("uuid");
+                    String data = results.getString("data");
+
+                    Element md = Xml.loadString(data, false);
+
+                    final Iterator descendants = md.getDescendants();
+                    while (descendants.hasNext()) {
+                        Object node = descendants.next();
+                        if (node instanceof Element) {
+                            Element el = (Element) node;
+                            final String atValue = el.getAttributeValue(HREF, NAMESPACE_XLINK);
+                            if (el.getName().equals("identificationInfo")) {
+                                GeocatXslUtil.mergeKeywords(el, true, allKeywordIds, missingKeywords, wordToIdLookup);
+                            }
+                        }
+                    }
+
+                    String updatedData = Xml.getString(md);
+                    numInBatch++;
+
+
+/*
+                    update.setString(1, updatedData);
+                    update.setInt(2, id);
+
+                    update.addBatch();
+                    numInBatch++;
+                    if (numInBatch > 200) {
+                        update.executeBatch();
+                        numInBatch = 0;
+                    }
+*/
+
+                }
+                //update.executeBatch();
+            }
+        }
+        if (!missingKeywords.isEmpty()) {
+            for (Map.Entry<String, Pair<String, org.jdom.Element>> entry : missingKeywords.entrySet()) {
+                KeywordBean keyword = new KeywordBean(mapper);
+                keyword.setUriCode(URLDecoder.decode(entry.getValue().one(), Constants.ENCODING));
+                List<?> nodes = Xml.selectNodes(entry.getValue().two(), "*//gmd:keyword//gmd:LocalisedCharacterString",
+                        Arrays.asList(GMD, SRV, GCO));
+                for (Object node : nodes) {
+                    Element el = (Element) node;
+                    String locale = el.getAttributeValue("locale");
+                    if (locale != null && locale.length() > 0) {
+                        locale = locale.substring(1).toLowerCase();
+                    } else {
+                        locale = "de";
+                    }
+                    String textTrim = el.getTextTrim();
+                    if (!textTrim.isEmpty()) {
+                        keyword.setValue(textTrim, locale);
+                    }
+                }
+
+                thesaurus.addElement(keyword);
+            }
+
+        }
+        thesaurus.getRepository().shutDown();
+    }
+
+
 }
