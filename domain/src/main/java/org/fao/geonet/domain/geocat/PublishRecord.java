@@ -155,7 +155,7 @@ public class PublishRecord extends GeonetEntity {
         return this;
     }
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getChangetime() {
         return cloneDate(changetime);
     }
@@ -165,7 +165,7 @@ public class PublishRecord extends GeonetEntity {
         return this;
     }
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     public Date getChangedate() {
         return cloneDate(changedate);
     }
