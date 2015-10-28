@@ -29,7 +29,12 @@
     </form>
 
     <div ng-if="authenticated" class="navbar-text navbar-right">
-      <span translate>signedInAs</span> {{user['username']}}
+      <span translate>signedInAs</span>
+      <a href="admin.console#/organization/users?userOrGroup={{user.username}}"
+         title="{{'userDetails' | translate}}"
+         class="navbar-link">
+        {{user.username}}
+      </a>
       <a href="../../j_spring_security_logout" title="{{'signout' | translate}}" class="navbar-link">
         <i class="fa fa-sign-out"></i>
       </a>
