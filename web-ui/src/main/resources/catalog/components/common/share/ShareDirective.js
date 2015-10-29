@@ -33,7 +33,8 @@
             'panel.html',
         scope: {
           id: '=gnShare',
-          batch: '@gnShareBatch'
+          batch: '@gnShareBatch',
+          valid: '@gnShareValid'
         },
         link: function(scope) {
 

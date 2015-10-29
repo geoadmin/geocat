@@ -151,7 +151,7 @@
         openModal({
           title: $translate('privileges') + ' - ' +
               (md.title || md.defaultTitle),
-          content: '<div gn-share="' + md.getId() + '"></div>'
+          content: '<div gn-share="' + md.getId() + '" gn-share-valid="' + md.valid +'"></div>'
         }, scope, 'PrivilegesUpdated');
       };
 

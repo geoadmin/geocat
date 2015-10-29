@@ -41,7 +41,7 @@
       </td>
       <td>
         <input type="checkbox"
-               data-ng-disabled="!isAdminOrReviewer"
+               data-ng-disabled="!isAdminOrReviewer || (!user.isAdministrator && valid != '1')"
                data-ng-click="checkAll(g)"
                data-ng-model="g.isCheckedAll"/>
       </td>
