@@ -2797,6 +2797,21 @@ public class DataManager implements ApplicationEventPublisherAware {
         final OperationAllowed operationAllowed = opAllowedRepo
                 .findOneById_GroupIdAndId_MetadataIdAndId_OperationId(grpId, mdId, opId);
 
+        if(opId == 0 && grpId == 1 && context.getUserSession().getProfile() != Profile.Administrator ) {
+            List<MetadataValidation> validationInfo = getMetadataValidationRepository().findAllById_MetadataId(mdId);
+            if (validationInfo == null || validationInfo.size() == 0) {
+                //TODO: validate the metadata
+                //TODO: Harvesters should pass here
+            }
+            else {
+                for (Object elem : validationInfo) {
+                    MetadataValidation vi = (MetadataValidation) elem;
+                    if (!vi.isValid()) {
+                        throw new RuntimeException("You cannot publish a metadata because it is not valid.");
+                    }
+                }
+            }
+        }
         if (operationAllowed == null) {
             checkOperationPermission(context, grpId, userGroupRepo);
         }
