@@ -286,5 +286,174 @@ une interface externe du service internet pour le processus ou la chaîne de ser
 			<label>Reference Geodata</label>
 		</entry>
 	</codelist>
+  <codelist name="gmd:MD_ScopeCode" editorMode="radio">
+    <entry>
+      <code>attribute</code>
+      <label>Attribut</label>
+      <description>Informations appliquées aux caractéristiques de l’attribut</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>attributeType</code>
+      <label>Type d'attribut</label>
+      <description>Informations appliquées aux caractéristiques de l’entité</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>collectionHardware</code>
+      <label>Collection matérielle</label>
+      <description>Informations appliquées aux caractéristiques d’une collection matérielle</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>collectionSession</code>
+      <label>Collection de session</label>
+      <description>Informations appliquées aux caractéristiques d’une collection de session</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>dataset</code>
+      <label>Jeu de données</label>
+      <description>Informations appliquées aux caractéristiques de jeu de données</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>series</code>
+      <label>Collection de données</label>
+      <description>Informations appliquées aux caractéristiques de la collection de données</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>nonGeographicDataset</code>
+      <label>Jeux de données non géographiques</label>
+      <description>Informations appliquées aux caractéristiques de jeux de données non géographiques</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>dimensionGroup</code>
+      <label>Dimension d'un groupe</label>
+      <description>Informations appliquées à un groupe</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>feature</code>
+      <label>Entité</label>
+      <description>Informations appliquées à une entité</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>featureType</code>
+      <label>Type d’entité</label>
+      <description>Informations appliquées à un type d’entité</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>propertyType</code>
+      <label>Type de propriété</label>
+      <description>Informations appliquées à un type de propriété</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>fieldSession</code>
+      <label>Champ de session</label>
+      <description>Informations appliquées aux caractéristiques d’un champ de session</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>software</code>
+      <label>Logiciel</label>
+      <description>Informations appliquées à programme ou à une routine</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>service</code>
+      <label>Service</label>
+      <description>Informations appliquées à un service Internet</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>model</code>
+      <label>Modèle</label>
+      <description>Informations appliquées à modèle décrivant les objets ou un ensemble d'objets</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>tile</code>
+      <label>Tuile</label>
+      <description>Tuile</description>
+    </entry>
+    <entry>
+      <code>project</code>
+      <label>Projet</label>
+      <description>Le projet décrit le cadre organisationnel défini pour l'accomplissement d'une tâche: il intègre la description des tenants et des aboutissants du problème, les objectifs, les activités prévues, les étapes de réalisation, les délais, les ressources...</description>
+    </entry>
+    <entry>
+      <code>stationSite</code>
+      <label>Station</label>
+      <description>Cet élément décrit les activités d'acquisition de données des stations de mesure ; il ne décrit pas les données mais la manière dont elles ont été saisies (paramètres de saisie, méthodes, instruments)</description>
+    </entry>
+    <entry>
+      <code>publication</code>
+      <label>Publication</label>
+      <description>Ce sont des produits finis tels que les ouvrages, brochures, articles, rapports, matériel audiovisuel...</description>
+    </entry>
+
+
+    <!-- Used for facet translation only and not displayed in editor -->
+    <entry>
+      <code>map</code>
+      <label>Carte</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>staticMap</code>
+      <label>Carte statique</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>interactiveMap</code>
+      <label>Carte interactive</label>
+      <description></description>
+    </entry>
+    <entry hideInEditMode="true">
+      <code>featureCatalog</code>
+      <label>Catalogue d'attributs</label>
+      <description></description>
+    </entry>
+    <!--GEOCAT-->
+    <entry>
+      <code>basicgeodata</code>
+      <label>Géodonnée de base</label>
+      <description></description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>basicgeodata-federal</code>
+      <label>Géodonnée de base - Fédéral</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>basicgeodata-cantonal</code>
+      <label>Géodonnée de base - Cantonal</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>basicgeodata-communal</code>
+      <label>Géodonnée de base - Communal</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>service-OGC:WFS</code>
+      <label>Services WFS</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>service-OGC:WMS</code>
+      <label>Services WMS</label>
+      <description></description>
+    </entry>
+
+  </codelist>
+
 </codelists>
 
