@@ -203,7 +203,7 @@ public class Publish {
                 report.incDisallowed();
             } else {
                 // GEOCAT
-                recordPublishEvent(serviceContext, mdId, true);
+                recordPublishEvent(serviceContext, mdId, false);
                 // END GEOCAT
                 report.incUnpublished();
                 toIndex.add(mdId);
