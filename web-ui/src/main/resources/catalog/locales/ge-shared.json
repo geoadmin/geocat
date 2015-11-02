@@ -3,7 +3,7 @@
   "region": "Regionentyp",
   "gn:countries": "Land",
   "gn:gemeindenBB": "Gemeinde",
-  "gn:kantoneBB": "Gemeinde",
+  "gn:kantoneBB": "Kantone",
   "gn:xlinks": "Validiert",
   "gn:non_validated": "Nicht validiert",
   "contacts": "Kontakte",
