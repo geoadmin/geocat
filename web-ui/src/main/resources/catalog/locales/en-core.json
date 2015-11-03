@@ -36,6 +36,7 @@
     "adminConsole": "Admin console",
     "any": "Full text",
     "anyPlaceHolder": "Search ...",
+    "isValid": "Validity",
     "VALID": "Valid",
     "INVALID": "Invalid",
     "NEVER_CALCULATED": "Never validated",

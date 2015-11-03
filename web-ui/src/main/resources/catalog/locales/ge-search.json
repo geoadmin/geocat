@@ -252,6 +252,7 @@
     "gray": "grau",
     "Results": "Reultate",
     "Legend": "Legende",
+    "isValid": "Gültigkeit",
     "Attribution": "Zuschreibung",
     "layerDelete": "Löschen",
     "layerMetadata": "Metadaten",
@@ -284,5 +285,6 @@
     "loadUserGroupsError": "Error loading user groups",
     "transferOwnershipError": "Error transferring metadata ownership",
     "transferOwnershipSuccessMsg": "<h4>Successfully transferred metadata to a new Owner.</h4><dl class=\"dl-horizontal\"><dt>Transferred:</dt><dd>{{done}}</dd><dt>Not Owned:</dt><dd>{{notOwner}}</dd><dt>Not found:</dt><dd>{{notFound}}</dd></dl>",
-    "filterGroup": "Filter groups ..."
+    "filterGroup": "Filter groups ...",
+    "on": "von"
 }

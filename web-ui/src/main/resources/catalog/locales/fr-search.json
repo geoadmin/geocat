@@ -287,5 +287,6 @@
     "loadUserGroupsError": "Erreur lors du chargement des groupes",
     "transferOwnershipError": "Erreur lors du changement d'auteur",
     "transferOwnershipSuccessMsg": "<h4>Changement d'auteur effectué.</h4><dl class=\"dl-horizontal\"><dt>Transférés :</dt><dd>{{done}}</dd><dt>Fiches avec auteur différent :</dt><dd>{{notOwner}}</dd><dt>Fiches non trouvées :</dt><dd>{{notFound}}</dd></dl>",
-    "filterGroup": "Filtrer les groupes ..."
+    "filterGroup": "Filtrer les groupes ...",
+    "on": "sur"
 }
