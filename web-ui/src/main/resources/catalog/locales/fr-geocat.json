@@ -7,5 +7,12 @@
   "service-OGC:WFS": "+ Services WFS",
   "any": "- Tout -",
   "indexSelectedRecordConfirm": "Voulez-vous vraiment indexer les {{selectedCount}} fiches sélectionnées ?",
-  "index": "Indexer"
+  "index": "Indexer",
+  "geodataType": "Géodonnée",
+  "basicGeodata": "Géodonnée de base",
+  "oereb": "RDDPF",
+  "oerebRegister": "registre RDDPF",
+  "openGovernmentData": "Open Government Data",
+  "openData": "Open Data",
+  "referenceGeodata": "Géodonnée de référence"
 }
