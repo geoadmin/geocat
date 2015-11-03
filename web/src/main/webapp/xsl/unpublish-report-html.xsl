@@ -353,7 +353,7 @@
 			<label for="{$id}"><xsl:value-of select="$name"/>: </label>
 			<select id="{$id}" class="search-form">
 				<xsl:choose>
-					<xsl:when test="count($elements) > 1">
+					<xsl:when test="count($elements) > 0">
 						<xsl:attribute name="onchange">doSearch()</xsl:attribute>
 						<option value=""></option>
 						<xsl:for-each select="$elements">
