@@ -44,6 +44,10 @@
       // TODO : get list from server side
       // GEOCAT
       $scope.langs = {'ger': 'ge', 'fre': 'fr', 'eng': 'en', 'ita': 'it'};
+      $scope.lang2 = $scope.langs[$scope.lang];
+      if($scope.lang2 == 'ge') {
+        $scope.lang2 = 'de';
+      }
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'ita': 'Italiano',
         'fre': 'Français', 'ger': 'Deutsch'};
