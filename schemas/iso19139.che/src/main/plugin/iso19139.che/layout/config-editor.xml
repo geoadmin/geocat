@@ -269,7 +269,7 @@
       <name>che:description</name>
       <name>che:type</name>
       <name ancestor="gmd:contactInfo">gmd:country</name>
-
+      <name ancestor="gmd:DQ_DomainConsistency">gmd:explanation</name>
     </exclude>
   </multilingualFields>
 
