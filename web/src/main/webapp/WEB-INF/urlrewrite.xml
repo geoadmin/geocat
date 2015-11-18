@@ -164,7 +164,7 @@
       map old metadata.formatter.html requests to new formatter based viewer
     </note>
     <from>^(.*)/(.*)/metadata.formatter.html\?xsl=([^&amp;]+).*uuid=([^&amp;]+).*</from>
-    <to type="permanent-redirect" last="true">%{context-path}$1/$2/md.viewer#/$3/$4</to>
+    <to type="permanent-redirect" last="true">%{context-path}$1/$2/md.format.html?xsl=$3&amp;id=$4</to>
   </rule>
 
   <!-- Rules for RESTful urls for metadata retrieve -->
