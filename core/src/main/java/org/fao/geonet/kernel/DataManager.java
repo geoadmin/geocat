@@ -2806,7 +2806,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             else {
                 for (Object elem : validationInfo) {
                     MetadataValidation vi = (MetadataValidation) elem;
-                    if (!vi.isValid()) {
+                    if (!vi.isValid() && vi.isRequired()) {
                         throw new RuntimeException("You cannot publish a metadata because it is not valid.");
                     }
                 }
