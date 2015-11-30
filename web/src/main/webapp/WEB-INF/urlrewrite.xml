@@ -140,6 +140,14 @@
 
   <rule>
     <note>
+      map old main service to home search service
+      geonetwork/srv/ger/geocat
+    </note>
+    <from>^(.*)/(.*)/geocat</from>
+    <to type="permanent-redirect" last="true">%{context-path}$1/$2/catalog.search</to>
+  </rule>
+  <rule>
+    <note>
       map old metadata.show requests to new formatter based viewer
     </note>
     <from>^(.*)/(.*)/metadata.show\?.*fileIdentifier=([^&amp;]+).*</from>
