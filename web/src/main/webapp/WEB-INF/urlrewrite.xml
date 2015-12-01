@@ -143,7 +143,7 @@
       map old main service to home search service
       geonetwork/srv/ger/geocat
     </note>
-    <from>^(.*)/(.*)/geocat</from>
+    <from>^(.*)/([A-Za-z]{3})/geocat</from>
     <to type="permanent-redirect" last="true">%{context-path}$1/$2/catalog.search</to>
   </rule>
   <rule>
