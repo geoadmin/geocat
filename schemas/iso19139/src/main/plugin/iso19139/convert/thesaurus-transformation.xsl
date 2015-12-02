@@ -216,27 +216,9 @@
       <gmd:thesaurusName>
         <gmd:CI_Citation>
           <gmd:title>
-            <xsl:if test="$textgroupOnly or count($listOfLanguage) > 1">
-              <xsl:attribute name="xsi:type">gmd:PT_FreeText_PropertyType</xsl:attribute>
-            </xsl:if>
-            <xsl:if test="not($textgroupOnly)">
             <gco:CharacterString>
-                <xsl:value-of select="$thesaurusEl/title" />
+              <xsl:value-of select="$thesauri/thesaurus[key = $currentThesaurus]/title" />
             </gco:CharacterString>
-            </xsl:if>
-
-            <gmd:PT_FreeText>
-              <xsl:for-each select="$listOfLanguage">
-                <xsl:variable name="lang" select="." />
-                <xsl:if test="($textgroupOnly or $lang != $listOfLanguage[1]) and ($thesaurusEl/labels/label[@language = $lang]/text() != '')">
-                  <gmd:textGroup>
-                    <gmd:LocalisedCharacterString locale="#{upper-case(util:twoCharLangCode($lang))}">
-                      <xsl:value-of select="$thesaurusEl/labels/label[@language = $lang]/text()"></xsl:value-of>
-                    </gmd:LocalisedCharacterString>
-                  </gmd:textGroup>
-                </xsl:if>
-              </xsl:for-each>
-            </gmd:PT_FreeText>
           </gmd:title>
 
           <xsl:variable name="thesaurusDate"
