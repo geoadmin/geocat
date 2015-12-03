@@ -1924,6 +1924,7 @@
       <option value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</option>
       <option value="WWW:LINK-1.0-http--ical">iCalendar (URL)</option>
       <option value="WWW:DOWNLOAD-1.0-http--download">File for download</option>
+      <option value="WWW:DOWNLOAD-URL">File for download from URL</option>
       <option value="WWW:DOWNLOAD-1.0-ftp--download">File for download through FTP</option>
       <option value="OGC:WMS-http-get-map">OGC-WMS Web Map Service</option>
       <option value="OGC:WFS-http-get-capabilities">OGC-WFS Web Feature Service</option>
