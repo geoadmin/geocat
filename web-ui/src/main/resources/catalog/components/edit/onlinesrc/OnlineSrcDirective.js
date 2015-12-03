@@ -590,12 +590,22 @@
                * layer grid and call or not a getCapabilities.
                */
               scope.$watch('params.protocol', function() {
-                if (!angular.isUndefined(scope.params.protocol)) {
+                if (angular.isDefined(scope.params.protocol)) {
                   scope.isWMSProtocol = (scope.params.protocol.
                       indexOf('OGC:WMS') >= 0);
                   scope.loadWMSCapabilities();
+
+                  // Move to upload tab cause we cant use this protocol and url
+                  if(scope.isDownloadProtocol()) {
+                    scope.mode = 'upload';
+                  }
                 }
               });
+
+              scope.isDownloadProtocol = function() {
+                return scope.params.protocol ==
+                    'WWW:DOWNLOAD-1.0-http--download';
+              };
 
               /**
                * On URL change, reload WMS capabilities
