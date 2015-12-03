@@ -270,6 +270,7 @@
       <name>che:type</name>
       <name ancestor="gmd:contactInfo">gmd:country</name>
       <name ancestor="gmd:DQ_DomainConsistency">gmd:explanation</name>
+      <name>che:code</name>
     </exclude>
   </multilingualFields>
 
