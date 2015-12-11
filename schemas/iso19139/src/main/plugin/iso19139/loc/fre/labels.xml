@@ -3101,7 +3101,6 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
             <option value="WWW:LINK-1.0-http--partners">Partner web address (URL)</option>
             <option value="WWW:LINK-1.0-http--rss">Fil RSS (URL)</option>
             <option value="WWW:LINK-1.0-http--ical">iCalendar (URL)</option>
-            <option value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</option>
             <option value="WWW:DOWNLOAD-URL">Fichier à télécharger (URL)</option>
             <option value="WWW:DOWNLOAD-1.0-ftp--download">Fichier à télécharger (FTP)</option>
             <option value="OGC:WMS-http-get-map">OGC-WMS Web Map Service</option>
