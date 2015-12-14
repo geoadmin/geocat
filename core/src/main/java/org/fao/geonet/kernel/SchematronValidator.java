@@ -102,32 +102,10 @@ public class SchematronValidator {
 
         List<SchematronCriteriaGroup> criteriaGroups = criteriaGroupRepository.findAllById_SchematronId(schematron.getId());
 
-        //Loop through all criteria to see if apply schematron
-        //if any criteria does not apply, do not apply at all (AND)
         SchematronRequirement requirement = SchematronRequirement.DISABLED;
         for (SchematronCriteriaGroup criteriaGroup : criteriaGroups) {
             List<SchematronCriteria> criteriaList = criteriaGroup.getCriteria();
-            boolean apply = false;
-            for(SchematronCriteria criteria : criteriaList) {
-                boolean tmpApply = criteria.accepts(applicationContext, metadataId, md, metadataSchema.getSchemaNS());
-
-                if(!tmpApply) {
-                    apply = false;
-                    break;
-                } else {
-                    apply = true;
-                }
-            }
-
-            if (apply) {
-                if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                    Log.debug(Geonet.DATA_MANAGER, " - Schematron group is accepted:" + criteriaGroup.getId().getName() +
-                                                   " for schematron: "+schematron.getRuleName());
-                }
-                requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
-            } else {
-                requirement = requirement.highestRequirement(SchematronRequirement.DISABLED);
-            }
+            requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
         }
         return new ApplicableSchematron(requirement, schematron);
     }
