@@ -32,6 +32,7 @@ import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.WildcardQuery;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
@@ -47,6 +48,7 @@ import org.fao.geonet.kernel.search.keyword.KeywordSort;
 import org.fao.geonet.kernel.search.keyword.SortDirection;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.util.ElementFinder;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.openrdf.model.URI;
@@ -69,6 +71,7 @@ import java.util.UUID;
 import static org.apache.lucene.search.WildcardQuery.WILDCARD_STRING;
 
 public final class KeywordsStrategy extends SharedObjectStrategy {
+    public static Logger LOGGER = Log.createLogger(KeywordsStrategy.class.getName());
     public static final String NAMESPACE = "http://custom.shared.obj.ch/concept#";
     public static final String GEOCAT_THESAURUS_NAME = "local._none_.geocat.ch";
     public static final String NON_VALID_THESAURUS_NAME = "local._none_.non_validated";
@@ -391,6 +394,10 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
     public String updateHrefId(String oldHref, String uriCodeAndThesaurusName, UserSession session)
             throws UnsupportedEncodingException {
         final KeywordBean concept = lookup(uriCodeAndThesaurusName);
+        if (concept == null) {
+            LOGGER.warning("Didn't find the Thesaurus for " + uriCodeAndThesaurusName);
+            return null;
+        }
         String base = oldHref.substring(0, oldHref.indexOf('?'));
         String encoded = URLEncoder.encode(concept.getUriCode(), "utf-8");
         return base + "?thesaurus=" + GEOCAT_THESAURUS_NAME + "&id=" + encoded + "&locales=en,it,de,fr";
@@ -404,7 +411,8 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
         Map<String, String> idMap = new HashMap<>();
         for (String uriCodeAndThesaurusName : ids) {
             KeywordBean concept = lookup(uriCodeAndThesaurusName);
-            idMap.put(uriCodeAndThesaurusName, createKeywordId(concept));
+            final String newUri = "thesaurus=" + geocatThesaurus.getKey() + "&id=" + concept.getUriCode();
+            idMap.put(uriCodeAndThesaurusName, newUri);
             geocatThesaurus.addElement(concept);
             nonValidThesaurus.removeElement(concept);
         }

@@ -39,6 +39,7 @@ import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
+import org.jdom.Attribute;
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -117,12 +118,20 @@ public class Validate implements Service {
                     xlink.removeAttribute(XLink.ROLE, XLink.NAMESPACE_XLINK);
 
                     String oldHref = xlink.getAttributeValue(XLink.HREF, XLink.NAMESPACE_XLINK);
+
+                    //TODO: here we get an oldHref like that:
+                    //   local://eng/xml.keyword.get?thesaurus=local._none_.non_validated&id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23foo,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23b4ef6187-2a69-4bb2-ae3e-4bc04a25211e&multiple=true&lang=eng,ger,ita,fre,roh&textgroupOnly=true&skipdescriptivekeywords=true
+                    // you can see there are two URLs separated by coma, in this example, the one we are moving
+                    // and the one that needs to stay. And take into account that the one we are moving needs to
+                    // be moved to another XLink that maybe has other URLs or maybe need to be created.
+                    // Therefore, this whole implementation here is broken and needs to be totally rewritten.
+                    // Plus, I'm not sure it's a good idea to remove the role without putting it back...
                     String newId = idMapping.get(id);
                     if (newId == null) {
                         newId = id;
                     }
                     String validateHRef = strategy.updateHrefId(oldHref, newId, session);
-                    if (validated) {
+                    if (validated && validateHRef != null) {
                         xlink.setAttribute(XLink.HREF, validateHRef, XLink.NAMESPACE_XLINK);
                     }
                 }
