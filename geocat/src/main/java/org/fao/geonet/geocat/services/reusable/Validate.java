@@ -29,7 +29,6 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
-import jeeves.xlink.XLink;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
@@ -37,16 +36,12 @@ import org.fao.geonet.geocat.kernel.reusable.ReusableTypes;
 import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
-import org.jdom.Attribute;
 import org.jdom.Element;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -65,12 +60,11 @@ public class Validate implements Service {
         Log.debug(Geocat.Module.REUSABLE, "Starting to validate following reusable objects: " + page
                                           + " \n(" + Arrays.toString(ids) + ")");
 
-        String baseUrl = Utils.mkBaseURL(context.getBaseUrl(), context.getBean(SettingManager.class));
         SharedObjectStrategy strategy = Utils.strategy(ReusableTypes.valueOf(page), context);
 
         Element results = new Element("results");
         if (strategy != null) {
-            results.addContent(performValidation(ids, strategy, context, baseUrl));
+            results.addContent(performValidation(ids, strategy, context));
         }
         context.getBean(SearchManager.class).forceIndexChanges();
 
@@ -80,8 +74,7 @@ public class Validate implements Service {
         return results;
     }
 
-    private List<Element> performValidation(String[] ids, SharedObjectStrategy strategy, ServiceContext context,
-                                            String baseUrl) throws Exception {
+    private List<Element> performValidation(String[] ids, SharedObjectStrategy strategy, ServiceContext context) throws Exception {
         Map<String, String> idMapping = strategy.markAsValidated(ids, context.getUserSession());
 
         List<Element> result = new ArrayList<Element>();
@@ -100,46 +93,18 @@ public class Validate implements Service {
     private Element updateXLink(SharedObjectStrategy strategy, ServiceContext context, Map<String, String> idMapping, String id,
                                 boolean validated) throws Exception {
 
-        UserSession session = context.getUserSession();
-        List<String> luceneFields = new LinkedList<String>();
-        luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
+        final UserSession session = context.getUserSession();
+        final List<String> luceneFields = Arrays.asList(strategy.getInvalidXlinkLuceneField());
 
         final Function<String, String> idConverter = strategy.numericIdToConcreteId(session);
-        Set<MetadataRecord> results = Utils.getReferencingMetadata(context, strategy, luceneFields, id, false, true, idConverter);
+        final Set<MetadataRecord> results =
+                Utils.getReferencingMetadata(context, strategy, luceneFields, id, false, true, idConverter);
 
         for (MetadataRecord metadataRecord : results) {
-
-            for (String xlinkHref : metadataRecord.xlinks) {
-
-                @SuppressWarnings("unchecked")
-                Iterator<Element> xlinks = metadataRecord.xml.getDescendants(new Utils.FindXLinks(xlinkHref));
-                while (xlinks.hasNext()) {
-                    Element xlink = xlinks.next();
-                    xlink.removeAttribute(XLink.ROLE, XLink.NAMESPACE_XLINK);
-
-                    String oldHref = xlink.getAttributeValue(XLink.HREF, XLink.NAMESPACE_XLINK);
-
-                    //TODO: here we get an oldHref like that:
-                    //   local://eng/xml.keyword.get?thesaurus=local._none_.non_validated&id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23foo,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23b4ef6187-2a69-4bb2-ae3e-4bc04a25211e&multiple=true&lang=eng,ger,ita,fre,roh&textgroupOnly=true&skipdescriptivekeywords=true
-                    // you can see there are two URLs separated by coma, in this example, the one we are moving
-                    // and the one that needs to stay. And take into account that the one we are moving needs to
-                    // be moved to another XLink that maybe has other URLs or maybe need to be created.
-                    // Therefore, this whole implementation here is broken and needs to be totally rewritten.
-                    // Plus, I'm not sure it's a good idea to remove the role without putting it back...
-                    String newId = idMapping.get(id);
-                    if (newId == null) {
-                        newId = id;
-                    }
-                    String validateHRef = strategy.updateHrefId(oldHref, newId, session);
-                    if (validated && validateHRef != null) {
-                        xlink.setAttribute(XLink.HREF, validateHRef, XLink.NAMESPACE_XLINK);
-                    }
-                }
-
-            }
+            strategy.updateXLinks(idMapping, id, validated, session, metadataRecord);
             metadataRecord.commit(context);
         }
-        Element e = new Element("id");
+        final Element e = new Element("id");
         e.setText(id);
         return e;
     }

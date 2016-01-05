@@ -26,6 +26,7 @@ package org.fao.geonet.geocat.kernel.reusable;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import jeeves.server.UserSession;
+import jeeves.xlink.XLink;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.WildcardQuery;
@@ -37,6 +38,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Map;
 
 import static org.apache.lucene.search.WildcardQuery.WILDCARD_STRING;
@@ -173,6 +175,29 @@ public abstract class SharedObjectStrategy implements FindMetadataReferences {
 
     public Function<String,String> numericIdToConcreteId(final UserSession session) {
         return ID_FUNC;
+    }
+
+    public void updateXLinks(Map<String, String> idMapping, String id, boolean validated, UserSession session, MetadataRecord metadataRecord) throws UnsupportedEncodingException {
+        assert metadataRecord.xml != null;
+        String newId = idMapping.get(id);
+        if (newId == null) {
+            newId = id;
+        }
+        for (String xlinkHref : metadataRecord.xlinks) {
+            @SuppressWarnings("unchecked")
+            final Iterator<Element> xlinks = metadataRecord.xml.getDescendants(new Utils.FindXLinks(xlinkHref));
+            while (xlinks.hasNext()) {
+                final Element xlink = xlinks.next();
+                xlink.removeAttribute(XLink.ROLE, XLink.NAMESPACE_XLINK);
+
+                final String oldHref = xlink.getAttributeValue(XLink.HREF, XLink.NAMESPACE_XLINK);
+
+                final String validateHRef = updateHrefId(oldHref, newId, session);
+                if (validated && validateHRef != null) {
+                    xlink.setAttribute(XLink.HREF, validateHRef, XLink.NAMESPACE_XLINK);
+                }
+            }
+        }
     }
 
     @Override
