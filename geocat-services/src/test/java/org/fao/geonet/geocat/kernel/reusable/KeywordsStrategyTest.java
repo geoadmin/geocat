@@ -30,7 +30,6 @@ public class KeywordsStrategyTest extends AbstractThesaurusBasedTest {
     public static final int GEOCAT_THES_WORDS = 100;
     private Thesaurus gcThesaurus;
     private Thesaurus nonValidThesaurusName;
-    private ThesaurusFinder thesaurusManager;
     private KeywordsStrategy strategy;
     private UserSession session;
 
@@ -46,7 +45,7 @@ public class KeywordsStrategyTest extends AbstractThesaurusBasedTest {
         this.gcThesaurus = createNewThesaurus(directory, GEOCAT_THESAURUS_NAME);
         this.nonValidThesaurusName = createNewThesaurus(directory, KeywordsStrategy.NON_VALID_THESAURUS_NAME);
 
-        this.thesaurusManager = new ThesaurusFinder() {
+        final ThesaurusFinder thesaurusManager = new ThesaurusFinder() {
             Map<String, Thesaurus> thesauri = Maps.newHashMap();
 
             {

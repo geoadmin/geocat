@@ -27,11 +27,14 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import jeeves.server.UserSession;
 import jeeves.xlink.XLink;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.WildcardQuery;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
@@ -47,6 +50,7 @@ import org.fao.geonet.kernel.search.keyword.KeywordSort;
 import org.fao.geonet.kernel.search.keyword.SortDirection;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.util.ElementFinder;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.openrdf.model.URI;
@@ -69,6 +73,7 @@ import java.util.UUID;
 import static org.apache.lucene.search.WildcardQuery.WILDCARD_STRING;
 
 public final class KeywordsStrategy extends SharedObjectStrategy {
+    public static Logger LOGGER = Log.createLogger(KeywordsStrategy.class.getName());
     public static final String NAMESPACE = "http://custom.shared.obj.ch/concept#";
     public static final String GEOCAT_THESAURUS_NAME = "local._none_.geocat.ch";
     public static final String NON_VALID_THESAURUS_NAME = "local._none_.non_validated";
@@ -391,6 +396,10 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
     public String updateHrefId(String oldHref, String uriCodeAndThesaurusName, UserSession session)
             throws UnsupportedEncodingException {
         final KeywordBean concept = lookup(uriCodeAndThesaurusName);
+        if (concept == null) {
+            LOGGER.warning("Didn't find the Thesaurus for " + uriCodeAndThesaurusName);
+            return null;
+        }
         String base = oldHref.substring(0, oldHref.indexOf('?'));
         String encoded = URLEncoder.encode(concept.getUriCode(), "utf-8");
         return base + "?thesaurus=" + GEOCAT_THESAURUS_NAME + "&id=" + encoded + "&locales=en,it,de,fr";
@@ -404,15 +413,20 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
         Map<String, String> idMap = new HashMap<>();
         for (String uriCodeAndThesaurusName : ids) {
             KeywordBean concept = lookup(uriCodeAndThesaurusName);
-            idMap.put(uriCodeAndThesaurusName, createKeywordId(concept));
+            final String newUri = "thesaurus=" + geocatThesaurus.getKey() + "&id=" + concept.getUriCode();
+            idMap.put(uriCodeAndThesaurusName, newUri);
             geocatThesaurus.addElement(concept);
             nonValidThesaurus.removeElement(concept);
         }
         return idMap;
     }
 
-    private Element xlinkIt(String thesaurus, String keywordUri, boolean validated) throws UnsupportedEncodingException {
-        String encoded = URLEncoder.encode(keywordUri, "UTF-8");
+    protected Element xlinkIt(String thesaurus, String keywordUris, boolean validated) throws UnsupportedEncodingException {
+        String[] keywords = keywordUris.split(",");
+        for (int i = 0; i < keywords.length; i++) {
+            keywords[i] = URLEncoder.encode(keywords[i], "UTF-8");
+        }
+        String encoded = StringUtils.join(keywords, ",");
         Element descriptiveKeywords = new Element("descriptiveKeywords", Geonet.Namespaces.GMD);
 
         descriptiveKeywords.setAttribute(XLink.HREF,
@@ -567,6 +581,65 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
     }
 
     @Override
+    public void updateXLinks(Map<String, String> idMapping, String id, boolean validated, UserSession session, MetadataRecord metadataRecord) throws UnsupportedEncodingException {
+        String newId = idMapping.get(id);
+        if (newId != null) {
+            updateXLinks(id, newId, metadataRecord.xlinks, metadataRecord.xml);
+        }
+    }
+
+    protected void updateXLinks(String oldId, String newId, Collection<String> xlinks, Element xml) throws UnsupportedEncodingException {
+        final Map<String, String[]> indexedLinks = indexLinks(xlinks);
+        Pair<String, String> oldSplit = splitUriAndThesaurusName(oldId);
+        Pair<String, String> newSplit = splitUriAndThesaurusName(newId);
+
+        //remove the old ID
+        String[] nonValidLinks = indexedLinks.get(oldSplit.two());
+        if (nonValidLinks != null) {
+            nonValidLinks = (String[]) ArrayUtils.removeElement(nonValidLinks, oldSplit.one());
+            if(nonValidLinks.length > 0) {
+                indexedLinks.put(oldSplit.two(), nonValidLinks);
+            } else {
+                indexedLinks.remove(oldSplit.two());
+            }
+        }
+
+        //add the new ID
+        String[] validLinks = indexedLinks.get(newSplit.two());
+        if (validLinks != null) {
+            validLinks = (String[]) ArrayUtils.add(validLinks, newSplit.one());
+        } else {
+            validLinks = new String[] {newSplit.one()};
+        }
+        indexedLinks.put(newSplit.two(), validLinks);
+
+        //remove all the xlinks
+        Element root = null;
+        int insertPos = -1;
+        for (String xlinkHref : xlinks) {
+            @SuppressWarnings("unchecked")
+            Iterator<Element> found = xml.getDescendants(new Utils.FindXLinks(xlinkHref));
+            if (found.hasNext()) {  //only one
+                final Element xlink = found.next();
+                if (root == null) {
+                    root = (Element) xlink.getParent();
+                    insertPos = root.indexOf(xlink);
+                } else {
+                    assert root == xlink.getParent();
+                }
+                root.removeContent(xlink);
+            }
+        }
+        assert root != null && insertPos >= 0;
+
+        //put them back
+        for (Map.Entry<String, String[]> link: indexedLinks.entrySet()) {
+            Element element = xlinkIt(link.getKey(), StringUtils.join(link.getValue(), ","), true);
+            root.addContent(insertPos++, element);
+        }
+    }
+
+    @Override
     public Query createFindMetadataQuery(String field, String concreteId, boolean isValidated) {
         BooleanQuery query = new BooleanQuery();
         Term term = new Term(field, WILDCARD_STRING + concreteId + "," + WILDCARD_STRING);
@@ -574,5 +647,23 @@ public final class KeywordsStrategy extends SharedObjectStrategy {
         query.add(new WildcardQuery(term), BooleanClause.Occur.SHOULD);
         query.add(new WildcardQuery(term2), BooleanClause.Occur.SHOULD);
         return query;
+    }
+
+    protected static Map<String, String[]> indexLinks(Collection<String> xlinks) throws UnsupportedEncodingException {
+        Map<String, String[]> ret = new HashMap<>();
+        for (String xlink: xlinks) {
+            final String thesaurus = Utils.extractUrlParam(xlink, "thesaurus");
+            final String id = Utils.extractUrlParam(xlink, "id");
+            final String[] idSplit = id.split(",");
+            for (int i = 0; i < idSplit.length; i++) {
+                idSplit[i] = URLDecoder.decode(idSplit[i], "utf-8");
+            }
+            if (ret.containsKey(thesaurus)) {
+                ret.put(thesaurus, (String[])ArrayUtils.addAll(ret.get(thesaurus), idSplit));
+            } else {
+                ret.put(thesaurus, idSplit);
+            }
+        }
+        return ret;
     }
 }

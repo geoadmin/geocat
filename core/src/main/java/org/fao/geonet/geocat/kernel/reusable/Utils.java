@@ -336,8 +336,12 @@ public final class Utils {
         if (href == null) {
             return null;
         }
-        int beginIndex = href.indexOf(paramName + "=") + paramName.length() + 1;
-        String frag = href.substring(beginIndex);
+        return extractUrlParam(href, paramName);
+    }
+
+    public static String extractUrlParam(String xlink, String paramName) {
+        int beginIndex = xlink.indexOf(paramName + "=") + paramName.length() + 1;
+        String frag = xlink.substring(beginIndex);
         int index = frag.indexOf('&');
         if (index < 0) {
             index = frag.length();

@@ -23,7 +23,7 @@ CREATE TABLE spatialindex
   metadataId text,
   the_geom geometry,
   CONSTRAINT spatialindex_pkey PRIMARY KEY (gid),
-  CONSTRAINT enforce_dims_the_geom CHECK (ndims(the_geom) = 2),
+  CONSTRAINT enforce_dims_the_geom CHECK (st_ndims(the_geom) = 2),
   CONSTRAINT enforce_geotype_the_geom CHECK (geometrytype(the_geom) = 'MULTIPOLYGON'::text OR the_geom IS NULL),
   CONSTRAINT enforce_srid_the_geom CHECK (srid(the_geom) = 4326)
 )

@@ -425,23 +425,8 @@
       <!-- Thesaurus stuff -->
       <dependency>
         <groupId>org.openrdf</groupId>
-        <artifactId>openrdf-model</artifactId>
-        <version>1.2.7</version>
-      </dependency>
-      <dependency>
-        <groupId>org.openrdf</groupId>
-        <artifactId>openrdf-util</artifactId>
-        <version>1.2.7</version>
-      </dependency>
-      <dependency>
-        <groupId>org.openrdf</groupId>
         <artifactId>sesame</artifactId>
         <version>1.2.7</version>
-      </dependency>
-      <dependency>
-        <groupId>org.openrdf</groupId>
-        <artifactId>rio</artifactId>
-        <version>1.0.9</version>
       </dependency>
 
       <!-- PDF stuff: Managed by Mapfish -->
@@ -1083,7 +1068,7 @@
       </snapshots>
       <id>boundless</id>
       <name>Boundless repository</name>
-      <url>http://repo.boundlessgeo.com/main/</url>
+      <url>https://repo.boundlessgeo.com/main/</url>
     </repository>
 <!--
      <repository>

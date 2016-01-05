@@ -8,6 +8,9 @@ import org.fao.geonet.kernel.rdf.Selectors;
 import org.fao.geonet.kernel.rdf.Where;
 import org.fao.geonet.kernel.rdf.Wheres;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
+import org.fao.geonet.kernel.search.keyword.KeywordSearchParams;
+import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -37,7 +41,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         Files.deleteIfExists(file);
 
         this.writableThesaurus = new Thesaurus(isoLangMapper, file.getFileName().toString(), null, null, Geonet.CodeList.LOCAL,
-                file.getFileName().toString(), file, null, true);
+                file.getFileName().toString(), file, "http://example.com", true);
         writableThesaurus.initRepository();
     }
     
@@ -463,5 +467,39 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         KeywordBean keyword = new KeywordBean(isoLangMapper);
         keyword.setUriCode(uri);
         writableThesaurus.addElement(keyword);
+    }
+
+    @Test
+    public void createEditSearch() throws Exception {
+        final String uri = "http://custom.shared.obj.ch/concept#foo";
+        writableThesaurus.addElement(new KeywordBean(isoLangMapper)
+                .setUriCode(uri)
+                .setValue("No", "eng")
+                .setValue("", "fre"));
+
+        writableThesaurus.addElement(new KeywordBean(isoLangMapper)
+                .setUriCode("http://custom.shared.obj.ch/concept#bar")
+                .setValue("Yes", "eng"));
+
+        System.out.println("Before:");
+        System.out.println(new String(Files.readAllBytes(writableThesaurus.getFile())));
+
+        writableThesaurus.updateElement(new KeywordBean(isoLangMapper)
+                .setUriCode(uri)
+                .setValue("Nope", "eng")
+                .setValue("Pas question", "fre"), true);
+
+        System.out.println("\n\n\nAfter:");
+        System.out.println(new String(Files.readAllBytes(writableThesaurus.getFile())));
+
+        final KeywordSearchParamsBuilder paramsBuilder = new KeywordSearchParamsBuilder(isoLangMapper);
+        paramsBuilder.addLang("eng").addLang("fre").addLang("ger").addLang("ita");
+        paramsBuilder.addThesaurus(writableThesaurus.getKey()).uri(uri);
+        final KeywordSearchParams build = paramsBuilder.build();
+        ThesaurusFinder thesaurusMan = new SingleThesaurusFinder(writableThesaurus);
+        List<KeywordBean> results = build.search(thesaurusMan);
+        assertEquals(1, results.size());
+        assertEquals("Nope", results.get(0).getValues().get("eng"));
+        assertEquals("Pas question", results.get(0).getValues().get("fre"));
     }
 }

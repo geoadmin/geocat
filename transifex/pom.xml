@@ -54,6 +54,7 @@
         <version>3.2</version>
         <configuration>
           <goalPrefix>mysql-jdbc-compliance</goalPrefix>
+          <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
         </configuration>
         <executions>
           <execution>
