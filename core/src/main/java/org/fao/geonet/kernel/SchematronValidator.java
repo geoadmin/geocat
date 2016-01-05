@@ -102,31 +102,26 @@ public class SchematronValidator {
 
         List<SchematronCriteriaGroup> criteriaGroups = criteriaGroupRepository.findAllById_SchematronId(schematron.getId());
 
-        //Loop through all criteria to see if apply schematron
-        //if any criteria does not apply, do not apply at all (AND)
+        // GEOCAT SB-366 specific: We actually want a "OR" on the criteria. Here is what is expected:
+        // Loop on each criteria ;
+        // - If the criteria does not apply, skip it
+        // - If the criteria applies, get its actual requirement
+        // At the end the highest requirement encountered is used along with the schematron.
+        // If no criteria could be applied, the schematron is disabled.
+        //
+        // The default behaviour in the regular GeoNetwork is to disable the schematron if any
+        // of the criteria could not be applied.
+        //
         SchematronRequirement requirement = SchematronRequirement.DISABLED;
         for (SchematronCriteriaGroup criteriaGroup : criteriaGroups) {
             List<SchematronCriteria> criteriaList = criteriaGroup.getCriteria();
-            boolean apply = false;
             for(SchematronCriteria criteria : criteriaList) {
                 boolean tmpApply = criteria.accepts(applicationContext, metadataId, md, metadataSchema.getSchemaNS());
-
-                if(!tmpApply) {
-                    apply = false;
-                    break;
+                if (! tmpApply) {
+                    continue;
                 } else {
-                    apply = true;
+                    requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
                 }
-            }
-
-            if (apply) {
-                if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                    Log.debug(Geonet.DATA_MANAGER, " - Schematron group is accepted:" + criteriaGroup.getId().getName() +
-                                                   " for schematron: "+schematron.getRuleName());
-                }
-                requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
-            } else {
-                requirement = requirement.highestRequirement(SchematronRequirement.DISABLED);
             }
         }
         return new ApplicableSchematron(requirement, schematron);
