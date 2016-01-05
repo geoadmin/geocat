@@ -22,6 +22,7 @@ import org.jdom.filter.ElementFilter;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -103,25 +104,33 @@ public class SchematronValidator {
         List<SchematronCriteriaGroup> criteriaGroups = criteriaGroupRepository.findAllById_SchematronId(schematron.getId());
 
         // GEOCAT SB-366 specific: We actually want a "OR" on the criteria. Here is what is expected:
-        // Loop on each criteria ;
-        // - If the criteria does not apply, skip it
-        // - If the criteria applies, get its actual requirement
-        // At the end the highest requirement encountered is used along with the schematron.
+        //
+        // Loop on each criteria from all criteria group ;
+        //
+        // - If the criteria does not apply, skip the whole criteria group
+        // - If all the criteria of the group apply, get the requirement from the criteria group
+        //
+        // At the end, the highest requirement encountered is used for the schematron.
         // If no criteria could be applied, the schematron is disabled.
         //
         // The default behaviour in the regular GeoNetwork is to disable the schematron if any
         // of the criteria could not be applied.
-        //
+
         SchematronRequirement requirement = SchematronRequirement.DISABLED;
+
         for (SchematronCriteriaGroup criteriaGroup : criteriaGroups) {
+            Boolean allCriteriasApply = true;
             List<SchematronCriteria> criteriaList = criteriaGroup.getCriteria();
+
             for(SchematronCriteria criteria : criteriaList) {
                 boolean tmpApply = criteria.accepts(applicationContext, metadataId, md, metadataSchema.getSchemaNS());
                 if (! tmpApply) {
-                    continue;
-                } else {
-                    requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
+                    allCriteriasApply = false;
+                    break;
                 }
+            }
+            if (allCriteriasApply) {
+                requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
             }
         }
         return new ApplicableSchematron(requirement, schematron);
