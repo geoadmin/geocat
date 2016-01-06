@@ -22,6 +22,7 @@ import org.jdom.filter.ElementFilter;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -102,31 +103,34 @@ public class SchematronValidator {
 
         List<SchematronCriteriaGroup> criteriaGroups = criteriaGroupRepository.findAllById_SchematronId(schematron.getId());
 
-        //Loop through all criteria to see if apply schematron
-        //if any criteria does not apply, do not apply at all (AND)
+        // GEOCAT SB-366 specific: We actually want a "OR" on the criteria. Here is what is expected:
+        //
+        // Loop on each criteria from all criteria group ;
+        //
+        // - If the criteria does not apply, skip the whole criteria group
+        // - If all the criteria of the group apply, get the requirement from the criteria group
+        //
+        // At the end, the highest requirement encountered is used for the schematron.
+        // If no criteria could be applied, the schematron is disabled.
+        //
+        // The default behaviour in the regular GeoNetwork is to disable the schematron if any
+        // of the criteria could not be applied.
+
         SchematronRequirement requirement = SchematronRequirement.DISABLED;
+
         for (SchematronCriteriaGroup criteriaGroup : criteriaGroups) {
+            Boolean allCriteriasApply = true;
             List<SchematronCriteria> criteriaList = criteriaGroup.getCriteria();
-            boolean apply = false;
+
             for(SchematronCriteria criteria : criteriaList) {
                 boolean tmpApply = criteria.accepts(applicationContext, metadataId, md, metadataSchema.getSchemaNS());
-
-                if(!tmpApply) {
-                    apply = false;
+                if (! tmpApply) {
+                    allCriteriasApply = false;
                     break;
-                } else {
-                    apply = true;
                 }
             }
-
-            if (apply) {
-                if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                    Log.debug(Geonet.DATA_MANAGER, " - Schematron group is accepted:" + criteriaGroup.getId().getName() +
-                                                   " for schematron: "+schematron.getRuleName());
-                }
+            if (allCriteriasApply) {
                 requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
-            } else {
-                requirement = requirement.highestRequirement(SchematronRequirement.DISABLED);
             }
         }
         return new ApplicableSchematron(requirement, schematron);

@@ -1,11 +1,19 @@
 package org.fao.geonet.geocat.kernel;
 
-import com.google.common.collect.Sets;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.isPublic;
+import static org.quartz.TriggerBuilder.newTrigger;
+import static org.springframework.data.jpa.domain.Specifications.where;
+
+import java.nio.file.Path;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
@@ -55,19 +63,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import java.nio.file.Path;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+import com.google.common.collect.Sets;
 
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.isPublic;
-import static org.quartz.TriggerBuilder.newTrigger;
-import static org.springframework.data.jpa.domain.Specifications.where;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 
 public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Service {
     public static final String UNPUBLISH_LOG = Geonet.GEONETWORK + ".unpublish";
@@ -322,6 +324,24 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
                                 + "Job took:  " + timeSec + " sec");
     }
 
+    /**
+	 * Check if if the given metadata needs to be unpublished (because of
+	 * invalidation), then saves the publish record state into database and
+	 * unpublishes it if needed.
+	 *
+	 * @param context
+	 *            the application context
+	 * @param metadataRecord
+	 *            the metadata to check / unpublish
+	 * @param dataManager
+	 *            the datamanager object (used to check validity)
+	 *
+	 * @return true if the MD has been invalidated (was published, but has been
+	 *         unpublished), false otherwise (if already unpublished, or if
+	 *         published but recognized valid).
+	 *
+	 * @throws Exception
+	 */
     private boolean checkIfNeedsUnpublishingAndSavePublishedRecord(ServiceContext context, Metadata metadataRecord,
                                                                    DataManager dataManager) throws Exception {
         String id = "" + metadataRecord.getId();
@@ -363,6 +383,15 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
         return false;
     }
 
+    /**
+     * Returns whether the given metadata is published or not, i.e. if all reserved groups have the view operation set.
+     *
+     * @param id the metadata Identifier
+     * @param context the application context
+     * @return true if the metadata is published, false otherwise.
+     *
+     * @throws SQLException
+     */
     public static boolean isPublished(String id, ServiceContext context) throws SQLException {
         final OperationAllowedRepository allowedRepository = context.getBean(OperationAllowedRepository.class);
 
@@ -371,7 +400,18 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
         return allowedRepository.count(idAndPublishedSpec) > 0;
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * Creates a list of metadata needed to be schematron checked, i.e.:
+     *
+     *  - not harvested
+     *  - of type Metadata (no template nor subtemplate)
+     *  - of schema ISO19139.che
+     *
+     * @param repo the MetadataRepository JPA
+     * @return a list of metadata objects to check
+     *
+     * @throws SQLException
+     */
     private List<Metadata> lookUpMetadataIds(MetadataRepository repo) throws SQLException {
         final Specification<Metadata> notHarvested = MetadataSpecs.isHarvested(false);
         Specification<Metadata> isMetadata = MetadataSpecs.isType(MetadataType.METADATA);
@@ -379,7 +419,16 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean implements Servic
         return repo.findAll(where(notHarvested).and(isMetadata).and(isCHEMetadata));
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * Gets a list of published states for the MDs, between 2 dates given as argument.
+     *
+     * @param context a ServiceContext object, used to get a hook onto the JPA repositories
+     * @param startOffset
+     * @param endOffset
+     * @return the list of published states (see the publish_tracking table in db)
+     *
+     * @throws Exception
+     */
     static List<PublishRecord> values(ServiceContext context, int startOffset, int endOffset) throws Exception {
         final Specification<PublishRecord> daysOldOrNewer = PublishRecordSpecs.daysOldOrNewer(startOffset);
         final Specification<PublishRecord> daysOldOrOlder = PublishRecordSpecs.daysOldOrOlder(endOffset);
