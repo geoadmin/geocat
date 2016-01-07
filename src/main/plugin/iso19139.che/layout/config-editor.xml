@@ -335,6 +335,7 @@
         <for name="gmd:distributionFormat"/>
         <for name="gmd:topicCategory"/>
         <for name="gmd:transferOptions"/>
+        <for name="gmd:date"/>
       </flatModeExceptions>
 
     </view>
