@@ -75,12 +75,16 @@
       <label class="col-sm-2 control-label">
         <xsl:value-of select="$labelConfig/label"/>
       </label>
+
+      <xsl:variable name="iso19193codelists" select="/root/gui/schemas/iso19139/codelists"/>
+
       <div class="col-sm-3 gn-value">
         <xsl:variable name="codelist"
                       select="gn-fn-metadata:getCodeListValues($schema,
                                   'gmd:CI_DateTypeCode',
-                                  $codelists,
+                                  $iso19193codelists,
                                   .)"/>
+
         <xsl:call-template name="render-codelist-as-select">
           <xsl:with-param name="listOfValues" select="$codelist"/>
           <xsl:with-param name="lang" select="$lang"/>
