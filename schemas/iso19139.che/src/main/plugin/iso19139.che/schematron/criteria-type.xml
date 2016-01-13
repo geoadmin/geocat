@@ -7,7 +7,7 @@
         <allowArbitraryValue>false</allowArbitraryValue>
         <remote>
             <cacheTime>0</cacheTime> <!-- Don't cache -->
-            <url>xml.search.keywords@json?pNewSearch=true&amp;maxResults=100&amp;pKeyword=@@search@@&amp;pTypeSearch=CONTAINS</url>
+            <url>xml.search.keywords@json?pThesauri=external.none.allThesaurus&amp;pNewSearch=true&amp;maxResults=100&amp;pKeyword=@@search@@&amp;pTypeSearch=CONTAINS</url>
 
             <!-- The following 3 elements are functions (paramName) {function body} and will be converted to a javascript function
                  in the UI by pre-pending function to the body text -->
