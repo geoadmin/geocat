@@ -42,7 +42,8 @@ public class Functions {
         String date = el.'gco:Date'.text()
         String dateTime = el.'gco:DateTime'.text()
         if (!date.isEmpty()) {
-            return date;
+            ISODate isoDate = new ISODate(date)
+            return new SimpleDateFormat("dd-MM-yyyy").format(isoDate.toDate())
         } else if (!dateTime.isEmpty()){
             ISODate isoDate = new ISODate(dateTime)
             return new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(isoDate.toDate())
