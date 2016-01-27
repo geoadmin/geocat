@@ -873,8 +873,8 @@ public class GeocatXslUtil {
                         }
                     }
                 }
+                keywordEl.detach();
             }
-            keywordEl.detach();
         }
 
         if (parent != null) {
