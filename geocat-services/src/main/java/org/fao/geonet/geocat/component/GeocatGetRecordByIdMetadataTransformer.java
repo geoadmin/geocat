@@ -54,7 +54,7 @@ public class GeocatGetRecordByIdMetadataTransformer implements GetRecordByIdMeta
                         context.getAppPath().resolve("xsl/conversion/import/ISO19139CHE-to-GM03.xsl"));
                 org.w3c.dom.Document domOut = toGm03.convert(domIn);
                 DOMBuilder builder = new DOMBuilder();
-                return Optional.of(builder.build(domOut).getRootElement());
+                return Optional.of(builder.build(domOut).detachRootElement());
 
             } catch (Exception e) {
                 throw new NoApplicableCodeEx("Error transforming metadata ISO 19139.CHE into GM03_2Record " + e.getMessage());
