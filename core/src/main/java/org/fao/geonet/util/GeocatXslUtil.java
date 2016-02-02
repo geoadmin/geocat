@@ -874,6 +874,14 @@ public class GeocatXslUtil {
                     }
                 }
                 keywordEl.detach();
+            } else {
+                //noinspection unchecked
+                List<org.jdom.Element> thesaurusIds = (List<org.jdom.Element>)
+                        Xml.selectNodes(keywordEl, "gmd:MD_Keywords//gmd:identifier//gmd:code/*", namespaces);
+                if (thesaurusIds.size() == 1 && thesaurusIds.get(0).getText().equals("external.none.allThesaurus")) {
+                    // remove the allThesaurus inserted by the edition.
+                    keywordEl.detach();
+                }
             }
         }
 
