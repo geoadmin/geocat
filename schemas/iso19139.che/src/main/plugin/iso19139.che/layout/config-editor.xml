@@ -192,7 +192,7 @@
 -->
     </expanded>
     <!-- All fields in ISO could be multilingual.
-    Define element to exlcude. 
+    Define element to exclude.
     TODO: it may be relevant to have parent defined
     to restrict the list.
     -->
@@ -243,6 +243,7 @@
       <name>gmd:checkPointDescription</name>
       <name>gmd:transformationDimensionDescription</name>
       <name>gmd:orientationParameterDescription</name>
+      <name>gmd:includedWithDataset</name>
       <name parent="gmd:MD_Format">gmd:name</name>
       <name ancestor="gmd:thesaurusName">gmd:code</name>
       <name ancestor="gmd:aggregateDataSetIdentifier">gmd:code</name>
