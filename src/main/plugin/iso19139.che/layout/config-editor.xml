@@ -244,6 +244,7 @@
       <name>gmd:transformationDimensionDescription</name>
       <name>gmd:orientationParameterDescription</name>
       <name>gmd:includedWithDataset</name>
+      <name>gmd:geometricObjectCount</name>
       <name parent="gmd:MD_Format">gmd:name</name>
       <name ancestor="gmd:thesaurusName">gmd:code</name>
       <name ancestor="gmd:aggregateDataSetIdentifier">gmd:code</name>
