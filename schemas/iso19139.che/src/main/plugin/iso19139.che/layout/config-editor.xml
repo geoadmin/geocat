@@ -179,6 +179,7 @@
     <name>gmd:resourceFormat</name>
     <name>gmd:graphicOverview</name>
     <name>gmd:includedWithDataset</name>
+    <name>gmd:distributor</name>
   </fieldsWithFieldset>
 
   <multilingualFields>
