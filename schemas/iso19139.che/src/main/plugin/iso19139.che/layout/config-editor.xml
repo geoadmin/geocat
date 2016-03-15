@@ -247,6 +247,7 @@
       <name>gmd:orientationParameterDescription</name>
       <name>gmd:includedWithDataset</name>
       <name>gmd:geometricObjectCount</name>
+      <name>gmd:numberOfDimensions</name>
       <name>gmd:attributeDescription</name>
       <name parent="gmd:MD_Format">gmd:name</name>
       <name ancestor="gmd:thesaurusName">gmd:code</name>
