@@ -64,17 +64,17 @@
 		<suggest name="gmd:extent"/>
 	</field>
 	
-	<field name="gmd:extent" mode="xlinkOnly">
+	<field name="gmd:extent">
 		<suggest name="gmd:EX_Extent"/>
         <exception parent="gmd:EX_SpatialTemporalExtent"/>
         <exception parent="gmd:EX_TemporalExtent"/>
 	</field>
 	
-	<field name="che:revisionExtent" mode="xlinkOnly">
+	<field name="che:revisionExtent">
 		<suggest name="gmd:EX_Extent"/> 
 	</field>
 	
-	<field name="gmd:sourceExtent" mode="xlinkOnly">
+	<field name="gmd:sourceExtent">
 		<suggest name="gmd:EX_Extent"/> 
 	</field>
 	
@@ -134,43 +134,15 @@
 		<suggest name="xlink:href"/>
 	</field>
 	
-	<!-- xLink : as defined in XSD, all PropertyType having an
-		attribute group set to gco:ObjectReference could be linked
-		using xlink attributes. 
-		
-		For each elements allows user to use default editor or 
-		defined a remote resource using an xlink.
-		
-		To add a new xlink popup on an element add a new field
-		<field name="nsPrefix:elementName" mode="xlink|xlinkOnly"/>
-		
-		Different modes are available:
-		* xlink: will allow classic editor AND xlink popup
-		* xlinkOnly: will only allow xlink popup
-		
-		If not set default editor is used.
-	-->
-	<field name="gmd:contact" mode="xlinkOnly"/>
-	<field name="gmd:distributorContact" mode="xlinkOnly"/>
-	<field name="gmd:processor" mode="xlinkOnly"/>
-	<field name="gmd:citedResponsibleParty" mode="xlinkOnly"/>
-	<field name="gmd:pointOfContact" mode="xlinkOnly"/>
-	<field name="gmd:source" mode="xlinkOnly">
+	<field name="gmd:MD_Distributor">
+		<!-- Eventhough gmd:distributorContact is a mandatory field, we don't want to add it since
+		     we want the user to choose a sharedObject instead -->
+		<filter name="gmd:distributorContact"/>
+	</field>
+	<field name="gmd:source">
         <exception parent="gmd:LI_Lineage"/>
         <exception parent="gmd:LI_ProcessStep"/>
     </field>
-	
-	<field name="gmd:distributionFormat" mode="xlinkOnly"/>
-	<field name="gmd:distributorFormat" mode="xlinkOnly"/>
-	<field name="gmd:resourceFormat" mode="xlinkOnly"/>
-    <field name="gmd:descriptiveKeywords" mode="xlinkOnly"/>
-    <field name="srv:keywords" mode="xlinkOnly"/>
-	<!--<field name="gmd:referenceSystemInfo" mode="xlink"/>-->
-    <field name="srv:extent" mode="xlinkOnly"/>
-    <field name="gmd:spatialExtent" mode="xlinkOnly"/>
-    <field name="srv:keywords" mode="xlinkOnly"/>
-    <field name="gmd:userContactInfo" mode="xlinkOnly"/>
-	
 	
 	<field name="gmd:date">
 		<suggest name="gco:Date"/>

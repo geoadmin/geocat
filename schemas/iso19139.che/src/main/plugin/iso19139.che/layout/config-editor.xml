@@ -69,7 +69,7 @@
         data-template-type="contacts"
         data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
-    <for name="gmd:distributor" addDirective="gc-add-sharedobject">
+    <for name="gmd:distributorContact" addDirective="gc-add-sharedobject">
       <directiveAttributes
         data-template-add-action="false"
         data-template-type="contacts"
@@ -180,6 +180,7 @@
     <name>gmd:graphicOverview</name>
     <name>gmd:includedWithDataset</name>
     <name>gmd:distributor</name>
+    <name>gmd:distributorContact</name>
   </fieldsWithFieldset>
 
   <multilingualFields>
@@ -330,6 +331,10 @@
       <flatModeExceptions>
         <for name="gmd:pointOfContact"/>
         <for name="gmd:distributor"/>
+        <for name="gmd:distributorContact"/>
+        <for name="gmd:distributionOrderProcess"/>
+        <for name="gmd:distributorFormat"/>
+        <for name="gmd:distributorTransferOptions"/>
         <for name="gmd:contact"/>
         <for name="gmd:processor"/>
         <for name="gmd:citedResponsibleParty"/>
@@ -594,6 +599,10 @@
       <flatModeExceptions>
         <for name="gmd:pointOfContact"/>
         <for name="gmd:distributor"/>
+        <for name="gmd:distributorContact"/>
+        <for name="gmd:distributionOrderProcess"/>
+        <for name="gmd:distributorFormat"/>
+        <for name="gmd:distributorTransferOptions"/>
         <for name="gmd:contact"/>
         <for name="gmd:processor"/>
         <for name="gmd:citedResponsibleParty"/>
