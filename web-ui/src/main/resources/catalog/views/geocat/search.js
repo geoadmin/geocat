@@ -277,7 +277,7 @@
         mode: 'prefetch',
         promise: (function() {
           var defer = $q.defer();
-          $http.get(suggestService.getInfoUrl('sources', 'groups')).
+          $http.get(suggestService.getInfoUrl('sources', 'groupsAll')).
               success(function(data) {
                 var res = [];
                 var parseBlock = function(block) {
