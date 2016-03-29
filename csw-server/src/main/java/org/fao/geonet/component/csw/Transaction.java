@@ -434,10 +434,10 @@ public class Transaction extends AbstractOperation implements CatalogService {
                 // Update the metadata with changes
                 if (metadataChanged) {
                     boolean validate = false;
-                    boolean ufo = false;
+                    boolean ufo = true;
                     boolean index = false;
                     String language = context.getLanguage();
-                    dataMan.updateMetadata(context, id, metadata, validate, ufo, index, language, changeDate, false);
+                    dataMan.updateMetadata(context, id, metadata, validate, ufo, index, language, changeDate, true);
 
                     updatedMd.add(id);
 
