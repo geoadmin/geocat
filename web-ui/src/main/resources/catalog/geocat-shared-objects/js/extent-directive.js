@@ -89,8 +89,14 @@
                * @geom {ol.geometry}
                */
               scope.fillInput = function() {
-                var geom = featureOverlay.getFeatures().item(0).getGeometry().
-                    clone().transform(map.getView().getProjection(), scope.formObj.proj);
+                var feature = featureOverlay.getFeatures().item(0) || scope.feature;
+                if (!feature) {
+                  return;
+                }
+                var geom = feature.getGeometry().clone();
+                if (!scope.incompatible) {
+                  geom = geom.transform(map.getView().getProjection(), scope.formObj.proj);
+                }
                 scope.formObj.geomString = formatWkt.writeGeometry(geom);
               };
 
@@ -101,6 +107,7 @@
               });
 
               dragboxInteraction.on('boxend', function() {
+                scope.incompatible = false;
                 scope.$apply(function() {
                   var f = new ol.Feature();
                   var g = dragboxInteraction.getGeometry();
@@ -122,23 +129,38 @@
                */
               scope.updateBbox = function() {
 
-                var coordinates, geom, f, extentProj;
+                var f, extentProj;
+                var mapProj = map.getView().getProjection();
 
                 clearMap();
                 drawInteraction.active = false;
                 dragboxInteraction.active = false;
+                f = new ol.Feature();
+
 
                 extentProj = ol.proj.transformExtent(scope.extent,
                     scope.formObj.proj, map.getView().getProjection());
-                coordinates = gnMap.getPolygonFromExtent(extentProj);
-                geom = new ol.geom.Polygon(coordinates);
 
-                f = new ol.Feature();
-                f.setGeometry(geom);
-                f.getGeometry().setCoordinates(coordinates);
-                featureOverlay.addFeature(f);
+                scope.incompatible = mapProj != scope.formObj.proj &&
+                  !ol.extent.containsExtent(mapProj.getExtent(), extentProj);
+                if (scope.incompatible) {
+                  extentProj = scope.extent;
+                }
 
-                map.getView().fitExtent(extentProj, map.getSize());
+                f.setGeometry(new ol.geom.Polygon(
+                  gnMap.getPolygonFromExtent(extentProj)
+                ));
+
+                if (!scope.incompatible) {
+                  featureOverlay.addFeature(f);
+                  map.getView().fitExtent(extentProj, map.getSize());
+                  scope.feature = null;
+                } else {
+                  scope.feature = f;
+                }
+
+                scope.fillInput();
+
               };
 
               /**
