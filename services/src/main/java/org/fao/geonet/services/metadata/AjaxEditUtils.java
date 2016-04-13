@@ -39,13 +39,13 @@ public class AjaxEditUtils extends EditUtils {
     }
     /**
      * Apply a list of changes to the metadata record in current editing session.
-     * 
+     *
      * <p>
      * The changes are a list of KVP. A key contains at least the element identifier from
-     * the meta-document. A key starting with an "X" should contain an XML fragment 
+     * the meta-document. A key starting with an "X" should contain an XML fragment
      * for the value.
      * </p>
-     * 
+     *
      * The following KVP combinations are allowed:
      * <ul>
      * <li>ElementId=ElementValue </li>
@@ -57,29 +57,29 @@ public class AjaxEditUtils extends EditUtils {
      * <li>XElementId_ElementName_replace=ElementValue</li>
      * <li>P{key}=xpath with P{key}_xml=XML snippet</li>
      * </ul>
-     * 
+     *
      * ElementName MUST contain "{@value #EditLib.COLON_SEPARATOR}" instead of ":" for prefixed elements.
-     * 
+     *
      * <p>
-     * When using X key ElementValue could contains many XML fragments (eg. 
+     * When using X key ElementValue could contains many XML fragments (eg.
      * &lt;gmd:keywords .../&gt;{@value #XML_FRAGMENT_SEPARATOR}&lt;gmd:keywords .../&gt;)
      * separated by {@link #XML_FRAGMENT_SEPARATOR}. All those fragments are inserted
      * to the last element of this type in its parent if ElementName is set.
      * If not, the element with ElementId is replaced.
      * If _replace suffix is used, then all elements having the same type than elementId are removed before insertion.
-     * 
+     *
      * </p>
-     * 
+     *
      * <p>
      * <pre>
      *  _Pd2295e223:/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
      *              gmd:citation/gmd:CI_Citation/
      *              gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'creation']
-     *              
+     *
      *  _Pd2295e223_xml:&lt;gmd:date/&gt; ... &lt;/gmd:date&gt;
      * </pre>
      * </p>
-     * 
+     *
      * @param id        Metadata internal identifier.
      * @param changes   List of changes to apply.
      * @param currVersion       Editing version which is checked against current editing version.
@@ -98,7 +98,7 @@ public class AjaxEditUtils extends EditUtils {
 
         // --- check if the metadata has been modified from last time
         if (currVersion != null && !editLib.getVersion(id).equals(currVersion)) {
-            Log.error(Geonet.EDITOR, "Version mismatch: had " + currVersion + 
+            Log.error(Geonet.EDITOR, "Version mismatch: had " + currVersion +
                                             " but expected " + editLib.getVersion(id));
             return null;
         }
@@ -118,12 +118,12 @@ public class AjaxEditUtils extends EditUtils {
             String ref = entry.getKey().trim();
             String value = entry.getValue().trim();
             String attribute = null;
-            
+
             // Avoid empty key
             if (ref.equals("")) {
                 continue;
             }
-            
+
             // Catch element starting with a X to replace XML fragments
             if (ref.startsWith("X")) {
                 ref = ref.substring(1);
@@ -167,32 +167,12 @@ public class AjaxEditUtils extends EditUtils {
                 attribute = ref.substring(at + 1);
                 ref = ref.substring(0, at);
             }
-            
+
             Element el = editLib.findElement(md, ref);
             if (el == null) {
                 Log.error(Geonet.EDITOR, EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
                 continue;
             }
-            
-            // START GEOCAT CHANGE for extended topicCateogy
-            final String topicCategoryCode = "MD_TopicCategoryCode";
-            if (el.getName().equals(topicCategoryCode) && el.getNamespaceURI().equals(Geonet.Namespaces.GMD.getURI())
-                    && el.getTextTrim().contains("_")) {
-                final List<Element> topicCategories =
-                        el.getParentElement().getParentElement().getChildren("topicCategory", Geonet.Namespaces.GMD);
-
-                for (Element topicCategory : topicCategories) {
-                    if (topicCategory.getParentElement() != el) {
-                        final Element child = topicCategory.getChild(topicCategoryCode, Geonet.Namespaces.GMD);
-                        final String text = child.getText();
-                        if (el.getTextTrim().startsWith(text)) {
-                            topicCategory.detach();
-                            break;
-                        }
-                    }
-                }
-            }
-            // END GEOCAT CHANGE for extended topicCateogy
 
             Element xlinkParent = findXlinkParent(el);
             if( xlinkParent!=null && ReusableObjManager.isValidated(xlinkParent)){
@@ -226,7 +206,7 @@ public class AjaxEditUtils extends EditUtils {
                 // Process element value
                 @SuppressWarnings("unchecked")
                 List<Content> content = el.getContent();
-                
+
                 for (Iterator<Content> iterator = content.iterator(); iterator.hasNext();) {
                     Content content2 = iterator.next();
                     if (content2 instanceof Text) {
@@ -236,7 +216,7 @@ public class AjaxEditUtils extends EditUtils {
                 el.addContent(value);
             }
         }
-        
+
         // Deals with XML fragments to insert or update
         if (!xmlInputs.isEmpty()) {
             editLib.addXMLFragments(schema, md, xmlInputs);
@@ -260,14 +240,14 @@ public class AjaxEditUtils extends EditUtils {
             }
             // END GEOCAT
         }
-        
-        
+
+
         setMetadataIntoSession(session,(Element)md.clone(), id);
-        
+
         // --- remove editing info
         editLib.removeEditingInfo(md);
         editLib.contractElements(md);
-        
+
         return (Element) md.detach();
     }
     /**
@@ -372,11 +352,11 @@ public class AjaxEditUtils extends EditUtils {
 						}
 					}
 				}
-				
+
 				Pair<Namespace, String> attInfo = parseAttributeName(name, ":", id, md, editLib);
 			    //--- Add new attribute with default value
                 el.setAttribute(new Attribute(attInfo.two(), defaultValue, attInfo.one()));
-                
+
 				// TODO : add attribute should be false and del true after adding an attribute
 				child = el;
 			} else {
@@ -487,10 +467,10 @@ public class AjaxEditUtils extends EditUtils {
 						break;
 					}
 				}
-				
+
 				// -- now delete the element as requested
 				parent.removeContent(me);
-				
+
 				//--- existing geonet child element not present so create it and insert it
 				//--- where the last element was deleted
 				if (result == null) {
@@ -615,7 +595,7 @@ public class AjaxEditUtils extends EditUtils {
 
     private Pair<Namespace, String> parseAttributeName(String attributeName, String separator,
             String id, Element md, EditLib editLib) throws Exception {
-        
+
         Integer indexColon = attributeName.indexOf(separator);
         String localname = attributeName;
         Namespace attrNS = Namespace.NO_NAMESPACE;
