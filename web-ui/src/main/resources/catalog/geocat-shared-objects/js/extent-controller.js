@@ -35,7 +35,7 @@
           $scope.formObj = {
             typename: 'gn:xlinks',
             geomString: '',
-            proj: 'EPSG:21781',
+            proj: 'EPSG:4326',
             geoId: {
               DE: '',
               FR: '',
@@ -57,7 +57,7 @@
             feature: {
               geoId: {},
               desc: {},
-              geom: 'POLYGON((481500 88000,481500 297250,832500 297250,832500 88000,481500 88000))'
+              geom: 'POLYGON((5.91088 45.9331,5.85641 47.8149,10.5417 47.7844,10.4350 45.9036,5.91088 45.9331))'
             }
           });
           $scope.finishEdit = function () {
@@ -136,7 +136,7 @@
               id: $scope.formObj.id,
               typename: $scope.formObj.typename,
               format: 'wkt',
-              crs: 'EPSG:21781',
+              crs: 'EPSG:4326',
               _content_type: 'json'
             }
           }).success(function (data) {

@@ -546,7 +546,7 @@ public final class ExtentsStrategy extends SharedObjectStrategy {
 
         String id = idAttributeToIdString(featureType, feature);
         String typeName = validated ? XLINK_TYPE : NON_VALIDATED_TYPE;
-        String url = XLink.LOCAL_PROTOCOL+"extent.edit?closeOnSave&crs=EPSG:21781&wfs=default&typename="
+        String url = XLink.LOCAL_PROTOCOL+"extent.edit?closeOnSave&crs=EPSG:4326&wfs=default&typename="
                 + typeName + "&id=" + id;
 
         addChild(e, REPORT_URL, url);

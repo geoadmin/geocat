@@ -94,9 +94,10 @@
                   return;
                 }
                 var geom = feature.getGeometry().clone();
-                if (!scope.incompatible) {
+
+                /*if (!scope.incompatible) {
                   geom = geom.transform(map.getView().getProjection(), scope.formObj.proj);
-                }
+                }*/
                 scope.formObj.geomString = formatWkt.writeGeometry(geom);
               };
 
@@ -196,7 +197,7 @@
                */
               var initForm = function(ft) {
                 scope.clearMap();
-                scope.formObj.proj = 'EPSG:21781';
+                scope.formObj.proj = 'EPSG:4326';
                 scope.formObj.geoId = scope.formObj.desc = {
                   DE: '',EN: '', FR: '',  IT: '', RM: ''};
                 if(ft) {
