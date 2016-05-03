@@ -314,9 +314,19 @@
       var scope;
       var finishEditExtent = function() {
         var service = scope.xlink ? extentsService.updateService :
-            extentsService.addService;
+          extentsService.addService;
 
-        extentsService.updateExtent(service, scope.formObj).
+
+        var serverProj = 'EPSG:4326';
+        var formObj = angular.copy(scope.formObj);
+        var formatWKT = new ol.format.WKT();
+
+        if (formObj.proj != serverProj) {
+          formObj.geomString = formatWKT.writeGeometry(formatWKT.readGeometry(formObj.geomString).transform(formObj.proj, serverProj));
+          formObj.proj = serverProj;
+        }
+
+        extentsService.updateExtent(service, formObj).
             success(function(data) {
 
               $('#sharedobjectModal').modal('hide');

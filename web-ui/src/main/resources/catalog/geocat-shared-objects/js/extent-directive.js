@@ -89,16 +89,9 @@
                * @geom {ol.geometry}
                */
               scope.fillInput = function() {
-                var feature = featureOverlay.getFeatures().item(0) || scope.feature;
-                if (!feature) {
-                  return;
-                }
-                var geom = feature.getGeometry().clone();
-
-                /*if (!scope.incompatible) {
-                  geom = geom.transform(map.getView().getProjection(), scope.formObj.proj);
-                }*/
-                scope.formObj.geomString = formatWkt.writeGeometry(geom);
+                scope.formObj.geomString = formatWkt.writeGeometry(
+                  ol.geom.Polygon.fromExtent(scope.extent)
+                );
               };
 
               drawInteraction.on('drawend', function() {
@@ -144,20 +137,15 @@
 
                 scope.incompatible = mapProj != scope.formObj.proj &&
                   !ol.extent.containsExtent(mapProj.getExtent(), extentProj);
-                if (scope.incompatible) {
-                  extentProj = scope.extent;
-                }
 
-                f.setGeometry(new ol.geom.Polygon(
-                  gnMap.getPolygonFromExtent(extentProj)
-                ));
 
                 if (!scope.incompatible) {
+                  f.setGeometry(new ol.geom.Polygon(
+                    gnMap.getPolygonFromExtent(extentProj)
+                  ));
+
                   featureOverlay.addFeature(f);
                   map.getView().fitExtent(extentProj, map.getSize());
-                  scope.feature = null;
-                } else {
-                  scope.feature = f;
                 }
 
                 scope.fillInput();
@@ -172,7 +160,7 @@
                   featureOverlay.getFeatures().clear();
                   var geom = formatWkt.readGeometry(scope.formObj.geomString).
                       transform(scope.formObj.proj,
-                      map.getView().getProjection());;
+                      map.getView().getProjection());
                   var f = new ol.Feature();
                   f.setGeometry(geom);
                   featureOverlay.addFeature(f);
@@ -184,8 +172,10 @@
                */
               scope.$watch('formObj.proj', function(newV, oldV) {
                 if(newV && oldV) {
-                  scope.extent = ol.proj.transformExtent(scope.extent,
-                  oldV, newV);
+                  scope.extent = ol.proj.transformExtent(scope.extent, oldV, newV);
+                  scope.formObj.geomString = (new ol.format.WKT()).writeGeometry(
+                    ol.geom.Polygon.fromExtent(scope.extent)
+                  );
                 }
               });
             },

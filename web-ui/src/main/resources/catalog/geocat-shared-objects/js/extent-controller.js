@@ -62,7 +62,17 @@
           });
           $scope.finishEdit = function () {
             $('#editModal').modal('hide');
-            extentsService.updateExtent(extentsService.addService, $scope.formObj).success(function(data){
+
+            var serverProj = 'EPSG:4326';
+            var formObj = angular.copy($scope.formObj);
+            var formatWKT = new ol.format.WKT();
+
+            if (formObj.proj != serverProj) {
+              formObj.geomString = formatWKT.writeGeometry(formatWKT.readGeometry(formObj.geomString).transform(formObj.proj, serverProj));
+              formObj.proj = serverProj;
+            }
+
+            extentsService.updateExtent(extentsService.addService, formObj).success(function(data){
               $timeout(function () {
                 var id = /.+id=(\d+).*/.exec(data[0])[1];
                 $location.url('/validated/extents?search='+id);

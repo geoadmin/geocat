@@ -67,7 +67,7 @@
         <property name="descColumn" value="DESC"/>
         <property name="searchColumn" value="SEARCH"/>
         <property name="geoIdColumn" value="GEO_ID"/>
-        <property name="srs" value="EPSG:21781"/>
+        <property name="srs" value="EPSG:4326"/>
         <property name="typename" value="gn:xlinks"/>
     </bean>
 
