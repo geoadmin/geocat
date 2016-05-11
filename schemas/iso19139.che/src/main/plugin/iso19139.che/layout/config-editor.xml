@@ -181,6 +181,7 @@
     <name>gmd:includedWithDataset</name>
     <name>gmd:distributor</name>
     <name>gmd:distributorContact</name>
+    <name>che:attribute</name>
   </fieldsWithFieldset>
 
   <multilingualFields>
