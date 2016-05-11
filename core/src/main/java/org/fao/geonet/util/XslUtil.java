@@ -340,14 +340,13 @@ public final class XslUtil
     	if(iso3LangCode==null || iso3LangCode.length() == 0) {
     		return twoCharLangCode(Geonet.DEFAULT_LANGUAGE);
     	} else {
+            if(iso3LangCode.equalsIgnoreCase("FRA")) {
+                return "FR";
+            }
 
-    	if(iso3LangCode.equalsIgnoreCase("FRA")) {
-    		return "FR";
-    	}
-
-    	if(iso3LangCode.equalsIgnoreCase("DEU")) {
-    		return "DE";
-    	}
+            if(iso3LangCode.equalsIgnoreCase("DEU")) {
+                return "DE";
+            }
             String iso2LangCode = null;
 
             try {
@@ -365,6 +364,7 @@ public final class XslUtil
             }
 
             if(iso2LangCode == null) {
+                Log.error(Geonet.GEONETWORK, "Cannot convert " + iso3LangCode + " to 2 char iso lang code", new Error());
                 return iso3LangCode.substring(0,2);
             } else {
                 return iso2LangCode;
