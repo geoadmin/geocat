@@ -15,4 +15,14 @@
                 section.</span></div>
     </alert.M501>
     <report.M501>No duplicate languages found.</report.M501>
+
+    <emptyLang>[Language] - Must not have empty translations</emptyLang>
+    <alert.emptyURL>
+        <div>Check that you don't have any empty URL (che:URLGroup or che:LocalisedURL)</div>
+    </alert.emptyURL>
+    <report.emptyUrl>URLs must not have empty content</report.emptyUrl>
+    <alert.emptyText>
+        <div>Check that you don't have any empty text (gmd:textGroup or che:LocalisedCharacterString)</div>
+    </alert.emptyText>
+    <report.emptyText>Localised text must not have empty content</report.emptyText>
 </strings>
