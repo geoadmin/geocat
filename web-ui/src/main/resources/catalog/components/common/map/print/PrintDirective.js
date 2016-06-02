@@ -494,7 +494,7 @@
             var tileGrid = source.getTileGrid();
             angular.extend(enc, {
               type: 'WMTS',
-              baseURL: location.protocol + '//wmts.geo.admin.ch', // FIXME
+              baseURL: '//wmts.geo.admin.ch', // FIXME
               layer: config.serverLayerName,
               maxExtent: layer.getExtent(),
               tileOrigin: tileGrid.getOrigin(),
