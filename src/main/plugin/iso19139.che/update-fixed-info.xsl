@@ -166,7 +166,7 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:apply-templates select="gco:CharacterString"/>
-      <xsl:copy-of select="gmd:PT_FreeText"/>
+      <xsl:apply-templates select="gmd:PT_FreeText"/>
     </xsl:copy>
   </xsl:template>
 
@@ -414,6 +414,13 @@
     </xsl:element>
   </xsl:template>
 
+  <!-- Remove URLGroups with empty LocalizedURLs or without it -->
+  <xsl:template match="che:URLGroup[che:LocalisedURL[not(text())]]"/>
+  <xsl:template match="che:URLGroup[not(che:LocalisedURL)]"/>
+
+  <!-- Remove textGroup with empty LocalisedCharacterString or without it -->
+  <xsl:template match="gmd:textGroup[gmd:LocalisedCharacterString[not(text())]]"/>
+  <xsl:template match="gmd:textGroup[not(gmd:LocalisedCharacterString)]"/>
 
   <!-- Remove attribute indeterminatePosition having empty
   value which is not a valid facet for it. -->
