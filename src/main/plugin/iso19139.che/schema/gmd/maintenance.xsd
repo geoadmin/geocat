@@ -29,6 +29,24 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
+    <xs:complexType name="MD_Appraisal_AAP_Type">
+        <xs:annotation>
+            <xs:documentation>AAP</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="gco:AbstractObject_Type">
+                <xs:sequence>
+                    <xs:element name="durationOfConservation" type="gco:Integer_PropertyType" />
+                    <xs:element name="commentOnDurationOfConservation" type="gco:CharacterString_PropertyType" />
+                    <xs:element name="appraisalOfArchivalValue" type="gco:CodeListValue_Type" />
+                    <xs:element name="reasonForArchivingValue" type="gco:CodeListValue_Type" />
+                    <xs:element name="commentOnArchivalValue" type="gco:CharacterString_PropertyType" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
 	<!-- ........................................................................ -->
 	<xs:element name="MD_MaintenanceInformation" type="gmd:MD_MaintenanceInformation_Type"/>
 	<!-- ........................................................................ -->
