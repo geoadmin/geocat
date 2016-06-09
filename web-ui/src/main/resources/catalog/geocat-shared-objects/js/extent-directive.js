@@ -15,8 +15,9 @@
   module.directive('gcEditExtent', [
     'gnMap',
     'gnSearchSettings',
+    'gnGlobalSettings',
     'ngeoDecorateInteraction',
-    function(gnMap, gnSearchSettings, goDecoI) {
+    function(gnMap, gnSearchSettings, gnGlobalSettings, goDecoI) {
 
       // Create overlay to draw bbox and polygon
       var featureOverlay = new ol.FeatureOverlay({
@@ -187,7 +188,7 @@
                */
               var initForm = function(ft) {
                 scope.clearMap();
-                scope.formObj.proj = 'EPSG:4326';
+                scope.formObj.proj = gnGlobalSettings.srs;
                 scope.formObj.geoId = scope.formObj.desc = {
                   DE: '',EN: '', FR: '',  IT: '', RM: ''};
                 if(ft) {

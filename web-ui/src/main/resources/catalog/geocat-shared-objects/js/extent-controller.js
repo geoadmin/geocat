@@ -13,13 +13,15 @@
         '$location',
         '$timeout',
         '$http',
+        'gnGlobalSettings',
         'commonProperties',
         'extentsService',
       function ($scope, $routeParams, $location, $timeout, $http,
-                commonProperties, extentsService) {
+                gnGlobalSettings, commonProperties, extentsService) {
 
         commonProperties.addValidated($scope, $routeParams);
         commonProperties.add($scope, $routeParams);
+
 
         if ($scope.isValid) {
           $scope.luceneIndexField = 'V_invalid_xlink_extent';
@@ -35,7 +37,7 @@
           $scope.formObj = {
             typename: 'gn:xlinks',
             geomString: '',
-            proj: 'EPSG:4326',
+            proj: gnGlobalSettings.srs,
             geoId: {
               DE: '',
               FR: '',
@@ -57,13 +59,13 @@
             feature: {
               geoId: {},
               desc: {},
-              geom: 'POLYGON((5.91088 45.9331,5.85641 47.8149,10.5417 47.7844,10.4350 45.9036,5.91088 45.9331))'
+              geom: gnGlobalSettings.defaultBbox
             }
           });
           $scope.finishEdit = function () {
             $('#editModal').modal('hide');
 
-            var serverProj = 'EPSG:4326';
+            var serverProj = gnGlobalSettings.srs;
             var formObj = angular.copy($scope.formObj);
             var formatWKT = new ol.format.WKT();
 
@@ -82,7 +84,7 @@
           $('#editModal').modal('show');
         };
 
-      }]).factory('extentsService', ['gnUrlUtils', '$http', function(gnUrlUtils, $http) {
+}]).factory('extentsService', ['gnUrlUtils', 'gnGlobalSettings', '$http', function(gnUrlUtils, gnGlobalSettings, $http) {
 
       var getString = function(val) {
         if (val && typeof(val) === 'string') {
@@ -146,7 +148,7 @@
               id: $scope.formObj.id,
               typename: $scope.formObj.typename,
               format: 'wkt',
-              crs: 'EPSG:4326',
+              crs: gnGlobalSettings.srs,
               _content_type: 'json'
             }
           }).success(function (data) {
