@@ -8,7 +8,8 @@
     <sch:ns prefix="srv" uri="http://www.isotc211.org/2005/srv"/>
     <sch:ns prefix="gco" uri="http://www.isotc211.org/2005/gco"/>
     <sch:ns prefix="geonet" uri="http://www.fao.org/geonetwork"/>
-    <sch:ns prefix="xlink" uri="http://www.w3.org/1999/xlink"/>    
+    <sch:ns prefix="xlink" uri="http://www.w3.org/1999/xlink"/>
+    <sch:ns prefix="che" uri="http://www.geocat.ch/2008/che"/>
 
     <!-- =============================================================
     GeoNetwork schematron rules:
@@ -44,6 +45,26 @@
             <sch:report test="$duplicateLanguage"
                 >$loc/strings/report.M501</sch:report>
             -->
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern>
+        <sch:title>$loc/strings/emptyLang</sch:title>
+        <sch:rule context="//che:PT_FreeURL">
+            <sch:let name="emptyUrl" value="che:URLGroup/che:LocalisedURL[not(text())]"/>
+            <sch:let name="emptyGroup" value="che:URLGroup[not(che:LocalisedURL)]"/>
+            <sch:assert test="not($emptyUrl or $emptyGroup)">$loc/strings/alert.emptyUrl</sch:assert>
+            <sch:report test="not($emptyUrl or $emptyGroup)">
+                <sch:value-of select="$loc/strings/report.emptyUrl"/>
+            </sch:report>
+        </sch:rule>
+        <sch:rule context="//gmd:PT_FreeText">
+            <sch:let name="emptyText" value="gmd:textGroup/gmd:LocalisedCharacterString[not(text())]"/>
+            <sch:let name="emptyGroup" value="gmd:textGroup[not(gmd:LocalisedCharacterString)]"/>
+            <sch:assert test="not($emptyText or $emptyGroup)">$loc/strings/alert.emptyText</sch:assert>
+            <sch:report test="not($emptyText or $emptyGroup)">
+                <sch:value-of select="$loc/strings/report.emptyText"/>
+            </sch:report>
         </sch:rule>
     </sch:pattern>
 </sch:schema>
