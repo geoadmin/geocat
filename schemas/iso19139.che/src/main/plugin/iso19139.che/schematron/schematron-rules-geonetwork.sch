@@ -53,16 +53,18 @@
         <sch:rule context="//che:PT_FreeURL">
             <sch:let name="emptyUrl" value="che:URLGroup/che:LocalisedURL[not(text())]"/>
             <sch:let name="emptyGroup" value="che:URLGroup[not(che:LocalisedURL)]"/>
-            <sch:assert test="not($emptyUrl or $emptyGroup)">$loc/strings/alert.emptyUrl</sch:assert>
-            <sch:report test="not($emptyUrl or $emptyGroup)">
+            <sch:let name="inXlink" value="ancestor::*[@xlink:href]"/>
+            <sch:assert test="not($emptyUrl or $emptyGroup) or $inXlink">$loc/strings/alert.emptyUrl</sch:assert>
+            <sch:report test="not($emptyUrl or $emptyGroup) or $inXlink">
                 <sch:value-of select="$loc/strings/report.emptyUrl"/>
             </sch:report>
         </sch:rule>
         <sch:rule context="//gmd:PT_FreeText">
             <sch:let name="emptyText" value="gmd:textGroup/gmd:LocalisedCharacterString[not(text())]"/>
             <sch:let name="emptyGroup" value="gmd:textGroup[not(gmd:LocalisedCharacterString)]"/>
-            <sch:assert test="not($emptyText or $emptyGroup)">$loc/strings/alert.emptyText</sch:assert>
-            <sch:report test="not($emptyText or $emptyGroup)">
+            <sch:let name="inXlink" value="ancestor::*[@xlink:href]"/>
+            <sch:assert test="not($emptyText or $emptyGroup) or $inXlink">$loc/strings/alert.emptyText</sch:assert>
+            <sch:report test="not($emptyText or $emptyGroup) or $inXlink">
                 <sch:value-of select="$loc/strings/report.emptyText"/>
             </sch:report>
         </sch:rule>
