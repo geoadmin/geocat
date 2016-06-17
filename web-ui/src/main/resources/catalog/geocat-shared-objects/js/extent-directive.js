@@ -68,7 +68,8 @@
                 showWKT: false,
                 showBbox: true
               };
-
+              
+              scope.gnGlobalSettings = gnGlobalSettings;
               scope.extent = [];
 
               featureOverlay.setMap(map);
