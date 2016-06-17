@@ -158,7 +158,7 @@ public class GeonetHttpRequestFactoryTest {
     @Test
     public void testCreateXmlRequestURLDefaultPortHttp() throws Exception {
         final XmlRequest xmlRequest = new GeonetHttpRequestFactory().createXmlRequest(new URL
-                ("http://host/path?queryString#fragment"));
+                ("http://host:80/path?queryString#fragment"));
 
         final HttpRequestBase httpRequestBase = xmlRequest.setupHttpMethod();
 
@@ -174,7 +174,7 @@ public class GeonetHttpRequestFactoryTest {
     @Test
     public void testCreateXmlRequestURLDefaultPortHttps() throws Exception {
         final XmlRequest xmlRequest = new GeonetHttpRequestFactory().createXmlRequest(new URL
-                ("https://host/path?queryString#fragment"));
+                ("https://host:443/path?queryString#fragment"));
 
         final HttpRequestBase httpRequestBase = xmlRequest.setupHttpMethod();
 

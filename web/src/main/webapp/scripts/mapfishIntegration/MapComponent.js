@@ -108,7 +108,7 @@ var MapComponent = OpenLayers.Class({
             */
             new OpenLayers.Layer.WMTS({
                 name: "karte",
-                url: ['http://wmts0.geo.admin.ch/','http://wmts1.geo.admin.ch/','http://wmts2.geo.admin.ch/','http://wmts3.geo.admin.ch/','http://wmts4.geo.admin.ch/'],
+                url: ['//wmts0.geo.admin.ch/','//wmts1.geo.admin.ch/','//wmts2.geo.admin.ch/','//wmts3.geo.admin.ch/','//wmts4.geo.admin.ch/'],
                 layer: "ch.swisstopo.pixelkarte-farbe",
                 style: "default",
                 matrixSet: "21781",
