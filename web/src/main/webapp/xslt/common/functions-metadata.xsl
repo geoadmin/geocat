@@ -18,7 +18,7 @@
     <xsl:param name="metadata" as="node()"/>
     <xsl:param name="evaluatedNode" as="node()"/>
 
-    <xsl:variable name="nodeRef" select="$evaluatedNode/*/gn:element/@ref"/>
+    <xsl:variable name="nodeRef" select="$evaluatedNode/gn:element/@ref"/>
     <xsl:variable name="node" select="$metadata//*[gn:element/@ref = $nodeRef]"/>
 
     <!--<xsl:message>#getOriginalNode ==================</xsl:message>
