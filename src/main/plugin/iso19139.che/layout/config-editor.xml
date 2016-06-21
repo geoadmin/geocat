@@ -347,6 +347,7 @@
         <for name="gmd:topicCategory"/>
         <for name="gmd:transferOptions"/>
         <for name="gmd:date"/>
+        <for name="che:attribute"/>
       </flatModeExceptions>
 
     </view>
@@ -613,6 +614,7 @@
         <for name="gmd:resourceFormat"/>
         <for name="gmd:distributionFormat"/>
         <for name="gmd:topicCategory"/>
+        <for name="che:attribute"/>
       </flatModeExceptions>
 
     </view>
