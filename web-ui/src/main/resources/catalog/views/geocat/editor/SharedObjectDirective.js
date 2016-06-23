@@ -236,6 +236,7 @@
     'keywordsService',
     'subtemplateService',
     'gnThesaurusService',
+    'gnGlobalSettings',
     'Keyword',
     '$translate',
     function ($q,
@@ -252,6 +253,7 @@
               keywordsService,
               subtemplateService,
               gnThesaurusService,
+              gnGlobalSettings,
               Keyword, $translate) {
 
 
@@ -317,7 +319,10 @@
           extentsService.addService;
 
 
-        var serverProj = 'EPSG:4326';
+        // No need to transform extent anymore as only server projection will be available
+        /*
+        var serverProj = gnGlobalSettings.srs;
+
         var formObj = angular.copy(scope.formObj);
         var formatWKT = new ol.format.WKT();
 
@@ -325,8 +330,9 @@
           formObj.geomString = formatWKT.writeGeometry(formatWKT.readGeometry(formObj.geomString).transform(formObj.proj, serverProj));
           formObj.proj = serverProj;
         }
+        */
 
-        extentsService.updateExtent(service, formObj).
+        extentsService.updateExtent(service, scope.formObj).
             success(function(data) {
 
               $('#sharedobjectModal').modal('hide');
@@ -432,7 +438,7 @@
               feature: {
                 geoId: {},
                 desc: {},
-                geom: 'POLYGON((5.91088 45.9331,5.85641 47.8149,10.5417 47.7844,10.4350 45.9036,5.91088 45.9331))'
+                geom: gnGlobalSettings.defaultBbox
               }
             })
           }, 200, true);
@@ -454,7 +460,7 @@
               id: scope.formObj.id,
               typename: scope.formObj.typename,
               format: 'wkt',
-              crs: 'EPSG:4326',
+              crs: gnGlobalSettings.srs,
               _content_type: 'json'
             }
           }).success(function (data) {
