@@ -118,20 +118,12 @@
       var bestDescription = function($scope) {
         var geoId = getBestTranslation($scope, $scope.formObj.geoId);
         var desc = getBestTranslation($scope, $scope.formObj.desc);
-        var finalDesc;
-        if (desc) {
-          finalDesc = desc;
-        }
-        if (geoId) {
-          if (finalDesc) {
-            finalDesc += " <"+geoId+">"
-          } else {
-            finalDesc = "<"+geoId+">";
-          }
-        }
-        if (!finalDesc) {
-          finalDesc = "No Description";
-        }
+
+        geoId = geoId ? "("+geoId+")" : "";
+        desc = desc ? desc + " " : "";
+
+        var finalDesc = desc + geoId;
+        return finalDesc;
       };
 
       var service = {
