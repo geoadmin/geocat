@@ -191,6 +191,7 @@
 					<xs:element name="dateOfMonitoringState" type="gco:Date_PropertyType" minOccurs="0"/>
 					<xs:element name="historyConcept" type="che:CHE_MD_HistoryConcept_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="archiveConcept" type="che:CHE_MD_ArchiveConcept_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="appraisalAap"   type="che:CHE_MD_Appraisal_AAP_Type" minOccurs="0" maxOccurs="1" />
 				</xs:sequence>
 				<xs:attribute ref="gco:isoType" use="required" fixed="gmd:MD_MaintenanceInformation"/>
 			</xs:extension>
@@ -234,6 +235,29 @@
 		</xs:sequence>
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="MD_ArchivalValueCode"  type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<xs:element name="MD_ArchivalReasonCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<!-- CHE_MD_Appraisal_AAP_Type -->
+	<xs:complexType name="CHE_MD_Appraisal_AAP_Type">
+		<xs:annotation>
+			<xs:documentation>AAP</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="durationOfConservation" type="gco:Integer_PropertyType" minOccurs="0" maxOccurs="1" />
+					<xs:element name="commentOnDurationOfConservation" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded" />
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element ref="MD_ArchivalValueCode" />
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element ref="MD_ArchivalReasonCode" />
+					</xs:sequence>
+					<xs:element name="commentOnArchivalValue" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<!-- MD_AbstractClass -->
 	<xs:complexType name="CHE_MD_AbstractClass_Type" abstract="true">
