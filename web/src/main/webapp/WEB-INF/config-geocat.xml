@@ -251,6 +251,12 @@
 			<output sheet="unpublish-report-html.xsl" contentType="text/html; charset=UTF-8"/>
         </service>
 
+        <service name="aap.report.csb">
+            <class name=".geocat.kernel.AapMetadataReport"/>
+            <output sheet="aap-report-csv.xsl" contentType="text/html; charset=UTF-8"/>
+        </service>
+        
+
         <service name="keywords.duplicate">
             <class name=".geocat.services.thesaurus.Duplicate"/>
 
