@@ -207,8 +207,11 @@
                 if(featureType) {
                   var geom = formatWkt.readGeometry(featureType.feature.geom);
                   var f = new ol.Feature();
-                  f.setGeometry(geom);
+
+                  // Reproject geometry to map projection
+                  f.setGeometry(geom.transform(gnGlobalSettings.srs, scope.map.getView().getProjection()));
                   featureOverlay.addFeature(f);
+
                   scope.extent = geom.getExtent();
                   scope.fillInput();
                 }
