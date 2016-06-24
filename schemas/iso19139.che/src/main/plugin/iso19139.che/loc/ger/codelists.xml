@@ -574,5 +574,69 @@
             <label>Fachstelle des Bundes</label>
             <description>Fachstelle des Bundes</description>
         </entry>
-    </codelist>    
+    </codelist>
+    <codelist name="che:CHE_MD_ArchivalValueCode">
+        <entry>
+            <code>A</code>
+            <label>archivwürdig</label>
+            <description>archivwürdig</description>
+        </entry>
+        <entry>
+            <code>N</code>
+            <label>nicht archivwürdig</label>
+            <description>nicht archivwürdig</description>
+        </entry>
+        <entry>
+            <code>S</code>
+            <label>Sampling / Selektion</label>
+            <description>Sampling / Selektion</description>
+        </entry>
+    </codelist>
+    <codelist name="che:CHE_MD_ArchivalReasonCode">
+        <entry>
+            <code>legalRelevance</code>
+            <label>Rechtliche Relevanz</label>
+            <description>Rechtliche Relevanz</description>
+        </entry>
+        <entry>
+            <code>guaranteeOfLegalCertainty</code>
+            <label>Gewährleistung der Rechtssicherheit</label>
+            <description>Gewährleistung der Rechtssicherheit</description>
+        </entry>
+        <entry>
+            <code>evidenceOfBusinessPractice</code>
+            <label>Nachweis der Geschäftspraxis</label>
+            <description>Nachweis der Geschäftspraxis</description>
+        </entry>
+        <entry>
+            <code>benefitsForResearch</code>
+            <label>Nutzen für die Forschung</label>
+            <description>Nutzen für die Forschung</description>
+        </entry>
+        <entry>
+            <code>contemporaryInterest</code>
+            <label>Zeitgenössisches Interesse</label>
+            <description>Zeitgenössisches Interesse</description>
+        </entry>
+        <entry>
+            <code>sensitivity</code>
+            <label>Brisanz</label>
+            <description>Brisanz</description>
+        </entry>
+        <entry>
+            <code>developmentsProgression</code>
+            <label>Entwicklungen / Verlauf</label>
+            <description>Entwicklungen / Verlauf</description>
+        </entry>
+        <entry>
+            <code>definingPowers</code>
+            <label>Definitionsmacht</label>
+            <description>Definitionsmacht</description>
+        </entry>
+        <entry>
+            <code>empty</code>
+            <label>leer</label>
+            <description>leer</description>
+        </entry>
+    </codelist>
 </codelists>
