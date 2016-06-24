@@ -568,5 +568,68 @@
             <description>Specialist authority</description>
         </entry>
     </codelist>
-    
+    <codelist name="che:CHE_MD_ArchivalValueCode">
+        <entry>
+            <code>A</code>
+            <label>of archival value</label>
+            <description>of archival value</description>
+        </entry>
+        <entry>
+            <code>N</code>
+            <label>no archival value</label>
+            <description>no archival value</description>
+        </entry>
+        <entry>
+            <code>S</code>
+            <label>Sampling / Selection</label>
+            <description>Sampling / Selection</description>
+        </entry>
+    </codelist>
+    <codelist name="che:CHE_MD_ArchivalReasonCode">
+        <entry>
+            <code>legalRelevance</code>
+            <label>Legal relevance</label>
+            <description>Legal relevance</description>
+        </entry>
+        <entry>
+            <code>guaranteeOfLegalCertainty</code>
+            <label>Guarantee of legal certainty</label>
+            <description>Guarantee of legal certainty</description>
+        </entry>
+        <entry>
+            <code>evidenceOfBusinessPractice</code>
+            <label>Evidence of business practice</label>
+            <description>Evidence of business practice</description>
+        </entry>
+        <entry>
+            <code>benefitsForResearch</code>
+            <label>Benefits for research</label>
+            <description>Benefits for research</description>
+        </entry>
+        <entry>
+            <code>contemporaryInterest</code>
+            <label>Contemporary interest</label>
+            <description>Contemporary interest</description>
+        </entry>
+        <entry>
+            <code>sensitivity</code>
+            <label>Sensitivity</label>
+            <description>Sensitivity</description>
+        </entry>
+        <entry>
+            <code>developmentsProgression</code>
+            <label>Developments / Progression</label>
+            <description>Developments / Progression</description>
+        </entry>
+        <entry>
+            <code>definingPowers</code>
+            <label>Defining powers</label>
+            <description>Defining powers</description>
+        </entry>
+        <entry>
+            <code>empty</code>
+            <label>empty</label>
+            <description>empty</description>
+        </entry>
+    </codelist>
 </codelists>

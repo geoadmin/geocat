@@ -537,6 +537,69 @@ une interface externe du service internet pour le processus ou la chaîne de ser
 			<description>Service spécialisé de la Confédération</description>
 		</entry>		
 	</codelist>
-
+    <codelist name="che:CHE_MD_ArchivalValueCode">
+        <entry>
+            <code>A</code>
+            <label>(de) valeur archivistique</label>
+            <description>(de) valeur archivistique</description>
+        </entry>
+        <entry>
+            <code>N</code>
+            <label>pas de valeur archivistique</label>
+            <description>pas de valeur archivistique</description>
+        </entry>
+        <entry>
+            <code>S</code>
+            <label>sampling / sélection</label>
+            <description>sampling / sélection</description>
+        </entry>
+    </codelist>
+    <codelist name="che:CHE_MD_ArchivalReasonCode">
+        <entry>
+            <code>legalRelevance</code>
+            <label>Pertinence juridique</label>
+            <description>Pertinence juridique</description>
+        </entry>
+        <entry>
+            <code>guaranteeOfLegalCertainty</code>
+            <label>Garantie de la sécurité juridique</label>
+            <description>Garantie de la sécurité juridique</description>
+        </entry>
+        <entry>
+            <code>evidenceOfBusinessPractice</code>
+            <label>Preuve de la pratique courante</label>
+            <description>Preuve de la pratique courante</description>
+        </entry>
+        <entry>
+            <code>benefitsForResearch</code>
+            <label>Utilité pour la recherche</label>
+            <description>Utilité pour la recherche</description>
+        </entry>
+        <entry>
+            <code>contemporaryInterest</code>
+            <label>Valeur d'actualité</label>
+            <description>Valeur d'actualité</description>
+        </entry>
+        <entry>
+            <code>sensitivity</code>
+            <label>Sujets explosifs</label>
+            <description>Sujets explosifs</description>
+        </entry>
+        <entry>
+            <code>developmentsProgression</code>
+            <label>Evolution / déroulement</label>
+            <description>Evolution / déroulement</description>
+        </entry>
+        <entry>
+            <code>definingPowers</code>
+            <label>Pouvoir d'influence</label>
+            <description>Pouvoir d'influence</description>
+        </entry>
+        <entry>
+            <code>empty</code>
+            <label>vide</label>
+            <description>vide</description>
+        </entry>
+    </codelist>
 </codelists>
 
