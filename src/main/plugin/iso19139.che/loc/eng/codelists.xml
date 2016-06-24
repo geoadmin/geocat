@@ -626,10 +626,5 @@
             <label>Defining powers</label>
             <description>Defining powers</description>
         </entry>
-        <entry>
-            <code>empty</code>
-            <label>empty</label>
-            <description>empty</description>
-        </entry>
     </codelist>
 </codelists>

@@ -633,10 +633,5 @@
             <label>Definitionsmacht</label>
             <description>Definitionsmacht</description>
         </entry>
-        <entry>
-            <code>empty</code>
-            <label>leer</label>
-            <description>leer</description>
-        </entry>
     </codelist>
 </codelists>

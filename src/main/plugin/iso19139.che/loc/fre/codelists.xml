@@ -595,11 +595,6 @@ une interface externe du service internet pour le processus ou la chaîne de ser
             <label>Pouvoir d'influence</label>
             <description>Pouvoir d'influence</description>
         </entry>
-        <entry>
-            <code>empty</code>
-            <label>vide</label>
-            <description>vide</description>
-        </entry>
     </codelist>
 </codelists>
 
