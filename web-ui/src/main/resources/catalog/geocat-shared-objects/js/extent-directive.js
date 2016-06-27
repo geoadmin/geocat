@@ -61,7 +61,6 @@
 
               scope.map = gnSearchSettings.searchMap;
               var map = scope.map;
-              var drawnGeom;
 
               // Manage form control display
               scope.prop = {
@@ -71,6 +70,9 @@
               
               scope.gnGlobalSettings = gnGlobalSettings;
               scope.extent = [];
+              scope.isExtent = true;
+
+              scope.featureOverlay = featureOverlay;
 
               featureOverlay.setMap(map);
               map.addInteraction(drawInteraction);
@@ -83,10 +85,11 @@
                 clearMap();
                 scope.extent = [];
                 scope.formObj.geomString = '';
+                scope.isExtent = true;
               };
 
               /**
-               * Set geometry as text input value. I could be formated
+               * Set geometry as text input value. It could be formated
                * to WKT or GML.
                * @geom {ol.geometry}
                */
@@ -96,13 +99,26 @@
                 );
               };
 
-              drawInteraction.on('drawend', function() {
-                scope.extent = [];
-                scope.fillInput();
-                scope.$apply();
+              drawInteraction.on('drawend', function(e) {
+                scope.isExtent = false;
+                scope.incompatible = false;
+
+                scope.$apply(function () {
+                  var g = e.feature.getGeometry();
+
+                  // Re-project new geometry to selected projection
+                  var g_project_crs = g.clone().transform(map.getView().getProjection(), scope.formObj.proj);
+
+                  // Update WKT field
+                  scope.formObj.geomString = formatWkt.writeGeometry(g_project_crs);
+
+                  // Update extent fields
+                  scope.extent = g_project_crs.getExtent();
+                });
               });
 
               dragboxInteraction.on('boxend', function() {
+                scope.isExtent = true;
                 scope.incompatible = false;
                 scope.$apply(function() {
                   var f = new ol.Feature();
@@ -208,12 +224,12 @@
                   var geom = formatWkt.readGeometry(featureType.feature.geom);
                   var f = new ol.Feature();
 
+                  scope.extent = geom.getExtent();
+                  scope.fillInput();
+
                   // Reproject geometry to map projection
                   f.setGeometry(geom.transform(gnGlobalSettings.srs, scope.map.getView().getProjection()));
                   featureOverlay.addFeature(f);
-
-                  scope.extent = geom.getExtent();
-                  scope.fillInput();
                 }
 
                 setTimeout(function () {
