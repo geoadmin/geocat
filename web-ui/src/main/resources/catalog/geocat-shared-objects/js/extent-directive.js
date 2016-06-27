@@ -225,7 +225,7 @@
                   var f = new ol.Feature();
 
                   scope.extent = geom.getExtent();
-                  scope.fillInput();
+                  scope.formObj.geomString = formatWkt.writeGeometry(geom);
 
                   // Reproject geometry to map projection
                   f.setGeometry(geom.transform(gnGlobalSettings.srs, scope.map.getView().getProjection()));
