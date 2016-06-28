@@ -379,7 +379,7 @@
     <xsl:variable name="firstFieldKey"
                   select="$template/values/key[position() = 1]/@label"/>
 
-    <div class="form-group gn-field gn-{$firstFieldKey} {if ($isFirst) then '' else 'gn-extra-field'} {if ($isAddAction) then 'gn-add-field' else ''}"
+    <div class="form-group gn-field gn-{$firstFieldKey} {if ($isFirst and not($isAddAction)) then '' else 'gn-extra-field'} {if ($isAddAction) then 'gn-add-field' else ''}"
          id="gn-el-{if ($refToDelete) then $refToDelete/@ref else generate-id()}"
          data-gn-field-highlight="">
 
@@ -633,7 +633,7 @@
 
       <!-- This element is replaced by the content received when clicking add -->
       <!-- GEOCAT -->
-      <div class="form-group gn-field {concat('gn-', substring-after($qualifiedName, ':'))} {if ($isRequired) then 'gn-required' else ''} {if ($isFirst or $directive/@addDirective = 'gc-add-sharedobject') then '' else 'gn-extra-field'} gn-add-field"
+      <div class="form-group gn-field {concat('gn-', substring-after($qualifiedName, ':'))} {if ($isRequired) then 'gn-required' else ''} gn-add-field"
            id="gn-el-{$id}"
            data-gn-field-highlight="">
         <label class="col-sm-2 control-label"
