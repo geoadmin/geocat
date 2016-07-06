@@ -408,4 +408,19 @@
       <xsl:with-param name="listOfValues" select="$helper"/>
     </xsl:call-template>
   </xsl:template>
+
+  <!-- Special for textual element addition where the parent was there, but without content -->
+  <xsl:template mode="mode-iso19139" match="gco:CharacterString" priority="0">
+    <xsl:param name="schema" select="$schema" required="no"/>
+    <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label"
+                      select="gn-fn-metadata:getLabel($schema, name(..), $labels, name(../..), '', '')/label"/>
+      <xsl:with-param name="value" select="."/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), name(.))"/>
+      <xsl:with-param name="name" select="gn:element/@ref"/>
+      <xsl:with-param name="editInfo" select="*/gn:element"/>
+    </xsl:call-template>
+  </xsl:template>
 </xsl:stylesheet>
