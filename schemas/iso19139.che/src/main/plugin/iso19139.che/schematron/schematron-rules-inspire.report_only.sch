@@ -181,8 +181,9 @@ USA.
 			
 			<!-- Topic category -->
 			<sch:let name="topic" value="gmd:topicCategory/gmd:MD_TopicCategoryCode"/>
-			<sch:let name="noTopic" value="not(gmd:topicCategory)  or 
-				gmd:topicCategory/gmd:MD_TopicCategoryCode/text() = ''"/>
+			<sch:let name="noTopic" value="not(gmd:topicCategory)  or
+                                gmd:topicCategory[not(gmd:MD_TopicCategoryCode)] or
+				gmd:topicCategory/gmd:MD_TopicCategoryCode/normalize-space(text()) = ''"/>
 			<sch:assert test="not($noTopic)">
 				<sch:value-of select="$loc/strings/alert.M39/div"/></sch:assert>
 			<sch:report test="not($noTopic)">
