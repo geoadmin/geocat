@@ -68,6 +68,7 @@ import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.fao.geonet.geocat.kernel.extent.FeatureType;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.json.JSONException;
@@ -461,6 +462,8 @@ public class Format extends AbstractFormatService implements ApplicationListener
         fparams.metadataInfo = metadataInfo;
         fparams.width = width;
         fparams.formatterInSchemaPlugin = isFormatterInSchemaPlugin(formatDir, schemaDir);
+        FeatureType featureType = (FeatureType) context.getApplicationContext().getBean("gn:non_validated");
+        fparams.globalSrs = featureType.srs();
 
         Path viewXslFile = formatDir.resolve(FormatterConstants.VIEW_XSL_FILENAME);
         Path viewGroovyFile = formatDir.resolve(FormatterConstants.VIEW_GROOVY_FILENAME);

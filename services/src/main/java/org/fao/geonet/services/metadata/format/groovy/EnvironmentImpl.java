@@ -52,6 +52,7 @@ public class EnvironmentImpl implements Environment {
     private final ServiceContext serviceContext;
     private final WebRequest webRequest;
     private final FormatterWidth width;
+    private final String globalSrs;
     private Multimap<String, String> indexInfo = null;
 
     public EnvironmentImpl(FormatterParams fparams, IsoLanguagesMapper mapper) {
@@ -72,6 +73,8 @@ public class EnvironmentImpl implements Environment {
 
         this.webRequest = fparams.webRequest;
         this.serviceContext = fparams.context;
+
+        this.globalSrs = fparams.globalSrs;
     }
 
     /**
@@ -217,6 +220,11 @@ public class EnvironmentImpl implements Environment {
         final AccessManager bean = serviceContext.getBean(AccessManager.class);
         return bean.isOwner(serviceContext, this.metadataInfo.getSourceInfo())
                || bean.hasEditPermission(serviceContext, String.valueOf(this.metadataInfo.getId()));
+    }
+
+    @Override
+    public String getGlobalSrs() {
+        return globalSrs;
     }
 
     @Override

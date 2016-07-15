@@ -26,6 +26,7 @@ public class FormatterParams {
     public FormatType formatType;
     public boolean formatterInSchemaPlugin;
     public FormatterWidth width;
+    public String globalSrs;
 
     public String param(String paramName, String defaultVal) {
         String[] values = webRequest.getParameterMap().get(paramName);
@@ -50,6 +51,10 @@ public class FormatterParams {
         return url;
     }
 
+    public String getGlobalSrs() {
+        return globalSrs;
+    }
+
     public boolean isDevMode() {
         return this.format.isDevMode(this.context);
     }
@@ -69,6 +74,7 @@ public class FormatterParams {
         formatterParams.metadataInfo = this.metadataInfo;
         formatterParams.schemaDir = this.schemaDir;
         formatterParams.formatterInSchemaPlugin = this.formatterInSchemaPlugin;
+        formatterParams.globalSrs = this.globalSrs;
 
         return formatterParams;
     }
