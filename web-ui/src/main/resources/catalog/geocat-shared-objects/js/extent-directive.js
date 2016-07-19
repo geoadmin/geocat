@@ -220,7 +220,7 @@
                 initForm(featureType);
 
                 // If we load an existing shared object we load the geom
-                if(featureType) {
+                if(featureType && featureType.feature.geom) {
                   var geom = formatWkt.readGeometry(featureType.feature.geom);
                   var f = new ol.Feature();
 
