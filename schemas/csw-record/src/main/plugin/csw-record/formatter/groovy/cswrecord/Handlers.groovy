@@ -50,11 +50,7 @@ public class Handlers extends dublincore.Handlers {
                         geomproj  : "EPSG:${CRS.lookupEpsgCode(crs, false)}",
                         minwidth: mapConfig.getWidth() / 4,
                         minheight: mapConfig.getWidth() / 4,
-                        mapconfig   : this.env.mapConfiguration,
-                        isWGS84   : this.env.getGlobalSrs() == 'EPSG:4326',
-                        test      : this.env.getGlobalSrs() == 'EPSG:4326',
-                        globalSrs : this.env.getGlobalSrs(),
-                        script    : '4'
+                        mapconfig   : this.env.mapConfiguration
                 ]
 
                 return handlers.fileResult("html/bbox.html", model)

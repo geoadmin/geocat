@@ -106,10 +106,4 @@ public interface Environment extends CurrentLanguageHolder {
      * Return true is the current user has edit permissions for the current metadata
      */
     public boolean canEdit() throws Exception;
-
-    /**
-     * Return global projection to use in this project: 21781 or 4326
-     */
-
-    public String getGlobalSrs();
 }

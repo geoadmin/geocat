@@ -1,7 +1,9 @@
 <div fmt-transclude="html/2-level-entry.html" fmt-transclude-model="childData">
   <div fmt-if="!pdfOutput" class="btn-group projection-choice" role="group">
-    <span fmt-if="isWGS84" class="btn btn-default active">WGS84</span>
-    <span fmt-if="!isWGS84" class="btn btn-default active">CH03</span>
+    <button type="button" class="btn btn-default active"
+            onclick="gnFormatter.updateBbox(event, '{{n}}', '{{e}}', '{{s}}', '{{w}}')">WGS84</button>
+    <button type="button" class="btn btn-default"
+            onclick="gnFormatter.reprojectBbox(event, '{{n}}', '{{e}}', '{{s}}', '{{w}}')">CH03</button>
   </div>
   <div class="thumbnail extent">
     <span fmt-if="!pdfOutput" fmt-only-children="true">
@@ -22,7 +24,6 @@
         <span class="input-group-addon">W</span>
       </div>
     </span>
-    globalSrs: {{globalSrs}} test: {{test}} script: {{script}} isWGS84: {{isWGS84}}
     <img src="region.getmap.png?mapsrs={{mapconfig.mapproj}}&amp;amp;width={{mapconfig.width}}&amp;amp;background={{mapconfig.background}}&amp;amp;geom=Polygon(({{w}}%20{{n}},{{e}}%20{{n}},{{e}}%20{{s}},{{w}}%20{{s}},{{w}}%20{{n}}))&amp;amp;geomsrs={{geomproj}}"
          style="min-width:{{minwidth}}px; min-height:{{minheight}}px;"
          alt=""/>

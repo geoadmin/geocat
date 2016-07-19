@@ -416,10 +416,6 @@ public class Handlers {
                 def replacements = bbox(thumbnail, el)
                 replacements['label'] = label
                 replacements['pdfOutput'] = commonHandlers.func.isPDFOutput()
-                replacements['isWGS84'] = env.getGlobalSrs() == 'EPSG:4326'
-                replacements['test'] = env.getGlobalSrs() == 'EPSG:4326'
-                replacements['globalSrs'] = env.getGlobalSrs()
-                replacements['script'] = '2'
 
                 handlers.fileResult("html/bbox.html", replacements)
             }
