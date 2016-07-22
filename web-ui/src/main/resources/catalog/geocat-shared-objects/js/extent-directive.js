@@ -223,6 +223,7 @@
                 if(featureType && featureType.feature.geom) {
                   var geom = formatWkt.readGeometry(featureType.feature.geom);
                   var f = new ol.Feature();
+                  var formatWKT = new ol.format.WKT();
 
                   scope.extent = geom.getExtent();
                   scope.formObj.geomString = formatWkt.writeGeometry(geom);
@@ -230,10 +231,18 @@
                   // Reproject geometry to map projection
                   f.setGeometry(geom.transform(gnGlobalSettings.srs, scope.map.getView().getProjection()));
                   featureOverlay.addFeature(f);
+
                 }
 
                 setTimeout(function () {
                   scope.map.updateSize();
+                  if(featureType && featureType.feature.geom) {
+                    console.log(scope.map.getSize());
+                    scope.map.getView().fitExtent(formatWKT.readGeometry(featureType.feature.geom).transform(scope.formObj.proj,'EPSG:3857').getExtent(),scope.map.getSize());
+                  } else {
+                    scope.map.getView().setCenter([929317, 5909466]);
+                    scope.map.getView().setZoom(7);
+                  }
                 }, 200);
               });
             }
