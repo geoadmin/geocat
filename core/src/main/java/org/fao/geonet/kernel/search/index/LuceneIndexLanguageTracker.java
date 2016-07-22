@@ -4,14 +4,12 @@ import org.apache.commons.io.IOUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
 import org.apache.lucene.index.ConcurrentMergeScheduler;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TrackingIndexWriter;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.LockObtainFailedException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
@@ -103,12 +101,12 @@ public class LuceneIndexLanguageTracker {
         LuceneConfig luceneConfig = context.getBean(LuceneConfig.class);
         DirectoryFactory directoryFactory = context.getBean(DirectoryFactory.class);
 
-        Directory cachedFSDir = null;
+        Directory cachedFSDir = directoryFactory.createIndexDirectory(indexId, luceneConfig);
         IndexWriter writer = null;
         GeonetworkNRTManager nrtManager = null;
         TrackingIndexWriter trackingIndexWriter;
+        boolean done = false;
         try {
-            cachedFSDir = directoryFactory.createIndexDirectory(indexId, luceneConfig);
             IndexWriterConfig conf = new IndexWriterConfig(Geonet.LUCENE_VERSION, SearchManager.getAnalyzer(indexId, false));
             ConcurrentMergeScheduler mergeScheduler = new ConcurrentMergeScheduler();
             conf.setMergeScheduler(mergeScheduler);
@@ -116,25 +114,17 @@ public class LuceneIndexLanguageTracker {
             trackingIndexWriter = new TrackingIndexWriter(writer);
             nrtManager = new GeonetworkNRTManager(luceneConfig, indexId,
                     trackingIndexWriter, writer, null, true, taxonomyIndexTracker);
-        } catch (CorruptIndexException e) {
-            IOUtils.closeQuietly(nrtManager);
-            IOUtils.closeQuietly(writer);
-            IOUtils.closeQuietly(cachedFSDir);
-            throw e;
-        } catch (LockObtainFailedException e) {
-            IOUtils.closeQuietly(nrtManager);
-            IOUtils.closeQuietly(writer);
-            IOUtils.closeQuietly(cachedFSDir);
-            throw e;
-        } catch (IOException e) {
-            IOUtils.closeQuietly(nrtManager);
-            IOUtils.closeQuietly(writer);
-            IOUtils.closeQuietly(cachedFSDir);
-            throw e;
+            done = true;
+        } finally {
+            if (!done) {
+                IOUtils.closeQuietly(nrtManager);
+                IOUtils.closeQuietly(writer);
+                IOUtils.closeQuietly(cachedFSDir);
+            }
         }
-        dirs.put(indexId, cachedFSDir);
         trackingWriters.put(indexId, trackingIndexWriter);
         searchManagers.put(indexId, nrtManager);
+        dirs.put(indexId, cachedFSDir);
     }
 
     private static String normalize(String locale) {
@@ -405,6 +395,25 @@ public class LuceneIndexLanguageTracker {
                     reset(TimeUnit.MINUTES.toMillis(1));
                     throw new RuntimeException(e);
                 }
+            }
+        } finally {
+            lock.unlock();
+        }
+
+        // wait for the merges to be done outside of the lock to avoid locking writes to the indexes
+        for (TrackingIndexWriter writer: trackingWriters.values()) {
+            writer.getIndexWriter().waitForMerges();
+        }
+
+        // need to re-open the indexes for the files' size to actually reduce
+        lock.lock();
+        try{
+            ArrayList<String> ids = new ArrayList<>(trackingWriters.keySet());
+            for (String id : ids) {
+                trackingWriters.get(id).getIndexWriter().close();
+                searchManagers.get(id).close();
+                dirs.get(id).close();
+                openIndex(id);
             }
         } finally {
             lock.unlock();
