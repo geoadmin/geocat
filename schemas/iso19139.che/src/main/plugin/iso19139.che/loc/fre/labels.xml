@@ -727,4 +727,26 @@ ce qui concerne les métadonnées"</description>
   <description>Characterization of a Dataset</description>
   <help>Classification of the dataset in a larger group of similar datasets with the help of the enclosed codelist</help>
  </element>
+
+    <!-- SB-422: AAP -->
+    <element name="che:CHE_durationOfConservation">
+        <label>durée de conservation DAD (années)</label>
+        <description>durée de conservation DAD (années)</description>
+    </element>
+    <element name="che:CHE_commentOnDurationOfConservation">
+        <label>Remarques concernant la durée de conservation</label>
+        <description>Remarques concernant la durée de conservation</description>
+    </element>
+    <element name="che:CHE_AppraisalOfArchivalValue">
+        <label>évaluation de la valeur archivistique</label>
+        <description>évaluation de la valeur archivistique</description>
+    </element>
+    <element name="che:CHE_ReasonForArchivingValue">
+        <label>justification quant à la valeur archivistique</label>
+        <description>justification quant à la valeur archivistique</description>
+    </element>
+    <element name="che:CHE_commentOnArchivalValue">
+        <label>Remarques concernant la valeur archivistique</label>
+        <description>Remarques concernant la valeur archivistique</description>
+    </element>
 </labels>
