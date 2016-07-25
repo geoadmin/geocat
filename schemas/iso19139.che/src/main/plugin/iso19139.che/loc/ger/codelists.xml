@@ -575,7 +575,7 @@
             <description>Fachstelle des Bundes</description>
         </entry>
     </codelist>
-    <codelist name="che:CHE_MD_ArchivalValueCode">
+    <codelist name="che:CHE_AppraisalOfArchivalValueCode">
         <entry>
             <code>A</code>
             <label>archivwürdig</label>
@@ -592,7 +592,7 @@
             <description>Sampling / Selektion</description>
         </entry>
     </codelist>
-    <codelist name="che:CHE_MD_ArchivalReasonCode">
+    <codelist name="che:CHE_ReasonForArchingValueCode">
         <entry>
             <code>legalRelevance</code>
             <label>Rechtliche Relevanz</label>

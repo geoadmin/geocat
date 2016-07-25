@@ -568,7 +568,7 @@
             <description>Specialist authority</description>
         </entry>
     </codelist>
-    <codelist name="che:CHE_MD_ArchivalValueCode">
+    <codelist name="che:CHE_AppraisalOfArchivalValueCode">
         <entry>
             <code>A</code>
             <label>of archival value</label>
@@ -585,7 +585,7 @@
             <description>Sampling / Selection</description>
         </entry>
     </codelist>
-    <codelist name="che:CHE_MD_ArchivalReasonCode">
+    <codelist name="che:CHE_ReasonForArchingValueCode">
         <entry>
             <code>legalRelevance</code>
             <label>Legal relevance</label>

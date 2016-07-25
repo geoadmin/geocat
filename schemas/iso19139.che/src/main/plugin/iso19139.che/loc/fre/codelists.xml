@@ -537,7 +537,7 @@ une interface externe du service internet pour le processus ou la chaîne de ser
 			<description>Service spécialisé de la Confédération</description>
 		</entry>		
 	</codelist>
-    <codelist name="che:CHE_MD_ArchivalValueCode">
+    <codelist name="che:CHE_AppraisalOfArchivalValueCode">
         <entry>
             <code>A</code>
             <label>(de) valeur archivistique</label>
@@ -554,7 +554,7 @@ une interface externe du service internet pour le processus ou la chaîne de ser
             <description>sampling / sélection</description>
         </entry>
     </codelist>
-    <codelist name="che:CHE_MD_ArchivalReasonCode">
+    <codelist name="che:CHE_ReasonForArchingValueCode">
         <entry>
             <code>legalRelevance</code>
             <label>Pertinence juridique</label>
