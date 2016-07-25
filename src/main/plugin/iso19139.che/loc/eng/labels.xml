@@ -564,6 +564,10 @@
         <help>Classification of the dataset in a larger group of similar datasets with the help of the enclosed codelist</help>
     </element>
     <!-- SB-422: AAP -->
+    <element name="che:CHE_Appraisal_AAP">
+        <label>Appraisal AAP</label>
+        <description>Appraisal AAP</description>    
+    </element>
     <element name="che:CHE_durationOfConservation">
         <label>Duration of conservation</label>
         <description>Duration of conservation</description>
