@@ -729,6 +729,10 @@ ce qui concerne les métadonnées"</description>
  </element>
 
     <!-- SB-422: AAP -->
+    <element name="che:CHE_Appraisal_AAP">
+        <label>Évaluation AAP</label>
+        <description>Évaluation AAP</description>    
+    </element>
     <element name="che:CHE_durationOfConservation">
         <label>durée de conservation DAD (années)</label>
         <description>durée de conservation DAD (années)</description>
