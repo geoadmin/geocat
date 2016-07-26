@@ -239,7 +239,7 @@
 
     <!-- AAP -->
     <xs:element name="CHE_AppraisalOfArchivalValueCode"  type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString" />
-    <xs:element name="CHE_ReasonForArchingValueCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString" />
+    <xs:element name="CHE_ReasonForArchivingValueCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString" />
     <xs:complexType name="CHE_AppraisalOfArchivalValue_Type">
         <xs:sequence minOccurs="1" maxOccurs="1">
             <xs:element ref="che:CHE_AppraisalOfArchivalValueCode" />
@@ -247,7 +247,7 @@
     </xs:complexType>
     <xs:complexType name="CHE_ReasonForArchivingValue_Type">
         <xs:sequence minOccurs="1" maxOccurs="1">
-            <xs:element ref="che:CHE_ReasonForArchingValueCode" />
+            <xs:element ref="che:CHE_ReasonForArchivingValueCode" />
         </xs:sequence>
     </xs:complexType>
 	<!-- CHE_MD_Appraisal_AAP_Type -->
