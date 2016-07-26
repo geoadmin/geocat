@@ -661,11 +661,11 @@
         <label>Bewertung AAP</label>
         <description>Bewertung AAP</description>    
     </element>
-    <element name="che:CHE_durationOfConservation">
+    <element name="che:CHE_DurationOfConservation">
         <label>Aufbewahrungsdauer NV in Jahren</label>
         <description>Aufbewahrungsdauer NV in Jahren</description>
     </element>
-    <element name="che:CHE_commentOnDurationOfConservation">
+    <element name="che:CHE_CommentOnDurationOfConservation">
         <label>Bemerkung zur Aufbewahrungsdauer</label>
         <description>Bemerkung zur Aufbewahrungsdauer</description>
     </element>
@@ -677,7 +677,7 @@
         <label>Begründung Archivwürdigkeit</label>
         <description>Begründung Archivwürdigkeit</description>
     </element>
-    <element name="che:CHE_commentOnArchivalValue">
+    <element name="che:CHE_CommentOnArchivalValue">
         <label>Bemerkung zur Archivwürdigkeit</label>
         <description>Bemerkung zur Archivwürdigkeit</description>
     </element>

@@ -257,12 +257,12 @@
 		</xs:annotation>
         <xs:sequence minOccurs="0" maxOccurs="1">
                 <xs:sequence minOccurs="1" maxOccurs="1">
-                    <xs:element name="CHE_durationOfConservation" type="gco:Integer_PropertyType" minOccurs="1" maxOccurs="1" />
+                    <xs:element name="CHE_DurationOfConservation" type="gco:Integer_PropertyType" minOccurs="1" maxOccurs="1" />
                 </xs:sequence>
-                <xs:element name="CHE_commentOnDurationOfConservation" type="gco:CharacterString_PropertyType"  minOccurs="0" maxOccurs="1" />
+                <xs:element name="CHE_CommentOnDurationOfConservation" type="gco:CharacterString_PropertyType"  minOccurs="0" maxOccurs="1" />
                 <xs:element name="CHE_AppraisalOfArchivalValue" type="che:CHE_AppraisalOfArchivalValue_Type" minOccurs="1" maxOccurs="1" />
                 <xs:element name="CHE_ReasonForArchivingValue" type="che:CHE_ReasonForArchivingValue_Type" minOccurs="1" maxOccurs="1" />
-                <xs:element name="CHE_commentOnArchivalValue" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="CHE_CommentOnArchivalValue" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 	<!-- MD_AbstractClass -->
