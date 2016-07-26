@@ -429,7 +429,17 @@
             </xsl:for-each>
         </xsl:for-each>
 
-
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- === maintenance Info (AAP) === -->
+        
+        <xsl:choose>
+            <xsl:when test="gmd:metadataMaintenance/che:CHE_MD_MaintenanceInformation/che:CHE_Appraisal_AAP">
+                <Field name="AAP" string="true" store="true" index="true"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <Field name="AAP" string="false" store="true" index="true"/>
+            </xsl:otherwise>
+        </xsl:choose>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- === Service stuff ===  -->

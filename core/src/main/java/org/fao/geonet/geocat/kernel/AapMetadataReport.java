@@ -4,8 +4,14 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.EntityManager;
+
+import org.apache.lucene.search.SearcherManager;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces;
 import org.fao.geonet.utils.Xml;
@@ -91,7 +97,7 @@ public class AapMetadataReport implements Service {
         if (m == null) {
             throw new NullPointerException("Metadata cannot be null");
         }
-        Element mi = new Element("metadata");
+        Element mi = new Element("record");
 
         Element rawMd = m.getXmlData(false);
 
@@ -134,22 +140,19 @@ public class AapMetadataReport implements Service {
     
     @Override
     public Element exec(Element params, ServiceContext context) throws Exception {
-
-        // Point of contact (Owner)
-        // Md title
-        // identifier (basicGeodataID)
-        // UUID
-        // MD_geodataType (referenceGeodata)
-        // Point of contact (specialist authority)
-        // maintenance and update frequency (AAP)
-        // duration of conservation (AAP)
-        // comment on duration
-        //   -- 5 empty columns --
-        // comment on archival value (AAP)
-        // appraisal on archival value  (AAP)
-        // reason for archival value (AAP)
-        // -- 11 empty columns --
-        return new Element("empty");
+        Element records = new Element("records");
+        
+        SearchManager sm = context.getBean(SearchManager.class);
+        MetadataRepository mdRepo = context.getBean(MetadataRepository.class);
+        
+        Set<Integer> mds = sm.getDocsWithAap();
+        for (Integer mdId : mds) {
+            Metadata curMd = mdRepo.findOne(mdId);
+            
+            records.addContent(extractAapInfo(curMd));
+        } 
+        System.out.println(Xml.getString(records));
+        return records;
 
     }
 }

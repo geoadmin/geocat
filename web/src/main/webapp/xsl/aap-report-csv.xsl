@@ -5,9 +5,9 @@
 
   <xsl:template match="/">
     <xsl:text>"owner";"Title";"Identifier";"UUID";"geodata type";"Point of contact";"maintenance &amp; update frequency";"duration of conservation";"comment on duration of conservation";;;;;;"comment on archival value";"appraisal of archival value";"reason for archiving value";;;;;;;;;;;;</xsl:text>
-    <xsl:apply-templates select="/root/report/allElements/record"/>
+    <xsl:apply-templates select="/root/records"/>
   </xsl:template>
   <xsl:template match="record">
-    "<xsl:value-of select="uuid"/>";"<xsl:value-of select="entity"/>";"<xsl:value-of select="validated"/>";"<xsl:value-of select="published"/>";"<xsl:value-of select="changedate"/>";"<xsl:value-of select="changetime"/>";"<xsl:value-of select="failurerule"/>";"<xsl:value-of select="replace(failurereasons, '&quot;', '`')"/>"</xsl:template>
+"<xsl:value-of select="uuid"/>";"<xsl:value-of select="entity"/>";"<xsl:value-of select="validated"/>";"<xsl:value-of select="published"/>";"<xsl:value-of select="changedate"/>";"<xsl:value-of select="changetime"/>";"<xsl:value-of select="failurerule"/>";"<xsl:value-of select="replace(failurereasons, '&quot;', '`')"/>"</xsl:template>
 
 </xsl:stylesheet>

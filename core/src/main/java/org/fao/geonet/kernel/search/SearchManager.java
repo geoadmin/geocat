@@ -1026,6 +1026,42 @@ public class SearchManager {
 			releaseIndexReader(indexAndTaxonomy);
 		}
 	}
+	
+    /**
+     * Retrieves all documents in the index with an AAP entry.
+     * This feature is geocat-specific, see https://jira.swisstopo.ch/browse/GEOCAT_SB-422.
+     *
+     * @return
+     * @throws Exception
+     */
+    public Set<Integer> getDocsWithAap() throws Exception {
+        IndexAndTaxonomy idx = getNewIndexReader(null);
+        try {
+            GeonetworkMultiReader reader = idx.indexReader;
+            Set<Integer> docs = new LinkedHashSet<Integer>();
+            for (int i = 0; i < reader.maxDoc(); i++) {       
+                DocumentStoredFieldVisitor aapVisitor = new DocumentStoredFieldVisitor(Geonet.IndexFieldNames.ID, "AAP");
+                reader.document(i, aapVisitor);
+                Document doc = aapVisitor.getDocument();
+                String id = doc.get(Geonet.IndexFieldNames.ID);
+                String aapField = doc.get("AAP");
+                if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+                    Log.debug(Geonet.INDEX_ENGINE, "Got id "+id+" : '"+aapField+"'");
+                if (id == null) {
+                    Log.error(Geonet.INDEX_ENGINE, "Document with no _id field skipped! Document is "+doc);
+                    continue;
+                }
+                if (aapField != null && aapField.trim().equalsIgnoreCase("true")) {
+                    docs.add(Integer.valueOf(id));
+                }
+            }
+            return docs;
+        }
+        finally {
+            releaseIndexReader(idx);
+        }
+    }
+	
 
     public ISODate getDocChangeDate(String mdId) throws Exception {
         Query query= new TermQuery(new Term(LuceneIndexField.ID, mdId));
