@@ -877,21 +877,21 @@
         <gmd:MD_MaintenanceFrequencyCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="asNeeded" />
       </gmd:maintenanceAndUpdateFrequency>
       <che:CHE_Appraisal_AAP>
-        <che:CHE_durationOfConservation>
+        <che:CHE_DurationOfConservation>
           <gco:Integer>3</gco:Integer>
-        </che:CHE_durationOfConservation>
-        <che:CHE_commentOnDurationOfConservation>
+        </che:CHE_DurationOfConservation>
+        <che:CHE_CommentOnDurationOfConservation>
           <gco:CharacterString>3 years should be sufficient for any MD - sample comment</gco:CharacterString>
-        </che:CHE_commentOnDurationOfConservation>
+        </che:CHE_CommentOnDurationOfConservation>
         <che:CHE_AppraisalOfArchivalValue>
           <che:CHE_AppraisalOfArchivalValueCode codeList="#CHE_AppraisalOfArchivalValueCode" codeListValue="S"/>
         </che:CHE_AppraisalOfArchivalValue>
         <che:CHE_ReasonForArchivingValue>
-          <che:CHE_ReasonForArchingValueCode codeList="#CHE_ReasonForArchingValueCode" codeListValue="evidenceOfBusinessPractice"/>
+          <che:CHE_ReasonForArchivingValueCode codeList="#CHE_ReasonForArchingValueCode" codeListValue="evidenceOfBusinessPractice"/>
         </che:CHE_ReasonForArchivingValue>
-        <che:CHE_commentOnArchivalValue>
+        <che:CHE_CommentOnArchivalValue>
           <gco:CharacterString>Sample comment on the archival value</gco:CharacterString>
-        </che:CHE_commentOnArchivalValue>
+        </che:CHE_CommentOnArchivalValue>
       </che:CHE_Appraisal_AAP>
     </che:CHE_MD_MaintenanceInformation>
   </gmd:metadataMaintenance>
