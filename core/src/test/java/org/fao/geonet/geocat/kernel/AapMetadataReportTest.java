@@ -9,6 +9,8 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,8 +38,8 @@ public class AapMetadataReportTest {
         Metadata tested = new Metadata();
         tested.setData(rawMd);
 
-        amr.extractAapInfo(tested);
-
+        Element el = amr.extractAapInfo(tested);
+        System.out.println(Xml.getString(el));
     }
     
 }

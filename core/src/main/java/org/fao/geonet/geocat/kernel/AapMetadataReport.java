@@ -41,28 +41,17 @@ public class AapMetadataReport implements Service {
             + "/gmd:resourceMaintenance/che:CHE_MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency"
             + "/gmd:MD_MaintenanceFrequencyCode/@codeListValue";
 
-    // TODO: not validated by GeoCat yet ...
-
+    private final String xpAap = "gmd:metadataMaintenance/che:CHE_MD_MaintenanceInformation/che:CHE_Appraisal_AAP/";
     // AAP duration of conservation
-    private final String xpAapDuration = "gmd:metadataMaintenance/che:CHE_MD_MaintenanceInformation"
-            + "/che:CHE_Appraisal_AAP/che:CHE_DurationOfConservation/gco:integer/text()";    
-    
+    private final String xpAapDuration = xpAap + "che:CHE_DurationOfConservation/gco:Integer/text()";
     // AAP comment on the duration
-    private final String xpAapCommentDuration = "gmd:metadataMaintenance/che:CHE_MD_MaintenanceInformation"
-            + "/che:CHE_Appraisal_AAP/che:CHE_CommentOnDurationOfConservation/gco:CharacterString/text()";
-    
-    // AAP comment on archival
-    private final String xpAapCommentOnArchival = "gmd:metadataMaintenance/che:CHE_MD_MaintenanceInformation"
-            + "/che:CHE_Appraisal_AAP/che:CHE_CommentOnArchivalValue/gco:CharacterString/text()";
+    private final String xpAapCommentDuration = xpAap + "che:CHE_CommentOnDurationOfConservation/gco:CharacterString/text()";
     // AAP appraisal of archival
-    private final String xpAapAppraisalOfArchival = "gmd:metadataMaintenance/che:CHE_MD_MaintenanceInformation"
-            + "/che:CHE_Appraisal_AAP/che:CHE_AppraisalOfArchivalValue"
-            + "/che:CHE_AppraisalOfArchivalValueCode/@codeListValue";
+    private final String xpAapAppraisalOfArchival = xpAap + "che:CHE_AppraisalOfArchivalValue/che:CHE_AppraisalOfArchivalValueCode/@codeListValue";
     // AAP reason for archiving value
-    private final String xpAapReasonForArchiving = "gmd:metadataMaintenance/che:CHE_MD_MaintenanceInformation"
-            + "/che:CHE_Appraisal_AAP/che:CHE_ReasonForArchivingValue"
-            + "/che:CHE_ReasonForArchivingValueCode/@codeListValue";
-
+    private final String xpAapReasonForArchiving = xpAap + "che:CHE_ReasonForArchivingValue/che:CHE_ReasonForArchivingValueCode/@codeListValue";
+    // AAP comment on archival
+    private final String xpAapCommentOnArchival = xpAap + "che:CHE_CommentOnArchivalValue/gco:CharacterString/text()";
     private final List<Namespace> xpNamespaces = Arrays.asList(new Namespace[] {
             ISO19139Namespaces.GMD,
             ISO19139Namespaces.GCO,
@@ -140,8 +129,6 @@ public class AapMetadataReport implements Service {
         mi.addContent(new Element("appraisalOfArchival").setText(appraisalOfArchival));
         mi.addContent(new Element("reasonForArchiving").setText(reasonForArchiving));
 
-        
-        System.out.println(Xml.getString(mi));
         return mi;
     }
     
