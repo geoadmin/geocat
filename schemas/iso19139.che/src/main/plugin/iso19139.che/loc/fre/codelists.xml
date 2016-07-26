@@ -554,7 +554,7 @@ une interface externe du service internet pour le processus ou la chaîne de ser
             <description>sampling / sélection</description>
         </entry>
     </codelist>
-    <codelist name="che:CHE_ReasonForArchingValueCode">
+    <codelist name="che:CHE_ReasonForArchivingValueCode">
         <entry>
             <code>legalRelevance</code>
             <label>Pertinence juridique</label>

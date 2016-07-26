@@ -592,7 +592,7 @@
             <description>Sampling / Selektion</description>
         </entry>
     </codelist>
-    <codelist name="che:CHE_ReasonForArchingValueCode">
+    <codelist name="che:CHE_ReasonForArchivingValueCode">
         <entry>
             <code>legalRelevance</code>
             <label>Rechtliche Relevanz</label>
