@@ -352,9 +352,9 @@
         <for name="gmd:topicCategory"/>
         <for name="gmd:transferOptions"/>
         <for name="gmd:date"/>
-        <for name="che:appraisal"/>
-        <!--<for name="che:commentOnDurationOfConservation"/>
-        <for name="che:commentOnArchivalValue"/>-->
+         <!--<for name="che:appraisal"/>
+         <for name="che:commentOnDurationOfConservation"/>
+         <for name="che:commentOnArchivalValue"/>-->
         <for name="che:attribute"/>
       </flatModeExceptions>
 
