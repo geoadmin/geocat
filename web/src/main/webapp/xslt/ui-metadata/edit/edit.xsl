@@ -10,7 +10,7 @@
   extension-element-prefixes="saxon" exclude-result-prefixes="#all">
 
   <!-- The editor form.
-  
+
   The form is built from the processing of the metadocument. The metadocument
   is composed of the source metadata record and the schema information.
   

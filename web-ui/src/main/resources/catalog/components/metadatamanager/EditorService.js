@@ -65,6 +65,21 @@
              }
            }
          };
+         // When adding a new element and the cardinality is 0-1,
+         // then hide the add control.
+         // When an element is removed and the cardinality is 0-1,
+         // then display the add control
+         var checkAddControls = function(element, isRemoved) {
+           var addElement = $(element).next();
+           if (addElement !== undefined) {
+             var addBlock = addElement.get(0);
+             if ($(addBlock).hasClass('gn-add-field') &&
+                 $(addBlock).attr('data-gn-cardinality') === '0-1') {
+               $(addBlock).toggleClass('hidden', isRemoved ? false : true);
+             }
+           }
+         };
+
          // When adding a new element, the down control
          // of the previous element must be enabled and
          // the up control enabled only if the previous
@@ -316,7 +331,8 @@
                  target[position || 'after'](snippet); // Insert
                  snippet.slideDown(duration, function() {});   // Slide
 
-                 // Adapt the move element
+                 // Adapt the add & move element
+                 checkAddControls(snippet);
                  checkMoveControls(snippet);
                }
                $compile(snippet)(gnCurrentEdit.formScope);
@@ -347,7 +363,7 @@
                target[position || 'before'](snippet); // Insert
                snippet.slideDown(duration, function() {});   // Slide
 
-               // Adapt the move element
+               checkAddControls(snippet);
                checkMoveControls(snippet);
 
                $compile(snippet)(gnCurrentEdit.formScope);
@@ -410,7 +426,7 @@
                  }
                };
 
-               // Adapt the move element
+               checkAddControls(target.get(0), true);
                checkMoveControls(target.get(0));
 
                target.slideUp(duration, function() { $(this).remove();});
