@@ -653,27 +653,27 @@
     </element>
     
     <!-- SB-422: AAP -->
-    <element name="che:CHE_Appraisal_AAP">
+    <element name="che:appraisal">
         <label>Appraisal AAP</label>
         <description>Appraisal AAP</description>    
     </element>
-    <element name="che:CHE_DurationOfConservation">
+    <element name="che:durationOfConservation">
         <label>Duration of conservation</label>
         <description>Duration of conservation</description>
     </element>
-    <element name="che:CHE_CommentOnDurationOfConservation">
+    <element name="che:commentOnDurationOfConservation">
         <label>Comment on duration of conservation</label>
         <description>Comment on duration of conservation</description>
     </element>
-    <element name="che:CHE_AppraisalOfArchivalValue">
+    <element name="che:appraisalOfArchivalValue">
         <label>Appraisal of archival value</label>
         <description>Appraisal of archival value</description>
     </element>
-    <element name="che:CHE_ReasonForArchivingValue">
+    <element name="che:reasonForArchivingValue">
         <label>Reason for archiving value</label>
         <description>Reason for archiving value</description>
     </element>
-    <element name="che:CHE_CommentOnArchivalValue">
+    <element name="che:commentOnArchivalValue">
         <label>Comment on archival value</label>
         <description>Comment on archival value</description>
     </element>

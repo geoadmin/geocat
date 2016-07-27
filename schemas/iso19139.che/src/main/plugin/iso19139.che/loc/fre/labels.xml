@@ -729,27 +729,27 @@ ce qui concerne les métadonnées"</description>
  </element>
 
     <!-- SB-422: AAP -->
-    <element name="che:CHE_Appraisal_AAP">
+    <element name="che:appraisal">
         <label>Évaluation AAP</label>
         <description>Évaluation AAP</description>    
     </element>
-    <element name="che:CHE_DurationOfConservation">
+    <element name="che:durationOfConservation">
         <label>durée de conservation DAD (années)</label>
         <description>durée de conservation DAD (années)</description>
     </element>
-    <element name="che:CHE_CommentOnDurationOfConservation">
+    <element name="che:commentOnDurationOfConservation">
         <label>Remarques concernant la durée de conservation</label>
         <description>Remarques concernant la durée de conservation</description>
     </element>
-    <element name="che:CHE_AppraisalOfArchivalValue">
+    <element name="che:appraisalOfArchivalValue">
         <label>évaluation de la valeur archivistique</label>
         <description>évaluation de la valeur archivistique</description>
     </element>
-    <element name="che:CHE_ReasonForArchivingValue">
+    <element name="che:reasonForArchivingValue">
         <label>justification quant à la valeur archivistique</label>
         <description>justification quant à la valeur archivistique</description>
     </element>
-    <element name="che:CHE_CommentOnArchivalValue">
+    <element name="che:commentOnArchivalValue">
         <label>Remarques concernant la valeur archivistique</label>
         <description>Remarques concernant la valeur archivistique</description>
     </element>
