@@ -222,7 +222,7 @@
     <!-- When building the form with an element having cardinality 0..1,
     add a hidden add action in case the element is removed. If removed,
     the client app take care of displaying this control. -->
-    <xsl:if test="$service = 'md.edit' and $parentEditInfo/@min = 0 and $parentEditInfo/@max = 1">
+    <xsl:if test="$service = 'md.edit' and $parentEditInfo and $parentEditInfo/@min = 0 and $parentEditInfo/@max = 1">
       <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, name())"/>
 
       <xsl:call-template name="render-element-to-add">
