@@ -40,17 +40,32 @@ public class AapMetadataReportTest {
         tested.setData(rawMd);
 
         String el = Xml.getString(amr.extractAapInfo(tested));
-        assertTrue("Unexpected content element extracted from mdaaptest.xml",
-                   el.contains("<title>Lisières forestières prioritaires</title>")              &&
-                   el.contains("<uuid>d2ab7e4e-d135-4442-b0af-2f8892d87843</uuid>")             &&
-                   el.contains("<updateFrequency>userDefined</updateFrequency>")                &&
-                   el.contains("<durationOfConservation>3</durationOfConservation>")            &&
-                   el.contains("<commentOnDuration>3 years should be sufficient "
-                           + "for any MD - sample comment</commentOnDuration>")                 &&
+
+        assertTrue("Unexpected title",
+                   el.contains("<title>Lisières forestières prioritaires</title>"));
+        assertTrue("Unexpected geodata ID",
+                el.contains("<identifier>101.2-TG</identifier>"));
+        assertTrue("Unexpected UUID",
+                el.contains("<uuid>d2ab7e4e-d135-4442-b0af-2f8892d87843</uuid>"));
+        assertTrue("Unexpected geodatatype",
+                el.contains("<geodatatype>Ja</geodatatype>"));
+        assertTrue("Unexpected owner",
+                el.contains("<owner>SFF</owner>"));
+        assertTrue("Unexpected owner",
+        el.contains("<specialistAuthority>Camptocamp</specialistAuthority>"));
+        assertTrue("Unexpected update frequency",
+                   el.contains("<updateFrequency>userDefined</updateFrequency>"));
+        assertTrue("Unexpected duration of conservation",
+                   el.contains("<durationOfConservation>3</durationOfConservation>"));
+        assertTrue("Unexpected comment on duration",
+                   el.contains("<commentOnDuration>Sample comment on the duration of conservation</commentOnDuration>"));
+        assertTrue("Unexpected comment on archival",
                    el.contains("<commentOnArchival>Sample comment on "
-                           + "the archival value</commentOnArchival>")                          &&
-                   el.contains("<appraisalOfArchival>S</appraisalOfArchival>")                  &&
-                   el.contains("<reasonForArchiving>evidenceOfBusinessPractice</reasonForArchiving>")
+                           + "the archival value</commentOnArchival>"));
+        assertTrue("Unexpected appraisal of archival value",
+                   el.contains("<appraisalOfArchival>S</appraisalOfArchival>"));
+        assertTrue("Unexpected reason for archiving value",
+                   el.contains("<reasonForArchiving>definingPowers</reasonForArchiving>")
                 );
     }
 

@@ -289,6 +289,88 @@
             </gmd:PT_FreeText>
           </che:organisationAcronym>
         </che:CHE_CI_ResponsibleParty>
+               <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
+          <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Service des forêts et de la faune</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Service des forêts et de la faune</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:organisationName>
+          <gmd:positionName xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Collaborateur scientifique</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Collaborateur scientifique</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:positionName>
+          <gmd:contactInfo>
+            <gmd:CI_Contact>
+              <gmd:phone>
+                <che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+                  <gmd:facsimile>
+                    <gco:CharacterString>026 / 305 23 36</gco:CharacterString>
+                  </gmd:facsimile>
+                  <che:directNumber>
+                    <gco:CharacterString>026 / 305 23 43</gco:CharacterString>
+                  </che:directNumber>
+                </che:CHE_CI_Telephone>
+              </gmd:phone>
+              <gmd:address>
+                <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+                  <gmd:city>
+                    <gco:CharacterString>Givisiez</gco:CharacterString>
+                  </gmd:city>
+                  <gmd:postalCode>
+                    <gco:CharacterString>1762</gco:CharacterString>
+                  </gmd:postalCode>
+                  <gmd:electronicMailAddress>
+                    <gco:CharacterString>forets@fr.ch</gco:CharacterString>
+                  </gmd:electronicMailAddress>
+                  <che:streetName>
+                    <gco:CharacterString>Route du Mont-Carmel</gco:CharacterString>
+                  </che:streetName>
+                  <che:streetNumber>
+                    <gco:CharacterString>1</gco:CharacterString>
+                  </che:streetNumber>
+                </che:CHE_CI_Address>
+              </gmd:address>
+              <gmd:onlineResource>
+                <gmd:CI_OnlineResource>
+                  <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                    <che:PT_FreeURL>
+                      <che:URLGroup>
+                        <che:LocalisedURL locale="#FR">http://www.fr.ch/sff</che:LocalisedURL>
+                      </che:URLGroup>
+                    </che:PT_FreeURL>
+                  </gmd:linkage>
+                  <gmd:protocol>
+                    <gco:CharacterString>text/html</gco:CharacterString>
+                  </gmd:protocol>
+                </gmd:CI_OnlineResource>
+              </gmd:onlineResource>
+            </gmd:CI_Contact>
+          </gmd:contactInfo>
+          <gmd:role>
+            <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="specialistAuthority" />
+          </gmd:role>
+          <che:individualFirstName>
+            <gco:CharacterString>Pierre</gco:CharacterString>
+          </che:individualFirstName>
+          <che:individualLastName>
+            <gco:CharacterString>Mauduit</gco:CharacterString>
+          </che:individualLastName>
+          <che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>SFF</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Camptocamp</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </che:organisationAcronym>
+        </che:CHE_CI_ResponsibleParty>
       </gmd:pointOfContact>
       <gmd:resourceMaintenance>
         <che:CHE_MD_MaintenanceInformation gco:isoType="gmd:MD_MaintenanceInformation">
@@ -613,6 +695,15 @@
           </gmd:geographicElement>
         </gmd:EX_Extent>
       </gmd:extent>
+      <che:basicGeodataID>
+          <gco:CharacterString>101.2-TG</gco:CharacterString>
+      </che:basicGeodataID>
+      <che:basicGeodataIDType>
+          <che:basicGeodataIDTypeCode codeList="#basicGeodataIDTypeCode" codeListValue="federal" />
+      </che:basicGeodataIDType>
+      <che:geodataType>
+          <che:MD_geodataTypeCode codeList="#MD_geodataTypeCode" codeListValue="ReferenceGeodata"/>
+      </che:geodataType>
     </che:CHE_MD_DataIdentification>
   </gmd:identificationInfo>
   <gmd:contentInfo xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xalan="http://xml.apache.org/xalan">
@@ -876,23 +967,25 @@
       <gmd:maintenanceAndUpdateFrequency>
         <gmd:MD_MaintenanceFrequencyCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="asNeeded" />
       </gmd:maintenanceAndUpdateFrequency>
-      <che:CHE_Appraisal_AAP>
-        <che:CHE_DurationOfConservation>
-          <gco:Integer>3</gco:Integer>
-        </che:CHE_DurationOfConservation>
-        <che:CHE_CommentOnDurationOfConservation>
-          <gco:CharacterString>3 years should be sufficient for any MD - sample comment</gco:CharacterString>
-        </che:CHE_CommentOnDurationOfConservation>
-        <che:CHE_AppraisalOfArchivalValue>
-          <che:CHE_AppraisalOfArchivalValueCode codeList="#CHE_AppraisalOfArchivalValueCode" codeListValue="S"/>
-        </che:CHE_AppraisalOfArchivalValue>
-        <che:CHE_ReasonForArchivingValue>
-          <che:CHE_ReasonForArchivingValueCode codeList="#CHE_ReasonForArchingValueCode" codeListValue="evidenceOfBusinessPractice"/>
-        </che:CHE_ReasonForArchivingValue>
-        <che:CHE_CommentOnArchivalValue>
-          <gco:CharacterString>Sample comment on the archival value</gco:CharacterString>
-        </che:CHE_CommentOnArchivalValue>
-      </che:CHE_Appraisal_AAP>
+      <che:appraisal>
+      <che:CHE_MD_Appraisal_AAP>
+         <che:durationOfConservation>
+            <gco:Integer>3</gco:Integer>
+         </che:durationOfConservation>
+         <che:commentOnDurationOfConservation>
+            <gco:CharacterString>Sample comment on the duration of conservation</gco:CharacterString>
+         </che:commentOnDurationOfConservation>
+         <che:appraisalOfArchivalValue>
+            <che:CHE_AppraisalOfArchivalValueCode codeList="#CHE_AppraisalOfArchivalValueCode" codeListValue="S"/>
+         </che:appraisalOfArchivalValue>
+         <che:reasonForArchivingValue>
+            <che:CHE_ReasonForArchivingValueCode codeList="#CHE_ReasonForArchivingValueCode" codeListValue="definingPowers"/>
+         </che:reasonForArchivingValue>
+         <che:commentOnArchivalValue>
+            <gco:CharacterString>Sample comment on the archival value</gco:CharacterString>
+         </che:commentOnArchivalValue>
+      </che:CHE_MD_Appraisal_AAP>
+    </che:appraisal>
     </che:CHE_MD_MaintenanceInformation>
   </gmd:metadataMaintenance>
 </che:CHE_MD_Metadata>
