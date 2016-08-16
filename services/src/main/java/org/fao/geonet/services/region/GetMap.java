@@ -32,6 +32,7 @@ import jeeves.server.dispatchers.ServiceManager;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.geocat.kernel.extent.FeatureType;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionNotFoundEx;
 import org.fao.geonet.kernel.region.RegionsDAO;
@@ -179,6 +180,11 @@ public class GetMap{
                                    @RequestParam(value = GEOM_SRS_PARAM, defaultValue = "EPSG:4326") String geomSrs,
                                    @RequestParam(value = OUTPUT_FILE_NAME, required=false) String outputFileName,
                                    NativeWebRequest request) throws Exception {
+
+
+        // force getMap to use configured projection
+        FeatureType nonValidated = context.getBean("gn:non_validated", FeatureType.class);
+        srs = nonValidated.srs();
 
         ServiceContext context = serviceManager.createServiceContext("region.getmap." + imageFormat, lang,
                 request.getNativeRequest(HttpServletRequest.class));
