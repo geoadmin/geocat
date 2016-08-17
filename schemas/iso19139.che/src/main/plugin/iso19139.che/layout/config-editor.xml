@@ -182,6 +182,9 @@
     <name>gmd:distributor</name>
     <name>gmd:distributorContact</name>
     <name>che:attribute</name>
+    <name>che:CHE_MD_AbstractClass</name>
+    <name>che:CHE_MD_Association</name>
+    <name>che:CHE_MD_Class</name>
   </fieldsWithFieldset>
 
   <multilingualFields>
