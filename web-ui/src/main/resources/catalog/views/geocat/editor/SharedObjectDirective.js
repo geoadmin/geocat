@@ -318,20 +318,6 @@
         var service = scope.xlink ? extentsService.updateService :
           extentsService.addService;
 
-
-        // No need to transform extent anymore as only server projection will be available
-        /*
-        var serverProj = gnGlobalSettings.srs;
-
-        var formObj = angular.copy(scope.formObj);
-        var formatWKT = new ol.format.WKT();
-
-        if (formObj.proj != serverProj) {
-          formObj.geomString = formatWKT.writeGeometry(formatWKT.readGeometry(formObj.geomString).transform(formObj.proj, serverProj));
-          formObj.proj = serverProj;
-        }
-        */
-
         extentsService.updateExtent(service, scope.formObj).
             success(function(data) {
 

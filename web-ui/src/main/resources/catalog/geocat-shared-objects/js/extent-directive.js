@@ -237,7 +237,6 @@
                 setTimeout(function () {
                   scope.map.updateSize();
                   if(featureType && featureType.feature.geom) {
-                    console.log(scope.map.getSize());
                     scope.map.getView().fitExtent(
                         formatWKT.readGeometry(featureType.feature.geom).transform(
                             scope.formObj.proj,

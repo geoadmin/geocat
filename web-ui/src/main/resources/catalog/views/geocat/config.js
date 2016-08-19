@@ -45,62 +45,62 @@
 
       if(gnGlobalSettings.srs == "EPSG:4326" ) {
 
-         // Configuration for 4326
+        // Configuration for 4326
 
-         var projection = ol.proj.get('EPSG:3857');
-         var projectionExtent = projection.getExtent();
-         var size = ol.extent.getWidth(projectionExtent) / 256;
-         var resolutions = new Array(14);
-         var matrixIds = new Array(14);
-         for (var z = 0; z < 14; ++z) {
-         // generate resolutions and matrixIds arrays for this WMTS
-         resolutions[z] = size / Math.pow(2, z);
-         matrixIds[z] = z;
-         }
+        var projection = ol.proj.get('EPSG:3857');
+        var projectionExtent = projection.getExtent();
+        var size = ol.extent.getWidth(projectionExtent) / 256;
+        var resolutions = new Array(14);
+        var matrixIds = new Array(14);
+        for (var z = 0; z < 14; ++z) {
+          // generate resolutions and matrixIds arrays for this WMTS
+          resolutions[z] = size / Math.pow(2, z);
+          matrixIds[z] = z;
+        }
 
-         var defaultUrl = 'https://server.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer/WMTS/tile/1.0.0/World_Topo_Map/default/default028mm/{TileMatrix}/{TileRow}/{TileCol}.jpg';
+        var defaultUrl = 'https://server.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer/WMTS/tile/1.0.0/World_Topo_Map/default/default028mm/{TileMatrix}/{TileRow}/{TileCol}.jpg';
 
-         var url = angular.isDefined(searchSettings.mapConfig) ?
-         searchSettings.mapConfig.url || defaultUrl : defaultUrl;
+        var url = angular.isDefined(searchSettings.mapConfig) ?
+        searchSettings.mapConfig.url || defaultUrl : defaultUrl;
 
-         var chLayer = new ol.layer.Tile({
-         source: new ol.source.WMTS({
-         url: defaultUrl,
-         tileGrid: new ol.tilegrid.WMTS({
-         origin: ol.extent.getTopLeft(projectionExtent),
-         resolutions: resolutions,
-         matrixIds: matrixIds
-         }),
-         requestEncoding: 'REST',
-         wrapX: true
-         })
-         });
+        var chLayer = new ol.layer.Tile({
+          source: new ol.source.WMTS({
+            url: defaultUrl,
+            tileGrid: new ol.tilegrid.WMTS({
+              origin: ol.extent.getTopLeft(projectionExtent),
+              resolutions: resolutions,
+              matrixIds: matrixIds
+            }),
+            requestEncoding: 'REST',
+            wrapX: true
+          })
+        });
 
-         var mousePositionControl = new ol.control.MousePosition({
-         coordinateFormat: ol.coordinate.createStringXY(4),
-         projection: 'EPSG:3857',
-         // comment the following two lines to have the mouse position
-         // be placed within the map.
-         className: 'custom-mouse-position',
-         target: document.getElementById('mouse-position'),
-         undefinedHTML: '&nbsp;'
-         });
+        var mousePositionControl = new ol.control.MousePosition({
+          coordinateFormat: ol.coordinate.createStringXY(4),
+          projection: 'EPSG:3857',
+          // comment the following two lines to have the mouse position
+          // be placed within the map.
+          className: 'custom-mouse-position',
+          target: document.getElementById('mouse-position'),
+          undefinedHTML: '&nbsp;'
+        });
 
-         searchSettings.searchMap = new ol.Map({
-         controls: ol.control.defaults({
-         attributionOptions: ({
-         collapsible: false
-         })
-         }).extend([mousePositionControl]),
-         layers: [chLayer],
-         view: new ol.View({
-         center: [929317, 5909466],
-         zoom: 7
-         })
-         });
+        searchSettings.searchMap = new ol.Map({
+          controls: ol.control.defaults({
+            attributionOptions: ({
+              collapsible: false
+            })
+          }).extend([mousePositionControl]),
+          layers: [chLayer],
+          view: new ol.View({
+            center: [929317, 5909466],
+            zoom: 7
+          })
+        });
 
       } else {
-        
+
         // Configuration for 21781
 
         var resolutions = [
@@ -120,8 +120,8 @@
         });
 
         var defaultUrl = '//wmts{5-9}.geo.admin.ch/1.0.0/{Layer}/default/' +
-            '20140520/21781/' +
-            '{TileMatrix}/{TileRow}/{TileCol}.jpeg';
+          '20140520/21781/' +
+          '{TileMatrix}/{TileRow}/{TileCol}.jpeg';
         var url = angular.isDefined(searchSettings.mapConfig) ?
         searchSettings.mapConfig.url || defaultUrl : defaultUrl;
 

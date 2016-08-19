@@ -171,7 +171,6 @@ public class GetMap{
     public HttpEntity<byte[]> exec(@PathVariable String lang,
                                    @PathVariable String imageFormat,
                                    @RequestParam(value = Params.ID, required = false) String id,
-                                   @RequestParam(value = MAP_SRS_PARAM, defaultValue = "EPSG:4326") String srs,
                                    @RequestParam(value = WIDTH_PARAM, required = false) Integer width,
                                    @RequestParam(value = HEIGHT_PARAM, required = false) Integer height,
                                    @RequestParam(value = BACKGROUND_PARAM, required = false) String background,
@@ -184,7 +183,7 @@ public class GetMap{
 
         // force getMap to use configured projection
         FeatureType nonValidated = context.getBean("gn:non_validated", FeatureType.class);
-        srs = nonValidated.srs();
+        String srs = nonValidated.srs();
 
         ServiceContext context = serviceManager.createServiceContext("region.getmap." + imageFormat, lang,
                 request.getNativeRequest(HttpServletRequest.class));
