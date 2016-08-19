@@ -238,7 +238,14 @@
                   scope.map.updateSize();
                   if(featureType && featureType.feature.geom) {
                     console.log(scope.map.getSize());
-                    scope.map.getView().fitExtent(formatWKT.readGeometry(featureType.feature.geom).transform(scope.formObj.proj,'EPSG:3857').getExtent(),scope.map.getSize());
+                    scope.map.getView().fitExtent(
+                        formatWKT.readGeometry(featureType.feature.geom).transform(
+                            scope.formObj.proj,
+                            scope.map.getView().getProjection().getCode()
+                        ).getExtent(),
+                        scope.map.getSize(),
+                        {nearest: true}
+                    );
                   } else {
                     scope.map.getView().setCenter([929317, 5909466]);
                     scope.map.getView().setZoom(7);
