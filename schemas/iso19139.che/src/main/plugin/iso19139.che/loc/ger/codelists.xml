@@ -588,8 +588,8 @@
         </entry>
         <entry>
             <code>S</code>
-            <label>Sampling / Selektion</label>
-            <description>Sampling / Selektion</description>
+            <label>sampling / selektion</label>
+            <description>sampling / selektion</description>
         </entry>
     </codelist>
     <codelist name="che:CHE_ReasonForArchivingValueCode">
