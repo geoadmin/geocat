@@ -726,8 +726,8 @@
         </entry>
         <entry>
             <code>S</code>
-            <label>Sampling / Selection</label>
-            <description>Sampling / Selection</description>
+            <label>sampling / selection</label>
+            <description>sampling / selection</description>
         </entry>
     </codelist>
     <codelist name="che:CHE_ReasonForArchivingValueCode">
