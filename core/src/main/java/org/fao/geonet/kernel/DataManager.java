@@ -2095,8 +2095,8 @@ public class DataManager implements ApplicationEventPublisherAware {
         } finally {
             if (index) {
                 //--- update search criteria
-                boolean processSharedObjects = false;
-                indexMetadata(metadataId, true, processSharedObjects, false, false);
+                final boolean processSharedObjects = false;
+                indexMetadata(metadataId, true, processSharedObjects, false, validate);
             }
         }
         if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {

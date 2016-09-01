@@ -18,10 +18,10 @@
     <sch:pattern>
         <sch:title>$loc/strings/invalidURLCheck</sch:title>
         <!-- Check specification names and status -->
-        <sch:rule context="/*//gmd:linkage//che:LocalisedURL | *//gmd:linkage//gmd:URL">
+        <sch:rule context="//gmd:linkage//che:LocalisedURL | //gmd:linkage//gmd:URL">
 
-            <sch:let name="isValidUrl" value="xslutil:validateURL(string(.))" />
-            <sch:assert test="$isValidUrl">
+            <sch:let name="isValidUrl" value="xslutil:validateURL(text())" />
+            <sch:assert test="$isValidUrl = true()">
                 <sch:value-of select="$loc/strings/alert.invalidURL/div" />
                 '<sch:value-of select="string(.)" />'
             </sch:assert>
