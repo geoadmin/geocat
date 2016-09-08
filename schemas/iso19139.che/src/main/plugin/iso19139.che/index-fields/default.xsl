@@ -433,7 +433,7 @@
         <!-- === maintenance Info (AAP) === -->
         
         <xsl:choose>
-            <xsl:when test="gmd:metadataMaintenance/che:CHE_MD_MaintenanceInformation/che:appraisal">
+          <xsl:when test="gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[text() = 'AAP-Bund']">
                 <Field name="AAP" string="true" store="true" index="true"/>
             </xsl:when>
             <xsl:otherwise>

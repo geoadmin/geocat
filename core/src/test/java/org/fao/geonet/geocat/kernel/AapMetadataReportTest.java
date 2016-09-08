@@ -22,7 +22,7 @@ public class AapMetadataReportTest {
     private final AapMetadataReport amr = new AapMetadataReport();
 
     @Before
-    public void setUp() {    
+    public void setUp() {
     }
     
     @After
@@ -88,6 +88,40 @@ public class AapMetadataReportTest {
                 el.contains("<commentOnArchival />")      &&
                 el.contains("<reasonForArchiving />")     &&
                 el.contains("<appraisalOfArchival />"));
+    }
+    
+    @Test
+    public void extractAapInfoFromCustomerProvidedMd() throws Exception {
+        URL rawMdUrl = this.getClass().getResource("aap.xml");
+        assumeTrue(rawMdUrl != null);
+        File rawMdF = new File(rawMdUrl.toURI());
+        assumeTrue(rawMdF.exists());
+        
+
+        String rawMd = FileUtils.readFileToString(rawMdF);
+        Metadata tested = new Metadata();
+        tested.setData(rawMd);
+
+        
+        String el = Xml.getString(amr.extractAapInfo(tested));  
+        System.out.println(el);
+    }
+    
+    @Test
+    public void testXpathIndexFieldAap() throws Exception {
+        // mdaaptest-noaap.xml for not containing kw, aap.xml for a containing one
+        URL rawMdUrl = this.getClass().getResource("aap.xml");
+        assumeTrue(rawMdUrl != null);
+        File rawMdF = new File(rawMdUrl.toURI());
+        assumeTrue(rawMdF.exists());
+        String rawMd = FileUtils.readFileToString(rawMdF);
+
+        // xpath used for AAP field indexation (see iso19139.che/default.xsl around line 453)
+        String xpath = "gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:descriptiveKeywords"+
+                "/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[text() = 'AAP-Bund']";
+
+        boolean b = Xml.selectBoolean(Xml.loadString(rawMd, false), xpath);
+        assertTrue("Expected true, false found", b);
     }
     
 }
