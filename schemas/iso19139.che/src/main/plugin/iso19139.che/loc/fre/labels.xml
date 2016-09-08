@@ -745,7 +745,15 @@ ce qui concerne les métadonnées"</description>
         <label>évaluation de la valeur archivistique</label>
         <description>évaluation de la valeur archivistique</description>
     </element>
+    <element name="che:CHE_AppraisalOfArchivalValueCode">
+        <label>évaluation de la valeur archivistique</label>
+        <description>évaluation de la valeur archivistique</description>
+    </element>    
     <element name="che:reasonForArchivingValue">
+        <label>justification quant à la valeur archivistique</label>
+        <description>justification quant à la valeur archivistique</description>
+    </element>
+    <element name="che:CHE_ReasonForArchivingValueCode">
         <label>justification quant à la valeur archivistique</label>
         <description>justification quant à la valeur archivistique</description>
     </element>
