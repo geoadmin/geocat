@@ -673,7 +673,15 @@
         <label>Bewertung Archivwürdigkeit</label>
         <description>Bewertung Archivwürdigkeit</description>
     </element>
+    <element name="che:CHE_AppraisalOfArchivalValueCode">
+        <label>Bewertung Archivwürdigkeit</label>
+        <description>Bewertung Archivwürdigkeit</description>
+    </element>    
     <element name="che:reasonForArchivingValue">
+        <label>Begründung Archivwürdigkeit</label>
+        <description>Begründung Archivwürdigkeit</description>
+    </element>
+    <element name="che:CHE_ReasonForArchivingValueCode">
         <label>Begründung Archivwürdigkeit</label>
         <description>Begründung Archivwürdigkeit</description>
     </element>

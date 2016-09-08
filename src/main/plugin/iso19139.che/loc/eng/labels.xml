@@ -580,10 +580,18 @@
         <label>Appraisal of archival value</label>
         <description>Appraisal of archival value</description>
     </element>
+    <element name="che:CHE_AppraisalOfArchivalValueCode">
+        <label>Appraisal of archival value</label>
+        <description>Appraisal of archival value</description>
+    </element>    
     <element name="che:reasonForArchivingValue">
         <label>Reason for archiving value</label>
         <description>Reason for archiving value</description>
     </element>
+    <element name="che:CHE_ReasonForArchivingValueCode">
+        <label>Reason for archiving value</label>
+        <description>Reason for archiving value</description>
+    </element>    
     <element name="che:commentOnArchivalValue">
         <label>Comment on archival value</label>
         <description>Comment on archival value</description>
