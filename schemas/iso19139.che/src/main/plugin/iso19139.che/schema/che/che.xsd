@@ -262,7 +262,7 @@
 					<xs:element name="appraisalOfArchivalValue" type="che:CHE_AppraisalOfArchivalValue_Type"
 						minOccurs="1" maxOccurs="1" />
 					<xs:element name="reasonForArchivingValue" type="che:CHE_ReasonForArchivingValue_Type"
-						minOccurs="1" maxOccurs="1" />
+						minOccurs="0" maxOccurs="1" />
 					<xs:element name="commentOnArchivalValue" type="gco:CharacterString_PropertyType"
 						minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
