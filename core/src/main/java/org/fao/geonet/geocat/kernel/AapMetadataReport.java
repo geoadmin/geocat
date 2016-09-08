@@ -28,7 +28,7 @@ public class AapMetadataReport implements Service {
 
     // Owner
     private final String xpMdOwnerBase = "gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:pointOfContact"
-            + "/che:CHE_CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='owner']/che:organisationAcronym/";
+            + "/che:CHE_CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='owner']/gmd:organisationName/";
     private final String xpOwnerDe = xpMdOwnerBase + "gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#DE']/text()";
     private final String xpOwnerFr = xpMdOwnerBase + "gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#FR']/text()";
     private final String xpOwnerEn = xpMdOwnerBase + "gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#EN']/text()";
@@ -54,11 +54,8 @@ public class AapMetadataReport implements Service {
     private final String xpGeodataType = "gmd:identificationInfo//che:geodataType/che:MD_geodataTypeCode/@codeListValue";
     private final String xpUuid = "gmd:fileIdentifier/gco:CharacterString/text()";
 
-
-    // maintenanceAndUpdateFrequency
-    private final String xpMaintAndUpdateFreq = "gmd:identificationInfo/che:CHE_MD_DataIdentification"
-            + "/gmd:resourceMaintenance/che:CHE_MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency"
-            + "/gmd:MD_MaintenanceFrequencyCode/@codeListValue";
+    private final String xpMaintAndUpdateFreq = "gmd:metadataMaintenance/che:CHE_MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency/"
+            + "gmd:MD_MaintenanceFrequencyCode/@codeListValue";
 
     // AAP
     private final String xpAap = "gmd:metadataMaintenance/che:CHE_MD_MaintenanceInformation/che:appraisal/";
