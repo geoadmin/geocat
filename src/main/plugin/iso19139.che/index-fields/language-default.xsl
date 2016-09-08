@@ -257,6 +257,18 @@
 					<Field name="keywordType" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
 			</xsl:for-each>
+
+            <!-- === maintenance Info (AAP) ===             -->
+            <xsl:choose>
+                <xsl:when
+                    test="*/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[text()='AAP-Bund']|
+                    */gmd:MD_Keywords/gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[text()='AAP-Bund']">
+                    <Field name="AAP" string="true" store="true" index="true" />
+                </xsl:when>
+                <xsl:otherwise>
+                    <Field name="AAP" string="false" store="true" index="true" />
+                </xsl:otherwise>
+            </xsl:choose>
 	
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
     
