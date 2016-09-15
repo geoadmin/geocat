@@ -103,18 +103,21 @@ public class MetadataNotifierClient {
                     return null;
                 }
             });
+            try {
+                // Execute the method.
+                if (response.getStatusCode() != HttpStatus.OK) {
+                    throw new MetadataNotifierClientException("Method failed: " + response.getStatusText());
+                }
 
-			// Execute the method.
-			if (response.getStatusCode() != HttpStatus.OK) {
-				throw new MetadataNotifierClientException("Method failed: " + response.getStatusText());
-			}
+                // Read the response body.
+                // byte[] responseBody = method.getResponseBody();
 
-			// Read the response body.
-			// byte[] responseBody = method.getResponseBody();
-
-			// Deal with the response.
-			// Use caution: ensure correct character encoding and is not binary data
-			// System.out.println(new String(responseBody));
+                // Deal with the response.
+                // Use caution: ensure correct character encoding and is not binary data
+                // System.out.println(new String(responseBody));
+            } finally {
+                response.close();
+            }
 
 		} catch (IOException e) {
 			throw new MetadataNotifierClientException(e);

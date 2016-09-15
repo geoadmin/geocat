@@ -62,19 +62,22 @@ public class SOAPRequest {
                             return null;
                         }
                     });
+            try {
+                // Better not with large queries
+                // data = httpMethod.getResponseBody();
+                //String s = new String(data);
+                SAXBuilder builder = new SAXBuilder();
 
-            // Better not with large queries
-            // data = httpMethod.getResponseBody();
-            //String s = new String(data);
-            SAXBuilder builder = new SAXBuilder();
-
-            // KLUDGE 9.apr.09 Just: ws.geoportal.ch appears to have an encoding that
-            // the standard SAX parser fails upon. For now we convert
-            // the byte input to a char stream.
-            if (url.getHost().indexOf("geoportal.ch") != -1) {
-                responseDoc = builder.build(new InputStreamReader(response.getBody(), Constants.ENCODING));
-            } else {
-                responseDoc = builder.build(response.getBody());
+                // KLUDGE 9.apr.09 Just: ws.geoportal.ch appears to have an encoding that
+                // the standard SAX parser fails upon. For now we convert
+                // the byte input to a char stream.
+                if (url.getHost().indexOf("geoportal.ch") != -1) {
+                    responseDoc = builder.build(new InputStreamReader(response.getBody(), Constants.ENCODING));
+                } else {
+                    responseDoc = builder.build(response.getBody());
+                }
+            } finally {
+                response.close();
             }
         } catch (JDOMException e) {
             throw new BadXmlResponseEx("Parse error: " + e.getMessage());

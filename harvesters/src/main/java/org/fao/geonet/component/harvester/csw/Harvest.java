@@ -969,9 +969,13 @@ public class Harvest extends AbstractOperation implements CatalogService {
                                 return null;
                             }
                         });
-                if (httpResponse.getStatusCode() != HttpStatus.OK) {
-                    // never mind, just log it
-                    Log.warning(Geonet.CSW_HARVEST, "WARNING: Failed to send HarvestResponse to responseHandler " + responseHandler + ", HTTP status is " + httpResponse.getStatusText());
+                try {
+                    if (httpResponse.getStatusCode() != HttpStatus.OK) {
+                        // never mind, just log it
+                        Log.warning(Geonet.CSW_HARVEST, "WARNING: Failed to send HarvestResponse to responseHandler " + responseHandler + ", HTTP status is " + httpResponse.getStatusText());
+                    }
+                } finally {
+                    httpResponse.close();
                 }
             } catch (IOException x) {
                 // never mind, just log it
