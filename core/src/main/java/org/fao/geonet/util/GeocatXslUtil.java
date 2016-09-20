@@ -25,6 +25,7 @@ import net.sf.saxon.type.Type;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
@@ -754,26 +755,41 @@ public class GeocatXslUtil {
         return URL_VALIDATION_CACHE.get(urlString, new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-
                 try {
-                    HttpHead head = new HttpHead(urlString);
-                    GeonetHttpRequestFactory requestFactory = ApplicationContextHolder.get().getBean(GeonetHttpRequestFactory.class);
-                    ClientHttpResponse response = requestFactory.execute(head);
-
-                    if (response.getRawStatusCode() == HttpStatus.SC_NOT_FOUND || response.getRawStatusCode() > 499) {
-                        HttpHead get = new HttpHead(urlString);
-
-                        response = requestFactory.execute(get);
-
-                        return response.getRawStatusCode() != HttpStatus.SC_NOT_FOUND && response.getRawStatusCode() < 500;
-                    } else {
-                        return true;
-                    }
+                    return validateURLImpl(urlString, 1);
                 } catch (Exception e) {
                     return false;
                 }
             }
         });
+    }
+
+    private static boolean validateURLImpl(final String urlString, int tryNumber) throws IOException {
+        if (tryNumber > 5) {
+            // protect against redirect loops
+            return false;
+        }
+        HttpHead head = new HttpHead(urlString);
+        GeonetHttpRequestFactory requestFactory = ApplicationContextHolder.get().getBean(GeonetHttpRequestFactory.class);
+        ClientHttpResponse response = requestFactory.execute(head);
+        try {
+
+            if (response.getRawStatusCode() == HttpStatus.SC_BAD_REQUEST || response.getRawStatusCode() == HttpStatus.SC_METHOD_NOT_ALLOWED) {
+                // the website doesn't support HEAD requests. Need to do a GET...
+                response.close();
+                HttpGet get = new HttpGet(urlString);
+                response = requestFactory.execute(get);
+            }
+
+            if (response.getRawStatusCode() / 100 == 3 && response.getHeaders().containsKey("Location")) {
+                // follow the redirects
+                return validateURLImpl(response.getHeaders().getFirst("Location"), tryNumber + 1);
+            }
+
+            return response.getRawStatusCode() / 100 == 2;
+        } finally {
+            response.close();
+        }
     }
 
     public static String parseRegionIdFromXLink(String xlink) {

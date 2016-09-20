@@ -843,21 +843,25 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 }
             });
 
-            if(log.isDebugEnabled()) {
-                log.debug("   Get " + httpResponse.getStatusCode());
-            }
+			try {
+				if (log.isDebugEnabled()) {
+					log.debug("   Get " + httpResponse.getStatusCode());
+				}
 
-			if (httpResponse.getStatusCode() == HttpStatus.OK) {
-			    // Save image document to temp directory
-				// TODO: Check OGC exception
+				if (httpResponse.getStatusCode() == HttpStatus.OK) {
+					// Save image document to temp directory
+					// TODO: Check OGC exception
 
-                try (OutputStream fo = Files.newOutputStream(dir.resolve(filename));
-                     InputStream in = httpResponse.getBody()) {
-                    BinaryFile.copy(in, fo);
-                }
-            } else {
-				log.info (" Http error connecting");
-				return null;
+					try (OutputStream fo = Files.newOutputStream(dir.resolve(filename));
+						 InputStream in = httpResponse.getBody()) {
+						BinaryFile.copy(in, fo);
+					}
+				} else {
+					log.info(" Http error connecting");
+					return null;
+				}
+			} finally {
+				httpResponse.close();
 			}
 		} catch (IOException ioe){
 			log.info (" Unable to connect to '" + req.toString() + "'");

@@ -93,31 +93,26 @@ public class XmlRequest extends AbstractHttpRequest {
 	{
 
 
-        final ClientHttpResponse httpResponse = doExecute(httpMethod);
+        try (ClientHttpResponse httpResponse = doExecute(httpMethod)) {
 
-        if (httpResponse.getRawStatusCode() > 399) {
-            throw new BadServerResponseEx(httpResponse.getStatusText() + 
-                    " -- URI: " + httpMethod.getURI() +
-                    " -- Response Code: " + httpResponse.getRawStatusCode());
-        }
+			if (httpResponse.getRawStatusCode() > 399) {
+				throw new BadServerResponseEx(httpResponse.getStatusText() +
+						" -- URI: " + httpMethod.getURI() +
+						" -- Response Code: " + httpResponse.getRawStatusCode());
+			}
 
-        byte[] data = null;
+			byte[] data = null;
 
-		try {
-		    data = IOUtils.toByteArray(httpResponse.getBody());
-			return Xml.loadStream(new ByteArrayInputStream(data));
-		}
+			try {
+				data = IOUtils.toByteArray(httpResponse.getBody());
+				return Xml.loadStream(new ByteArrayInputStream(data));
+			} catch (JDOMException e) {
+				throw new BadXmlResponseEx("Response: '" + new String(data, "UTF8") + "' (from URI " + httpMethod.getURI() + ")");
+			} finally {
+				httpMethod.releaseConnection();
 
-		catch(JDOMException e)
-		{
-			throw new BadXmlResponseEx("Response: '" + new String(data, "UTF8") + "' (from URI " + httpMethod.getURI() + ")");
-		}
-
-		finally
-		{
-			httpMethod.releaseConnection();
-
-			sentData     = getSentData(httpMethod);
+				sentData = getSentData(httpMethod);
+			}
 		}
 	}
 
