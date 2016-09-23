@@ -102,7 +102,7 @@ public class ValidationService implements ApplicationContextAware {
 
         // index records
         DataManager dataMan = context.getBean(DataManager.class);
-        BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, this.report.get("records"));
+        BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, this.report.get("records"), serviceContext);
         r.process();
 
         return new StatusResponse(String.format(
