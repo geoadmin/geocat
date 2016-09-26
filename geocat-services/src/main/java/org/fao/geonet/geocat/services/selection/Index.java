@@ -93,7 +93,7 @@ public class Index implements Service {
                 }
 
                 index = ids.size();
-                new BatchOpsMetadataReindexer(dataManager, ids).process();
+                new BatchOpsMetadataReindexer(dataManager, ids, context).process();
             }
         }
 

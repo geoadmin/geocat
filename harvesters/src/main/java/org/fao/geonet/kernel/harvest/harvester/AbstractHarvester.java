@@ -25,6 +25,8 @@ package org.fao.geonet.kernel.harvest.harvester;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.DailyRollingFileAppender;
 import org.apache.log4j.PatternLayout;
@@ -75,6 +77,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.transaction.TransactionStatus;
 
 import java.io.File;
 import java.io.IOException;
@@ -558,9 +561,16 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
                 //--- proper harvesting
                 logger.info("Started harvesting from node : " + nodeName);
-                HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger);
+                final HarvestWithIndexProcessor h = new HarvestWithIndexProcessor(dataMan, logger);
                 // todo check (was: processwithfastindexing)
-                h.process();
+                TransactionManager.runInTransaction("Harvest", context.getApplicationContext(), TransactionManager.TransactionRequirement.CREATE_NEW,
+                        TransactionManager.CommitBehavior.ALWAYS_COMMIT, false, new TransactionTask<Void>() {
+                            @Override
+                            public Void doInTransaction(TransactionStatus transaction) throws Throwable {
+                                h.process();
+                                return null;
+                            }
+                        });
                 logger.info("Ended harvesting from node : " + nodeName);
 
                 if (getParams().isOneRunOnly()) {

@@ -20,10 +20,15 @@ package org.fao.geonet.services.metadata;
 
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.MoreExecutors;
+import jeeves.server.context.ServiceContext;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.util.ThreadUtils;
+import org.springframework.transaction.TransactionStatus;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -42,29 +47,42 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
         private final int ids[];
         private final int beginIndex, count;
         private final DataManager dm;
+        private final ServiceContext context;
 
-        BatchOpsCallable(int ids[], int beginIndex, int count, DataManager dm) {
+        BatchOpsCallable(int ids[], int beginIndex, int count, DataManager dm, @Nonnull ServiceContext context) {
             this.ids = ids;
             this.beginIndex = beginIndex;
             this.count = count;
             this.dm = dm;
+            this.context = context;
         }
 
         public Void call() throws Exception {
-            for (int i = beginIndex; i < beginIndex + count; i++) {
-                boolean doIndex = beginIndex + count - 1 == i;
-                dm.indexMetadata(ids[i] + "", doIndex);
-            }
+            TransactionManager.runInTransaction("BatchOpsMetadataReindexer", context.getApplicationContext(),
+                    TransactionManager.TransactionRequirement.CREATE_NEW,
+                    TransactionManager.CommitBehavior.ALWAYS_COMMIT, false, new TransactionTask<Void>() {
+                        @Override
+                        public Void doInTransaction(TransactionStatus transaction) throws Throwable {
+                            for (int i = beginIndex; i < beginIndex + count; i++) {
+                                boolean doIndex = beginIndex + count - 1 == i;
+                                dm.indexMetadata(ids[i] + "", doIndex);
+                            }
+                            return null;
+                        }
+                    });
 
             return null;
         }
     }
 
     Set<Integer> metadata;
+    private final ServiceContext context;
 
-    public BatchOpsMetadataReindexer(DataManager dm, Set<Integer> metadata) {
+
+    public BatchOpsMetadataReindexer(DataManager dm, Set<Integer> metadata, @Nonnull ServiceContext context) {
         super(dm);
         this.metadata = metadata;
+        this.context = context;
     }
 
     public void process() throws Exception {
@@ -93,7 +111,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
                 int start = index;
                 int count = Math.min(perThread, ids.length - start);
                 // create threads to process this chunk of ids
-                jobs.add(createCallable(ids, start, count));
+                jobs.add(createCallable(ids, start, count, context));
 
                 index += count;
             }
@@ -120,8 +138,8 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
         }
     }
 
-    protected BatchOpsCallable createCallable(int[] ids, int start, int count) {
-        return new BatchOpsCallable(ids, start, count, getDataManager());
+    protected BatchOpsCallable createCallable(int[] ids, int start, int count, @Nonnull ServiceContext context) {
+        return new BatchOpsCallable(ids, start, count, getDataManager(), context);
     }
 }
 
