@@ -102,7 +102,7 @@
             <tr class="banner noprint">
                 <td class="banner-nav">
                     <table><tr><td class="first">
-                        <a href="http://www.geocat.ch/internet/geocat/{/root/gui/strings/language}/home/news.html"><xsl:value-of select="/root/gui/strings/nav/news"/></a>
+                        <a href="https://www.geocat.admin.ch/{/root/gui/strings/language}/news.html"><xsl:value-of select="/root/gui/strings/nav/news"/></a>
                     </td><td>
                         <xsl:choose>
                             <xsl:when test="/root/gui/reqService='geocat' or /root/gui/reqService='user.login' or /root/gui/reqService='user.logout'">
@@ -124,9 +124,9 @@
                             </xsl:choose>
                         </xsl:if>
                     </td><td>
-                        <a href="http://www.geocat.ch/internet/geocat/{/root/gui/strings/language}/home/documentation.html"><xsl:value-of select="/root/gui/strings/nav/doc"/></a>
+                        <a href="https://www.geocat.admin.ch/{/root/gui/strings/language}/documentation.html"><xsl:value-of select="/root/gui/strings/nav/doc"/></a>
                     </td><td>
-                        <a href="http://www.geocat.ch/internet/geocat/{/root/gui/strings/language}/home/about.html"><xsl:value-of select="/root/gui/strings/nav/about"/></a>
+                        <a href="https://www.geocat.admin.ch/{/root/gui/strings/language}/about-geocat-ch.html"><xsl:value-of select="/root/gui/strings/nav/about"/></a>
                     </td></tr></table>
                 </td>
 				<xsl:choose>

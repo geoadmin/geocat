@@ -175,7 +175,7 @@
                         <nav id="nav">
                             <ul id="main-navigation">
                                 <li>
-                                    <a href="http://www.geocat.ch/internet/geocat/{/root/gui/strings/language}/home/news.html"><xsl:value-of select="/root/gui/strings/nav/news"/></a>
+                                    <a href="https://www.geocat.admin.ch/{/root/gui/strings/language}/news.html"><xsl:value-of select="/root/gui/strings/nav/news"/></a>
                                 </li>
                                 <li>
                                     <xsl:choose>
@@ -203,10 +203,10 @@
 
                                 </li>
                                 <li>
-                                    <a href="http://www.geocat.ch/internet/geocat/{/root/gui/strings/language}/home/documentation.html"><xsl:value-of select="/root/gui/strings/nav/doc"/></a>
+                                    <a href="https://www.geocat.admin.ch/{/root/gui/strings/language}/documentation.html"><xsl:value-of select="/root/gui/strings/nav/doc"/></a>
                                 </li>
                                 <li>
-                                    <a href="http://www.geocat.ch/internet/geocat/{/root/gui/strings/language}/home/about.html"><xsl:value-of select="/root/gui/strings/nav/about"/></a>
+                                    <a href="https://www.geocat.admin.ch/{/root/gui/strings/language}/about-geocat-ch.html"><xsl:value-of select="/root/gui/strings/nav/about"/></a>
                                 </li>
                             </ul>
                         </nav>
