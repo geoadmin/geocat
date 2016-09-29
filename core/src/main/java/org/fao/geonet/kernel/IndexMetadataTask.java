@@ -1,13 +1,10 @@
 package org.fao.geonet.kernel;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.transaction.TransactionManager;
-import jeeves.transaction.TransactionTask;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.utils.Log;
 import org.springframework.transaction.TransactionStatus;
 
@@ -77,44 +74,33 @@ final class IndexMetadataTask implements Runnable {
                 }
             }
 
+            DataManager dataManager = _context.getBean(DataManager.class);
             // servlet up so safe to index all metadata that needs indexing
+            for (Object metadataId : _metadataIds) {
+                this.indexed.incrementAndGet();
+                if (this.indexed.compareAndSet(500, 0)) {
+                    try {
+                        searchManager.forceIndexChanges();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
 
-            final DataManager dataManager = _context.getBean(DataManager.class);
-            TransactionManager.runInTransaction("IndexingTask", _context.getApplicationContext(),
-                    TransactionManager.TransactionRequirement.CREATE_NEW,
-                    TransactionManager.CommitBehavior.ALWAYS_COMMIT, false, new TransactionTask<Void>() {
-                        @Override
-                        public Void doInTransaction(TransactionStatus transaction) throws Throwable {
-                            try {
-                                for (Object metadataId : _metadataIds) {
-                                    IndexMetadataTask.this.indexed.incrementAndGet();
-                                    if (IndexMetadataTask.this.indexed.compareAndSet(500, 0)) {
-                                        try {
-                                            searchManager.forceIndexChanges();
-                                        } catch (IOException e) {
-                                            throw new RuntimeException(e);
-                                        }
-                                    }
-
-                                    try {
-                                        // GEOCAT
-                                        dataManager.indexMetadata(metadataId.toString(), false, true, false, true);
-                                        // END GEOCAT
-                                    } catch (Exception e) {
-                                        Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '" + metadataId + "': " + e.getMessage()
-                                                + "\n" + Util.getStackTrace(e));
-                                    }
-                                }
-                                if (_user != null && _context.getUserSession().getUserId() == null) {
-                                    _context.getUserSession().loginAs(_user);
-                                }
-                                searchManager.forceIndexChanges();
-                            } catch (IOException e) {
-                                Log.error(Geonet.INDEX_ENGINE, "Error occurred indexing metadata", e);
-                            }
-                            return null;
-                        }
-                    });
+                try {
+                    // GEOCAT
+                    dataManager.indexMetadata(metadataId.toString(), false, true, false, true);
+                    // END GEOCAT
+                } catch (Exception e) {
+                    Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '" + metadataId + "': " + e.getMessage()
+                                                   + "\n" + Util.getStackTrace(e));
+                }
+            }
+            if (_user != null && _context.getUserSession().getUserId() == null) {
+                _context.getUserSession().loginAs(_user);
+            }
+            searchManager.forceIndexChanges();
+        } catch (IOException e) {
+            Log.error(Geonet.INDEX_ENGINE, "Error occurred indexing metadata", e);
         } finally {
             _batchIndex.remove(this);
         }

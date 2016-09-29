@@ -98,7 +98,7 @@ public class BatchNewOwner {
 
         // -- reindex metadata
         context.info("Re-indexing metadata");
-        BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataManager, modified, context);
+        BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataManager, modified);
         r.process();
 
         return result;

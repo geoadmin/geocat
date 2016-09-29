@@ -137,7 +137,7 @@ public class Publish {
             }
         }
 
-        BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataManager, toIndex, serviceContext);
+        BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataManager, toIndex);
         r.process(testing || toIndex.size() < 5);
 
 
