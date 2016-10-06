@@ -318,6 +318,8 @@
     "filesystem-nodeleteHelp": "원본에서 삭제된 경우에도 카탈로그 레코드 보관",
     "filesystem-recurse": "하위폴더에서도 검색",
     "filesystem-recurseHelp": "True이면 하위폴더에서도 메타데이터를 검색합니다",
+    "filesystem-beforeScript": "Script to run before harvesting",
+    "filesystem-beforeScriptHelp": "Can be used to do a rsync or something similar. Runs nothing if empty.",
     "flyTo": "도착",
     "formatter": "포메터",
     "formatterFileUpdateError": "{{file}} 파일을 저장하는 중 오류가 발생했습니다",

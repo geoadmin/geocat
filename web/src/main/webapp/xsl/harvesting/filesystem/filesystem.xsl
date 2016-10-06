@@ -48,12 +48,17 @@
 				<td class="padded"><label for="filesystem.name"><xsl:value-of select="/root/gui/harvesting/name"/></label></td>
 				<td class="padded"><input id="filesystem.name" class="content" type="text" value="" size="200"/></td>
 			</tr>
-			
+
 			<tr>
 				<td class="padded"><label for="filesystem.directoryname"><xsl:value-of select="/root/gui/harvesting/directoryname"/></label></td>
 				<td class="padded"><input id="filesystem.directoryname" class="content" type="text" value="" size="300"/></td>
 			</tr>
-			
+
+			<tr>
+				<td class="padded"><label for="filesystem.beforeScript"><xsl:value-of select="/root/gui/harvesting/beforeScript"/></label></td>
+				<td class="padded"><input id="filesystem.beforeScript" class="content" type="text" value="" size="300"/></td>
+			</tr>
+
 			<tr>
 				<td class="padded"><label for="filesystem.recurse"><xsl:value-of select="/root/gui/harvesting/recurse"/></label></td>
 				<td class="padded"><input id="filesystem.recurse" type="checkbox" checked="on"/></td>

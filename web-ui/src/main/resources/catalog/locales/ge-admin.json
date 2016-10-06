@@ -325,6 +325,8 @@
   "filesystem-nodeleteHelp": "Keep catalog record even if deleted at source",
   "filesystem-recurse": "Also search in subfolders",
   "filesystem-recurseHelp": "If true then the subfolders will also be search for metadata",
+  "filesystem-beforeScript": "Script to run before harvesting",
+  "filesystem-beforeScriptHelp": "Can be used to do a rsync or something similar. Runs nothing if empty.",
   "flyTo": "Fly to",
   "formatter": "Formatter",
   "formatterFileUpdateError": "Error occured while saving {{file}}",

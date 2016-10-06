@@ -24,6 +24,7 @@ package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -49,6 +50,7 @@ import org.jdom.Element;
 import com.google.common.collect.Sets;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,26 +62,27 @@ import java.util.UUID;
 
 /**
  * Harvester for local filesystem.
- * 
+ *
  * @author heikki doeleman
  *
  */
 public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
-	
+
 	//FIXME Put on a different file?
 	private LocalFilesystemParams params;
 
-	
+
 	@Override
 	protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
 		LocalFilesystemParams lp = (LocalFilesystemParams) params;
         super.setParams(lp);
-        
+
         settingMan.add( "id:"+siteId, "icon", lp.icon);
 		settingMan.add( "id:"+siteId, "recurse", lp.recurse);
 		settingMan.add( "id:"+siteId, "directory", lp.directoryname);
 		settingMan.add( "id:"+siteId, "nodelete", lp.nodelete);
         settingMan.add( "id:"+siteId, "checkFileLastModifiedForUpdate", lp.checkFileLastModifiedForUpdate);
+		settingMan.add( "id:"+siteId, "beforeScript", lp.beforeScript);
 	}
 
 	@Override
@@ -89,17 +92,17 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         //--- retrieve/initialize information
 		params.create(node);
-		
+
 		//--- force the creation of a new uuid
 		params.setUuid(UUID.randomUUID().toString());
-		
+
 		String id = settingMan.add( "harvesting", "node", getType());
 		storeNode( params, "id:"+id);
 
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
-        	
+
 		return id;
 	}
 
@@ -152,7 +155,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
 		// indexes the harvested MDs
 		dataMan.batchIndexInThreadPool(context, idsForHarvestingResult);
-		
+
         log.debug("End of alignment for : " + params.getName());
 		return result;
 	}
@@ -188,7 +191,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 	}
 	}
 
-	
+
 	/**
 	 * Inserts a metadata into the database. If index param is true, Lucene index is updated after insertion,
 	 * else the indexation step is skipped
@@ -205,12 +208,12 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
             String createDate, BaseAligner aligner) throws Exception {
 		return addMetadata(xml, uuid, schema, localGroups, localCateg, createDate, aligner, true);
 	}
-	
+
     String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg,
                        String createDate, BaseAligner aligner, boolean index) throws Exception {
 		log.debug("  - Adding metadata with remote uuid: "+ uuid);
 
-		
+
         //
         // insert metadata
         //
@@ -247,6 +250,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 	@Override
     public void doHarvest(Logger l) throws Exception {
 		log.debug("LocalFilesystem doHarvest: top directory is " + params.directoryname + ", recurse is " + params.recurse);
+		runBeforeScript();
 		Path directory = IO.toPath(params.directoryname);
 		this.result = align(directory);
 	}
@@ -278,10 +282,25 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.getUuid());
-		
+
 		params = copy;
         super.setParams(params);
 
     }
 
+    private void runBeforeScript() throws IOException, InterruptedException {
+		if (StringUtils.isEmpty(params.beforeScript)) {
+			return;  // Nothing to run
+		}
+		log.info("Running the before script: " + params.beforeScript);
+		Process process = new ProcessBuilder(params.beforeScript).
+				redirectError(ProcessBuilder.Redirect.INHERIT).
+				redirectOutput(ProcessBuilder.Redirect.INHERIT).
+				start();
+		int result = process.waitFor();
+		if ( result != 0 ) {
+			log.warning("The beforeScript failed with exit value=" + Integer.toString(result));
+			throw new RuntimeException("The beforeScript returned an error: " + Integer.toString(result));
+		}
+	}
 }

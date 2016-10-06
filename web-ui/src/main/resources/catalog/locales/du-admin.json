@@ -318,6 +318,8 @@
     "filesystem-nodeleteHelp": "Behoud catalogusbestand ook al is deze verwijderd bij de bron",
     "filesystem-recurse": "Zoek ook in submappen",
     "filesystem-recurseHelp": "Indien aangevinkt, dan worden ook de onderliggende mappen doorzocht op metadata",
+    "filesystem-beforeScript": "Script to run before harvesting",
+    "filesystem-beforeScriptHelp": "Can be used to do a rsync or something similar. Runs nothing if empty.",
     "flyTo": "Vlieg naar",
     "formatter": "Formatter",
     "formatterFileUpdateError": "Fout opgetreden tijdens het opslaan van {{FILE}}",

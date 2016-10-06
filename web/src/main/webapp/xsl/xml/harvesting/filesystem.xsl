@@ -16,6 +16,7 @@
 		<nodelete><xsl:value-of select="nodelete/value" /></nodelete>
 		<checkFileLastModifiedForUpdate><xsl:value-of select="checkFileLastModifiedForUpdate/value" /></checkFileLastModifiedForUpdate>
 		<icon><xsl:value-of select="icon/value" /></icon>
+		<beforeScript><xsl:value-of select="beforeScript/value" /></beforeScript>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
