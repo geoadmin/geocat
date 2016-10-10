@@ -3178,6 +3178,9 @@
     <label>Räumliche Darstellungsart</label>
     <description>Räumliche Darstellungsart</description>
   </element>
+  <element name="gmd:MD_MaintenanceFrequencyCode">
+    <label>Überarbeitungsintervall</label>
+  </element>
   <element name="gmd:CI_RoleCode">
     <label>Funktion</label>
     <description>Funktion</description>
