@@ -318,6 +318,8 @@
     "filesystem-nodeleteHelp": "Manatener la entrada en el catálogo incluso si se elimina en la fuente",
     "filesystem-recurse": "Buscar también en subcarpetas",
     "filesystem-recurseHelp": "Si se habilita, los metadatos también se buscarán en las subcarpetas.",
+    "filesystem-beforeScript": "Script to run before harvesting",
+    "filesystem-beforeScriptHelp": "Can be used to do a rsync or something similar. Runs nothing if empty.",
     "flyTo": "Ir a",
     "formatter": "Formateador",
     "formatterFileUpdateError": "Ocurrió un error salvando {{file}}",

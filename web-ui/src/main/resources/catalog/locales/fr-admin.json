@@ -325,6 +325,8 @@
   "filesystem-nodeleteHelp": "Conserver les fiches dans le catalogue même si elles ont été supprimées dans le répertoire",
   "filesystem-recurse": "Parcourrir les sous-répertoires",
   "filesystem-recurseHelp": "Si sélectionné, les fiches des sous répertoires seront également recherchées",
+  "filesystem-beforeScript": "Script à exécuter avant moissonage",
+  "filesystem-beforeScriptHelp": "Peut être utiliser pour exécuter un rsync ou quelque chose d'équivalent. N'exécute rien si vide.",
   "flyTo": "Se déplacer vers",
   "formatter": "Mise en page",
   "formatterFileUpdateError": "Erreur lors de la sauvegarde du fichier {{file}}",
