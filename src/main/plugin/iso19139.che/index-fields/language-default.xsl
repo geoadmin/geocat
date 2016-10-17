@@ -261,8 +261,8 @@
             <!-- === maintenance Info (AAP) ===             -->
             <xsl:choose>
                 <xsl:when
-                    test="*/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[text()='AAP-Bund']|
-                    */gmd:MD_Keywords/gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[text()='AAP-Bund']">
+                    test="*/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[text()='Aufbewahrungs- und Archivierungsplanung AAP']|
+                    */gmd:MD_Keywords/gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[text()='Aufbewahrungs- und Archivierungsplanung AAP']">
                     <Field name="AAP" string="true" store="true" index="true" />
                 </xsl:when>
                 <xsl:otherwise>
