@@ -29,6 +29,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+    
 	<!-- ........................................................................ -->
 	<xs:element name="MD_MaintenanceInformation" type="gmd:MD_MaintenanceInformation_Type"/>
 	<!-- ........................................................................ -->

@@ -10,3 +10,5 @@ handlers.add name: 'gmd:topicCategory', select: 'gmd:topicCategory', group: true
     def listItems = elems.findAll{!it.text().isEmpty() && !iso19139TopicCategories.contains(it.text())}.collect {f.codelistValueLabel("MD_TopicCategoryCode", it.text())};
     handlers.fileResult("html/list-entry.html", [label:f.nodeLabel(elems[0]), listItems: listItems])
 }
+
+handlers.skip name: 'skip che:CHE_MD_Appraisal_AAP', select: { it -> it.name() == 'che:CHE_MD_Appraisal_AAP' }, { it.children() }
