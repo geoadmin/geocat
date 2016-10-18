@@ -655,4 +655,39 @@
         <description>Characterization of a Dataset</description>
         <help>Classification of the dataset in a larger group of similar datasets with the help of the enclosed codelist</help>
     </element>
+
+    <!-- SB-422: AAP -->
+    <element name="che:appraisal">
+        <label>Bewertung AAP</label>
+        <description>Bewertung AAP</description>    
+    </element>
+    <element name="che:durationOfConservation">
+        <label>Aufbewahrungsdauer NV in Jahren</label>
+        <description>Aufbewahrungsdauer NV in Jahren</description>
+    </element>
+    <element name="che:commentOnDurationOfConservation">
+        <label>Bemerkung zur Aufbewahrungsdauer</label>
+        <description>Bemerkung zur Aufbewahrungsdauer</description>
+    </element>
+    <element name="che:appraisalOfArchivalValue">
+        <label>Bewertung Archivwürdigkeit</label>
+        <description>Bewertung Archivwürdigkeit</description>
+    </element>
+    <element name="che:CHE_AppraisalOfArchivalValueCode">
+        <label>Bewertung Archivwürdigkeit</label>
+        <description>Bewertung Archivwürdigkeit</description>
+    </element>    
+    <element name="che:reasonForArchivingValue">
+        <label>Begründung Archivwürdigkeit</label>
+        <description>Begründung Archivwürdigkeit</description>
+    </element>
+    <element name="che:CHE_ReasonForArchivingValueCode">
+        <label>Begründung Archivwürdigkeit</label>
+        <description>Begründung Archivwürdigkeit</description>
+    </element>
+    <element name="che:commentOnArchivalValue">
+        <label>Bemerkung zur Archivwürdigkeit</label>
+        <description>Bemerkung zur Archivwürdigkeit</description>
+    </element>
+    
 </labels>

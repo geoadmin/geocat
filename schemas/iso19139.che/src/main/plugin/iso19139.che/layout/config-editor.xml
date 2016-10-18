@@ -166,6 +166,7 @@
     <name>gmd:geographicBox</name>
     <name>gmd:EX_TemporalExtent</name>
     <name>gmd:MD_Distributor</name>
+    <name>che:appraisal</name>
     <name>srv:containsOperations</name>
     <name>srv:SV_CoupledResource</name>
     <name>gmd:metadataConstraints</name>
@@ -281,6 +282,7 @@
       <name ancestor="gmd:contactInfo">gmd:country</name>
       <name ancestor="gmd:DQ_DomainConsistency">gmd:explanation</name>
       <name>che:code</name>
+      <name>che:durationOfConservation</name>
     </exclude>
   </multilingualFields>
 
@@ -350,6 +352,9 @@
         <for name="gmd:topicCategory"/>
         <for name="gmd:transferOptions"/>
         <for name="gmd:date"/>
+         <!--<for name="che:appraisal"/>
+         <for name="che:commentOnDurationOfConservation"/>
+         <for name="che:commentOnArchivalValue"/>-->
         <for name="che:attribute"/>
       </flatModeExceptions>
 

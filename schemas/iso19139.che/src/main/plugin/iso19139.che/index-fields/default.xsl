@@ -429,8 +429,6 @@
             </xsl:for-each>
         </xsl:for-each>
 
-
-
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- === Service stuff ===  -->
         <!-- Service type           -->

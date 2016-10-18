@@ -621,4 +621,156 @@
 
   </codelist>
 
+    <!-- Geocat override: asked on behalf of SB-422 -->
+    <codelist name="gmd:CI_RoleCode">
+        <entry>
+            <code>resourceProvider</code>
+            <label>Resource provider</label>
+            <description>Party that supplies the resource</description>
+        </entry>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <entry>
+            <code>custodian</code>
+            <label>Custodian</label>
+            <description>Party that accepts accountability and
+                responsability for the data and ensures
+                appropriate care
+                and maintenance of the resource</description>
+        </entry>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <entry>
+            <code>owner</code>
+            <label>Owner</label>
+            <description>Party that owns the resource</description>
+        </entry>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <entry>
+            <code>user</code>
+            <label>User</label>
+            <description>Party who uses the resource</description>
+        </entry>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <entry>
+            <code>distributor</code>
+            <label>Distributor</label>
+            <description>Party who distributes the resource</description>
+        </entry>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <entry>
+            <code>originator</code>
+            <label>Originator</label>
+            <description>Party who created the resource</description>
+        </entry>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <entry>
+            <code>pointOfContact</code>
+            <label>Point of contact</label>
+            <description>Party who can be contacted for acquiring
+                knowledge about or acquisition of the
+                resource</description>
+        </entry>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <entry>
+            <code>principalInvestigator</code>
+            <label>Principal investigator</label>
+            <description>Key party responsible for gathering information
+                and conducting
+                research</description>
+        </entry>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <entry>
+            <code>processor</code>
+            <label>Processor</label>
+            <description>Party wha has processed the data in a manner
+                such that the resource has been
+                modified</description>
+        </entry>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <entry>
+            <code>publisher</code>
+            <label>Publisher</label>
+            <description>Party who published the resource</description>
+        </entry>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <entry>
+            <code>author</code>
+            <label>Author</label>
+            <description>Party who authored the resource</description>
+        </entry>
+        <entry>
+            <code>editor</code>
+            <label>Editor</label>
+            <description></description>
+        </entry>
+        <entry>
+            <code>partner</code>
+            <label>Partner</label>
+            <description></description>
+        </entry>
+        <entry>
+            <code>specialistAuthority</code>
+            <label>Specialist authority</label>
+            <description>Specialist authority</description>
+        </entry>
+    </codelist>
+    <codelist name="che:CHE_AppraisalOfArchivalValueCode">
+        <entry>
+            <code>A</code>
+            <label>of archival value</label>
+            <description>of archival value</description>
+        </entry>
+        <entry>
+            <code>N</code>
+            <label>no archival value</label>
+            <description>no archival value</description>
+        </entry>
+        <entry>
+            <code>S</code>
+            <label>sampling / selection</label>
+            <description>sampling / selection</description>
+        </entry>
+    </codelist>
+    <codelist name="che:CHE_ReasonForArchivingValueCode">
+        <entry>
+            <code>legalRelevance</code>
+            <label>Legal relevance</label>
+            <description>Legal relevance</description>
+        </entry>
+        <entry>
+            <code>guaranteeOfLegalCertainty</code>
+            <label>Guarantee of legal certainty</label>
+            <description>Guarantee of legal certainty</description>
+        </entry>
+        <entry>
+            <code>evidenceOfBusinessPractice</code>
+            <label>Evidence of business practice</label>
+            <description>Evidence of business practice</description>
+        </entry>
+        <entry>
+            <code>benefitsForResearch</code>
+            <label>Benefits for research</label>
+            <description>Benefits for research</description>
+        </entry>
+        <entry>
+            <code>contemporaryInterest</code>
+            <label>Contemporary interest</label>
+            <description>Contemporary interest</description>
+        </entry>
+        <entry>
+            <code>sensitivity</code>
+            <label>Sensitivity</label>
+            <description>Sensitivity</description>
+        </entry>
+        <entry>
+            <code>developmentsProgression</code>
+            <label>Developments / Progression</label>
+            <description>Developments / Progression</description>
+        </entry>
+        <entry>
+            <code>definingPowers</code>
+            <label>Defining powers</label>
+            <description>Defining powers</description>
+        </entry>
+    </codelist>  
+
 </codelists>
