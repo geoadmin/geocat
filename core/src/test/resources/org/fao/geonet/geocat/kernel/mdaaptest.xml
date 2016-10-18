@@ -7,10 +7,10 @@
     <gco:CharacterString>fre</gco:CharacterString>
   </gmd:language>
   <gmd:characterSet xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xalan="http://xml.apache.org/xalan">
-    <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+    <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8"/>
   </gmd:characterSet>
   <gmd:hierarchyLevel xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xalan="http://xml.apache.org/xalan">
-    <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" />
+    <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset"/>
   </gmd:hierarchyLevel>
   <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed">
     <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
@@ -78,7 +78,7 @@
         </gmd:CI_Contact>
       </gmd:contactInfo>
       <gmd:role>
-        <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="pointOfContact" />
+        <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="pointOfContact"/>
       </gmd:role>
       <che:individualFirstName>
         <gco:CharacterString>Michel</gco:CharacterString>
@@ -105,40 +105,40 @@
   <gmd:locale xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xalan="http://xml.apache.org/xalan">
     <gmd:PT_Locale id="FR">
       <gmd:languageCode>
-        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre" />
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre"/>
       </gmd:languageCode>
       <gmd:characterEncoding>
-        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8"/>
       </gmd:characterEncoding>
     </gmd:PT_Locale>
   </gmd:locale>
   <gmd:locale xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xalan="http://xml.apache.org/xalan">
     <gmd:PT_Locale id="DE">
       <gmd:languageCode>
-        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger" />
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger"/>
       </gmd:languageCode>
       <gmd:characterEncoding>
-        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8"/>
       </gmd:characterEncoding>
     </gmd:PT_Locale>
   </gmd:locale>
   <gmd:locale xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xalan="http://xml.apache.org/xalan">
     <gmd:PT_Locale id="IT">
       <gmd:languageCode>
-        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ita" />
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ita"/>
       </gmd:languageCode>
       <gmd:characterEncoding>
-        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8"/>
       </gmd:characterEncoding>
     </gmd:PT_Locale>
   </gmd:locale>
   <gmd:locale xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xalan="http://xml.apache.org/xalan">
     <gmd:PT_Locale id="EN">
       <gmd:languageCode>
-        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" />
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
       </gmd:languageCode>
       <gmd:characterEncoding>
-        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8"/>
       </gmd:characterEncoding>
     </gmd:PT_Locale>
   </gmd:locale>
@@ -168,12 +168,12 @@
                 <gco:Date>2011-09-01</gco:Date>
               </gmd:date>
               <gmd:dateType>
-                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation" />
+                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation"/>
               </gmd:dateType>
             </gmd:CI_Date>
           </gmd:date>
           <gmd:presentationForm>
-            <gmd:CI_PresentationFormCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_PresentationFormCode" codeListValue="mapDigital" />
+            <gmd:CI_PresentationFormCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_PresentationFormCode" codeListValue="mapDigital"/>
           </gmd:presentationForm>
         </gmd:CI_Citation>
       </gmd:citation>
@@ -203,8 +203,31 @@
           </gmd:textGroup>
         </gmd:PT_FreeText>
       </gmd:abstract>
+      <gmd:resourceMaintenance>
+        <che:CHE_MD_MaintenanceInformation gco:isoType="gmd:MD_MaintenanceInformation">
+          <che:appraisal>
+            <che:CHE_MD_Appraisal_AAP>
+              <che:durationOfConservation>
+                <gco:Integer>3</gco:Integer>
+              </che:durationOfConservation>
+              <che:commentOnDurationOfConservation>
+                <gco:CharacterString>Sample comment on the duration of conservation</gco:CharacterString>
+              </che:commentOnDurationOfConservation>
+              <che:appraisalOfArchivalValue>
+                <che:CHE_AppraisalOfArchivalValueCode codeList="#CHE_AppraisalOfArchivalValueCode" codeListValue="S"/>
+              </che:appraisalOfArchivalValue>
+              <che:reasonForArchivingValue>
+                <che:CHE_ReasonForArchivingValueCode codeList="#CHE_ReasonForArchivingValueCode" codeListValue="definingPowers"/>
+              </che:reasonForArchivingValue>
+              <che:commentOnArchivalValue>
+                <gco:CharacterString>Sample comment on the archival value</gco:CharacterString>
+              </che:commentOnArchivalValue>
+            </che:CHE_MD_Appraisal_AAP>
+          </che:appraisal>
+        </che:CHE_MD_MaintenanceInformation>
+      </gmd:resourceMaintenance>
       <gmd:status>
-        <gmd:MD_ProgressCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ProgressCode" codeListValue="onGoing" />
+        <gmd:MD_ProgressCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ProgressCode" codeListValue="onGoing"/>
       </gmd:status>
       <gmd:pointOfContact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed">
         <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
@@ -272,7 +295,7 @@
             </gmd:CI_Contact>
           </gmd:contactInfo>
           <gmd:role>
-            <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="owner" />
+            <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="owner"/>
           </gmd:role>
           <che:individualFirstName>
             <gco:CharacterString>Michel</gco:CharacterString>
@@ -289,7 +312,7 @@
             </gmd:PT_FreeText>
           </che:organisationAcronym>
         </che:CHE_CI_ResponsibleParty>
-               <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
+        <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
           <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>Service des forêts et de la faune</gco:CharacterString>
             <gmd:PT_FreeText>
@@ -354,7 +377,7 @@
             </gmd:CI_Contact>
           </gmd:contactInfo>
           <gmd:role>
-            <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="specialistAuthority" />
+            <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="specialistAuthority"/>
           </gmd:role>
           <che:individualFirstName>
             <gco:CharacterString>Pierre</gco:CharacterString>
@@ -375,7 +398,7 @@
       <gmd:resourceMaintenance>
         <che:CHE_MD_MaintenanceInformation gco:isoType="gmd:MD_MaintenanceInformation">
           <gmd:maintenanceAndUpdateFrequency>
-            <gmd:MD_MaintenanceFrequencyCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="userDefined" />
+            <gmd:MD_MaintenanceFrequencyCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="userDefined"/>
           </gmd:maintenanceAndUpdateFrequency>
         </che:CHE_MD_MaintenanceInformation>
       </gmd:resourceMaintenance>
@@ -407,7 +430,7 @@
                 <gmd:LocalisedCharacterString locale="#FR">forêt</gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#RM" />
+                <gmd:LocalisedCharacterString locale="#RM"/>
               </gmd:textGroup>
             </gmd:PT_FreeText>
           </gmd:keyword>
@@ -427,12 +450,12 @@
                 <gmd:LocalisedCharacterString locale="#FR">intervention au niveau de la nature et des paysages</gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#RM" />
+                <gmd:LocalisedCharacterString locale="#RM"/>
               </gmd:textGroup>
             </gmd:PT_FreeText>
           </gmd:keyword>
           <gmd:type>
-            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="_none_" />
+            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="_none_"/>
           </gmd:type>
           <gmd:thesaurusName>
             <gmd:CI_Citation>
@@ -445,7 +468,7 @@
                     <gco:Date>2015-11-16</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
                   </gmd:dateType>
                 </gmd:CI_Date>
               </gmd:date>
@@ -478,12 +501,12 @@
                 <gmd:LocalisedCharacterString locale="#FR">Lisière</gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#RM" />
+                <gmd:LocalisedCharacterString locale="#RM"/>
               </gmd:textGroup>
             </gmd:PT_FreeText>
           </gmd:keyword>
           <gmd:type>
-            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="_none_" />
+            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="_none_"/>
           </gmd:type>
           <gmd:thesaurusName>
             <gmd:CI_Citation>
@@ -496,7 +519,7 @@
                     <gco:Date>2016-02-02</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
                   </gmd:dateType>
                 </gmd:CI_Date>
               </gmd:date>
@@ -524,7 +547,7 @@
         </che:CHE_MD_LegalConstraints>
       </gmd:resourceConstraints>
       <gmd:spatialRepresentationType>
-        <gmd:MD_SpatialRepresentationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode" codeListValue="vector" />
+        <gmd:MD_SpatialRepresentationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode" codeListValue="vector"/>
       </gmd:spatialRepresentationType>
       <gmd:spatialResolution>
         <gmd:MD_Resolution>
@@ -544,13 +567,13 @@
         <gco:CharacterString>fre</gco:CharacterString>
       </gmd:language>
       <gmd:characterSet>
-        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8"/>
       </gmd:characterSet>
-      <gmd:topicCategory />
-      <gmd:topicCategory />
-      <gmd:topicCategory />
-      <gmd:topicCategory />
-      <gmd:topicCategory />
+      <gmd:topicCategory/>
+      <gmd:topicCategory/>
+      <gmd:topicCategory/>
+      <gmd:topicCategory/>
+      <gmd:topicCategory/>
       <gmd:topicCategory>
         <gmd:MD_TopicCategoryCode>environment</gmd:MD_TopicCategoryCode>
       </gmd:topicCategory>
@@ -696,13 +719,13 @@
         </gmd:EX_Extent>
       </gmd:extent>
       <che:basicGeodataID>
-          <gco:CharacterString>101.2-TG</gco:CharacterString>
+        <gco:CharacterString>101.2-TG</gco:CharacterString>
       </che:basicGeodataID>
       <che:basicGeodataIDType>
-          <che:basicGeodataIDTypeCode codeList="#basicGeodataIDTypeCode" codeListValue="federal" />
+        <che:basicGeodataIDTypeCode codeList="#basicGeodataIDTypeCode" codeListValue="federal"/>
       </che:basicGeodataIDType>
       <che:geodataType>
-          <che:MD_geodataTypeCode codeList="#MD_geodataTypeCode" codeListValue="ReferenceGeodata"/>
+        <che:MD_geodataTypeCode codeList="#MD_geodataTypeCode" codeListValue="ReferenceGeodata"/>
       </che:geodataType>
     </che:CHE_MD_DataIdentification>
   </gmd:identificationInfo>
@@ -741,12 +764,12 @@
                 <gco:Date>2012-05-10</gco:Date>
               </gmd:date>
               <gmd:dateType>
-                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="creation" />
+                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="creation"/>
               </gmd:dateType>
             </gmd:CI_Date>
           </gmd:date>
           <gmd:presentationForm>
-            <gmd:CI_PresentationFormCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_PresentationFormCode" codeListValue="mapDigital" />
+            <gmd:CI_PresentationFormCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_PresentationFormCode" codeListValue="mapDigital"/>
           </gmd:presentationForm>
         </gmd:CI_Citation>
       </gmd:featureCatalogueCitation>
@@ -755,7 +778,7 @@
           <che:name>
             <gco:CharacterString>LISIERES_PRIORITAIRES</gco:CharacterString>
           </che:name>
-          <che:description />
+          <che:description/>
           <che:attribute>
             <che:name>
               <gco:CharacterString>REMARQUE</gco:CharacterString>
@@ -763,7 +786,7 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>Remarque</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
           <che:attribute>
             <che:name>
@@ -772,7 +795,7 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>Longueur en m.</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
           <che:attribute>
             <che:name>
@@ -781,7 +804,7 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>Type de la route route bordant la lisière (si existante)</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
           <che:attribute>
             <che:name>
@@ -790,7 +813,7 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>Importance du corridor à faune (si existant)</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
           <che:attribute>
             <che:name>
@@ -799,7 +822,7 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>Présence / absence de site propice aux reptiles</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
           <che:attribute>
             <che:name>
@@ -808,7 +831,7 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>Présence / absence de prairies et pâturages secs d'importance nationale</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
           <che:attribute>
             <che:name>
@@ -817,7 +840,7 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>Présence / absence de bas-marais d'importance nationale</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
           <che:attribute>
             <che:name>
@@ -826,7 +849,7 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>Présence / absence de haut-marais d'importance nationale</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
           <che:attribute>
             <che:name>
@@ -835,7 +858,7 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>Présence / absence de site marécageux d'importance nationale</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
           <che:attribute>
             <che:name>
@@ -844,7 +867,7 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>Présence / absence de site de reproduction des amphibiens d'importance nationale</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
           <che:attribute>
             <che:name>
@@ -853,7 +876,7 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>Présence / absence de prairie maigre du canton de Fribourg</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
           <che:attribute>
             <che:name>
@@ -862,7 +885,7 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>Présence / absence de haut-marais d'importance cantonale</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
           <che:attribute>
             <che:name>
@@ -871,7 +894,7 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>Présence / absence de prairie et pâturage sec d'importance nationale</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
           <che:attribute>
             <che:name>
@@ -880,7 +903,7 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>Type de priorité 1.Très haute: si les 3 types d'objets d'importance biologique sont attenant à cette lisière / 2.Haute: si 2 types d'objets d'importance biologique sont attenant à cette lisière / 3.Basse: si 1 seul type d'objets d'importance biologique est attenant à cette lisière / 4.Secondaire: si la lisière est proche d'une route de classe 4, d'une gravière ou se situe à plus de 1400m d'altitude et cela indépendamment du nombre d'objets d'importance biologique attenant à cette lisière.</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
           <che:attribute>
             <che:name>
@@ -889,7 +912,7 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>Numéro de l'arrondissement forestier</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
           <che:attribute>
             <che:name>
@@ -898,7 +921,7 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>Présence / absence d'une gravière</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
           <che:attribute>
             <che:name>
@@ -907,7 +930,7 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>&lt; ou &gt; à 1400 m.</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
           <che:attribute>
             <che:name>
@@ -916,12 +939,12 @@
             <che:description xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>Numéro de référence</gco:CharacterString>
             </che:description>
-            <che:namedType />
+            <che:namedType/>
           </che:attribute>
         </che:CHE_MD_Class>
       </che:class>
       <che:modelType>
-        <che:CHE_MD_modelTypeCode codeListValue="FeatureDescription" codeList="#CHE_MD_modelTypeCode" />
+        <che:CHE_MD_modelTypeCode codeListValue="FeatureDescription" codeList="#CHE_MD_modelTypeCode"/>
       </che:modelType>
     </che:CHE_MD_FeatureCatalogueDescription>
   </gmd:contentInfo>
@@ -944,7 +967,7 @@
       <gmd:scope>
         <gmd:DQ_Scope>
           <gmd:level>
-            <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" />
+            <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset"/>
           </gmd:level>
         </gmd:DQ_Scope>
       </gmd:scope>
@@ -965,28 +988,8 @@
   <gmd:metadataMaintenance xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive" xmlns:xalan="http://xml.apache.org/xalan">
     <che:CHE_MD_MaintenanceInformation gco:isoType="gmd:MD_MaintenanceInformation">
       <gmd:maintenanceAndUpdateFrequency>
-        <gmd:MD_MaintenanceFrequencyCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="asNeeded" />
+        <gmd:MD_MaintenanceFrequencyCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="asNeeded"/>
       </gmd:maintenanceAndUpdateFrequency>
-      <che:appraisal>
-      <che:CHE_MD_Appraisal_AAP>
-         <che:durationOfConservation>
-            <gco:Integer>3</gco:Integer>
-         </che:durationOfConservation>
-         <che:commentOnDurationOfConservation>
-            <gco:CharacterString>Sample comment on the duration of conservation</gco:CharacterString>
-         </che:commentOnDurationOfConservation>
-         <che:appraisalOfArchivalValue>
-            <che:CHE_AppraisalOfArchivalValueCode codeList="#CHE_AppraisalOfArchivalValueCode" codeListValue="S"/>
-         </che:appraisalOfArchivalValue>
-         <che:reasonForArchivingValue>
-            <che:CHE_ReasonForArchivingValueCode codeList="#CHE_ReasonForArchivingValueCode" codeListValue="definingPowers"/>
-         </che:reasonForArchivingValue>
-         <che:commentOnArchivalValue>
-            <gco:CharacterString>Sample comment on the archival value</gco:CharacterString>
-         </che:commentOnArchivalValue>
-      </che:CHE_MD_Appraisal_AAP>
-    </che:appraisal>
     </che:CHE_MD_MaintenanceInformation>
   </gmd:metadataMaintenance>
 </che:CHE_MD_Metadata>
-

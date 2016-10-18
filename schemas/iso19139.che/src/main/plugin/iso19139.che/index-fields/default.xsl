@@ -430,18 +430,6 @@
         </xsl:for-each>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <!-- === maintenance Info (AAP) === -->
-        
-        <xsl:choose>
-          <xsl:when test="gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[text() = 'AAP-Bund']">
-                <Field name="AAP" string="true" store="true" index="true"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <Field name="AAP" string="false" store="true" index="true"/>
-            </xsl:otherwise>
-        </xsl:choose>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- === Service stuff ===  -->
         <!-- Service type           -->
         <xsl:for-each select="gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName|

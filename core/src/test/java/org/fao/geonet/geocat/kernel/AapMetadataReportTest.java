@@ -1,19 +1,16 @@
 package org.fao.geonet.geocat.kernel;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assume.assumeNotNull;
 import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 
@@ -21,17 +18,10 @@ public class AapMetadataReportTest {
 
     private final AapMetadataReport amr = new AapMetadataReport();
 
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {}
-    
     @Test
     public void extractAapInfoTest() throws Exception {
         URL rawMdUrl = this.getClass().getResource("mdaaptest.xml");
-        assumeTrue(rawMdUrl != null);
+        assumeNotNull(rawMdUrl);
         File rawMdF = new File(rawMdUrl.toURI());
         assumeTrue(rawMdF.exists());
 
@@ -40,7 +30,7 @@ public class AapMetadataReportTest {
         tested.setData(rawMd);
 
         String el = Xml.getString(amr.extractAapInfo(tested));
-
+        System.out.println(el);
         assertTrue("Unexpected title",
                    el.contains("<title>Lisières forestières prioritaires</title>"));
         assertTrue("Unexpected geodata ID",
@@ -50,11 +40,11 @@ public class AapMetadataReportTest {
         assertTrue("Unexpected geodatatype",
                 el.contains("<geodatatype>Ja</geodatatype>"));
         assertTrue("Unexpected owner",
-                el.contains("<owner>SFF</owner>"));
+                el.contains("<owner>Service des forêts et de la faune</owner>"));
         assertTrue("Unexpected owner",
         el.contains("<specialistAuthority>Camptocamp</specialistAuthority>"));
         assertTrue("Unexpected update frequency",
-                   el.contains("<updateFrequency>userDefined</updateFrequency>"));
+                   el.contains("<updateFrequency>asNeeded</updateFrequency>"));
         assertTrue("Unexpected duration of conservation",
                    el.contains("<durationOfConservation>3</durationOfConservation>"));
         assertTrue("Unexpected comment on duration",
@@ -72,7 +62,7 @@ public class AapMetadataReportTest {
     @Test
     public void extractAapInfoOnNonAapMdTest() throws Exception {
         URL rawMdUrl = this.getClass().getResource("mdaaptest-noaap.xml");
-        assumeTrue(rawMdUrl != null);
+        assumeNotNull(rawMdUrl);
         File rawMdF = new File(rawMdUrl.toURI());
         assumeTrue(rawMdF.exists());
 
@@ -93,7 +83,7 @@ public class AapMetadataReportTest {
     @Test
     public void extractAapInfoFromCustomerProvidedMd() throws Exception {
         URL rawMdUrl = this.getClass().getResource("aap.xml");
-        assumeTrue(rawMdUrl != null);
+        assumeNotNull(rawMdUrl);
         File rawMdF = new File(rawMdUrl.toURI());
         assumeTrue(rawMdF.exists());
         
@@ -103,22 +93,34 @@ public class AapMetadataReportTest {
         tested.setData(rawMd);
 
         
-        String el = Xml.getString(amr.extractAapInfo(tested));  
-        System.out.println(el);
+        String el = Xml.getString(amr.extractAapInfo(tested));
+        assertFalse("Unexpected content element extracted from aap.xml",
+                el.contains("<title />")                  &&
+                el.contains("<identifier />")             &&
+                el.contains("<uuid />")                   &&
+                el.contains("<geodatatype />")            &&
+                el.contains("<owner />")                  &&
+                el.contains("<specialistAuthority />")    &&
+                el.contains("<updateFrequency />")        &&
+                el.contains("<durationOfConservation />") &&
+                el.contains("<commentOnDuration />")      &&
+                el.contains("<commentOnArchival />")      &&
+                el.contains("<appraisalOfArchival />")    &&
+                el.contains("<reasonForArchiving />"));
     }
     
     @Test
     public void testXpathIndexFieldAap() throws Exception {
         // mdaaptest-noaap.xml for not containing kw, aap.xml for a containing one
         URL rawMdUrl = this.getClass().getResource("aap.xml");
-        assumeTrue(rawMdUrl != null);
+        assumeNotNull(rawMdUrl);
         File rawMdF = new File(rawMdUrl.toURI());
         assumeTrue(rawMdF.exists());
         String rawMd = FileUtils.readFileToString(rawMdF);
 
-        // xpath used for AAP field indexation (see iso19139.che/default.xsl around line 453)
+        // xpath used for AAP field indexation (see iso19139.che/default-language.xsl around line 453)
         String xpath = "gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:descriptiveKeywords"+
-                "/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[text() = 'AAP-Bund']";
+                "/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[text() = 'Aufbewahrungs- und Archivierungsplanung AAP']";
 
         boolean b = Xml.selectBoolean(Xml.loadString(rawMd, false), xpath);
         assertTrue("Expected true, false found", b);

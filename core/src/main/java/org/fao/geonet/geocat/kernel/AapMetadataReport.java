@@ -34,7 +34,6 @@ public class AapMetadataReport implements Service {
     private final String xpOwnerEn = xpMdOwnerBase + "gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#EN']/text()";
     private final String xpOwnerIt = xpMdOwnerBase + "gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#IT']/text()";
 
-    // StringUtils.join() ? anyone ?
     private final String xpMdOwnerDef = xpOwnerDe +"|"+ xpOwnerFr +"|"+ xpOwnerEn +"|"+ xpOwnerIt;
 
     // SpecialistAuthority
@@ -47,9 +46,14 @@ public class AapMetadataReport implements Service {
 
     private final String xpSpecialistDef = xpSpecialistDe +"|"+ xpSpecialistFr +"|"+ xpSpecialistEn +"|"+ xpSpecialistIt;
 
+    private final String xpTitleBase = "gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title";
+    private final String xpTitleDe = xpTitleBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#DE']/text()";
+    private final String xpTitleFr = xpTitleBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#DE']/text()";
+    private final String xpTitleEn = xpTitleBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#DE']/text()";
+    private final String xpTitleIt = xpTitleBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#DE']/text()";
 
-    private final String xpTitle = "gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation"
-            + "/gmd:CI_Citation/gmd:title/gco:CharacterString/text()";
+    private final String xpTitle = xpTitleBase + "/gco:CharacterString/text()" + "|" + xpTitleDe + "|" + xpTitleFr + "|" + xpTitleEn + "|" + xpTitleIt;
+
     private final String xpBasicGeodataIdentifier = "gmd:identificationInfo//che:basicGeodataID/gco:CharacterString/text()";
     private final String xpGeodataType = "gmd:identificationInfo//che:geodataType/che:MD_geodataTypeCode/@codeListValue";
     private final String xpUuid = "gmd:fileIdentifier/gco:CharacterString/text()";
@@ -58,7 +62,7 @@ public class AapMetadataReport implements Service {
             + "gmd:MD_MaintenanceFrequencyCode/@codeListValue";
 
     // AAP
-    private final String xpAap = "gmd:metadataMaintenance/che:CHE_MD_MaintenanceInformation/che:appraisal/";
+    private final String xpAap = "gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:resourceMaintenance/che:CHE_MD_MaintenanceInformation/che:appraisal/";
     // AAP duration of conservation
     private final String xpAapDuration = xpAap + "che:CHE_MD_Appraisal_AAP/che:durationOfConservation/gco:Integer/text()";
     // AAP comment on the duration
@@ -80,10 +84,16 @@ public class AapMetadataReport implements Service {
 
     private String safeGetText(Element metadata, String xpath) {
         String ret = "";
+        Object txt = null;
         try {
-            Text txt = (Text) Xml.selectSingle(metadata, xpath, xpNamespaces);
-            if (txt != null) {
-                ret = txt.getText();
+            txt = Xml.selectSingle(metadata, xpath, xpNamespaces);
+            if (txt == null) {
+                return "";
+            }
+            if (txt instanceof Text) {
+                ret = ((Text) txt).getText();
+            } else {
+                ret = txt.toString();
             }
         } catch (JDOMException e) {
             return "";
@@ -93,10 +103,17 @@ public class AapMetadataReport implements Service {
 
     private String safeGetAttribute(Element metadata, String xpath) {
         String ret = "";
+        Object att = null;
         try {
-            Attribute att = (Attribute) Xml.selectSingle(metadata, xpath, xpNamespaces);
-            if (att != null) {
-                ret = att.getValue();
+            att =  Xml.selectSingle(metadata, xpath, xpNamespaces);
+            if (att == null) {
+                return "";
+            }
+            if (att instanceof Attribute) {
+                ret = ((Attribute) att).getValue();
+            } else {
+                
+                ret = att.toString();
             }
         } catch (JDOMException e) {
             return "";
@@ -113,7 +130,7 @@ public class AapMetadataReport implements Service {
 
         Element rawMd = m.getXmlData(false);
 
-        String title = this.safeGetText(rawMd, xpTitle);        
+        String title = this.safeGetText(rawMd, xpTitle);
         String basicGeodataId = this.safeGetText(rawMd, xpBasicGeodataIdentifier);
         String uuid = this.safeGetText(rawMd, xpUuid);
         String geodataType = this.safeGetAttribute(rawMd, xpGeodataType);
