@@ -251,7 +251,7 @@
                       scope.map.getView().setZoom(7);
                     } else {
                       scope.map.getView().setCenter([660000, 190000]);
-                      scope.map.getView().setZoom(8);
+                      scope.map.getView().setZoom(3);
                     }
                   }
                 }, 200);
