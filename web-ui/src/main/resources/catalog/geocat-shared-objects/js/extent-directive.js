@@ -246,8 +246,13 @@
                         {nearest: true}
                     );
                   } else {
-                    scope.map.getView().setCenter([929317, 5909466]);
-                    scope.map.getView().setZoom(7);
+                    if(gnGlobalSettings.srs == "EPSG:4326" ) {
+                      scope.map.getView().setCenter([929317, 5909466]);
+                      scope.map.getView().setZoom(7);
+                    } else {
+                      scope.map.getView().setCenter([660000, 190000]);
+                      scope.map.getView().setZoom(8);
+                    }
                   }
                 }, 200);
               });
