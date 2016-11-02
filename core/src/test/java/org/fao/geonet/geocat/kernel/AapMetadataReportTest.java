@@ -1,7 +1,7 @@
 package org.fao.geonet.geocat.kernel;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNotNull;
 import static org.junit.Assume.assumeTrue;
 
@@ -30,7 +30,6 @@ public class AapMetadataReportTest {
         tested.setData(rawMd);
 
         String el = Xml.getString(amr.extractAapInfo(tested));
-        System.out.println(el);
         assertTrue("Unexpected title",
                    el.contains("<title>Lisières forestières prioritaires</title>"));
         assertTrue("Unexpected geodata ID",
@@ -44,7 +43,7 @@ public class AapMetadataReportTest {
         assertTrue("Unexpected owner",
         el.contains("<specialistAuthority>Camptocamp</specialistAuthority>"));
         assertTrue("Unexpected update frequency",
-                   el.contains("<updateFrequency>asNeeded</updateFrequency>"));
+                   el.contains("<updateFrequency>userDefined</updateFrequency>"));
         assertTrue("Unexpected duration of conservation",
                    el.contains("<durationOfConservation>3</durationOfConservation>"));
         assertTrue("Unexpected comment on duration",
@@ -126,4 +125,23 @@ public class AapMetadataReportTest {
         assertTrue("Expected true, false found", b);
     }
     
+    @Test
+    public void missingFieldCSVExpotrtTestSb451() throws Exception {
+        URL rawMdUrl = this.getClass().getResource("issue-export-SB451.xml");
+        assumeNotNull(rawMdUrl);
+        File rawMdF = new File(rawMdUrl.toURI());
+        assumeTrue(rawMdF.exists());
+
+        String rawMd = FileUtils.readFileToString(rawMdF);
+        Metadata tested = new Metadata();
+        tested.setData(rawMd);
+
+        String el = Xml.getString(amr.extractAapInfo(tested));
+
+        assertFalse("SB-451: still missing fields (maintenanceAndUpdateFrequency, commentOnDurationOfConservation, commentOnArchivalValue)",
+                el.contains("<updateFrequency />")        &&
+                el.contains("<commentOnDuration />")      &&
+                el.contains("<commentOnArchival />"));
+    }
+
 }
