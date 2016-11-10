@@ -151,16 +151,14 @@
       </script>
     </xsl:if>
 
-    <xsl:if test="$angularApp = 'geocat_shared_objects_app'">
-      <script type="text/javascript">
-        var module = angular.module('geocat_shared_objects_app');
+    <script type="text/javascript">
+      var module = angular.module( '<xsl:value-of select="$angularApp"/>');
 
-        module.config(['gnGlobalSettings',
-        function(gnGlobalSettings) {
-          gnGlobalSettings.srs = '<xsl:value-of select="util:getBeanPropertyValue('gn:non_validated','srs')"/>';
-        }]);
-      </script>
-    </xsl:if>
+      module.config(['gnGlobalSettings',
+      function(gnGlobalSettings) {
+        gnGlobalSettings.srs = '<xsl:value-of select="util:getBeanPropertyValue('gn:non_validated','srs')"/>';
+      }]);
+    </script>
 
     <xsl:if test="$angularApp = 'gn_editor'">
       <script type="text/javascript">
