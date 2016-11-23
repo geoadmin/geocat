@@ -166,7 +166,6 @@ public final class XslUtil
         boolean isAccessible = f.isAccessible();
         f.setAccessible(true);
         String res = f.get(o).toString();
-        f.setAccessible(isAccessible);
         return res;
     }
 
