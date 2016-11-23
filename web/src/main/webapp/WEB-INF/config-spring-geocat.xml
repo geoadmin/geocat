@@ -7,6 +7,11 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd" >
 
+    <context:property-placeholder location="file:${geonetwork.dir}/default_projection.properties" file-encoding="UTF-8" ignore-unresolvable="true"
+                                  ignore-resource-not-found="true" order="1"/>
+
+    <context:property-placeholder location="classpath:default_projection.properties" file-encoding="UTF-8" ignore-unresolvable="true" order="2"/>
+
     <bean id="RegionsDAO" class="org.fao.geonet.geocat.services.region.geocat.GeocatRegionsDAO">
         <property name="cacheAllRegionsInMemory" value="false"/>
     </bean>
@@ -67,7 +72,7 @@
         <property name="descColumn" value="DESC"/>
         <property name="searchColumn" value="SEARCH"/>
         <property name="geoIdColumn" value="GEO_ID"/>
-        <property name="srs" value="EPSG:4326"/>
+        <property name="srs" value="${default_projection}"/>
         <property name="typename" value="gn:xlinks"/>
     </bean>
 
@@ -76,7 +81,7 @@
         <property name="descColumn" value="DESC"/>
         <property name="searchColumn" value="SEARCH"/>
         <property name="geoIdColumn" value="GEO_ID"/>
-        <property name="srs" value="EPSG:4326"/>
+        <property name="srs" value="${default_projection}"/>
         <property name="typename" value="gn:non_validated"/>
     </bean>
     <bean id="reusableObjectManager" class="org.fao.geonet.geocat.kernel.reusable.ReusableObjManager"/>
