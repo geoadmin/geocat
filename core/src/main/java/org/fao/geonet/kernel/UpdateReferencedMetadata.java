@@ -87,7 +87,7 @@ public class UpdateReferencedMetadata implements Runnable {
                     public Void doInTransaction(TransactionStatus transaction) throws Throwable {
 
                         for (Integer id : mdIds) {
-                            dm.indexMetadata(id + "", false);
+                            dm.indexMetadata(id + "", false, false, false, false);
                         }
                         return null;
                     }
