@@ -3,6 +3,7 @@ package org.fao.geonet.util;
 import com.google.common.collect.Multimap;
 import com.vividsolutions.jts.geom.Polygon;
 import jeeves.component.ProfileManager;
+import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import net.sf.saxon.Configuration;
@@ -18,9 +19,11 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.w3c.dom.Node;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -28,11 +31,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
+import javax.servlet.ServletContext;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
  * params are objects because it is hard to determine what is passed in from XSLT.
- * Most are converted to string by calling tostring.
+ * Most are converted to string by calling toString().
  *
  * @author jesse
  */
@@ -135,6 +139,36 @@ public final class XslUtil
 	public static boolean existsBean(String beanId) {
 		return ProfileManager.existsBean(beanId);
 	}
+
+
+    /**
+     * Return value of property 'propName' of bean 'beanId'
+     *
+     * @param beanId Name of bean to extract property from
+     * @param propName Name of property
+     * @return String value of property 'propName' of bean 'BeanId'
+     */
+    public static String getBeanPropertyValue(String beanId, String propName) throws Exception {
+
+        if(!XslUtil.existsBean(beanId))
+            throw new Exception("Cannot find bean with name : " + beanId);
+
+        ServiceContext serviceContext = ServiceContext.get();
+
+        if (serviceContext == null)
+            throw new Exception("Cannot get ServiceContext instance");
+
+        ServletContext servletContext = serviceContext.getServlet().getServletContext();
+        ConfigurableApplicationContext springContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(servletContext);
+
+        Object o = springContext.getBean(beanId);
+        Field f = o.getClass().getDeclaredField(propName);
+        boolean isAccessible = f.isAccessible();
+        f.setAccessible(true);
+        String res = f.get(o).toString();
+        return res;
+    }
+
     /**
 	 * Optimistically check if user can access a given url.  If not possible to determine then
 	 * the methods will return true.  So only use to show url links, not check if a user has access

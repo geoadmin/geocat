@@ -31,8 +31,8 @@
     <label class="col-sm-2 control-label" translate>projection</label>
     <div class="col-sm-4">
       <select class="form-control input-sm" data-ng-model="formObj.proj" ng-change="fillInput()">
-        <option value="EPSG:21781" translate>CHO3 (EPSG:21781)</option>
-        <option value="EPSG:4326" translate>WGS 84 (EPSG:4326)</option>
+        <option value="EPSG:4326" translate ng-if="gnGlobalSettings.srs == 'EPSG:4326'">WGS 84 (EPSG:4326)</option>
+        <option value="EPSG:21781" translate ng-if="gnGlobalSettings.srs == 'EPSG:21781'">CHO3 (EPSG:21781)</option>
       </select>
     </div>
   </div>
@@ -47,38 +47,40 @@
       </div>
     </div>
 
-  <!--BBOX field-->
-  <div class="form-group" >
-    <label class="col-sm-2 control-label" translate>bbox</label>
-    <div class="col-sm-10 gn-bbox">
-      <div class="">
-        <div class="input-group coord coord-north">
-          <input type="number" step="any"
-                 data-ng-model="extent[3]"
-                 data-ng-change="updateBbox(true)"
-                 class="input-sm form-control" value="180">
-          <span class="input-group-addon">N</span>
-        </div>
-        <div class="input-group coord coord-south">
-          <input type="number" step="any"
-                 data-ng-model="extent[1]"
-                 data-ng-change="updateBbox(true)"
-                 class="input-sm form-control" value="-180">
-          <span class="input-group-addon">S</span>
-        </div>
-        <div class="input-group coord coord-east">
-          <input type="number" step="any"
-                 data-ng-model="extent[2]"
-                 data-ng-change="updateBbox(true)"
-                 class="input-sm form-control" value="-90">
-          <span class="input-group-addon">E</span>
-        </div>
-        <div class="input-group coord coord-west">
-          <input type="number" step="any"
-                 data-ng-model="extent[0]"
-                 data-ng-change="updateBbox(true)"
-                 class="input-sm form-control" value="90">
-          <span class="input-group-addon">W</span>
+  <!--BBOX field is diplayed if we are not drawing polygon -->
+  <div class="form-group" style="margin-bottom: 0px">
+    <div ng-if="isExtent">
+      <label class="col-sm-2 control-label" translate>bbox</label>
+      <div class="col-sm-10 gn-bbox">
+        <div class="">
+          <div class="input-group coord coord-north">
+            <input type="number" step="any"
+                   data-ng-model="extent[3]"
+                   data-ng-change="updateBbox(true)"
+                   class="input-sm form-control" value="180">
+            <span class="input-group-addon">N</span>
+          </div>
+          <div class="input-group coord coord-south">
+            <input type="number" step="any"
+                   data-ng-model="extent[1]"
+                   data-ng-change="updateBbox(true)"
+                   class="input-sm form-control" value="-180">
+            <span class="input-group-addon">S</span>
+          </div>
+          <div class="input-group coord coord-east">
+            <input type="number" step="any"
+                   data-ng-model="extent[2]"
+                   data-ng-change="updateBbox(true)"
+                   class="input-sm form-control" value="-90">
+            <span class="input-group-addon">E</span>
+          </div>
+          <div class="input-group coord coord-west">
+            <input type="number" step="any"
+                   data-ng-model="extent[0]"
+                   data-ng-change="updateBbox(true)"
+                   class="input-sm form-control" value="90">
+            <span class="input-group-addon">W</span>
+          </div>
         </div>
       </div>
     </div>

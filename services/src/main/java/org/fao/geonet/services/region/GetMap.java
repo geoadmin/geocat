@@ -32,6 +32,7 @@ import jeeves.server.dispatchers.ServiceManager;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.geocat.kernel.extent.FeatureType;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionNotFoundEx;
 import org.fao.geonet.kernel.region.RegionsDAO;
@@ -170,7 +171,6 @@ public class GetMap{
     public HttpEntity<byte[]> exec(@PathVariable String lang,
                                    @PathVariable String imageFormat,
                                    @RequestParam(value = Params.ID, required = false) String id,
-                                   @RequestParam(value = MAP_SRS_PARAM, defaultValue = "EPSG:4326") String srs,
                                    @RequestParam(value = WIDTH_PARAM, required = false) Integer width,
                                    @RequestParam(value = HEIGHT_PARAM, required = false) Integer height,
                                    @RequestParam(value = BACKGROUND_PARAM, required = false) String background,
@@ -179,6 +179,11 @@ public class GetMap{
                                    @RequestParam(value = GEOM_SRS_PARAM, defaultValue = "EPSG:4326") String geomSrs,
                                    @RequestParam(value = OUTPUT_FILE_NAME, required=false) String outputFileName,
                                    NativeWebRequest request) throws Exception {
+
+
+        // force getMap to use configured projection
+        FeatureType nonValidated = context.getBean("gn:non_validated", FeatureType.class);
+        String srs = nonValidated.srs();
 
         ServiceContext context = serviceManager.createServiceContext("region.getmap." + imageFormat, lang,
                 request.getNativeRequest(HttpServletRequest.class));

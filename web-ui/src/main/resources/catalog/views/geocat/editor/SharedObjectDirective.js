@@ -236,6 +236,7 @@
     'keywordsService',
     'subtemplateService',
     'gnThesaurusService',
+    'gnGlobalSettings',
     'Keyword',
     '$translate',
     function ($q,
@@ -252,6 +253,7 @@
               keywordsService,
               subtemplateService,
               gnThesaurusService,
+              gnGlobalSettings,
               Keyword, $translate) {
 
 
@@ -314,7 +316,7 @@
       var scope;
       var finishEditExtent = function() {
         var service = scope.xlink ? extentsService.updateService :
-            extentsService.addService;
+          extentsService.addService;
 
         extentsService.updateExtent(service, scope.formObj).
             success(function(data) {
@@ -422,7 +424,7 @@
               feature: {
                 geoId: {},
                 desc: {},
-                geom: 'POLYGON((481500 88000,481500 297250,832500 297250,832500 88000,481500 88000))'
+                geom: gnGlobalSettings.defaultBbox
               }
             })
           }, 200, true);
@@ -444,7 +446,7 @@
               id: scope.formObj.id,
               typename: scope.formObj.typename,
               format: 'wkt',
-              crs: 'EPSG:21781',
+              crs: gnGlobalSettings.srs,
               _content_type: 'json'
             }
           }).success(function (data) {
