@@ -13,13 +13,15 @@
         '$location',
         '$timeout',
         '$http',
+        'gnGlobalSettings',
         'commonProperties',
         'extentsService',
       function ($scope, $routeParams, $location, $timeout, $http,
-                commonProperties, extentsService) {
+                gnGlobalSettings, commonProperties, extentsService) {
 
         commonProperties.addValidated($scope, $routeParams);
         commonProperties.add($scope, $routeParams);
+
 
         if ($scope.isValid) {
           $scope.luceneIndexField = 'V_invalid_xlink_extent';
@@ -35,7 +37,7 @@
           $scope.formObj = {
             typename: 'gn:xlinks',
             geomString: '',
-            proj: 'EPSG:21781',
+            proj: gnGlobalSettings.srs,
             geoId: {
               DE: '',
               FR: '',
@@ -57,12 +59,22 @@
             feature: {
               geoId: {},
               desc: {},
-              geom: 'POLYGON((481500 88000,481500 297250,832500 297250,832500 88000,481500 88000))'
+              geom: gnGlobalSettings.defaultBbox
             }
           });
           $scope.finishEdit = function () {
             $('#editModal').modal('hide');
-            extentsService.updateExtent(extentsService.addService, $scope.formObj).success(function(data){
+
+            var serverProj = gnGlobalSettings.srs;
+            var formObj = angular.copy($scope.formObj);
+            var formatWKT = new ol.format.WKT();
+
+            if (formObj.proj != serverProj) {
+              formObj.geomString = formatWKT.writeGeometry(formatWKT.readGeometry(formObj.geomString).transform(formObj.proj, serverProj));
+              formObj.proj = serverProj;
+            }
+
+            extentsService.updateExtent(extentsService.addService, formObj).success(function(data){
               $timeout(function () {
                 var id = /.+id=(\d+).*/.exec(data[0])[1];
                 $location.url('/validated/extents?search='+id);
@@ -72,7 +84,7 @@
           $('#editModal').modal('show');
         };
 
-      }]).factory('extentsService', ['gnUrlUtils', '$http', function(gnUrlUtils, $http) {
+}]).factory('extentsService', ['gnUrlUtils', 'gnGlobalSettings', '$http', function(gnUrlUtils, gnGlobalSettings, $http) {
 
       var getString = function(val) {
         if (val && typeof(val) === 'string') {
@@ -106,20 +118,12 @@
       var bestDescription = function($scope) {
         var geoId = getBestTranslation($scope, $scope.formObj.geoId);
         var desc = getBestTranslation($scope, $scope.formObj.desc);
-        var finalDesc;
-        if (desc) {
-          finalDesc = desc;
-        }
-        if (geoId) {
-          if (finalDesc) {
-            finalDesc += " <"+geoId+">"
-          } else {
-            finalDesc = "<"+geoId+">";
-          }
-        }
-        if (!finalDesc) {
-          finalDesc = "No Description";
-        }
+
+        geoId = geoId ? "("+geoId+")" : "";
+        desc = desc ? desc + " " : "";
+
+        var finalDesc = desc + geoId;
+        return finalDesc;
       };
 
       var service = {
@@ -136,7 +140,7 @@
               id: $scope.formObj.id,
               typename: $scope.formObj.typename,
               format: 'wkt',
-              crs: 'EPSG:21781',
+              crs: gnGlobalSettings.srs,
               _content_type: 'json'
             }
           }).success(function (data) {

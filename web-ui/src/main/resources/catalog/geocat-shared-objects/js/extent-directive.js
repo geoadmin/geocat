@@ -15,8 +15,9 @@
   module.directive('gcEditExtent', [
     'gnMap',
     'gnSearchSettings',
+    'gnGlobalSettings',
     'ngeoDecorateInteraction',
-    function(gnMap, gnSearchSettings, goDecoI) {
+    function(gnMap, gnSearchSettings, gnGlobalSettings, goDecoI) {
 
       // Create overlay to draw bbox and polygon
       var featureOverlay = new ol.FeatureOverlay({
@@ -60,15 +61,18 @@
 
               scope.map = gnSearchSettings.searchMap;
               var map = scope.map;
-              var drawnGeom;
 
               // Manage form control display
               scope.prop = {
                 showWKT: false,
                 showBbox: true
               };
-
+              
+              scope.gnGlobalSettings = gnGlobalSettings;
               scope.extent = [];
+              scope.isExtent = true;
+
+              scope.featureOverlay = featureOverlay;
 
               featureOverlay.setMap(map);
               map.addInteraction(drawInteraction);
@@ -81,32 +85,40 @@
                 clearMap();
                 scope.extent = [];
                 scope.formObj.geomString = '';
+                scope.isExtent = true;
               };
 
               /**
-               * Set geometry as text input value. I could be formated
+               * Set geometry as text input value. It could be formated
                * to WKT or GML.
                * @geom {ol.geometry}
                */
               scope.fillInput = function() {
-                var feature = featureOverlay.getFeatures().item(0) || scope.feature;
-                if (!feature) {
-                  return;
-                }
-                var geom = feature.getGeometry().clone();
-                if (!scope.incompatible) {
-                  geom = geom.transform(map.getView().getProjection(), scope.formObj.proj);
-                }
-                scope.formObj.geomString = formatWkt.writeGeometry(geom);
+                scope.formObj.geomString = formatWkt.writeGeometry(
+                  ol.geom.Polygon.fromExtent(scope.extent)
+                );
               };
 
-              drawInteraction.on('drawend', function() {
-                scope.extent = [];
-                scope.fillInput();
-                scope.$apply();
+              drawInteraction.on('drawend', function(e) {
+                scope.isExtent = false;
+                scope.incompatible = false;
+
+                scope.$apply(function () {
+                  var g = e.feature.getGeometry();
+
+                  // Re-project new geometry to selected projection
+                  var g_project_crs = g.clone().transform(map.getView().getProjection(), scope.formObj.proj);
+
+                  // Update WKT field
+                  scope.formObj.geomString = formatWkt.writeGeometry(g_project_crs);
+
+                  // Update extent fields
+                  scope.extent = g_project_crs.getExtent();
+                });
               });
 
               dragboxInteraction.on('boxend', function() {
+                scope.isExtent = true;
                 scope.incompatible = false;
                 scope.$apply(function() {
                   var f = new ol.Feature();
@@ -143,20 +155,15 @@
 
                 scope.incompatible = mapProj != scope.formObj.proj &&
                   !ol.extent.containsExtent(mapProj.getExtent(), extentProj);
-                if (scope.incompatible) {
-                  extentProj = scope.extent;
-                }
 
-                f.setGeometry(new ol.geom.Polygon(
-                  gnMap.getPolygonFromExtent(extentProj)
-                ));
 
                 if (!scope.incompatible) {
+                  f.setGeometry(new ol.geom.Polygon(
+                    gnMap.getPolygonFromExtent(extentProj)
+                  ));
+
                   featureOverlay.addFeature(f);
                   map.getView().fitExtent(extentProj, map.getSize());
-                  scope.feature = null;
-                } else {
-                  scope.feature = f;
                 }
 
                 scope.fillInput();
@@ -171,7 +178,7 @@
                   featureOverlay.getFeatures().clear();
                   var geom = formatWkt.readGeometry(scope.formObj.geomString).
                       transform(scope.formObj.proj,
-                      map.getView().getProjection());;
+                      map.getView().getProjection());
                   var f = new ol.Feature();
                   f.setGeometry(geom);
                   featureOverlay.addFeature(f);
@@ -183,8 +190,10 @@
                */
               scope.$watch('formObj.proj', function(newV, oldV) {
                 if(newV && oldV) {
-                  scope.extent = ol.proj.transformExtent(scope.extent,
-                  oldV, newV);
+                  scope.extent = ol.proj.transformExtent(scope.extent, oldV, newV);
+                  scope.formObj.geomString = (new ol.format.WKT()).writeGeometry(
+                    ol.geom.Polygon.fromExtent(scope.extent)
+                  );
                 }
               });
             },
@@ -196,7 +205,7 @@
                */
               var initForm = function(ft) {
                 scope.clearMap();
-                scope.formObj.proj = 'EPSG:21781';
+                scope.formObj.proj = gnGlobalSettings.srs;
                 scope.formObj.geoId = scope.formObj.desc = {
                   DE: '',EN: '', FR: '',  IT: '', RM: ''};
                 if(ft) {
@@ -211,17 +220,40 @@
                 initForm(featureType);
 
                 // If we load an existing shared object we load the geom
-                if(featureType) {
+                if(featureType && featureType.feature.geom) {
                   var geom = formatWkt.readGeometry(featureType.feature.geom);
                   var f = new ol.Feature();
-                  f.setGeometry(geom);
-                  featureOverlay.addFeature(f);
+                  var formatWKT = new ol.format.WKT();
+
                   scope.extent = geom.getExtent();
-                  scope.fillInput();
+                  scope.formObj.geomString = formatWkt.writeGeometry(geom);
+
+                  // Reproject geometry to map projection
+                  f.setGeometry(geom.transform(gnGlobalSettings.srs, scope.map.getView().getProjection()));
+                  featureOverlay.addFeature(f);
+
                 }
 
                 setTimeout(function () {
                   scope.map.updateSize();
+                  if(featureType && featureType.feature.geom) {
+                    scope.map.getView().fitExtent(
+                        formatWKT.readGeometry(featureType.feature.geom).transform(
+                            scope.formObj.proj,
+                            scope.map.getView().getProjection().getCode()
+                        ).getExtent(),
+                        scope.map.getSize(),
+                        {nearest: true}
+                    );
+                  } else {
+                    if(gnGlobalSettings.srs == "EPSG:4326" ) {
+                      scope.map.getView().setCenter([929317, 5909466]);
+                      scope.map.getView().setZoom(7);
+                    } else {
+                      scope.map.getView().setCenter([660000, 190000]);
+                      scope.map.getView().setZoom(3);
+                    }
+                  }
                 }, 200);
               });
             }

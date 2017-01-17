@@ -150,7 +150,16 @@
         }]);
       </script>
     </xsl:if>
-    
+
+    <script type="text/javascript">
+      var module = angular.module( '<xsl:value-of select="$angularApp"/>');
+
+      module.config(['gnGlobalSettings',
+      function(gnGlobalSettings) {
+        gnGlobalSettings.srs = '<xsl:value-of select="util:getBeanPropertyValue('gn:non_validated','srs')"/>';
+      }]);
+    </script>
+
     <xsl:if test="$angularApp = 'gn_editor'">
       <script type="text/javascript">
         var module = angular.module('gn_editor');
@@ -165,24 +174,13 @@
           </xsl:if>
           gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
           gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
-        }]);
-      </script>
-    </xsl:if>
-    
-    <xsl:if test="$angularApp = 'gn_editor'">
-      <script type="text/javascript">
-        var module = angular.module('gn_editor');
-        module.config(['gnViewerSettings', 'gnGlobalSettings',
-                function(gnViewerSettings, gnGlobalSettings) {
-          <xsl:if test="$owsContext">
-            gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
+          gnGlobalSettings.srs = '<xsl:value-of select="util:getBeanPropertyValue('gn:non_validated','srs')"/>';
+          <xsl:if test="util:getBeanPropertyValue('gn:non_validated','srs') = 'EPSG:4326'">
+          gnGlobalSettings.defaultBbox = 'POLYGON((5.91088 45.9331,5.85641 47.8149,10.5417 47.7844,10.4350 45.9036,5.91088 45.9331))';
           </xsl:if>
-          <xsl:if test="$wmsUrl and $layerName">
-            gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
-            gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
+          <xsl:if test="util:getBeanPropertyValue('gn:non_validated','srs') = 'EPSG:21781'">
+          gnGlobalSettings.defaultBbox = 'POLYGON((481500 88000,481500 297250,832500 297250,832500 88000,481500 88000))';
           </xsl:if>
-          gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
-          gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
         }]);
       </script>
     </xsl:if>
