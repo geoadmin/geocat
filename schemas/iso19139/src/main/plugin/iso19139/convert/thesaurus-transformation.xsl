@@ -93,7 +93,7 @@
 
           <xsl:attribute name="xlink:href"
                          select="concat($prefixUrl, '/xml.keyword.get?thesaurus=', thesaurus/key,
-							                '&amp;amp;id=', replace(/root/request/id, '#', '%23'),
+							                '&amp;amp;id=', encode-for-uri(/root/request/id),
 							                '&amp;amp;multiple=', $multiple,
 							                if (/root/request/lang) then concat('&amp;amp;lang=', /root/request/lang) else '',
 							                if ($textgroupOnly) then '&amp;amp;textgroupOnly' else '')"/>
