@@ -97,7 +97,7 @@
                 <xsl:value-of select="/root/request/id" />
               </xsl:when>
               <xsl:otherwise>
-                <xsl:value-of select="encode-for-uri(/root/request/id)" />
+                <xsl:value-of select="replace(encode-for-uri(/root/request/id), '%2C', ',')" />
               </xsl:otherwise>
             </xsl:choose>
           </xsl:variable>
