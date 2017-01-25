@@ -25,6 +25,12 @@
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
+			<code>expiry</code>
+			<label>Scadenza</label>
+			<description>Date identifies when the resource has expired</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
 			<code>publication</code>
 			<label>Pubblicazione</label>
 			<description>Data che identifica quando la risorsa è stata pubblicata</description>

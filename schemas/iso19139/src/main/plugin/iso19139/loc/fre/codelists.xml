@@ -10,6 +10,12 @@
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
+			<code>expiry</code>
+			<label>Expiration</label>
+			<description>Date à laquelle la ressource a expiré</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
 			<code>publication</code>
 			<label>Publication</label>
 			<description>Date à laquelle la ressource est publiée</description>

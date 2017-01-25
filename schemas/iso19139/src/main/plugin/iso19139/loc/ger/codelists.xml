@@ -6,7 +6,12 @@
 			<code>creation</code>
 			<label>Erstellung</label>
 			<description>Das Datum gibt an, wann die Ressource erstmalig erstellt wurde</description>
-
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>expiry</code>
+			<label>Ablauf</label>
+			<description>Das Datum gibt an, wann die Ressource verfällt</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
