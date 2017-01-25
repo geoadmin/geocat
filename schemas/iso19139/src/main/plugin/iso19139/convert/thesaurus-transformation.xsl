@@ -91,9 +91,20 @@
 																then  concat('local://', /root/gui/language)
 																else $serviceUrl"/>
 
+          <xsl:variable name="keywordIds">
+            <xsl:choose>
+              <xsl:when test="thesaurus/key = 'external.none.allThesaurus'">
+                <xsl:value-of select="/root/request/id" />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="encode-for-uri(/root/request/id)" />
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+
           <xsl:attribute name="xlink:href"
                          select="concat($prefixUrl, '/xml.keyword.get?thesaurus=', thesaurus/key,
-							                '&amp;amp;id=', encode-for-uri(/root/request/id),
+							                '&amp;amp;id=', $keywordIds,
 							                '&amp;amp;multiple=', $multiple,
 							                if (/root/request/lang) then concat('&amp;amp;lang=', /root/request/lang) else '',
 							                if ($textgroupOnly) then '&amp;amp;textgroupOnly' else '')"/>
