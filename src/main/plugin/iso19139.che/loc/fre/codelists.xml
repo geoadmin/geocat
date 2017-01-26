@@ -263,27 +263,27 @@ une interface externe du service internet pour le processus ou la chaîne de ser
 	<codelist name="che:MD_geodataTypeCode">
 		<entry>
 			<code>basicGeodata</code>
-			<label>Basic Geodata</label>
+			<label>Géodonnées de base</label>
 		</entry>
 		<entry>
 			<code>oereb</code>
-			<label>oereb</label>
+			<label>OEREB</label>
 		</entry>
 		<entry>
 			<code>oerebRegister</code>
-			<label>oereb Register</label>
+			<label>Registre OEREB</label>
 		</entry>
 		<entry>
 			<code>openGovernmentData</code>
-			<label>Open Government Data</label>
+			<label>Données gouvernementales ouvertes</label>
 		</entry>
 		<entry>
 			<code>openData</code>
-			<label>Open Data</label>
+			<label>Données ouvertes</label>
 		</entry>
 		<entry>
 			<code>referenceGeodata</code>
-			<label>Reference Geodata</label>
+			<label>Géodonnées de référence</label>
 		</entry>
 	</codelist>
   <codelist name="gmd:MD_ScopeCode" editorMode="radio">
