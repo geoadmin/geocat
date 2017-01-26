@@ -716,16 +716,16 @@ ce qui concerne les métadonnées"</description>
     <condition/>
  </element>
  <element name="che:basicGeodataIDTypeCode">
-  <label>Genere dell'identificatore </label>
-  <description>Genere dell'identificatore </description>
+  <label>Code de type géodonnées de base</label>
+  <description>Code de type géodonnées de base</description>
  </element>
  <element name="che:MD_geodataTypeCode">
-  <label>Geodata Type Code</label>
+  <label>Code de type de géodonnées</label>
  </element>
  <element name="che:geodataType">
-  <label>Geodata Type</label>
-  <description>Characterization of a Dataset</description>
-  <help>Classification of the dataset in a larger group of similar datasets with the help of the enclosed codelist</help>
+  <label>Type de géodonnées</label>
+  <description>Description du jeu de données</description>
+  <help>Classification du jeu de données dans un plus grand groupe de jeux de données similaires à l'aide de la liste de codes ci-jointe</help>
  </element>
 
     <!-- SB-422: AAP -->
