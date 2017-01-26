@@ -86,7 +86,7 @@
     "Other": "Weitere",
     "export": "Exportieren",
     "exportXML": "Export (XML ISO19139)",
-    "exportcheXML": "Speichern als XML",
+    "exportcheXML": "Speichern als XML (ISO19139.che)",
     "exportGM03": "(als GM03) exportieren",
     "exportRDF": "(als RDF) exportieren",
     "exportCSV": "(als CSV) exportieren",
