@@ -303,6 +303,8 @@ public final class Utils {
     public static String mkBaseURL( String baseURL, SettingManager settingMan ) {
         String host = settingMan.getValue("system/server/host").trim();
         String portNumber = settingMan.getValue("system/server/port").trim();
+        String protocol = settingMan.getValue("system/server/protocol").trim();
+
         if (host.length() == 0) {
             try {
                 host = InetAddress.getLocalHost().getHostName();
@@ -310,25 +312,30 @@ public final class Utils {
                 host = "http://localhost";
             }
         }
-        if (portNumber.length() == 0) {
+        if (portNumber.length() == 0)
             portNumber = "8080";
-        }
 
+        if(protocol.length() == 0)
+            protocol = "http";
+
+        // Add protocol if not present in host
         try {
             new URL(host);
         } catch (MalformedURLException e) {
             try {
-                new URL("http://" + host);
-                host = "http://" + host;
+                new URL(protocol + "://" + host);
+                host = protocol + "://" + host;
             } catch (MalformedURLException e2) {
                 throw new RuntimeException(e);
             }
         }
-        if (host.length() == 0) {
-            return baseURL;
+
+        if((portNumber.equals("80") && protocol.equals("http")) || (portNumber.equals("443") && protocol.equals("https"))){
+            return host + baseURL;
         } else {
             return host + ":" + portNumber + baseURL;
         }
+
     }
 
     public static String extractUrlParam( Element xlink, String paramName ) {
