@@ -24,6 +24,11 @@
             <li><a id="nav-keywords" ng-href="#/{{validated}}/keywords" translate>keywords</a></li>
         </ul>
     </li>
+    <li>
+        <button class="btn btn-warning" gn-click-and-spin="updateSubtemplatePrivileges()">
+            <i class="fa fa-key"></i>&nbsp;<span translate>updatePrivileges</span>
+        </button>
+    </li>
     <ul class="nav nav-pills pull-right">
         <li data-ng-hide="!isValidated || isDeletePage">
             <li class="dropdown">

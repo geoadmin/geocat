@@ -121,6 +121,11 @@ SET
   value='{"iso19110":{"defaultTab":"default","displayToolTip":false,"related":{"display":true,"readonly":true,"categories":["dataset"]},"validation":{"display":true}},"iso19139":{"defaultTab":"default","displayToolTip":false,"related":{"display":true,"categories":[]},"suggestion":{"display":true},"validation":{"display":true}},"dublin-core":{"defaultTab":"default","related":{"display":true,"readonly":false,"categories":["parent","onlinesrc"]}},"iso19139.che":{"defaultTab":"default","displayToolTip":false,"related":{"display":true,"categories":["thumbnail","onlinesrc","service","dataset","source","sibling"]},"suggestion":{"display":true},"validation":{"display":true}}}'
 WHERE
   name = 'metadata/editor/schemaConfig';
+
+INSERT INTO public.groups(
+            id, description, email, logo, name)
+    VALUES (99999, 'Subtemplates', '', '', 'SUBTEMPLATES');
+
 -- END GEOCAT
 INSERT INTO settings (name, value, datatype, position, internal) VALUES ('system/server/log','log4j.xml',0,250,'y');
 

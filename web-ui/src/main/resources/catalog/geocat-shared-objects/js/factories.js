@@ -295,6 +295,10 @@ angular.module('geocat_shared_objects_factories', ['geocat_shared_objects_transl
                 }
               };
 
+            $scope.updateSubtemplatePrivileges = function() {
+              return $http.get('subtamplates/updateprivileges');
+            };
+
             return loadRecords($scope);
           },
           createSubtemplateSuccess: function($scope, locationUrl) {

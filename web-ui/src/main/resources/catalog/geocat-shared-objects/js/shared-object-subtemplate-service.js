@@ -23,7 +23,7 @@
               template: 's',
               fullPrivileges: 'y',
               data: template,
-              group: 0,
+              group: 99999,
               extra: validated ? 'validated' : 'nonvalidated',
               schema: 'iso19139.che'
             };

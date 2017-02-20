@@ -44,3 +44,7 @@ INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schema
 INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schematronid) VALUES (3, 'XPATH', '*//gmd:keyword/gco:CharacterString/text() = ''Geobasisdatensatz''__OR__*//gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString/text() = ''Geobasisdatensatz''', 'Geobasisdatensatz', 3);
 INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schematronid) VALUES (4, 'GROUP', '42', 'Geobasisdatensatz', 3);
 INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schematronid) VALUES (5, 'ALWAYS_ACCEPT', '', 'DefaultInspireStrict', 1);
+
+INSERT INTO public.groups(
+            id, description, email, logo, name)
+    VALUES (99999, 'Subtemplates', '', '', 'SUBTEMPLATES');

@@ -4,7 +4,7 @@
   var module = angular.module('geocat_shared_objects_translate_config', []);
 
   // Define the translation files to load
-  module.constant('$LOCALES', ['core', 'shared']);
+  module.constant('$LOCALES', ['core', 'shared', 'search']);
 
   module.config(['$translateProvider', '$LOCALES',
     function($translateProvider, $LOCALES) {
