@@ -46,6 +46,9 @@ public class AapMetadataReport implements Service {
 
     private final String xpSpecialistDef = xpSpecialistDe +"|"+ xpSpecialistFr +"|"+ xpSpecialistEn +"|"+ xpSpecialistIt;
 
+    // topicCategory
+    private final String xpTopicCategory = "gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode/text()";
+
     private final String xpTitleBase = "gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title";
     private final String xpTitleDe = xpTitleBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#DE']/text()";
     private final String xpTitleFr = xpTitleBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#FR']/text()";
@@ -158,6 +161,7 @@ public class AapMetadataReport implements Service {
 
         String mdOwner      = this.safeGetText(rawMd, xpMdOwnerDef);
         String mdSpecialist = this.safeGetText(rawMd, xpSpecialistDef);
+        String topicCategory = this.safeGetText(rawMd, xpTopicCategory);
 
         mi.addContent(new Element("title").setText(title));
         mi.addContent(new Element("identifier").setText(basicGeodataId));
@@ -166,6 +170,7 @@ public class AapMetadataReport implements Service {
         mi.addContent(new Element("geodatatype").setText(geodataType.equals("ReferenceGeodata") ? "Ja" : "Nein"));
         mi.addContent(new Element("owner").setText(mdOwner));
         mi.addContent(new Element("specialistAuthority").setText(mdSpecialist));
+        mi.addContent(new Element("topicCategory").setText(topicCategory));
 
         // TODO Point of contact / role code "Specialist authority"
         mi.addContent(new Element("updateFrequency").setText(updateFreq));

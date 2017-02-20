@@ -569,11 +569,6 @@
       <gmd:characterSet>
         <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8"/>
       </gmd:characterSet>
-      <gmd:topicCategory/>
-      <gmd:topicCategory/>
-      <gmd:topicCategory/>
-      <gmd:topicCategory/>
-      <gmd:topicCategory/>
       <gmd:topicCategory>
         <gmd:MD_TopicCategoryCode>environment</gmd:MD_TopicCategoryCode>
       </gmd:topicCategory>

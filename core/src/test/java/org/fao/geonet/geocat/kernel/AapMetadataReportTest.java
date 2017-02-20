@@ -42,6 +42,8 @@ public class AapMetadataReportTest {
                 el.contains("<owner>Service des forêts et de la faune</owner>"));
         assertTrue("Unexpected owner",
         el.contains("<specialistAuthority>Camptocamp</specialistAuthority>"));
+        assertTrue("Unexpected topicCategory",
+                el.contains("<topicCategory>environment</topicCategory>"));
         assertTrue("Unexpected update frequency",
                    el.contains("<updateFrequency>userDefined</updateFrequency>"));
         assertTrue("Unexpected duration of conservation",
@@ -100,6 +102,7 @@ public class AapMetadataReportTest {
                 el.contains("<geodatatype />")            &&
                 el.contains("<owner />")                  &&
                 el.contains("<specialistAuthority />")    &&
+                el.contains("<topicCategory />")          &&
                 el.contains("<updateFrequency />")        &&
                 el.contains("<durationOfConservation />") &&
                 el.contains("<commentOnDuration />")      &&
@@ -117,7 +120,7 @@ public class AapMetadataReportTest {
         assumeTrue(rawMdF.exists());
         String rawMd = FileUtils.readFileToString(rawMdF);
 
-        // xpath used for AAP field indexation (see iso19139.che/default-language.xsl around line 453)
+        // xpath used for AAP field indexation (see iso19139.che/index-fields/language-default.xsl around line 261)
         String xpath = "gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:descriptiveKeywords"+
                 "/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[text() = 'Aufbewahrungs- und Archivierungsplanung AAP']";
 
