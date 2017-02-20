@@ -625,7 +625,7 @@
       <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink">
         <gmd:MD_Keywords>
           <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
-            <gco:CharacterString>Aufbewahrungs- und Archivierungsplanung AAP</gco:CharacterString>
+            <gco:CharacterString>Aufbewahrungs- und Archivierungsplanung AAP - Bund</gco:CharacterString>
             <gmd:PT_FreeText>
               <gmd:textGroup>
                 <gmd:LocalisedCharacterString locale="#EN">AAP-Bund</gmd:LocalisedCharacterString>

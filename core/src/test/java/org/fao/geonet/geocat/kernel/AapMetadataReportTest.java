@@ -122,7 +122,7 @@ public class AapMetadataReportTest {
 
         // xpath used for AAP field indexation (see iso19139.che/index-fields/language-default.xsl around line 261)
         String xpath = "gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:descriptiveKeywords"+
-                "/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[text() = 'Aufbewahrungs- und Archivierungsplanung AAP']";
+                "/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[text() = 'Aufbewahrungs- und Archivierungsplanung AAP - Bund']";
 
         boolean b = Xml.selectBoolean(Xml.loadString(rawMd, false), xpath);
         assertTrue("Expected true, false found", b);
