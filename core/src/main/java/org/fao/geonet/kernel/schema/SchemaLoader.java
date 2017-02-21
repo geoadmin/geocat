@@ -616,20 +616,24 @@ public class SchemaLoader
                 number = number + numberRecursed;
             }
             else {
-                number++;
-                mdt.addElementWithType(ee.name, ee.type, ee.min, ee.max);
                 // Also add any elements that substitute for this one so that we can
                 // complete the list of choices if required
+				boolean hasSubstitutes = false;
                 if (doSubs) {
                     ArrayList<ElementEntry> elemSubs = hmSubsGrp.get(ee.name);
                     if (elemSubs != null) {
                         for (ElementEntry eeSub : elemSubs) {
-                            mdt.addElementWithType(eeSub.name, eeSub.type, eeSub.min, eeSub.max);
+                            mdt.addElement(eeSub.name, eeSub.type, true, eeSub.min, eeSub.max);
                             number++;
+							hasSubstitutes = true;
                         }
                     }
                 }
-            }
+				if(!hasSubstitutes) {
+					number++;
+					mdt.addElement(ee.name, ee.type, true, ee.min, ee.max);
+				}
+			}
         }
 		return number;
 	}
