@@ -301,7 +301,7 @@ public class Importer {
 
                     categs = info.getChild("categories");
                     privileges = info.getChild("privileges");
-
+                    groupId = Util.getParam(params, Params.GROUP);
                     Element general = info.getChild("general");
 
                     uuid = general.getChildText("uuid");
