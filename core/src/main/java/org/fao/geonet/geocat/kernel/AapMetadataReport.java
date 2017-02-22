@@ -46,11 +46,14 @@ public class AapMetadataReport implements Service {
 
     private final String xpSpecialistDef = xpSpecialistDe +"|"+ xpSpecialistFr +"|"+ xpSpecialistEn +"|"+ xpSpecialistIt;
 
+    // topicCategory
+    private final String xpTopicCategory = "gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode/text()";
+
     private final String xpTitleBase = "gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title";
     private final String xpTitleDe = xpTitleBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#DE']/text()";
-    private final String xpTitleFr = xpTitleBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#DE']/text()";
-    private final String xpTitleEn = xpTitleBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#DE']/text()";
-    private final String xpTitleIt = xpTitleBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#DE']/text()";
+    private final String xpTitleFr = xpTitleBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#FR']/text()";
+    private final String xpTitleEn = xpTitleBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#EN']/text()";
+    private final String xpTitleIt = xpTitleBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#IT']/text()";
 
     private final String xpTitle = xpTitleBase + "/gco:CharacterString/text()" + "|" + xpTitleDe + "|" + xpTitleFr + "|" + xpTitleEn + "|" + xpTitleIt;
 
@@ -58,15 +61,22 @@ public class AapMetadataReport implements Service {
     private final String xpGeodataType = "gmd:identificationInfo//che:geodataType/che:MD_geodataTypeCode/@codeListValue";
     private final String xpUuid = "gmd:fileIdentifier/gco:CharacterString/text()";
 
-    private final String xpMaintAndUpdateFreq = "gmd:metadataMaintenance/che:CHE_MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency/"
-            + "gmd:MD_MaintenanceFrequencyCode/@codeListValue";
+     private final String xpMaintAndUpdateFreq = " gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:resourceMaintenance/che:CHE_MD_MaintenanceInformation"
+            + "/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode/@codeListValue";
 
     // AAP
     private final String xpAap = "gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:resourceMaintenance/che:CHE_MD_MaintenanceInformation/che:appraisal/";
     // AAP duration of conservation
     private final String xpAapDuration = xpAap + "che:CHE_MD_Appraisal_AAP/che:durationOfConservation/gco:Integer/text()";
+
     // AAP comment on the duration
-    private final String xpAapCommentDuration = xpAap + "che:CHE_MD_Appraisal_AAP/che:commentOnDurationOfConservation/gco:CharacterString/text()";
+    private final String xpAapCommentDurBase = xpAap + "che:CHE_MD_Appraisal_AAP/che:commentOnDurationOfConservation";
+    private final String xpAapCommentDurDe = xpAapCommentDurBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#DE']/text()";
+    private final String xpAapCommentDurFr = xpAapCommentDurBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#FR']/text()";
+    private final String xpAapCommentDurEn = xpAapCommentDurBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#EN']/text()";
+    private final String xpAapCommentDurIt = xpAapCommentDurBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#IT']/text()";
+    private final String xpAapCommentDuration = xpAapCommentDurBase + "/gco:CharacterString/text()" + "|"
+            + xpAapCommentDurDe + "|" + xpAapCommentDurFr + "|" + xpAapCommentDurEn + "|" + xpAapCommentDurIt;
     // AAP appraisal of archival
     private final String xpAapAppraisalOfArchival = xpAap + "che:CHE_MD_Appraisal_AAP/che:appraisalOfArchivalValue/che:CHE_AppraisalOfArchivalValueCode/@codeListValue";
     // AAP reason for archiving value
@@ -151,6 +161,7 @@ public class AapMetadataReport implements Service {
 
         String mdOwner      = this.safeGetText(rawMd, xpMdOwnerDef);
         String mdSpecialist = this.safeGetText(rawMd, xpSpecialistDef);
+        String topicCategory = this.safeGetText(rawMd, xpTopicCategory);
 
         mi.addContent(new Element("title").setText(title));
         mi.addContent(new Element("identifier").setText(basicGeodataId));
@@ -159,6 +170,7 @@ public class AapMetadataReport implements Service {
         mi.addContent(new Element("geodatatype").setText(geodataType.equals("ReferenceGeodata") ? "Ja" : "Nein"));
         mi.addContent(new Element("owner").setText(mdOwner));
         mi.addContent(new Element("specialistAuthority").setText(mdSpecialist));
+        mi.addContent(new Element("topicCategory").setText(topicCategory));
 
         // TODO Point of contact / role code "Specialist authority"
         mi.addContent(new Element("updateFrequency").setText(updateFreq));

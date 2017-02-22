@@ -1,7 +1,7 @@
 package org.fao.geonet.geocat.kernel;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNotNull;
 import static org.junit.Assume.assumeTrue;
 
@@ -30,7 +30,6 @@ public class AapMetadataReportTest {
         tested.setData(rawMd);
 
         String el = Xml.getString(amr.extractAapInfo(tested));
-        System.out.println(el);
         assertTrue("Unexpected title",
                    el.contains("<title>Lisières forestières prioritaires</title>"));
         assertTrue("Unexpected geodata ID",
@@ -43,8 +42,10 @@ public class AapMetadataReportTest {
                 el.contains("<owner>Service des forêts et de la faune</owner>"));
         assertTrue("Unexpected owner",
         el.contains("<specialistAuthority>Camptocamp</specialistAuthority>"));
+        assertTrue("Unexpected topicCategory",
+                el.contains("<topicCategory>environment</topicCategory>"));
         assertTrue("Unexpected update frequency",
-                   el.contains("<updateFrequency>asNeeded</updateFrequency>"));
+                   el.contains("<updateFrequency>userDefined</updateFrequency>"));
         assertTrue("Unexpected duration of conservation",
                    el.contains("<durationOfConservation>3</durationOfConservation>"));
         assertTrue("Unexpected comment on duration",
@@ -101,6 +102,7 @@ public class AapMetadataReportTest {
                 el.contains("<geodatatype />")            &&
                 el.contains("<owner />")                  &&
                 el.contains("<specialistAuthority />")    &&
+                el.contains("<topicCategory />")          &&
                 el.contains("<updateFrequency />")        &&
                 el.contains("<durationOfConservation />") &&
                 el.contains("<commentOnDuration />")      &&
@@ -118,12 +120,31 @@ public class AapMetadataReportTest {
         assumeTrue(rawMdF.exists());
         String rawMd = FileUtils.readFileToString(rawMdF);
 
-        // xpath used for AAP field indexation (see iso19139.che/default-language.xsl around line 453)
+        // xpath used for AAP field indexation (see iso19139.che/index-fields/language-default.xsl around line 261)
         String xpath = "gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:descriptiveKeywords"+
-                "/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[text() = 'Aufbewahrungs- und Archivierungsplanung AAP']";
+                "/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[text() = 'Aufbewahrungs- und Archivierungsplanung AAP - Bund']";
 
         boolean b = Xml.selectBoolean(Xml.loadString(rawMd, false), xpath);
         assertTrue("Expected true, false found", b);
     }
     
+    @Test
+    public void missingFieldCSVExpotrtTestSb451() throws Exception {
+        URL rawMdUrl = this.getClass().getResource("issue-export-SB451.xml");
+        assumeNotNull(rawMdUrl);
+        File rawMdF = new File(rawMdUrl.toURI());
+        assumeTrue(rawMdF.exists());
+
+        String rawMd = FileUtils.readFileToString(rawMdF);
+        Metadata tested = new Metadata();
+        tested.setData(rawMd);
+
+        String el = Xml.getString(amr.extractAapInfo(tested));
+
+        assertFalse("SB-451: still missing fields (maintenanceAndUpdateFrequency, commentOnDurationOfConservation, commentOnArchivalValue)",
+                el.contains("<updateFrequency />")        &&
+                el.contains("<commentOnDuration />")      &&
+                el.contains("<commentOnArchival />"));
+    }
+
 }
