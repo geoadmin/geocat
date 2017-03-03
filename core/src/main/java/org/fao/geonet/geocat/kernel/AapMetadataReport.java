@@ -56,7 +56,7 @@ public class AapMetadataReport implements Service {
     private final String xpTitleEn = xpTitleBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#EN']/text()";
     private final String xpTitleIt = xpTitleBase + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#IT']/text()";
 
-    private final String xpTitle = xpTitleBase + "/gco:CharacterString/text()" + "|" + xpTitleDe + "|" + xpTitleFr + "|" + xpTitleEn + "|" + xpTitleIt;
+    private final String[] xpTitle = new String[] { xpTitleBase + "/gco:CharacterString/text()", xpTitleDe, xpTitleFr, xpTitleEn, xpTitleIt };
 
     private final String xpBasicGeodataIdentifier = "gmd:identificationInfo//che:basicGeodataID/gco:CharacterString/text()";
     private final String xpGeodataType = "gmd:identificationInfo//che:geodataType/che:MD_geodataTypeCode/@codeListValue";
@@ -146,7 +146,7 @@ public class AapMetadataReport implements Service {
         // but I don't want to have to fiddle with different xml / xpath
         // implementations between utests and live webapp, I consider this
         // approach as acceptable.
-        for (String xpt : xpTitle.split("\\|")) {
+        for (String xpt : xpTitle) {
             title = this.safeGetText(rawMd, xpt);
             if (! StringUtils.isEmpty(title))
                 break;
