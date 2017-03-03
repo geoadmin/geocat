@@ -147,4 +147,23 @@ public class AapMetadataReportTest {
                 el.contains("<commentOnArchival />"));
     }
 
+    @Test
+    public void csvExportMismatchLanguages() throws Exception {
+        System.setProperty("javax.xml.transform.TransformerFactory",
+                "net.sf.saxon.TransformerFactoryImpl");
+        URL rawMdUrl = this.getClass().getResource("sb451-export-title-lang-mismatch.xml");
+        assumeNotNull(rawMdUrl);
+        File rawMdF = new File(rawMdUrl.toURI());
+        assumeTrue(rawMdF.exists());
+
+        String rawMd = FileUtils.readFileToString(rawMdF);
+        Metadata tested = new Metadata();
+        tested.setData(rawMd);
+
+        String el = Xml.getString(amr.extractAapInfo(tested));
+
+        assertTrue(el.contains("<title>Haltestellen des öffentlichen Verkehrs</title>")
+                && el.contains("<owner>Bundesamt für Verkehr</owner>"));
+    }
+
 }

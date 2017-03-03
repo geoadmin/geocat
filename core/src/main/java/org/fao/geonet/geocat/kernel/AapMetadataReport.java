@@ -17,6 +17,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.Text;
+import org.springframework.util.StringUtils;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -140,7 +141,16 @@ public class AapMetadataReport implements Service {
 
         Element rawMd = m.getXmlData(false);
 
-        String title = this.safeGetText(rawMd, xpTitle);
+        String title = "";
+        // Note: it should be possible to do this in "pure xpath",
+        // but I don't want to have to fiddle with different xml / xpath
+        // implementations between utests and live webapp, I consider this
+        // approach as acceptable.
+        for (String xpt : xpTitle.split("\\|")) {
+            title = this.safeGetText(rawMd, xpt);
+            if (! StringUtils.isEmpty(title))
+                break;
+        }
         String basicGeodataId = this.safeGetText(rawMd, xpBasicGeodataIdentifier);
         String uuid = this.safeGetText(rawMd, xpUuid);
         String geodataType = this.safeGetAttribute(rawMd, xpGeodataType);
