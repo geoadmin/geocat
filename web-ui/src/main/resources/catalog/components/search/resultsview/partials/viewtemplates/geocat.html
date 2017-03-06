@@ -24,11 +24,11 @@
              gn-metadata-open-selector=".gn-resultview" title="{{md.title || md.defaultTitle}}">{{md.title || md.defaultTitle}}</a>
         </h4>
 
-        <a class="pull-left" ng-if="md.groupWebsite" href="{{md.groupWebsite}}" target="_blank">
-          <img ng-src="../..{{md.logo}}" class="media-object"/>
+        <a class="pull-left" ng-if="::md.groupWebsite" href="{{::md.groupWebsite}}" title="{{::getGroupById(md.groupOwner).name}}" target="_blank">
+          <img ng-src="../..{{::md.logo}}" class="media-object"/>
         </a>
-        <a class="pull-left" ng-if="!md.groupWebsite">
-          <img ng-src="../..{{md.logo}}" class="media-object"/>
+        <a class="pull-left" ng-if="::!md.groupWebsite" title="{{::getGroupById(md.groupOwner).name}}">
+          <img ng-src="../..{{::md.logo}}" class="media-object"/>
         </a>
 
         <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350" dd-text-collapse-text="{{md.abstract || md.defaultAbstract}}"></p>

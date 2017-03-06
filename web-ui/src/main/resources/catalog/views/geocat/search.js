@@ -19,6 +19,8 @@
       $LOCALES.push('geocat');
     }]);
 
+  module.value('geocatGroupsAndSources', []);
+
   /**
    * @ngdoc controller
    * @name gn_search_geocat.controller:gnsGeocat
@@ -36,8 +38,9 @@
     '$window',
     'gnMdView',
     'gnUrlUtils',
+    'geocatGroupsAndSources',
     function($scope, $timeout, gnMap, gnSearchSettings, $window, gnMdView,
-             gnUrlUtils) {
+             gnUrlUtils, geocatGroupsAndSources) {
 
       var localStorage = $window.localStorage || {};
 
@@ -115,6 +118,18 @@
 
       gnMdView.initFormatter('.gn-resultview');
       $('#anySearchField').focus();
+
+      $scope.getGroupById = function(id) {
+        var ret;
+        geocatGroupsAndSources.some(function(g) {
+          if(g.id == id) {
+            ret = g;
+            return true;
+          }
+          else return false;
+        });
+        return ret;
+      };
     }]);
 
   module.controller('gnsGeocatToolbar', [
@@ -167,10 +182,11 @@
     '$location',
     'gnMap',
     'gnSearchLocation',
+    'geocatGroupsAndSources',
     function($scope, gnHttp, gnHttpServices, gnRegionService,
         $timeout, suggestService, $http, gnSearchSettings,
              gnSearchManagerService, ngeoDecorateInteraction, $q,
-             $location, gnMap, gnSearchLocation) {
+             $location, gnMap, gnSearchLocation, geocatGroupsAndSources) {
 
       // init routing
       var routeHomepage = function() {
@@ -283,11 +299,13 @@
                 var parseBlock = function(block) {
                   var a = data[block];
                   for (var i = 0; i < a.length; i++) {
-                    res.push({
+                    var o = {
                       id: a[i]['@id'],
                       name: (a[i].label && a[i].label[$scope.lang]) ?
                           a[i].label[$scope.lang] : a[i].name
-                    });
+                    };
+                    res.push(o);
+                    geocatGroupsAndSources.push(o);
                   }
                 };
                 parseBlock('sources');
