@@ -58,6 +58,8 @@ public class Unset extends NotInReadOnlyModeService {
 		String id      = Util.getParam(params, Params.ID);
 		String type    = Util.getParam(params, Params.TYPE);
 		String version = Util.getParam(params, Params.VERSION);
+		String url = Util.getParam(params, Params.URL);
+
 
 		Lib.resource.checkEditPrivilege(context, id);
 
@@ -78,17 +80,13 @@ public class Unset extends NotInReadOnlyModeService {
 		if (result == null)
 			throw new OperationAbortedEx("Metadata not found", id);
 
-		result = result.getChild(type);
 
-		if (result == null)
-			throw new OperationAbortedEx("Metadata has no thumbnail", id);
-
-		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + getFileName(result.getText());
+		String file = Lib.resource.getDir(context, Params.Access.PUBLIC, id) + "";
 
 		//-----------------------------------------------------------------------
 		//--- remove thumbnail
 
-		dataMan.unsetThumbnail(context, id, type.equals("small"), true);
+		dataMan.unsetThumbnail(context, id, type.equals("small"), true, url);
 		
 		
 		File thumbnail = new File(file);

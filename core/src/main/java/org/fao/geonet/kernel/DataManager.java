@@ -2528,15 +2528,18 @@ public class DataManager implements ApplicationEventPublisherAware {
         return result;
     }
 
-    /**
-     *
-     * @param context
-     * @param id
-     * @param small
-     * @param file
-     * @throws Exception
-     */
     public void setThumbnail(ServiceContext context, String id, boolean small, String file, boolean indexAfterChange) throws Exception {
+        setThumbnail(context, id, small, file, indexAfterChange, null);
+    }
+        /**
+         *
+         * @param context
+         * @param id
+         * @param small
+         * @param file
+         * @throws Exception
+         */
+    public void setThumbnail(ServiceContext context, String id, boolean small, String file, boolean indexAfterChange, final String description) throws Exception {
         int    pos = file.lastIndexOf('.');
         String ext = (pos == -1) ? "???" : file.substring(pos +1);
 
@@ -2556,7 +2559,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         // as many profiles depend on it.
         env.addContent(new Element("url").setText(getSettingManager().getSiteURL(context)));
 
-        manageThumbnail(context, id, small, env, Geonet.File.SET_THUMBNAIL, indexAfterChange);
+        manageThumbnail(context, id, small, env, Geonet.File.SET_THUMBNAIL, indexAfterChange, description);
     }
 
     /**
@@ -2566,10 +2569,13 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @param small
      * @throws Exception
      */
-    public void unsetThumbnail(ServiceContext context, String id, boolean small, boolean indexAfterChange) throws Exception {
+    public void unsetThumbnail(ServiceContext context, String id, boolean small, boolean indexAfterChange, String url) throws Exception {
         Element env = new Element("env");
+        if(url != null) {
+            env.addContent(new Element("id").setText(url));
+        }
 
-        manageThumbnail(context, id, small, env, Geonet.File.UNSET_THUMBNAIL, indexAfterChange);
+        manageThumbnail(context, id, small, env, Geonet.File.UNSET_THUMBNAIL, indexAfterChange, null);
     }
 
     /**
@@ -2583,7 +2589,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @throws Exception
      */
     private void manageThumbnail(ServiceContext context, String id, boolean small, Element env,
-                                 String styleSheet, boolean indexAfterChange) throws Exception {
+                                 String styleSheet, boolean indexAfterChange, final String description) throws Exception {
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
         Element md = getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
@@ -2595,7 +2601,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         String schema = getMetadataSchema(id);
 
         //--- setup environment
-        String type = small ? "thumbnail" : "large_thumbnail";
+        String type = description != null ? description : (small ? "thumbnail" : "large_thumbnail");
         env.addContent(new Element("type").setText(type));
         transformMd(context, id, md, env, schema, styleSheet, indexAfterChange);
     }

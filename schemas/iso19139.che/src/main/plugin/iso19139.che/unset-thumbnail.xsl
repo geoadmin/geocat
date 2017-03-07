@@ -9,13 +9,12 @@
 	<!-- ================================================================= -->
 	
 	<xsl:template match="/root">
-		 <xsl:apply-templates select="che:CHE_MD_Metadata"/>
+		<xsl:apply-templates select="che:CHE_MD_Metadata"/>
 	</xsl:template>
 
 	<!-- ================================================================= -->
 	
-	<xsl:template priority="5" match="gmd:graphicOverview[gmd:MD_BrowseGraphic/gmd:fileDescription/gco:CharacterString = /root/env/type or
-						 gmd:MD_BrowseGraphic/gmd:fileDescription/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString = /root/env/type]"/>
+	<xsl:template priority="5" match="gmd:graphicOverview[gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString = /root/env/id]"/>
 
 	<!-- ================================================================= -->
 

@@ -86,6 +86,7 @@ public class Set {
                                         @PathVariable String lang,
                                         @RequestParam(Params.ID) String id,
                                         @RequestParam(Params.TYPE) String type,
+                                        @RequestParam(Params.DESCRIPTION) String description,
                                         @RequestParam(Params.VERSION) String version,
                                         @RequestParam(Params.FNAME) MultipartFile file,
                                         @RequestParam(Params.SCALING_DIR) String scalingDir,
@@ -130,7 +131,7 @@ public class Set {
 
 			removeOldThumbnail(context, id, "small", false);
 			createThumbnail(file, outFile, smallScalingFactor, smallScalingDir);
-			dataMan.setThumbnail(context, id, true, smallFile.toString(), false);
+			dataMan.setThumbnail(context, id, true, smallFile.toString(), false, description);
 		}
 
 		//-----------------------------------------------------------------------
@@ -145,14 +146,14 @@ public class Set {
 
 			createThumbnail(file, outFile, scalingFactor, scalingDir);
 
-			dataMan.setThumbnail(context, id, type.equals("small"), newFile.toString(), false);
+			dataMan.setThumbnail(context, id, type.equals("small"), newFile.toString(), false, description);
 		}
 		else
 		{
 			//--- move uploaded file to destination directory
             Files.copy(file.getInputStream(), metadataPublicDatadir.resolve(file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
 
-			dataMan.setThumbnail(context, id, type.equals("small"), file.getOriginalFilename(), false);
+			dataMan.setThumbnail(context, id, type.equals("small"), file.getOriginalFilename(), false, description);
 		}
 
         dataMan.indexMetadata(id, true);
@@ -211,7 +212,7 @@ public class Set {
 		//-----------------------------------------------------------------------
 		//--- create the requested thumbnail, removing the old one
         removeOldThumbnail(context, id, type, false);
-        saveThumbnail(scaling, file, type, dataDir, scalingDir, scalingFactor, dataMan, id, context);
+        saveThumbnail(scaling, file, type, dataDir, scalingDir, scalingFactor, dataMan, id, context, null);
 
 		//-----------------------------------------------------------------------
         dataMan.indexMetadata(id, true);
@@ -228,7 +229,7 @@ public class Set {
 	//--------------------------------------------------------------------------
 
     private void saveThumbnail(boolean scaling, String file, String type, Path dataDir, String scalingDir,
-                               int scalingFactor, DataManager dataMan, String id, ServiceContext context) throws Exception {
+                               int scalingFactor, DataManager dataMan, String id, ServiceContext context, final String description) throws Exception {
             if (scaling) {
                 Path newFile = getFileName(file, type.equals("small"));
                 Path inFile  = context.getUploadDir().resolve(file);
@@ -243,7 +244,7 @@ public class Set {
                     context.error("Error while deleting thumbnail : " + inFile);
                 }
 
-                dataMan.setThumbnail(context, id, type.equals("small"), newFile.toString(), false);
+                dataMan.setThumbnail(context, id, type.equals("small"), newFile.toString(), false, null);
             } else {
                 //--- move uploaded file to destination directory
                 Path inFile  = context.getUploadDir().resolve(file);
@@ -256,7 +257,7 @@ public class Set {
                     throw new Exception("Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
                 }
 			
-                dataMan.setThumbnail(context, id, type.equals("small"), file, false);
+                dataMan.setThumbnail(context, id, type.equals("small"), file, false, description);
             }
         }
 
@@ -281,7 +282,7 @@ public class Set {
 		//-----------------------------------------------------------------------
 		//--- remove thumbnail
 
-		dataMan.unsetThumbnail(context, id, type.equals("small"), indexAfterChange);
+		dataMan.unsetThumbnail(context, id, type.equals("small"), indexAfterChange, null);
 
 		//--- remove file
 

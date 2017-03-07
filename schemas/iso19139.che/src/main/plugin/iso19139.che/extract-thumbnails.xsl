@@ -28,6 +28,11 @@
 							<xsl:value-of select="gmd:fileName/gco:CharacterString" />
 						</small>
 					</xsl:when>
+					<xsl:otherwise>
+						<description>
+							<xsl:value-of select="gmd:fileDescription/gco:CharacterString" />
+						</description>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:for-each>
 		</thumbnail>

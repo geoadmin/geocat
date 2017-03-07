@@ -473,6 +473,7 @@
             runService('removeThumbnail', {
               type: (thumb.title === 'thumbnail' ? 'small' : 'large'),
               id: gnCurrentEdit.id,
+              url: thumb.id,
               version: gnCurrentEdit.version
             }, this);
           }
