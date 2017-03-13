@@ -8,6 +8,7 @@ import org.jdom.Element;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,7 +64,14 @@ public class HarvesterUtil {
                                           Map<String, Object> processParams,
                                           Logger log) {
 
-        Path filePath = metadataSchema.getSchemaDir().resolve("process").resolve(processName + ".xsl");
+        Path filePath = null;
+        //GEOCAT in harvester xsl comes from xsl/convert
+        if(processName.startsWith("/")) {
+            filePath = Paths.get(processName);
+        }
+        else {
+            filePath = metadataSchema.getSchemaDir().resolve("process").resolve(processName + ".xsl");
+        }
         if (!Files.exists(filePath)) {
             log.info("     processing instruction not found for " + metadataSchema.getName() + " schema. metadata not filtered.");
         } else {
