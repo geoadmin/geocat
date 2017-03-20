@@ -219,7 +219,7 @@ public class Aligner extends BaseAligner
         if (cancelMonitor.get()) {
             return;
         }
-
+        String mdUuid = ri.uuid;
         Element md = retrieveMetadata(ri.uuid);
 
 		if (md == null) {
@@ -244,6 +244,13 @@ public class Aligner extends BaseAligner
         if (!params.xslfilter.equals("")) {
             md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
                     md, processName, processParams, log);
+
+            //GEOCAT get new uuid if modified by process
+            mdUuid = dataMan.extractUUID(schema, md);
+            if(mdUuid == null) {
+                mdUuid = ri.uuid;
+            }
+            // end geocat
         }
         //
         // insert metadata
@@ -258,7 +265,9 @@ public class Aligner extends BaseAligner
         } else {
             ownerId = Integer.parseInt(params.getOwnerId());
         }
-        Metadata metadata = new Metadata().setUuid(ri.uuid);
+
+
+        Metadata metadata = new Metadata().setUuid(mdUuid);
         metadata.getDataInfo().
                 setSchemaId(schema).
                 setRoot(md.getQualifiedName()).
