@@ -122,9 +122,16 @@ SET
 WHERE
   name = 'metadata/editor/schemaConfig';
 
+ALTER TABLE public.operationallowed DROP CONSTRAINT operationallowed_metadataid_fkey;
+ALTER TABLE public.operationallowed
+  ADD CONSTRAINT operationallowed_metadataid_fkey FOREIGN KEY (metadataid)
+      REFERENCES public.metadata (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE;
+
 INSERT INTO public.groups(
             id, description, email, logo, name)
     VALUES (99999, 'Subtemplates', '', '', 'SUBTEMPLATES');
+
 
 -- END GEOCAT
 INSERT INTO settings (name, value, datatype, position, internal) VALUES ('system/server/log','log4j.xml',0,250,'y');
