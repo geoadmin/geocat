@@ -14,7 +14,7 @@
 	 <xsl:template match="/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString">
 	  <xsl:copy>
 	  <xsl:choose>
-	 	 <xsl:when test = "string-length(text()) = 3" >
+	 	 <xsl:when test = "string-length(text()) &lt; 5" >
 	 	  <xsl:value-of select="concat('ASIT-VD_', text())"/>
 	   	</xsl:when>
 	   	<xsl:otherwise>
