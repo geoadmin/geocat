@@ -36,9 +36,12 @@ import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
 import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -53,6 +56,9 @@ import java.util.Set;
  * @author jeichar
  */
 public class Delete implements Service {
+
+    private DataManager dataManager;
+    private XmlSerializer xmlSerializer;
 
     public Element exec(Element params, ServiceContext context) throws Exception {
         boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
@@ -69,6 +75,8 @@ public class Delete implements Service {
             ids[i] = Integer.parseInt(sIds[i]);
         }
 
+        this.dataManager = context.getBean(DataManager.class);
+        this.xmlSerializer = context.getBean(XmlSerializer.class);
 
         Log.debug(Geocat.Module.REUSABLE, "Starting to delete following rejected objects: ("
                                           + Arrays.toString(ids) + ")");
@@ -85,9 +93,24 @@ public class Delete implements Service {
                 metadataIds.add(metadataRecord.id);
 
                 // compile a list of email addresses for notifications
-                for (MetadataRecord record : md) {
-                    emailInfo.put(record.ownerId, record.id);
-                }
+                emailInfo.put(metadataRecord.ownerId, metadataRecord.id);
+
+                // Remove shared contact from MDs
+                Element el = this.dataManager.getGeocatMetadata(context, metadataRecord.id.toString(), false, true);
+
+                java.util.List namespaces = Arrays.asList(
+                        Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd"),
+                        Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink")
+                );
+
+                // Delete 'gmd:pointOfContact' with 'xlink:href' containing xml.reusable.deleted
+                java.util.List<Element> res = Xml.selectNodes(el, "*//gmd:pointOfContact[contains(@xlink:href,'xml.reusable.deleted')]", namespaces);
+                for(Element re : res)
+                    re.detach();
+
+                boolean updateDateStamp = false;
+                this.xmlSerializer.update(metadataRecord.id.toString(), el, null, updateDateStamp, metadataRecord.uuid, context);
+
             }
         }
 
