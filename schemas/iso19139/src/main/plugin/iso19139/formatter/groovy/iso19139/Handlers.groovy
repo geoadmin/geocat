@@ -1,5 +1,6 @@
 package iso19139
 
+import org.apache.commons.lang.StringEscapeUtils
 import org.fao.geonet.services.metadata.format.groovy.Environment
 import org.fao.geonet.services.metadata.format.groovy.MapConfig
 
@@ -306,7 +307,7 @@ public class Handlers {
             def img = graphic.'gmd:fileName'.text()
             String thumbnailUrl;
             if (img.startsWith("http://") || img.startsWith("https://")) {
-                thumbnailUrl = img;
+                thumbnailUrl = StringEscapeUtils.escapeXml(img);
             } else if (!isSmallImage(img) || !hasLargeGraphic) {
                 thumbnailUrl = env.getLocalizedUrl() + "resources.get?fname=" + img + "&amp;access=public&amp;id=" + env.getMetadataId();
             }
