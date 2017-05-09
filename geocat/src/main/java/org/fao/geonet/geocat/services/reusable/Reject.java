@@ -36,6 +36,7 @@ import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geocat;
+import org.fao.geonet.geocat.kernel.reusable.ContactsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.DeletedObjects;
 import org.fao.geonet.geocat.kernel.reusable.ExtentsStrategy;
 import org.fao.geonet.geocat.kernel.reusable.MetadataRecord;
@@ -45,14 +46,17 @@ import org.fao.geonet.geocat.kernel.reusable.SharedObjectStrategy;
 import org.fao.geonet.geocat.kernel.reusable.Utils;
 import org.fao.geonet.geocat.kernel.reusable.Utils.FindXLinks;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.geocat.RejectedSharedObjectRepository;
 import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.springframework.transaction.TransactionStatus;
 
 import java.nio.file.Path;
@@ -75,6 +79,10 @@ import static jeeves.transaction.TransactionManager.TransactionRequirement.CREAT
  */
 public class Reject implements Service {
 
+    private DataManager dataManager;
+    private MetadataRepository metadataRepository;
+    private XmlSerializer xmlSerializer;
+
     public Element exec(Element params, ServiceContext context) throws Exception {
         String page = Util.getParamText(params, "type");
         String[] ids = Util.getParamText(params, "id").split(",");
@@ -83,6 +91,9 @@ public class Reject implements Service {
         boolean testing = Boolean.parseBoolean(Util.getParam(params, "testing", "false"));
         boolean isValidObject = Boolean.parseBoolean(Util.getParam(params, "isValidObject", "false"));
 
+        this.dataManager = context.getBean(DataManager.class);
+        this.metadataRepository = context.getBean(MetadataRepository.class);
+        this.xmlSerializer = context.getBean(XmlSerializer.class);
 
         String specificData = null;
         if (isValidObject && ReusableTypes.extents.toString().equals(page)) {
@@ -139,7 +150,28 @@ public class Reject implements Service {
             Element newIds = updateHrefs(context, desc, rejectionMessage, results);
 
             for (MetadataRecord metadataRecord : results) {
-                allAffectedMdIds.add(Integer.toString(metadataRecord.id));
+                String mdId = Integer.toString(metadataRecord.id);
+                allAffectedMdIds.add(mdId);
+
+                // Remove validated shared contact from MDs
+                if(strategy instanceof ContactsStrategy && isValidObject){
+
+                    // Validated contacts should be deleted from MD
+                    Element el = this.dataManager.getGeocatMetadata(context, mdId, false, true);
+
+                    List namespaces = Arrays.asList(
+                            Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd"),
+                            Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink")
+                    );
+
+                    // Delete 'gmd:pointOfContact' with 'xlink:href' containing xml.reusable.deleted
+                    List<Element> res = Xml.selectNodes(el, "*//gmd:pointOfContact[contains(@xlink:href,'xml.reusable.deleted')]", namespaces);
+                    for(Element re : res)
+                        re.detach();
+
+                    boolean updateDateStamp = false;
+                    this.xmlSerializer.update(mdId, el, null, updateDateStamp, metadataRecord.uuid, context);
+                }
             }
 
             Element e = new Element("idMap").addContent(new Element("oldId").setText(id)).addContent(newIds);

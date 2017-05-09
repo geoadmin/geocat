@@ -2040,13 +2040,6 @@ public class DataManager implements ApplicationEventPublisherAware {
      * Updates a metadata record. Deletes validation report currently in session (if any). If user asks for validation
      * the validation report will be (re-)created then.
      *
-     * @param context
-     * @param metadataId
-     * @param validate
-     * @param lang
-     * @param changeDate
-     * @param updateDateStamp
-     *
      * @return metadata if the that was updated
      * @throws Exception
      */
@@ -2066,9 +2059,14 @@ public class DataManager implements ApplicationEventPublisherAware {
         Integer intId = Integer.valueOf(metadataId);
         if (ufo) {
             String parentUuid = null;
-            metadataXml = updateFixedInfo(schema, Optional.of(intId), null, metadataXml, parentUuid, (updateDateStamp ? UpdateDatestamp
-
-                    .YES : UpdateDatestamp.NO), context);
+            metadataXml = updateFixedInfo(
+                    schema,
+                    Optional.of(intId),
+                    null,
+                    metadataXml,
+                    parentUuid,
+                    (updateDateStamp ? UpdateDatestamp.YES : UpdateDatestamp.NO),
+                    context);
         }
 
         //--- force namespace prefix for iso19139 metadata
