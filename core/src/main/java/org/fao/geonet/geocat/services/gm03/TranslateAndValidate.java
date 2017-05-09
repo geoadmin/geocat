@@ -382,4 +382,17 @@ public class TranslateAndValidate {
         return doc.getConfiguration().buildDocument(xmlSource);
     }
 
+    /**
+     * This method will convert short md identifier only composed by number [0-9]+ by prefixing with 'ASIT-VD'
+     * If md identifier is not only composed of number, it will not be changed and return as is.
+     */
+    public static String convertToUuid(String id){
+        try{
+            Integer.parseInt(id);
+            return "ASIT-VD" + id;
+        } catch (NumberFormatException ex){
+            return id;
+        }
+    }
+
 }
