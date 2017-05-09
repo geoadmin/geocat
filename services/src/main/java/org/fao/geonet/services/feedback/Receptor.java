@@ -59,27 +59,11 @@ public class Receptor implements Service {
             //
             // automatic hidden params
             //
-            String metadataOrganization = Util.getParam(params, Params.METADATA_ORGANIZATION, "");
             String metadataEmail = Util.getParam(params, Params.METADATA_EMAIL, "");
             String uuid = Util.getParam(params, Params.UUID, "");
-            String date = Util.getParam(params, Params.DATE, "");
-            String title = Util.getParam(params, Params.TITLE, "");
 
             Calendar cal = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM yyyy 'at' hh:mm:ss z");
-            String currentDateTime = sdf.format(cal.getTime());
-            String body = "Date and time: " + currentDateTime + "\n";
-            if(StringUtils.isEmpty(uuid)) {
-                body += "Subject:\tGeneral feedback GeoNetwork catalog\n";
-            }
-            else {
-                body += "Subject:\tMetadata feedback GeoNetwork catalog\n";
-                body += "Metadata UUID: " + uuid + "\n";
-                body = "Metadata title: " + title + "\n";
-                body += "Metadata date: " + date + "\n";
-                body += "Metadata organization: " + metadataOrganization + "\n";
-            }
-            body = "Name:\t" + name + "\n";
+            String body = "Name:\t" + name + "\n";
             body += "Sex:\t" + sex + "\n";
             body += "Function:\t" + function + "\n";
             body += "Organization:\t" + organization + "\n";
