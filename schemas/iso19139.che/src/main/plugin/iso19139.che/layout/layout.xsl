@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gmd="http://www.isotc211.org/2005/gmd"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:che="http://www.geocat.ch/2008/che"
                 xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
                 xmlns:util="java:org.fao.geonet.util.GeocatXslUtil"
@@ -50,7 +52,8 @@
 
       <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(., true())"/>
       <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
-      <xsl:variable name="regionId" select="util:parseRegionIdFromXLink(../../@xlink:href)"/>
+      <xsl:variable name="regionId" select="''"/>
+      <!--GEOCAT-DEPRECATED <xsl:variable name="regionId" select="util:parseRegionIdFromXLink(../../@xlink:href)"/>-->
 
       <xsl:call-template name="render-boxed-element">
         <xsl:with-param name="label"
@@ -90,10 +93,11 @@
     <xsl:variable name="isMultilingualElementExpanded"
                   select="count($editorConfig/editor/multilingualFields/expanded[name = $elementName]) > 0"/>
 
-    <xsl:variable name="theElement" select="if ($isMultilingualElement and $hasOnlyPTFreeText)
-    then che:PT_FreeURL
-    else
-      gmd:URL"/>
+    <xsl:variable name="theElement"
+                  select="if ($isMultilingualElement and $hasOnlyPTFreeText)
+                          then che:PT_FreeURL
+                          else gmd:URL"/>
+
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPathByRef(gn:element/@ref, $metadata, true())"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
     <xsl:variable name="labelConfig"
