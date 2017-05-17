@@ -110,7 +110,7 @@
       <option value="AT">Autriche (AT)</option>
     </helper>
   </element>
-  <element name="che:language" id="509.0">
+  <element name="che:language" id="509.0" context="che:CHE_MD_Legislation">
     <label>Langue</label>
     <description>Langue dans laquelle la loi est écrite</description>
     <condition>Obligatoire</condition>
