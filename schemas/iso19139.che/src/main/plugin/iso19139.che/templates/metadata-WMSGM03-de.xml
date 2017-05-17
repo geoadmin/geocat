@@ -9,8 +9,7 @@
     <gco:CharacterString>91fb91ef-3e2d-43b7-9b34-f519182228b3</gco:CharacterString>
   </gmd:fileIdentifier>
   <gmd:language>
-    <gco:CharacterString>deu</gco:CharacterString>
-  </gmd:language>
+    <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger"/>  </gmd:language>
   <gmd:characterSet>
     <gmd:MD_CharacterSetCode codeListValue="utf8"
                              codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>

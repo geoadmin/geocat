@@ -152,8 +152,7 @@
         </gmd:MD_Resolution>
       </gmd:spatialResolution>
       <gmd:language>
-        <gco:CharacterString>deu</gco:CharacterString>
-      </gmd:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger"/>      </gmd:language>
       <gmd:topicCategory>
         <gmd:MD_TopicCategoryCode>boundaries</gmd:MD_TopicCategoryCode>
       </gmd:topicCategory>
