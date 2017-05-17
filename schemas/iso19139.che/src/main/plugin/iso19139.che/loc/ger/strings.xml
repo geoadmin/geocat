@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <understandResource>Information about the dataset</understandResource>
+  <relatedResources>Related services and linked data</relatedResources>
+  <techInfo>Technical information</techInfo>
+  <contactInfo>Contact information</contactInfo>
+  <temporalRef>Temporal information</temporalRef>
+  <constraintInfo>Access constraint information</constraintInfo>
+
+  <!-- New strings added for the AngularJS editor -->
+  <!-- View and tabs -->
+  <advanced>Full</advanced>
+  <default>Simple</default>
+  <simple>Simple</simple>
+  <inspire>INSPIRE</inspire>
+  <bgdi>BGDI</bgdi>
+  <resource>Resource</resource>
+  <xml>XML</xml>
+  <metadata>Metadaten</metadata>
+  <identificationInfo>Basisinfo</identificationInfo>
+  <distributionInfo>Vertriebsinfo</distributionInfo>
+  <dataQualityInfo>Datenqualität</dataQualityInfo>
+  <spatialRepresentationInfo>Struktur der räumlichen Daten</spatialRepresentationInfo>
+  <referenceSystemInfo>Referenzsystem</referenceSystemInfo>
+  <contentInfo>Dateninhalt</contentInfo>
+  <portrayalCatalogueInfo>Darstellungskatalog</portrayalCatalogueInfo>
+  <metadataConstraints>Metadateneinschränkungen</metadataConstraints>
+  <metadataMaintenance>Metadatenpflege</metadataMaintenance>
+  <applicationSchemaInfo>Anwendungsschema</applicationSchemaInfo>
+  <metadataExtensionInfo>Metadatenerweiterungen</metadataExtensionInfo>
+  <legislationInformation>Gesetzgebung</legislationInformation>
+  <rsIdentifier>Projektions-Code</rsIdentifier>
+  <spatialResolution>Maßstab (min. oder max.)</spatialResolution>
+  <geometricObjectType>Geometrie-Typ</geometricObjectType>
+
+  <!-- XSD error translation -->
+  <invalidElement>Invalid element. Invalid content was found starting with element: </invalidElement>
+  <onElementOf>One of the following elements </onElementOf>
+  <isExpected> is expected.</isExpected>
+  <isNotComplete> is not complete.</isNotComplete>
+  <elementLocated>Parent element is </elementLocated>
+  <missingElement>Missing element. The content of element: </missingElement>
+  <invalidValue>Invalid or missing value.</invalidValue>
+  <notValidFor> is not a valid value for </notValidFor>
+  <xsdErrorIs>XSD error is: </xsdErrorIs>
+  <inElement> in element </inElement>
+  <enum1>Value </enum1>
+  <enum2> is not valid for the field </enum2>
+  <enum3>List of values is :</enum3>
+
+</strings>

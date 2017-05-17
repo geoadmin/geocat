@@ -1,0 +1,15 @@
+<strings>
+  <mandatoryFields>Check mandatory fields</mandatoryFields>
+
+  <durationOfConservationRequired>durationOfConservation is required (integer)</durationOfConservationRequired>
+  <durationOfConservationReport>duration of conservation: </durationOfConservationReport>
+  
+  <appraisalOfArchivalValueRequired>appraisalOfArchivalValue is required (codelist)</appraisalOfArchivalValueRequired>
+  <appraisalOfArchivalValueReport>appraisal of archival value: </appraisalOfArchivalValueReport>
+
+  <reasonForArchivalValuePresence>Test presence or absence of reasonForArchivalValue field</reasonForArchivalValuePresence>
+  <reasonForArchivalValuePresenceReport>reasonForArchivalValue: </reasonForArchivalValuePresenceReport>
+  <reasonForArchivalValuePresent>Field is present</reasonForArchivalValuePresent>
+  <reasonForArchivalValueAbsent>Field is absent</reasonForArchivalValueAbsent>
+
+</strings>
