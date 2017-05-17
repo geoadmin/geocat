@@ -15,18 +15,18 @@ import java.util.List;
  * Created by francois on 6/15/14.
  */
 public class ISO19139cheSchemaPlugin
-        extends ISO19139SchemaPlugin {
+    extends ISO19139SchemaPlugin {
     public static final String IDENTIFIER = "iso19139.che";
 
     private static ImmutableSet<Namespace> allNamespaces;
 
     static {
         allNamespaces = ImmutableSet.<Namespace>builder()
-                .add(ISO19139Namespaces.GCO)
-                .add(ISO19139Namespaces.GMD)
-                .add(ISO19139Namespaces.SRV)
-                .add(ISO19139cheNamespaces.CHE)
-                .build();
+            .add(ISO19139Namespaces.GCO)
+            .add(ISO19139Namespaces.GMD)
+            .add(ISO19139Namespaces.SRV)
+            .add(ISO19139cheNamespaces.CHE)
+            .build();
     }
 
     @Override
@@ -35,25 +35,25 @@ public class ISO19139cheSchemaPlugin
         List<Element> matches = super.getTranslationForElement(element, languageIdentifier);
         if (matches == null || matches.isEmpty()) {
             final String path = ".//che:LocalisedURL" +
-                                "[@locale='#" + languageIdentifier + "' and ../local-name() == 'URLGroup']";
+                "[@locale='#" + languageIdentifier + "' and ../local-name() == 'URLGroup']";
             try {
                 XPath xpath = XPath.newInstance(path);
                 matches = xpath.selectNodes(element);
                 return matches;
             } catch (Exception e) {
                 Log.debug(LOGGER_NAME, getIdentifier() + ": getTranslationForElement failed " +
-                                       "on element " + Xml.getString(element) +
-                                       " using XPath '" + path +
-                                       "updatedLocalizedTextElement exception " + e.getMessage());
+                    "on element " + Xml.getString(element) +
+                    " using XPath '" + path +
+                    "updatedLocalizedTextElement exception " + e.getMessage());
             }
         }
         return null;
     }
 
     /**
-     *  Add a LocalisedCharacterString or localisedURL to an element. In ISO19139, the translation are
-     *  stored gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString.
-     *
+     * Add a LocalisedCharacterString or localisedURL to an element. In ISO19139, the translation are
+     * stored gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString.
+     * <p>
      * <pre>
      * <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
      *    <gco:CharacterString>Template for Vector data in ISO19139 (multilingual)</gco:CharacterString>
@@ -75,7 +75,7 @@ public class ISO19139cheSchemaPlugin
         } else {
             // An ISO19139 element containing translation has an xsi:type attribute
             element.setAttribute("type", "che:PT_FreeURL_PropertyType",
-                    Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
+                Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
 
             // Create a new translation for the language
             Element langElem = new Element("LocalisedURL", ISO19139cheNamespaces.CHE);

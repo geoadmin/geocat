@@ -7,5 +7,5 @@ import org.jdom.Namespace;
  */
 public class ISO19139cheNamespaces {
     public static final Namespace CHE =
-            Namespace.getNamespace("che", "http://www.geocat.ch/2008/che");
+        Namespace.getNamespace("che", "http://www.geocat.ch/2008/che");
 }

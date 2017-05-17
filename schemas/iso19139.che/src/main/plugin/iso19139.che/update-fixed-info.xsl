@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
-  xmlns:gml="http://www.opengis.net/gml" xmlns:srv="http://www.isotc211.org/2005/srv"
-  xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco"
-  xmlns:java="java:org.fao.geonet.util.XslUtil" xmlns:che="http://www.geocat.ch/2008/che"
-  xmlns:geonet="http://www.fao.org/geonetwork"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xlink="http://www.w3.org/1999/xlink" exclude-result-prefixes="#all">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gml="http://www.opengis.net/gml"
+                xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:che="http://www.geocat.ch/2008/che" xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:xlink="http://www.w3.org/1999/xlink" version="2.0"
+                exclude-result-prefixes="#all">
 
   <xsl:include href="../iso19139/convert/functions.xsl"/>
   <xsl:include href="../iso19139/convert/thesaurus-transformation.xsl"/>
   <xsl:include href="update-sub-template-fixed-info.xsl"/>
 
-  <xsl:variable name="serviceUrl" select="/root/env/siteURL" />
+  <xsl:variable name="serviceUrl" select="/root/env/siteURL"/>
   <!-- ================================================================= -->
 
   <xsl:template match="/root">
@@ -44,7 +44,8 @@
           <xsl:copy-of select="gmd:parentIdentifier"/>
         </xsl:when>
       </xsl:choose>
-      <xsl:apply-templates select="node()[not(self::gmd:language) and not(self::gmd:characterSet) and not(self::gmd:parentIdentifier)]"/>
+      <xsl:apply-templates
+        select="node()[not(self::gmd:language) and not(self::gmd:characterSet) and not(self::gmd:parentIdentifier)]"/>
     </xsl:copy>
   </xsl:template>
 
@@ -195,7 +196,8 @@
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
       <xsl:attribute name="codeList">
-        <xsl:value-of select="concat('http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#',local-name(.))"/>
+        <xsl:value-of
+          select="concat('http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#',local-name(.))"/>
       </xsl:attribute>
     </xsl:copy>
   </xsl:template>
@@ -206,7 +208,8 @@
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
       <xsl:attribute name="codeList">
-        <xsl:value-of select="concat('http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#',local-name(.))"/>
+        <xsl:value-of
+          select="concat('http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#',local-name(.))"/>
       </xsl:attribute>
     </xsl:copy>
   </xsl:template>
@@ -215,7 +218,8 @@
   <!-- online resources: download -->
   <!-- ================================================================= -->
 
-  <xsl:template match="gmd:CI_OnlineResource[matches(gmd:protocol/gco:CharacterString,'^WWW:DOWNLOAD-.*-http--download.*') and gmd:name]">
+  <xsl:template
+    match="gmd:CI_OnlineResource[matches(gmd:protocol/gco:CharacterString,'^WWW:DOWNLOAD-.*-http--download.*') and gmd:name]">
     <xsl:variable name="fname" select="gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType"/>
     <xsl:variable name="mimeType">
       <xsl:call-template name="getMimeTypeFile">
@@ -230,10 +234,12 @@
         <gmd:URL>
           <xsl:choose>
             <xsl:when test="/root/env/system/downloadservice/simple='true'">
-              <xsl:value-of select="concat($serviceUrl,'/resources.get?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=public')"/>
+              <xsl:value-of
+                select="concat($serviceUrl,'/resources.get?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=public')"/>
             </xsl:when>
             <xsl:when test="/root/env/system/downloadservice/withdisclaimer='true'">
-              <xsl:value-of select="concat($serviceUrl,'/file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=public')"/>
+              <xsl:value-of
+                select="concat($serviceUrl,'/file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=public')"/>
             </xsl:when>
             <xsl:otherwise> <!-- /root/env/system/downloadservice/leave='true' -->
               <xsl:value-of select="gmd:linkage/gmd:URL"/>
@@ -257,7 +263,8 @@
   <!-- online resources: link-to-downloadable data etc -->
   <!-- ================================================================= -->
 
-  <xsl:template match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'WWW:LINK-') and contains(gmd:protocol/gco:CharacterString,'http--download')]">
+  <xsl:template
+    match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'WWW:LINK-') and contains(gmd:protocol/gco:CharacterString,'http--download')]">
     <xsl:variable name="mimeType">
       <xsl:call-template name="getMimeTypeUrl">
         <xsl:with-param name="linkage" select="gmd:linkage/gmd:URL"/>
@@ -292,10 +299,12 @@
       <xsl:attribute name="src">
         <xsl:choose>
           <xsl:when test="/root/env/system/downloadservice/simple='true'">
-            <xsl:value-of select="concat($serviceUrl,'/resources.get?uuid=',/root/env/uuid,'&amp;fname=',.,'&amp;access=private')"/>
+            <xsl:value-of
+              select="concat($serviceUrl,'/resources.get?uuid=',/root/env/uuid,'&amp;fname=',.,'&amp;access=private')"/>
           </xsl:when>
           <xsl:when test="/root/env/system/downloadservice/withdisclaimer='true'">
-            <xsl:value-of select="concat($serviceUrl,'/file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',.,'&amp;access=private')"/>
+            <xsl:value-of
+              select="concat($serviceUrl,'/file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',.,'&amp;access=private')"/>
           </xsl:when>
           <xsl:otherwise> <!-- /root/env/system/downloadservice/leave='true' -->
             <xsl:value-of select="@src"/>
@@ -320,7 +329,8 @@
         <xsl:choose>
           <xsl:when test="not(string(@xlink:href)) or starts-with(@xlink:href, $serviceUrl)">
             <xsl:attribute name="xlink:href">
-              <xsl:value-of select="concat($serviceUrl,'/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=',@uuidref)"/>
+              <xsl:value-of
+                select="concat($serviceUrl,'/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=',@uuidref)"/>
             </xsl:attribute>
           </xsl:when>
           <xsl:otherwise>
@@ -328,7 +338,7 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:if>
-      <xsl:copy-of select="./node()" />
+      <xsl:copy-of select="./node()"/>
     </xsl:copy>
 
   </xsl:template>
@@ -339,7 +349,8 @@
   -->
   <xsl:template match="gmd:PT_Locale">
     <xsl:element name="gmd:{local-name()}">
-      <xsl:variable name="id" select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
+      <xsl:variable name="id"
+                    select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
 
       <xsl:apply-templates select="@*"/>
       <xsl:if test="normalize-space(@id)='' or normalize-space(@id)!=$id">
@@ -352,18 +363,22 @@
   </xsl:template>
 
   <!-- Apply same changes as above to the gmd:LocalisedCharacterString -->
-  <xsl:variable name="language" select="//gmd:PT_Locale" /> <!-- Need list of all locale -->
-  <xsl:template  match="gmd:LocalisedCharacterString">
+  <xsl:variable name="language" select="//gmd:PT_Locale"/> <!-- Need list of all locale -->
+  <xsl:template match="gmd:LocalisedCharacterString">
     <xsl:element name="gmd:{local-name()}">
-      <xsl:variable name="currentLocale" >
-        <xsl:variable name="baseLoc" select="upper-case(replace(normalize-space(@locale), '^#', ''))" />
+      <xsl:variable name="currentLocale">
+        <xsl:variable name="baseLoc" select="upper-case(replace(normalize-space(@locale), '^#', ''))"/>
         <xsl:choose>
           <xsl:when test="$baseLoc = 'GE'">DE</xsl:when>
-          <xsl:otherwise><xsl:value-of select="$baseLoc"/></xsl:otherwise>
+          <xsl:otherwise>
+            <xsl:value-of select="$baseLoc"/>
+          </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
-      <xsl:variable name="ptLocale" select="$language[upper-case(replace(normalize-space(@id), '^#', ''))=string($currentLocale)]"/>
-      <xsl:variable name="id" select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue, ''))"/>
+      <xsl:variable name="ptLocale"
+                    select="$language[upper-case(replace(normalize-space(@id), '^#', ''))=string($currentLocale)]"/>
+      <xsl:variable name="id"
+                    select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue, ''))"/>
       <xsl:apply-templates select="@*"/>
       <xsl:if test="$id != '' and ($currentLocale='' or @locale!=concat('#', $id)) ">
         <xsl:attribute name="locale">
@@ -373,17 +388,21 @@
       <xsl:apply-templates select="node()"/>
     </xsl:element>
   </xsl:template>
-  <xsl:template  match="che:LocalisedURL">
+  <xsl:template match="che:LocalisedURL">
     <xsl:element name="che:{local-name()}">
-      <xsl:variable name="currentLocale" >
-        <xsl:variable name="baseLoc" select="upper-case(replace(normalize-space(@locale), '^#', ''))" />
+      <xsl:variable name="currentLocale">
+        <xsl:variable name="baseLoc" select="upper-case(replace(normalize-space(@locale), '^#', ''))"/>
         <xsl:choose>
           <xsl:when test="$baseLoc = 'GE'">DE</xsl:when>
-          <xsl:otherwise><xsl:value-of select="$baseLoc"/></xsl:otherwise>
+          <xsl:otherwise>
+            <xsl:value-of select="$baseLoc"/>
+          </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
-      <xsl:variable name="ptLocale" select="$language[upper-case(replace(normalize-space(@id), '^#', ''))=string($currentLocale)]"/>
-      <xsl:variable name="id" select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue, ''))"/>
+      <xsl:variable name="ptLocale"
+                    select="$language[upper-case(replace(normalize-space(@id), '^#', ''))=string($currentLocale)]"/>
+      <xsl:variable name="id"
+                    select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue, ''))"/>
       <xsl:apply-templates select="@*"/>
       <xsl:if test="$id != '' and ($currentLocale='' or @locale!=concat('#', $id)) ">
         <xsl:attribute name="locale">
@@ -393,17 +412,21 @@
       <xsl:apply-templates select="node()"/>
     </xsl:element>
   </xsl:template>
-  <xsl:template  match="gmd:LocalisedURL">
+  <xsl:template match="gmd:LocalisedURL">
     <xsl:element name="che:{local-name()}">
-      <xsl:variable name="currentLocale" >
-        <xsl:variable name="baseLoc" select="upper-case(replace(normalize-space(@locale), '^#', ''))" />
+      <xsl:variable name="currentLocale">
+        <xsl:variable name="baseLoc" select="upper-case(replace(normalize-space(@locale), '^#', ''))"/>
         <xsl:choose>
           <xsl:when test="$baseLoc = 'GE'">DE</xsl:when>
-          <xsl:otherwise><xsl:value-of select="$baseLoc"/></xsl:otherwise>
+          <xsl:otherwise>
+            <xsl:value-of select="$baseLoc"/>
+          </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
-      <xsl:variable name="ptLocale" select="$language[upper-case(replace(normalize-space(@id), '^#', ''))=string($currentLocale)]"/>
-      <xsl:variable name="id" select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue, ''))"/>
+      <xsl:variable name="ptLocale"
+                    select="$language[upper-case(replace(normalize-space(@id), '^#', ''))=string($currentLocale)]"/>
+      <xsl:variable name="id"
+                    select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue, ''))"/>
       <xsl:apply-templates select="@*"/>
       <xsl:if test="$id != '' and ($currentLocale='' or @locale!=concat('#', $id)) ">
         <xsl:attribute name="locale">
@@ -437,8 +460,8 @@
   <!-- ================================================================= -->
 
   <xsl:template name="correct_ns_prefix">
-    <xsl:param name="element" />
-    <xsl:param name="prefix" />
+    <xsl:param name="element"/>
+    <xsl:param name="prefix"/>
     <xsl:choose>
       <xsl:when test="local-name($element)=name($element) and $prefix != '' ">
         <xsl:element name="{$prefix}:{local-name($element)}">
@@ -527,7 +550,7 @@
     </xsl:copy>
   </xsl:template>
 
-  <xsl:template priority="10"  match="
+  <xsl:template priority="10" match="
             gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'geoscientificInformation_') and
                 not( preceding-sibling::gmd:topicCategory[starts-with(normalize-space(gmd:MD_TopicCategoryCode), 'geoscientificInformation_')])]">
     <gmd:topicCategory>

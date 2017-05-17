@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xalan="http://xml.apache.org/xalan" xmlns:gml="http://www.opengis.net/gml" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" gco:isoType="gmd:MD_Metadata">
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                     gco:isoType="gmd:MD_Metadata">
   <gmd:fileIdentifier>
-    <gco:CharacterString xmlns:srv="http://www.isotc211.org/2005/srv">5eae0fab-45b5-47bb-a263-c88699f57a5c</gco:CharacterString>
+    <gco:CharacterString>5eae0fab-45b5-47bb-a263-c88699f57a5c
+    </gco:CharacterString>
   </gmd:fileIdentifier>
   <gmd:language>
     <gco:CharacterString>deu</gco:CharacterString>
   </gmd:language>
   <gmd:characterSet>
-    <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+    <gmd:MD_CharacterSetCode codeListValue="utf8"
+                             codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
   </gmd:characterSet>
   <gmd:hierarchyLevel>
-    <gmd:MD_ScopeCode codeListValue="dataset" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+    <gmd:MD_ScopeCode codeListValue="dataset"
+                      codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
   </gmd:hierarchyLevel>
   <gmd:dateStamp>
-    <gco:DateTime xmlns:srv="http://www.isotc211.org/2005/srv">2009-05-07T15:19:38</gco:DateTime>
+    <gco:DateTime>2009-05-07T15:19:38</gco:DateTime>
   </gmd:dateStamp>
   <gmd:metadataStandardName>
-    <gco:CharacterString xmlns:srv="http://www.isotc211.org/2005/srv">GM03 2+</gco:CharacterString>
+    <gco:CharacterString>GM03 2+</gco:CharacterString>
   </gmd:metadataStandardName>
   <gmd:locale>
     <gmd:PT_Locale id="DE">
@@ -103,7 +108,8 @@
                 <gco:Date/>
               </gmd:date>
               <gmd:dateType>
-                <gmd:CI_DateTypeCode codeListValue="" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"/>
+                <gmd:CI_DateTypeCode codeListValue=""
+                                     codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"/>
               </gmd:dateType>
             </gmd:CI_Date>
           </gmd:date>
@@ -113,7 +119,9 @@
         <gco:CharacterString/>
         <gmd:PT_FreeText>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#FR">Localisation des émetteurs de téléphonie mobile (GSM et UMTS) avec leurs différentes capacités.</gmd:LocalisedCharacterString>
+            <gmd:LocalisedCharacterString locale="#FR">Localisation des émetteurs de téléphonie mobile (GSM et UMTS)
+              avec leurs différentes capacités.
+            </gmd:LocalisedCharacterString>
           </gmd:textGroup>
         </gmd:PT_FreeText>
       </gmd:abstract>
@@ -126,12 +134,15 @@
         </gmd:PT_FreeText>
       </gmd:purpose>
       <gmd:status>
-        <gmd:MD_ProgressCode codeListValue="" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ProgressCode"/>
+        <gmd:MD_ProgressCode codeListValue=""
+                             codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ProgressCode"/>
       </gmd:status>
       <gmd:resourceMaintenance>
-        <che:CHE_MD_MaintenanceInformation xmlns:gts="http://www.isotc211.org/2005/gts" gco:isoType="gmd:MD_MaintenanceInformation">
+        <che:CHE_MD_MaintenanceInformation xmlns:gts="http://www.isotc211.org/2005/gts"
+                                           gco:isoType="gmd:MD_MaintenanceInformation">
           <gmd:maintenanceAndUpdateFrequency>
-            <gmd:MD_MaintenanceFrequencyCode codeListValue="" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_MaintenanceFrequencyCode"/>
+            <gmd:MD_MaintenanceFrequencyCode codeListValue=""
+                                             codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_MaintenanceFrequencyCode"/>
           </gmd:maintenanceAndUpdateFrequency>
           <gmd:dateOfNextUpdate>
             <gco:Date/>
@@ -139,17 +150,19 @@
         </che:CHE_MD_MaintenanceInformation>
       </gmd:resourceMaintenance>
       <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+        <gmd:MD_Keywords>
           <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
             <gmd:PT_FreeText>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#DE">Geographisches Informationssystem</gmd:LocalisedCharacterString>
+                <gmd:LocalisedCharacterString locale="#DE">Geographisches Informationssystem
+                </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
                 <gmd:LocalisedCharacterString locale="#IT">sistema informativo geografico</gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#FR">système d'information géographique</gmd:LocalisedCharacterString>
+                <gmd:LocalisedCharacterString locale="#FR">système d'information géographique
+                </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
                 <gmd:LocalisedCharacterString locale="#EN">geographic information system</gmd:LocalisedCharacterString>
@@ -157,7 +170,8 @@
             </gmd:PT_FreeText>
           </gmd:keyword>
           <gmd:type>
-            <gmd:MD_KeywordTypeCode codeListValue="theme" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"/>
+            <gmd:MD_KeywordTypeCode codeListValue="theme"
+                                    codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"/>
           </gmd:type>
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
@@ -174,10 +188,12 @@
             <gco:CharacterString/>
           </gmd:useLimitation>
           <gmd:accessConstraints>
-            <gmd:MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_RestrictionCode" codeListValue=""/>
+            <gmd:MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_RestrictionCode"
+                                    codeListValue=""/>
           </gmd:accessConstraints>
           <gmd:useConstraints>
-            <gmd:MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_RestrictionCode" codeListValue=""/>
+            <gmd:MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_RestrictionCode"
+                                    codeListValue=""/>
           </gmd:useConstraints>
           <gmd:otherConstraints gco:nilReason="missing">
             <gco:CharacterString/>
@@ -190,7 +206,8 @@
             <gco:CharacterString/>
           </gmd:useLimitation>
           <gmd:classification>
-            <gmd:MD_ClassificationCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ClassificationCode" codeListValue=""/>
+            <gmd:MD_ClassificationCode
+              codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ClassificationCode" codeListValue=""/>
           </gmd:classification>
           <gmd:userNote gco:nilReason="missing">
             <gco:CharacterString/>
@@ -198,7 +215,8 @@
         </gmd:MD_SecurityConstraints>
       </gmd:resourceConstraints>
       <gmd:spatialRepresentationType>
-        <gmd:MD_SpatialRepresentationTypeCode codeListValue="grid" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_SpatialRepresentationTypeCode"/>
+        <gmd:MD_SpatialRepresentationTypeCode codeListValue="grid"
+                                              codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_SpatialRepresentationTypeCode"/>
       </gmd:spatialRepresentationType>
       <gmd:spatialResolution>
         <gmd:MD_Resolution>
@@ -211,7 +229,8 @@
         <gco:CharacterString/>
       </gmd:language>
       <gmd:characterSet>
-        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+        <gmd:MD_CharacterSetCode codeListValue="utf8"
+                                 codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
       </gmd:characterSet>
       <gmd:topicCategory>
         <gmd:MD_TopicCategoryCode/>
@@ -230,7 +249,8 @@
         <gco:RecordType/>
       </gmd:attributeDescription>
       <gmd:contentType>
-        <gmd:MD_CoverageContentTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CoverageContentTypeCode" codeListValue=""/>
+        <gmd:MD_CoverageContentTypeCode
+          codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CoverageContentTypeCode" codeListValue=""/>
       </gmd:contentType>
     </che:CHE_MD_CoverageDescription>
   </gmd:contentInfo>
@@ -260,7 +280,9 @@
                 <gco:CharacterString/>
               </gmd:description>
               <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode" codeListValue=""/>
+                <gmd:CI_OnLineFunctionCode
+                  codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"
+                  codeListValue=""/>
               </gmd:function>
             </gmd:CI_OnlineResource>
           </gmd:onLine>
@@ -273,7 +295,8 @@
       <gmd:scope>
         <gmd:DQ_Scope>
           <gmd:level>
-            <gmd:MD_ScopeCode codeListValue="dataset" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+            <gmd:MD_ScopeCode codeListValue="dataset"
+                              codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
           </gmd:level>
         </gmd:DQ_Scope>
       </gmd:scope>
@@ -283,7 +306,9 @@
             <gco:CharacterString/>
             <gmd:PT_FreeText>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#FR">Ces données proviennent des différents opérateurs de télécommunication. Aucune garantie sur l'exactitude des données n'est fournie par l'OFCOM.</gmd:LocalisedCharacterString>
+                <gmd:LocalisedCharacterString locale="#FR">Ces données proviennent des différents opérateurs de
+                  télécommunication. Aucune garantie sur l'exactitude des données n'est fournie par l'OFCOM.
+                </gmd:LocalisedCharacterString>
               </gmd:textGroup>
             </gmd:PT_FreeText>
           </gmd:statement>
@@ -301,7 +326,8 @@
   <gmd:metadataMaintenance>
     <che:CHE_MD_MaintenanceInformation gco:isoType="gmd:MD_MaintenanceInformation">
       <gmd:maintenanceAndUpdateFrequency>
-        <gmd:MD_MaintenanceFrequencyCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_MaintenanceFrequencyCode" codeListValue=""/>
+        <gmd:MD_MaintenanceFrequencyCode
+          codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_MaintenanceFrequencyCode" codeListValue=""/>
       </gmd:maintenanceAndUpdateFrequency>
       <gmd:dateOfNextUpdate>
         <gco:Date/>

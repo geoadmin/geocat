@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2001-2004, Evan Lenz 
+Copyright (c) 2001-2004, Evan Lenz
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -10,29 +10,29 @@ Redistribution and use in source and binary forms, with or without modification,
 
 	    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<xsl:stylesheet version="1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:geonet="http://www.fao.org/geonetwork"
-  >
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:geonet="http://www.fao.org/geonetwork"
+                version="1.0"
+>
   <xsl:output omit-xml-declaration="yes"/>
 
   <xsl:param name="use-empty-syntax" select="true()"/>
   <xsl:param name="exclude-unused-prefixes" select="true()"/>
 
-  <xsl:param name="start-tag-start"     select="'&lt;'"/>
-  <xsl:param name="start-tag-end"       select="'>'"/>
-  <xsl:param name="empty-tag-end"       select="'/>'"/>
-  <xsl:param name="end-tag-start"       select="'&lt;/'"/>
-  <xsl:param name="end-tag-end"         select="'>'"/>
-  <xsl:param name="space"               select="' '"/>
-  <xsl:param name="ns-decl"             select="'xmlns'"/>
-  <xsl:param name="colon"               select="':'"/>
-  <xsl:param name="equals"              select="'='"/>
+  <xsl:param name="start-tag-start" select="'&lt;'"/>
+  <xsl:param name="start-tag-end" select="'>'"/>
+  <xsl:param name="empty-tag-end" select="'/>'"/>
+  <xsl:param name="end-tag-start" select="'&lt;/'"/>
+  <xsl:param name="end-tag-end" select="'>'"/>
+  <xsl:param name="space" select="' '"/>
+  <xsl:param name="ns-decl" select="'xmlns'"/>
+  <xsl:param name="colon" select="':'"/>
+  <xsl:param name="equals" select="'='"/>
   <xsl:param name="attribute-delimiter" select="'&quot;'"/>
-  <xsl:param name="comment-start"       select="'&lt;!--'"/>
-  <xsl:param name="comment-end"         select="'-->'"/>
-  <xsl:param name="pi-start"            select="'&lt;?'"/>
-  <xsl:param name="pi-end"              select="'?>'"/>
+  <xsl:param name="comment-start" select="'&lt;!--'"/>
+  <xsl:param name="comment-end" select="'-->'"/>
+  <xsl:param name="pi-start" select="'&lt;?'"/>
+  <xsl:param name="pi-end" select="'?>'"/>
 
   <xsl:template name="xml-to-string">
     <xsl:param name="node-set" select="."/>
@@ -40,19 +40,19 @@ Redistribution and use in source and binary forms, with or without modification,
       <xsl:with-param name="depth" select="1"/>
     </xsl:apply-templates>
   </xsl:template>
-<!---->
-<!--  <xsl:template match="/" name="xml-to-string-root-rule">-->
-<!--    <xsl:call-template name="xml-to-string"/>-->
-<!--  </xsl:template>-->
-<!---->
-<!--  <xsl:template match="/" mode="xml-to-string">-->
-<!--    <xsl:param name="depth"/>-->
-<!--    <xsl:apply-templates mode="xml-to-string">-->
-<!--      <xsl:with-param name="depth" select="$depth"/>-->
-<!--    </xsl:apply-templates>-->
-<!--  </xsl:template>-->
+  <!---->
+  <!--  <xsl:template match="/" name="xml-to-string-root-rule">-->
+  <!--    <xsl:call-template name="xml-to-string"/>-->
+  <!--  </xsl:template>-->
+  <!---->
+  <!--  <xsl:template match="/" mode="xml-to-string">-->
+  <!--    <xsl:param name="depth"/>-->
+  <!--    <xsl:apply-templates mode="xml-to-string">-->
+  <!--      <xsl:with-param name="depth" select="$depth"/>-->
+  <!--    </xsl:apply-templates>-->
+  <!--  </xsl:template>-->
 
-<!-- Do not show geonet elements -->
+  <!-- Do not show geonet elements -->
   <xsl:template match="geonet:*" priority="100" mode="xml-to-string"/>
 
   <xsl:template match="*" mode="xml-to-string">
@@ -96,7 +96,8 @@ Redistribution and use in source and binary forms, with or without modification,
         <xsl:with-param name="element" select="$element/.."/>
       </xsl:call-template>
     </xsl:variable>
-    <xsl:if test="(not($exclude-unused-prefixes) or ($element | $element//@* | $element//*)[namespace-uri()=current()]) and not(string($declaredAbove)) and name()!='xml'">
+    <xsl:if
+      test="(not($exclude-unused-prefixes) or ($element | $element//@* | $element//*)[namespace-uri()=current()]) and not(string($declaredAbove)) and name()!='xml'">
       <xsl:value-of select="$space"/>
       <xsl:value-of select="$ns-decl"/>
       <xsl:if test="name()">

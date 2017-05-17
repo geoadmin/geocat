@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
-  xmlns:gco="http://www.isotc211.org/2005/gco"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd"
-  exclude-result-prefixes="#all">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                version="2.0"
+                exclude-result-prefixes="#all">
 
 
   <!-- ================================================================= -->
@@ -45,10 +45,12 @@
   </xsl:template>
 
   <xsl:template match="gmd:country/gco:CharacterString" priority="100">
-    <xsl:variable name="country" select="lower-case(text())" />
+    <xsl:variable name="country" select="lower-case(text())"/>
     <xsl:choose>
       <xsl:when test="$countryNameMapping/cnt[@name = $country]">
-        <gco:CharacterString><xsl:value-of select="$countryNameMapping/cnt[@name = $country]/text()"/></gco:CharacterString>
+        <gco:CharacterString>
+          <xsl:value-of select="$countryNameMapping/cnt[@name = $country]/text()"/>
+        </gco:CharacterString>
       </xsl:when>
       <xsl:otherwise>
         <xsl:copy-of select="."/>

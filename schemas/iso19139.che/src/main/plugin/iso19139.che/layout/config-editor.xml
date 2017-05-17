@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:noNamespaceSchemaLocation="../../config-editor.xsd"
-  xmlns:gn="http://www.fao.org/geonetwork"
-  xmlns:gco="http://www.isotc211.org/2005/gco"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd"
-  xmlns:gmx="http://www.isotc211.org/2005/gmx"
-  xmlns:srv="http://www.isotc211.org/2005/srv"
-  xmlns:gml="http://www.opengis.net/gml"
-  xmlns:xlink="http://www.w3.org/1999/xlink" >
+        xmlns:gco="http://www.isotc211.org/2005/gco"
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:srv="http://www.isotc211.org/2005/srv"
+        xmlns:gml="http://www.opengis.net/gml"
+        xsi:noNamespaceSchemaLocation="../../config-editor.xsd"
+>
 
   <!-- Form field type configuration. Default is text. -->
   <fields>
@@ -39,7 +37,6 @@
 
     <for name="gco:Date" use="data-gn-date-picker"/>
     <for name="gco:DateTime" use="data-gn-date-picker"/>
-
 
 
     <!-- gmx:FileName/@src attribute -->
@@ -107,13 +104,13 @@
       <directiveAttributes
         data-template-add-action="true"
         data-template-type="formats"
-        />
+      />
     </for>
     <for name="gmd:distributionFormat" addDirective="gc-add-sharedobject">
       <directiveAttributes
         data-template-add-action="true"
         data-template-type="formats"
-        />
+      />
     </for>
 
 
@@ -193,10 +190,10 @@
     the widget should have. If expanded, then one
     field per language is displayed. -->
     <expanded>
-<!--
-      <name>gmd:title</name>
-      <name>gmd:abstract</name>
--->
+      <!--
+            <name>gmd:title</name>
+            <name>gmd:abstract</name>
+      -->
     </expanded>
     <!-- All fields in ISO could be multilingual.
     Define element to exclude.
@@ -299,7 +296,7 @@
         <section xpath="/che:CHE_MD_Metadata/gmd:dataQualityInfo"/>
 
         <section xpath="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo"/>
-        <section xpath="/che:CHE_MD_Metadata/gmd:referenceSystemInfo" />
+        <section xpath="/che:CHE_MD_Metadata/gmd:referenceSystemInfo"/>
         <section xpath="/che:CHE_MD_Metadata/gmd:contentInfo"/>
         <section xpath="/che:CHE_MD_Metadata/gmd:portrayalCatalogueInfo"/>
 
@@ -308,11 +305,11 @@
           <field xpath="/che:CHE_MD_Metadata/gmd:language" or="language" in="/che:CHE_MD_Metadata"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:characterSet"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:parentIdentifier" or="parentIdentifier"
-            in="/che:CHE_MD_Metadata"/>
+                 in="/che:CHE_MD_Metadata"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:hierarchyLevel" or="hierarchyLevel"
-            in="/che:CHE_MD_Metadata"/>
+                 in="/che:CHE_MD_Metadata"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:hierarchyLevelName" or="hierarchyLevelName"
-            in="/che:CHE_MD_Metadata"/>
+                 in="/che:CHE_MD_Metadata"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:dateStamp"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:metadataStandardName"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:metadataStandardVersion"/>
@@ -352,9 +349,9 @@
         <for name="gmd:topicCategory"/>
         <for name="gmd:transferOptions"/>
         <for name="gmd:date"/>
-         <!--<for name="che:appraisal"/>
-         <for name="che:commentOnDurationOfConservation"/>
-         <for name="che:commentOnArchivalValue"/>-->
+        <!--<for name="che:appraisal"/>
+        <for name="che:commentOnDurationOfConservation"/>
+        <for name="che:commentOnArchivalValue"/>-->
         <for name="che:attribute"/>
       </flatModeExceptions>
 
@@ -362,30 +359,30 @@
     <view name="advanced">
       <tab id="identificationInfo" default="true">
         <section xpath="/che:CHE_MD_Metadata/gmd:identificationInfo" or="identificationInfo"
-          in="/che:CHE_MD_Metadata"/>
+                 in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="distributionInfo">
         <section xpath="/che:CHE_MD_Metadata/gmd:distributionInfo" or="distributionInfo"
-          in="/che:CHE_MD_Metadata"/>
+                 in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="dataQualityInfo">
         <section xpath="/che:CHE_MD_Metadata/gmd:dataQualityInfo" or="dataQualityInfo"
-          in="/che:CHE_MD_Metadata"/>
+                 in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="spatialRepresentationInfo">
         <section xpath="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo"
-          or="spatialRepresentationInfo" in="/che:CHE_MD_Metadata"/>
+                 or="spatialRepresentationInfo" in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="referenceSystemInfo">
         <section xpath="/che:CHE_MD_Metadata/gmd:referenceSystemInfo" or="referenceSystemInfo"
-          in="/che:CHE_MD_Metadata"/>
+                 in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="contentInfo" toggle="true">
         <section xpath="/che:CHE_MD_Metadata/gmd:contentInfo" or="contentInfo" in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="portrayalCatalogueInfo" toggle="true">
         <section xpath="/che:CHE_MD_Metadata/gmd:portrayalCatalogueInfo" or="portrayalCatalogueInfo"
-          in="/che:CHE_MD_Metadata"/>
+                 in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="metadata">
         <section name="che:CHE_MD_Metadata">
@@ -393,11 +390,11 @@
           <field xpath="/che:CHE_MD_Metadata/gmd:language" or="language" in="/che:CHE_MD_Metadata"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:characterSet"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:parentIdentifier" or="parentIdentifier"
-            in="/che:CHE_MD_Metadata"/>
+                 in="/che:CHE_MD_Metadata"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:hierarchyLevel" or="hierarchyLevel"
-            in="/che:CHE_MD_Metadata"/>
+                 in="/che:CHE_MD_Metadata"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:hierarchyLevelName" or="hierarchyLevelName"
-            in="/che:CHE_MD_Metadata"/>
+                 in="/che:CHE_MD_Metadata"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:dateStamp"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:metadataStandardName"/>
           <field xpath="/che:CHE_MD_Metadata/gmd:metadataStandardVersion"/>
@@ -413,23 +410,23 @@
       </tab>
       <tab id="metadataConstraints" toggle="true">
         <section xpath="/che:CHE_MD_Metadata/gmd:metadataConstraints" or="metadataConstraints"
-          in="/che:CHE_MD_Metadata"/>
+                 in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="metadataMaintenance" toggle="true">
         <section xpath="/che:CHE_MD_Metadata/gmd:metadataMaintenance" or="metadataMaintenance"
-          in="/che:CHE_MD_Metadata"/>
+                 in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="applicationSchemaInfo" toggle="true">
         <section xpath="/che:CHE_MD_Metadata/gmd:applicationSchemaInfo" or="applicationSchemaInfo"
-          in="/che:CHE_MD_Metadata"/>
+                 in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="metadataExtensionInfo" toggle="true">
         <section xpath="/che:CHE_MD_Metadata/gmd:metadataExtensionInfo" or="metadataExtensionInfo"
-          in="/che:CHE_MD_Metadata"/>
+                 in="/che:CHE_MD_Metadata"/>
       </tab>
       <tab id="legislationInformation" toggle="true">
         <section xpath="/che:CHE_MD_Metadata/che:legislationInformation" or="legislationInformation"
-          in="/che:CHE_MD_Metadata"/>
+                 in="/che:CHE_MD_Metadata"/>
       </tab>
     </view>
     <view name="inspire">
@@ -439,23 +436,30 @@
       <tab id="bgdi" default="true" mode="flat">
         <section name="gmd:identificationInfo">
           <!-- 1 - title -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title" />
+          <field
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title"/>
           <!-- 2 - alternate title -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle" />
+          <field
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle"/>
           <!-- 3 - Date -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date" />
+          <field
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date"/>
           <!-- 5 - Collective title -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:collectiveTitle" />
+          <field
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:collectiveTitle"/>
           <!-- 6 - Abstract -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:abstract" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:abstract"/>
           <!-- 7 - Point of contact -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:pointOfContact" or="pointOfContact"
-            in="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:pointOfContact"
+                 or="pointOfContact"
+                 in="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification"/>
           <!-- 8 - Keywords -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:descriptiveKeywords" />
+          <field
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:descriptiveKeywords"/>
           <!-- 12 - Resolution min -->
           <!-- 13 - Resolution max -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution">
+          <field
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution">
             <template>
               <values>
                 <key label="scale"
@@ -501,29 +505,34 @@
           </action>
 
           <!-- 16 - Topic Category -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode" />
+          <field
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode"/>
           <!-- 17 - Extent -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:extent" or="extent"
-            in="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:extent"
+                 or="extent"
+                 in="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification"/>
           <!-- 18 - Basic Geodata ID -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/che:basicGeodataID" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/che:basicGeodataID"/>
           <!-- 19 - Basic Geodata type -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/che:basicGeodataIDType/che:basicGeodataIDTypeCode" />
+          <field
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/che:basicGeodataIDType/che:basicGeodataIDTypeCode"/>
         </section>
         <section name="che:CHE_MD_Metadata">
           <!-- 26 - File ID UUID -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:fileIdentifier" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:fileIdentifier"/>
           <!-- 27 - MD contact -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:contact" or="contact" in="/che:CHE_MD_Metadata" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:contact" or="contact" in="/che:CHE_MD_Metadata"/>
           <!-- 14 - Language -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:locale" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:locale"/>
           <!-- 15 - Character Set -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:characterSet" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:characterSet"/>
 
           <!-- 24 - Geometric object type -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:MD_GeometricObjects/gmd:geometricObjectType"
-                 or="geometricObjectType" in="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:MD_GeometricObjects"
-                 name="geometricObjectType">
+          <field
+            xpath="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:MD_GeometricObjects/gmd:geometricObjectType"
+            or="geometricObjectType"
+            in="/che:CHE_MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:MD_GeometricObjects"
+            name="geometricObjectType">
           </field>
 
           <action type="add"
@@ -536,16 +545,17 @@
             <template>
               <snippet>
                 <gmd:spatialRepresentationInfo>
-                <gmd:MD_VectorSpatialRepresentation>
-                <gmd:geometricObjects>
-                  <gmd:MD_GeometricObjects>
-                    <gmd:geometricObjectType>
-                      <gmd:MD_GeometricObjectTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_GeometricObjectTypeCode"
-                                                      codeListValue="surface"/>
-                    </gmd:geometricObjectType>
-                  </gmd:MD_GeometricObjects>
-                </gmd:geometricObjects>
-                </gmd:MD_VectorSpatialRepresentation>
+                  <gmd:MD_VectorSpatialRepresentation>
+                    <gmd:geometricObjects>
+                      <gmd:MD_GeometricObjects>
+                        <gmd:geometricObjectType>
+                          <gmd:MD_GeometricObjectTypeCode
+                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_GeometricObjectTypeCode"
+                            codeListValue="surface"/>
+                        </gmd:geometricObjectType>
+                      </gmd:MD_GeometricObjects>
+                    </gmd:geometricObjects>
+                  </gmd:MD_VectorSpatialRepresentation>
                 </gmd:spatialRepresentationInfo>
               </snippet>
             </template>
@@ -584,17 +594,19 @@
 
         <section name="gmd:metadataConstraints">
           <!-- 9 - Use constraints -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:metadataConstraints/che:CHE_MD_LegalConstraints/gmd:useConstraints/gmd:MD_RestrictionCode" />
+          <field
+            xpath="/che:CHE_MD_Metadata/gmd:metadataConstraints/che:CHE_MD_LegalConstraints/gmd:useConstraints/gmd:MD_RestrictionCode"/>
           <!-- 10 - other constraints -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:metadataConstraints/che:CHE_MD_LegalConstraints/gmd:otherConstraints" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:metadataConstraints/che:CHE_MD_LegalConstraints/gmd:otherConstraints"/>
           <!-- 11 - Use limitation -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:metadataConstraints/che:CHE_MD_LegalConstraints/gmd:useLimitation" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:metadataConstraints/che:CHE_MD_LegalConstraints/gmd:useLimitation"/>
         </section>
 
         <section name="gmd:distributionInfo">
           <!-- 20 - Distribution format -->
-          <field xpath="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat" or="distributionFormat"
-            in="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"
+                 or="distributionFormat"
+                 in="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution"/>
           <!-- 21 - Transfer option 1 link -->
           <field name="onlineLink"
                  xpath="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions"
@@ -604,7 +616,7 @@
           <!-- 22 - Transfer option 2 download -->
           <!-- 23 - Transfer option 3 specialised Geoportal -->
         </section>
-        <section xpath="/che:CHE_MD_Metadata/che:legislationInformation" />
+        <section xpath="/che:CHE_MD_Metadata/che:legislationInformation"/>
       </tab>
       <!-- Elements that should not use the "flat" mode -->
       <flatModeExceptions>

@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--  
-Stylesheet used to update metadata for a service and 
+<!--
+Stylesheet used to update metadata for a service and
 attached it to the metadata for data.
 -->
-<xsl:stylesheet version="2.0" xmlns:gmd="http://www.isotc211.org/2005/gmd"
-  xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gts="http://www.isotc211.org/2005/gts"
-  xmlns:gml="http://www.opengis.net/gml" xmlns:srv="http://www.isotc211.org/2005/srv"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:che="http://www.geocat.ch/2008/che" xmlns:gmx="http://www.isotc211.org/2005/gmx"
-  xmlns:mime="java:org.fao.geonet.util.MimeTypeFinder">
+<xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:che="http://www.geocat.ch/2008/che"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:mime="java:org.fao.geonet.util.MimeTypeFinder"
+                version="2.0">
 
   <!-- ============================================================================= -->
 
@@ -100,7 +99,9 @@ attached it to the metadata for data.
                                     <xsl:variable name="nameLang" select="substring-before(., '#')"></xsl:variable>
                                     <xsl:variable name="nameValue" select="substring-after(., '#')"></xsl:variable>
                                     <che:URLGroup>
-                                      <che:LocalisedURL locale="{concat('#', $nameLang)}"><xsl:value-of select="$nameValue" /></che:LocalisedURL>
+                                      <che:LocalisedURL locale="{concat('#', $nameLang)}">
+                                        <xsl:value-of select="$nameValue"/>
+                                      </che:LocalisedURL>
                                     </che:URLGroup>
                                   </xsl:for-each>
                                 </che:PT_FreeURL>
@@ -152,7 +153,9 @@ attached it to the metadata for data.
                               <xsl:variable name="nameLang" select="substring-before(., '#')"></xsl:variable>
                               <xsl:variable name="nameValue" select="substring-after(., '#')"></xsl:variable>
                               <che:URLGroup>
-                                <che:LocalisedURL locale="{concat('#', $nameLang)}"><xsl:value-of select="$nameValue" /></che:LocalisedURL>
+                                <che:LocalisedURL locale="{concat('#', $nameLang)}">
+                                  <xsl:value-of select="$nameValue"/>
+                                </che:LocalisedURL>
                               </che:URLGroup>
                             </xsl:for-each>
                           </che:PT_FreeURL>
@@ -175,7 +178,9 @@ attached it to the metadata for data.
                                     <xsl:variable name="nameLang" select="substring-before(., '#')"></xsl:variable>
                                     <xsl:variable name="nameValue" select="substring-after(., '#')"></xsl:variable>
                                     <gmd:textGroup>
-                                      <gmd:LocalisedCharacterString locale="{concat('#', $nameLang)}"><xsl:value-of select="$nameValue" /></gmd:LocalisedCharacterString>
+                                      <gmd:LocalisedCharacterString locale="{concat('#', $nameLang)}">
+                                        <xsl:value-of select="$nameValue"/>
+                                      </gmd:LocalisedCharacterString>
                                     </gmd:textGroup>
                                   </xsl:for-each>
                                 </gmd:PT_FreeText>
@@ -184,7 +189,9 @@ attached it to the metadata for data.
                             <xsl:otherwise>
                               <xsl:variable name="mimeType" select="mime:detectMimeTypeFile(/root/env/datadir,$name)"/>
                               <gmd:name>
-                                <gmx:MimeFileType type="{$mimeType}"><xsl:value-of select="$name"/></gmx:MimeFileType>
+                                <gmx:MimeFileType type="{$mimeType}">
+                                  <xsl:value-of select="$name"/>
+                                </gmx:MimeFileType>
                               </gmd:name>
                             </xsl:otherwise>
                           </xsl:choose>
@@ -199,7 +206,9 @@ attached it to the metadata for data.
                                     <xsl:variable name="descLang" select="substring-before(., '#')"></xsl:variable>
                                     <xsl:variable name="descValue" select="substring-after(., '#')"></xsl:variable>
                                     <gmd:textGroup>
-                                      <gmd:LocalisedCharacterString locale="{concat('#', $descLang)}"><xsl:value-of select="$descValue" /></gmd:LocalisedCharacterString>
+                                      <gmd:LocalisedCharacterString locale="{concat('#', $descLang)}">
+                                        <xsl:value-of select="$descValue"/>
+                                      </gmd:LocalisedCharacterString>
                                     </gmd:textGroup>
                                   </xsl:for-each>
                                 </gmd:PT_FreeText>
@@ -207,7 +216,9 @@ attached it to the metadata for data.
                             </xsl:when>
                             <xsl:otherwise>
                               <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
-                                <gco:CharacterString><xsl:value-of select="$desc"/></gco:CharacterString>
+                                <gco:CharacterString>
+                                  <xsl:value-of select="$desc"/>
+                                </gco:CharacterString>
                               </gmd:description>
                             </xsl:otherwise>
                           </xsl:choose>
@@ -222,12 +233,12 @@ attached it to the metadata for data.
               </xsl:if>
               <xsl:copy-of
                 select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:offLine"
-                />
+              />
             </gmd:MD_DigitalTransferOptions>
           </gmd:transferOptions>
           <xsl:copy-of
             select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[position() > 1]"
-            />
+          />
         </gmd:MD_Distribution>
 
       </gmd:distributionInfo>

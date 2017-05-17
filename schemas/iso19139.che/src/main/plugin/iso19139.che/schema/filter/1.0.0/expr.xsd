@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema
-   targetNamespace="http://www.opengis.net/ogc"
-   xmlns:ogc="http://www.opengis.net/ogc"
-   xmlns:gml="http://www.opengis.net/gml"
-   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-   elementFormDefault="qualified">
+  xmlns:ogc="http://www.opengis.net/ogc"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://www.opengis.net/ogc"
+  elementFormDefault="qualified">
 
   <xsd:element name="Add"
                type="ogc:BinaryOperatorType"

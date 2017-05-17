@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<!--
   Suggest the creation of a default topological consistency report
   when INSPIRE theme is set to Hydrography, Transport Networks or Utility and governmental services
 -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
-  xmlns:geonet="http://www.fao.org/geonetwork" xmlns:gml="http://www.opengis.net/gml"
-  xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
-  exclude-result-prefixes="gmd">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                version="2.0"
+                exclude-result-prefixes="gmd">
 
   <xsl:import href="process-utility.xsl"/>
 
   <!-- i18n information -->
   <xsl:variable name="inspire-add-dq-toporeport-loc">
-    <msg id="a" xml:lang="en"> INSPIRE theme(s) found. Run this task to add a topological
-      consistency section.</msg>
-    <msg id="a" xml:lang="fr"> thème(s) INSPIRE trouvé(s). Exécuter cette action pour ajouter une
-      section sur la cohérence topologique.</msg>
+    <msg id="a" xml:lang="en">INSPIRE theme(s) found. Run this task to add a topological
+      consistency section.
+    </msg>
+    <msg id="a" xml:lang="fr">thème(s) INSPIRE trouvé(s). Exécuter cette action pour ajouter une
+      section sur la cohérence topologique.
+    </msg>
   </xsl:variable>
 
   <xsl:variable name="inspire-thesaurus-dq-topo"
-    select="document(concat(system-property(concat(substring-after($baseUrl, '/'), '.data.dir')), '/codelist/external/thesauri/theme/inspire-theme.rdf'))"/>
+                select="document(concat(system-property(concat(substring-after($baseUrl, '/'), '.data.dir')), '/codelist/external/thesauri/theme/inspire-theme.rdf'))"/>
 
   <xsl:template name="list-inspire-add-dq-toporeport">
     <suggestion process="inspire-add-dq-toporeport"/>
@@ -34,7 +35,7 @@
 
     <!-- TODO : PT_FreeText ? -->
     <xsl:variable name="inspire-theme-found"
-      select="count($inspire-thesaurus-dq-topo//skos:Concept[
+                  select="count($inspire-thesaurus-dq-topo//skos:Concept[
                     skos:prefLabel = $root//gmd:keyword/gco:CharacterString and
                     (
                     @rdf:about = 'http://rdfdata.eionet.europa.eu/inspirethemes/themes/8' or

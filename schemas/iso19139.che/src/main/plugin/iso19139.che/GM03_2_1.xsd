@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.interlis.ch/INTERLIS2.3" xmlns:ili2c="http://www.interlis.ch/ili2c" targetNamespace="http://www.interlis.ch/INTERLIS2.3" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ili2c="http://www.interlis.ch/ili2c"
+            xmlns="http://www.interlis.ch/INTERLIS2.3" targetNamespace="http://www.interlis.ch/INTERLIS2.3"
+            elementFormDefault="qualified" attributeFormDefault="unqualified">
   <xsd:annotation>
     <xsd:appinfo source="http://www.interlis.ch/ili2c/ili2cversion">4.4.8-20120831</xsd:appinfo>
     <xsd:appinfo source="http://www.interlis.ch/ili2c">
@@ -450,12 +452,12 @@
       <xsd:enumeration value="zu"/>
     </xsd:restriction>
   </xsd:simpleType>
-  <xsd:complexType  name="CodeISO.CountryCodeISO_">
+  <xsd:complexType name="CodeISO.CountryCodeISO_">
     <xsd:sequence>
       <xsd:element name="value" type="CodeISO.CountryCodeISO"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="CodeISO.LanguageCodeISO_">
+  <xsd:complexType name="CodeISO.LanguageCodeISO_">
     <xsd:sequence>
       <xsd:element name="value" type="CodeISO.LanguageCodeISO"/>
     </xsd:sequence>
@@ -696,67 +698,67 @@
       <xsd:extension base="xsd:string"/>
     </xsd:simpleContent>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.CharacterString_">
+  <xsd:complexType name="GM03_2_1Core.Core.CharacterString_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Core.Core.CharacterString"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.CharacterStringLong_">
+  <xsd:complexType name="GM03_2_1Core.Core.CharacterStringLong_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Core.Core.CharacterStringLong"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.CI_RoleCode_">
+  <xsd:complexType name="GM03_2_1Core.Core.CI_RoleCode_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Core.Core.CI_RoleCode"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.DateTime_">
+  <xsd:complexType name="GM03_2_1Core.Core.DateTime_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Core.Core.DateTime"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.GM_Point_">
+  <xsd:complexType name="GM03_2_1Core.Core.GM_Point_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Core.Core.GM_Point"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_CharacterSetCode_">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_CharacterSetCode_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Core.Core.MD_CharacterSetCode"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_ProgressCode_">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_ProgressCode_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Core.Core.MD_ProgressCode"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_ScopeCode_">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_ScopeCode_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Core.Core.MD_ScopeCode"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_SpatialRepresentationTypeCode_">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_SpatialRepresentationTypeCode_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Core.Core.MD_SpatialRepresentationTypeCode"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_TopicCategoryCode_">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_TopicCategoryCode_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Core.Core.MD_TopicCategoryCode"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.Real_">
+  <xsd:complexType name="GM03_2_1Core.Core.Real_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Core.Core.Real"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.URL_">
+  <xsd:complexType name="GM03_2_1Core.Core.URL_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Core.Core.URL"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.DQ_DataQuality">
+  <xsd:complexType name="GM03_2_1Core.Core.DQ_DataQuality">
     <xsd:sequence>
       <xsd:element name="MD_Metadata" minOccurs="0">
         <xsd:complexType>
@@ -768,12 +770,12 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_Authority">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_Authority">
     <xsd:sequence>
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_DigitalTransferOptions">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_DigitalTransferOptions">
     <xsd:sequence>
       <xsd:element name="MD_Distribution" minOccurs="0">
         <xsd:complexType>
@@ -785,12 +787,12 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_Distribution">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_Distribution">
     <xsd:sequence>
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_ReferenceSystem">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_ReferenceSystem">
     <xsd:sequence>
       <xsd:element name="referenceSystemIdentifier" minOccurs="0">
         <xsd:complexType>
@@ -802,7 +804,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_Thesaurus">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_Thesaurus">
     <xsd:sequence>
       <xsd:element name="citation">
         <xsd:complexType>
@@ -814,7 +816,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.SC_VerticalDatum">
+  <xsd:complexType name="GM03_2_1Core.Core.SC_VerticalDatum">
     <xsd:sequence>
       <xsd:element name="datumID">
         <xsd:complexType>
@@ -850,7 +852,7 @@
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.CI_Address">
+  <xsd:complexType name="GM03_2_1Core.Core.CI_Address">
     <xsd:sequence>
       <xsd:element name="streetName" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="streetNumber" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
@@ -863,7 +865,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.CI_Date">
+  <xsd:complexType name="GM03_2_1Core.Core.CI_Date">
     <xsd:sequence>
       <xsd:element name="date" type="GM03_2_1Core.Core.Date"/>
       <xsd:element name="dateType" type="GM03_2_1Core.Core.CI_DateTypeCode"/>
@@ -877,7 +879,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.CI_Telephone">
+  <xsd:complexType name="GM03_2_1Core.Core.CI_Telephone">
     <xsd:sequence>
       <xsd:element name="number" type="GM03_2_1Core.Core.CharacterString"/>
       <xsd:element name="numberType" type="GM03_2_1Core.Core.CI_NumberTypeCode"/>
@@ -891,7 +893,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.DQ_Scope">
+  <xsd:complexType name="GM03_2_1Core.Core.DQ_Scope">
     <xsd:sequence>
       <xsd:element name="level" type="GM03_2_1Core.Core.MD_ScopeCode"/>
       <xsd:element name="DQ_DataQuality" minOccurs="0">
@@ -904,13 +906,13 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.EX_GeographicExtent">
+  <xsd:complexType name="GM03_2_1Core.Core.EX_GeographicExtent">
     <xsd:sequence>
       <xsd:element name="extentTypeCode" type="GM03_2_1Core.Core.Boolean" minOccurs="0"/>
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.EX_VerticalExtent">
+  <xsd:complexType name="GM03_2_1Core.Core.EX_VerticalExtent">
     <xsd:sequence>
       <xsd:element name="minimumValue" type="GM03_2_1Core.Core.Real"/>
       <xsd:element name="maximumValue" type="GM03_2_1Core.Core.Real"/>
@@ -925,14 +927,14 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_Format">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_Format">
     <xsd:sequence>
       <xsd:element name="name" type="GM03_2_1Core.Core.CharacterString"/>
       <xsd:element name="version" type="GM03_2_1Core.Core.CharacterString"/>
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_Metadata">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_Metadata">
     <xsd:sequence>
       <xsd:element name="fileIdentifier" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="language" type="CodeISO.LanguageCodeISO" minOccurs="0"/>
@@ -943,14 +945,16 @@
       <xsd:element name="hierarchyLevel" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.MD_ScopeCode_" type="GM03_2_1Core.Core.MD_ScopeCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.MD_ScopeCode_" type="GM03_2_1Core.Core.MD_ScopeCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="hierarchyLevelName" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -972,13 +976,13 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_RepresentativeFraction">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_RepresentativeFraction">
     <xsd:sequence>
       <xsd:element name="denominator" type="GM03_2_1Core.Core.Integer"/>
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_Resolution">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_Resolution">
     <xsd:sequence>
       <xsd:element name="distance" type="GM03_2_1Core.Core.Distance" minOccurs="0"/>
       <xsd:element name="MD_DataIdentification" minOccurs="0">
@@ -998,7 +1002,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_ScopeDescription">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_ScopeDescription">
     <xsd:sequence>
       <xsd:element name="attributes" type="GM03_2_1Core.Core.GF_AttributeType" minOccurs="0"/>
       <xsd:element name="features" type="GM03_2_1Core.Core.GF_FeatureType" minOccurs="0"/>
@@ -1016,7 +1020,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.PT_Group">
+  <xsd:complexType name="GM03_2_1Core.Core.PT_Group">
     <xsd:sequence>
       <xsd:element name="language" type="CodeISO.LanguageCodeISO" minOccurs="0"/>
       <xsd:element name="country" type="CodeISO.CountryCodeISO" minOccurs="0"/>
@@ -1024,7 +1028,7 @@
       <xsd:element name="plainText" type="GM03_2_1Core.Core.CharacterStringLong"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.PT_URLGroup">
+  <xsd:complexType name="GM03_2_1Core.Core.PT_URLGroup">
     <xsd:sequence>
       <xsd:element name="language" type="CodeISO.LanguageCodeISO" minOccurs="0"/>
       <xsd:element name="country" type="CodeISO.CountryCodeISO" minOccurs="0"/>
@@ -1032,20 +1036,20 @@
       <xsd:element name="plainURL" type="GM03_2_1Core.Core.URL"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.TM_Primitive">
+  <xsd:complexType name="GM03_2_1Core.Core.TM_Primitive">
     <xsd:sequence>
       <xsd:element name="begin" type="GM03_2_1Core.Core.DateTime"/>
       <xsd:element name="end" type="GM03_2_1Core.Core.DateTime" minOccurs="0"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.EX_BoundingPolygon">
+  <xsd:complexType name="GM03_2_1Core.Core.EX_BoundingPolygon">
     <xsd:sequence>
       <xsd:element name="extentTypeCode" type="GM03_2_1Core.Core.Boolean" minOccurs="0"/>
       <xsd:element name="polygon" type="GM03_2_1Core.Core.GM_Object"/>
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.EX_GeographicBoundingBox">
+  <xsd:complexType name="GM03_2_1Core.Core.EX_GeographicBoundingBox">
     <xsd:sequence>
       <xsd:element name="extentTypeCode" type="GM03_2_1Core.Core.Boolean" minOccurs="0"/>
       <xsd:element name="northBoundLatitude" type="GM03_2_1Core.Core.Angle"/>
@@ -1055,7 +1059,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.EX_GeographicDescription">
+  <xsd:complexType name="GM03_2_1Core.Core.EX_GeographicDescription">
     <xsd:sequence>
       <xsd:element name="extentTypeCode" type="GM03_2_1Core.Core.Boolean" minOccurs="0"/>
       <xsd:element name="geographicIdentifier">
@@ -1068,7 +1072,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.EX_TemporalExtent">
+  <xsd:complexType name="GM03_2_1Core.Core.EX_TemporalExtent">
     <xsd:sequence>
       <xsd:element name="extent">
         <xsd:complexType>
@@ -1080,7 +1084,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.PT_FreeText">
+  <xsd:complexType name="GM03_2_1Core.Core.PT_FreeText">
     <xsd:sequence>
       <xsd:element name="textGroup">
         <xsd:complexType>
@@ -1091,30 +1095,31 @@
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.PT_FreeURL">
+  <xsd:complexType name="GM03_2_1Core.Core.PT_FreeURL">
     <xsd:sequence>
       <xsd:element name="URLGroup">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.PT_URLGroup" type="GM03_2_1Core.Core.PT_URLGroup" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.PT_URLGroup" type="GM03_2_1Core.Core.PT_URLGroup"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_DistributiondistributionFormat">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_DistributiondistributionFormat">
     <xsd:sequence>
       <xsd:element name="MD_Distribution" type="RoleType"/>
       <xsd:element name="distributionFormat" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.referenceSystemInfoMD_Metadata">
+  <xsd:complexType name="GM03_2_1Core.Core.referenceSystemInfoMD_Metadata">
     <xsd:sequence>
       <xsd:element name="referenceSystemInfo" type="RoleType"/>
       <xsd:element name="MD_Metadata" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.CI_Citation">
+  <xsd:complexType name="GM03_2_1Core.Core.CI_Citation">
     <xsd:sequence>
       <xsd:element name="title">
         <xsd:complexType>
@@ -1133,7 +1138,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.CI_Contact">
+  <xsd:complexType name="GM03_2_1Core.Core.CI_Contact">
     <xsd:sequence>
       <xsd:element name="hoursOfService" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="contactInstructions" minOccurs="0">
@@ -1146,7 +1151,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.CI_OnlineResource">
+  <xsd:complexType name="GM03_2_1Core.Core.CI_OnlineResource">
     <xsd:sequence>
       <xsd:element name="protocol" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="applicationProfile" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
@@ -1182,7 +1187,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.CI_ResponsibleParty">
+  <xsd:complexType name="GM03_2_1Core.Core.CI_ResponsibleParty">
     <xsd:sequence>
       <xsd:element name="individualFirstName" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="individualLastName" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
@@ -1238,7 +1243,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.EX_Extent">
+  <xsd:complexType name="GM03_2_1Core.Core.EX_Extent">
     <xsd:sequence>
       <xsd:element name="description" minOccurs="0">
         <xsd:complexType>
@@ -1257,7 +1262,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.EX_SpatialTemporalExtent">
+  <xsd:complexType name="GM03_2_1Core.Core.EX_SpatialTemporalExtent">
     <xsd:sequence>
       <xsd:element name="extent">
         <xsd:complexType>
@@ -1269,7 +1274,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.LI_Lineage">
+  <xsd:complexType name="GM03_2_1Core.Core.LI_Lineage">
     <xsd:sequence>
       <xsd:element name="statement" minOccurs="0">
         <xsd:complexType>
@@ -1288,12 +1293,13 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_Identification">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_Identification">
     <xsd:sequence>
       <xsd:element name="status" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.MD_ProgressCode_" type="GM03_2_1Core.Core.MD_ProgressCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.MD_ProgressCode_" type="GM03_2_1Core.Core.MD_ProgressCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -1328,7 +1334,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_Identifier">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_Identifier">
     <xsd:sequence>
       <xsd:element name="code">
         <xsd:complexType>
@@ -1347,13 +1353,14 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_Keywords">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_Keywords">
     <xsd:sequence>
       <xsd:element name="type" type="GM03_2_1Core.Core.MD_KeywordTypeCode" minOccurs="0"/>
       <xsd:element name="keyword">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.PT_FreeText" type="GM03_2_1Core.Core.PT_FreeText" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.PT_FreeText" type="GM03_2_1Core.Core.PT_FreeText"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -1367,12 +1374,13 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_DataIdentification">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_DataIdentification">
     <xsd:sequence>
       <xsd:element name="status" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.MD_ProgressCode_" type="GM03_2_1Core.Core.MD_ProgressCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.MD_ProgressCode_" type="GM03_2_1Core.Core.MD_ProgressCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -1407,7 +1415,8 @@
       <xsd:element name="spatialRepresentationType" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.MD_SpatialRepresentationTypeCode_" type="GM03_2_1Core.Core.MD_SpatialRepresentationTypeCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.MD_SpatialRepresentationTypeCode_"
+                         type="GM03_2_1Core.Core.MD_SpatialRepresentationTypeCode_" maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -1421,21 +1430,23 @@
       <xsd:element name="characterSet" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.MD_CharacterSetCode_" type="GM03_2_1Core.Core.MD_CharacterSetCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.MD_CharacterSetCode_" type="GM03_2_1Core.Core.MD_CharacterSetCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="topicCategory" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.MD_TopicCategoryCode_" type="GM03_2_1Core.Core.MD_TopicCategoryCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.MD_TopicCategoryCode_" type="GM03_2_1Core.Core.MD_TopicCategoryCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.RS_Identifier">
+  <xsd:complexType name="GM03_2_1Core.Core.RS_Identifier">
     <xsd:sequence>
       <xsd:element name="code">
         <xsd:complexType>
@@ -1454,63 +1465,65 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.CI_ResponsiblePartyparentinfo">
+  <xsd:complexType name="GM03_2_1Core.Core.CI_ResponsiblePartyparentinfo">
     <xsd:sequence>
       <xsd:element name="parentResponsibleParty" type="RoleType"/>
       <xsd:element name="CI_ResponsibleParty" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.descriptiveKeywordsMD_Identification">
+  <xsd:complexType name="GM03_2_1Core.Core.descriptiveKeywordsMD_Identification">
     <xsd:sequence>
       <xsd:element name="descriptiveKeywords" type="RoleType"/>
       <xsd:element name="MD_Identification" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.EX_ExtentgeographicElement">
+  <xsd:complexType name="GM03_2_1Core.Core.EX_ExtentgeographicElement">
     <xsd:sequence>
       <xsd:element name="EX_Extent" type="RoleType"/>
       <xsd:element name="geographicElement" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.EX_ExtenttemporalElement">
+  <xsd:complexType name="GM03_2_1Core.Core.EX_ExtenttemporalElement">
     <xsd:sequence>
       <xsd:element name="EX_Extent" type="RoleType"/>
       <xsd:element name="temporalElement" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.EX_ExtentverticalElement">
+  <xsd:complexType name="GM03_2_1Core.Core.EX_ExtentverticalElement">
     <xsd:sequence>
       <xsd:element name="EX_Extent" type="RoleType"/>
       <xsd:element name="verticalElement" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_IdentificationpointOfContact">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_IdentificationpointOfContact">
     <xsd:sequence>
       <xsd:element name="pointOfContact" type="RoleType"/>
       <xsd:element name="MD_Identification" type="RoleType"/>
       <xsd:element name="role">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.MD_Metadatacontact">
+  <xsd:complexType name="GM03_2_1Core.Core.MD_Metadatacontact">
     <xsd:sequence>
       <xsd:element name="contact" type="RoleType"/>
       <xsd:element name="MD_Metadata" type="RoleType"/>
       <xsd:element name="role">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Core.Core.spatialExtentEX_SpatialTemporalExtent">
+  <xsd:complexType name="GM03_2_1Core.Core.spatialExtentEX_SpatialTemporalExtent">
     <xsd:sequence>
       <xsd:element name="spatialExtent" type="RoleType"/>
       <xsd:element name="EX_SpatialTemporalExtent" type="RoleType"/>
@@ -1521,7 +1534,8 @@
       <xsd:choice minOccurs="0" maxOccurs="unbounded">
         <xsd:element name="GM03_2_1Core.Core.DQ_DataQuality" type="GM03_2_1Core.Core.DQ_DataQuality"/>
         <xsd:element name="GM03_2_1Core.Core.MD_Authority" type="GM03_2_1Core.Core.MD_Authority"/>
-        <xsd:element name="GM03_2_1Core.Core.MD_DigitalTransferOptions" type="GM03_2_1Core.Core.MD_DigitalTransferOptions"/>
+        <xsd:element name="GM03_2_1Core.Core.MD_DigitalTransferOptions"
+                     type="GM03_2_1Core.Core.MD_DigitalTransferOptions"/>
         <xsd:element name="GM03_2_1Core.Core.MD_Distribution" type="GM03_2_1Core.Core.MD_Distribution"/>
         <xsd:element name="GM03_2_1Core.Core.MD_ReferenceSystem" type="GM03_2_1Core.Core.MD_ReferenceSystem"/>
         <xsd:element name="GM03_2_1Core.Core.MD_Thesaurus" type="GM03_2_1Core.Core.MD_Thesaurus"/>
@@ -1533,34 +1547,47 @@
         <xsd:element name="GM03_2_1Core.Core.EX_VerticalExtent" type="GM03_2_1Core.Core.EX_VerticalExtent"/>
         <xsd:element name="GM03_2_1Core.Core.MD_Format" type="GM03_2_1Core.Core.MD_Format"/>
         <xsd:element name="GM03_2_1Core.Core.MD_Metadata" type="GM03_2_1Core.Core.MD_Metadata"/>
-        <xsd:element name="GM03_2_1Core.Core.MD_RepresentativeFraction" type="GM03_2_1Core.Core.MD_RepresentativeFraction"/>
+        <xsd:element name="GM03_2_1Core.Core.MD_RepresentativeFraction"
+                     type="GM03_2_1Core.Core.MD_RepresentativeFraction"/>
         <xsd:element name="GM03_2_1Core.Core.MD_Resolution" type="GM03_2_1Core.Core.MD_Resolution"/>
         <xsd:element name="GM03_2_1Core.Core.MD_ScopeDescription" type="GM03_2_1Core.Core.MD_ScopeDescription"/>
         <xsd:element name="GM03_2_1Core.Core.EX_BoundingPolygon" type="GM03_2_1Core.Core.EX_BoundingPolygon"/>
-        <xsd:element name="GM03_2_1Core.Core.EX_GeographicBoundingBox" type="GM03_2_1Core.Core.EX_GeographicBoundingBox"/>
-        <xsd:element name="GM03_2_1Core.Core.EX_GeographicDescription" type="GM03_2_1Core.Core.EX_GeographicDescription"/>
+        <xsd:element name="GM03_2_1Core.Core.EX_GeographicBoundingBox"
+                     type="GM03_2_1Core.Core.EX_GeographicBoundingBox"/>
+        <xsd:element name="GM03_2_1Core.Core.EX_GeographicDescription"
+                     type="GM03_2_1Core.Core.EX_GeographicDescription"/>
         <xsd:element name="GM03_2_1Core.Core.EX_TemporalExtent" type="GM03_2_1Core.Core.EX_TemporalExtent"/>
-        <xsd:element name="GM03_2_1Core.Core.MD_DistributiondistributionFormat" type="GM03_2_1Core.Core.MD_DistributiondistributionFormat"/>
-        <xsd:element name="GM03_2_1Core.Core.referenceSystemInfoMD_Metadata" type="GM03_2_1Core.Core.referenceSystemInfoMD_Metadata"/>
+        <xsd:element name="GM03_2_1Core.Core.MD_DistributiondistributionFormat"
+                     type="GM03_2_1Core.Core.MD_DistributiondistributionFormat"/>
+        <xsd:element name="GM03_2_1Core.Core.referenceSystemInfoMD_Metadata"
+                     type="GM03_2_1Core.Core.referenceSystemInfoMD_Metadata"/>
         <xsd:element name="GM03_2_1Core.Core.CI_Citation" type="GM03_2_1Core.Core.CI_Citation"/>
         <xsd:element name="GM03_2_1Core.Core.CI_Contact" type="GM03_2_1Core.Core.CI_Contact"/>
         <xsd:element name="GM03_2_1Core.Core.CI_OnlineResource" type="GM03_2_1Core.Core.CI_OnlineResource"/>
         <xsd:element name="GM03_2_1Core.Core.CI_ResponsibleParty" type="GM03_2_1Core.Core.CI_ResponsibleParty"/>
         <xsd:element name="GM03_2_1Core.Core.EX_Extent" type="GM03_2_1Core.Core.EX_Extent"/>
-        <xsd:element name="GM03_2_1Core.Core.EX_SpatialTemporalExtent" type="GM03_2_1Core.Core.EX_SpatialTemporalExtent"/>
+        <xsd:element name="GM03_2_1Core.Core.EX_SpatialTemporalExtent"
+                     type="GM03_2_1Core.Core.EX_SpatialTemporalExtent"/>
         <xsd:element name="GM03_2_1Core.Core.LI_Lineage" type="GM03_2_1Core.Core.LI_Lineage"/>
         <xsd:element name="GM03_2_1Core.Core.MD_Identifier" type="GM03_2_1Core.Core.MD_Identifier"/>
         <xsd:element name="GM03_2_1Core.Core.MD_Keywords" type="GM03_2_1Core.Core.MD_Keywords"/>
         <xsd:element name="GM03_2_1Core.Core.MD_DataIdentification" type="GM03_2_1Core.Core.MD_DataIdentification"/>
         <xsd:element name="GM03_2_1Core.Core.RS_Identifier" type="GM03_2_1Core.Core.RS_Identifier"/>
-        <xsd:element name="GM03_2_1Core.Core.CI_ResponsiblePartyparentinfo" type="GM03_2_1Core.Core.CI_ResponsiblePartyparentinfo"/>
-        <xsd:element name="GM03_2_1Core.Core.descriptiveKeywordsMD_Identification" type="GM03_2_1Core.Core.descriptiveKeywordsMD_Identification"/>
-        <xsd:element name="GM03_2_1Core.Core.EX_ExtentgeographicElement" type="GM03_2_1Core.Core.EX_ExtentgeographicElement"/>
-        <xsd:element name="GM03_2_1Core.Core.EX_ExtenttemporalElement" type="GM03_2_1Core.Core.EX_ExtenttemporalElement"/>
-        <xsd:element name="GM03_2_1Core.Core.EX_ExtentverticalElement" type="GM03_2_1Core.Core.EX_ExtentverticalElement"/>
-        <xsd:element name="GM03_2_1Core.Core.MD_IdentificationpointOfContact" type="GM03_2_1Core.Core.MD_IdentificationpointOfContact"/>
+        <xsd:element name="GM03_2_1Core.Core.CI_ResponsiblePartyparentinfo"
+                     type="GM03_2_1Core.Core.CI_ResponsiblePartyparentinfo"/>
+        <xsd:element name="GM03_2_1Core.Core.descriptiveKeywordsMD_Identification"
+                     type="GM03_2_1Core.Core.descriptiveKeywordsMD_Identification"/>
+        <xsd:element name="GM03_2_1Core.Core.EX_ExtentgeographicElement"
+                     type="GM03_2_1Core.Core.EX_ExtentgeographicElement"/>
+        <xsd:element name="GM03_2_1Core.Core.EX_ExtenttemporalElement"
+                     type="GM03_2_1Core.Core.EX_ExtenttemporalElement"/>
+        <xsd:element name="GM03_2_1Core.Core.EX_ExtentverticalElement"
+                     type="GM03_2_1Core.Core.EX_ExtentverticalElement"/>
+        <xsd:element name="GM03_2_1Core.Core.MD_IdentificationpointOfContact"
+                     type="GM03_2_1Core.Core.MD_IdentificationpointOfContact"/>
         <xsd:element name="GM03_2_1Core.Core.MD_Metadatacontact" type="GM03_2_1Core.Core.MD_Metadatacontact"/>
-        <xsd:element name="GM03_2_1Core.Core.spatialExtentEX_SpatialTemporalExtent" type="GM03_2_1Core.Core.spatialExtentEX_SpatialTemporalExtent"/>
+        <xsd:element name="GM03_2_1Core.Core.spatialExtentEX_SpatialTemporalExtent"
+                     type="GM03_2_1Core.Core.spatialExtentEX_SpatialTemporalExtent"/>
       </xsd:choice>
     </xsd:sequence>
     <xsd:attribute name="BID" type="IliID" use="required"/>
@@ -1892,17 +1919,17 @@
       <xsd:extension base="xsd:string"/>
     </xsd:simpleContent>
   </xsd:complexType>
-  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.Record"  mixed="true">
-	<xsd:sequence >
-   		<xsd:element name="XMLBLBOX" minOccurs="0">
-			<xsd:complexType>
-				<xsd:sequence>
-					<xsd:any minOccurs="0" maxOccurs="unbounded"
-						processContents="lax" />
-				</xsd:sequence>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:sequence>
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.Record" mixed="true">
+    <xsd:sequence>
+      <xsd:element name="XMLBLBOX" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:any minOccurs="0" maxOccurs="unbounded"
+                     processContents="lax"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
   </xsd:complexType>
   <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.RecordType">
     <xsd:simpleContent>
@@ -1927,37 +1954,37 @@
     <xsd:restriction base="xsd:normalizedString">
     </xsd:restriction>
   </xsd:simpleType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.CI_PresentationFormCode_">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.CI_PresentationFormCode_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Comprehensive.Comprehensive.CI_PresentationFormCode"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DCPList_">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DCPList_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Comprehensive.Comprehensive.DCPList"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.GenericName_">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.GenericName_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Comprehensive.Comprehensive.GenericName"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_MediumFormatCode_">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_MediumFormatCode_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Comprehensive.Comprehensive.MD_MediumFormatCode"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_RestrictionCode_">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_RestrictionCode_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Comprehensive.Comprehensive.MD_RestrictionCode"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.Record_">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.Record_">
     <xsd:sequence>
       <xsd:element name="value" type="GM03_2_1Comprehensive.Comprehensive.Record"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.CI_Series">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.CI_Series">
     <xsd:sequence>
       <xsd:element name="page" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="issueIdentification" minOccurs="0">
@@ -1977,7 +2004,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_Result">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_Result">
     <xsd:sequence>
       <xsd:element name="DQ_Element" minOccurs="0">
         <xsd:complexType>
@@ -1989,7 +2016,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.Duration">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.Duration">
     <xsd:sequence>
       <xsd:element name="years">
         <xsd:simpleType>
@@ -2041,20 +2068,21 @@
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.gml_CodeType">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.gml_CodeType">
     <xsd:sequence>
       <xsd:element name="code" type="GM03_2_1Core.Core.CharacterString"/>
       <xsd:element name="codeSpace" type="INTERLIS.URI" minOccurs="0"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.LI_ProcessStep">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.LI_ProcessStep">
     <xsd:sequence>
       <xsd:element name="description" type="GM03_2_1Core.Core.CharacterStringLong"/>
       <xsd:element name="dateTime" type="GM03_2_1Core.Core.DateTime" minOccurs="0"/>
       <xsd:element name="rationale" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -2068,7 +2096,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.LI_Source">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.LI_Source">
     <xsd:sequence>
       <xsd:element name="description" minOccurs="0">
         <xsd:complexType>
@@ -2101,7 +2129,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_AbstractClass">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_AbstractClass">
     <xsd:sequence>
       <xsd:element name="name" type="GM03_2_1Core.Core.CharacterString"/>
       <xsd:element name="description" minOccurs="0">
@@ -2121,7 +2149,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConcept">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConcept">
     <xsd:sequence>
       <xsd:element name="archiveConceptURL" minOccurs="0">
         <xsd:complexType>
@@ -2140,7 +2168,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_Attribute">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_Attribute">
     <xsd:sequence>
       <xsd:element name="name" type="GM03_2_1Core.Core.CharacterString"/>
       <xsd:element name="description" minOccurs="0">
@@ -2167,7 +2195,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_BrowseGraphic">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_BrowseGraphic">
     <xsd:sequence>
       <xsd:element name="fileName" type="GM03_2_1Core.Core.CharacterString"/>
       <xsd:element name="fileType" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
@@ -2188,7 +2216,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_CodeDomain">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_CodeDomain">
     <xsd:sequence>
       <xsd:element name="name" type="GM03_2_1Core.Core.CharacterString"/>
       <xsd:element name="description" minOccurs="0">
@@ -2215,7 +2243,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_CodeValue">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_CodeValue">
     <xsd:sequence>
       <xsd:element name="name" type="GM03_2_1Core.Core.CharacterString"/>
       <xsd:element name="code" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
@@ -2243,12 +2271,13 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_Constraints">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_Constraints">
     <xsd:sequence>
       <xsd:element name="useLimitation" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.PT_FreeText" type="GM03_2_1Core.Core.PT_FreeText" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.PT_FreeText" type="GM03_2_1Core.Core.PT_FreeText"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -2262,7 +2291,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_ContentInformation">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_ContentInformation">
     <xsd:sequence>
       <xsd:element name="MD_Metadata" minOccurs="0">
         <xsd:complexType>
@@ -2274,7 +2303,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_CRS">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_CRS">
     <xsd:sequence>
       <xsd:element name="referenceSystemIdentifier" minOccurs="0">
         <xsd:complexType>
@@ -2321,7 +2350,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_DigitalTransferOptions">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_DigitalTransferOptions">
     <xsd:sequence>
       <xsd:element name="MD_Distribution" minOccurs="0">
         <xsd:complexType>
@@ -2342,12 +2371,13 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_Distributor">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_Distributor">
     <xsd:sequence>
       <xsd:element name="distributorContact">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_DistributordistributorContact" type="GM03_2_1Comprehensive.Comprehensive.MD_DistributordistributorContact"/>
+            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_DistributordistributorContact"
+                         type="GM03_2_1Comprehensive.Comprehensive.MD_DistributordistributorContact"/>
           </xsd:sequence>
           <xsd:attribute name="REF" type="IliID" use="required"/>
           <xsd:attribute name="BID" type="IliID"/>
@@ -2357,7 +2387,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_EllipsoidParameters">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_EllipsoidParameters">
     <xsd:sequence>
       <xsd:element name="semiMajorAxis" type="GM03_2_1Core.Core.Real"/>
       <xsd:element name="axisUnits" type="GM03_2_1Core.Core.UomLength"/>
@@ -2365,7 +2395,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_Format">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_Format">
     <xsd:sequence>
       <xsd:element name="name" type="GM03_2_1Core.Core.CharacterString"/>
       <xsd:element name="version" type="GM03_2_1Core.Core.CharacterString"/>
@@ -2375,7 +2405,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_HistoryConcept">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_HistoryConcept">
     <xsd:sequence>
       <xsd:element name="historyConceptURL" minOccurs="0">
         <xsd:complexType>
@@ -2394,7 +2424,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_MetadataExtensionInformation">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_MetadataExtensionInformation">
     <xsd:sequence>
       <xsd:element name="extensionOnLineResource" minOccurs="0">
         <xsd:complexType>
@@ -2406,21 +2436,21 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_ObliqueLineAzimuth">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_ObliqueLineAzimuth">
     <xsd:sequence>
       <xsd:element name="azimuthAngle" type="GM03_2_1Core.Core.Real"/>
       <xsd:element name="azimuthMeasurePointLongitude" type="GM03_2_1Core.Core.Real"/>
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_ObliqueLinePoint">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_ObliqueLinePoint">
     <xsd:sequence>
       <xsd:element name="azimuthLineLatitude" type="GM03_2_1Core.Core.Real"/>
       <xsd:element name="azimuthLineLongitude" type="GM03_2_1Core.Core.Real"/>
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_PortrayalCatalogueReference">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_PortrayalCatalogueReference">
     <xsd:sequence>
       <xsd:element name="portrayalCatalogueURL" minOccurs="0">
         <xsd:complexType>
@@ -2432,7 +2462,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_ProjectionParameters">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_ProjectionParameters">
     <xsd:sequence>
       <xsd:element name="zone" type="GM03_2_1Core.Core.Integer" minOccurs="0"/>
       <xsd:element name="standardParallel" minOccurs="0">
@@ -2464,12 +2494,13 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_Revision">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_Revision">
     <xsd:sequence>
       <xsd:element name="revisionScope" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.MD_ScopeCode_" type="GM03_2_1Core.Core.MD_ScopeCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.MD_ScopeCode_" type="GM03_2_1Core.Core.MD_ScopeCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -2485,7 +2516,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_Role">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_Role">
     <xsd:sequence>
       <xsd:element name="name" type="GM03_2_1Core.Core.CharacterString"/>
       <xsd:element name="description" minOccurs="0">
@@ -2512,7 +2543,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_SpatialRepresentation">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_SpatialRepresentation">
     <xsd:sequence>
       <xsd:element name="MD_Metadata" minOccurs="0">
         <xsd:complexType>
@@ -2524,7 +2555,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_StandardOrderProcess">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_StandardOrderProcess">
     <xsd:sequence>
       <xsd:element name="fees" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="plannedAvailableDateTime" type="GM03_2_1Core.Core.DateTime" minOccurs="0"/>
@@ -2546,13 +2577,13 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_Type">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_Type">
     <xsd:sequence>
       <xsd:element name="type" type="GM03_2_1Core.Core.CharacterString"/>
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_Usage">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_Usage">
     <xsd:sequence>
       <xsd:element name="usageDateTime" type="GM03_2_1Core.Core.DateTime" minOccurs="0"/>
       <xsd:element name="userDeterminedLimitations" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
@@ -2573,7 +2604,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.RS_Identifier">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.RS_Identifier">
     <xsd:sequence>
       <xsd:element name="code">
         <xsd:complexType>
@@ -2594,7 +2625,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.SV_OperationChainMetadata">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.SV_OperationChainMetadata">
     <xsd:sequence>
       <xsd:element name="name" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="description" minOccurs="0">
@@ -2607,13 +2638,13 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_Scopeextent">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_Scopeextent">
     <xsd:sequence>
       <xsd:element name="extent" type="RoleType"/>
       <xsd:element name="DQ_Scope" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.resourceFormatMD_Identification">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.resourceFormatMD_Identification">
     <xsd:sequence>
       <xsd:element name="resourceFormat" type="RoleType"/>
       <xsd:element name="MD_Identification" type="RoleType"/>
@@ -2623,7 +2654,7 @@
     <xsd:restriction base="xsd:normalizedString">
     </xsd:restriction>
   </xsd:simpleType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.CI_Citation">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.CI_Citation">
     <xsd:sequence>
       <xsd:element name="title">
         <xsd:complexType>
@@ -2644,7 +2675,8 @@
       <xsd:element name="presentationForm" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.CI_PresentationFormCode_" type="GM03_2_1Comprehensive.Comprehensive.CI_PresentationFormCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.CI_PresentationFormCode_"
+                         type="GM03_2_1Comprehensive.Comprehensive.CI_PresentationFormCode_" maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -2653,7 +2685,8 @@
       <xsd:element name="alternateTitle" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.PT_FreeText" type="GM03_2_1Core.Core.PT_FreeText" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.PT_FreeText" type="GM03_2_1Core.Core.PT_FreeText"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -2730,7 +2763,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_ConformanceResult">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_ConformanceResult">
     <xsd:sequence>
       <xsd:element name="DQ_Element" minOccurs="0">
         <xsd:complexType>
@@ -2744,17 +2777,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_Element">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_Element">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -2773,7 +2808,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeResult">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeResult">
     <xsd:sequence>
       <xsd:element name="DQ_Element" minOccurs="0">
         <xsd:complexType>
@@ -2788,17 +2823,19 @@
       <xsd:element name="value">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.Record_" type="GM03_2_1Comprehensive.Comprehensive.Record_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.Record_"
+                         type="GM03_2_1Comprehensive.Comprehensive.Record_" maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_AggregateInformation">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_AggregateInformation">
     <xsd:sequence>
       <xsd:element name="associationType" type="GM03_2_1Comprehensive.Comprehensive.DS_AssociationTypeCode"/>
-      <xsd:element name="initiativeType" type="GM03_2_1Comprehensive.Comprehensive.DS_InitiativeTypeCode" minOccurs="0"/>
+      <xsd:element name="initiativeType" type="GM03_2_1Comprehensive.Comprehensive.DS_InitiativeTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="aggregateDataSetIdentifier" minOccurs="0">
         <xsd:complexType>
           <xsd:attribute name="REF" type="IliID" use="required"/>
@@ -2809,7 +2846,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_ApplicationSchemaInformation">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_ApplicationSchemaInformation">
     <xsd:sequence>
       <xsd:element name="schemaLanguage" type="GM03_2_1Core.Core.CharacterString"/>
       <xsd:element name="constraintLanguage" type="GM03_2_1Core.Core.CharacterString"/>
@@ -2820,7 +2857,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_Association">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_Association">
     <xsd:sequence>
       <xsd:element name="name" type="GM03_2_1Core.Core.CharacterString"/>
       <xsd:element name="description" minOccurs="0">
@@ -2840,7 +2877,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_Class">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_Class">
     <xsd:sequence>
       <xsd:element name="name" type="GM03_2_1Core.Core.CharacterString"/>
       <xsd:element name="description" minOccurs="0">
@@ -2860,7 +2897,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_CoverageDescription">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_CoverageDescription">
     <xsd:sequence>
       <xsd:element name="MD_Metadata" minOccurs="0">
         <xsd:complexType>
@@ -2876,12 +2913,13 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification">
     <xsd:sequence>
       <xsd:element name="status" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.MD_ProgressCode_" type="GM03_2_1Core.Core.MD_ProgressCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.MD_ProgressCode_" type="GM03_2_1Core.Core.MD_ProgressCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -2916,7 +2954,8 @@
       <xsd:element name="spatialRepresentationType" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.MD_SpatialRepresentationTypeCode_" type="GM03_2_1Core.Core.MD_SpatialRepresentationTypeCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.MD_SpatialRepresentationTypeCode_"
+                         type="GM03_2_1Core.Core.MD_SpatialRepresentationTypeCode_" maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -2930,14 +2969,16 @@
       <xsd:element name="characterSet" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.MD_CharacterSetCode_" type="GM03_2_1Core.Core.MD_CharacterSetCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.MD_CharacterSetCode_" type="GM03_2_1Core.Core.MD_CharacterSetCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="topicCategory" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.MD_TopicCategoryCode_" type="GM03_2_1Core.Core.MD_TopicCategoryCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.MD_TopicCategoryCode_" type="GM03_2_1Core.Core.MD_TopicCategoryCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -2945,12 +2986,14 @@
       <xsd:element name="credit" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="basicGeodataID" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="basicGeodataIDType" type="GM03_2_1Comprehensive.Comprehensive.BasicGeodataIDTypeCode" minOccurs="0"/>
+      <xsd:element name="basicGeodataIDType" type="GM03_2_1Comprehensive.Comprehensive.BasicGeodataIDTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="environmentDescription" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
@@ -2968,7 +3011,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_Dimension">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_Dimension">
     <xsd:sequence>
       <xsd:element name="dimensionName" type="GM03_2_1Comprehensive.Comprehensive.MD_DimensionNameTypeCode"/>
       <xsd:element name="dimensionSize" type="GM03_2_1Core.Core.Integer"/>
@@ -2983,7 +3026,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_ExtendedElementInformation">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_ExtendedElementInformation">
     <xsd:sequence>
       <xsd:element name="name" type="GM03_2_1Core.Core.CharacterString"/>
       <xsd:element name="shortName" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
@@ -2997,7 +3040,8 @@
       <xsd:element name="parentEntity">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -3005,14 +3049,15 @@
       <xsd:element name="rationale" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_FeatureCatalogueDescription">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_FeatureCatalogueDescription">
     <xsd:sequence>
       <xsd:element name="MD_Metadata" minOccurs="0">
         <xsd:complexType>
@@ -3033,7 +3078,8 @@
       <xsd:element name="featureTypes" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.GenericName_" type="GM03_2_1Comprehensive.Comprehensive.GenericName_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.GenericName_"
+                         type="GM03_2_1Comprehensive.Comprehensive.GenericName_" maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -3048,7 +3094,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_GeometricObjects">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_GeometricObjects">
     <xsd:sequence>
       <xsd:element name="geometricObjectType" type="GM03_2_1Comprehensive.Comprehensive.MD_GeometricObjectTypeCode"/>
       <xsd:element name="geometricObjectCount" type="GM03_2_1Core.Core.Integer" minOccurs="0"/>
@@ -3062,7 +3108,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_GridSpatialRepresentation">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_GridSpatialRepresentation">
     <xsd:sequence>
       <xsd:element name="MD_Metadata" minOccurs="0">
         <xsd:complexType>
@@ -3077,12 +3123,13 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_LegalConstraints">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_LegalConstraints">
     <xsd:sequence>
       <xsd:element name="useLimitation" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.PT_FreeText" type="GM03_2_1Core.Core.PT_FreeText" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.PT_FreeText" type="GM03_2_1Core.Core.PT_FreeText"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -3096,28 +3143,31 @@
       <xsd:element name="accessConstraints" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_RestrictionCode_" type="GM03_2_1Comprehensive.Comprehensive.MD_RestrictionCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_RestrictionCode_"
+                         type="GM03_2_1Comprehensive.Comprehensive.MD_RestrictionCode_" maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="useConstraints" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_RestrictionCode_" type="GM03_2_1Comprehensive.Comprehensive.MD_RestrictionCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_RestrictionCode_"
+                         type="GM03_2_1Comprehensive.Comprehensive.MD_RestrictionCode_" maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="otherConstraints" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.PT_FreeText" type="GM03_2_1Core.Core.PT_FreeText" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.PT_FreeText" type="GM03_2_1Core.Core.PT_FreeText"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_Legislation">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_Legislation">
     <xsd:sequence>
       <xsd:element name="country">
         <xsd:complexType>
@@ -3133,11 +3183,13 @@
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
-      <xsd:element name="legislationType" type="GM03_2_1Comprehensive.Comprehensive.CI_LegislationTypeCode" minOccurs="0"/>
+      <xsd:element name="legislationType" type="GM03_2_1Comprehensive.Comprehensive.CI_LegislationTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="internalReference" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -3151,7 +3203,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_Medium">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_Medium">
     <xsd:sequence>
       <xsd:element name="name" type="GM03_2_1Comprehensive.Comprehensive.MD_MediumNameCode" minOccurs="0"/>
       <xsd:element name="density" minOccurs="0">
@@ -3166,7 +3218,8 @@
       <xsd:element name="mediumFormat" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_MediumFormatCode_" type="GM03_2_1Comprehensive.Comprehensive.MD_MediumFormatCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_MediumFormatCode_"
+                         type="GM03_2_1Comprehensive.Comprehensive.MD_MediumFormatCode_" maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -3180,19 +3233,20 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_RangeDimension">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_RangeDimension">
     <xsd:sequence>
       <xsd:element name="sequenceIdentifier" type="GM03_2_1Comprehensive.Comprehensive.MemberName" minOccurs="0"/>
       <xsd:element name="descriptor" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_SecurityConstraints">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_SecurityConstraints">
     <xsd:sequence>
       <xsd:element name="useLimitation" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.PT_FreeText" type="GM03_2_1Core.Core.PT_FreeText" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.PT_FreeText" type="GM03_2_1Core.Core.PT_FreeText"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -3222,7 +3276,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_VectorSpatialRepresentation">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_VectorSpatialRepresentation">
     <xsd:sequence>
       <xsd:element name="MD_Metadata" minOccurs="0">
         <xsd:complexType>
@@ -3235,26 +3289,28 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.SV_CoupledResource">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.SV_CoupledResource">
     <xsd:sequence>
       <xsd:element name="identifier" type="GM03_2_1Core.Core.CharacterString"/>
       <xsd:element name="operationName" type="GM03_2_1Core.Core.CharacterString"/>
       <xsd:element name="ScopedName" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.gml_CodeType" type="GM03_2_1Comprehensive.Comprehensive.gml_CodeType"/>
+            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.gml_CodeType"
+                         type="GM03_2_1Comprehensive.Comprehensive.gml_CodeType"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadata">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadata">
     <xsd:sequence>
       <xsd:element name="operationName" type="GM03_2_1Core.Core.CharacterString"/>
       <xsd:element name="DCP">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DCPList_" type="GM03_2_1Comprehensive.Comprehensive.DCPList_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DCPList_"
+                         type="GM03_2_1Comprehensive.Comprehensive.DCPList_" maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -3269,7 +3325,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.SV_Parameter">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.SV_Parameter">
     <xsd:sequence>
       <xsd:element name="direction" type="GM03_2_1Comprehensive.Comprehensive.SV_ParameterDirection" minOccurs="0"/>
       <xsd:element name="optionality" type="GM03_2_1Core.Core.CharacterString"/>
@@ -3292,169 +3348,175 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor">
     <xsd:sequence>
       <xsd:element name="distributionOrderProcess" type="RoleType"/>
       <xsd:element name="MD_Distributor" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.distributorTransferOptionsMD_Distributor">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.distributorTransferOptionsMD_Distributor">
     <xsd:sequence>
       <xsd:element name="distributorTransferOptions" type="RoleType"/>
       <xsd:element name="MD_Distributor" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat">
     <xsd:sequence>
       <xsd:element name="formatDistributor" type="RoleType"/>
       <xsd:element name="distributorFormat" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.LI_ProcessStepprocessor">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.LI_ProcessStepprocessor">
     <xsd:sequence>
       <xsd:element name="processor" type="RoleType"/>
       <xsd:element name="LI_ProcessStep" type="RoleType"/>
       <xsd:element name="role">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.LI_SourcesourceExtent">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.LI_SourcesourceExtent">
     <xsd:sequence>
       <xsd:element name="sourceExtent" type="RoleType"/>
       <xsd:element name="LI_Source" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConceptarchiveConceptCitation">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConceptarchiveConceptCitation">
     <xsd:sequence>
       <xsd:element name="MD_ArchiveConcept" type="RoleType"/>
       <xsd:element name="archiveConceptCitation" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_AttributenamedType">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_AttributenamedType">
     <xsd:sequence>
       <xsd:element name="MD_Attribute" type="RoleType"/>
       <xsd:element name="namedType" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_Distributiondistributor">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_Distributiondistributor">
     <xsd:sequence>
       <xsd:element name="distributor" type="RoleType"/>
       <xsd:element name="MD_Distribution" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_DistributordistributorContact">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_DistributordistributorContact">
     <xsd:sequence>
       <xsd:element name="role">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_HistoryConcepthistoryConceptCitation">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_HistoryConcepthistoryConceptCitation">
     <xsd:sequence>
       <xsd:element name="MD_HistoryConcept" type="RoleType"/>
       <xsd:element name="historyConceptCitation" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_MetadatametadataConstraints">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_MetadatametadataConstraints">
     <xsd:sequence>
       <xsd:element name="metadataConstraints" type="RoleType"/>
       <xsd:element name="MD_Metadata" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_RevisionrevisionContact">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_RevisionrevisionContact">
     <xsd:sequence>
       <xsd:element name="MD_Revision" type="RoleType"/>
       <xsd:element name="revisionContact" type="RoleType"/>
       <xsd:element name="role">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_RevisionrevisionScopeDescription">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_RevisionrevisionScopeDescription">
     <xsd:sequence>
       <xsd:element name="MD_Revision" type="RoleType"/>
       <xsd:element name="revisionScopeDescription" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_UsageuserContactInfo">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_UsageuserContactInfo">
     <xsd:sequence>
       <xsd:element name="userContactInfo" type="RoleType"/>
       <xsd:element name="MD_Usage" type="RoleType"/>
       <xsd:element name="role">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.metadataExtensionInfoMD_Metadata">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.metadataExtensionInfoMD_Metadata">
     <xsd:sequence>
       <xsd:element name="metadataExtensionInfo" type="RoleType"/>
       <xsd:element name="MD_Metadata" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.obliqueLinePointParameterMD_ProjectionParameters">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.obliqueLinePointParameterMD_ProjectionParameters">
     <xsd:sequence>
       <xsd:element name="obliqueLinePointParameter" type="RoleType"/>
       <xsd:element name="MD_ProjectionParameters" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata">
     <xsd:sequence>
       <xsd:element name="portrayalCatalogueInfo" type="RoleType"/>
       <xsd:element name="MD_Metadata" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.resourceConstraintsMD_Identification">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.resourceConstraintsMD_Identification">
     <xsd:sequence>
       <xsd:element name="resourceConstraints" type="RoleType"/>
       <xsd:element name="MD_Identification" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.revisionMD_Identification">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.revisionMD_Identification">
     <xsd:sequence>
       <xsd:element name="revision" type="RoleType"/>
       <xsd:element name="MD_Identification" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.sourceLI_Lineage">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.sourceLI_Lineage">
     <xsd:sequence>
       <xsd:element name="source" type="RoleType"/>
       <xsd:element name="LI_Lineage" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.sourceStepsource">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.sourceStepsource">
     <xsd:sequence>
       <xsd:element name="sourceStep" type="RoleType"/>
       <xsd:element name="source" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_Completeness">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_Completeness">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -3473,17 +3535,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_LogicalConsistency">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_LogicalConsistency">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -3502,17 +3566,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_PositionalAccuracy">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_PositionalAccuracy">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -3531,17 +3597,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_TemporalAccuracy">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_TemporalAccuracy">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -3560,17 +3628,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_ThematicAccuracy">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_ThematicAccuracy">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -3589,7 +3659,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_Band">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_Band">
     <xsd:sequence>
       <xsd:element name="sequenceIdentifier" type="GM03_2_1Comprehensive.Comprehensive.MemberName" minOccurs="0"/>
       <xsd:element name="descriptor" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
@@ -3604,7 +3674,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_Georectified">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_Georectified">
     <xsd:sequence>
       <xsd:element name="MD_Metadata" minOccurs="0">
         <xsd:complexType>
@@ -3631,14 +3701,15 @@
       <xsd:element name="transformationDimensionMapping" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="2"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="2"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_Georeferenceable">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_Georeferenceable">
     <xsd:sequence>
       <xsd:element name="MD_Metadata" minOccurs="0">
         <xsd:complexType>
@@ -3657,7 +3728,7 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_ImageDescription">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_ImageDescription">
     <xsd:sequence>
       <xsd:element name="MD_Metadata" minOccurs="0">
         <xsd:complexType>
@@ -3672,7 +3743,8 @@
       <xsd:element name="focalDistance" type="GM03_2_1Core.Core.Integer" minOccurs="0"/>
       <xsd:element name="illuminationElevationAngle" type="GM03_2_1Core.Core.Angle" minOccurs="0"/>
       <xsd:element name="illuminationAzimuthAngle" type="GM03_2_1Core.Core.Angle" minOccurs="0"/>
-      <xsd:element name="imagingCondition" type="GM03_2_1Comprehensive.Comprehensive.MD_ImagingConditionCode" minOccurs="0"/>
+      <xsd:element name="imagingCondition" type="GM03_2_1Comprehensive.Comprehensive.MD_ImagingConditionCode"
+                   minOccurs="0"/>
       <xsd:element name="cloudCoverPercentage" type="GM03_2_1Core.Core.Percentage" minOccurs="0"/>
       <xsd:element name="compressionGenerationQuantity" type="GM03_2_1Core.Core.Integer" minOccurs="0"/>
       <xsd:element name="triangulationIndicator" type="GM03_2_1Core.Core.Boolean" minOccurs="0"/>
@@ -3697,15 +3769,18 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformation">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformation">
     <xsd:sequence>
-      <xsd:element name="maintenanceAndUpdateFrequency" type="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceFrequencyCode"/>
+      <xsd:element name="maintenanceAndUpdateFrequency"
+                   type="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceFrequencyCode"/>
       <xsd:element name="dateOfNextUpdate" type="GM03_2_1Core.Core.Date" minOccurs="0"/>
-      <xsd:element name="userDefinedMaintenanceFrequency" type="GM03_2_1Comprehensive.Comprehensive.TM_PeriodDuration" minOccurs="0"/>
+      <xsd:element name="userDefinedMaintenanceFrequency" type="GM03_2_1Comprehensive.Comprehensive.TM_PeriodDuration"
+                   minOccurs="0"/>
       <xsd:element name="updateScope" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.MD_ScopeCode_" type="GM03_2_1Core.Core.MD_ScopeCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.MD_ScopeCode_" type="GM03_2_1Core.Core.MD_ScopeCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -3713,7 +3788,8 @@
       <xsd:element name="maintenanceNote" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.PT_FreeText" type="GM03_2_1Core.Core.PT_FreeText" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.PT_FreeText" type="GM03_2_1Core.Core.PT_FreeText"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -3734,12 +3810,13 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.SV_ServiceIdentification">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.SV_ServiceIdentification">
     <xsd:sequence>
       <xsd:element name="status" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.MD_ProgressCode_" type="GM03_2_1Core.Core.MD_ProgressCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.MD_ProgressCode_" type="GM03_2_1Core.Core.MD_ProgressCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -3774,146 +3851,155 @@
       <xsd:element name="credit" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
-      <xsd:element name="inspireServiceType" type="GM03_2_1Comprehensive.Comprehensive.InspireServiceType" minOccurs="0"/>
+      <xsd:element name="inspireServiceType" type="GM03_2_1Comprehensive.Comprehensive.InspireServiceType"
+                   minOccurs="0"/>
       <xsd:element name="serviceTypeVersion" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="couplingType" type="GM03_2_1Comprehensive.Comprehensive.SV_CouplingType"/>
       <xsd:element name="operatesOn" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="coupledResource" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.SV_CoupledResource" type="GM03_2_1Comprehensive.Comprehensive.SV_CoupledResource" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.SV_CoupledResource"
+                         type="GM03_2_1Comprehensive.Comprehensive.SV_CoupledResource" maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="serviceType">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.gml_CodeType" type="GM03_2_1Comprehensive.Comprehensive.gml_CodeType"/>
+            <xsd:element name="GM03_2_1Comprehensive.Comprehensive.gml_CodeType"
+                         type="GM03_2_1Comprehensive.Comprehensive.gml_CodeType"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.aggregationInfo_MD_Identification">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.aggregationInfo_MD_Identification">
     <xsd:sequence>
       <xsd:element name="aggregationInfo" type="RoleType"/>
       <xsd:element name="MD_Identification" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.applicationSchemaInfoMD_Metadata">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.applicationSchemaInfoMD_Metadata">
     <xsd:sequence>
       <xsd:element name="applicationSchemaInfo" type="RoleType"/>
       <xsd:element name="MD_Metadata" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty">
     <xsd:sequence>
       <xsd:element name="citedResponsibleParty" type="RoleType"/>
       <xsd:element name="CI_Citation" type="RoleType"/>
       <xsd:element name="role">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.CI_Citationidentifier">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.CI_Citationidentifier">
     <xsd:sequence>
       <xsd:element name="identifier" type="RoleType"/>
       <xsd:element name="CI_Citation" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription">
     <xsd:sequence>
       <xsd:element name="class" type="RoleType"/>
       <xsd:element name="MD_FeatureCatalogueDescription" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.dimensionMD_CoverageDescription">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.dimensionMD_CoverageDescription">
     <xsd:sequence>
       <xsd:element name="dimension" type="RoleType"/>
       <xsd:element name="MD_CoverageDescription" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription">
     <xsd:sequence>
       <xsd:element name="domain" type="RoleType"/>
       <xsd:element name="MD_FeatureCatalogueDescription" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.extendedElementInformationMD_MetadataExtensionInformation">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.extendedElementInformationMD_MetadataExtensionInformation">
     <xsd:sequence>
       <xsd:element name="extendedElementInformation" type="RoleType"/>
       <xsd:element name="MD_MetadataExtensionInformation" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.legislationConstraintsMD_LegalConstraints">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.legislationConstraintsMD_LegalConstraints">
     <xsd:sequence>
       <xsd:element name="legislationConstraints" type="RoleType"/>
       <xsd:element name="MD_LegalConstraints" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_ExtendedElementInformationsource">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_ExtendedElementInformationsource">
     <xsd:sequence>
       <xsd:element name="MD_ExtendedElementInformation" type="RoleType"/>
       <xsd:element name="source" type="RoleType"/>
       <xsd:element name="role">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_MetadatalegislationInformation">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_MetadatalegislationInformation">
     <xsd:sequence>
       <xsd:element name="MD_Metadata" type="RoleType"/>
       <xsd:element name="legislationInformation" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.reportDQ_DataQuality">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.reportDQ_DataQuality">
     <xsd:sequence>
       <xsd:element name="report" type="RoleType"/>
       <xsd:element name="DQ_Qualitiy" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.SV_OperationChainMetadataoperation">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.SV_OperationChainMetadataoperation">
     <xsd:sequence>
       <xsd:element name="SV_OperationChainMetadata" type="RoleType"/>
       <xsd:element name="operation" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadataconnectPoint">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadataconnectPoint">
     <xsd:sequence>
       <xsd:element name="SV_OperationMetadata" type="RoleType"/>
       <xsd:element name="connectPoint" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_AbsoluteExternalPositionalAccuracy">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_AbsoluteExternalPositionalAccuracy">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -3932,17 +4018,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_AccuracyOfATimeMeasurement">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_AccuracyOfATimeMeasurement">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -3961,17 +4049,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_CompletenessCommission">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_CompletenessCommission">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -3990,17 +4080,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_CompletenessOmission">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_CompletenessOmission">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -4019,17 +4111,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_ConceptualConsistency">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_ConceptualConsistency">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -4048,17 +4142,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_DomainConsistency">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_DomainConsistency">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -4077,17 +4173,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_FormatConsistency">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_FormatConsistency">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -4106,17 +4204,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_GriddedDataPositionalAccuracy">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_GriddedDataPositionalAccuracy">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -4135,17 +4235,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_NonQuantitativeAttributeAccuracy">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_NonQuantitativeAttributeAccuracy">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -4164,17 +4266,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeAttributeAccuracy">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeAttributeAccuracy">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -4193,17 +4297,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_RelativeInternalPositionalAccuracy">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_RelativeInternalPositionalAccuracy">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -4222,17 +4328,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_TemporalConsistency">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_TemporalConsistency">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -4251,17 +4359,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_TemporalValidity">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_TemporalValidity">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -4280,17 +4390,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_ThematicClassificationCorrectness">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_ThematicClassificationCorrectness">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -4309,17 +4421,19 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.DQ_TopologicalConsistency">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.DQ_TopologicalConsistency">
     <xsd:sequence>
       <xsd:element name="nameOfMeasure" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CharacterString_" type="GM03_2_1Core.Core.CharacterString_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="measureDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
-      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode" minOccurs="0"/>
+      <xsd:element name="evaluationMethodType" type="GM03_2_1Comprehensive.Comprehensive.DQ_EvaluationMethodTypeCode"
+                   minOccurs="0"/>
       <xsd:element name="evaluationMethodDescription" type="GM03_2_1Core.Core.CharacterString" minOccurs="0"/>
       <xsd:element name="dateTime" minOccurs="0">
         <xsd:complexType>
@@ -4338,32 +4452,33 @@
     </xsd:sequence>
     <xsd:attribute name="TID" type="IliID" use="required"/>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.containsOperationsSV_ServiceIdentification">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.containsOperationsSV_ServiceIdentification">
     <xsd:sequence>
       <xsd:element name="containsOperations" type="RoleType"/>
       <xsd:element name="SV_ServiceIdentification" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.extentSV_ServiceIdentification">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.extentSV_ServiceIdentification">
     <xsd:sequence>
       <xsd:element name="extent" type="RoleType"/>
       <xsd:element name="SV_ServiceIdentification" type="RoleType"/>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationcontact">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationcontact">
     <xsd:sequence>
       <xsd:element name="contact" type="RoleType"/>
       <xsd:element name="MD_MaintenanceInformation" type="RoleType"/>
       <xsd:element name="role">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_" maxOccurs="unbounded"/>
+            <xsd:element name="GM03_2_1Core.Core.CI_RoleCode_" type="GM03_2_1Core.Core.CI_RoleCode_"
+                         maxOccurs="unbounded"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
-  <xsd:complexType  name="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription">
+  <xsd:complexType name="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription">
     <xsd:sequence>
       <xsd:element name="updateScopeDescription" type="RoleType"/>
       <xsd:element name="MD_MaintenanceInformation" type="RoleType"/>
@@ -4384,141 +4499,265 @@
         <xsd:element name="GM03_2_1Core.Core.DQ_Scope" type="GM03_2_1Core.Core.DQ_Scope"/>
         <xsd:element name="GM03_2_1Core.Core.EX_VerticalExtent" type="GM03_2_1Core.Core.EX_VerticalExtent"/>
         <xsd:element name="GM03_2_1Core.Core.MD_Metadata" type="GM03_2_1Core.Core.MD_Metadata"/>
-        <xsd:element name="GM03_2_1Core.Core.MD_RepresentativeFraction" type="GM03_2_1Core.Core.MD_RepresentativeFraction"/>
+        <xsd:element name="GM03_2_1Core.Core.MD_RepresentativeFraction"
+                     type="GM03_2_1Core.Core.MD_RepresentativeFraction"/>
         <xsd:element name="GM03_2_1Core.Core.MD_Resolution" type="GM03_2_1Core.Core.MD_Resolution"/>
         <xsd:element name="GM03_2_1Core.Core.MD_ScopeDescription" type="GM03_2_1Core.Core.MD_ScopeDescription"/>
         <xsd:element name="GM03_2_1Core.Core.EX_BoundingPolygon" type="GM03_2_1Core.Core.EX_BoundingPolygon"/>
-        <xsd:element name="GM03_2_1Core.Core.EX_GeographicBoundingBox" type="GM03_2_1Core.Core.EX_GeographicBoundingBox"/>
-        <xsd:element name="GM03_2_1Core.Core.EX_GeographicDescription" type="GM03_2_1Core.Core.EX_GeographicDescription"/>
+        <xsd:element name="GM03_2_1Core.Core.EX_GeographicBoundingBox"
+                     type="GM03_2_1Core.Core.EX_GeographicBoundingBox"/>
+        <xsd:element name="GM03_2_1Core.Core.EX_GeographicDescription"
+                     type="GM03_2_1Core.Core.EX_GeographicDescription"/>
         <xsd:element name="GM03_2_1Core.Core.EX_TemporalExtent" type="GM03_2_1Core.Core.EX_TemporalExtent"/>
-        <xsd:element name="GM03_2_1Core.Core.MD_DistributiondistributionFormat" type="GM03_2_1Core.Core.MD_DistributiondistributionFormat"/>
-        <xsd:element name="GM03_2_1Core.Core.referenceSystemInfoMD_Metadata" type="GM03_2_1Core.Core.referenceSystemInfoMD_Metadata"/>
+        <xsd:element name="GM03_2_1Core.Core.MD_DistributiondistributionFormat"
+                     type="GM03_2_1Core.Core.MD_DistributiondistributionFormat"/>
+        <xsd:element name="GM03_2_1Core.Core.referenceSystemInfoMD_Metadata"
+                     type="GM03_2_1Core.Core.referenceSystemInfoMD_Metadata"/>
         <xsd:element name="GM03_2_1Core.Core.CI_Contact" type="GM03_2_1Core.Core.CI_Contact"/>
         <xsd:element name="GM03_2_1Core.Core.CI_OnlineResource" type="GM03_2_1Core.Core.CI_OnlineResource"/>
         <xsd:element name="GM03_2_1Core.Core.CI_ResponsibleParty" type="GM03_2_1Core.Core.CI_ResponsibleParty"/>
         <xsd:element name="GM03_2_1Core.Core.EX_Extent" type="GM03_2_1Core.Core.EX_Extent"/>
-        <xsd:element name="GM03_2_1Core.Core.EX_SpatialTemporalExtent" type="GM03_2_1Core.Core.EX_SpatialTemporalExtent"/>
+        <xsd:element name="GM03_2_1Core.Core.EX_SpatialTemporalExtent"
+                     type="GM03_2_1Core.Core.EX_SpatialTemporalExtent"/>
         <xsd:element name="GM03_2_1Core.Core.LI_Lineage" type="GM03_2_1Core.Core.LI_Lineage"/>
         <xsd:element name="GM03_2_1Core.Core.MD_Identifier" type="GM03_2_1Core.Core.MD_Identifier"/>
         <xsd:element name="GM03_2_1Core.Core.MD_Keywords" type="GM03_2_1Core.Core.MD_Keywords"/>
-        <xsd:element name="GM03_2_1Core.Core.CI_ResponsiblePartyparentinfo" type="GM03_2_1Core.Core.CI_ResponsiblePartyparentinfo"/>
-        <xsd:element name="GM03_2_1Core.Core.descriptiveKeywordsMD_Identification" type="GM03_2_1Core.Core.descriptiveKeywordsMD_Identification"/>
-        <xsd:element name="GM03_2_1Core.Core.EX_ExtentgeographicElement" type="GM03_2_1Core.Core.EX_ExtentgeographicElement"/>
-        <xsd:element name="GM03_2_1Core.Core.EX_ExtenttemporalElement" type="GM03_2_1Core.Core.EX_ExtenttemporalElement"/>
-        <xsd:element name="GM03_2_1Core.Core.EX_ExtentverticalElement" type="GM03_2_1Core.Core.EX_ExtentverticalElement"/>
-        <xsd:element name="GM03_2_1Core.Core.MD_IdentificationpointOfContact" type="GM03_2_1Core.Core.MD_IdentificationpointOfContact"/>
+        <xsd:element name="GM03_2_1Core.Core.CI_ResponsiblePartyparentinfo"
+                     type="GM03_2_1Core.Core.CI_ResponsiblePartyparentinfo"/>
+        <xsd:element name="GM03_2_1Core.Core.descriptiveKeywordsMD_Identification"
+                     type="GM03_2_1Core.Core.descriptiveKeywordsMD_Identification"/>
+        <xsd:element name="GM03_2_1Core.Core.EX_ExtentgeographicElement"
+                     type="GM03_2_1Core.Core.EX_ExtentgeographicElement"/>
+        <xsd:element name="GM03_2_1Core.Core.EX_ExtenttemporalElement"
+                     type="GM03_2_1Core.Core.EX_ExtenttemporalElement"/>
+        <xsd:element name="GM03_2_1Core.Core.EX_ExtentverticalElement"
+                     type="GM03_2_1Core.Core.EX_ExtentverticalElement"/>
+        <xsd:element name="GM03_2_1Core.Core.MD_IdentificationpointOfContact"
+                     type="GM03_2_1Core.Core.MD_IdentificationpointOfContact"/>
         <xsd:element name="GM03_2_1Core.Core.MD_Metadatacontact" type="GM03_2_1Core.Core.MD_Metadatacontact"/>
-        <xsd:element name="GM03_2_1Core.Core.spatialExtentEX_SpatialTemporalExtent" type="GM03_2_1Core.Core.spatialExtentEX_SpatialTemporalExtent"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.CI_Series" type="GM03_2_1Comprehensive.Comprehensive.CI_Series"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.LI_ProcessStep" type="GM03_2_1Comprehensive.Comprehensive.LI_ProcessStep"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.LI_Source" type="GM03_2_1Comprehensive.Comprehensive.LI_Source"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConcept" type="GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConcept"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Attribute" type="GM03_2_1Comprehensive.Comprehensive.MD_Attribute"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_BrowseGraphic" type="GM03_2_1Comprehensive.Comprehensive.MD_BrowseGraphic"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_CodeDomain" type="GM03_2_1Comprehensive.Comprehensive.MD_CodeDomain"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_CodeValue" type="GM03_2_1Comprehensive.Comprehensive.MD_CodeValue"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Constraints" type="GM03_2_1Comprehensive.Comprehensive.MD_Constraints"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_CRS" type="GM03_2_1Comprehensive.Comprehensive.MD_CRS"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_DigitalTransferOptions" type="GM03_2_1Comprehensive.Comprehensive.MD_DigitalTransferOptions"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Distributor" type="GM03_2_1Comprehensive.Comprehensive.MD_Distributor"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_EllipsoidParameters" type="GM03_2_1Comprehensive.Comprehensive.MD_EllipsoidParameters"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Format" type="GM03_2_1Comprehensive.Comprehensive.MD_Format"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_HistoryConcept" type="GM03_2_1Comprehensive.Comprehensive.MD_HistoryConcept"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_MetadataExtensionInformation" type="GM03_2_1Comprehensive.Comprehensive.MD_MetadataExtensionInformation"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ObliqueLineAzimuth" type="GM03_2_1Comprehensive.Comprehensive.MD_ObliqueLineAzimuth"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ObliqueLinePoint" type="GM03_2_1Comprehensive.Comprehensive.MD_ObliqueLinePoint"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_PortrayalCatalogueReference" type="GM03_2_1Comprehensive.Comprehensive.MD_PortrayalCatalogueReference"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ProjectionParameters" type="GM03_2_1Comprehensive.Comprehensive.MD_ProjectionParameters"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Revision" type="GM03_2_1Comprehensive.Comprehensive.MD_Revision"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Role" type="GM03_2_1Comprehensive.Comprehensive.MD_Role"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_StandardOrderProcess" type="GM03_2_1Comprehensive.Comprehensive.MD_StandardOrderProcess"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Type" type="GM03_2_1Comprehensive.Comprehensive.MD_Type"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Usage" type="GM03_2_1Comprehensive.Comprehensive.MD_Usage"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.RS_Identifier" type="GM03_2_1Comprehensive.Comprehensive.RS_Identifier"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.SV_OperationChainMetadata" type="GM03_2_1Comprehensive.Comprehensive.SV_OperationChainMetadata"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_Scopeextent" type="GM03_2_1Comprehensive.Comprehensive.DQ_Scopeextent"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.resourceFormatMD_Identification" type="GM03_2_1Comprehensive.Comprehensive.resourceFormatMD_Identification"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.CI_Citation" type="GM03_2_1Comprehensive.Comprehensive.CI_Citation"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_ConformanceResult" type="GM03_2_1Comprehensive.Comprehensive.DQ_ConformanceResult"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeResult" type="GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeResult"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_AggregateInformation" type="GM03_2_1Comprehensive.Comprehensive.MD_AggregateInformation"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ApplicationSchemaInformation" type="GM03_2_1Comprehensive.Comprehensive.MD_ApplicationSchemaInformation"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Association" type="GM03_2_1Comprehensive.Comprehensive.MD_Association"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Class" type="GM03_2_1Comprehensive.Comprehensive.MD_Class"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_CoverageDescription" type="GM03_2_1Comprehensive.Comprehensive.MD_CoverageDescription"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification" type="GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Dimension" type="GM03_2_1Comprehensive.Comprehensive.MD_Dimension"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ExtendedElementInformation" type="GM03_2_1Comprehensive.Comprehensive.MD_ExtendedElementInformation"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_FeatureCatalogueDescription" type="GM03_2_1Comprehensive.Comprehensive.MD_FeatureCatalogueDescription"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_GeometricObjects" type="GM03_2_1Comprehensive.Comprehensive.MD_GeometricObjects"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_GridSpatialRepresentation" type="GM03_2_1Comprehensive.Comprehensive.MD_GridSpatialRepresentation"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_LegalConstraints" type="GM03_2_1Comprehensive.Comprehensive.MD_LegalConstraints"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Legislation" type="GM03_2_1Comprehensive.Comprehensive.MD_Legislation"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Medium" type="GM03_2_1Comprehensive.Comprehensive.MD_Medium"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_RangeDimension" type="GM03_2_1Comprehensive.Comprehensive.MD_RangeDimension"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_SecurityConstraints" type="GM03_2_1Comprehensive.Comprehensive.MD_SecurityConstraints"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_VectorSpatialRepresentation" type="GM03_2_1Comprehensive.Comprehensive.MD_VectorSpatialRepresentation"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadata" type="GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadata"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.SV_Parameter" type="GM03_2_1Comprehensive.Comprehensive.SV_Parameter"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor" type="GM03_2_1Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.distributorTransferOptionsMD_Distributor" type="GM03_2_1Comprehensive.Comprehensive.distributorTransferOptionsMD_Distributor"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat" type="GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.LI_ProcessStepprocessor" type="GM03_2_1Comprehensive.Comprehensive.LI_ProcessStepprocessor"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.LI_SourcesourceExtent" type="GM03_2_1Comprehensive.Comprehensive.LI_SourcesourceExtent"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConceptarchiveConceptCitation" type="GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConceptarchiveConceptCitation"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_AttributenamedType" type="GM03_2_1Comprehensive.Comprehensive.MD_AttributenamedType"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Distributiondistributor" type="GM03_2_1Comprehensive.Comprehensive.MD_Distributiondistributor"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_HistoryConcepthistoryConceptCitation" type="GM03_2_1Comprehensive.Comprehensive.MD_HistoryConcepthistoryConceptCitation"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_MetadatametadataConstraints" type="GM03_2_1Comprehensive.Comprehensive.MD_MetadatametadataConstraints"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_RevisionrevisionContact" type="GM03_2_1Comprehensive.Comprehensive.MD_RevisionrevisionContact"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_RevisionrevisionScopeDescription" type="GM03_2_1Comprehensive.Comprehensive.MD_RevisionrevisionScopeDescription"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_UsageuserContactInfo" type="GM03_2_1Comprehensive.Comprehensive.MD_UsageuserContactInfo"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.metadataExtensionInfoMD_Metadata" type="GM03_2_1Comprehensive.Comprehensive.metadataExtensionInfoMD_Metadata"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.obliqueLinePointParameterMD_ProjectionParameters" type="GM03_2_1Comprehensive.Comprehensive.obliqueLinePointParameterMD_ProjectionParameters"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata" type="GM03_2_1Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.resourceConstraintsMD_Identification" type="GM03_2_1Comprehensive.Comprehensive.resourceConstraintsMD_Identification"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.revisionMD_Identification" type="GM03_2_1Comprehensive.Comprehensive.revisionMD_Identification"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.sourceLI_Lineage" type="GM03_2_1Comprehensive.Comprehensive.sourceLI_Lineage"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.sourceStepsource" type="GM03_2_1Comprehensive.Comprehensive.sourceStepsource"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Band" type="GM03_2_1Comprehensive.Comprehensive.MD_Band"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Georectified" type="GM03_2_1Comprehensive.Comprehensive.MD_Georectified"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Georeferenceable" type="GM03_2_1Comprehensive.Comprehensive.MD_Georeferenceable"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ImageDescription" type="GM03_2_1Comprehensive.Comprehensive.MD_ImageDescription"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformation" type="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformation"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.SV_ServiceIdentification" type="GM03_2_1Comprehensive.Comprehensive.SV_ServiceIdentification"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.aggregationInfo_MD_Identification" type="GM03_2_1Comprehensive.Comprehensive.aggregationInfo_MD_Identification"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.applicationSchemaInfoMD_Metadata" type="GM03_2_1Comprehensive.Comprehensive.applicationSchemaInfoMD_Metadata"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty" type="GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.CI_Citationidentifier" type="GM03_2_1Comprehensive.Comprehensive.CI_Citationidentifier"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription" type="GM03_2_1Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.dimensionMD_CoverageDescription" type="GM03_2_1Comprehensive.Comprehensive.dimensionMD_CoverageDescription"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription" type="GM03_2_1Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.extendedElementInformationMD_MetadataExtensionInformation" type="GM03_2_1Comprehensive.Comprehensive.extendedElementInformationMD_MetadataExtensionInformation"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.legislationConstraintsMD_LegalConstraints" type="GM03_2_1Comprehensive.Comprehensive.legislationConstraintsMD_LegalConstraints"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ExtendedElementInformationsource" type="GM03_2_1Comprehensive.Comprehensive.MD_ExtendedElementInformationsource"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_MetadatalegislationInformation" type="GM03_2_1Comprehensive.Comprehensive.MD_MetadatalegislationInformation"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.reportDQ_DataQuality" type="GM03_2_1Comprehensive.Comprehensive.reportDQ_DataQuality"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.SV_OperationChainMetadataoperation" type="GM03_2_1Comprehensive.Comprehensive.SV_OperationChainMetadataoperation"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadataconnectPoint" type="GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadataconnectPoint"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_AbsoluteExternalPositionalAccuracy" type="GM03_2_1Comprehensive.Comprehensive.DQ_AbsoluteExternalPositionalAccuracy"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_AccuracyOfATimeMeasurement" type="GM03_2_1Comprehensive.Comprehensive.DQ_AccuracyOfATimeMeasurement"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_CompletenessCommission" type="GM03_2_1Comprehensive.Comprehensive.DQ_CompletenessCommission"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_CompletenessOmission" type="GM03_2_1Comprehensive.Comprehensive.DQ_CompletenessOmission"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_ConceptualConsistency" type="GM03_2_1Comprehensive.Comprehensive.DQ_ConceptualConsistency"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_DomainConsistency" type="GM03_2_1Comprehensive.Comprehensive.DQ_DomainConsistency"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_FormatConsistency" type="GM03_2_1Comprehensive.Comprehensive.DQ_FormatConsistency"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_GriddedDataPositionalAccuracy" type="GM03_2_1Comprehensive.Comprehensive.DQ_GriddedDataPositionalAccuracy"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_NonQuantitativeAttributeAccuracy" type="GM03_2_1Comprehensive.Comprehensive.DQ_NonQuantitativeAttributeAccuracy"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeAttributeAccuracy" type="GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeAttributeAccuracy"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_RelativeInternalPositionalAccuracy" type="GM03_2_1Comprehensive.Comprehensive.DQ_RelativeInternalPositionalAccuracy"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_TemporalConsistency" type="GM03_2_1Comprehensive.Comprehensive.DQ_TemporalConsistency"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_TemporalValidity" type="GM03_2_1Comprehensive.Comprehensive.DQ_TemporalValidity"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_ThematicClassificationCorrectness" type="GM03_2_1Comprehensive.Comprehensive.DQ_ThematicClassificationCorrectness"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_TopologicalConsistency" type="GM03_2_1Comprehensive.Comprehensive.DQ_TopologicalConsistency"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.containsOperationsSV_ServiceIdentification" type="GM03_2_1Comprehensive.Comprehensive.containsOperationsSV_ServiceIdentification"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.extentSV_ServiceIdentification" type="GM03_2_1Comprehensive.Comprehensive.extentSV_ServiceIdentification"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationcontact" type="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationcontact"/>
-        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription" type="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription"/>
+        <xsd:element name="GM03_2_1Core.Core.spatialExtentEX_SpatialTemporalExtent"
+                     type="GM03_2_1Core.Core.spatialExtentEX_SpatialTemporalExtent"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.CI_Series"
+                     type="GM03_2_1Comprehensive.Comprehensive.CI_Series"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.LI_ProcessStep"
+                     type="GM03_2_1Comprehensive.Comprehensive.LI_ProcessStep"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.LI_Source"
+                     type="GM03_2_1Comprehensive.Comprehensive.LI_Source"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConcept"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConcept"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Attribute"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_Attribute"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_BrowseGraphic"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_BrowseGraphic"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_CodeDomain"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_CodeDomain"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_CodeValue"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_CodeValue"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Constraints"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_Constraints"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_CRS"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_CRS"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_DigitalTransferOptions"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_DigitalTransferOptions"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Distributor"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_Distributor"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_EllipsoidParameters"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_EllipsoidParameters"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Format"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_Format"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_HistoryConcept"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_HistoryConcept"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_MetadataExtensionInformation"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_MetadataExtensionInformation"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ObliqueLineAzimuth"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_ObliqueLineAzimuth"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ObliqueLinePoint"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_ObliqueLinePoint"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_PortrayalCatalogueReference"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_PortrayalCatalogueReference"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ProjectionParameters"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_ProjectionParameters"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Revision"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_Revision"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Role"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_Role"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_StandardOrderProcess"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_StandardOrderProcess"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Type"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_Type"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Usage"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_Usage"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.RS_Identifier"
+                     type="GM03_2_1Comprehensive.Comprehensive.RS_Identifier"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.SV_OperationChainMetadata"
+                     type="GM03_2_1Comprehensive.Comprehensive.SV_OperationChainMetadata"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_Scopeextent"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_Scopeextent"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.resourceFormatMD_Identification"
+                     type="GM03_2_1Comprehensive.Comprehensive.resourceFormatMD_Identification"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.CI_Citation"
+                     type="GM03_2_1Comprehensive.Comprehensive.CI_Citation"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_ConformanceResult"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_ConformanceResult"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeResult"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeResult"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_AggregateInformation"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_AggregateInformation"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ApplicationSchemaInformation"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_ApplicationSchemaInformation"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Association"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_Association"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Class"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_Class"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_CoverageDescription"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_CoverageDescription"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Dimension"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_Dimension"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ExtendedElementInformation"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_ExtendedElementInformation"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_FeatureCatalogueDescription"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_FeatureCatalogueDescription"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_GeometricObjects"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_GeometricObjects"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_GridSpatialRepresentation"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_GridSpatialRepresentation"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_LegalConstraints"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_LegalConstraints"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Legislation"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_Legislation"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Medium"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_Medium"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_RangeDimension"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_RangeDimension"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_SecurityConstraints"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_SecurityConstraints"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_VectorSpatialRepresentation"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_VectorSpatialRepresentation"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadata"
+                     type="GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadata"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.SV_Parameter"
+                     type="GM03_2_1Comprehensive.Comprehensive.SV_Parameter"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor"
+                     type="GM03_2_1Comprehensive.Comprehensive.distributionOrderProcessMD_Distributor"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.distributorTransferOptionsMD_Distributor"
+                     type="GM03_2_1Comprehensive.Comprehensive.distributorTransferOptionsMD_Distributor"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat"
+                     type="GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.LI_ProcessStepprocessor"
+                     type="GM03_2_1Comprehensive.Comprehensive.LI_ProcessStepprocessor"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.LI_SourcesourceExtent"
+                     type="GM03_2_1Comprehensive.Comprehensive.LI_SourcesourceExtent"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConceptarchiveConceptCitation"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_ArchiveConceptarchiveConceptCitation"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_AttributenamedType"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_AttributenamedType"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Distributiondistributor"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_Distributiondistributor"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_HistoryConcepthistoryConceptCitation"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_HistoryConcepthistoryConceptCitation"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_MetadatametadataConstraints"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_MetadatametadataConstraints"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_RevisionrevisionContact"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_RevisionrevisionContact"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_RevisionrevisionScopeDescription"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_RevisionrevisionScopeDescription"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_UsageuserContactInfo"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_UsageuserContactInfo"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.metadataExtensionInfoMD_Metadata"
+                     type="GM03_2_1Comprehensive.Comprehensive.metadataExtensionInfoMD_Metadata"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.obliqueLinePointParameterMD_ProjectionParameters"
+                     type="GM03_2_1Comprehensive.Comprehensive.obliqueLinePointParameterMD_ProjectionParameters"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata"
+                     type="GM03_2_1Comprehensive.Comprehensive.portrayalCatalogueInfoMD_Metadata"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.resourceConstraintsMD_Identification"
+                     type="GM03_2_1Comprehensive.Comprehensive.resourceConstraintsMD_Identification"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.revisionMD_Identification"
+                     type="GM03_2_1Comprehensive.Comprehensive.revisionMD_Identification"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.sourceLI_Lineage"
+                     type="GM03_2_1Comprehensive.Comprehensive.sourceLI_Lineage"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.sourceStepsource"
+                     type="GM03_2_1Comprehensive.Comprehensive.sourceStepsource"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Band"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_Band"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Georectified"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_Georectified"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_Georeferenceable"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_Georeferenceable"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ImageDescription"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_ImageDescription"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformation"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformation"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.SV_ServiceIdentification"
+                     type="GM03_2_1Comprehensive.Comprehensive.SV_ServiceIdentification"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.aggregationInfo_MD_Identification"
+                     type="GM03_2_1Comprehensive.Comprehensive.aggregationInfo_MD_Identification"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.applicationSchemaInfoMD_Metadata"
+                     type="GM03_2_1Comprehensive.Comprehensive.applicationSchemaInfoMD_Metadata"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty"
+                     type="GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.CI_Citationidentifier"
+                     type="GM03_2_1Comprehensive.Comprehensive.CI_Citationidentifier"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription"
+                     type="GM03_2_1Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.dimensionMD_CoverageDescription"
+                     type="GM03_2_1Comprehensive.Comprehensive.dimensionMD_CoverageDescription"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription"
+                     type="GM03_2_1Comprehensive.Comprehensive.domainMD_FeatureCatalogueDescription"/>
+        <xsd:element
+          name="GM03_2_1Comprehensive.Comprehensive.extendedElementInformationMD_MetadataExtensionInformation"
+          type="GM03_2_1Comprehensive.Comprehensive.extendedElementInformationMD_MetadataExtensionInformation"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.legislationConstraintsMD_LegalConstraints"
+                     type="GM03_2_1Comprehensive.Comprehensive.legislationConstraintsMD_LegalConstraints"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_ExtendedElementInformationsource"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_ExtendedElementInformationsource"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_MetadatalegislationInformation"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_MetadatalegislationInformation"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.reportDQ_DataQuality"
+                     type="GM03_2_1Comprehensive.Comprehensive.reportDQ_DataQuality"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.SV_OperationChainMetadataoperation"
+                     type="GM03_2_1Comprehensive.Comprehensive.SV_OperationChainMetadataoperation"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadataconnectPoint"
+                     type="GM03_2_1Comprehensive.Comprehensive.SV_OperationMetadataconnectPoint"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_AbsoluteExternalPositionalAccuracy"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_AbsoluteExternalPositionalAccuracy"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_AccuracyOfATimeMeasurement"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_AccuracyOfATimeMeasurement"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_CompletenessCommission"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_CompletenessCommission"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_CompletenessOmission"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_CompletenessOmission"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_ConceptualConsistency"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_ConceptualConsistency"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_DomainConsistency"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_DomainConsistency"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_FormatConsistency"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_FormatConsistency"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_GriddedDataPositionalAccuracy"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_GriddedDataPositionalAccuracy"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_NonQuantitativeAttributeAccuracy"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_NonQuantitativeAttributeAccuracy"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeAttributeAccuracy"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeAttributeAccuracy"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_RelativeInternalPositionalAccuracy"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_RelativeInternalPositionalAccuracy"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_TemporalConsistency"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_TemporalConsistency"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_TemporalValidity"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_TemporalValidity"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_ThematicClassificationCorrectness"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_ThematicClassificationCorrectness"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.DQ_TopologicalConsistency"
+                     type="GM03_2_1Comprehensive.Comprehensive.DQ_TopologicalConsistency"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.containsOperationsSV_ServiceIdentification"
+                     type="GM03_2_1Comprehensive.Comprehensive.containsOperationsSV_ServiceIdentification"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.extentSV_ServiceIdentification"
+                     type="GM03_2_1Comprehensive.Comprehensive.extentSV_ServiceIdentification"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationcontact"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationcontact"/>
+        <xsd:element name="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription"
+                     type="GM03_2_1Comprehensive.Comprehensive.MD_MaintenanceInformationupdateScopeDescription"/>
       </xsd:choice>
     </xsd:sequence>
     <xsd:attribute name="BID" type="IliID" use="required"/>

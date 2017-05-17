@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:exslt="http://exslt.org/common" xmlns:geonet="http://www.fao.org/geonetwork"
-  xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd" version="2.0" exclude-result-prefixes="exslt">
+                xmlns:exslt="http://exslt.org/common" xmlns:geonet="http://www.fao.org/geonetwork"
+                xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd" version="2.0" exclude-result-prefixes="exslt">
 
   <xsl:import href="process-utility.xsl"/>
 
   <!-- i18n information -->
   <xsl:variable name="add-extent-loc">
-    <msg id="a" xml:lang="en">Keyword field contains place keywords (ie. </msg>
+    <msg id="a" xml:lang="en">Keyword field contains place keywords (ie.</msg>
     <msg id="b" xml:lang="en">). Try to compute metadata extent using thesaurus.</msg>
-    <msg id="a" xml:lang="fr">Certains mots clés sont de type géographique (ie. </msg>
+    <msg id="a" xml:lang="fr">Certains mots clés sont de type géographique (ie.</msg>
     <msg id="b" xml:lang="fr">). Exécuter cette action pour essayer de calculer l'emprise à partir des thésaurus.</msg>
   </xsl:variable>
 
@@ -25,16 +25,14 @@
 
 
   <xsl:variable name="replaceMode"
-    select="geonet:parseBoolean($replace)"/>
+                select="geonet:parseBoolean($replace)"/>
   <xsl:variable name="serviceUrl"
-    select="concat($gurl, '/srv/', $lang, '/xml.search.keywords?pNewSearch=true&amp;pTypeSearch=2&amp;pKeyword=')"/>
-
+                select="concat($gurl, '/srv/', $lang, '/xml.search.keywords?pNewSearch=true&amp;pTypeSearch=2&amp;pKeyword=')"/>
 
 
   <xsl:template name="list-add-extent-from-geokeywords">
     <suggestion process="add-extent-from-geokeywords"/>
   </xsl:template>
-
 
 
   <!-- Analyze the metadata record and return available suggestion
@@ -43,27 +41,29 @@
     <xsl:param name="root"/>
 
     <xsl:variable name="extentDescription"
-      select="string-join($root//gmd:EX_Extent/gmd:description/gco:CharacterString, ' ')"/>
+                  select="string-join($root//gmd:EX_Extent/gmd:description/gco:CharacterString, ' ')"/>
 
     <xsl:variable name="geoKeywords"
-      select="$root//gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[
-                      not(gco:CharacterString/@gco:nilReason) 
+                  select="$root//gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[
+                      not(gco:CharacterString/@gco:nilReason)
                       and not(contains($extentDescription, gco:CharacterString))
                       and ../gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='place']"/>
     <xsl:if test="$geoKeywords">
       <suggestion process="add-extent-from-geokeywords" id="{generate-id()}" category="keyword" target="extent">
-        <name><xsl:value-of select="geonet:i18n($add-extent-loc, 'a', $guiLang)"/><xsl:value-of select="string-join($geoKeywords, ', ')"/>
-          <xsl:value-of select="geonet:i18n($add-extent-loc, 'b', $guiLang)"/></name>
+        <name>
+          <xsl:value-of select="geonet:i18n($add-extent-loc, 'a', $guiLang)"/><xsl:value-of
+          select="string-join($geoKeywords, ', ')"/>
+          <xsl:value-of select="geonet:i18n($add-extent-loc, 'b', $guiLang)"/>
+        </name>
         <operational>true</operational>
         <params>{gurl:{type:'string', defaultValue:'<xsl:value-of select="$gurl"/>'},
           lang:{type:'string', defaultValue:'<xsl:value-of select="$lang"/>'},
-          replace:{type:'boolean', defaultValue:'<xsl:value-of select="$replace"/>'}}</params>
+          replace:{type:'boolean', defaultValue:'<xsl:value-of select="$replace"/>'}}
+        </params>
       </suggestion>
     </xsl:if>
 
   </xsl:template>
-
-
 
 
   <!-- Do a copy of every nodes and attributes -->
@@ -84,9 +84,9 @@
     priority="2">
 
     <xsl:variable name="srv"
-      select="local-name(.)='SV_ServiceIdentification'
+                  select="local-name(.)='SV_ServiceIdentification'
             or @gco:isoType='srv:SV_ServiceIdentification'"/>
-    
+
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <!-- Copy all elements from AbstractMD_IdentificationType-->
@@ -128,11 +128,11 @@
       <!-- Keep existing extent and compute
             from keywords -->
 
-      <!-- replace or add extent. Default mode is add. 
+      <!-- replace or add extent. Default mode is add.
             All extent element are processed and if a geographicElement is found,
-            it will be removed. Description, verticalElement and temporalElement 
+            it will be removed. Description, verticalElement and temporalElement
             are preserved.
-            
+
             GeographicElement element having BoundingPolygon are preserved.
             -->
       <xsl:choose>
@@ -223,5 +223,5 @@
       </xsl:if>
     </xsl:for-each>
   </xsl:template>
-  
+
 </xsl:stylesheet>
