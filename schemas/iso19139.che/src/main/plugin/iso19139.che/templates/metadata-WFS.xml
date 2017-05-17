@@ -7,7 +7,7 @@
     <gco:CharacterString>30d62090-9bf7-4f8e-85a9-86b150dda585</gco:CharacterString>
   </gmd:fileIdentifier>
   <gmd:language>
-    <gco:CharacterString>fra</gco:CharacterString>
+    <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre"/>
   </gmd:language>
   <gmd:characterSet>
     <gmd:MD_CharacterSetCode codeListValue="utf8"
@@ -33,7 +33,7 @@
   <gmd:locale>
     <gmd:PT_Locale id="FR">
       <gmd:languageCode>
-        <gmd:LanguageCode codeList="#LanguageCode" codeListValue="fra">French</gmd:LanguageCode>
+        <gmd:LanguageCode codeList="#LanguageCode" codeListValue="fre">French</gmd:LanguageCode>
       </gmd:languageCode>
       <gmd:characterEncoding>
         <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
@@ -53,7 +53,7 @@
   <gmd:locale>
     <gmd:PT_Locale id="DE">
       <gmd:languageCode>
-        <gmd:LanguageCode codeList="#LanguageCode" codeListValue="deu">German</gmd:LanguageCode>
+        <gmd:LanguageCode codeList="#LanguageCode" codeListValue="ger">German</gmd:LanguageCode>
       </gmd:languageCode>
       <gmd:characterEncoding>
         <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>

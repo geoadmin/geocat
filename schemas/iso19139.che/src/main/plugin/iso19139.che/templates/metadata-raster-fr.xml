@@ -7,7 +7,7 @@
     <gco:CharacterString>a427166f-f921-4408-a03e-1652cbfd23ab</gco:CharacterString>
   </gmd:fileIdentifier>
   <gmd:language xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <gco:CharacterString>fra</gco:CharacterString>
+    <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre"/>
   </gmd:language>
   <gmd:characterSet xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <gmd:MD_CharacterSetCode codeListValue="utf8"
@@ -27,7 +27,7 @@
   <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <gmd:PT_Locale id="FR">
       <gmd:languageCode>
-        <gmd:LanguageCode codeListValue="fra" codeList="#LanguageCode">French</gmd:LanguageCode>
+        <gmd:LanguageCode codeListValue="fre" codeList="#LanguageCode">French</gmd:LanguageCode>
       </gmd:languageCode>
       <gmd:characterEncoding>
         <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
@@ -37,7 +37,7 @@
   <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <gmd:PT_Locale id="DE">
       <gmd:languageCode>
-        <gmd:LanguageCode codeListValue="deu" codeList="#LanguageCode">German</gmd:LanguageCode>
+        <gmd:LanguageCode codeListValue="ger" codeList="#LanguageCode">German</gmd:LanguageCode>
       </gmd:languageCode>
       <gmd:characterEncoding>
         <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
