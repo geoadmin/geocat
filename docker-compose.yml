@@ -1,0 +1,23 @@
+version: '2'
+
+services:
+  database:
+    image: mdillon/postgis:9.4
+    volumes:
+      - ./postgresql_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=geonetwork
+      - POSTGRES_PASSWORD=geonetwork
+      - POSTGRES_DB=geonetwork
+
+  geonetwork:
+    image: tomcat:8-jre8
+    volumes:
+      - ./web/target/geonetwork:/usr/local/tomcat/webapps/geonetwork
+    links:
+      - database
+    environment:
+      - JAVA_OPTS= -Xmx8g -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+    ports:
+      - "8080:8080"
+      - "5005:5005"
