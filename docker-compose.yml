@@ -9,15 +9,18 @@ services:
       - POSTGRES_USER=geonetwork
       - POSTGRES_PASSWORD=geonetwork
       - POSTGRES_DB=geonetwork
+    ports:
+      - "55432:5432"
 
   geonetwork:
     image: tomcat:8-jre8
     volumes:
       - ./web/target/geonetwork:/usr/local/tomcat/webapps/geonetwork
+      - ./web-ui/src/main/resources/catalog:/usr/local/tomcat/webapps/geonetwork/catalog
     links:
       - database
     environment:
       - JAVA_OPTS= -Xmx8g -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
     ports:
-      - "8080:8080"
+      - "8190:8080"
       - "5005:5005"
