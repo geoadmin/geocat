@@ -46,7 +46,7 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
-            .andExpect(jsonPath("$['system/site/name']", is("My GeoNetwork catalogue")));
+            .andExpect(jsonPath("$['system/site/name']", is("geocat.ch")));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
-            .andExpect(jsonPath("$['system/site/name']", is("My GeoNetwork catalogue")));
+            .andExpect(jsonPath("$['system/site/name']", is("geocat.ch")));
     }
 
     @Test
