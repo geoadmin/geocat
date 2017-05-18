@@ -255,7 +255,7 @@
       <label>Autre services</label>
     </entry>
   </codelist>
-  <codelist name="gmd:DS_AssociationTypeCode">
+  <codelist name="gmd:DS_AssociationTypeCode" alias="associationType">
     <entry>
       <code>largerWorkCitation</code>
       <label>Larger work citation</label>

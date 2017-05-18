@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<codelists xmlns:gmd="http://www.isotc211.org/2005/gmd">
-  <!--
-        <codelist name="gmd:CI_DateTypeCode">
-        <entry><code></code><label></label><description></description></entry>
-        </codelist>-->
+<codelists xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="../../../../../../../schema-labels.xsd"
+ xmlns:gmd="http://www.isotc211.org/2005/gmd">
   <codelist name="che:Country">
     <entry>
       <code>CH</code>
@@ -263,7 +261,7 @@
       <label>Other Services</label>
     </entry>
   </codelist>
-  <codelist name="gmd:DS_AssociationTypeCode">
+  <codelist name="gmd:DS_AssociationTypeCode" alias="associationType">
     <entry>
       <code>largerWorkCitation</code>
       <label>Larger work citation</label>

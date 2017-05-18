@@ -1,9 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <codelists xmlns:gmd="http://www.isotc211.org/2005/gmd">
-  <!--
-        <codelist name="gmd:CI_DateTypeCode">
-        <entry><code></code><label></label><description></description></entry>
-        </codelist>-->
   <codelist name="gmd:Country">
     <entry>
       <code>CH</code>
@@ -414,7 +410,7 @@
       <label>Altri servizi</label>
     </entry>
   </codelist>
-  <codelist name="gmd:DS_AssociationTypeCode">
+  <codelist name="gmd:DS_AssociationTypeCode" alias="associationType">
     <entry>
       <code>largerWorkCitation</code>
       <label>Larger work citation</label>
