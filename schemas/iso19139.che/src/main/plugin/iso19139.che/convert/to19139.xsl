@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:che="http://www.geocat.ch/2008/che" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd"
+<xsl:stylesheet xmlns:che="http://www.geocat.ch/2008/che"
+                xmlns:srv="http://www.isotc211.org/2005/srv"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 version="1.0"
-                exclude-result-prefixes="che"
->
+                exclude-result-prefixes="#all">
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
 
   <!-- Some default values -->
@@ -37,6 +40,7 @@
   </xsl:template>
 
   <!-- Remove isoType and xsi:type attribute in iso19139 -->
-  <xsl:template match="@gco:isoType|@xsi:type[.='che:PT_FreeURL_PropertyType']" priority="2"/>
+  <xsl:template match="@gco:isoType|@xsi:type[.='che:PT_FreeURL_PropertyType']"
+                priority="2"/>
 
 </xsl:stylesheet>
