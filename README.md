@@ -2,6 +2,10 @@
 
 [![Build Status](https://travis-ci.org/geonetwork/core-geonetwork.svg?branch=develop)](https://travis-ci.org/geonetwork/core-geonetwork)
 
+# Build geocat for docker usage
+```
+mvn clean install -DskipTests -Ddb.username=geonetwork -Ddb.name=geonetwork -Ddb.type=postgres -Ddb.host=database -Ddb.password=geonetwork
+```
 # Features
 
 * Immediate search access to local and distributed geospatial catalogues
