@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
                 xmlns="http://www.interlis.ch/INTERLIS2.3"
                 xmlns:che="http://www.geocat.ch/2008/che"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
@@ -7,9 +7,8 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:gmi="http://www.isotc211.org/2005/gmi"
-                xmlns:xalan="http://xml.apache.org/xalan"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
-                exclude-result-prefixes="che gco gmd gml xalan gmi util">
+                exclude-result-prefixes="#all">
 
     <xsl:template mode="DataQuality" match="gmd:DQ_DataQuality">
         <GM03_2_1Core.Core.DQ_DataQuality TID="x{util:randomId()}">

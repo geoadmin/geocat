@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:che="http://www.geocat.ch/2008/che"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
-                xmlns:xalan="http://xml.apache.org/xalan"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:int="http://www.interlis.ch/INTERLIS2.3"
-                exclude-result-prefixes="int xalan">
+                exclude-result-prefixes="#all">
     <xsl:template mode="RespParty"
                   match="int:GM03_2_1Core.Core.MD_IdentificationpointOfContact |
                          int:GM03_2_1Core.Core.MD_Metadatacontact |

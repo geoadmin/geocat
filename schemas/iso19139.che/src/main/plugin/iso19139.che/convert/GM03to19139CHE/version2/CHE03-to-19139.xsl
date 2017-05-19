@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
                 xmlns:comp="http://toignore"
                 xmlns:che="http://www.geocat.ch/2008/che"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
@@ -9,8 +9,7 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:int="http://www.interlis.ch/INTERLIS2.3"
-                exclude-result-prefixes="int"
-                xmlns:xalan="http://xml.apache.org/xalan" >
+                exclude-result-prefixes="#all">
 
     <xsl:include href="resolve-refs.xsl"/>
     <xsl:include href="metadata.xsl"/>

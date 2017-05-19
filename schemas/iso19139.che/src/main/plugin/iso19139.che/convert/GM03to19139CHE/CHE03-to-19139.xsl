@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
                 xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive"
                 xmlns:che="http://www.geocat.ch/2008/che"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
@@ -7,8 +7,7 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:xalan="http://xml.apache.org/xalan" >
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
     <xsl:include href="resolve-refs.xsl"/>
     <xsl:include href="metadata.xsl"/>
