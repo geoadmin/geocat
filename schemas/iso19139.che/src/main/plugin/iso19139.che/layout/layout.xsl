@@ -45,7 +45,7 @@
 
 
 
-  <xsl:template mode="mode-iso19139.che" priority="99999"
+  <xsl:template mode="mode-iso19139" priority="99999"
                 match="che:CHE_CI_ResponsibleParty/gn:child[@name = 'individualName']">
     <!-- Do nothing -->
   </xsl:template>
@@ -86,7 +86,7 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template mode="mode-iso19139.che" priority="200"
+  <xsl:template mode="mode-iso19139" priority="200"
                 match="*[che:PT_FreeURL|che:LocalisedURL]">
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
@@ -361,7 +361,7 @@
   in profile codelist files. In such case, then use
   iso19139 codelist files.
   -->
-  <xsl:template mode="mode-iso19139.che"
+  <xsl:template mode="mode-iso19139"
                 priority="30000"
                 match="*[*/@codeList and
                          $schema = 'iso19139.che' and

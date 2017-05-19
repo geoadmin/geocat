@@ -2,6 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:che="http://www.geocat.ch/2008/che"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 version="2.0"
                 exclude-result-prefixes="#all">
@@ -10,7 +11,9 @@
 
   <xsl:template name="get-iso19139.che-is-service">
     <xsl:value-of
-      select="count($metadata/gmd:identificationInfo/che:CHE_SV_ServiceIdentification) > 0"/>
+      select="count(
+                $metadata/gmd:identificationInfo/che:CHE_SV_ServiceIdentification|
+                $metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
   </xsl:template>
 
   <xsl:template name="get-iso19139.che-title">
