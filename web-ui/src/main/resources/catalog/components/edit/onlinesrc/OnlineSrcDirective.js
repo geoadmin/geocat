@@ -1325,7 +1325,8 @@
                     scope.srcParams = {selectedLayers: []};
 
                     var searchParams = {
-                      type: scope.mode
+                      type: scope.mode,
+                      _isHarvested: 'n' //specific GEOCAT
                     };
                     scope.$broadcast('resetSearch', searchParams);
                     scope.layers = [];
@@ -1403,13 +1404,33 @@
                         scope.srcParams.uuidSrv = md.getUuid();
                         scope.srcParams.uuidDS = gnCurrentEdit.uuid;
 
-                        if (angular.isArray(links) && links.length == 1) {
+                        // specific GEOCAT
+                        var wmsUris;
+                        if (md.type.indexOf('service') >= 0) {
+                          wmsUris = [];
+                          angular.forEach(md.wmsuri, function(uri) {
+                            var e = uri.split('###');
+                            wmsUris.push({
+                              uuid: e[0],
+                              Name: e[1],
+                              Title: e[1],
+                              url: e[2]
+                            });
+                          });
+                        }
+
+                        if(wmsUris && wmsUris.length) {
+                          scope.layers = wmsUris;
+                        }
+                        // end - specific GEOCAT
+                        else if(angular.isArray(links) && links.length == 1) {
                           scope.loadCurrentLink(links[0].url);
                           scope.srcParams.url = links[0].url;
-                        } else {
+                        }
+                        else {
                           scope.srcParams.url = '';
                           scope.alertMsg = $translate.instant(
-                              'linkToServiceWithoutURLError');
+                            'linkToServiceWithoutURLError');
                         }
                       }
                       else {
