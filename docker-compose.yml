@@ -17,6 +17,11 @@ services:
     volumes:
       - ./web/target/geonetwork:/usr/local/tomcat/webapps/geonetwork
       - ./web-ui/src/main/resources/catalog:/usr/local/tomcat/webapps/geonetwork/catalog
+      - ./schemas/iso19139.che/src/main/plugin/iso19139.che:/usr/local/tomcat/webapps/geonetwork/WEB-INF/data/config/schema_plugins/iso19139.che
+      - ./schemas/iso19139/src/main/plugin/iso19139:/usr/local/tomcat/webapps/geonetwork/WEB-INF/data/config/schema_plugins/iso19139
+      - ./schemas/iso19110/src/main/plugin/iso19110:/usr/local/tomcat/webapps/geonetwork/WEB-INF/data/config/schema_plugins/iso19110
+      - ./schemas/csw-record/src/main/plugin/csw-record:/usr/local/tomcat/webapps/geonetwork/WEB-INF/data/config/schema_plugins/csw-record
+      - ./schemas/dublin-core/src/main/plugin/dublin-core:/usr/local/tomcat/webapps/geonetwork/WEB-INF/data/config/schema_plugins/dublin-core
     links:
       - database
     environment:
