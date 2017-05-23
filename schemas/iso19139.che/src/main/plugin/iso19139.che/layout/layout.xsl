@@ -224,13 +224,12 @@
   </xsl:template>
 
 
-  <xsl:template mode="mode-iso19139.che" match="gmd:MD_TopicCategoryCode" priority="2000">
+  <xsl:template mode="mode-iso19139" match="*[name() = 'gmd:MD_TopicCategoryCode' and $schema = 'iso19139.che']" priority="2000">
 
 
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="codelists" select="$iso19139codelists" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
-
 
     <xsl:variable name="name" select="name(.)"/>
     <xsl:variable name="value" select="string(.)"/>
