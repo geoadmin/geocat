@@ -2,10 +2,62 @@
 
 [![Build Status](https://travis-ci.org/geonetwork/core-geonetwork.svg?branch=develop)](https://travis-ci.org/geonetwork/core-geonetwork)
 
-# Build geocat for docker usage
+# Geocat
+## Build & run
+### Docker
+
+A composition `docker-compose.yml` has been added to the project. It contains 2 services:
+- database
+- geonetwork
+
+`database` starts a container with a postgresql/postgis 9.4 and create an empty base geonetwork with user geonetwork/geonetwork.
+
+`geonetwork` starts a tomcat and map the webapps folder of the tomcat to your sources `web/target/geonetwork` folder. Schemas and ui files are also mapped to your sources to have realtime developpment.
+
+Start your project:
 ```
+git clone --recursive git@github.com:geoadmin/geocat.git
+cd geocat
 mvn clean install -DskipTests -Ddb.username=geonetwork -Ddb.name=geonetwork -Ddb.type=postgres -Ddb.host=database -Ddb.password=geonetwork
+docker-compose up
 ```
+
+When you want to rebuild your project, you must clean the web/target folder as root, because tomcat created it as root.
+Also, you may want to clean some files created by root in your schemas (like schematron-rules files) with a git clean -f (check you have no unwatched file to kepp before cleaning your repository).
+
+A script `instal_merge.sh` can be used to rebuild the project (it also does the target folded cleaning).
+
+Application will be available on localhost:8190/geonetwork
+
+### Jetty
+
+You can still want to work with jetty. But you can still use the database container from docker.
+Run your jetty with database configuration postgres mapped to the 55432 port (comes from coker postgres image).
+
+Start your project:
+```
+mvn clean install -DskipTests
+docker-compose up database
+mvn jetty-run -Penv-dev -Ddb.username=geonetwork -Ddb.name=geonetwork -Ddb.config.file=../config-db/postgres.xml -Ddb.password=geonetwork -Ddb.port=55432
+```
+
+Application will be available on localhost:8080/geonetwork
+
+When you work with jetty, no mapping is done for schemas. Resource copying is done on jetty startup. If you want to update your schemas without starting jetty you can use those commands:
+```
+cp -R -f schemas/iso19139/src/main/plugin/iso19139/ web/src/main/webapp/WEB-INF/data/config/schema_plugins/
+cp -R -f schemas/iso19139.che/src/main/plugin/iso19139.che/ web/src/main/webapp/WEB-INF/data/config/schema_plugins/
+cp -R -f schemas/dublin-core/src/main/plugin/dublin-core/ web/src/main/webapp/WEB-INF/data/config/schema_plugins/
+```
+
+## geocat configuration
+
+### Database
+First time tomcat will start over the empty database, it will fill it with all geonetwork database structure and datas.
+
+### ISO10139.CHE
+Go to admin page (admin/admin) and add SIO19139.CHE templates and schemas. It is a fresh new set of records imported from geocat.ch PROD server.
+
 # Features
 
 * Immediate search access to local and distributed geospatial catalogues
