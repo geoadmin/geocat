@@ -410,6 +410,7 @@
       <label>Altri servizi</label>
     </entry>
   </codelist>
+  <codelist name="gmd:DS_InitiativeTypeCode" alias="initiativeType"/>
   <codelist name="gmd:DS_AssociationTypeCode" alias="associationType">
     <entry>
       <code>largerWorkCitation</code>
