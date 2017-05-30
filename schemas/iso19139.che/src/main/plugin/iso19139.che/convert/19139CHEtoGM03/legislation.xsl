@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
-                xmlns="http://www.interlis.ch/INTERLIS2.3"
+                xmlns:ili="http://www.interlis.ch/INTERLIS2.3"
                 xmlns:che="http://www.geocat.ch/2008/che"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
@@ -9,7 +9,7 @@
                 exclude-result-prefixes="che gco gmd util">
 
     <xsl:template mode="Legislation" match="che:CHE_MD_Legislation">
-        <GM03_2_1Comprehensive.Comprehensive.MD_Legislation TID='x{generate-id(.)}'>
+        <ili:GM03_2_1Comprehensive.Comprehensive.MD_Legislation TID='x{generate-id(.)}'>
             <xsl:apply-templates mode="enumISO" select=".">
                 <xsl:with-param name="name">CodeISO.CountryCodeISO_</xsl:with-param>
                 <xsl:with-param name="element">country</xsl:with-param>
@@ -22,28 +22,28 @@
             <xsl:apply-templates mode="text" select="che:legislationType"/>
             <xsl:apply-templates mode="Legislation" select="che:internalReference"/>
             <xsl:apply-templates mode="Legislation" select="che:title"/>
-        </GM03_2_1Comprehensive.Comprehensive.MD_Legislation>
+        </ili:GM03_2_1Comprehensive.Comprehensive.MD_Legislation>
     </xsl:template>
 
     <xsl:template mode="Legislation" match="che:title">
-        <title REF="?">
-            <GM03_2_1Comprehensive.Comprehensive.CI_Citation TID="x{util:randomId()}">
+        <ili:title REF="?">
+            <ili:GM03_2_1Comprehensive.Comprehensive.CI_Citation TID="x{util:randomId()}">
                 <xsl:apply-templates mode="RefSystem"/>
-            </GM03_2_1Comprehensive.Comprehensive.CI_Citation>
-        </title>
+            </ili:GM03_2_1Comprehensive.Comprehensive.CI_Citation>
+        </ili:title>
     </xsl:template>
 
     <xsl:template mode="Legislation" match="che:internalReference">
-        <internalReference>
+        <ili:internalReference>
             <xsl:for-each select="gco:CharacterString">
-                <GM03_2_1Core.Core.CharacterString_>
-                    <value><xsl:value-of select="."/></value>
-                </GM03_2_1Core.Core.CharacterString_>
+                <ili:GM03_2_1Core.Core.CharacterString_>
+                    <ili:value><xsl:value-of select="."/></ili:value>
+                </ili:GM03_2_1Core.Core.CharacterString_>
             </xsl:for-each>
-        </internalReference>
+        </ili:internalReference>
     </xsl:template>
 
     <xsl:template mode="Legislation" match="*" priority="-100">
-        <ERROR>Unknown Legislation element <xsl:value-of select="local-name(.)"/></ERROR>
+        <ili:ERROR>Unknown Legislation element <xsl:value-of select="local-name(.)"/></ili:ERROR>
     </xsl:template>
 </xsl:stylesheet>

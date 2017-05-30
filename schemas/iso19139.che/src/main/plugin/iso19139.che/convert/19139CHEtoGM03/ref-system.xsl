@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
-                xmlns="http://www.interlis.ch/INTERLIS2.3"
+                xmlns:ili="http://www.interlis.ch/INTERLIS2.3"
                 xmlns:che="http://www.geocat.ch/2008/che"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
@@ -9,41 +9,41 @@
                 exclude-result-prefixes="che gco gmd util">
 
     <xsl:template mode="RefSystem" match="gmd:referenceSystemInfo">
-        <GM03_2_1Core.Core.referenceSystemInfoMD_Metadata TID='x{generate-id(.)}'>
-            <referenceSystemInfo REF="?">
+        <ili:GM03_2_1Core.Core.referenceSystemInfoMD_Metadata TID='x{generate-id(.)}'>
+            <ili:referenceSystemInfo REF="?">
                 <xsl:apply-templates mode="RefSystem"/>
-            </referenceSystemInfo>
-            <BACK_REF name="MD_Metadata"/>
-        </GM03_2_1Core.Core.referenceSystemInfoMD_Metadata>
+            </ili:referenceSystemInfo>
+            <ili:BACK_REF name="MD_Metadata"/>
+        </ili:GM03_2_1Core.Core.referenceSystemInfoMD_Metadata>
     </xsl:template>
 
     <xsl:template mode="RefSystem" match="gmd:MD_ReferenceSystem">
-        <GM03_2_1Core.Core.MD_ReferenceSystem TID='x{generate-id(.)}'>
+        <ili:GM03_2_1Core.Core.MD_ReferenceSystem TID='x{generate-id(.)}'>
             <xsl:apply-templates mode="RefSystem"/>
-        </GM03_2_1Core.Core.MD_ReferenceSystem>
+        </ili:GM03_2_1Core.Core.MD_ReferenceSystem>
     </xsl:template>
 
     <xsl:template mode="RefSystem" match="gmd:referenceSystemIdentifier">
-        <referenceSystemIdentifier REF='?'>
+        <ili:referenceSystemIdentifier REF='?'>
             <xsl:apply-templates mode="RefSystem"/>
-        </referenceSystemIdentifier>
+        </ili:referenceSystemIdentifier>
     </xsl:template>
 
     <xsl:template mode="RefSystem" match="gmd:RS_Identifier">
-        <GM03_2_1Comprehensive.Comprehensive.RS_Identifier TID='x{generate-id(.)}'>
+        <ili:GM03_2_1Comprehensive.Comprehensive.RS_Identifier TID='x{generate-id(.)}'>
             <xsl:apply-templates mode="textGroup" select="gmd:code"/>
             <xsl:apply-templates mode="RefSystem" select="gmd:authority"/>
             <xsl:apply-templates mode="text" select="gmd:codeSpace"/>
             <xsl:apply-templates mode="text" select="gmd:version"/>
-        </GM03_2_1Comprehensive.Comprehensive.RS_Identifier>
+        </ili:GM03_2_1Comprehensive.Comprehensive.RS_Identifier>
     </xsl:template>
 
     <xsl:template mode="RefSystem" match="gmd:authority">
-        <MD_Authority REF="?">
-            <GM03_2_1Core.Core.MD_Authority TID='x{generate-id(.)}'>
+        <ili:MD_Authority REF="?">
+            <ili:GM03_2_1Core.Core.MD_Authority TID='x{generate-id(.)}'>
                 <xsl:apply-templates mode="RefSystem"/>
-            </GM03_2_1Core.Core.MD_Authority>
-        </MD_Authority>
+            </ili:GM03_2_1Core.Core.MD_Authority>
+        </ili:MD_Authority>
     </xsl:template>
 
     <xsl:template mode="RefSystem" match="gmd:CI_Citation">
@@ -65,7 +65,7 @@
         <xsl:apply-templates mode="text" select="gmd:collectiveTitle"/>
         <xsl:apply-templates mode="text" select="gmd:otherCitationDetails"/>
         <xsl:if test="$backRef">
-            <BACK_REF name="{$backRef}"/>
+            <ili:BACK_REF name="{$backRef}"/>
         </xsl:if>
         <xsl:apply-templates mode="RefSystem" select="gmd:series/gmd:CI_Series"/>
 
@@ -78,13 +78,13 @@
     </xsl:template>
 
     <xsl:template mode="RefSystem" match="gmd:citedResponsibleParty">
-        <GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty TID="x{util:randomId()}">
-            <citedResponsibleParty REF="?">
+        <ili:GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty TID="x{util:randomId()}">
+            <ili:citedResponsibleParty REF="?">
                 <xsl:apply-templates mode="RespParty"/>
-            </citedResponsibleParty>
-            <BACK_REF name="CI_Citation"/>
+            </ili:citedResponsibleParty>
+            <ili:BACK_REF name="CI_Citation"/>
             <xsl:apply-templates mode="RespPartyRole"/>
-        </GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty>
+        </ili:GM03_2_1Comprehensive.Comprehensive.CI_CitationcitedResponsibleParty>
     </xsl:template>
 
     <xsl:template mode="RefSystem" match="gmd:date">
@@ -93,31 +93,31 @@
 
 
     <xsl:template mode="RefSystem" match="gmd:CI_Series">
-        <series REF="?">
-          <GM03_2_1Comprehensive.Comprehensive.CI_Series TID="x{util:randomId()}">
+        <ili:series REF="?">
+          <ili:GM03_2_1Comprehensive.Comprehensive.CI_Series TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:page"/>
             <xsl:apply-templates mode="text" select="gmd:issueIdentification"/>
             <xsl:apply-templates mode="text" select="gmd:name"/>
-          </GM03_2_1Comprehensive.Comprehensive.CI_Series>
-        </series>
+          </ili:GM03_2_1Comprehensive.Comprehensive.CI_Series>
+        </ili:series>
     </xsl:template>
 
     <xsl:template mode="RefSystem" match="gmd:CI_Date">
-        <GM03_2_1Core.Core.CI_Date TID='x{generate-id(.)}'>
+        <ili:GM03_2_1Core.Core.CI_Date TID='x{generate-id(.)}'>
             <xsl:choose>
                 <xsl:when test="gmd:date/gco:DateTime">
-                    <date><xsl:value-of select="substring-before(gmd:date/gco:DateTime, 'T')"/></date>
+                    <ili:date><xsl:value-of select="substring-before(gmd:date/gco:DateTime, 'T')"/></ili:date>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:apply-templates mode="text" select="gmd:date"/>
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:apply-templates mode="text" select="gmd:dateType"/>
-            <BACK_REF name="CI_Citation"/>
-        </GM03_2_1Core.Core.CI_Date>
+            <ili:BACK_REF name="CI_Citation"/>
+        </ili:GM03_2_1Core.Core.CI_Date>
     </xsl:template>
 
     <xsl:template mode="RefSystem" match="*" priority="-100">
-        <ERROR>Unknown RefSystem element <xsl:value-of select="local-name(.)"/> child of <xsl:value-of select="local-name(..)"/> </ERROR>
+        <ili:ERROR>Unknown RefSystem element <xsl:value-of select="local-name(.)"/> child of <xsl:value-of select="local-name(..)"/> </ili:ERROR>
     </xsl:template>
 </xsl:stylesheet>
