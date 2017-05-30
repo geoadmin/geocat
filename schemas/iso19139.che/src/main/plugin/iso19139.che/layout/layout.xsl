@@ -225,20 +225,22 @@
 
 
   <xsl:template mode="mode-iso19139" match="*[name() = 'gmd:MD_TopicCategoryCode' and $schema = 'iso19139.che']" priority="2000">
-
-
     <xsl:param name="schema" select="$schema" required="no"/>
-    <xsl:param name="codelists" select="$iso19139codelists" required="no"/>
+    <xsl:param name="codelists" select="$codelists" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
 
-    <xsl:variable name="name" select="name(.)"/>
     <xsl:variable name="value" select="string(.)"/>
 
-    <xsl:variable name="invalidValue" select="if($value = 'environment' or $value = 'geoscientificInformation'
-        or $value = 'planningCadastre' or $value = 'imageryBaseMapsEarthCover' or $value= 'utilitiesCommunication') then 'true' else 'false'"/>
+    <xsl:variable name="invalidValue"
+                  select="if($value = 'environment' or $value = 'geoscientificInformation'
+                          or $value = 'planningCadastre' or $value = 'imageryBaseMapsEarthCover'
+                          or $value= 'utilitiesCommunication') then 'true' else 'false'"/>
 
-    <xsl:variable name="hasValidValue" select="if(../gmd:MD_TopicCategoryCode[string(.) != 'environment' and string(.) != 'geoscientificInformation'
-        and string(.) != 'planningCadastre' and string(.) != 'imageryBaseMapsEarthCover' and string(.) != 'utilitiesCommunication']) then 'true' else 'false'"/>
+    <xsl:variable name="hasValidValue"
+                  select="if(../gmd:MD_TopicCategoryCode[
+                              string(.) != 'environment' and string(.) != 'geoscientificInformation'
+                              and string(.) != 'planningCadastre' and string(.) != 'imageryBaseMapsEarthCover'
+                              and string(.) != 'utilitiesCommunication']) then 'true' else 'false'"/>
 
     <xsl:variable name="invalidCls" select="if($invalidValue = 'true') then 'has-error' else ''"/>
 
