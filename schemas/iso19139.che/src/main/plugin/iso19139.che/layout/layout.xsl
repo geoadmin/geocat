@@ -229,6 +229,7 @@
     <xsl:param name="codelists" select="$codelists" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
 
+    <xsl:variable name="name" select="name(.)"/>
     <xsl:variable name="value" select="string(.)"/>
 
     <xsl:variable name="invalidValue"
