@@ -4,6 +4,7 @@
                 exclude-result-prefixes="#all">
   <xsl:output method="xml"
               version="1.0"
+              exclude-result-prefixes="#all"
               encoding="UTF-8"
               indent="yes"/>
 
