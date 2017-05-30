@@ -1630,184 +1630,157 @@
   </codelist>
   <!-- ==================================================== -->
   <codelist name="gmd:MD_TopicCategoryCode">
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
-      <code>imageryBaseMapsEarthCover</code>
-      <label>A Cartes de référence, couverture du sol, images aériennes</label>
-      <description>Carte de référence. Exemples : occupation des terres, imagerie aérienne et satellitale, carte thématiques, carte topographiques</description>
-    </entry>
-    <entry>
-      <code>imageryBaseMapsEarthCover_BaseMaps</code>
-      <label>A1 Cartes de référence, modèles du territoire</label>
-      <description/>
-    </entry>
-    <entry>
-      <code>imageryBaseMapsEarthCover_EarthCover</code>
-      <label>A2 Couverture et utilisation du sol</label>
-      <description/>
-    </entry>
-    <entry>
-      <code>imageryBaseMapsEarthCover_Imagery</code>
-      <label>A3 Images aériennes et satellitaires</label>
-      <description/>
-    </entry>
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <entry>
-      <code>location</code>
-      <label>B Localisation, systèmes de référence</label>
-      <description>Exemples : zones postales, adresses, points de contrôle, réseau géodésique</description>
-    </entry>
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <entry>
-      <code>elevation</code>
-      <label>C Altimétrie</label>
-      <description>Hauteurs au dessous et dessus du niveau de la mer. Exemples : altitude, bathymétrie, MNT, pentes et calculs dérivés de l’altitude</description>
-    </entry>
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <entry>
-      <code>boundaries</code>
-      <label>D Limites politiques et administratives</label>
-      <description>Exemples : limites de pays, de provinces, de départements, de communes</description>
-    </entry>
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <entry>
-      <code>planningCadastre</code>
-      <label>E Dévéloppement territorial, cadastre foncier</label>
-      <description>Exemples : carte d’utilisation des terres, plan d’occupation des sols, planification pour la prévention des risques</description>
-    </entry>
-    <entry>
-      <code>planningCadastre_Planning</code>
-      <label>E1 Dévéloppement territorial</label>
-      <description/>
-    </entry>
-    <entry>
-      <code>planningCadastre_Cadastre</code>
-      <label>E2 Cadastre foncier</label>
-      <description/>
-    </entry>
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <entry>
-      <code>geoscientificInformation</code>
-      <label>F Géologie, sols, dangers naturels</label>
-      <description>Informations relatives aux sciences de la terre. Exemples : composants et processus géophysiques, géologie, minéralogie, tectonique, risque sismique</description>
-    </entry>
-    <entry>
-      <code>geoscientificInformation_Geology</code>
-      <label>F1 Géologie</label>
-      <description/>
-    </entry>
-    <entry>
-      <code>geoscientificInformation_Soils</code>
-      <label>F2 Sols</label>
-      <description/>
-    </entry>
-    <entry>
-      <code>geoscientificInformation_NaturalHazards</code>
-      <label>F3 Dangers naturels</label>
-      <description/>
+      <code>farming</code>
+      <label>Agriculture</label>
+      <description>Elevage et/ou cultures. Exemples : agriculture, irrigation, aquaculture,
+        plantations
+      </description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>biota</code>
-      <label>G Forêt, flore, faune</label>
-      <description>Flore et faune dans un écosystème naturel. Exemples : habitat, écologie, faune sauvage, faune aquatique, sciences biologiques, zones humides, végétation, biodiversité</description>
+      <label>Biote</label>
+      <description>Flore et faune dans un écosystème naturel. Exemples : habitat, écologie, faune
+        sauvage, faune aquatique, sciences biologiques, zones humides, végétation, biodiversité
+      </description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
-      <code>oceans</code>
-      <label>H Océans</label>
-      <description>Composants et caractéristiques du milieu maritime. Exemples : littoral, récifs, marée, etc.</description>
-    </entry>
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <entry>
-      <code>inlandWaters</code>
-      <label>I Hydrographie</label>
-      <description>Exemples : fleuves, rivières, glaciers, lacs salés, systèmes hydrographiques, barrages, débits, qualité de l’eau</description>
+      <code>boundaries</code>
+      <label>Limites</label>
+      <description>Exemples : limites de pays, de provinces, de départements, de communes
+      </description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>climatologyMeteorologyAtmosphere</code>
-      <label>K Atmosphère, climatologie</label>
-      <description>Processus et phénomènes atmosphériques. Exemples : climat, météorologie, conditions atmosphériques, changements climatiques, couverture nuageuse</description>
-    </entry>
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <entry>
-      <code>environment</code>
-      <label>L Protection de l'environnement et de la nature</label>
-      <description>Ressources naturelles, protection, conservation des ressources naturelles. Exemples : pollution, traitement et stockage des déchets, suivi de l’environnement, gestion du risque, réserves naturelles, paysage</description>
-    </entry>
-    <entry>
-      <code>environment_EnvironmentalProtection</code>
-      <label>L1 Protection de l'environnement, bruit</label>
-      <description/>
-    </entry>
-    <entry>
-      <code>environment_NatureProtection</code>
-      <label>L2 Protection de la nature et du paysage</label>
-      <description>Protection de la nature et du paysage</description>
-    </entry>
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <entry>
-      <code>society</code>
-      <label>M Population, Société, culture</label>
-      <description>Caractéristiques des sociétés et des cultures. Exemples :lois, anthropologie, éducation, données démographiques, archéologique, suivi des systèmes	sociaux, croyances, us et coutumes, crimes et justices</description>
-    </entry>
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <entry>
-      <code>health</code>
-      <label>N Santé</label>
-      <description>Santé, services de santé, épidémiologie. Exemples : maladies et épidémie, facteurs affectant la santé, santé mentale et physique, services de santé</description>
-    </entry>
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <entry>
-      <code>structure</code>
-      <label>O Edifices, infrastructures, ouvrages</label>
-      <description>Aménagements urbains. Exemples : musée, église, usines, maisons, monuments, boutiques, immeubles</description>
-    </entry>
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <entry>
-      <code>transportation</code>
-      <label>P Transport</label>
-      <description>Moyens de transports des personnes et des biens. Exemples :  routes, aéroports, tunnels, viaducs, ponts, chemin de fer</description>
-    </entry>
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <entry>
-      <code>utilitiesCommunication</code>
-      <label>Q Approvisionnement, élimination, communication</label>
-      <description>Systèmes de distribution de gestion ou de stockage de l’énergie, de l’eau, des déchets. Infrastructures et services de communication. Exemples : source d’énergie solaire, hydroélectrique, nucléaire, épuration et distribution des eaux, réseau de distribution électrique, de gaz, réseau de télécommunication, radio.</description>
-    </entry>
-    <entry>
-      <code>utilitiesCommunication_Energy</code>
-      <label>Q1 Energie</label>
-      <description>Energie</description>
-    </entry>
-    <entry>
-      <code>utilitiesCommunication_Utilities</code>
-      <label>Q2 Systèmes des eaux et des déchets</label>
-      <description></description>
-    </entry>
-    <entry>
-      <code>utilitiesCommunication_Communication</code>
-      <label>Q3 Communication</label>
-      <description></description>
-    </entry>
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <entry>
-      <code>intelligenceMilitary</code>
-      <label>R Armée, sécurité</label>
-      <description>Bases militaires et infrastructures de sécurité</description>
-    </entry>
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <entry>
-      <code>farming</code>
-      <label>S Agriculture</label>
-      <description>Elevage et/ou cultures. Exemples : agriculture, irrigation, aquaculture, plantations</description>
+      <label>Climatologie/Météorologie/Atmosphère</label>
+      <description>Processus et phénomènes atmosphériques. Exemples : climat, météorologie,
+        conditions atmosphériques, changements climatiques, couverture nuageuse
+      </description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>economy</code>
-      <label>T Activités économiques</label>
-      <description>Activités économiques. Exemples : production, travail, revenu, commerce, industrie, tourisme et éco-tourisme, foresterie, pêche, chasse, exploration et exploitation des ressources minières, pétrole, gaz naturel</description>
+      <label>Economie</label>
+      <description>Activités économiques. Exemples : production, travail, revenu, commerce,
+        industrie, tourisme et éco-tourisme, foresterie, pêche, chasse, exploration et exploitation
+        des ressources minières, pétrole, gaz naturel
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>elevation</code>
+      <label>Altitude</label>
+      <description>Hauteurs au dessous et dessus du niveau de la mer. Exemples : altitude,
+        bathymétrie, MNT, pentes et calculs dérivés de l’altitude
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>environment</code>
+      <label>Environnement</label>
+      <description>Ressources naturelles, protection, conservation des ressources naturelles.
+        Exemples : pollution, traitement et stockage des déchets, suivi de l’environnement, gestion
+        du risque, réserves naturelles, paysage
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>geoscientificInformation</code>
+      <label>Informations géoscientifiques</label>
+      <description>Informations relatives aux sciences de la terre. Exemples : composants et
+        processus géophysiques, géologie, minéralogie, tectonique, risque sismique
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>health</code>
+      <label>Santé</label>
+      <description>Santé, services de santé, épidémiologie. Exemples : maladies et épidémie,
+        facteurs affectant la santé, santé mentale et physique, services de santé
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>imageryBaseMapsEarthCover</code>
+      <label>Imagerie/Cartes de base/Occupation des terres</label>
+      <description>Carte de référence. Exemples : occupation des terres, imagerie aérienne et
+        satellitale, carte thématiques, carte topographiques
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>intelligenceMilitary</code>
+      <label>Renseignement/Secteur militaire</label>
+      <description>Bases militaires et infrastructures</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>inlandWaters</code>
+      <label>Eaux intérieures</label>
+      <description>Exemples : fleuves, rivières, glaciers, lacs salés, systèmes hydrographiques,
+        barrages, débits, qualité de l’eau
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>location</code>
+      <label>Localisation</label>
+      <description>Exemples : zones postales, adresses, points de contrôle, réseau géodésique
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>oceans</code>
+      <label>Océans</label>
+      <description>Composants et caractéristiques du milieu maritime. Exemples : littoral, récifs,
+        marée, etc.
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>planningCadastre</code>
+      <label>Planification/Cadastre</label>
+      <description>Exemples : carte d’utilisation des terres, plan d’occupation des sols,
+        planification pour la prévention des risques
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>society</code>
+      <label>Société</label>
+      <description>Caractéristiques des sociétés et des cultures. Exemples :lois, anthropologie,
+        éducation, données démographiques, archéologique, suivi des systèmes sociaux, croyances, us
+        et coutumes, crimes et justices
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>structure</code>
+      <label>Structure</label>
+      <description>Aménagements urbains. Exemples : musée, église, usines, maisons, monuments,
+        boutiques, immeubles
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>transportation</code>
+      <label>Transport</label>
+      <description>Moyens de transports des personnes et des biens. Exemples : routes, aéroports,
+        tunnels, viaducs, ponts, chemin de fer
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>utilitiesCommunication</code>
+      <label>Services d'utilité publique/Communication</label>
+      <description>Systèmes de distribution de gestion ou de stockage de l’énergie, de l’eau, des
+        déchets. Infrastructures et services de communication. Exemples : source d’énergie solaire,
+        hydroélectrique, nucléaire, épuration et distribution des eaux, réseau de distribution
+        électrique, de gaz, réseau de télécommunication, radio.
+      </description>
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
   </codelist>
