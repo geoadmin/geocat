@@ -10,7 +10,7 @@
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 version="2.0"
 >
 
@@ -46,6 +46,13 @@
 
   <!-- ========================================================================================= -->
 
+  <!-- For record not having status obsolete, flag them as non
+  obsolete records. Some catalog like to restrict to non obsolete
+  records only the default search. -->
+  <xsl:variable name="flagNonObseleteRecords" select="false()"/>
+
+
+  <!-- The main metadata language -->
   <xsl:variable name="isoLangId">
     <xsl:call-template name="langId19139"/>
   </xsl:variable>
@@ -53,7 +60,7 @@
   <xsl:template match="/">
 
     <xsl:variable name="poundLangId"
-                  select="concat('#', upper-case(java:twoCharLangCode(normalize-space(string($isoLangId)))))"/>
+                  select="concat('#', upper-case(util:twoCharLangCode(normalize-space(string($isoLangId)))))"/>
     <Document locale="{$isoLangId}">
       <xsl:apply-templates mode="xlinks"/>
       <xsl:apply-templates mode="broken-xlinks"/>
@@ -283,6 +290,17 @@
         </xsl:otherwise>
       </xsl:choose>
 
+
+      <!-- Add an extra value to the status codelist to indicate all
+      non obsolete records -->
+      <xsl:if test="$flagNonObseleteRecords">
+        <xsl:variable name="isNotObsolete"
+                      select="count(gmd:status[gmd:MD_ProgressCode/@codeListValue = 'obsolete']) = 0"/>
+        <xsl:if test="$isNotObsolete">
+          <Field name="cl_status" string="notobsolete" store="true" index="true"/>
+        </xsl:if>
+      </xsl:if>
+
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
       <xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
@@ -291,7 +309,8 @@
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-      <xsl:for-each select="gmd:language/gco:CharacterString">
+      <xsl:for-each
+        select="gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue">
         <Field name="datasetLang" string="{string(.)}" store="true" index="true"/>
       </xsl:for-each>
 
@@ -319,7 +338,7 @@
 
 
       <!-- Index aggregation info and provides option to query by type of association
-        and type of initiative
+              and type of initiative
 
       Aggregation info is indexed by adding the following fields to the index:
        * agg_use: boolean
@@ -328,30 +347,36 @@
        * agg_{$associationType}_with_initiative: {$initiativeType}
        * agg_{$associationType}_{$initiativeType}: {$code}
 
-      Sample queries:
-       * Search for records with siblings: http://localhost:8080/geonetwork/srv/fre/q?agg_use=true
-       * Search for records having a crossReference with another record:
-       http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference=23f0478a-14ba-4a24-b365-8be88d5e9e8c
-       * Search for records having a crossReference with another record:
-       http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference=23f0478a-14ba-4a24-b365-8be88d5e9e8c
-       * Search for records having a crossReference of type "study" with another record:
-       http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference_study=23f0478a-14ba-4a24-b365-8be88d5e9e8c
-       * Search for records having a crossReference of type "study":
-       http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference_with_initiative=study
-       * Search for records having a "crossReference" :
-       http://localhost:8080/geonetwork/srv/fre/q?agg_with_association=crossReference
+          Sample queries:
+           * Search for records with siblings: http://localhost:8080/geonetwork/srv/fre/q?agg_use=true
+           * Search for records having a crossReference with another record:
+           http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference=23f0478a-14ba-4a24-b365-8be88d5e9e8c
+           * Search for records having a crossReference with another record:
+           http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference=23f0478a-14ba-4a24-b365-8be88d5e9e8c
+           * Search for records having a crossReference of type "study" with another record:
+           http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference_study=23f0478a-14ba-4a24-b365-8be88d5e9e8c
+           * Search for records having a crossReference of type "study":
+           http://localhost:8080/geonetwork/srv/fre/q?agg_crossReference_with_initiative=study
+           * Search for records having a "crossReference" :
+           http://localhost:8080/geonetwork/srv/fre/q?agg_with_association=crossReference
       -->
       <xsl:for-each select="gmd:aggregationInfo/gmd:MD_AggregateInformation">
         <xsl:variable name="code" select="gmd:aggregateDataSetIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString|
-												gmd:aggregateDataSetIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
+                                                  gmd:aggregateDataSetIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
         <xsl:if test="$code != ''">
-          <xsl:variable name="associationType" select="gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue"/>
-          <xsl:variable name="initiativeType" select="gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue"/>
-          <Field name="agg_{$associationType}_{$initiativeType}" string="{$code}" store="false" index="true"/>
-          <Field name="agg_{$associationType}_with_initiative" string="{$initiativeType}" store="false" index="true"/>
+          <xsl:variable name="associationType"
+                        select="gmd:associationType/gmd:DS_AssociationTypeCode/@codeListValue"/>
+          <xsl:variable name="initiativeType"
+                        select="gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue"/>
+
+          <Field name="agg_{$associationType}_{$initiativeType}" string="{$code}" store="false"
+                 index="true"/>
+          <Field name="agg_{$associationType}_with_initiative" string="{$initiativeType}"
+                 store="false" index="true"/>
           <Field name="agg_{$associationType}" string="{$code}" store="true" index="true"/>
           <Field name="agg_associated" string="{$code}" store="false" index="true"/>
-          <Field name="agg_with_association" string="{$associationType}" store="false" index="true"/>
+          <Field name="agg_with_association" string="{$associationType}" store="false"
+                 index="true"/>
           <Field name="agg_use" string="true" store="false" index="true"/>
         </xsl:if>
       </xsl:for-each>
@@ -419,6 +444,50 @@
     <!-- === Data Quality  === -->
     <xsl:for-each select="gmd:dataQualityInfo/*/gmd:lineage//gmd:source[@uuidref]">
       <Field name="hassource" string="{string(@uuidref)}" store="false" index="true"/>
+    </xsl:for-each>
+
+    <xsl:for-each select="gmd:dataQualityInfo/*/gmd:report/*/gmd:result">
+      <xsl:if test="$inspire='true'">
+        <!--
+            INSPIRE related dataset could contains a conformity section with:
+            * COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services
+            * INSPIRE Data Specification on <Theme Name> - <version>
+            * INSPIRE Specification on <Theme Name> - <version> for CRS and GRID
+
+            Index those types of citation title to found dataset related to INSPIRE (which may be better than keyword
+            which are often used for other types of datasets).
+
+            "1089/2010" is maybe too fuzzy but could work for translated citation like "Règlement n°1089/2010, Annexe II-6" TODO improved
+        -->
+        <xsl:if test="(
+                                contains(gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString, '1089/2010') or
+                                contains(gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE Data Specification') or
+                                contains(gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE Specification'))">
+          <Field name="inspirerelated" string="on" store="false" index="true"/>
+        </xsl:if>
+      </xsl:if>
+
+      <xsl:for-each select="//gmd:pass/gco:Boolean">
+        <Field name="degree" string="{string(.)}" store="true" index="true"/>
+      </xsl:for-each>
+
+      <xsl:for-each select="//gmd:specification/*/gmd:title/gco:CharacterString">
+        <Field name="specificationTitle" string="{string(.)}" store="true" index="true"/>
+      </xsl:for-each>
+
+      <xsl:for-each select="//gmd:specification/*/gmd:date/*/gmd:date">
+        <Field name="specificationDate" string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}"
+               store="true" index="true"/>
+      </xsl:for-each>
+
+      <xsl:for-each
+        select="//gmd:specification/*/gmd:date/*/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue">
+        <Field name="specificationDateType" string="{string(.)}" store="true" index="true"/>
+      </xsl:for-each>
+    </xsl:for-each>
+
+    <xsl:for-each select="gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement/gco:CharacterString">
+      <Field name="lineage" string="{string(.)}" store="true" index="true"/>
     </xsl:for-each>
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -515,8 +584,11 @@
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-    <xsl:for-each select="gmd:language/gco:CharacterString">
+    <xsl:for-each select="gmd:language/gco:CharacterString
+                        |gmd:language/gmd:LanguageCode/@codeListValue
+                        |gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue">
       <Field name="language" string="{string(.)}" store="true" index="true"/>
+      <Field name="mdLanguage" string="{string(.)}" store="true" index="true"/>
     </xsl:for-each>
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -553,7 +625,11 @@
 
     <Field name="any" store="false" index="true">
       <xsl:attribute name="string">
-        <xsl:apply-templates select="." mode="allText"/>
+        <xsl:value-of select="normalize-space(string(.))"/>
+        <xsl:text> </xsl:text>
+        <xsl:for-each select="//@codeListValue">
+          <xsl:value-of select="concat(., ' ')"/>
+        </xsl:for-each>
       </xsl:attribute>
     </Field>
 
@@ -577,8 +653,15 @@
       </xsl:attribute>
     </Field>
 
-    <xsl:apply-templates select="." mode="codeList"/>
-
+    <!-- Index all codelist -->
+    <xsl:for-each select=".//*[*/@codeListValue != '']">
+      <Field name="cl_{local-name()}"
+             string="{*/@codeListValue}"
+             store="true" index="true"/>
+      <Field name="cl_{concat(local-name(), '_text')}"
+             string="{util:getCodelistTranslation(name(*), string(*/@codeListValue), string($isoLangId))}"
+             store="true" index="true"/>
+    </xsl:for-each>
   </xsl:template>
 
   <!-- ========================================================================================= -->
@@ -658,23 +741,6 @@
     </xsl:if>
   </xsl:template>
 
-  <!-- ========================================================================================= -->
-  <!-- codelist element, indexed, not stored nor tokenized -->
-
-  <xsl:template match="*[./*/@codeListValue]" mode="codeList">
-    <xsl:param name="name" select="name(.)"/>
-
-    <Field name="{$name}" string="{*/@codeListValue}" store="false" index="true"/>
-  </xsl:template>
-
-  <!-- ========================================================================================= -->
-
-  <xsl:template match="*" mode="codeList">
-    <xsl:apply-templates select="*" mode="codeList"/>
-  </xsl:template>
-
-  <!-- ========================================================================================= -->
-  <!--allText -->
 
   <xsl:template match="gmd:polygon |
 		gmd:westBoundLongitude |
