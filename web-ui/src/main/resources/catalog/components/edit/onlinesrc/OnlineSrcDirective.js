@@ -881,6 +881,9 @@
                       scope.schema.indexOf('iso19139') === 0) {
                     scope.config = schemaConfig['iso19139'];
                   }
+                  // Specific geocat
+                  scope.config.multilingualFields.push('url');
+                  // End Specific geocat
 
                   if (gnCurrentEdit.mdOtherLanguages) {
 
