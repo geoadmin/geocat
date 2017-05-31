@@ -36,23 +36,23 @@
 
   <util:list id="initial-data">
     <bean class="org.fao.geonet.domain.Pair" factory-method="read">
-      <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+      <constructor-arg value="WEB-INF/classes/setup/sql-geocat/v340/data"/>
       <constructor-arg value="data-db-"/>
     </bean>
     <bean class="org.fao.geonet.domain.Pair" factory-method="read">
-      <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+      <constructor-arg value="WEB-INF/classes/setup/sql-geocat/v340/data"/>
       <constructor-arg value="loc-eng-"/>
     </bean>
     <bean class="org.fao.geonet.domain.Pair" factory-method="read">
-      <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+      <constructor-arg value="WEB-INF/classes/setup/sql-geocat/v340/data"/>
       <constructor-arg value="loc-fre-"/>
     </bean>
     <bean class="org.fao.geonet.domain.Pair" factory-method="read">
-      <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+      <constructor-arg value="WEB-INF/classes/setup/sql-geocat/v340/data"/>
       <constructor-arg value="loc-ger-"/>
     </bean>
     <bean class="org.fao.geonet.domain.Pair" factory-method="read">
-      <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+      <constructor-arg value="WEB-INF/classes/setup/sql-geocat/v340/data"/>
       <constructor-arg value="loc-ita-"/>
     </bean>
   </util:list>
