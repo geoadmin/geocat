@@ -42,6 +42,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -532,6 +533,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void getRelated() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
