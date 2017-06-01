@@ -262,6 +262,44 @@
                       icon: 'fa gn-icon-onlinesrc',
                       process: 'onlinesrc-add',
                       fields: {
+                        'url': {isMultilingual: false},
+                        'protocol': {
+                          value: 'WWW:LINK-1.0-http--link',
+                          isMultilingual: false
+                        },
+                        'name': {},
+                        'desc': {},
+                        'function': {isMultilingual: false},
+                        'applicationProfile': {isMultilingual: false}
+                      }
+                    }, {
+                      label: 'addThumbnail',
+                      sources: {
+                        filestore: true,
+                        thumbnailMaker: true
+                      },
+                      icon: 'fa gn-icon-thumbnail',
+                      fileStoreFilter: '*.{jpg,JPG,png,PNG,gif,GIF}',
+                      process: 'thumbnail-add',
+                      fields: {
+                        'url': {
+                          param: 'thumbnail_url',
+                          isMultilingual: false
+                        },
+                        'name': {param: 'thumbnail_desc'}
+                      }
+                    }]
+                  },
+                  'iso19139.che': {
+                    display: 'radio',
+                    types: [{
+                      label: 'addOnlinesrc',
+                      sources: {
+                        filestore: true
+                      },
+                      icon: 'fa gn-icon-onlinesrc',
+                      process: 'onlinesrc-add',
+                      fields: {
                         'url': {},
                         'protocol': {
                           value: 'WWW:LINK-1.0-http--link',
@@ -1267,16 +1305,18 @@
                    */
                 scope.$watch('params.linkType', function(newValue, oldValue) {
                   if (newValue !== oldValue) {
-                    if (!scope.isEditing) {
-                      resetForm();
-                    }
-
                     scope.config.multilingualFields = [];
                     angular.forEach(newValue.fields, function(f, k) {
                       if (f.isMultilingual !== false) {
                         scope.config.multilingualFields.push(k);
                       }
                     });
+
+                    if (!scope.isEditing) {
+                      resetForm();
+                    }
+
+                    initMultilingualFields();
 
                     if (newValue.sources && newValue.sources.metadataStore) {
                       scope.$broadcast('resetSearch',
