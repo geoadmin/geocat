@@ -323,8 +323,6 @@ Insert is made in first transferOptions found.
           <!-- ... the name is simply added in the newly
           created online element. -->
 
-          <xsl:message>###############
-          <xsl:value-of select="$name"></xsl:value-of> </xsl:message>
           <gmd:onLine>
             <xsl:if test="$uuidref">
               <xsl:attribute name="uuidref" select="$uuidref"/>
