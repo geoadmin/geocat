@@ -16,6 +16,26 @@
                 version="2.0"
                 exclude-result-prefixes="#all">
 
+  <!-- Convert an element gco:CharacterString
+  to the GN localized string structure -->
+  <xsl:template mode="get-iso19139-localized-url" match="*">
+
+    <xsl:variable name="mainLanguage"
+                  select="string(ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata']/gmd:language/gco:CharacterString)"/>
+
+    <xsl:for-each select="gmd:URL|che:PT_FreeURL/*/che:LocalisedURL">
+      <xsl:variable name="localeId"
+                    select="substring-after(@locale, '#')"/>
+
+      <value lang="{if (@locale)
+                  then ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata']/gmd:locale/*[@id = $localeId]/gmd:languageCode/*/@codeListValue
+                  else if ($mainLanguage) then $mainLanguage else $lang}">
+        <xsl:value-of select="string(.)"/>
+      </value>
+    </xsl:for-each>
+  </xsl:template>
+
+
   <!-- Relation contained in the metadata record has to be returned
   It could be document or thumbnails
   -->
@@ -31,7 +51,8 @@
               <xsl:value-of select="gmd:fileName/gco:CharacterString"/>
             </id>
             <url>
-              <xsl:value-of select="gmd:fileName/gco:CharacterString"/>
+              <xsl:apply-templates mode="get-iso19139-localized-string"
+                                   select="gmd:fileName"/>
             </url>
             <title>
               <xsl:apply-templates mode="get-iso19139-localized-string"
@@ -47,60 +68,27 @@
                                     gmd:linkage/gmd:URL!='' or
                                     gmd:linkage/che:PT_FreeURL//che:LocalisedURL[text() != ''] or
                                     gmd:linkage/che:LocalisedURL!='']"/>
+
     <xsl:if test="count($links) > 0">
       <onlines>
-
         <xsl:for-each select="$links">
+
           <item>
             <xsl:variable name="langCode">
               <xsl:value-of select="concat('#', upper-case(util:twoCharLangCode($lang, 'EN')))"/>
             </xsl:variable>
-            <xsl:variable name="url">
-              <xsl:choose>
-                <xsl:when test="gmd:linkage/gmd:URL!=''">
-                  <xsl:value-of select="gmd:linkage/gmd:URL"/>
-                </xsl:when>
-                <xsl:when test="gmd:linkage/che:LocalisedURL!=''">
-                  <xsl:value-of select="gmd:linkage/che:LocalisedURL"/>
-                </xsl:when>
-                <xsl:when test="(gmd:linkage/che:PT_FreeURL//che:LocalisedURL[@locale = $langCode][text() != ''])[1]">
-                  <xsl:value-of
-                    select="(gmd:linkage/che:PT_FreeURL//che:LocalisedURL[@locale = $langCode][text() != ''])[1]"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:value-of select="(gmd:linkage/che:PT_FreeURL//che:LocalisedURL[text() != ''])[1]"/>
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:variable>
-            <!-- Compute title based on online source info-->
-            <xsl:variable name="title">
-              <xsl:variable name="title" select="''"/>
-              <xsl:value-of select="if ($title = '' and ../@uuidref)
-                                    then ../@uuidref
-                                    else $title"/><xsl:text> </xsl:text>
-              <xsl:value-of select="if (gn-fn-rel:translate(gmd:name, $langCode) != '')
-                                    then gn-fn-rel:translate(gmd:name, $langCode)
-                                    else if (gmd:name/gmx:MimeFileType != '')
-                                    then gmd:name/gmx:MimeFileType
-                                    else if (gn-fn-rel:translate(gmd:description, $langCode) != '')
-                                    then gn-fn-rel:translate(gmd:description, $langCode)
-                                    else $url"/>
-            </xsl:variable>
+            <xsl:variable name="url" select="gmd:linkage/gmd:URL"/>
             <id>
               <xsl:value-of select="$url"/>
             </id>
             <title>
-              <xsl:value-of select="if ($title != '') then $title else $url"/>
+              <xsl:apply-templates mode="get-iso19139-localized-string"
+                                   select="gmd:name"/>
             </title>
             <url>
-              <xsl:value-of select="$url"/>
+              <xsl:apply-templates mode="get-iso19139-localized-url"
+                                   select="gmd:linkage"/>
             </url>
-            <name>
-              <xsl:value-of select="gn-fn-rel:translate(gmd:name, $langCode)"/>
-            </name>
-            <abstract>
-              <xsl:value-of select="gn-fn-rel:translate(gmd:description, $langCode)"/>
-            </abstract>
             <function>
               <xsl:value-of select="gmd:function/*/@codeListValue"/>
             </function>
@@ -108,7 +96,8 @@
               <xsl:value-of select="gmd:applicationProfile/gco:CharacterString"/>
             </applicationProfile>
             <description>
-              <xsl:value-of select="gn-fn-rel:translate(gmd:description, $langCode)"/>
+              <xsl:apply-templates mode="get-iso19139-localized-string"
+                                   select="gmd:description"/>
             </description>
             <protocol>
               <xsl:value-of select="gn-fn-rel:translate(gmd:protocol, $langCode)"/>
@@ -116,7 +105,6 @@
             <type>onlinesrc</type>
           </item>
         </xsl:for-each>
-
       </onlines>
     </xsl:if>
   </xsl:template>
