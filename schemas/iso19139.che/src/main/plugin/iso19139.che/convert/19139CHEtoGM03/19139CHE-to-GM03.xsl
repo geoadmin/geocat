@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
-                xmlns="http://www.interlis.ch/INTERLIS2.3"
+                xmlns:ili="http://www.interlis.ch/INTERLIS2.3"
                 xmlns:che="http://www.geocat.ch/2008/che"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
@@ -22,40 +22,40 @@
   <xsl:include href="legislation.xsl"/>
 
   <xsl:template match="/">
-    <TRANSFER>
+    <ili:TRANSFER>
       <xsl:call-template name="header"/>
-      <DATASECTION>
-        <GM03_2_1Comprehensive.Comprehensive BID="x{generate-id(.)}">
+      <ili:DATASECTION>
+        <ili:GM03_2_1Comprehensive.Comprehensive BID="x{generate-id(.)}">
           <xsl:apply-templates mode="metadata" select="*"/>
 
           <xsl:apply-templates mode="root" select="//gmd:distributor/gmd:MD_Distributor/gmd:distributorFormat"/>
-        </GM03_2_1Comprehensive.Comprehensive>
-      </DATASECTION>
-    </TRANSFER>
+        </ili:GM03_2_1Comprehensive.Comprehensive>
+      </ili:DATASECTION>
+    </ili:TRANSFER>
   </xsl:template>
   <xsl:template mode="root" match="gmd:distributorFormat">
-    <GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat TID="x{util:randomId()}">
+    <ili:GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat TID="x{util:randomId()}">
       <xsl:apply-templates mode="root" select="gmd:MD_Format/gmd:formatDistributor[1]"/>
       <xsl:apply-templates mode="root" select="gmd:MD_Format">
         <xsl:with-param name="showDistributor" select="false()"/>
       </xsl:apply-templates>
-    </GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat>
+    </ili:GM03_2_1Comprehensive.Comprehensive.formatDistributordistributorFormat>
   </xsl:template>
   <xsl:template mode="root" match="gmd:formatDistributor">
-    <formatDistributor REF="?">
+    <ili:formatDistributor REF="?">
       <xsl:apply-templates mode="distribution"/>
-    </formatDistributor>
+    </ili:formatDistributor>
   </xsl:template>
   <xsl:template mode="root" match="gmd:MD_Format">
-    <distributorFormat REF="?">
+    <ili:distributorFormat REF="?">
       <xsl:apply-templates mode="distribution" select="."/>
-    </distributorFormat>
+    </ili:distributorFormat>
   </xsl:template>
 
   <xsl:template mode="language" match="*">
-    <ERROR>Unknown metadata element
+    <ili:ERROR>Unknown metadata element
       <xsl:value-of select="local-name(.)"/>
-    </ERROR>
+    </ili:ERROR>
   </xsl:template>
 
   <xsl:template name="lang3_to_lang2">
@@ -99,41 +99,41 @@
     <xsl:if test="*[local-name()=$element]">
       <xsl:element name="{$element}">
         <xsl:for-each select="*[local-name()=$element]">
-          <GM03_2_1Core.Core.PT_FreeText>
-            <textGroup>
+          <ili:GM03_2_1Core.Core.PT_FreeText>
+            <ili:textGroup>
 
               <xsl:if test="normalize-space(.)=''">
-                <GM03_2_1Core.Core.PT_Group>
-                  <language>
+                <ili:GM03_2_1Core.Core.PT_Group>
+                  <ili:language>
                     <xsl:value-of select="$defaultLanguage"/>
-                  </language>
-                  <plainText></plainText>
-                </GM03_2_1Core.Core.PT_Group>
+                  </ili:language>
+                  <ili:plainText></ili:plainText>
+                </ili:GM03_2_1Core.Core.PT_Group>
               </xsl:if>
               <xsl:if
                 test="normalize-space(gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $defaultLanguage]) != ''">
                 <xsl:for-each select="gco:CharacterString[normalize-space(.) != '']">
-                  <GM03_2_1Core.Core.PT_Group>
-                    <language>
+                  <ili:GM03_2_1Core.Core.PT_Group>
+                    <ili:language>
                       <xsl:value-of select="$defaultLanguage"/>
-                    </language>
-                    <plainText>
+                    </ili:language>
+                    <ili:plainText>
                       <xsl:value-of select="."/>
-                    </plainText>
-                  </GM03_2_1Core.Core.PT_Group>
+                    </ili:plainText>
+                  </ili:GM03_2_1Core.Core.PT_Group>
                 </xsl:for-each>
               </xsl:if>
               <xsl:for-each
                 select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space(text())!='']">
-                <GM03_2_1Core.Core.PT_Group>
+                <ili:GM03_2_1Core.Core.PT_Group>
                   <xsl:apply-templates mode="text" select="@locale"/>
-                  <plainText>
+                  <ili:plainText>
                     <xsl:value-of select="."/>
-                  </plainText>
-                </GM03_2_1Core.Core.PT_Group>
+                  </ili:plainText>
+                </ili:GM03_2_1Core.Core.PT_Group>
               </xsl:for-each>
-            </textGroup>
-          </GM03_2_1Core.Core.PT_FreeText>
+            </ili:textGroup>
+          </ili:GM03_2_1Core.Core.PT_FreeText>
         </xsl:for-each>
       </xsl:element>
     </xsl:if>
@@ -141,85 +141,85 @@
 
   <xsl:template mode="textGroup" match="*" priority="2">
     <xsl:element name="{local-name(.)}">
-      <GM03_2_1Core.Core.PT_FreeText>
-        <textGroup>
+      <ili:GM03_2_1Core.Core.PT_FreeText>
+        <ili:textGroup>
           <xsl:if test="normalize-space(.)=''">
-            <GM03_2_1Core.Core.PT_Group>
-              <language>
+            <ili:GM03_2_1Core.Core.PT_Group>
+              <ili:language>
                 <xsl:value-of select="$defaultLanguage"/>
-              </language>
-              <plainText></plainText>
-            </GM03_2_1Core.Core.PT_Group>
+              </ili:language>
+              <ili:plainText></ili:plainText>
+            </ili:GM03_2_1Core.Core.PT_Group>
           </xsl:if>
           <xsl:for-each select="gco:CharacterString[normalize-space(.) != ''
                     and not(../gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[lower-case(@locale) = concat('#',$defaultLanguage)]) and normalize-space(.) != ''] ">
-            <GM03_2_1Core.Core.PT_Group>
-              <language>
+            <ili:GM03_2_1Core.Core.PT_Group>
+              <ili:language>
                 <xsl:value-of select="$defaultLanguage"/>
-              </language>
-              <plainText>
+              </ili:language>
+              <ili:plainText>
                 <xsl:value-of select="."/>
-              </plainText>
-            </GM03_2_1Core.Core.PT_Group>
+              </ili:plainText>
+            </ili:GM03_2_1Core.Core.PT_Group>
           </xsl:for-each>
           <xsl:for-each
             select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space(text())!='']">
-            <GM03_2_1Core.Core.PT_Group>
+            <ili:GM03_2_1Core.Core.PT_Group>
               <xsl:apply-templates mode="text" select="@locale"/>
-              <plainText>
+              <ili:plainText>
                 <xsl:value-of select="."/>
-              </plainText>
-            </GM03_2_1Core.Core.PT_Group>
+              </ili:plainText>
+            </ili:GM03_2_1Core.Core.PT_Group>
           </xsl:for-each>
-        </textGroup>
-      </GM03_2_1Core.Core.PT_FreeText>
+        </ili:textGroup>
+      </ili:GM03_2_1Core.Core.PT_FreeText>
     </xsl:element>
   </xsl:template>
 
   <xsl:template mode="text_" match="*">
     <xsl:element name="{local-name(.)}">
-      <GM03_2_1Core.Core.CharacterString_>
-        <value>
+      <ili:GM03_2_1Core.Core.CharacterString_>
+        <ili:value>
           <xsl:value-of select="."/>
-        </value>
-      </GM03_2_1Core.Core.CharacterString_>
+        </ili:value>
+      </ili:GM03_2_1Core.Core.CharacterString_>
     </xsl:element>
   </xsl:template>
   <xsl:template mode="text" match="*[@xsi:type='gmd:PT_FreeText_PropertyType']" priority="2">
 
     <xsl:if test="normalize-space(.) != ''">
       <xsl:element name="{local-name(.)}">
-        <GM03_2_1Core.Core.PT_FreeText>
-          <textGroup>
+        <ili:GM03_2_1Core.Core.PT_FreeText>
+          <ili:textGroup>
             <xsl:if test="normalize-space(.)=''">
-              <GM03_2_1Core.Core.PT_Group>
-                <language>
+              <ili:GM03_2_1Core.Core.PT_Group>
+                <ili:language>
                   <xsl:value-of select="$defaultLanguage"/>
-                </language>
-                <plainText></plainText>
-              </GM03_2_1Core.Core.PT_Group>
+                </ili:language>
+                <ili:plainText></ili:plainText>
+              </ili:GM03_2_1Core.Core.PT_Group>
             </xsl:if>
             <xsl:for-each select="gco:CharacterString[normalize-space(.) != ''
                     and not(../gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[lower-case(@locale) = concat('#',$defaultLanguage) and normalize-space(.) != ''])]">
-              <GM03_2_1Core.Core.PT_Group>
-                <language>
+              <ili:GM03_2_1Core.Core.PT_Group>
+                <ili:language>
                   <xsl:value-of select="$defaultLanguage"/>
-                </language>
-                <plainText>
+                </ili:language>
+                <ili:plainText>
                   <xsl:value-of select="."/>
-                </plainText>
-              </GM03_2_1Core.Core.PT_Group>
+                </ili:plainText>
+              </ili:GM03_2_1Core.Core.PT_Group>
             </xsl:for-each>
             <xsl:for-each select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space(.) != '']">
-              <GM03_2_1Core.Core.PT_Group>
+              <ili:GM03_2_1Core.Core.PT_Group>
                 <xsl:apply-templates mode="text" select="@locale"/>
-                <plainText>
+                <ili:plainText>
                   <xsl:value-of select="."/>
-                </plainText>
-              </GM03_2_1Core.Core.PT_Group>
+                </ili:plainText>
+              </ili:GM03_2_1Core.Core.PT_Group>
             </xsl:for-each>
-          </textGroup>
-        </GM03_2_1Core.Core.PT_FreeText>
+          </ili:textGroup>
+        </ili:GM03_2_1Core.Core.PT_FreeText>
       </xsl:element>
     </xsl:if>
   </xsl:template>
@@ -283,7 +283,7 @@
   </xsl:template>
 
   <xsl:template mode="text" match="@locale">
-    <language>
+    <ili:language>
       <xsl:choose>
         <xsl:when test=".='#DE'">de</xsl:when>
         <xsl:when test=".='#FR'">fr</xsl:when>
@@ -295,7 +295,7 @@
           <xsl:value-of select="substring(., 2)"/>
         </xsl:otherwise>
       </xsl:choose>
-    </language>
+    </ili:language>
   </xsl:template>
 
   <xsl:template mode="characterString" match="*[gco:CharacterString and normalize-space(gco:CharacterString) != '']">
@@ -307,46 +307,46 @@
   <xsl:template mode="text" match="*[@xsi:type='che:PT_FreeURL_PropertyType' or gmd:URL or che:LocalisedURL]"
                 priority="2">
     <xsl:element name="{local-name(.)}">
-      <GM03_2_1Core.Core.PT_FreeURL>
-        <URLGroup>
+      <ili:GM03_2_1Core.Core.PT_FreeURL>
+        <ili:URLGroup>
           <xsl:if test="normalize-space(.)=''">
-            <GM03_2_1Core.Core.PT_URLGroup>
-              <language>
+            <ili:GM03_2_1Core.Core.PT_URLGroup>
+              <ili:language>
                 <xsl:value-of select="$defaultLanguage"/>
-              </language>
-              <plainURL></plainURL>
-            </GM03_2_1Core.Core.PT_URLGroup>
+              </ili:language>
+              <ili:plainURL></ili:plainURL>
+            </ili:GM03_2_1Core.Core.PT_URLGroup>
           </xsl:if>
           <xsl:for-each select="gmd:URL[normalize-space(.) != '']">
-            <GM03_2_1Core.Core.PT_URLGroup>
-              <language>
+            <ili:GM03_2_1Core.Core.PT_URLGroup>
+              <ili:language>
                 <xsl:value-of select="$defaultLanguage"/>
-              </language>
-              <plainURL>
+              </ili:language>
+              <ili:plainURL>
                 <xsl:value-of select="."/>
-              </plainURL>
-            </GM03_2_1Core.Core.PT_URLGroup>
+              </ili:plainURL>
+            </ili:GM03_2_1Core.Core.PT_URLGroup>
           </xsl:for-each>
           <xsl:for-each select="che:LocalisedURL[normalize-space(.) != '']">
-            <GM03_2_1Core.Core.PT_URLGroup>
-              <language>
+            <ili:GM03_2_1Core.Core.PT_URLGroup>
+              <ili:language>
                 <xsl:value-of select="$defaultLanguage"/>
-              </language>
-              <plainURL>
+              </ili:language>
+              <ili:plainURL>
                 <xsl:value-of select="."/>
-              </plainURL>
-            </GM03_2_1Core.Core.PT_URLGroup>
+              </ili:plainURL>
+            </ili:GM03_2_1Core.Core.PT_URLGroup>
           </xsl:for-each>
           <xsl:for-each select="che:PT_FreeURL/che:URLGroup/che:LocalisedURL[normalize-space(.) != '']">
-            <GM03_2_1Core.Core.PT_URLGroup>
+            <ili:GM03_2_1Core.Core.PT_URLGroup>
               <xsl:apply-templates mode="text" select="@locale"/>
-              <plainURL>
+              <ili:plainURL>
                 <xsl:value-of select="."/>
-              </plainURL>
-            </GM03_2_1Core.Core.PT_URLGroup>
+              </ili:plainURL>
+            </ili:GM03_2_1Core.Core.PT_URLGroup>
           </xsl:for-each>
-        </URLGroup>
-      </GM03_2_1Core.Core.PT_FreeURL>
+        </ili:URLGroup>
+      </ili:GM03_2_1Core.Core.PT_FreeURL>
     </xsl:element>
   </xsl:template>
 
@@ -369,9 +369,9 @@
     <xsl:element name="{local-name(.)}">
       <xsl:for-each select="*">
         <xsl:element name="GM03_2_1Core.Core.{local-name(.)}_">
-          <value>
+          <ili:value>
             <xsl:value-of select="@codeListValue"/>
-          </value>
+          </ili:value>
         </xsl:element>
       </xsl:for-each>
     </xsl:element>
@@ -384,9 +384,9 @@
       <xsl:element name="{$element}">
         <xsl:for-each select="*[local-name(.) = $element]">
           <xsl:element name="{$newName}">
-            <value>
+            <ili:value>
               <xsl:value-of select="*/@codeListValue"/>
-            </value>
+            </ili:value>
           </xsl:element>
         </xsl:for-each>
       </xsl:element>
@@ -401,7 +401,7 @@
       <xsl:element name="{$element}">
         <xsl:for-each select="*[local-name()=$element]/*">
           <xsl:element name="{$name}">
-            <value>
+            <ili:value>
               <xsl:choose>
                 <xsl:when test="$element='language' and $lowercase='0'">
                   <xsl:call-template name="lang3_to_lang2">
@@ -424,7 +424,7 @@
                     select="translate(@codeListValue, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')"/>
                 </xsl:otherwise>
               </xsl:choose>
-            </value>
+            </ili:value>
           </xsl:element>
         </xsl:for-each>
       </xsl:element>
@@ -435,9 +435,9 @@
     <xsl:element name="{local-name(.)}">
       <xsl:for-each select="*">
         <xsl:element name="GM03_2_1Comprehensive.Comprehensive.{local-name(.)}_">
-          <value>
+          <ili:value>
             <xsl:value-of select="@codeListValue"/>
-          </value>
+          </ili:value>
         </xsl:element>
       </xsl:for-each>
     </xsl:element>
@@ -449,9 +449,9 @@
       <xsl:element name="{$element}">
         <xsl:for-each select="*[local-name()=$element]/*">
           <xsl:element name="GM03_2_1Comprehensive.Comprehensive.{local-name(.)}_">
-            <value>
+            <ili:value>
               <xsl:value-of select="@codeListValue"/>
-            </value>
+            </ili:value>
           </xsl:element>
         </xsl:for-each>
       </xsl:element>
@@ -459,9 +459,9 @@
   </xsl:template>
 
   <xsl:template mode="text" match="*" priority="-100">
-    <ERROR>Unknown text element
+    <ili:ERROR>Unknown text element
       <xsl:value-of select="local-name(.)"/> with parent
       <xsl:value-of select="local-name(..)"/>
-    </ERROR>
+    </ili:ERROR>
   </xsl:template>
 </xsl:stylesheet>

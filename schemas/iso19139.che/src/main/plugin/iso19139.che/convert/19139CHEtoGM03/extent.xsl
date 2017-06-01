@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0"
-                xmlns="http://www.interlis.ch/INTERLIS2.3"
+                xmlns:ili="http://www.interlis.ch/INTERLIS2.3"
                 xmlns:che="http://www.geocat.ch/2008/che"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
@@ -16,44 +16,44 @@
     </xsl:template>
 
     <xsl:template mode="Extent" match="gmd:EX_Extent">
-        <GM03_2_1Core.Core.EX_Extent TID="x{util:randomId()}">
+        <ili:GM03_2_1Core.Core.EX_Extent TID="x{util:randomId()}">
             <xsl:apply-templates mode="textGroup" select="gmd:description"/>
-            <BACK_REF name="MD_DataIdentification"/>
+            <ili:BACK_REF name="MD_DataIdentification"/>
             <xsl:apply-templates mode="Extent" select="gmd:geographicElement"/>
             <xsl:apply-templates mode="Extent" select="gmd:temporalElement"/>
             <xsl:apply-templates mode="Extent" select="gmd:verticalElement"/>
-        </GM03_2_1Core.Core.EX_Extent>
+        </ili:GM03_2_1Core.Core.EX_Extent>
     </xsl:template>
 
     <xsl:template mode="Extent" match="gmd:geographicElement">
-        <GM03_2_1Core.Core.EX_ExtentgeographicElement TID="x{util:randomId()}">
-            <BACK_REF name="EX_Extent"/>
-            <geographicElement REF="?">
+        <ili:GM03_2_1Core.Core.EX_ExtentgeographicElement TID="x{util:randomId()}">
+            <ili:BACK_REF name="EX_Extent"/>
+            <ili:geographicElement REF="?">
                 <xsl:apply-templates mode="Extent"/>
-            </geographicElement>
-        </GM03_2_1Core.Core.EX_ExtentgeographicElement>
+            </ili:geographicElement>
+        </ili:GM03_2_1Core.Core.EX_ExtentgeographicElement>
     </xsl:template>
 
     <xsl:template mode="Extent" match="gmd:temporalElement">
-        <GM03_2_1Core.Core.EX_ExtenttemporalElement TID="x{util:randomId()}">
-            <BACK_REF name="EX_Extent"/>
-            <temporalElement REF="?">
-              <GM03_2_1Core.Core.EX_TemporalExtent TID="x{util:randomId()}">
-                <extent>
-                    <GM03_2_1Core.Core.TM_Primitive>
+        <ili:GM03_2_1Core.Core.EX_ExtenttemporalElement TID="x{util:randomId()}">
+            <ili:BACK_REF name="EX_Extent"/>
+            <ili:temporalElement REF="?">
+              <ili:GM03_2_1Core.Core.EX_TemporalExtent TID="x{util:randomId()}">
+                <ili:extent>
+                    <ili:GM03_2_1Core.Core.TM_Primitive>
                         <xsl:apply-templates mode="TimePeriod"/>
-                    </GM03_2_1Core.Core.TM_Primitive>
-                </extent>
-              </GM03_2_1Core.Core.EX_TemporalExtent>
-            </temporalElement>
-        </GM03_2_1Core.Core.EX_ExtenttemporalElement>
+                    </ili:GM03_2_1Core.Core.TM_Primitive>
+                </ili:extent>
+              </ili:GM03_2_1Core.Core.EX_TemporalExtent>
+            </ili:temporalElement>
+        </ili:GM03_2_1Core.Core.EX_ExtenttemporalElement>
     </xsl:template>
 
     <xsl:template mode="TimePeriod" match="gml:begin">
-        <begin><xsl:value-of select=".//text()"/></begin>
+        <ili:begin><xsl:value-of select=".//text()"/></ili:begin>
     </xsl:template>
     <xsl:template mode="TimePeriod" match="gml:end">
-        <end><xsl:value-of select=".//text()"/></end>
+        <ili:end><xsl:value-of select=".//text()"/></ili:end>
     </xsl:template>
 
     <xsl:template mode="Extent" match="gmd:geographicElement[gmd:EX_BoundingPolygon//gml:MultiSurface]" priority="10">
@@ -61,20 +61,20 @@
             <xsl:apply-templates mode="explode-multipolygons" />
         </xsl:variable>
         <xsl:for-each select="$exploded/gmd:geographicElement">
-            <GM03_2_1Core.Core.EX_ExtentgeographicElement TID="x{util:randomId()}">
-                <BACK_REF name="EX_Extent"/>
-                <geographicElement REF="?">
+            <ili:GM03_2_1Core.Core.EX_ExtentgeographicElement TID="x{util:randomId()}">
+                <ili:BACK_REF name="EX_Extent"/>
+                <ili:geographicElement REF="?">
                     <xsl:apply-templates mode="Extent"/>
-                </geographicElement>
-            </GM03_2_1Core.Core.EX_ExtentgeographicElement>
+                </ili:geographicElement>
+            </ili:GM03_2_1Core.Core.EX_ExtentgeographicElement>
         </xsl:for-each>
     </xsl:template>
 
     <xsl:template mode="Extent" match="gmd:EX_BoundingPolygon">
-        <GM03_2_1Core.Core.EX_BoundingPolygon TID="x{util:randomId()}">
+        <ili:GM03_2_1Core.Core.EX_BoundingPolygon TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:extentTypeCode"/>
             <xsl:apply-templates mode="Extent" select="gmd:polygon"/>
-        </GM03_2_1Core.Core.EX_BoundingPolygon>
+        </ili:GM03_2_1Core.Core.EX_BoundingPolygon>
     </xsl:template>
 
     <xsl:template mode="Extent" match="gmd:polygon">
@@ -82,52 +82,52 @@
     </xsl:template>
 
     <xsl:template mode="Extent" match="gmd:EX_GeographicBoundingBox">
-        <GM03_2_1Core.Core.EX_GeographicBoundingBox TID="x{util:randomId()}">
+        <ili:GM03_2_1Core.Core.EX_GeographicBoundingBox TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:extentTypeCode"/>
             <xsl:apply-templates mode="text" select="gmd:northBoundLatitude"/>
             <xsl:apply-templates mode="text" select="gmd:southBoundLatitude"/>
             <xsl:apply-templates mode="text" select="gmd:eastBoundLongitude"/>
             <xsl:apply-templates mode="text" select="gmd:westBoundLongitude"/>
-        </GM03_2_1Core.Core.EX_GeographicBoundingBox>
+        </ili:GM03_2_1Core.Core.EX_GeographicBoundingBox>
     </xsl:template>
 
     <xsl:template mode="Extent" match="gmd:EX_GeographicDescription">
-        <GM03_2_1Core.Core.EX_GeographicDescription TID="x{util:randomId()}">
+        <ili:GM03_2_1Core.Core.EX_GeographicDescription TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:extentTypeCode"/>
             <xsl:apply-templates mode="Extent" select="gmd:geographicIdentifier"/>
-        </GM03_2_1Core.Core.EX_GeographicDescription>
+        </ili:GM03_2_1Core.Core.EX_GeographicDescription>
     </xsl:template>
 
     <xsl:template mode="Extent" match="gmd:geographicIdentifier">
-        <geographicIdentifier REF="?">
+        <ili:geographicIdentifier REF="?">
             <xsl:apply-templates mode="Extent"/>
-        </geographicIdentifier>
+        </ili:geographicIdentifier>
     </xsl:template>
 
     <xsl:template mode="Extent" match="gmd:MD_Identifier">
-        <GM03_2_1Core.Core.MD_Identifier TID="x{util:randomId()}">
+        <ili:GM03_2_1Core.Core.MD_Identifier TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:code"/>
             <xsl:apply-templates mode="Extent" select="gmd:authority"/>
-        </GM03_2_1Core.Core.MD_Identifier>
+        </ili:GM03_2_1Core.Core.MD_Identifier>
     </xsl:template>
 
     <xsl:template mode="Extent" match="*" priority="-100">
-        <ERROR>Unknown Extent element <xsl:value-of select="local-name(.)"/></ERROR>
+        <ili:ERROR>Unknown Extent element <xsl:value-of select="local-name(.)"/></ili:ERROR>
     </xsl:template>
 
     <xsl:template mode="gml" match="gml:Polygon[count(ancestor::gml:MultiSurface) = 0]|gml:MultiSurface[gml:surfaceMember]">
-        <polygon>
-            <SURFACE>
-                <BOUNDARY>
+        <ili:polygon>
+            <ili:SURFACE>
+                <ili:BOUNDARY>
                     <xsl:apply-templates mode="gml" select="child::node()[1]"/>
-                </BOUNDARY>
+                </ili:BOUNDARY>
                 <xsl:for-each select="gml:surfaceMember//gml:interior">
-                <BOUNDARY>
+                <ili:BOUNDARY>
                     <xsl:apply-templates mode="gml" select="."/>
-                </BOUNDARY>
+                </ili:BOUNDARY>
                 </xsl:for-each>
-            </SURFACE>
-        </polygon>
+            </ili:SURFACE>
+        </ili:polygon>
     </xsl:template>
 
     <xsl:template mode="gml" match="gml:exterior|gml:curveMember|gml:Ring|gml:LinearRing|gml:surfaceMember|gml:Polygon">
@@ -147,9 +147,9 @@
     </xsl:template>
 
     <xsl:template mode="gml" match="gml:LineString">
-        <POLYLINE>
+        <ili:POLYLINE>
             <xsl:apply-templates mode="gml"/>
-        </POLYLINE>
+        </ili:POLYLINE>
     </xsl:template>
 
     <xsl:template mode="gml" match="gml:posList">
@@ -172,10 +172,10 @@
         <xsl:variable name="nextnext" select="substring-after($next, $sep)"/>
 
         <xsl:if test="$x != '' and $y != ''">
-            <COORD>
-                <C1><xsl:value-of select="$x"/></C1>
-                <C2><xsl:value-of select="$y"/></C2>
-            </COORD>
+            <ili:COORD>
+                <ili:C1><xsl:value-of select="$x"/></ili:C1>
+                <ili:C2><xsl:value-of select="$y"/></ili:C2>
+            </ili:COORD>
 
             <xsl:call-template name="explode">
                 <xsl:with-param name="string" select="$nextnext"/>
@@ -185,11 +185,11 @@
 
     <xsl:template mode="gml" match="gml:coordinates">
         <!-- will be converted by ISO19139CHEtoGM03 -->
-        <GML_COORDINATES decimal="{@decimal}" cs="{@cs}" ts="{@ts}"><xsl:value-of select="."/></GML_COORDINATES>
+        <ili:GML_COORDINATES decimal="{@decimal}" cs="{@cs}" ts="{@ts}"><xsl:value-of select="."/></ili:GML_COORDINATES>
     </xsl:template>
 
     <xsl:template mode="gml" match="*" priority="-100">
-        <ERROR>Unknown gml element <xsl:value-of select="local-name(.)"/></ERROR>
+        <ili:ERROR>Unknown gml element <xsl:value-of select="local-name(.)"/></ili:ERROR>
     </xsl:template>
 
     <!-- Explode multipolygons into multiple normal polygons -->

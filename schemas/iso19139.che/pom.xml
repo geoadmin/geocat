@@ -18,6 +18,11 @@
       <artifactId>schema-iso19139</artifactId>
       <version>${project.version}</version>
     </dependency>
+      <dependency>
+          <groupId>org.geonetwork-opensource</groupId>
+          <artifactId>services</artifactId>
+          <version>3.3.0-SNAPSHOT</version>
+      </dependency>
   </dependencies>
 
   <build>
