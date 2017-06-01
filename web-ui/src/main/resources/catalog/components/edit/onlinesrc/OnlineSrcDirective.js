@@ -263,11 +263,14 @@
                       process: 'onlinesrc-add',
                       fields: {
                         'url': {},
-                        'protocol': {value: 'WWW:LINK-1.0-http--link'},
+                        'protocol': {
+                          value: 'WWW:LINK-1.0-http--link',
+                          isMultilingual: false
+                        },
                         'name': {},
                         'desc': {},
-                        'function': {},
-                        'applicationProfile': {}
+                        'function': {isMultilingual: false},
+                        'applicationProfile': {isMultilingual: false}
                       }
                     }, {
                       label: 'addThumbnail',
@@ -279,11 +282,13 @@
                       fileStoreFilter: '*.{jpg,JPG,png,PNG,gif,GIF}',
                       process: 'thumbnail-add',
                       fields: {
-                        'url': {param: 'thumbnail_url'},
+                        'url': {
+                          param: 'thumbnail_url',
+                          isMultilingual: false
+                        },
                         'name': {param: 'thumbnail_desc'}
                       }
-                    }],
-                    multilingualFields: ['name', 'desc']
+                    }]
                   },
                   'iso19115-3': {
                     display: 'select',
@@ -881,9 +886,6 @@
                       scope.schema.indexOf('iso19139') === 0) {
                     scope.config = schemaConfig['iso19139'];
                   }
-                  // Specific geocat
-                  scope.config.multilingualFields.push('url');
-                  // End Specific geocat
 
                   if (gnCurrentEdit.mdOtherLanguages) {
 
@@ -910,10 +912,21 @@
                     }
                   }
 
+                  var typeConfig = linkToEdit ?
+                    getTypeConfig(linkToEdit) :
+                    scope.config.types[0];
+                  scope.config.multilingualFields = [];
+                  angular.forEach(typeConfig.fields, function(f, k) {
+                    if (f.isMultilingual !== false) {
+                      scope.config.multilingualFields.push(k);
+                    }
+                  });
+
                   initThumbnailMaker();
                   resetForm();
 
                   $(scope.popupid).modal('show');
+
 
                   if (scope.isEditing) {
                     // If the title object contains more than one value,
@@ -970,7 +983,7 @@
                     });
 
                     scope.params = {
-                      linkType: getTypeConfig(linkToEdit),
+                      linkType: typeConfig,
                       url: fields.url,
                       protocol: linkToEdit.protocol,
                       name: fields.name,
@@ -1258,6 +1271,13 @@
                       resetForm();
                     }
 
+                    scope.config.multilingualFields = [];
+                    angular.forEach(newValue.fields, function(f, k) {
+                      if (f.isMultilingual !== false) {
+                        scope.config.multilingualFields.push(k);
+                      }
+                    });
+
                     if (newValue.sources && newValue.sources.metadataStore) {
                       scope.$broadcast('resetSearch',
                           newValue.sources.metadataStore.params);
@@ -1316,6 +1336,7 @@
 
                 scope.isFieldMultilingual = function(field) {
                   return scope.isMdMultilingual &&
+                    scope.config.multilingualFields &&
                     scope.config.multilingualFields.indexOf(field) >= 0
                 }
               }
