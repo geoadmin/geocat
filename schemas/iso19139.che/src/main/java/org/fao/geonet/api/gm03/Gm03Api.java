@@ -136,17 +136,11 @@ public class Gm03Api  {
         Path xsdFile = schemaDir.resolve(GM03_XSD_FILE);
         Path xsl = schemaDir.resolve(GM03_XSL_CONVERSION_FILE);
 
-
-        final Element transform = Xml.transform(xml, xsl);
-        return transform;
-
-/*
         ISO19139CHEtoGM03Base toGm03 = new ISO19139CHEtoGM03(xsdFile, xsl);
         Document domOut = toGm03.convert(domIn);
 
         DOMBuilder builder = new DOMBuilder();
         return builder.build(domOut).getRootElement();
-*/
     }
 
 
