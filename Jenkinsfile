@@ -6,12 +6,11 @@
 dockerBuild {
   stage('Docker pull the maven image') {
     sh 'docker pull maven:3-jdk-8'
-      sh 'docker pull pmauduit/google-drive-publisher'
   }
   withDockerContainer(image: 'maven:3-jdk-8') {
     stage('Getting the sources') {
-      git url: 'https://github.com/geoadmin/geocat.git', branch: "geocat_3.4.x"
-        sh 'git submodule update --init --recursive'
+      git url: 'https://github.com/geoadmin/geocat.git', branch: env.BRANCH_NAME
+      sh 'git submodule update --init --recursive'
     }
     stage('First build without test') {
       sh '''mvn clean install -B -Dmaven.repo.local=./.m2_repo -DskipTests'''
