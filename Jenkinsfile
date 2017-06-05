@@ -9,7 +9,7 @@ dockerBuild {
   }
   withDockerContainer(image: 'maven:3-jdk-8') {
     stage('Getting the sources') {
-      git url: 'https://github.com/geoadmin/geocat.git', branch: env.BRANCH_NAME
+      git url: 'https://github.com/camptocamp/geocat.git', branch: env.BRANCH_NAME
       sh 'git submodule update --init --recursive'
     }
     stage('First build without test') {
