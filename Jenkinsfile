@@ -40,7 +40,7 @@ dockerBuild {
               </server>
             </servers>
           </settings>""".replaceAll("USERNAME", env.USERNAME).replaceAll("PASSWORD", env.PASSWORD)
-          sh "echo '${configXmlStr}' > /config.xml"
+          sh "echo '${configXmlStr}' > /settings.xml"
       }
     }
     stage('Build/publish a docker image') {
