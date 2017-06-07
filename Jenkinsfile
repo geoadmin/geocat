@@ -2,6 +2,9 @@
 
 @Library('c2c-pipeline-library') import static com.camptocamp.utils.*
 
+selectNodes {
+    (it.memorysize_mb as Float) > 12000
+}
 
 dockerBuild {
   stage('Docker pull the maven image') {
