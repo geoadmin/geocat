@@ -54,7 +54,6 @@ dockerBuild {
   } // withDockerContainer
 
   // Using another container, deploys the previously published image onto the dev env
-  if (env.BRANCH_NAME == 'geocat_3.4.x') {
     stage('Deploy newly created images on the dev env') {
       withDockerContainer(image: 'debian', args: "--privileged -u 0:0") {
 
@@ -95,15 +94,18 @@ dockerBuild {
 
         stage('Terraforming') {
           ansiColor('xterm') {
-            sh """cd terraform-geocat                        &&
-              ln -s /root/bin/terraform /usr/bin             &&
-              make install                                   &&
-              make init                                      &&
-              cd rancher-environments/geocat-dev             &&
-              terraform apply"""
+            if (env.BRANCH_NAME == 'geocat_3.4.x') {
+              sh """cd terraform-geocat                        &&
+                ln -s /root/bin/terraform /usr/bin             &&
+                make install                                   &&
+                make init                                      &&
+                cd rancher-environments/geocat-dev             &&
+                terraform apply"""
+            } else {
+              println "Not onto the 'geocat_3.4.x' branch, skipping redeploy"
+            }// if
           } // ansiColor
         } // stage
       } // withDockerContainer
     } // stage
-  } // if
 } // dockerBuild
