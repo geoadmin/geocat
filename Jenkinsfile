@@ -16,10 +16,10 @@ dockerBuild {
       sh 'git submodule update --init --recursive'
     }
     stage('First build without test') {
-      sh '''mvn clean install -B -Dmaven.repo.local=./.m2_repo -DskipTests'''
+      sh '''mvn clean install -B -Dmaven.repo.local=./.m2_repo -Ddb.username=geonetwork -Ddb.name=geonetwork -Ddb.type=postgres -Ddb.host=database -Ddb.password=geonetwork -DskipTests'''
     }
     stage('Second build with tests') {
-      sh '''mvn clean install -B -Dmaven.repo.local=./.m2_repo -fn'''
+      sh '''mvn clean install -B -Dmaven.repo.local=./.m2_repo -Ddb.username=geonetwork -Ddb.name=geonetwork -Ddb.type=postgres -Ddb.host=database -Ddb.password=geonetwork -fn'''
     }
     stage('Saving tests results') {
       junit '**/target/surefire-reports/TEST-*.xml'
@@ -49,7 +49,7 @@ dockerBuild {
     stage('Build/publish a docker image') {
       // one-liner to setup docker
       sh 'curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-17.05.0-ce.tgz && tar --strip-components=1 -xvzf docker-17.05.0-ce.tgz -C /usr/local/bin'
-      sh '''mvn -s /settings.xml -B -Dmaven.repo.local=./.m2_repo -pl web -Pdocker docker:build docker:push'''
+      sh '''mvn -s /settings.xml -B -Dmaven.repo.local=./.m2_repo  -Ddb.username=geonetwork -Ddb.name=geonetwork -Ddb.type=postgres -Ddb.host=database -Ddb.password=geonetwork -pl web -Pdocker docker:build docker:push'''
     }
   } // withDockerContainer
 
@@ -95,7 +95,7 @@ dockerBuild {
 
         stage('Terraforming') {
           ansiColor('xterm') {
-            sh """cd terraform-geocat                            &&
+            sh """cd terraform-geocat                        &&
               ln -s /root/bin/terraform /usr/bin             &&
               make install                                   &&
               make init                                      &&
