@@ -54,54 +54,56 @@ dockerBuild {
   } // withDockerContainer
 
   // Using another container, deploys the previously published image onto the dev env
-  stage('Deploy newly created images on the dev env') {
-    withDockerContainer(image: 'debian', args: "--privileged -u 0:0") {
+  if (env.BRANCH_NAME == 'geocat_3.4.x') {
+    stage('Deploy newly created images on the dev env') {
+      withDockerContainer(image: 'debian', args: "--privileged -u 0:0") {
 
-      stage('Install / configure needed tools') {
-        sh 'apt update && apt install -y make ssh git wget unzip'
-        sh 'mkdir -p ~/bin'
-      } // stage
+        stage('Install / configure needed tools') {
+          sh 'apt update && apt install -y make ssh git wget unzip'
+            sh 'mkdir -p ~/bin'
+        } // stage
 
-      stage("Prepare caas-dev access") {
-        withCredentials([file(credentialsId: 'jenkins-caas-dev-bgdi.ch.json', variable: 'FILE')]) {
-          sh 'mkdir -p ~/.rancher'
-          sh "cp ${FILE} ~/.rancher/caas.dev.bgdi.ch.json"
-        } // withCredentials
-      } // stage
+        stage("Prepare caas-dev access") {
+          withCredentials([file(credentialsId: 'jenkins-caas-dev-bgdi.ch.json', variable: 'FILE')]) {
+            sh 'mkdir -p ~/.rancher'
+              sh "cp ${FILE} ~/.rancher/caas.dev.bgdi.ch.json"
+          } // withCredentials
+        } // stage
 
-      stage("Configuring AWS / S3") {
-        sh 'mkdir ~/.aws'
-        withCredentials([[$class: 'UsernamePasswordMultiBinding',
-            credentialsId: 'terraform-georchestra-aws-credentials',
-            usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-          def credentialsFile = """
-[c2c]
-aws_access_key_id = ${env.USERNAME}
-aws_secret_access_key = ${env.PASSWORD}
-region = eu-west-1
-"""
-          sh "echo '${credentialsFile}' > ~/.aws/credentials"
-        } // withCredentials
-      } // stage
+        stage("Configuring AWS / S3") {
+          sh 'mkdir ~/.aws'
+            withCredentials([[$class: 'UsernamePasswordMultiBinding',
+                credentialsId: 'terraform-georchestra-aws-credentials',
+                usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+              def credentialsFile = """
+                [c2c]
+                aws_access_key_id = ${env.USERNAME}
+              aws_secret_access_key = ${env.PASSWORD}
+              region = eu-west-1
+                """
+                sh "echo '${credentialsFile}' > ~/.aws/credentials"
+            } // withCredentials
+        } // stage
 
-      stage('Checking out the terraform-geocat repository') {
-        sshagent(["terraform-geocat-deploy-key"]) {
-          sh "ssh -oStrictHostKeyChecking=no git@github.com || true"
-          sh "rm -rf terraform-geocat"
-          sh "git clone git@github.com:camptocamp/terraform-geocat.git"
-        } // sshagent
-      } // stage
+        stage('Checking out the terraform-geocat repository') {
+          sshagent(["terraform-geocat-deploy-key"]) {
+            sh "ssh -oStrictHostKeyChecking=no git@github.com || true"
+              sh "rm -rf terraform-geocat"
+              sh "git clone git@github.com:camptocamp/terraform-geocat.git"
+          } // sshagent
+        } // stage
 
-      stage('Terraforming') {
-        ansiColor('xterm') {
-          sh """cd terraform-geocat                            &&
-                ln -s /root/bin/terraform /usr/bin             &&
-                make install                                   &&
-                make init                                      &&
-                cd rancher-environments/geocat-dev             &&
-                terraform apply"""
-        } // ansiColor
-      } // stage
-    } // withDockerContainer
-  } // stage
-}
+        stage('Terraforming') {
+          ansiColor('xterm') {
+            sh """cd terraform-geocat                            &&
+              ln -s /root/bin/terraform /usr/bin             &&
+              make install                                   &&
+              make init                                      &&
+              cd rancher-environments/geocat-dev             &&
+              terraform apply"""
+          } // ansiColor
+        } // stage
+      } // withDockerContainer
+    } // stage
+  } // if
+} // dockerBuild
