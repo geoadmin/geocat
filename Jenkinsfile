@@ -7,6 +7,9 @@ selectNodes {
 }
 
 dockerBuild {
+
+  def mavenOpts = '-B -Dmaven.repo.local=./.m2_repo -Ddb.username=geonetwork -Ddb.name=geonetwork -Ddb.type=postgres -Ddb.host=database -Ddb.password=geonetwork'
+
   stage('Docker pull the maven image') {
     sh 'docker pull maven:3-jdk-8'
   }
@@ -16,10 +19,24 @@ dockerBuild {
       sh 'git submodule update --init --recursive'
     }
     stage('First build without test') {
-      sh '''mvn clean install -B -Dmaven.repo.local=./.m2_repo -Ddb.username=geonetwork -Ddb.name=geonetwork -Ddb.type=postgres -Ddb.host=database -Ddb.password=geonetwork -DskipTests'''
+      sh "mvn clean install ${mavenOpts} -DskipTests"
     }
     stage('Second build with tests') {
-      sh '''mvn clean install -B -Dmaven.repo.local=./.m2_repo -Ddb.username=geonetwork -Ddb.name=geonetwork -Ddb.type=postgres -Ddb.host=database -Ddb.password=geonetwork -fn'''
+      sh "mvn clean install ${mavenOpts} -fn"
+    }
+    stage('calculating coverage') {
+      sh "mvn cobertura:cobertura ${mavenOpts} -fn"
+      step([$class: 'CoberturaPublisher',
+            autoUpdateHealth: false,
+            autoUpdateStability: false,
+            coberturaReportFile: '**/target/site/cobertura/coverage.xml',
+            failNoReports: true,
+            failUnhealthy: false,
+            failUnstable: false,
+            maxNumberOfBuilds: 0,
+            onlyStable: false,
+            sourceEncoding: 'UTF_8',
+            zoomCoverageChart: true])
     }
     stage('Saving tests results') {
       junit '**/target/surefire-reports/TEST-*.xml'
@@ -49,7 +66,7 @@ dockerBuild {
     stage('Build/publish a docker image') {
       // one-liner to setup docker
       sh 'curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-17.05.0-ce.tgz && tar --strip-components=1 -xvzf docker-17.05.0-ce.tgz -C /usr/local/bin'
-      sh '''mvn -s /settings.xml -B -Dmaven.repo.local=./.m2_repo  -Ddb.username=geonetwork -Ddb.name=geonetwork -Ddb.type=postgres -Ddb.host=database -Ddb.password=geonetwork -pl web -Pdocker docker:build docker:push'''
+      sh "mvn -s /settings.xml ${mavenOpts} -pl web -Pdocker docker:build docker:push"
     }
   } // withDockerContainer
 
