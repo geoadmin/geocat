@@ -2434,6 +2434,16 @@
     <help>z.B. Schweiz, Österreich oder Deutschland</help>
     <condition/>
     <description>Staat</description>
+    <!-- Specific Geocat -->
+    <helper>
+      <option value="CH">Schweiz (CH)</option>
+      <option value="DE">Deutschland (DE)</option>
+      <option value="LI">Lichtenstein (LI)</option>
+      <option value="FR">Frankreich (FR)</option>
+      <option value="IT">Italien (IT)</option>
+      <option value="AT">Österreich (AT)</option>
+    </helper>
+    <!-- End Specific Geocat -->
   </element>
   <element name="gmd:electronicMailAddress" id="386">
     <label>E-Mail</label>
