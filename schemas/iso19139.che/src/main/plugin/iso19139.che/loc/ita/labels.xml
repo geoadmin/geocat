@@ -635,11 +635,6 @@
     </description>
     <help/>
   </element>
-  <element name="che:CHE_SV_ServiceIdentification" id="40.0">
-    <label>Informazione di base sul servizio</label>
-    <description>Indicazioni generali per la descrizione di servizi secondo la norma ISO 19119 (profilo GM03_2+)
-    </description>
-  </element>
   <element name="che:inspireServiceType">
     <label>Tipo dei servizi INSPIRE</label>
     <description>Classificazione dei servizi secondo le direttive esecutive di INSPIRE per metadati</description>
