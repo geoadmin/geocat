@@ -38,7 +38,7 @@ Start your project:
 ```
 mvn clean install -DskipTests
 docker-compose up database
-mvn jetty-run -Penv-dev -Ddb.username=geonetwork -Ddb.name=geonetwork -Ddb.config.file=../config-db/postgres.xml -Ddb.password=geonetwork -Ddb.port=55432
+mvn jetty:run -Penv-dev -Ddb.username=geonetwork -Ddb.name=geonetwork -Ddb.config.file=../config-db/postgres.xml -Ddb.password=geonetwork -Ddb.port=55432
 ```
 
 Application will be available on localhost:8080/geonetwork
