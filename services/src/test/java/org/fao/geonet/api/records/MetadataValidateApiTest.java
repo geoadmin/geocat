@@ -68,7 +68,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
                 .andExpect(jsonPath("$.report").value(hasSize(0)));
 
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
-        assertEquals(validations.size(), 1);
+        assertEquals(1, validations.size());
         assertEquals(VALID, validations.get(0).getStatus());
     }
 
@@ -88,10 +88,27 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
                 .andExpect(jsonPath("$.report").value(hasSize(0)));
 
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
-        assertEquals(validations.size(), 1);
+        assertEquals(1, validations.size());
         assertEquals(MetadataValidationStatus.INVALID, validations.get(0).getStatus());
     }
 
+    @Test
+    public void validateSubTemplateValidIsNotSet() throws Exception {
+        Metadata subTemplate = subTemplateOnLineResourceDbInsert();
+
+        MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
+
+        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate")
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.description").value("<Null> is not a valid value for: valid"));
+
+        List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
+        assertEquals(0, validations.size());
+    }
 
     private ServiceContext context;
 
@@ -101,6 +118,14 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
     }
 
     private Metadata subTemplateOnLineResourceDbInsert() throws Exception {
+        return subTemplateOnLineResourceDbInsert(MetadataType.SUB_TEMPLATE);
+    }
+
+    private Metadata subTemplateOnLineResourceDbInsertAsMetadata() throws Exception {
+        return subTemplateOnLineResourceDbInsert(MetadataType.METADATA);
+    }
+
+    private Metadata subTemplateOnLineResourceDbInsert(MetadataType type) throws Exception {
         loginAsAdmin(context);
 
         URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/sub-OnlineResource.xml");
@@ -112,7 +137,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         metadata.getDataInfo()
                 .setRoot(sampleMetadataXml.getQualifiedName())
                 .setSchemaId(schemaManager.autodetectSchema(sampleMetadataXml))
-                .setType(MetadataType.SUB_TEMPLATE)
+                .setType(type)
                 .setPopularity(1000);
         metadata.getSourceInfo()
                 .setOwner(SUBTEMPLATE_TEST_OWNER)
