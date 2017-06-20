@@ -104,11 +104,32 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("BadParameterEx"))
                 .andExpect(jsonPath("$.description").value("<Null> is not a valid value for: valid"));
 
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
         assertEquals(0, validations.size());
     }
+
+    @Test
+    public void validateSubTemplateValidIsTrueButNotLoggedAsAdmin() throws Exception {
+        Metadata subTemplate = subTemplateOnLineResourceDbInsert();
+
+        MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAsAnonymous();
+
+        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate")
+                .param("valid", "true")
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("SecurityException"));
+
+        List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
+        assertEquals(0, validations.size());
+    }
+
 
     private ServiceContext context;
 
