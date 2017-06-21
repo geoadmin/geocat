@@ -136,7 +136,7 @@ public class MetadataValidateApi {
             value = "Validation status. Should be provided only in case of SUBTEMPLATE validation. If provided for another type, throw ",
             required = false)
         @RequestParam (required = false)
-            Boolean isValid,
+            Boolean isvalid,
         HttpServletRequest request,
         @ApiParam(hidden = true)
         @ApiIgnore
@@ -154,17 +154,17 @@ public class MetadataValidateApi {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
 
         boolean isSubtemplate = metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE;
-        boolean validSet = (isValid != null);
+        boolean validSet = (isvalid != null);
         if (!isSubtemplate && validSet) {
-            throw new BadParameterEx("isValid", "<not Null for not subTemplate>");
+            throw new BadParameterEx("isvalid", "<not Null for not subTemplate>");
         }
         if (isSubtemplate && !validSet) {
-            throw new BadParameterEx("isValid", "<Null>");
+            throw new BadParameterEx("isvalid", "<Null>");
         }
         if (isSubtemplate) {
             MetadataValidation metadataValidation = new MetadataValidation().
                     setId(new MetadataValidationId(metadata.getId(), "subtemplate")).
-                    setStatus(isValid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID).
+                    setStatus(isvalid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID).
                     setRequired(true).
                     setNumTests(0).
                     setNumFailures(0);

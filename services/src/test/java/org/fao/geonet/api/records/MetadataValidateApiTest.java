@@ -43,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
     private static final int SUBTEMPLATE_TEST_OWNER = 42;
-    public static final String REQ_VALID_PARAM = "isValid";
+    public static final String REQ_VALID_PARAM = "isvalid";
     @Autowired
     private WebApplicationContext wac;
     @Autowired
@@ -114,7 +114,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("BadParameterEx"))
-                .andExpect(jsonPath("$.description").value("<Null> is not a valid value for: isValid"));
+                .andExpect(jsonPath("$.description").value("<Null> is not a valid value for: isvalid"));
 
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
         assertEquals(0, validations.size());
@@ -156,7 +156,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("BadParameterEx"))
-                .andExpect(jsonPath("$.description").value("<not Null for not subTemplate> is not a valid value for: isValid"));
+                .andExpect(jsonPath("$.description").value("<not Null for not subTemplate> is not a valid value for: isvalid"));
 
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
         assertEquals(0, validations.size());
