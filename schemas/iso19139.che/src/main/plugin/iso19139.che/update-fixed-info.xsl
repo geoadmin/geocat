@@ -1,26 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gml="http://www.opengis.net/gml"
-                xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:java="java:org.fao.geonet.util.XslUtil"
-                xmlns:che="http://www.geocat.ch/2008/che" xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                xmlns:xlink="http://www.w3.org/1999/xlink" version="2.0"
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:srv="http://www.isotc211.org/2005/srv"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:che="http://www.geocat.ch/2008/che"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
+                xmlns:geonet="http://www.fao.org/geonetwork"
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                version="2.0"
                 exclude-result-prefixes="#all">
 
   <xsl:include href="../iso19139/convert/functions.xsl"/>
   <xsl:include href="../iso19139/convert/thesaurus-transformation.xsl"/>
+  <xsl:include href="../iso19139/layout/utility-fn.xsl"/>
   <xsl:include href="update-sub-template-fixed-info.xsl"/>
 
   <xsl:variable name="serviceUrl" select="/root/env/siteURL"/>
-  <!-- ================================================================= -->
+
+
+  <!-- The default language is also added as gmd:locale
+  for multilingual metadata records. -->
+  <xsl:variable name="mainLanguage"
+                select="/root/*/gmd:language/gco:CharacterString/text()|
+                        /root/*/gmd:language/gmd:LanguageCode/@codeListValue"/>
+
+  <xsl:variable name="isMultilingual"
+                select="count(/root/*/gmd:locale[*/gmd:languageCode/*/@codeListValue != $mainLanguage]) > 0"/>
+
+  <xsl:variable name="mainLanguageId"
+                select="upper-case(java:twoCharLangCode($mainLanguage))"/>
+
+  <xsl:variable name="defaultEncoding"
+                select="'utf8'"/>
+
+  <xsl:variable name="editorConfig"
+                select="document('layout/config-editor.xml')"/>
+
+  <xsl:variable name="nonMultilingualFields"
+                select="$editorConfig/editor/multilingualFields/exclude"/>
 
   <xsl:template match="/root">
     <xsl:apply-templates select="che:CHE_MD_Metadata"/>
   </xsl:template>
 
-  <!-- ================================================================= -->
 
   <xsl:template match="che:CHE_MD_Metadata">
     <xsl:copy>
+      <xsl:namespace name="xsi" select="'http://www.w3.org/2001/XMLSchema-instance'"/>
       <xsl:apply-templates select="@*"/>
 
       <gmd:fileIdentifier>
@@ -41,19 +94,62 @@
           </gmd:parentIdentifier>
         </xsl:when>
         <xsl:when test="gmd:parentIdentifier">
-          <xsl:copy-of select="gmd:parentIdentifier"/>
+          <xsl:apply-templates select="gmd:parentIdentifier"/>
         </xsl:when>
       </xsl:choose>
-      <xsl:apply-templates
-        select="node()[not(self::gmd:language) and not(self::gmd:characterSet) and not(self::gmd:parentIdentifier)]"/>
+
+      <xsl:apply-templates select="
+        gmd:hierarchyLevel|
+        gmd:hierarchyLevelName|
+        gmd:contact|
+        gmd:dateStamp|
+        gmd:metadataStandardName|
+        gmd:metadataStandardVersion|
+        gmd:dataSetURI"/>
+
+      <!-- Copy existing locales and create an extra one for the default metadata language. -->
+      <xsl:if test="$isMultilingual">
+        <xsl:apply-templates select="gmd:locale[*/gmd:languageCode/*/@codeListValue != $mainLanguage]"/>
+        <gmd:locale>
+          <gmd:PT_Locale id="{$mainLanguageId}">
+            <gmd:languageCode>
+              <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/"
+                                codeListValue="{$mainLanguage}"/>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+              <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"
+                                       codeListValue="{$defaultEncoding}"/>
+            </gmd:characterEncoding>
+          </gmd:PT_Locale>
+        </gmd:locale>
+      </xsl:if>
+
+      <xsl:apply-templates select="
+        gmd:spatialRepresentationInfo|
+        gmd:referenceSystemInfo|
+        gmd:metadataExtensionInfo|
+        gmd:identificationInfo|
+        gmd:contentInfo|
+        gmd:distributionInfo|
+        gmd:dataQualityInfo|
+        gmd:portrayalCatalogueInfo|
+        gmd:metadataConstraints|
+        gmd:applicationSchemaInfo|
+        gmd:metadataMaintenance|
+        gmd:series|
+        gmd:describes|
+        gmd:propertyType|
+        gmd:featureType|
+        gmd:featureAttribute"/>
+
+      <!-- Handle ISO profiles extensions. -->
+      <xsl:apply-templates select="
+        *[namespace-uri()!='http://www.isotc211.org/2005/gmd' and
+          namespace-uri()!='http://www.isotc211.org/2005/srv']"/>
     </xsl:copy>
   </xsl:template>
 
 
-  <!-- ================================================================= -->
-  <!-- Do not process MD_Metadata header generated by previous template  -->
-
-  <xsl:template match="che:CHE_MD_Metadata/gmd:fileIdentifier|che:CHE_MD_Metadata/gmd:parentIdentifier" priority="10"/>
 
   <!-- ================================================================= -->
 
@@ -90,16 +186,6 @@
   </xsl:template>
  -->
 
-  <!-- ================================================================= -->
-  <!-- Do not allow to expand operatesOn sub-elements
-    and constrain users to use uuidref attribute to link
-    service metadata to datasets. This will avoid to have
-    error on XSD validation. -->
-  <xsl:template match="srv:operatesOn">
-    <xsl:copy>
-      <xsl:copy-of select="@*"/>
-    </xsl:copy>
-  </xsl:template>
 
   <!-- ================================================================= -->
   <!-- Add gmd:id attribute to all gml elements which required one. -->
@@ -158,16 +244,80 @@
 
   <!-- ================================================================= -->
 
-  <xsl:template match="*[gco:CharacterString]">
+  <xsl:template match="*[gco:CharacterString|gmd:PT_FreeText]">
     <xsl:copy>
-      <xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
-      <xsl:if test="normalize-space(gco:CharacterString)=''">
-        <xsl:attribute name="gco:nilReason">
-          <xsl:value-of select="'missing'"/>
-        </xsl:attribute>
-      </xsl:if>
-      <xsl:apply-templates select="gco:CharacterString"/>
-      <xsl:apply-templates select="gmd:PT_FreeText"/>
+      <xsl:apply-templates select="@*[not(name() = 'gco:nilReason') and not(name() = 'xsi:type')]"/>
+
+      <!-- Add nileason if text is empty -->
+      <xsl:choose>
+        <xsl:when test="normalize-space(gco:CharacterString)=''">
+          <xsl:attribute name="gco:nilReason">
+            <xsl:choose>
+              <xsl:when test="@gco:nilReason">
+                <xsl:value-of select="@gco:nilReason"/>
+              </xsl:when>
+              <xsl:otherwise>missing</xsl:otherwise>
+            </xsl:choose>
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:when test="@gco:nilReason!='missing' and normalize-space(gco:CharacterString)!=''">
+          <xsl:copy-of select="@gco:nilReason"/>
+        </xsl:when>
+      </xsl:choose>
+
+
+      <!-- For multilingual records, for multilingual fields,
+       create a gco:CharacterString containing
+       the same value as the default language PT_FreeText.
+      -->
+      <xsl:variable name="element" select="name()"/>
+
+
+      <xsl:variable name="excluded"
+                    select="gn-fn-iso19139:isNotMultilingualField(., $editorConfig)"/>
+      <xsl:choose>
+        <xsl:when test="not($isMultilingual) or
+                        $excluded">
+          <!-- Copy what's in here ... probably only a gco:CharacterString -->
+          <xsl:apply-templates select="node()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <!-- Add xsi:type for multilingual element. -->
+          <xsl:attribute name="xsi:type" select="'gmd:PT_FreeText_PropertyType'"/>
+
+          <!-- Is the default language value set in a PT_FreeText ? -->
+          <xsl:variable name="isInPTFreeText"
+                        select="count(gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
+                                            @locale = concat('#', $mainLanguageId)]) = 1"/>
+
+
+          <xsl:choose>
+            <xsl:when test="$isInPTFreeText">
+              <!-- Update gco:CharacterString to contains
+                   the default language value from the PT_FreeText.
+                   PT_FreeText takes priority. -->
+              <gco:CharacterString>
+                <xsl:value-of select="gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
+                                            @locale = concat('#', $mainLanguageId)]/text()"/>
+              </gco:CharacterString>
+              <xsl:apply-templates select="gmd:PT_FreeText"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <!-- Populate PT_FreeText for default language if not existing. -->
+              <xsl:apply-templates select="gco:CharacterString"/>
+              <gmd:PT_FreeText>
+                <gmd:textGroup>
+                  <gmd:LocalisedCharacterString locale="#{$mainLanguageId}">
+                    <xsl:value-of select="gco:CharacterString"/>
+                  </gmd:LocalisedCharacterString>
+                </gmd:textGroup>
+
+                <xsl:apply-templates select="gmd:PT_FreeText/gmd:textGroup"/>
+              </gmd:PT_FreeText>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:copy>
   </xsl:template>
 
@@ -232,19 +382,7 @@
       <xsl:copy-of select="@*"/>
       <gmd:linkage>
         <gmd:URL>
-          <xsl:choose>
-            <xsl:when test="/root/env/system/downloadservice/simple='true'">
-              <xsl:value-of
-                select="concat($serviceUrl,'/resources.get?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=public')"/>
-            </xsl:when>
-            <xsl:when test="/root/env/system/downloadservice/withdisclaimer='true'">
-              <xsl:value-of
-                select="concat($serviceUrl,'/file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',$fname,'&amp;access=public')"/>
-            </xsl:when>
-            <xsl:otherwise> <!-- /root/env/system/downloadservice/leave='true' -->
-              <xsl:value-of select="gmd:linkage/gmd:URL"/>
-            </xsl:otherwise>
-          </xsl:choose>
+          <xsl:value-of select="gmd:linkage/gmd:URL"/>
         </gmd:URL>
       </gmd:linkage>
       <xsl:copy-of select="gmd:protocol"/>
@@ -260,7 +398,7 @@
   </xsl:template>
 
   <!-- ================================================================= -->
-  <!-- online resources: link-to-downloadable data etc -->
+  <!-- Add mime type for downloadable online resources -->
   <!-- ================================================================= -->
 
   <xsl:template
@@ -292,28 +430,6 @@
     </xsl:copy>
   </xsl:template>
 
-  <!-- ================================================================= -->
-
-  <xsl:template match="gmx:FileName[name(..)!='gmd:contactInstructions']">
-    <xsl:copy>
-      <xsl:attribute name="src">
-        <xsl:choose>
-          <xsl:when test="/root/env/system/downloadservice/simple='true'">
-            <xsl:value-of
-              select="concat($serviceUrl,'/resources.get?uuid=',/root/env/uuid,'&amp;fname=',.,'&amp;access=private')"/>
-          </xsl:when>
-          <xsl:when test="/root/env/system/downloadservice/withdisclaimer='true'">
-            <xsl:value-of
-              select="concat($serviceUrl,'/file.disclaimer?uuid=',/root/env/uuid,'&amp;fname=',.,'&amp;access=private')"/>
-          </xsl:when>
-          <xsl:otherwise> <!-- /root/env/system/downloadservice/leave='true' -->
-            <xsl:value-of select="@src"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:attribute>
-      <xsl:value-of select="."/>
-    </xsl:copy>
-  </xsl:template>
 
   <!-- ================================================================= -->
 
@@ -325,7 +441,12 @@
   <xsl:template match="srv:operatesOn|gmd:featureCatalogueCitation">
     <xsl:copy>
       <xsl:copy-of select="@uuidref"/>
-      <xsl:if test="@uuidref">
+      <xsl:choose>
+
+        <!-- Do not expand operatesOn sub-elements when using uuidref
+             to link service metadata to datasets or datasets to iso19110.
+         -->
+        <xsl:when test="@uuidref">
         <xsl:choose>
           <xsl:when test="not(string(@xlink:href)) or starts-with(@xlink:href, $serviceUrl)">
             <xsl:attribute name="xlink:href">
@@ -337,8 +458,12 @@
             <xsl:copy-of select="@xlink:href"/>
           </xsl:otherwise>
         </xsl:choose>
-      </xsl:if>
-      <xsl:copy-of select="./node()"/>
+        </xsl:when>
+
+        <xsl:otherwise>
+          <xsl:apply-templates select="node()" />
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:copy>
 
   </xsl:template>
@@ -366,19 +491,12 @@
   <xsl:variable name="language" select="//gmd:PT_Locale"/> <!-- Need list of all locale -->
   <xsl:template match="gmd:LocalisedCharacterString">
     <xsl:element name="gmd:{local-name()}">
-      <xsl:variable name="currentLocale">
-        <xsl:variable name="baseLoc" select="upper-case(replace(normalize-space(@locale), '^#', ''))"/>
-        <xsl:choose>
-          <xsl:when test="$baseLoc = 'GE'">DE</xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="$baseLoc"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:variable>
+      <xsl:variable name="currentLocale"
+                    select="upper-case(replace(normalize-space(@locale), '^#', ''))"/>
       <xsl:variable name="ptLocale"
                     select="$language[upper-case(replace(normalize-space(@id), '^#', ''))=string($currentLocale)]"/>
       <xsl:variable name="id"
-                    select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue, ''))"/>
+                    select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
       <xsl:apply-templates select="@*"/>
       <xsl:if test="$id != '' and ($currentLocale='' or @locale!=concat('#', $id)) ">
         <xsl:attribute name="locale">
@@ -388,6 +506,8 @@
       <xsl:apply-templates select="node()"/>
     </xsl:element>
   </xsl:template>
+
+
   <xsl:template match="che:LocalisedURL">
     <xsl:element name="che:{local-name()}">
       <xsl:variable name="currentLocale">
@@ -412,6 +532,8 @@
       <xsl:apply-templates select="node()"/>
     </xsl:element>
   </xsl:template>
+
+
   <xsl:template match="gmd:LocalisedURL">
     <xsl:element name="che:{local-name()}">
       <xsl:variable name="currentLocale">
