@@ -60,7 +60,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
     private SearchManager searchManager;
 
     @Test
-    public void validateSubTemplateValidIsTrue() throws Exception {
+    public void subTemplateValidIsTrue() throws Exception {
         Metadata subTemplate = subTemplateOnLineResourceDbInsert();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -81,7 +81,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
-    public void validateSubTemplateValidIsFalse() throws Exception {
+    public void subTemplateValidIsFalse() throws Exception {
         Metadata subTemplate = subTemplateOnLineResourceDbInsert();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -102,7 +102,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
-    public void validateSubTemplateValidIsNotSet() throws Exception {
+    public void subTemplateValidIsNotSet() throws Exception {
         Metadata subTemplate = subTemplateOnLineResourceDbInsert();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -114,7 +114,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("BadParameterEx"))
-                .andExpect(jsonPath("$.description").value("<Null> is not a valid value for: valid"));
+                .andExpect(jsonPath("$.description").value("<Null> is not a valid value for: isValid"));
 
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
         assertEquals(0, validations.size());
@@ -122,7 +122,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
-    public void validateSubTemplateValidIsTrueButNotLoggedAsAdmin() throws Exception {
+    public void subTemplateValidIsTrueButNotLoggedAsAdmin() throws Exception {
         Metadata subTemplate = subTemplateOnLineResourceDbInsert();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -140,6 +140,27 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         assertEquals(0, validations.size());
         loginAsAdmin();
         assertEquals(1, countTemplateIndexed(subTemplate.getUuid(), "-1"));
+    }
+
+    @Test
+    public void subTemplateValidSetButTemplate() throws Exception {
+        Metadata subTemplate = subTemplateOnLineResourceDbInsertAsMetadata();
+
+        MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
+
+        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate")
+                .param(REQ_VALID_PARAM, "true")
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("BadParameterEx"))
+                .andExpect(jsonPath("$.description").value("<not Null for not subTemplate> is not a valid value for: isValid"));
+
+        List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
+        assertEquals(0, validations.size());
+        assertEquals(1, countTemplateIndexed(subTemplate.getUuid(), "-1", "n"));
     }
 
     private ServiceContext context;
@@ -189,15 +210,19 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
                 false);
 
         dataManager.indexMetadata("" + dbInsertedMetadata.getId(), true);
-        assertEquals(1, countTemplateIndexed(dbInsertedMetadata.getUuid(), "-1"));
+        assertEquals(1, countTemplateIndexed(dbInsertedMetadata.getUuid(), "-1", type == MetadataType.SUB_TEMPLATE ? "s" : "n"));
         return dbInsertedMetadata;
     }
 
     private int countTemplateIndexed(String uuid, String validStatus) throws Exception {
+        return countTemplateIndexed(uuid, validStatus, "s");
+    }
+
+    private int countTemplateIndexed(String uuid, String validStatus, String type) throws Exception {
         MetaSearcher searcher = searchManager.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
         Element request = new Element("request")
                 .addContent(new Element(Geonet.IndexFieldNames.UUID).setText(uuid))
-                .addContent(new Element(Geonet.IndexFieldNames.IS_TEMPLATE).setText("s"))
+                .addContent(new Element(Geonet.IndexFieldNames.IS_TEMPLATE).setText(type))
                 .addContent(new Element(Geonet.IndexFieldNames.VALID).setText(validStatus));
         searcher.search(context, request, new ServiceConfig());
         return searcher.getSize();

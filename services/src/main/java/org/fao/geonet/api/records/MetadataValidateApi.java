@@ -155,9 +155,12 @@ public class MetadataValidateApi {
 
         boolean isSubtemplate = metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE;
         boolean validSet = (isValid != null);
+        if (!isSubtemplate && validSet) {
+            throw new BadParameterEx("isValid", "<not Null for not subTemplate>");
+        }
         if (isSubtemplate && !validSet) {
-                throw new BadParameterEx("valid", "<Null>");
-            }
+            throw new BadParameterEx("isValid", "<Null>");
+        }
         if (isSubtemplate) {
             MetadataValidation metadataValidation = new MetadataValidation().
                     setId(new MetadataValidationId(metadata.getId(), "subtemplate")).
