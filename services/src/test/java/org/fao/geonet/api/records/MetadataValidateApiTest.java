@@ -43,6 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
     private static final int SUBTEMPLATE_TEST_OWNER = 42;
+    public static final String REQ_VALID_PARAM = "isValid";
     @Autowired
     private WebApplicationContext wac;
     @Autowired
@@ -66,7 +67,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockHttpSession mockHttpSession = loginAsAdmin();
 
         toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate")
-                .param("valid", "true")
+                .param(REQ_VALID_PARAM, "true")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
@@ -87,7 +88,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockHttpSession mockHttpSession = loginAsAdmin();
 
         toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate")
-                .param("valid", "false")
+                .param(REQ_VALID_PARAM, "false")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
@@ -128,7 +129,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockHttpSession mockHttpSession = loginAsAnonymous();
 
         toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate")
-                .param("valid", "true")
+                .param(REQ_VALID_PARAM, "true")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
