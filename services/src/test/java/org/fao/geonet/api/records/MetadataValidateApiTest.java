@@ -1,14 +1,18 @@
 package org.fao.geonet.api.records;
 
-import com.google.common.collect.Lists;
+import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.search.MetaSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -38,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
-    private  static final int SUBTEMPLATE_TEST_OWNER = 42;
+    private static final int SUBTEMPLATE_TEST_OWNER = 42;
     @Autowired
     private WebApplicationContext wac;
     @Autowired
@@ -51,6 +55,8 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
     private MetadataRepository metadataRepository;
     @Autowired
     MetadataValidationRepository metadataValidationRepository;
+    @Autowired
+    private SearchManager searchManager;
 
     @Test
     public void validateSubTemplateValidIsTrue() throws Exception {
@@ -70,6 +76,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
         assertEquals(1, validations.size());
         assertEquals(VALID, validations.get(0).getStatus());
+        assertEquals(1, countTemplateIndexed(subTemplate.getUuid(), "1"));
     }
 
     @Test
@@ -90,6 +97,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
         assertEquals(1, validations.size());
         assertEquals(MetadataValidationStatus.INVALID, validations.get(0).getStatus());
+        assertEquals(1, countTemplateIndexed(subTemplate.getUuid(), "0"));
     }
 
     @Test
@@ -109,6 +117,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
 
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
         assertEquals(0, validations.size());
+        assertEquals(1, countTemplateIndexed(subTemplate.getUuid(), "-1"));
     }
 
     @Test
@@ -128,8 +137,9 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
 
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
         assertEquals(0, validations.size());
+        loginAsAdmin();
+        assertEquals(1, countTemplateIndexed(subTemplate.getUuid(), "-1"));
     }
-
 
     private ServiceContext context;
 
@@ -177,7 +187,18 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
                 false,
                 false);
 
-        dataManager.indexMetadata(Lists.newArrayList("" + dbInsertedMetadata.getId()));
+        dataManager.indexMetadata("" + dbInsertedMetadata.getId(), true);
+        assertEquals(1, countTemplateIndexed(dbInsertedMetadata.getUuid(), "-1"));
         return dbInsertedMetadata;
+    }
+
+    private int countTemplateIndexed(String uuid, String validStatus) throws Exception {
+        MetaSearcher searcher = searchManager.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+        Element request = new Element("request")
+                .addContent(new Element(Geonet.IndexFieldNames.UUID).setText(uuid))
+                .addContent(new Element(Geonet.IndexFieldNames.IS_TEMPLATE).setText("s"))
+                .addContent(new Element(Geonet.IndexFieldNames.VALID).setText(validStatus));
+        searcher.search(context, request, new ServiceConfig());
+        return searcher.getSize();
     }
 }

@@ -162,10 +162,11 @@ public class MetadataValidateApi {
             MetadataValidation metadataValidation = new MetadataValidation().
                     setId(new MetadataValidationId(metadata.getId(), "subtemplate")).
                     setStatus(isValid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID).
-                    setRequired(false).
+                    setRequired(true).
                     setNumTests(0).
                     setNumFailures(0);
             this.metadataValidationRepository.save(metadataValidation);
+            dataManager.indexMetadata(("" + metadata.getId()), true);
             return new Reports();
         }
 
