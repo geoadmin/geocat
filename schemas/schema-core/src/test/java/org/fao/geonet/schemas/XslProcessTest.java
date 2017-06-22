@@ -23,10 +23,11 @@
 
 package org.fao.geonet.schemas;
 
-import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
+import com.google.common.collect.ImmutableSet;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.junit.Before;
 import org.junit.Test;
 import org.xmlunit.builder.DiffBuilder;
@@ -55,10 +56,23 @@ import static org.junit.Assert.assertThat;
  */
 public abstract class XslProcessTest {
 
+
     protected Map<String, String> ns = new HashMap<String, String>();
+    public Map<String, String> getNs() {
+        return ns;
+    }
+
+    public XslProcessTest setNs(ImmutableSet<Namespace> ns) {
+        for (Namespace n : ns) {
+            this.ns.put(n.getPrefix(), n.getURI());
+        }
+        return this;
+    }
+
     protected Path root;
     protected Path xslFile;
     protected Path xmlFile;
+
     private String xslFilename;
     private String xmlFilename;
 
@@ -97,16 +111,6 @@ public abstract class XslProcessTest {
         if (xmlFilename != null) {
             xmlFile = root.resolve(xmlFilename);
         }
-
-        // TODO: Register all required namespaces
-        ns.put(
-            ISO19139Namespaces.GMD.getPrefix(),
-            ISO19139Namespaces.GMD.getURI()
-        );
-        ns.put(
-            ISO19139Namespaces.GCO.getPrefix(),
-            ISO19139Namespaces.GCO.getURI()
-        );
     }
 
     @Test

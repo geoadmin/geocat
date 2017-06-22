@@ -31,7 +31,7 @@ public class ISO19139cheSchemaPlugin
     ISOPlugin {
     public static final String IDENTIFIER = "iso19139.che";
 
-    private static ImmutableSet<Namespace> allNamespaces;
+    public static ImmutableSet<Namespace> allNamespaces;
 
     private static Map<String, Namespace> allTypenames;
 

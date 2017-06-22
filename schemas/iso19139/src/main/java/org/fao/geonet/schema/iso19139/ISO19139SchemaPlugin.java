@@ -51,7 +51,7 @@ public class ISO19139SchemaPlugin
     ISOPlugin {
     public static final String IDENTIFIER = "iso19139";
 
-    private static ImmutableSet<Namespace> allNamespaces;
+    public static ImmutableSet<Namespace> allNamespaces;
     private static Map<String, Namespace> allTypenames;
     private static Map<String, String> allExportFormats;
 
