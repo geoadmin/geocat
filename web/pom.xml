@@ -793,8 +793,33 @@
         <es.spring.profile>es</es.spring.profile>
       </properties>
     </profile>
+    <profile>
+      <id>docker</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.spotify</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <version>0.4.14</version>
+            <configuration>
+              <imageName>camptocamp/geocat:${project.version}</imageName>
+              <baseImage>tomcat:8-jre8</baseImage>
+              <resources>
+                <resource>
+                  <targetPath>/usr/local/tomcat/webapps</targetPath>
+                  <directory>${project.build.directory}</directory>
+                  <include>geonetwork.war</include>
+                </resource>
+              </resources>
+              <!-- This will require a settings.xml file for maven -->
+              <serverId>docker-hub</serverId>
+              <registryUrl>https://index.docker.io/v1/</registryUrl>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
-
   <properties>
     <geonetwork.version>${project.version}</geonetwork.version>
     <geonetwork.subversion>SNAPSHOT</geonetwork.subversion>
