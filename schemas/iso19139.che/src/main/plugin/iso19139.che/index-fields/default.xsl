@@ -41,6 +41,8 @@
   <xsl:include href="../../../xsl/utils-fn.xsl"/>
   <xsl:include href="../../iso19139/index-fields/inspire-util.xsl" />
 
+  <xsl:include href="../../iso19139/index-subtemplate-fields.xsl"/>
+
   <!-- This file defines what parts of the metadata are indexed by Lucene
        Searches can be conducted on indexes defined here.
        The Field@name attribute defines the name of the search variable.

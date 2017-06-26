@@ -1,4 +1,5 @@
 {
+    "che:CHE_CI_ResponsibleParty": "Organizations & contacts",
     "add-extent-from-geokeywords": "Compute extent from keywords",
     "add-extent-from-geokeywords-help": "Search all keywords from thesaurus of type place and add matching extents.",
     "addCRS-help": "Add new CRS",
@@ -128,6 +129,7 @@
     "gmd:CI_ResponsibleParty": "Organizations & contacts",
     "cit:CI_Responsibility": "Organizations & contacts (ISO19115-3)",
     "mrd:MD_Format": "Formats",
+    "gmd:MD_Format": "Formats",
     "mcc:MD_BrowseGraphic": "Logos",
     "gmd:MD_Distribution": "Online resources",
     "hasFeatureCatalog": "Using this feature catalog",
@@ -263,6 +265,7 @@
     "searchAconstraint": "Search for a constraint ...",
     "searchAcontact": "Search for a contact ...",
     "searchAnOrganisation": "Search for an organisation ...",
+    "searchAnFormat": "Search for a format ...",
     "setAndReplaceExtent": "Replace existing extent",
     "setCRS": "Set coordinate reference system",
     "setDynamicGraphicOverview": "Set graphic overview (using GetMap request URL)",

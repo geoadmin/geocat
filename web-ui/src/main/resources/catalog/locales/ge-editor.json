@@ -1,4 +1,5 @@
 {
+    "che:CHE_CI_ResponsibleParty": "Organisationen und Kontakte",
     "add-extent-from-geokeywords": "Ausdehnung anhand der Schlüsselwörter berechnen",
     "add-extent-from-geokeywords-help": "Alle Schlüsselwörter vom Typ \"Ort\" im Thesaurus suchen und entsprechende Ausdehnungen anfügen.",
     "addCRS-help": "neues CRS anfügen",
