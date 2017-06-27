@@ -12,7 +12,7 @@ dockerBuild {
 
   stage('Docker pull the maven image') {
     sh 'docker pull maven:3-jdk-8'
-    sh 'docker pull debian'
+    sh 'docker pull ubuntu'
   }
   withDockerContainer(image: 'maven:3-jdk-8') {
     stage('Getting the sources') {
