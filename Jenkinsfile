@@ -12,6 +12,7 @@ dockerBuild {
 
   stage('Docker pull the maven image') {
     sh 'docker pull maven:3-jdk-8'
+    sh 'docker pull debian'
   }
   withDockerContainer(image: 'maven:3-jdk-8') {
     stage('Getting the sources') {
@@ -72,11 +73,12 @@ dockerBuild {
 
   // Using another container, deploys the previously published image onto the dev env
     stage('Deploy newly created images on the dev env') {
-      withDockerContainer(image: 'debian', args: "--privileged -u 0:0") {
+      withDockerContainer(image: 'ubuntu') {
 
         stage('Install / configure needed tools') {
-          sh 'apt update && apt install -y make ssh git wget unzip'
-            sh 'mkdir -p ~/bin'
+          sh 'apt-get update'
+          sh 'apt-get -y install make ssh git wget unzip'
+          sh 'mkdir -p ~/bin'
         } // stage
 
         stage("Prepare caas-dev access") {
