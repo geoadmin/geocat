@@ -23,10 +23,10 @@ dockerBuild {
       sh "mvn clean install ${mavenOpts} -DskipTests"
     }
     stage('Second build with tests') {
-      sh "mvn clean install ${mavenOpts} -fn"
+      sh "mvn clean install ${mavenOpts} -fae"
     }
     stage('calculating coverage') {
-      sh "mvn cobertura:cobertura ${mavenOpts} -fn -Dcobertura.report.format=xml"
+      sh "mvn cobertura:cobertura ${mavenOpts} -fae -Dcobertura.report.format=xml"
       step([$class: 'CoberturaPublisher',
             autoUpdateHealth: false,
             autoUpdateStability: false,
