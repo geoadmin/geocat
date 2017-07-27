@@ -149,13 +149,21 @@ UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
 
 
 
+-- Migrate resource.get links - Done in XSLT
+-- SELECT link FROM (
+--   SELECT unnest(xpath(
+--             './/*[contains(text(), "resource.get"]',
+--             data::xml)::varchar[]) AS link
+--           FROM metadata
+--           ORDER BY link
+-- ) AS links;
 
--- TODO
 
--- UI: geocat view does not exist yet. Swith to default for now
+
+-- TODO UI: geocat view does not exist yet. Swith to default for now
 UPDATE settings SET value = 'default' WHERE name = 'system/ui/defaultView';
 
--- CGP
+-- TODO CGP
 -- Remove CGP harvester for the time being.
 DELETE FROM harvesterSettings WHERE id IN (
   SELECT id FROM harvesterSettings
@@ -186,25 +194,191 @@ DELETE FROM harvesterSettings WHERE id IN (
 
 
 
--- List of tables with changes
+-- List of spatial tables to be loaded from Shapefile using the API POST /srv/api/0.1/registries/actions/entries/import/spatial:
 -- countries
 -- countriesBB
 -- countries_search
--- deletedobjects
 -- gemeindenBB
 -- gemeindenBB_search
--- geom_table_lastmodified
--- hiddenmetadataelements
 -- kantoneBB
 -- kantone_search
--- metadata.extra is this really useful ?
--- non_validated non validated extent subtemplates
--- params to drop
+
+-- Create extent subtemplate for non reference datasets (ie. list above):
+-- xlinks
+INSERT INTO metadata (
+  SELECT
+      nextval('hibernate_sequence') as id,
+      concat('geocatch-subtpl-extent-', id) AS uuid,
+      'iso19139' AS schemaId,
+      's' AS istemplate,
+      'n' AS isHarvested,
+      to_char(current_timestamp, 'YYYY:MM:DD"T"HH:MI:SS') AS createdate,
+      to_char(current_timestamp, 'YYYY:MM:DD"T"HH:MI:SS') AS changedate,
+      '<gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">
+        <gmd:description>
+         <gmd:PT_FreeText>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#EN">  ' || endesc || '</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#DE">  ' || dedesc || '</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#FR">  ' || frdesc || '</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#IT">  ' || itdesc || '</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#RM">  ' || rmdesc || '</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          </gmd:PT_FreeText>
+        </gmd:description>
+        <gmd:geographicElement>
+          <gmd:EX_GeographicDescription>
+            <gmd:geographicIdentifier>
+              <gmd:MD_Identifier>
+                <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                  <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                  <gmd:LocalisedCharacterString locale="#EN">  ' || enid || '</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                  <gmd:LocalisedCharacterString locale="#DE">  ' || deid || '</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                  <gmd:LocalisedCharacterString locale="#FR">  ' || frid || '</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                  <gmd:LocalisedCharacterString locale="#IT">  ' || itid || '</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                  <gmd:LocalisedCharacterString locale="#RM">  ' || rmid || '</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  </gmd:PT_FreeText>
+                </gmd:code>
+              </gmd:MD_Identifier>
+            </gmd:geographicIdentifier>
+          </gmd:EX_GeographicDescription>
+        </gmd:geographicElement>
+        <gmd:geographicElement>
+          <gmd:EX_GeographicBoundingBox>
+            <gmd:westBoundLongitude>
+              <gco:Decimal>' || minx || '</gco:Decimal>
+            </gmd:westBoundLongitude>
+            <gmd:eastBoundLongitude>
+              <gco:Decimal>' || maxx || '</gco:Decimal>
+            </gmd:eastBoundLongitude>
+            <gmd:southBoundLatitude>
+              <gco:Decimal>' || miny || '</gco:Decimal>
+            </gmd:southBoundLatitude>
+            <gmd:northBoundLatitude>
+              <gco:Decimal>' || maxy || '</gco:Decimal>
+            </gmd:northBoundLatitude>
+          </gmd:EX_GeographicBoundingBox>
+        </gmd:geographicElement>
+        <gmd:geographicElement>
+          <gmd:EX_BoundingPolygon>
+            <gmd:polygon> ' || gml || '</gmd:polygon>
+          </gmd:EX_BoundingPolygon>
+        </gmd:geographicElement>
+      </gmd:EX_Extent>' AS data,
+      (SELECT value FROM settings WHERE name = 'system/site/siteId') AS source,
+      '' AS title,
+      '' AS root,
+      '' AS harvestuuid,
+      (SELECT id FROM users WHERE name = 'admin' ORDER by 1 LIMIT 1) AS owner,
+      (SELECT id FROM groups WHERE name = 'SUBTEMPLATES' ORDER by 1 LIMIT 1) AS groupowner,
+      '' AS harvesturi,
+      0 AS rating,
+      0 AS popularity,
+      null AS displayorder,
+      null AS doctype,
+      null AS extra
+       FROM (
+    SELECT "ID"::varchar id, COALESCE((xpath(
+      '//DE/text()',
+      concat('<root>', replace(replace("GEO_ID", ']]>', ''), '<![CDATA[', ''), '</root>')::xml)::varchar[])[1], '') AS deid,
+      COALESCE((xpath(
+      '//FR/text()',
+      concat('<root>', replace(replace("GEO_ID", ']]>', ''), '<![CDATA[', ''), '</root>')::xml)::varchar[])[1], '') AS frid,
+      COALESCE((xpath(
+      '//IT/text()',
+      concat('<root>', replace(replace("GEO_ID", ']]>', ''), '<![CDATA[', ''), '</root>')::xml)::varchar[])[1], '') AS itid,
+      COALESCE((xpath(
+      '//RM/text()',
+      concat('<root>', replace(replace("GEO_ID", ']]>', ''), '<![CDATA[', ''), '</root>')::xml)::varchar[])[1], '') AS rmid,
+      COALESCE((xpath(
+      '//EN/text()',
+      concat('<root>', replace(replace("GEO_ID", ']]>', ''), '<![CDATA[', ''), '</root>')::xml)::varchar[])[1], '') AS enid,
+      COALESCE((xpath(
+      '//DE/text()',
+      concat('<root>', replace(replace("DESC", ']]>', ''), '<![CDATA[', ''), '</root>')::xml)::varchar[])[1], '') AS dedesc,
+      COALESCE((xpath(
+      '//FR/text()',
+      concat('<root>', replace(replace("DESC", ']]>', ''), '<![CDATA[', ''), '</root>')::xml)::varchar[])[1], '') AS frdesc,
+      COALESCE((xpath(
+      '//IT/text()',
+      concat('<root>', replace(replace("DESC", ']]>', ''), '<![CDATA[', ''), '</root>')::xml)::varchar[])[1], '') AS itdesc,
+      COALESCE((xpath(
+      '//RM/text()',
+      concat('<root>', replace(replace("DESC", ']]>', ''), '<![CDATA[', ''), '</root>')::xml)::varchar[])[1], '') AS rmdesc,
+      COALESCE((xpath(
+      '//EN/text()',
+      concat('<root>', replace(replace("DESC", ']]>', ''), '<![CDATA[', ''), '</root>')::xml)::varchar[])[1], '') AS endesc,
+      ST_AsGML(the_geom)  gml,
+      ST_XMin(ST_Transform(the_geom, 4326)) AS minx,
+      ST_YMin(ST_Transform(the_geom, 4326)) AS miny,
+      ST_XMax(ST_Transform(the_geom, 4326)) AS maxx,
+      ST_YMax(ST_Transform(the_geom, 4326)) AS maxy
+      FROM xlinks) AS extent
+);
+
+-- Make xlink subtemplate valid
+INSERT INTO validation
+  SELECT id, null, 1, 0, 0, createdate, true
+    FROM metadata WHERE uuid like 'geocatch-subtpl-extent-%';
+
+
+-- Set publish to all
+INSERT INTO operationallowed
+  SELECT 1, id, 0
+    FROM metadata WHERE uuid like 'geocatch-subtpl-extent-%';
+
+-- Set edit privileges to SUBTEMPLATES group
+INSERT INTO operationallowed
+  SELECT (SELECT id FROM groups WHERE name = 'SUBTEMPLATES' ORDER by 1 LIMIT 1),
+        id, 2
+    FROM metadata WHERE uuid like 'geocatch-subtpl-extent-%';
+
+
+-- TODO check if we do the same for non_validated extent subtemplates
+
+DROP TABLE hiddenmetadataelements;
+DROP TABLE deletedobjects;
+DROP TABLE geom_table_lastmodified;
+
+-- TODO publish_tracking
+
+-- TODO metadata.extra is this really useful ?
+
+-- TODO Search statistics to drop or move to ES
+-- params
 -- params_temp ?
 -- params_v2 ?
--- publish_tracking
--- requests to drop
+-- requests
 -- requests_v2
--- xlinks
 
 
+-- XLink migration
+SELECT xlink FROM (
+  SELECT unnest(xpath(
+            './/@xlink:href',
+            data::xml,
+            ARRAY[ARRAY['xlink', 'http://www.w3.org/1999/xlink']])::varchar[]) AS xlink
+          FROM metadata
+          ORDER BY xlink
+) AS xlinks
+  WHERE
+    xlink NOT LIKE 'https://%thesaurus.download%' AND
+    xlink NOT LIKE '%GetRecordById%';
