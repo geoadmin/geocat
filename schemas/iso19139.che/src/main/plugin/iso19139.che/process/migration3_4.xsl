@@ -6,6 +6,7 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:xalan="http://xml.apache.org/xalan"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -14,6 +15,11 @@
 
   <!-- Migration process for iso19139.che metadata for version 3.4 -->
   <xsl:output method="xml" indent="yes"/>
+
+  <xsl:param name="nodeUrl" select="'https://www.geocat.ch/geonetwork/srv/'"/>
+  
+  <xsl:variable name="uuid"
+                select="*/gmd:fileIdentifier/*/text()"/>
 
   <!--
   Remove hardcoded schemaLocation in records. Schema location
@@ -52,6 +58,68 @@
   </xsl:template>
 
 
+  <!-- Replace old link to resources.get to attachement API -->
+  <xsl:template match="text()[contains(., '/resources.get?')]">
+    <xsl:value-of select="replace(
+      .,
+      '(.*)/([a-zA-Z0-9_\-]+)/([a-z]{2,3})/{1,2}resources.get\?.*fname=([\w,\s-]+\.[\w]+)(&amp;.*|$)',
+      concat($nodeUrl, 'api/records/', $uuid, '/attachments/$4')
+      )"/>
+  </xsl:template>
+
+  <xsl:template match="gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString[not(starts-with(., 'http'))]">
+    <xsl:copy copy-namespaces="no">
+      <xsl:apply-templates select="@*"/>
+      
+      <xsl:value-of select="concat($nodeUrl, 'api/records/', $uuid, '/attachments/', .)"/>
+    </xsl:copy>
+  </xsl:template>
+
+
+  <!-- XLink updates -->
+  <!-- Remove deprecated ones -->
+  <xsl:template match="@xlink:href[starts-with(., 'local://xml.reusable.deleted?')]"/>
+  <xsl:template match="@xlink:href[starts-with(., 'local://xml.format.get?id=')]"/>
+  <xsl:template match="@xlink:href[starts-with(., 'local://xml.user.get?')]"/>
+  
+  
+  <xsl:template match="@xlink:href[starts-with(., 
+    'http://www.geocat.ch:80/geonetwork/srv/deu/xml.extent.get?') or
+    starts-with(., 'local://xml.extent.get?')]">
+    
+    <xsl:variable name="id"
+                  select="replace(., '.*id=([0-9]+)(&amp;.*|$)', '$1')"/>
+    <xsl:variable name="type"
+      select="replace(., '.*(featuretype|typename)=([A-Za-z0-9:_]+)(&amp;.*|$)', '$2')"/>
+    
+    
+    <xsl:value-of select="concat('local://srv/api/registries/entries/', 
+                    'geocatch-subtpl-extent-', $type, '-', $id)"/>
+  </xsl:template>
+  
+  
+  <!-- TODO: Add language parameter -->
+  <xsl:template match="@xlink:href[starts-with(., 'local://subtemplate?')]">
+    
+    <xsl:variable name="uuid"
+      select="replace(., '.*uuid=([a-z0-9-]+)(&amp;.*|$)', '$1')"/>
+    
+    <xsl:variable name="params"
+      select="replace(., '.*uuid=([a-z0-9-]+)(&amp;|$)(.*)', '$3')"/>
+    
+    <xsl:value-of select="concat('local://srv/api/registries/entries/', 
+      $uuid, if ($params != '') then concat('?', $params) else '')"/>
+  </xsl:template>
+  
+  
+  <xsl:template match="@xlink:href[starts-with(., 'local://che.keyword.get?')]">
+    
+    <xsl:variable name="params"
+      select="replace(., 'local://che.keyword.get?(.*)', '$1')"/>
+    
+    <xsl:value-of select="concat('local://srv/api/registries/entries/', 
+      'geocatch-subtpl-extent-', $params)"/>
+  </xsl:template>
 
   <!--
   Parent identifier is replaced by aggregate with
