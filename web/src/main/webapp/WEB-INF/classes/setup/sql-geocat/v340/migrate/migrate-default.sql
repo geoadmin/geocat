@@ -204,7 +204,7 @@ DELETE FROM harvesterSettings WHERE id IN (
 -- kantone_search
 
 -- Create extent subtemplate for non reference datasets (ie. list above):
--- xlinks
+-- Reproject to MN95
 INSERT INTO metadata (
   SELECT
       nextval('hibernate_sequence') as id,
@@ -326,7 +326,7 @@ INSERT INTO metadata (
       COALESCE((xpath(
       '//EN/text()',
       concat('<root>', replace(replace("DESC", ']]>', ''), '<![CDATA[', ''), '</root>')::xml)::varchar[])[1], '') AS endesc,
-      ST_AsGML(the_geom)  gml,
+      ST_AsGML(st_transform(the_geom, 2056))  gml,
       ST_XMin(ST_Transform(the_geom, 4326)) AS minx,
       ST_YMin(ST_Transform(the_geom, 4326)) AS miny,
       ST_XMax(ST_Transform(the_geom, 4326)) AS maxx,
