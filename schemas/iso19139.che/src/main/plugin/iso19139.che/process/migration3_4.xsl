@@ -17,9 +17,14 @@
   <xsl:output method="xml" indent="yes"/>
 
   <xsl:param name="nodeUrl" select="'https://www.geocat.ch/geonetwork/srv/'"/>
-  
+
   <xsl:variable name="uuid"
                 select="*/gmd:fileIdentifier/*/text()"/>
+
+  <xsl:variable name="langs"
+                select="*/gmd:language/gco:CharacterString|
+                        */gmd:language/gmd:LanguageCode/@codeListValue|
+                        */gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue"/>
 
   <!--
   Remove hardcoded schemaLocation in records. Schema location
@@ -70,55 +75,92 @@
   <xsl:template match="gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString[not(starts-with(., 'http'))]">
     <xsl:copy copy-namespaces="no">
       <xsl:apply-templates select="@*"/>
-      
+
       <xsl:value-of select="concat($nodeUrl, 'api/records/', $uuid, '/attachments/', .)"/>
     </xsl:copy>
   </xsl:template>
 
 
   <!-- XLink updates -->
-  <!-- Remove deprecated ones -->
+  <!-- Remove deprecated ones but keep what's in the resolved (if any elements) -->
   <xsl:template match="@xlink:href[starts-with(., 'local://xml.reusable.deleted?')]"/>
   <xsl:template match="@xlink:href[starts-with(., 'local://xml.format.get?id=')]"/>
   <xsl:template match="@xlink:href[starts-with(., 'local://xml.user.get?')]"/>
-  
-  
-  <xsl:template match="@xlink:href[starts-with(., 
+
+
+  <!-- Remove non validated Xlinks ?
+  eg. "local://xml.extent.get?id=255&amp;wfs=default&amp;typename=gn:non_validated&amp;format=GMD_BBOX&amp;extentTypeCode=true" -->
+  <xsl:template match="*[contains(@xlink:href, 'gn:non_validated')]"/>
+
+
+  <!-- Extent subtemplates are now located in metadata template
+  as subtemplate with a uuid like: geocatch-subtpl-extent-custom-{{oldId}}
+
+  Reference dataset like canton, ... are also loaded in metadata table
+  with if like geocatch-subtpl-extent-{{type}}-{{uuid}}.
+  -->
+  <xsl:template match="@xlink:href[starts-with(.,
     'http://www.geocat.ch:80/geonetwork/srv/deu/xml.extent.get?') or
     starts-with(., 'local://xml.extent.get?')]">
-    
+
     <xsl:variable name="id"
                   select="replace(., '.*id=([0-9]+)(&amp;.*|$)', '$1')"/>
     <xsl:variable name="type"
       select="replace(., '.*(featuretype|typename)=([A-Za-z0-9:_]+)(&amp;.*|$)', '$2')"/>
-    
-    
-    <xsl:value-of select="concat('local://srv/api/registries/entries/', 
-                    'geocatch-subtpl-extent-', $type, '-', $id)"/>
+
+
+    <!-- Shared object stored in xlinks tables are
+    now identified as custom. For reference dataset,
+    gn: prefix is removed (eg. gn:gemeindenBB) -->
+    <xsl:variable name="newType"
+                  select="if ($type = 'gn:xlinks')
+                          then 'custom'
+                          else substring-after($type, ':')"/>
+
+    <!-- Remap old id to new one TODO -->
+
+    <xsl:value-of select="concat('local://srv/api/registries/entries/',
+                    'geocatch-subtpl-extent-', $newType, '-', $id)"/>
   </xsl:template>
-  
-  
-  <!-- TODO: Add language parameter -->
+
+
+
+  <!-- Old subtemplates are preserved, only the base URL is reworded
+  and the list of metadata language added. -->
   <xsl:template match="@xlink:href[starts-with(., 'local://subtemplate?')]">
-    
+
     <xsl:variable name="uuid"
       select="replace(., '.*uuid=([a-z0-9-]+)(&amp;.*|$)', '$1')"/>
-    
+
     <xsl:variable name="params"
       select="replace(., '.*uuid=([a-z0-9-]+)(&amp;|$)(.*)', '$3')"/>
-    
-    <xsl:value-of select="concat('local://srv/api/registries/entries/', 
-      $uuid, if ($params != '') then concat('?', $params) else '')"/>
+
+    <xsl:value-of select="concat(
+                        'local://srv/api/registries/entries/',
+                        $uuid,
+                        if ($params != '')
+                          then concat('?', normalize-space($params))
+                          else '',
+                        if (count($langs) > 0)
+                          then concat('&amp;lang=',
+                            string-join(distinct-values($langs), '&amp;lang='))
+                          else ''
+                        )"/>
   </xsl:template>
-  
-  
+
+
   <xsl:template match="@xlink:href[starts-with(., 'local://che.keyword.get?')]">
-    
+
     <xsl:variable name="params"
       select="replace(., 'local://che.keyword.get?(.*)', '$1')"/>
-    
-    <xsl:value-of select="concat('local://srv/api/registries/entries/', 
-      'geocatch-subtpl-extent-', $params)"/>
+
+    <xsl:value-of select="concat('local://srv/api/registries/vocabularies/',
+      '', $params)"/>
+    <!-- TODO:
+    * Add language parameter
+    * Remove non validated keywords ? From https://tc-geocat.int.bgdi.ch/geonetwork/srv/eng/thesaurus.download?ref=local._none_.non_validated
+    "local://eng/xml.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%2304c0f143-6611-4c2e-af22-e9a7f375e7ea&amp;multiple=true&amp;lang=eng,ger,ita,fre,roh&amp;textgroupOnly=true&amp;skipdescriptivekeywords=true"
+    -->
   </xsl:template>
 
   <!--

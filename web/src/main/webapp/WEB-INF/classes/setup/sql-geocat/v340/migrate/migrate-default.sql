@@ -208,7 +208,7 @@ DELETE FROM harvesterSettings WHERE id IN (
 INSERT INTO metadata (
   SELECT
       nextval('hibernate_sequence') as id,
-      concat('geocatch-subtpl-extent-', id) AS uuid,
+      concat('geocatch-subtpl-extent-custom-', id) AS uuid,
       'iso19139' AS schemaId,
       's' AS istemplate,
       'n' AS isHarvested,
@@ -326,7 +326,7 @@ INSERT INTO metadata (
       COALESCE((xpath(
       '//EN/text()',
       concat('<root>', replace(replace("DESC", ']]>', ''), '<![CDATA[', ''), '</root>')::xml)::varchar[])[1], '') AS endesc,
-      ST_AsGML(st_transform(the_geom, 2056))  gml,
+      ST_AsGML(ST_Transform(the_geom, 2056))  gml,
       ST_XMin(ST_Transform(the_geom, 4326)) AS minx,
       ST_YMin(ST_Transform(the_geom, 4326)) AS miny,
       ST_XMax(ST_Transform(the_geom, 4326)) AS maxx,
@@ -337,19 +337,19 @@ INSERT INTO metadata (
 -- Make xlink subtemplate valid
 INSERT INTO validation
   SELECT id, null, 1, 0, 0, createdate, true
-    FROM metadata WHERE uuid like 'geocatch-subtpl-extent-%';
+    FROM metadata WHERE uuid like 'geocatch-subtpl-extent-custom-%';
 
 
 -- Set publish to all
 INSERT INTO operationallowed
   SELECT 1, id, 0
-    FROM metadata WHERE uuid like 'geocatch-subtpl-extent-%';
+    FROM metadata WHERE uuid like 'geocatch-subtpl-extent-custom-%';
 
 -- Set edit privileges to SUBTEMPLATES group
 INSERT INTO operationallowed
   SELECT (SELECT id FROM groups WHERE name = 'SUBTEMPLATES' ORDER by 1 LIMIT 1),
         id, 2
-    FROM metadata WHERE uuid like 'geocatch-subtpl-extent-%';
+    FROM metadata WHERE uuid like 'geocatch-subtpl-extent-custom-%';
 
 
 -- TODO check if we do the same for non_validated extent subtemplates
