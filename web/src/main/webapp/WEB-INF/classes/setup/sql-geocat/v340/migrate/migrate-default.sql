@@ -351,6 +351,7 @@ INSERT INTO operationallowed
         id, 2
     FROM metadata WHERE uuid like 'geocatch-subtpl-extent-custom-%';
 
+-- DELETE FROM metadata WHERE uuid like 'geocatch-subtpl-extent-custom-%';
 
 DROP TABLE non_validated;
 DROP TABLE hiddenmetadataelements;
