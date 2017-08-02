@@ -135,6 +135,16 @@
               data-insert-modes="xlink"/>
     </for>
 
+    <for name="gmd:extent" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+        data-template-add-action="true"
+        data-search-action="true"
+        data-popup-action="true"
+        data-template-type="extent"
+        data-filter='{"_root": "gmd:EX_Extent"}'
+        data-insert-modes=""/>
+    </for>
+
     <!-- Example configuration: Add onLine source from subtemplate
     <for name="gmd:onLine" addDirective="gc-add-sharedobject">
       <directiveAttributes

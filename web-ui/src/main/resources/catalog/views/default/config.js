@@ -36,11 +36,10 @@
         'gnViewerSettings',
         'gnOwsContextService',
         'gnMap',
-        'gnNcWms',
         'gnGlobalSettings',
         '$location',
         function(searchSettings, viewerSettings, gnOwsContextService,
-                 gnMap, gnNcWms, gnGlobalSettings, $location) {
+                 gnMap, gnGlobalSettings, $location) {
 
           // Load the context defined in the configuration
           viewerSettings.defaultContext =
@@ -154,17 +153,25 @@
             });
           }
 
+          // Map protocols used to load layers/services in the map viewer
+          searchSettings.mapProtocols = {
+            layers: [
+              'OGC:WMS',
+              'OGC:WMS-1.1.1-http-get-map',
+              'OGC:WMS-1.3.0-http-get-map',
+              'OGC:WFS'
+              ],
+            services: [
+              'OGC:WMS-1.3.0-http-get-capabilities',
+              'OGC:WMS-1.1.1-http-get-capabilities',
+              'OGC:WFS-1.0.0-http-get-capabilities'
+              ]
+          };
+
           // Set custom config in gnSearchSettings
           angular.extend(searchSettings, {
             viewerMap: viewerMap,
             searchMap: searchMap
-          });
-
-          viewerMap.getLayers().on('add', function(e) {
-            var layer = e.element;
-            if (layer.get('advanced')) {
-              gnNcWms.feedOlLayer(layer);
-            }
           });
 
         }]);

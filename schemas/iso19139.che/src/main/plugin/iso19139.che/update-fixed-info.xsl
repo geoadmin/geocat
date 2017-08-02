@@ -43,7 +43,7 @@
   <xsl:include href="update-sub-template-fixed-info.xsl"/>
 
   <xsl:variable name="serviceUrl" select="/root/env/siteURL"/>
-
+  <xsl:variable name="node" select="/root/env/node"/>
 
   <!-- The default language is also added as gmd:locale
   for multilingual metadata records. -->

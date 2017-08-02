@@ -114,35 +114,31 @@
           map.removeLayer(layersToRemove[i]);
         }
 
-        // set the General.BoundingBox
+        // -- set the Map view (extent/projection)
         var bbox = context.general.boundingBox.value;
         var ll = bbox.lowerCorner;
         var ur = bbox.upperCorner;
         var projection = bbox.crs;
 
-        if (projection == 'EPSG:4326') {
-          ll.reverse();
-          ur.reverse();
-        }
         var extent = ll.concat(ur);
-        // reproject in case bbox's projection doesn't match map's projection
-        extent = ol.proj.transformExtent(extent,
-            projection, map.getView().getProjection());
-
-        extent = gnMap.secureExtent(extent, map.getView().getProjection());
-
-        // store the extent into view settings so that it can be used later in
-        // case the map is not visible yet
         gnViewerSettings.initialExtent = extent;
+
+        // save this extent for later use (for example if the map
+        // is not currently visible)
+        map.set('lastExtent', extent);
+
+        if (map.getView().getProjection().getCode() != projection) {
+          var view = new ol.View({
+            extent: extent,
+            projection: projection
+          });
+          map.setView(view);
+        }
 
         // $timeout used to avoid map no rendered (eg: null size)
         $timeout(function() {
           map.getView().fit(extent, map.getSize(), { nearest: true });
         }, 0, false);
-
-        // save this extent for later use (for example if the map
-        // is not currently visible)
-        map.set('lastExtent', extent);
 
         // load the resources & add additional layers if available
         var layers = context.resourceList.layer;
@@ -160,6 +156,14 @@
           if (map.getLayers().getLength() > 0) {
             map.getLayers().removeAt(0);
           }
+          var bgLoadingLayer = new ol.layer.Image({
+            loading: true,
+            label: 'loading',
+            url: '',
+            visible: false
+          });
+          map.getLayers().insertAt(0, bgLoadingLayer);
+
           if (!gnViewerSettings.bgLayers) {
             gnViewerSettings.bgLayers = [];
           }
@@ -195,7 +199,7 @@
 
                     if (!layer.hidden && !isFirstBgLayer) {
                       isFirstBgLayer = true;
-                      map.getLayers().insertAt(0, olLayer);
+                      map.getLayers().setAt(0, olLayer);
                     }
                   }
                 }
@@ -218,21 +222,21 @@
                   var layerIndex = bgLayers.push(loadingLayer);
                   var p = self.createLayer(layer, map, i);
 
-                  (function(idx) {
+                  (function(idx, loadingLayer) {
                     p.then(function(layer) {
-                      bgLayers[idx-1] = layer;
+                      bgLayers[idx - 1] = layer;
 
-                      if(!layer) {
+                      if (!layer) {
                         return;
                       }
                       layer.displayInLayerManager = false;
                       layer.background = true;
 
-                      if(loadingLayer.get('bgLayer')) {
-                        map.getLayers().insertAt(0, layer);
+                      if (loadingLayer.get('bgLayer')) {
+                        map.getLayers().setAt(0, layer);
                       }
                     });
-                  })(layerIndex);
+                  })(layerIndex, loadingLayer);
                 }
               }
               // WMS layer not in background
@@ -264,20 +268,28 @@
 
                   var loadingLayer = new ol.layer.Image({
                     loading: true,
-                    label: 'loading',
+                    label: layer.name || 'loading',
                     url: '',
-                    visible: false
+                    visible: false,
+                    group: layer.group
                   });
+
                   loadingLayer.displayInLayerManager = true;
 
                   var layerIndex = map.getLayers().push(loadingLayer);
                   var p = self.createLayer(layer, map, undefined, i);
+                  loadingLayer.set('index', layerIndex);
 
-                  (function(idx) {
+                  (function(idx, loadingLayer) {
                     p.then(function(layer) {
-                      map.getLayers().setAt(idx, layer);
+                      if (layer) {
+                        map.getLayers().setAt(idx, layer);
+                      }
+                      else {
+                        loadingLayer.set('errors', ['load failed']);
+                      }
                     });
-                  })(layerIndex);
+                  })(layerIndex, loadingLayer);
                 }
               }
             }
@@ -373,8 +385,6 @@
 
           if (source instanceof ol.source.OSM) {
             name = '{type=osm}';
-          } else if (source instanceof ol.source.MapQuest) {
-            name = '{type=mapquest}';
           } else if (source instanceof ol.source.BingMaps) {
             name = '{type=bing_aerial}';
           } else if (source instanceof ol.source.Stamen) {
@@ -388,7 +398,7 @@
               service: 'urn:ogc:serviceType:WMS'
             }];
           } else if (source instanceof ol.source.ImageWMS ||
-            source instanceof ol.source.TileWMS) {
+              source instanceof ol.source.TileWMS) {
             name = '{type=wms,name=' + layer.get('name') + '}';
             params.server = [{
               onlineResource: [{
@@ -562,7 +572,8 @@
             promise = gnMap.addWmtsFromScratch(map, res.href, name, createOnly);
           }
 
-          // if it's not WMTS, let's assume it is wms (so as to be sure to return something)
+          // if it's not WMTS, let's assume it is wms
+          // (so as to be sure to return something)
           else {
             promise = gnMap.addWmsFromScratch(map, res.href, name, createOnly);
           }

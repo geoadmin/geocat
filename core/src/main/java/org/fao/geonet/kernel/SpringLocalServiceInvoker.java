@@ -37,6 +37,9 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 public class SpringLocalServiceInvoker {
 
     @Autowired
@@ -63,6 +66,10 @@ public class SpringLocalServiceInvoker {
     public Object invoke(String uri) throws Exception {
         MockHttpServletRequest request = prepareMockRequestFromUri(uri);
         MockHttpServletResponse response = new MockHttpServletResponse();
+        return invoke(request, response);
+    }
+
+    public Object invoke(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         HandlerExecutionChain handlerExecutionChain = requestMappingHandlerMapping.getHandler(request);
         HandlerMethod handlerMethod = (HandlerMethod) handlerExecutionChain.getHandler();
@@ -79,17 +86,14 @@ public class SpringLocalServiceInvoker {
         String requestURI = uri.replace("local://" + nodeId, "").split("\\?")[0];
         MockHttpServletRequest request = new MockHttpServletRequest("GET", requestURI);
         request.setSession(new MockHttpSession());
-        boolean doesUriContainsParams = uri.indexOf("?") > 0;
-        if (doesUriContainsParams) {
-            String[] splits = uri.split("\\?");
-            if (splits.length > 1) {
-                String params = splits[1];
-                for (String param : params.split("&")) {
-                    String[] parts = param.split("=");
-                    String name = parts[0];
-                    String value = parts[1];
-                    request.addParameter(name, value);
-                }
+        String[] splits = uri.split("\\?");
+        if (splits.length > 1) {
+            String params = splits[1];
+            for (String param : params.split("&")) {
+                String[] parts = param.split("=");
+                String name = parts[0];
+                String value = parts[1];
+                request.addParameter(name, value);
             }
         }
         return request;
