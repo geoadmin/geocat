@@ -352,8 +352,7 @@ INSERT INTO operationallowed
     FROM metadata WHERE uuid like 'geocatch-subtpl-extent-custom-%';
 
 
--- TODO check if we do the same for non_validated extent subtemplates
-
+DROP TABLE non_validated;
 DROP TABLE hiddenmetadataelements;
 DROP TABLE deletedobjects;
 DROP TABLE geom_table_lastmodified;
@@ -371,14 +370,14 @@ DROP TABLE geom_table_lastmodified;
 
 
 -- XLink migration
-SELECT xlink FROM (
-  SELECT unnest(xpath(
-            './/@xlink:href',
-            data::xml,
-            ARRAY[ARRAY['xlink', 'http://www.w3.org/1999/xlink']])::varchar[]) AS xlink
-          FROM metadata
-          ORDER BY xlink
-) AS xlinks
-  WHERE
-    xlink NOT LIKE 'https://%thesaurus.download%' AND
-    xlink NOT LIKE '%GetRecordById%';
+-- SELECT xlink FROM (
+--   SELECT unnest(xpath(
+--             './/@xlink:href',
+--             data::xml,
+--             ARRAY[ARRAY['xlink', 'http://www.w3.org/1999/xlink']])::varchar[]) AS xlink
+--           FROM metadata
+--           ORDER BY xlink
+-- ) AS xlinks
+--   WHERE
+--     xlink NOT LIKE 'https://%thesaurus.download%' AND
+--     xlink NOT LIKE '%GetRecordById%';
