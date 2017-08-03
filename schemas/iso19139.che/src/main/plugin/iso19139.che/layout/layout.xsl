@@ -50,6 +50,10 @@
     <!-- Do nothing -->
   </xsl:template>
 
+  <!--
+  Old bbox editor style for geocat providing only an image of the bounding box.
+  Editing was providing in the subtemplate editor.
+
   <xsl:template mode="mode-iso19139" match="gmd:geographicElement[gmd:EX_GeographicBoundingBox]|
   gmd:geographicElement[gmd:EX_BoundingPolygon]" priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
@@ -60,7 +64,7 @@
       <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(., true())"/>
       <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
       <xsl:variable name="regionId" select="''"/>
-      <!--GEOCAT-DEPRECATED <xsl:variable name="regionId" select="util:parseRegionIdFromXLink(../../@xlink:href)"/>-->
+      &lt;!&ndash;GEOCAT-DEPRECATED <xsl:variable name="regionId" select="util:parseRegionIdFromXLink(../../@xlink:href)"/>&ndash;&gt;
 
       <xsl:call-template name="render-boxed-element">
         <xsl:with-param name="label"
@@ -84,7 +88,7 @@
         </xsl:with-param>
       </xsl:call-template>
     </xsl:if>
-  </xsl:template>
+  </xsl:template>-->
 
   <xsl:template mode="mode-iso19139" priority="200"
                 match="*[che:PT_FreeURL|che:LocalisedURL]">
