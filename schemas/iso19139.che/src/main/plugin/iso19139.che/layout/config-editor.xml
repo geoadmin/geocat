@@ -201,6 +201,7 @@
     <name>gmd:aggregationInfo</name>
     <name>gmd:processStep</name>
     <name>gmd:lineage</name>
+    <name>gmd:locale</name>
     <name>gmd:centerPoint</name>
     <name>gmd:verticalCRS</name>
     <name>gml:verticalCS</name>
