@@ -104,7 +104,7 @@
     starts-with(., 'local://xml.extent.get?')]">
 
     <xsl:variable name="id"
-                  select="replace(., '.*id=([0-9]+)(&amp;.*|$)', '$1')"/>
+                  select="replace(., '.*id=([0-9.]+)(&amp;.*|$)', '$1')"/>
     <xsl:variable name="type"
       select="replace(., '.*(featuretype|typename)=([A-Za-z0-9:_]+)(&amp;.*|$)', '$2')"/>
 
@@ -115,18 +115,33 @@
     <xsl:variable name="newType"
                   select="if ($type = 'gn:xlinks')
                           then 'custom'
+                          else if ($type = 'gn:countries')
+                          then 'landesgebiet'
+                          else if ($type = 'gn:kantoneBB')
+                          then 'kantonsgebiet'
+                          else if ($type = 'gn:gemeindenBB')
+                          then 'hoheitsgebiet'
                           else substring-after($type, ':')"/>
 
-    <!-- Remap old id to new one TODO -->
+    <!-- Remap old id to new one TODO
+    LANDESGEBIET(NAME)=CountriesBB(NAME)
+    KANTONSGEBIET(KANTONSNUM)=KantoneBB(KANTONSNR)
+    HOHEITSGEBIET(BFS_NUMMER)=gemeindenBB(OBJECTVAL)
+    -->
 
-    <xsl:value-of select="concat('local://srv/api/registries/entries/',
-                    'geocatch-subtpl-extent-', $newType, '-', $id)"/>
+    <xsl:attribute name="xlink:href" select="concat('local://srv/api/registries/entries/',
+                    'geocatch-subtpl-extent-', $newType, '-', $id, '?',
+                      if (count($langs) > 0)
+                      then concat('lang=', string-join(distinct-values($langs), '&amp;lang='))
+                      else ''
+                    )"/>
   </xsl:template>
 
 
 
   <!-- Old subtemplates are preserved, only the base URL is reworded
-  and the list of metadata language added. -->
+  and the list of metadata language added.
+  -->
   <xsl:template match="@xlink:href[starts-with(., 'local://subtemplate?')]">
 
     <xsl:variable name="uuid"
@@ -135,11 +150,11 @@
     <xsl:variable name="params"
       select="replace(., '.*uuid=([a-z0-9-]+)(&amp;|$)(.*)', '$3')"/>
 
-    <xsl:value-of select="concat(
+    <xsl:attribute name="xlink:href" select="concat(
                         'local://srv/api/registries/entries/',
-                        $uuid,
+                        $uuid, '?',
                         if ($params != '')
-                          then concat('?', normalize-space($params))
+                          then normalize-space($params)
                           else '',
                         if (count($langs) > 0)
                           then concat('&amp;lang=',
@@ -149,19 +164,32 @@
   </xsl:template>
 
 
-  <xsl:template match="@xlink:href[starts-with(., 'local://che.keyword.get?')]">
+  <!-- Remove non validated XLinks.
+  eg. local://eng/xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%2301521da7-8aa1-42da-b73c-271f5c566def,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23f5099d41-2b76-4efa-9736-918caccfa675,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23c93b198f-156c-4dc0-a0a8-9a237bd7304c,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%2335d4f0be-449b-4f5d-b7c2-002160a07e17,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%236deb04a9-cb57-4020-8925-9bf69de563f4,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%230fe4668b-02f2-4800-a01c-8c381c15e03d,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%239e6e35d9-a2c7-4f31-8f3a-476bdb7bda37,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%238853db72-01d2-4df9-9567-fd6d2f3e3c1e,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%231f09df8a-d811-44be-8748-56d70437fef0,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23a395a4c2-33da-4dc9-9282-9021173ef08a,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23be8f32a1-54f2-41b8-96a1-48480f753df1,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%231d495352-eb56-4f5e-b7c7-94f23e8e5fca,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23f2a4aaca-efdd-4927-8bb6-e750208ab19a,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23af1a6e79-f33e-4adf-87f1-b1671c6f35ce&amp;multiple=true&amp;lang=eng,ger,ita,fre,roh&amp;textgroupOnly=true&amp;skipdescriptivekeywords=true
+  -->
+  <xsl:template match="@xlink:href[starts-with(., 'local://eng/xml.keyword.get?') and contains(., 'xml.keyword.get?thesaurus=local._none_.non_validated')]" priority="10"/>
 
+  <xsl:template match="@xlink:href[starts-with(., 'local://eng/xml.keyword.get?') or starts-with(., 'local://che.keyword.get?')]">
+
+    <!-- Extract parameters and remove old locales parameter which
+    is replaced by lang parameters. -->
     <xsl:variable name="params"
-      select="replace(., 'local://che.keyword.get?(.*)', '$1')"/>
+      select="replace(
+                replace(
+                replace(., '(local://eng/xml.keyword.get\?|local://che.keyword.get\?)(.*)', '$2'),
+                  '&amp;locales=fr,en,de,it', ''),
+                  '&amp;multiple=true', '')"/>
 
-    <xsl:value-of select="concat('local://srv/api/registries/vocabularies/',
-      '', $params)"/>
-    <!-- TODO:
-    * Add language parameter
-    * Remove non validated keywords ? From https://tc-geocat.int.bgdi.ch/geonetwork/srv/eng/thesaurus.download?ref=local._none_.non_validated
-    "local://eng/xml.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%2304c0f143-6611-4c2e-af22-e9a7f375e7ea&amp;multiple=true&amp;lang=eng,ger,ita,fre,roh&amp;textgroupOnly=true&amp;skipdescriptivekeywords=true"
-    -->
+    <xsl:attribute name="xlink:href"
+                   select="concat('local://srv/api/registries/vocabularies/keywords?',
+                                $params,
+                                if (count($langs) > 0)
+                                 then concat('&amp;lang=', string-join(distinct-values($langs), '&amp;lang='))
+                                 else ''
+                                 )"/>
   </xsl:template>
+
+
 
   <!--
   Parent identifier is replaced by aggregate with
