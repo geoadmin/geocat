@@ -40,6 +40,7 @@
       <xsl:namespace name="gmd" select="'http://www.isotc211.org/2005/gmd'"/>
       <xsl:namespace name="gco" select="'http://www.isotc211.org/2005/gco'"/>
       <xsl:namespace name="gmx" select="'http://www.isotc211.org/2005/gmx'"/>
+      <xsl:namespace name="gts" select="'http://www.isotc211.org/2005/gts'"/>
       <xsl:namespace name="srv" select="'http://www.isotc211.org/2005/srv'"/>
       <xsl:namespace name="gml" select="'http://www.opengis.net/gml'"/>
       <xsl:namespace name="xsi" select="'http://www.w3.org/2001/XMLSchema-instance'"/>
@@ -51,7 +52,12 @@
 
   <xsl:template match="@xsi:schemaLocation"/>
 
-
+  <xsl:template match="gmd:locale">
+    <xsl:variable name="id" select="*/@id"/>
+    <xsl:if test="count(preceding-sibling::gmd:locale[*/@id = $id]) = 0">
+      <xsl:copy-of select="." copy-namespaces="no"/>
+    </xsl:if>
+  </xsl:template>
 
   <!-- Encode language following INSPIRE rules -->
   <xsl:template match="gmd:language[gco:CharacterString]">
