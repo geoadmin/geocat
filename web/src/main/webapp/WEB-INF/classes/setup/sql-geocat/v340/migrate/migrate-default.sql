@@ -215,8 +215,8 @@ INSERT INTO metadata (
       'iso19139' AS schemaId,
       's' AS istemplate,
       'n' AS isHarvested,
-      to_char(current_timestamp, 'YYYY:MM:DD"T"HH:MI:SS') AS createdate,
-      to_char(current_timestamp, 'YYYY:MM:DD"T"HH:MI:SS') AS changedate,
+      to_char(current_timestamp, 'YYYY-MM-DD"T"HH:MI:SS') AS createdate,
+      to_char(current_timestamp, 'YYYY-MM-DD"T"HH:MI:SS') AS changedate,
       '<gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">
         <gmd:description>
          <gmd:PT_FreeText>
