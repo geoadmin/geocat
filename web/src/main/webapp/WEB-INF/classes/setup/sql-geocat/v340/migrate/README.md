@@ -148,7 +148,7 @@ rm -f /tmp/cookie;
 curl -s -c /tmp/cookie -o /dev/null -X POST "$CATALOG/srv/eng/info?type=me"; 
 export TOKEN=`grep XSRF-TOKEN /tmp/cookie | cut -f 7`; 
 curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
-  "$CATALOG/srv/eng/q?_schema=iso19139.che&_isTemplate=y%20or%20n"
+  "$CATALOG/srv/eng/q?_schema=iso19139.che&_isTemplate=y%20or%20n&_isHarvested=n&summaryOnly=true"
 ```
 
 2. Select all records to be updated
@@ -157,7 +157,14 @@ curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/
 ``` 
 curl -X PUT --header 'Content-Type: application/json' \
   --header 'Accept: application/json' \
-   -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
+  -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
+  "$CATALOG/srv/api/0.1/selections/metadata"
+  
+  
+curl -X GET \
+  --header 'Content-Type: application/json' \
+  --header 'Accept: application/json' \
+  -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
   "$CATALOG/srv/api/0.1/selections/metadata"
 ```
 
