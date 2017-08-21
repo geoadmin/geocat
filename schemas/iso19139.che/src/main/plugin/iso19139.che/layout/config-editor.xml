@@ -371,9 +371,7 @@
         <for name="gmd:distributionOrderProcess"/>
         <for name="gmd:distributorFormat"/>
         <for name="gmd:distributorTransferOptions"/>
-        <for name="gmd:contact"/>
         <for name="gmd:processor"/>
-        <for name="gmd:citedResponsibleParty"/>
         <for name="gmd:extent"/>
         <for name="srv:extent"/>
         <for name="gmd:resourceFormat"/>
