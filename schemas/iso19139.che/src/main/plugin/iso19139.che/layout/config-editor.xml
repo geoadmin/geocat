@@ -58,7 +58,7 @@
       <directiveAttributes
               data-template-add-action="false"
               data-search-action="true"
-              data-popup-action="true"
+              data-popup-action="false"
               data-template-type="contact"
               data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
               data-insert-modes="xlink"
@@ -68,7 +68,7 @@
       <directiveAttributes
               data-template-add-action="false"
               data-search-action="true"
-              data-popup-action="true"
+              data-popup-action="false"
               data-template-type="contact"
               data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
               data-insert-modes="xlink"
@@ -78,7 +78,7 @@
       <directiveAttributes
               data-template-add-action="false"
               data-search-action="true"
-              data-popup-action="true"
+              data-popup-action="false"
               data-template-type="contact"
               data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
               data-insert-modes="xlink"
@@ -88,7 +88,7 @@
       <directiveAttributes
               data-template-add-action="false"
               data-search-action="true"
-              data-popup-action="true"
+              data-popup-action="false"
               data-template-type="contact"
               data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
               data-insert-modes="xlink"
@@ -98,7 +98,7 @@
       <directiveAttributes
               data-template-add-action="false"
               data-search-action="true"
-              data-popup-action="true"
+              data-popup-action="false"
               data-template-type="contact"
               data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
               data-insert-modes="xlink"
@@ -108,7 +108,7 @@
       <directiveAttributes
               data-template-add-action="false"
               data-search-action="true"
-              data-popup-action="true"
+              data-popup-action="false"
               data-template-type="contact"
               data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
               data-insert-modes="xlink"
@@ -120,7 +120,7 @@
       <directiveAttributes
               data-template-add-action="false"
               data-search-action="true"
-              data-popup-action="true"
+              data-popup-action="false"
               data-template-type="format"
               data-filter='{"_root": "gmd:MD_Format"}'
               data-insert-modes="xlink"/>
@@ -129,7 +129,7 @@
       <directiveAttributes
               data-template-add-action="false"
               data-search-action="true"
-              data-popup-action="true"
+              data-popup-action="false"
               data-template-type="format"
               data-filter='{"_root": "gmd:MD_Format"}'
               data-insert-modes="xlink"/>
@@ -139,7 +139,7 @@
       <directiveAttributes
         data-template-add-action="true"
         data-search-action="true"
-        data-popup-action="true"
+        data-popup-action="false"
         data-template-type="extent"
         data-filter='{"_root": "gmd:EX_Extent"}'
         data-insert-modes=""/>
