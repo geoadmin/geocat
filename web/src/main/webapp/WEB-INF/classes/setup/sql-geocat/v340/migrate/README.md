@@ -59,6 +59,11 @@ gzip -d geocat-$todaydate.gz
 wget https://raw.githubusercontent.com/geoadmin/geocat/geocat_3.4.x/web/src/main/webapp/WEB-INF/classes/setup/sql-geocat/v340/migrate/migrate-default.sql
 psql -d geocat -f migrate-default.sql 
 ```
+Run geonetwork.
+If DB init issues, then updata privileges
+```
+grant all on all tables in schema public to geonetwork;
+```
 
 TODO:
 
