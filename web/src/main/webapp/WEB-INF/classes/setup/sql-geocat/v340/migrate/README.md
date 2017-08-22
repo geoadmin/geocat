@@ -33,7 +33,7 @@ psql
 
 >
 CREATE DATABASE geocat
-  WITH OWNER = "www-data"
+  WITH OWNER = "geonetwork"
        ENCODING = 'UTF8'
        TABLESPACE = pg_default
        LC_COLLATE = 'en_US.UTF-8'
@@ -60,15 +60,18 @@ wget https://raw.githubusercontent.com/geoadmin/geocat/geocat_3.4.x/web/src/main
 psql -d geocat -f migrate-default.sql 
 ```
 Run geonetwork.
-If DB init issues, then updata privileges
+If DB init issues, then update privileges (to geonetwork)
 ```
-grant all on all tables in schema public to geonetwork;
+for tbl in `psql -qAt -c "select tablename from pg_tables where schemaname = 'public';" geocat` ; do  psql -c "alter table \"$tbl\" owner to geonetwork" geocat ; done
+
+for tbl in `psql -qAt -c "select sequence_name from information_schema.sequences where sequence_schema = 'public';" geocat` ; do  psql -c "alter table \"$tbl\" owner to geonetwork" geocat ; done
 ```
 
 TODO:
 
 * CGP harvester removed for the time being
 * geocat UI config set to default.
+* drop sequences
 
 
 ### Extent subtemplate loading from ESRI Shapefile:
