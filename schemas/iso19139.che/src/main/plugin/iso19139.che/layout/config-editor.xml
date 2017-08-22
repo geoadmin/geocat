@@ -481,20 +481,15 @@
       </tab>
       <thesaurusList>
         <thesaurus key="external.theme.gemet"
-                   transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   transformations="to-iso19139-keyword-as-xlink"/>
         <thesaurus key="external.theme.inspire-theme"
-                   transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   transformations="to-iso19139-keyword-as-xlink"/>
         <thesaurus key="external.theme.gemet-theme"
-                   transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   transformations="to-iso19139-keyword-as-xlink"/>
         <thesaurus key="external.theme.inspire-service-taxonomy"
-                   transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   transformations="to-iso19139-keyword-as-xlink"/>
         <thesaurus key="local.theme.geocat.ch"
-                   transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   transformations="to-iso19139-keyword-as-xlink"/>
         <thesaurus key="external.none.allThesaurus"
                    transformations="to-iso19139-keyword-as-xlink"
                    fieldset="false"/>
