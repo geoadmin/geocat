@@ -31,6 +31,7 @@
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
                 version="2.0"
                 exclude-result-prefixes="#all">
 
@@ -44,8 +45,8 @@
   -->
 
 
-  <xsl:template mode="mode-iso19139" priority="2000" match="
-    gmd:descriptiveKeywords">
+  <xsl:template mode="mode-iso19139" priority="2000"
+                match="gmd:descriptiveKeywords">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
@@ -55,6 +56,12 @@
     <xsl:variable name="thesaurusTitleEl"
                   select="gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title"/>
 
+    <!--Add all Thesaurus as first block of keywords-->
+    <xsl:if test="name(preceding-sibling::*[1]) != name()">
+      <xsl:call-template name="addAllThesaurus">
+        <xsl:with-param name="ref" select="../gn:element/@ref"/>
+      </xsl:call-template>
+    </xsl:if>
 
     <xsl:variable name="thesaurusTitle">
       <xsl:choose>
@@ -236,7 +243,8 @@
              data-element-ref="{concat('_X', ../gn:element/@ref, '_replace')}"
              data-thesaurus-title="{if ($thesaurusConfig/@fieldset = 'false') then $thesaurusTitle else ''}"
              data-thesaurus-key="{$thesaurusKey}"
-             data-keywords="{$keywords}" data-transformations="{$transformations}"
+             data-keywords="{$keywords}"
+             data-transformations="{$transformations}"
              data-current-transformation="{$transformation}"
              data-max-tags="{$maxTags}"
              data-lang="{$metadataOtherLanguagesAsJson}"
@@ -257,6 +265,38 @@
       </xsl:otherwise>
     </xsl:choose>
 
+  </xsl:template>
+
+  <xsl:template name="addAllThesaurus">
+    <xsl:param name="ref"/>
+    <xsl:if test="java:getSettingValue('system/metadata/allThesaurus') = 'true'">
+
+
+      <xsl:variable name="thesaurusConfig"
+                    as="element()?"
+                    select="$thesaurusList/thesaurus[@key='external.none.allThesaurus']"/>
+
+      <xsl:variable name="transformations"
+                    as="xs:string"
+                    select="if ($thesaurusConfig/@transformations != '')
+                              then $thesaurusConfig/@transformations
+                              else 'to-iso19139-keyword,to-iso19139-keyword-with-anchor,to-iso19139-keyword-as-xlink'"/>
+
+      <br></br>
+      <div
+              data-gn-keyword-selector="tagsinput"
+              data-metadata-id=""
+              data-element-ref="_X{$ref}_gmdCOLONdescriptiveKeywords"
+              data-thesaurus-title="{{{{'selectKeyword' | translate}}}}"
+              data-thesaurus-key="external.none.allThesaurus"
+              data-keywords=""
+              data-transformations="{$transformations}"
+              data-current-transformation="to-iso19139-keyword"
+              data-max-tags="" data-lang="{$metadataOtherLanguagesAsJson}"
+              data-textgroup-only="false"
+              class="">
+      </div>
+    </xsl:if>
   </xsl:template>
 
 </xsl:stylesheet>
