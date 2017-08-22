@@ -38,7 +38,7 @@
                 exclude-result-prefixes="#all">
 
   <xsl:include href="../iso19139/convert/functions.xsl"/>
-  <xsl:include href="../iso19139/convert/thesaurus-transformation.xsl"/>
+  <xsl:include href="../iso19139/update-fixed-info-keywords.xsl"/>
   <xsl:include href="../iso19139/layout/utility-fn.xsl"/>
   <xsl:include href="update-sub-template-fixed-info.xsl"/>
 
