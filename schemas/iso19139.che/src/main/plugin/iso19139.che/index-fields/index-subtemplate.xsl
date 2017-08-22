@@ -26,9 +26,49 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:che="http://www.geocat.ch/2008/che"
                 version="2.0"
 >
 
   <xsl:include href="../../iso19139/index-fields/index-subtemplate.xsl" />
+
+  <!--Contacts & Organisations CHE-->
+  <xsl:template mode="index" priority="1000"
+                match="gmd:CI_ResponsibleParty[count(ancestor::node()) =  1]|*[@gco:isoType='gmd:CI_ResponsibleParty'][count(ancestor::node()) = 1]">
+
+    <xsl:param name="isoLangId"/>
+    <xsl:param name="langId"/>
+    <xsl:param name="locale"/>
+
+    <xsl:variable name="firstName" select="normalize-space((.//che:individualFirstName)[1])" />
+    <xsl:variable name="lastName" select="normalize-space((.//che:individualLastName)[1])" />
+    <xsl:variable name="org"
+                  select="if($isMultilingual) then normalize-space(gmd:organisationName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]) else normalize-space(gmd:organisationName/gco:CharacterString)"/>
+
+    <xsl:choose>
+      <xsl:when test="$isMultilingual">
+        <xsl:for-each
+                select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress">
+          <Field name="email" string="{gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]}" store="true" index="true"/>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:for-each
+                select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString">
+          <Field name="email" string="{.}" store="true" index="true"/>
+        </xsl:for-each>
+      </xsl:otherwise>
+    </xsl:choose>
+
+    <xsl:variable name="basicTitle" select="concat($firstName, ' ', $lastName, ' ', $org)" />
+
+    <Field name="orgName" string="{$org}" store="true" index="true"/>
+    <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
+    <Field name="_title" string="{$basicTitle}" store="true" index="false" />
+
+    <xsl:call-template name="subtemplate-common-fields"/>
+
+  </xsl:template>
+
 
 </xsl:stylesheet>
