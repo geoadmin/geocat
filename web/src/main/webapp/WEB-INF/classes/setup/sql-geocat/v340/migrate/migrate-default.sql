@@ -355,6 +355,10 @@ INSERT INTO operationallowed
 
 DELETE FROM Settings WHERE name like 'system/shib%';
 
+UPDATE Metadata SET data = replace(data, 'http://www.geocat.ch/geonetwork/srv/eng//csw', 'http://www.geocat.ch/geonetwork/srv/eng/csw')
+  WHERE data LIKE '%http://www.geocat.ch/geonetwork/srv/eng//csw%';
+
+
 DROP TABLE non_validated;
 DROP TABLE hiddenmetadataelements;
 DROP TABLE deletedobjects;
