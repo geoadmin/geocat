@@ -146,7 +146,7 @@ Apply the transformation to all metadata records.
 
 In a browser:
 ``` 
-http://localhost:8080/geonetwork/srv/eng/q?_schema=iso19139.che&_isTemplate=y%20or%20n
+http://localhost:8080/geonetwork/srv/eng/q?_schema=iso19139.che&_isTemplate=y%20or%20n&_isHarvested=n
 ``` 
 
 In command line:
