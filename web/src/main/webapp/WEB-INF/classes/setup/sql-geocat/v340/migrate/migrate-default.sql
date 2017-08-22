@@ -358,6 +358,13 @@ DELETE FROM Settings WHERE name like 'system/shib%';
 UPDATE Metadata SET data = replace(data, 'http://www.geocat.ch/geonetwork/srv/eng//csw', 'http://www.geocat.ch/geonetwork/srv/eng/csw')
   WHERE data LIKE '%http://www.geocat.ch/geonetwork/srv/eng//csw%';
 
+UPDATE Metadata SET data = replace(data, 'local._none_.geocat.ch', 'local.theme.geocat.ch')
+  WHERE data LIKE '%local._none_.geocat.ch%';
+
+UPDATE Metadata SET data = replace(data, 'external._none_.gemet', 'external.theme.gemet')
+  WHERE data LIKE '%external._none_.gemet%';
+
+
 
 DROP TABLE non_validated;
 DROP TABLE hiddenmetadataelements;
@@ -388,6 +395,7 @@ DROP TABLE geom_table_lastmodified;
 --   WHERE
 --     xlink NOT LIKE 'https://%thesaurus.download%' AND
 --     xlink NOT LIKE '%GetRecordById%';
+
 
 -- Temporary account
 -- INSERT INTO Users (id, username, password, name, surname, profile, kind, organisation, security, authtype, isenabled) VALUES  (111111,'fxp','46e44386069f7cf0d4f2a420b9a2383a612f316e2024b0fe84052b0b96c479a23e8a0be8b90fb8c2','fxp','fxp',0,'','','','', 'y');
