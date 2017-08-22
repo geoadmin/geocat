@@ -39,8 +39,11 @@ CREATE DATABASE geocat
        LC_COLLATE = 'en_US.UTF-8'
        LC_CTYPE = 'en_US.UTF-8'
        CONNECTION LIMIT = -1;
+
+\c geocat
        
 CREATE EXTENSION postgis;
+
 \q
 
 
@@ -49,11 +52,12 @@ gzip -d geocat-$todaydate.gz
 
 
 # Load database dump as postgis 2 database
-/usr/share/postgresql/9.5/contrib/postgis-2.2/postgis_restore.pl geocat.sql | sudo -u postgres psql -d geocat
+/usr/share/postgresql/9.5/contrib/postgis-2.2/postgis_restore.pl geocat-$todaydate.sql | sudo -u postgres psql -d geocat
 
 
 # Run migration (see migrate-default.sql)
-psql -d geocat -f WEB-INF/classes/setup/sql-geocat/v340/migrate/migrate-default.sql 
+wget https://raw.githubusercontent.com/geoadmin/geocat/geocat_3.4.x/web/src/main/webapp/WEB-INF/classes/setup/sql-geocat/v340/migrate/migrate-default.sql
+psql -d geocat -f migrate-default.sql 
 ```
 
 TODO:
