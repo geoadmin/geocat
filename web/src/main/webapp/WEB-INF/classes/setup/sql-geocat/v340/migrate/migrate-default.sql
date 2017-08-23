@@ -1,5 +1,10 @@
 
 
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES
+  ('system/csw/enabledWhenIndexing', 'true', 2, 1211, 'y');
+
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES
+  ('metadata/import/restrict', 'iso19139.che', 0, 11000, 'y');
 
 INSERT INTO Settings (name, value, datatype, position, internal)
   VALUES ('metadata/workflow/draftWhenInGroup', '', 0, 100002, 'n');
