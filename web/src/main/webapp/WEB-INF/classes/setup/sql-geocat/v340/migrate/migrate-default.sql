@@ -6,6 +6,9 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES
   ('metadata/import/restrict', 'iso19139.che', 0, 11000, 'y');
 
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES
+  ('system/metadatacreate/generateUuid', 'true', 2, 9100, 'n');
+
 INSERT INTO Settings (name, value, datatype, position, internal)
   VALUES ('metadata/workflow/draftWhenInGroup', '', 0, 100002, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal)
