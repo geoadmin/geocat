@@ -201,6 +201,7 @@
     </summaryType>
     <summaryType name="subtemplates">
       <item facet="subTemplateType"/>
+      <item facet="type"/>
       <item facet="groupOwner" max="99" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
       <item facet="isValid" max="3" sortBy="value" translator="apploc:validStatus-"/>

@@ -172,7 +172,18 @@
         </xsl:otherwise>
       </xsl:choose>
 
-        <xsl:call-template name="subtemplate-common-fields"/>
+      <!-- Categorize extents by type based
+      on the UUID prefixed used when imported.
+      In geocat.ch, Land prefix is geocatch-subtpl-extent-landesgebiet-,
+       canton, geocatch-subtpl-extent-kantonsgebiet- and
+       geocatch-subtpl-extent-hoheitsgebiet for communes.
+       -->
+      <Field name="type"
+             string="{replace($uuid, 'geocatch-subtpl-extent-(.*)-[0-9]*', '$1')}"
+             store="true" index="true"/>
+
+
+      <xsl:call-template name="subtemplate-common-fields"/>
     </xsl:template>
 
 
