@@ -170,6 +170,11 @@
       for the directive.
       <directiveAttributes data-include="external.theme.inspire-theme,external.place.regions"/>
       -->
+      <directiveAttributes
+        data-include="xpath::string-join(che:CHE_MD_Metadata/gmd:identificationInfo
+                          //gmd:thesaurusName/*/gmd:identifier/*/
+                            gmd:code/gmx:Anchor/
+                              concat('-', substring-after(text()[. != ''], 'geonetwork.thesaurus.')), ',')"/>
     </for>
   </fields>
 
