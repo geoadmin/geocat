@@ -404,8 +404,18 @@ DROP TABLE geom_table_lastmodified;
 --     xlink NOT LIKE 'https://%thesaurus.download%' AND
 --     xlink NOT LIKE '%GetRecordById%';
 
-
 -- Temporary account
 -- INSERT INTO Users (id, username, password, name, surname, profile, kind, organisation, security, authtype, isenabled) VALUES  (111111,'fxp','46e44386069f7cf0d4f2a420b9a2383a612f316e2024b0fe84052b0b96c479a23e8a0be8b90fb8c2','fxp','fxp',0,'','','','', 'y');
 -- INSERT INTO Address (id, address, city, country, state, zip) VALUES  (111111, '', '', '', '', '');
 -- INSERT INTO UserAddress (userid, addressid) VALUES  (111111, 111111);
+
+-- UPDATE metadata
+--   SET data = replace(data, ' xlink:show="replace"', '')
+--   WHERE data like '% xlink:show="replace"%';
+UPDATE metadata
+  SET data = replace(data, 'skipdescriptivekeywords=true&amp;', '')
+  WHERE data like '%skipdescriptivekeywords=true&amp;%';
+
+DELETE FROM selectionsdes;
+DELETE FROM Selections;
+

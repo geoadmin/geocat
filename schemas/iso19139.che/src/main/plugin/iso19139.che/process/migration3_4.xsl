@@ -28,6 +28,8 @@
                         */gmd:language/gmd:LanguageCode/@codeListValue|
                         */gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue"/>
 
+  <xsl:variable name="hasExpiryDate"
+                select="count(//gmd:CI_DateTypeCode/@codeListValue = 'expiry') > 0"/>
   <!--
   Remove hardcoded schemaLocation in records. Schema location
   is added by the application depending on the schema configuration
@@ -74,6 +76,13 @@
                         codeListValue="{gco:CharacterString}"/>
     </xsl:element>
   </xsl:template>
+
+
+  <!-- Convert expiry codelist to lastRevision -->
+  <xsl:template match="gmd:CI_DateTypeCode/@codeListValue[. = 'expiry']">
+    <xsl:attribute name="codeListValue">lastRevision</xsl:attribute>
+  </xsl:template>
+
 
 
   <!-- Replace old link to resources.get to attachement API -->
@@ -222,6 +231,16 @@
       <xsl:apply-templates select="gmd:purpose"/>
       <xsl:apply-templates select="gmd:credit"/>
       <xsl:apply-templates select="gmd:status"/>
+
+      <!-- If expiry then flag record as completed -->
+      <xsl:if test="$hasExpiryDate and
+                    count(gmd:status[gmd:MD_ProgressCode/@codeListValue = 'completed']) = 0">
+        <gmd:status>
+          <gmd:MD_ProgressCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ProgressCode"
+                               codeListValue="completed"/>
+        </gmd:status>
+      </xsl:if>
+
       <xsl:apply-templates select="gmd:pointOfContact"/>
       <xsl:apply-templates select="gmd:resourceMaintenance"/>
       <xsl:apply-templates select="gmd:graphicOverview"/>

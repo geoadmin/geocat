@@ -170,6 +170,12 @@
       for the directive.
       <directiveAttributes data-include="external.theme.inspire-theme,external.place.regions"/>
       -->
+      <directiveAttributes
+        data-transformation="to-iso19139-keyword-as-xlink"
+        data-include="xpath::string-join(che:CHE_MD_Metadata/gmd:identificationInfo
+                          //gmd:thesaurusName/*/gmd:identifier/*/
+                            gmd:code/gmx:Anchor/
+                              concat('-', substring-after(text()[. != ''], 'geonetwork.thesaurus.')), ',')"/>
     </for>
   </fields>
 
@@ -397,22 +403,22 @@
       <thesaurusList>
         <thesaurus key="external.theme.gemet"
                    transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   />
         <thesaurus key="external.theme.inspire-theme"
                    transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   />
         <thesaurus key="external.theme.gemet-theme"
                    transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   />
         <thesaurus key="external.theme.inspire-service-taxonomy"
                    transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   />
         <thesaurus key="local.theme.geocat.ch"
                    transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   />
         <thesaurus key="external.none.allThesaurus"
                    transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   />
       </thesaurusList>
     </view>
     <view name="advanced">
@@ -500,7 +506,7 @@
                    transformations="to-iso19139-keyword-as-xlink"/>
         <thesaurus key="external.none.allThesaurus"
                    transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   />
       </thesaurusList>
     </view>
     <view name="inspire">
@@ -713,22 +719,22 @@
       <thesaurusList>
         <thesaurus key="external.theme.gemet"
                    transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   />
         <thesaurus key="external.theme.inspire-theme"
                    transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   />
         <thesaurus key="external.theme.gemet-theme"
                    transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   />
         <thesaurus key="external.theme.inspire-service-taxonomy"
                    transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   />
         <thesaurus key="local.theme.geocat.ch"
                    transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   />
         <thesaurus key="external.none.allThesaurus"
                    transformations="to-iso19139-keyword-as-xlink"
-                   fieldset="false"/>
+                   />
       </thesaurusList>
     </view>
     <view name="xml">

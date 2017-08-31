@@ -302,7 +302,7 @@
           </gmd:textGroup>
         </gmd:PT_FreeText>
       </gmd:abstract>
-      <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://eng/xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fgeocat.ch%2Fconcept%23b6291656-f6fd-4199-9678-ad9be0fefe9f&amp;multiple=true&amp;lang=eng,ger,ita,fre,roh&amp;textgroupOnly=true&amp;skipdescriptivekeywords=true" xlink:role="http://www.geonetwork.org/non_valid_obj" />
+      <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://eng/xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fgeocat.ch%2Fconcept%23b6291656-f6fd-4199-9678-ad9be0fefe9f&amp;multiple=true&amp;lang=eng,ger,ita,fre,roh&amp;textgroupOnly=true" xlink:role="http://www.geonetwork.org/non_valid_obj" />
       <gmd:language>
         <gco:CharacterString>ger</gco:CharacterString>
       </gmd:language>

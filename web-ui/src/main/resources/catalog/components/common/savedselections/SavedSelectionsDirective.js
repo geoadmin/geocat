@@ -86,25 +86,26 @@
         //   multiple layers in one go
         // * AnonymousUserList is a list of preferred records
         //   for anonymous user only stored in localStorage.
-        localList: [{
-          id: -10,
-          name: 'AnonymousUserlist',
-          records: [],
-          // Can be localStorage, sessionStorage or
-          // null (ie. not preserved on page refresh).
-          storage: 'localStorage',
-          isAnonymousOnly: true
-        }, {
-          id: -20,
-          name: 'MapLayerlist',
-          records: [],
-          storage: null
-          // }, {
-          //   id: -30,
-          //   name: 'DataDownloaderlist',
-          //   records: [],
-          //   storage: null
-        }]
+        localList: []
+        //   [{
+        //   id: -10,
+        //   name: 'AnonymousUserlist',
+        //   records: [],
+        //   // Can be localStorage, sessionStorage or
+        //   // null (ie. not preserved on page refresh).
+        //   storage: 'localStorage',
+        //   isAnonymousOnly: true
+        // }, {
+        //   id: -20,
+        //   name: 'MapLayerlist',
+        //   records: [],
+        //   storage: null
+        //   // }, {
+        //   //   id: -30,
+        //   //   name: 'DataDownloaderlist',
+        //   //   records: [],
+        //   //   storage: null
+        // }]
       };
     }]);
 
