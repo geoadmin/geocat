@@ -173,9 +173,9 @@ Durch die Visualisierung über das Internet, wird den Chefexperten und Ferrosko-
 Durch die Visualisierung über das Internet, wird den Chefexperten und Ferrosko-peuren ein effizientes Tool zur Verfügung gestellt, um sich einen Überblick über bisherige Schiessschäden und Schiessplätze zu verschaffen. Dies mit dem Ziel, zukünftige Schäden und damit verbundene Entschädigungszahlungen zu reduzie-ren (Prävention).</gmd:LocalisedCharacterString>
           </gmd:textGroup>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#FR">Le programme PROJEKTIL vous permet de visualiser:  
+            <gmd:LocalisedCharacterString locale="#FR">Le programme PROJEKTIL vous permet de visualiser:
 •	les dommages causés aux arbres par des impacts de tirs, y compris les dommages subséquents provoqués par les militaires, et
-•	les places de tir. 
+•	les places de tir.
 Grâce à cette visualisation par le biais d'Internet, l'utilisateur dispose d'un outil efficace pour acquérir une vue d'ensemble sur les dégâts occasionnés par des tirs et sur les places de tir. L'objectif, à l'avenir, est de réduire les dégâts et le verse-ment d'indemnisations y relatives (prévention).</gmd:LocalisedCharacterString>
           </gmd:textGroup>
         </gmd:PT_FreeText>
@@ -237,7 +237,7 @@ Grâce à cette visualisation par le biais d'Internet, l'utilisateur dispose d'u
           </gmd:thesaurusName>
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
-      <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://eng/xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23f6159453-f62e-4a0f-ac83-1b5da3334b80,http%3A%2F%2Fgeocat.ch%2Fconcept%239609bd43-0098-453c-846f-bf2c29b5d325&amp;multiple=true&amp;lang=eng,ger,ita,fre,roh&amp;textgroupOnly=true&amp;skipdescriptivekeywords=true" xlink:role="http://www.geonetwork.org/non_valid_obj" />
+      <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://eng/xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23f6159453-f62e-4a0f-ac83-1b5da3334b80,http%3A%2F%2Fgeocat.ch%2Fconcept%239609bd43-0098-453c-846f-bf2c29b5d325&amp;multiple=true&amp;lang=eng,ger,ita,fre,roh&amp;textgroupOnly=true" xlink:role="http://www.geonetwork.org/non_valid_obj" />
       <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink">
         <gmd:MD_Keywords>
           <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">

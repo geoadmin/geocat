@@ -302,7 +302,7 @@
           </gmd:textGroup>
         </gmd:PT_FreeText>
       </gmd:abstract>
-      <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://eng/xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fgeocat.ch%2Fconcept%237950c5b9-e991-44cd-b6e4-ee7cbdf96062,http%3A%2F%2Fgeocat.ch%2Fconcept%2311fcc338-bf35-477a-bd4b-e45e76df2dae,http%3A%2F%2Fgeocat.ch%2Fconcept%23b6291656-f6fd-4199-9678-ad9be0fefe9f,http%3A%2F%2Fgeocat.ch%2Fconcept%23d0065481-9a97-417d-aa05-7d10f1893614&amp;multiple=true&amp;lang=eng,ger,ita,fre,roh&amp;textgroupOnly=true&amp;skipdescriptivekeywords=true" xlink:role="http://www.geonetwork.org/non_valid_obj" />
+      <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://eng/xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fgeocat.ch%2Fconcept%237950c5b9-e991-44cd-b6e4-ee7cbdf96062,http%3A%2F%2Fgeocat.ch%2Fconcept%2311fcc338-bf35-477a-bd4b-e45e76df2dae,http%3A%2F%2Fgeocat.ch%2Fconcept%23b6291656-f6fd-4199-9678-ad9be0fefe9f,http%3A%2F%2Fgeocat.ch%2Fconcept%23d0065481-9a97-417d-aa05-7d10f1893614&amp;multiple=true&amp;lang=eng,ger,ita,fre,roh&amp;textgroupOnly=true" xlink:role="http://www.geonetwork.org/non_valid_obj" />
       <gmd:language>
         <gco:CharacterString>ger</gco:CharacterString>
       </gmd:language>
