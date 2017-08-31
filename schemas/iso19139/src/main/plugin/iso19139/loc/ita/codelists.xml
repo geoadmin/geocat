@@ -60,6 +60,13 @@
         riesaminata e migliorata o emendata
       </description>
     </entry>
+
+    <entry>
+      <code>lastRevision</code>
+      <label>Last Revision</label>
+      <description>Date identifies when the resource was last reviewed
+      </description>
+    </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
   </codelist>
   <!-- ==================================================== -->
