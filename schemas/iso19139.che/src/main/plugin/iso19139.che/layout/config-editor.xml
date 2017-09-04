@@ -150,7 +150,7 @@
         data-popup-action="false"
         data-template-type="extent"
         data-filter='{"_root": "gmd:EX_Extent"}'
-        data-insert-modes=""/>
+        data-insert-modes="xlink"/>
     </for>
 
     <!-- Example configuration: Add onLine source from subtemplate
