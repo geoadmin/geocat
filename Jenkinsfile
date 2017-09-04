@@ -122,7 +122,7 @@ aws_access_key_id = ${env.USERNAME}
 aws_secret_access_key = ${env.PASSWORD}
 region = eu-west-1
 """
-          executeInContainer(deployContainerName, "echo '${credentialsFile}' > ~/.aws/credentials"
+          executeInContainer(deployContainerName, "echo '${credentialsFile}' > ~/.aws/credentials")
         } // withCredentials
     } // stage
 
