@@ -419,3 +419,4 @@ UPDATE metadata
 DELETE FROM selectionsdes;
 DELETE FROM Selections;
 
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/import/restrict', 'iso19139.che', 0, 11000, 'y');
