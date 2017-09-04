@@ -130,7 +130,7 @@ region = eu-west-1
       withCredentials([file(credentialsId: 'terraform-geocat-deploy-key', variable: 'FILE')]) {
         sh "docker cp ${FILE} ${deployContainerName}:/ssh-github-access"
         executeInContainer(deployContainerName, "rm -rf terraform-geocat")
-        executeInContainer(deployContainerName, "ssh-agent /bin/bash -c "ssh-add /ssh-github-access ; git clone git@github.com:camptocamp/terraform-geocat.git"
+        executeInContainer(deployContainerName, "ssh-agent /bin/bash -c "ssh-add /ssh-github-access ; ssh -oStrictHostKeyChecking=no git@github.com || true ; git clone git@github.com:camptocamp/terraform-geocat.git"
       }
     } // stage
 
