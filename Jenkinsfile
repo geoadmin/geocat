@@ -28,7 +28,7 @@ dockerBuild {
 
   stage('docker pull') {
     sh "docker pull ${mavenContainerImage}"
-    sh "docker pull ${terraformContainerImage}"
+    sh "docker pull ${deployContainerImage}"
   }
 
   stage('Getting the sources') {
