@@ -7,7 +7,7 @@ selectNodes {
 }
 
 def spawnContainer(def containerName, def containerImage) {
-   sh "docker run -it -d -v `pwd`:/home/build --name ${containerName} -w /home/build ${containerImage} /bin/bash
+   sh "docker run -it -d -v `pwd`:/home/build --name ${containerName} -w /home/build ${containerImage} /bin/bash"
 }
 
 def destroyContainer(def containerName) {
