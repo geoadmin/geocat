@@ -24,7 +24,7 @@ dockerBuild {
   def deployContainerName = "geocat-deployer"
   def deployContainerImage = "ubuntu"
 
-  def mavenOpts = '-B -Dmaven.repo.local=./.m2_repo -Ddb.username=geonetwork -Ddb.name=geonetwork -Ddb.type=postgres -Ddb.host=database -Ddb.password=geonetwork'
+  def mavenOpts = '-B -fn -Dmaven.repo.local=./.m2_repo -Ddb.username=geonetwork -Ddb.name=geonetwork -Ddb.type=postgres -Ddb.host=database -Ddb.password=geonetwork'
 
   stage('docker pull') {
     sh "docker pull ${mavenContainerImage}"
@@ -44,13 +44,13 @@ dockerBuild {
   }
   stage('Second build with tests') {
     try {
-      executeInContainer(buildContainerName,"MAVEN_OPTS=-Xmx8192m mvn clean install ${mavenOpts} -fae")
+      executeInContainer(buildContainerName,"MAVEN_OPTS=-Xmx8192m mvn clean install ${mavenOpts} ")
     } finally {
       junit '**/target/surefire-reports/TEST-*.xml'
     }
   }
   stage('calculating coverage') {
-    executeInContainer(buildContainerName, "MAVEN_OPTS=-Xmx8192m mvn cobertura:cobertura ${mavenOpts} -fae -Dcobertura.report.format=xml")
+    executeInContainer(buildContainerName, "MAVEN_OPTS=-Xmx8192m mvn cobertura:cobertura ${mavenOpts} -Dcobertura.report.format=xml")
     step([$class: 'CoberturaPublisher',
         autoUpdateHealth: false,
         autoUpdateStability: false,
