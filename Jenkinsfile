@@ -72,6 +72,7 @@ dockerBuild {
     def dockerImageName = "camptocamp/geocat:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
     // one-liner to setup docker
     executeInContainer(buildContainerName, "curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-17.05.0-ce.tgz && tar --strip-components=1 -xvzf docker-17.05.0-ce.tgz -C /usr/local/bin")
+    executeInContainer(buildContainerName, "service docker start")
     executeInContainer(buildContainerName, "mvn -s /settings.xml ${mavenOpts} -pl web -Pdocker -DdockerImageName=${dockerImageName} docker:build docker:push")
   }
   // at this time, the first container used to build is no longer necessary
