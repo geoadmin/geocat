@@ -7,7 +7,7 @@ selectNodes {
 }
 
 def spawnContainer(def containerName, def containerImage) {
-   sh "docker run -it -d -v `pwd`:/home/build --name ${containerName} -w /home/build ${containerImage} /bin/bash"
+   sh "docker run -it -d --privileged -v `pwd`:/home/build --name ${containerName} -w /home/build ${containerImage} /bin/bash"
 }
 
 def destroyContainer(def containerName) {
@@ -24,7 +24,7 @@ dockerBuild {
   def deployContainerName = "geocat-deployer"
   def deployContainerImage = "ubuntu"
 
-  def mavenOpts = '-B -fn -Dmaven.repo.local=./.m2_repo -Ddb.username=geonetwork -Ddb.name=geonetwork -Ddb.type=postgres -Ddb.host=database -Ddb.password=geonetwork'
+  def mavenOpts = '-B -Dmaven.repo.local=./.m2_repo -Ddb.username=geonetwork -Ddb.name=geonetwork -Ddb.type=postgres -Ddb.host=database -Ddb.password=geonetwork'
 
   stage('docker pull') {
     sh "docker pull ${mavenContainerImage}"
@@ -40,13 +40,17 @@ dockerBuild {
     spawnContainer(buildContainerName, mavenContainerImage)
   }
   stage('First build without test') {
-    executeInContainer(buildContainerName, "mvn clean install ${mavenOpts} -DskipTests")
+    executeInContainer(buildContainerName, "MAVEN_OPTS=-Xmx8192m mvn clean install ${mavenOpts} -DskipTests")
   }
   stage('Second build with tests') {
-    executeInContainer(buildContainerName,"mvn clean install ${mavenOpts} -fae")
+    try {
+      executeInContainer(buildContainerName,"MAVEN_OPTS=-Xmx8192m mvn clean install ${mavenOpts} -fae")
+    } finally {
+      junit '**/target/surefire-reports/TEST-*.xml'
+    }
   }
   stage('calculating coverage') {
-    executeInContainer(buildContainerName, "mvn cobertura:cobertura ${mavenOpts} -fae -Dcobertura.report.format=xml")
+    executeInContainer(buildContainerName, "MAVEN_OPTS=-Xmx8192m mvn cobertura:cobertura ${mavenOpts} -fae -Dcobertura.report.format=xml")
     step([$class: 'CoberturaPublisher',
         autoUpdateHealth: false,
         autoUpdateStability: false,
@@ -58,10 +62,6 @@ dockerBuild {
         onlyStable: false,
         sourceEncoding: 'UTF_8',
         zoomCoverageChart: true])
-  }
-  stage('Saving tests results') {
-    // This task does not need to run in the builder container
-    junit '**/target/surefire-reports/TEST-*.xml'
   }
   stage('configure georchestra c2c docker-hub account') {
     // Requires a username / password configured in Jenkins' credentials, with id docker-c2cgeorchestra
