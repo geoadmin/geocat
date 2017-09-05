@@ -98,17 +98,8 @@ dockerBuild {
     } // stage
 
     stage("Configuring AWS / S3") {
-        withCredentials([[$class: 'UsernamePasswordMultiBinding',
-            credentialsId: 'terraform-georchestra-aws-credentials',
-            usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-          def credentialsFile = """
-[c2c]
-aws_access_key_id = ${env.USERNAME}
-aws_secret_access_key = ${env.PASSWORD}
-region = eu-west-1
-"""
-          executeInContainer(deployContainerName, "echo '${credentialsFile}' > ~/.aws/credentials")
-        } // withCredentials
+      withCredentials([file(credentialsId: 'terraform-georchestra-aws-credentials-file', variable: 'FILE')]) {
+        sh "docker cp ${FILE} ${deployContainerName}:/root/.aws/credentials"
     } // stage
 
     stage('Checking out the terraform-geocat repository') {
