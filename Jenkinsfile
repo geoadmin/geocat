@@ -65,7 +65,7 @@ dockerBuild {
   }
   stage('configure georchestra c2c docker-hub account') {
     withCredentials([file(credentialsId: 'docker-maven-c2cgeorchestra', variable: 'FILE')]) {
-      sh "docker cp ${FILE} ${buildContainerName}:/config.xml"
+      sh "docker cp ${FILE} ${buildContainerName}:/settings.xml"
     }
   }
   stage('Build/publish a docker image') {
