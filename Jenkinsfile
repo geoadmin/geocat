@@ -99,6 +99,7 @@ dockerBuild {
     stage("Configuring AWS / S3") {
       withCredentials([file(credentialsId: 'terraform-georchestra-aws-credentials-file', variable: 'FILE')]) {
         sh "docker cp ${FILE} ${deployContainerName}:/root/.aws/credentials"
+      } //  withCredentials
     } // stage
 
     stage('Checking out the terraform-geocat repository') {
