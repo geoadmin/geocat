@@ -64,25 +64,8 @@ dockerBuild {
         zoomCoverageChart: true])
   }
   stage('configure georchestra c2c docker-hub account') {
-    // Requires a username / password configured in Jenkins' credentials, with id docker-c2cgeorchestra
-    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'dockerhub',
-        usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-      def configXmlStr = """<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
-        http://maven.apache.org/xsd/settings-1.0.0.xsd">
-        <servers>
-        <server>
-        <id>docker-hub</id>
-        <username>USERNAME</username>
-        <password>PASSWORD</password>
-        <configuration>
-        <email>geocat2@camptocamp.com</email>
-        </configuration>
-        </server>
-        </servers>
-        </settings>""".replaceAll("USERNAME", env.USERNAME).replaceAll("PASSWORD", env.PASSWORD)
-      executeInContainer(buildContainerName, "echo '${configXmlStr}' > /settings.xml")
+    withCredentials([file(credentialsId: 'docker-maven-c2cgeorchestra', variable: 'FILE')]) {
+      sh "docker cp ${FILE} ${buildContainerName}:/config.xml"
     }
   }
   stage('Build/publish a docker image') {
