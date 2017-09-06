@@ -103,7 +103,7 @@ dockerBuild {
     } // stage
 
     stage('Checking out the terraform-geocat repository') {
-      withCredentials([file(credentialsId: 'terraform-geocat-deploy-key', variable: 'FILE')]) {
+      withCredentials([file(credentialsId: 'terraform-geocat-deploy-key-file', variable: 'FILE')]) {
         sh "docker cp ${FILE} ${deployContainerName}:/ssh-github-access"
         executeInContainer(deployContainerName, "rm -rf terraform-geocat")
         executeInContainer(deployContainerName, "ssh-agent /bin/bash -c 'ssh-add /ssh-github-access ; ssh -oStrictHostKeyChecking=no git@github.com || true ; git clone git@github.com:camptocamp/terraform-geocat.git'")
