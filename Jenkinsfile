@@ -105,7 +105,7 @@ dockerBuild {
     stage('Checking out the terraform-geocat repository') {
       sshagent(["terraform-geocat-deploy-key"]) {
         sh "rm -rf terraform-geocat"
-        sh "ssh -oStrictHostKeyChecking=no git@github.com"
+        sh "ssh -oStrictHostKeyChecking=no git@github.com || true"
         sh "git clone git@github.com:camptocamp/terraform-geocat.git"
         sh "docker cp terraform-geocat ${deployContainerName}:/"
         sh "rm -rf terraform-geocat"
