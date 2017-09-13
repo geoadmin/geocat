@@ -23,6 +23,14 @@
       <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c] - %m%n"/>
     </layout>
   </appender>
+  <appender name="fileAppenderXlink"
+            class="org.apache.log4j.RollingFileAppender">
+    <param name="Threshold" value="ALL"/>
+    <param name="File" value="logs/geonetwork-xlinks.log"/>
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c] - %m%n"/>
+    </layout>
+  </appender>
 
   <!-- Geonetwork module (and submodule) logging -->
   <logger name="geonetwork" additivity="false">
@@ -149,6 +157,9 @@
   </logger>
   <logger name="jeeves.xlinkprocessor">
     <level value="WARN"/>
+    <appender-ref ref="consoleAppender"/>
+    <appender-ref ref="fileAppender"/>
+    <appender-ref ref="fileAppenderXlink"/>
   </logger>
   <logger name="jeeves.transformerFactory">
     <level value="WARN"/>
