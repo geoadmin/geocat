@@ -89,15 +89,11 @@ zip commune.zip swissBOUNDARIES3D_1_3_TLM_HOHEITSGEBIET.*
 Load ZIP files using the API (see api-load-extent-subtemplate.png):
 
 ```
-
-#export CATALOG=http://localhost:8080/geonetwork
-export CATALOGUSER=fxp
-export CATALOGPASS=aaaaaa
-
 #export CATALOG=http://localhost:8080/geonetwork
 export CATALOG=http://geocat-dev.dev.bgdi.ch/geonetwork
 export CATALOGUSER=admin
 export CATALOGPASS=admin
+
 
 rm -f /tmp/cookie; 
 curl -s -c /tmp/cookie -o /dev/null -X POST "$CATALOG/srv/eng/info?type=me"; 
@@ -114,19 +110,30 @@ curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/
   -F file=@land.zip \
   "$CATALOG/srv/api/0.1/registries/actions/entries/import/spatial?uuidAttribute=ICC&uuidPattern=geocatch-subtpl-extent-landesgebiet-%7B%7Buuid%7D%7D&descriptionAttribute=NAME&geomProjectionTo=EPSG%3A4326&lenient=true&onlyBoundingBox=false&process=build-extent-subtemplate&schema=iso19139&uuidProcessing=OVERWRITE"
 
+# Check in db select * from metadata where uuid like 'geocatch-subtpl-extent-land%'
+# = 4
 
 curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
   -H 'Content-Type: multipart/form-data' -H 'Accept: application/json' \
   -F file=@cantons.zip \
  "$CATALOG/srv/api/0.1/registries/actions/entries/import/spatial?uuidAttribute=KANTONSNUM&uuidPattern=geocatch-subtpl-extent-kantonsgebiet-%7B%7Buuid%7D%7D&descriptionAttribute=NAME&geomProjectionTo=EPSG%3A4326&lenient=true&onlyBoundingBox=false&process=build-extent-subtemplate&schema=iso19139&uuidProcessing=OVERWRITE"
 
+# Check in db select * from metadata where uuid like 'geocatch-subtpl-extent-kanton%'
+# = 26
 
 curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
   -H 'Content-Type: multipart/form-data' -H 'Accept: application/json' \
   -F file=@hoheitsgebiet.zip \
  "$CATALOG/srv/api/0.1/registries/actions/entries/import/spatial?uuidAttribute=BFS_NUMMER&uuidPattern=geocatch-subtpl-extent-hoheitsgebiet-%7B%7Buuid%7D%7D&descriptionAttribute=NAME&geomProjectionTo=EPSG%3A4326&lenient=true&onlyBoundingBox=false&process=build-extent-subtemplate&schema=iso19139&uuidProcessing=OVERWRITE"
+ 
+# Check in db select * from metadata where uuid like 'geocatch-subtpl-extent-hoheitsgebiet%'
+# = 2285
 
 ```
+
+TODO: There is an issue with BatchOpsMetadataReindexer to solve here as the number of subtemplate
+in the catalogue is correct only after a reindex.
+
 
 
 ## Data directory migration
@@ -146,10 +153,10 @@ Apply the transformation to all metadata records.
 
 In a browser:
 ``` 
-http://localhost:8080/geonetwork/srv/eng/q?_schema=iso19139.che&_isTemplate=y%20or%20n&_isHarvested=n
+http://localhost:8080/geonetwork/srv/eng/q?_schema=iso19139.che&_isTemplate=y%20or%20n&_isHarvested=n&bucket=m&summaryOnly=true
 ``` 
 
-In command line:
+In command line (does not work use browser mode):
 ``` 
 export CATALOG=http://geocat-dev.dev.bgdi.ch/geonetwork
 export CATALOGUSER=admin
@@ -160,27 +167,42 @@ rm -f /tmp/cookie;
 curl -s -c /tmp/cookie -o /dev/null -X POST "$CATALOG/srv/eng/info?type=me"; 
 export TOKEN=`grep XSRF-TOKEN /tmp/cookie | cut -f 7`; 
 curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
-  "$CATALOG/srv/eng/q?_schema=iso19139.che&_isTemplate=y%20or%20n&_isHarvested=n&summaryOnly=true"
+  "$CATALOG/srv/eng/q?_schema=iso19139.che&_isTemplate=y%20or%20n&_isHarvested=n&summaryOnly=true&bucket=m"
 ```
 
 2. Select all records to be updated
+
+
+http://localhost:8080/geonetwork/doc/api/#!/selections/addToSelection_1
+
+Parameters:
+* bucket=m
 
 
 ``` 
 curl -X PUT --header 'Content-Type: application/json' \
   --header 'Accept: application/json' \
   -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
-  "$CATALOG/srv/api/0.1/selections/metadata"
+  "$CATALOG/srv/api/0.1/selections/m"
   
   
 curl -X GET \
   --header 'Content-Type: application/json' \
   --header 'Accept: application/json' \
   -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
-  "$CATALOG/srv/api/0.1/selections/metadata"
+  "$CATALOG/srv/api/0.1/selections/m"
 ```
 
 3. Apply migration process to selection
+
+
+http://localhost:8080/geonetwork/doc/api/#!/selections/addToSelection_1
+
+Parameters:
+* bucket=m
+* process=migration3_4
+
+
 
 ``` 
 curl -X POST --header 'Content-Type: application/json' \
