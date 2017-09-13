@@ -151,8 +151,20 @@
     HOHEITSGEBIET(BFS_NUMMER)=gemeindenBB(OBJECTVAL)
     -->
 
+    <xsl:variable name="newId">
+      <xsl:choose>
+        <xsl:when test="$newType = 'landesgebiet'">
+          <xsl:value-of select="if ($id = '0') then 'CH'
+                                else if ($id = '1') then 'LI' else ''"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$id"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:attribute name="xlink:href" select="concat('local://srv/api/registries/entries/',
-                    'geocatch-subtpl-extent-', $newType, '-', $id, '?',
+                    'geocatch-subtpl-extent-', $newType, '-',
+                    normalize-space($newId), '?',
                       if (count($langs) > 0)
                       then concat('lang=', string-join(distinct-values($langs), '&amp;lang='))
                       else ''
