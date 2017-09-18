@@ -224,7 +224,7 @@ INSERT INTO metadata (
       'n' AS isHarvested,
       to_char(current_timestamp, 'YYYY-MM-DD"T"HH:MI:SS') AS createdate,
       to_char(current_timestamp, 'YYYY-MM-DD"T"HH:MI:SS') AS changedate,
-      '<gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">
+      '<gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml">
         <gmd:description>
          <gmd:PT_FreeText>
           <gmd:textGroup>
@@ -459,4 +459,7 @@ DELETE FROM Selections;
 
 
 -- Marbach LU
--- SELECT * FROM "gemeindenBB" WHERE "OBJECTVAL" = 1006
+
+SELECT * FROM "gemeindenBB" WHERE "OBJECTVAL" in (1006, 6471, 6401, 5826);
+
+SELECT * FROM "xlinks" WHERE "ID" in (151, 150, 8, 81, 9, 59, 145);

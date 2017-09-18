@@ -150,6 +150,9 @@ See https://github.com/geoadmin/geocat/blob/geocat_3.4.x/schemas/iso19139.che/sr
 
 Apply the transformation to all metadata records.
 
+0. (optinal) Turn off xlink resolution to make this faster.
+
+
 1. Search all records to be updated
 
 In a browser:
@@ -194,7 +197,10 @@ curl -X GET \
   "$CATALOG/srv/api/0.1/selections/m"
 ```
 
-3. Apply migration process to selection
+Should return around 4757 records to update (depending on the db version used).
+
+
+3. Apply migration process to selection (~1.2hour without indexing)
 
 
 http://localhost:8080/geonetwork/doc/api/#!/processes/processRecordsUsingXslt_1
@@ -220,7 +226,7 @@ curl -X GET --header 'Accept: application/json' \
   "$CATALOG/srv/api/0.1/processes/reports"
 ```
 
-5. Reindex the catalogue from the admin page.
+5. (optional - if you did not turned off xlinks resolution) Reindex the catalogue from the admin page.
 
 
 
