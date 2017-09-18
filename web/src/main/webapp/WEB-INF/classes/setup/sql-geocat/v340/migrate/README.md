@@ -76,14 +76,15 @@ TODO:
 
 ### Extent subtemplate loading from ESRI Shapefile:
 
-Download data from https://shop.swisstopo.admin.ch/fr/products/landscape/boundaries3D
+Download data from http://files.titellus.net/gis/ch/ with data aggregated on id
+to have one geometry (multi if needed) per features.
+(origin from https://shop.swisstopo.admin.ch/fr/products/landscape/boundaries3D)
 
-Zip Shapefiles to be imported in separate ZIP files:
 
 ```
-zip land.zip swissBOUNDARIES3D_1_3_TLM_LANDESGEBIET.*
-zip canton.zip swissBOUNDARIES3D_1_3_TLM_KANTONSGEBIET.*
-zip commune.zip swissBOUNDARIES3D_1_3_TLM_HOHEITSGEBIET.*
+wget http://files.titellus.net/gis/ch/land.zip
+wget http://files.titellus.net/gis/ch/cantons.zip
+wget http://files.titellus.net/gis/ch/hoheitsgebiet.zip
 ```
 
 Load ZIP files using the API (see api-load-extent-subtemplate.png):
@@ -110,7 +111,7 @@ curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/
   -F file=@land.zip \
   "$CATALOG/srv/api/0.1/registries/actions/entries/import/spatial?uuidAttribute=ICC&uuidPattern=geocatch-subtpl-extent-landesgebiet-%7B%7Buuid%7D%7D&descriptionAttribute=NAME&geomProjectionTo=EPSG%3A4326&lenient=true&onlyBoundingBox=false&process=build-extent-subtemplate&schema=iso19139&uuidProcessing=OVERWRITE"
 
-# Check in db select * from metadata where uuid like 'geocatch-subtpl-extent-land%'
+# Check in db select count(*) from metadata where uuid like 'geocatch-subtpl-extent-land%'
 # = 4
 
 curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
@@ -118,7 +119,7 @@ curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/
   -F file=@cantons.zip \
  "$CATALOG/srv/api/0.1/registries/actions/entries/import/spatial?uuidAttribute=KANTONSNUM&uuidPattern=geocatch-subtpl-extent-kantonsgebiet-%7B%7Buuid%7D%7D&descriptionAttribute=NAME&geomProjectionTo=EPSG%3A4326&lenient=true&onlyBoundingBox=false&process=build-extent-subtemplate&schema=iso19139&uuidProcessing=OVERWRITE"
 
-# Check in db select * from metadata where uuid like 'geocatch-subtpl-extent-kanton%'
+# Check in db select count(*) from metadata where uuid like 'geocatch-subtpl-extent-kanton%'
 # = 26
 
 curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
@@ -126,7 +127,7 @@ curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/
   -F file=@hoheitsgebiet.zip \
  "$CATALOG/srv/api/0.1/registries/actions/entries/import/spatial?uuidAttribute=BFS_NUMMER&uuidPattern=geocatch-subtpl-extent-hoheitsgebiet-%7B%7Buuid%7D%7D&descriptionAttribute=NAME&geomProjectionTo=EPSG%3A4326&lenient=true&onlyBoundingBox=false&process=build-extent-subtemplate&schema=iso19139&uuidProcessing=OVERWRITE"
  
-# Check in db select * from metadata where uuid like 'geocatch-subtpl-extent-hoheitsgebiet%'
+# Check in db select count(*) from metadata where uuid like 'geocatch-subtpl-extent-hoheitsgebiet%'
 # = 2285
 
 ```
@@ -196,11 +197,13 @@ curl -X GET \
 3. Apply migration process to selection
 
 
-http://localhost:8080/geonetwork/doc/api/#!/selections/addToSelection_1
+http://localhost:8080/geonetwork/doc/api/#!/processes/processRecordsUsingXslt_1
 
 Parameters:
+* content-type=application/json
 * bucket=m
 * process=migration3_4
+* index=false
 
 
 
@@ -208,7 +211,7 @@ Parameters:
 curl -X POST --header 'Content-Type: application/json' \
   --header 'Accept: application/json' \
   -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
-  "$CATALOG/srv/api/0.1/processes/migration3_4"
+  "$CATALOG/srv/api/0.1/processes/migration3_4?index=false"
 ```
 
 4. Follow progress
@@ -217,7 +220,7 @@ curl -X GET --header 'Accept: application/json' \
   "$CATALOG/srv/api/0.1/processes/reports"
 ```
 
-
+5. Reindex the catalogue from the admin page.
 
 
 
@@ -226,3 +229,21 @@ curl -X GET --header 'Accept: application/json' \
 
 Copy current thesaurus from ```/srv/tomcat/geocat/private/geocat/config/codelist```
 in new installation (or use admin interface).
+
+
+
+## Indexing errors
+
+```
+Error on line 621 of language-default.xsl:
+  XTTE0790: A sequence of more than one item is not allowed as the first argument of
+  geonet:protocolMimeType() ("https://map.geo.admin.ch/?topi...",
+  "https://map.geo.admin.ch/?topi...", ...) 
+2017-09-18 09:19:49,769 ERROR [geonetwork.index] - Indexing stylesheet contains errors: A sequence of more than one item is not allowed as the first argument of geonet:protocolMimeType() ("https://map.geo.admin.ch/?topi...", "https://map.geo.admin.ch/?topi...", ...)  
+	 Marking the metadata as _indexingError=1 in index
+	 
+	 
+	 
+	 
+2017-09-18 09:45:07,448 WARN  [geonetwork.index] - Invalid value. Field 'denominator' is not added to the document. Error is: For input string: "25'000"
+```

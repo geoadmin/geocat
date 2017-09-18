@@ -418,3 +418,45 @@ UPDATE metadata
 
 DELETE FROM selectionsdes;
 DELETE FROM Selections;
+
+
+-- Now done in migration3_4.xsl
+-- UPDATE metadata
+--   SET data = replace(data, 'geocatch-subtpl-extent-landesgebiet-0', 'geocatch-subtpl-extent-landesgebiet-CH')
+--   WHERE data like '%geocatch-subtpl-extent-landesgebiet-0%';
+--
+-- UPDATE metadata
+--   SET data = replace(data, 'geocatch-subtpl-extent-landesgebiet-1', 'geocatch-subtpl-extent-landesgebiet-LI')
+--   WHERE data like '%geocatch-subtpl-extent-landesgebiet-1%';
+
+-- UPDATE metadata
+--    SET data = regexp_replace(data,
+--                     'geocatch-subtpl-extent-kantonsgebiet-([0-9]*).0',
+--                     E'geocatch-subtpl-extent-kantonsgebiet-\\1', 'g')
+--    WHERE data like '%geocatch-subtpl-extent-kantonsgebiet-%.0?%';
+--
+-- UPDATE metadata
+--    SET data = regexp_replace(data,
+--                     'geocatch-subtpl-extent-hoheitsgebiet-([0-9]*).0',
+--                     E'geocatch-subtpl-extent-hoheitsgebiet-\\1', 'g')
+--    WHERE data like '%geocatch-subtpl-extent-hoheitsgebiet-%.0?%';
+--
+-- UPDATE metadata
+--    SET data = regexp_replace(data,
+--                     'geocatch-subtpl-extent-custom-([0-9]*).0',
+--                     E'geocatch-subtpl-extent-custom-\\1', 'g')
+--    WHERE data like '%geocatch-subtpl-extent-custom-%.0?%';
+
+
+-- Remaining indexing problems:
+-- 58 empty polygon geometries
+-- SELECT * FROM metadata WHERE data like '%<gml:posList />%'
+
+-- One record linked to a non existing xlinks
+-- SELECT * FROM metadata WHERE data like '%id=253%'
+-- https://www.geocat.ch/geonetwork/srv/fre/xml.extent.get?id=253&wfs=default&typename=gn:xlinks&format=GMD_COMPLETE&extentTypeCode=true
+-- e15b7d2b-1f66-4e84-8e2e-42020dd99f83
+
+
+-- Marbach LU
+-- SELECT * FROM "gemeindenBB" WHERE "OBJECTVAL" = 1006
