@@ -7,7 +7,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES
   ('metadata/import/restrict', 'iso19139.che,iso19139', 0, 11000, 'y');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES
-  ('system/metadatacreate/generateUuid', 'true', 1, 9100, 'n');
+  ('system/metadatacreate/generateUuid', 'true', 2, 9100, 'n');
 
 INSERT INTO Settings (name, value, datatype, position, internal)
   VALUES ('metadata/workflow/draftWhenInGroup', '', 0, 100002, 'n');
@@ -213,6 +213,8 @@ DELETE FROM harvesterSettings WHERE id IN (
 -- kantoneBB
 -- kantone_search
 
+-- DELETE FROM metadata WHERE uuid like 'geocatch-subtpl-extent-custom-%';
+
 -- Create extent subtemplate for non reference datasets (ie. list above):
 -- Reproject to MN95
 INSERT INTO metadata (
@@ -402,7 +404,7 @@ DROP TABLE geom_table_lastmodified;
 -- ) AS xlinks
 --   WHERE
 --     xlink NOT LIKE 'https://%thesaurus.download%' AND
---     xlink NOT LIKE '%GetRecordById%';
+--     xlink NOT LIKE '%GetRecordById%' AND xlink like '%gn:xlinks%' AND xlink like '%.0&amp;%';
 
 -- Temporary account
 -- INSERT INTO Users (id, username, password, name, surname, profile, kind, organisation, security, authtype, isenabled) VALUES  (111111,'fxp','46e44386069f7cf0d4f2a420b9a2383a612f316e2024b0fe84052b0b96c479a23e8a0be8b90fb8c2','fxp','fxp',0,'','','','', 'y');
@@ -458,8 +460,12 @@ DELETE FROM Selections;
 -- e15b7d2b-1f66-4e84-8e2e-42020dd99f83
 
 
--- Marbach LU
-
-SELECT * FROM "gemeindenBB" WHERE "OBJECTVAL" in (1006, 6471, 6401, 5826);
-
-SELECT * FROM "xlinks" WHERE "ID" in (151, 150, 8, 81, 9, 59, 145);
+-- --
+-- SELECT "OBJECTVAL", "GEMNAME" FROM "gemeindenBB"
+--    WHERE "OBJECTVAL" in (1003, 1006, 1138, 1096, 1006, 1060, 1092, 2013, 2270, 2277, 6471, 6401, 6403, 5826, 5800) ORDER BY 2;
+--
+-- SELECT * FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1006';
+--
+-- SELECT * FROM "xlinks" WHERE "ID" in (151, 150, 8, 81, 9, 59, 145);
+--
+-- SELECT * FROM metadata WHERE uuid = 'geocatch-subtpl-extent-custom-150';
