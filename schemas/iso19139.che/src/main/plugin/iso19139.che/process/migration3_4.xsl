@@ -145,7 +145,7 @@
                           then 'hoheitsgebiet'
                           else substring-after($type, ':')"/>
 
-    <!-- Remap old id to new one TODO
+    <!-- Remap old id to new one
     LANDESGEBIET(NAME)=CountriesBB(NAME)
     KANTONSGEBIET(KANTONSNUM)=KantoneBB(KANTONSNR)
     HOHEITSGEBIET(BFS_NUMMER)=gemeindenBB(OBJECTVAL)
@@ -155,13 +155,17 @@
       <xsl:choose>
         <xsl:when test="$newType = 'landesgebiet'">
           <xsl:value-of select="if ($id = '0') then 'CH'
-                                else if ($id = '1') then 'LI' else ''"/>
+                                else if ($id = '1') then 'LI' else $id"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:value-of select="$id"/>
+          <!-- Old Ids were numerics-->
+          <xsl:value-of select="if (contains($id, '.'))
+                                then substring-before($id, '.')
+                                else $id"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+
     <xsl:attribute name="xlink:href" select="concat('local://srv/api/registries/entries/',
                     'geocatch-subtpl-extent-', $newType, '-',
                     normalize-space($newId), '?',
@@ -225,6 +229,7 @@
                                  else ''
                                  )"/>
   </xsl:template>
+
 
 
 
