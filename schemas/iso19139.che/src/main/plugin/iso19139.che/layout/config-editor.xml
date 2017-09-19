@@ -150,6 +150,7 @@
         data-popup-action="false"
         data-template-type="extent"
         data-filter='{"_root": "gmd:EX_Extent"}'
+        data-show-valid-only="true"
         data-insert-modes="xlink"/>
     </for>
 
