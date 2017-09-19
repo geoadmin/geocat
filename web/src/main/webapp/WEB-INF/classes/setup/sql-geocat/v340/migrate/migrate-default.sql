@@ -486,3 +486,79 @@ DELETE FROM Selections;
 -- SELECT * FROM "xlinks" WHERE "ID" in (151, 150, 8, 81, 9, 59, 145);
 --
 -- SELECT * FROM metadata WHERE uuid = 'geocatch-subtpl-extent-custom-150';
+
+
+INSERT INTO metadata (
+  SELECT
+      nextval('hibernate_sequence') as id,
+      concat('geocatch-subtpl-extent-hoheitsgebiet-', id) AS uuid,
+      'iso19139' AS schemaId,
+      's' AS istemplate,
+      'n' AS isHarvested,
+      to_char(current_timestamp, 'YYYY-MM-DD"T"HH:MI:SS') AS createdate,
+      to_char(current_timestamp, 'YYYY-MM-DD"T"HH:MI:SS') AS changedate,
+      '<gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml">
+        <gmd:description>
+         <gmd:PT_FreeText>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#EN">  ' || label || '</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#DE">  ' || label || '</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#FR">  ' || label || '</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#IT">  ' || label || '</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#RM">  ' || label || '</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          </gmd:PT_FreeText>
+        </gmd:description>
+        <gmd:geographicElement>
+          <gmd:EX_GeographicBoundingBox>
+            <gmd:westBoundLongitude>
+              <gco:Decimal>' || minx || '</gco:Decimal>
+            </gmd:westBoundLongitude>
+            <gmd:eastBoundLongitude>
+              <gco:Decimal>' || maxx || '</gco:Decimal>
+            </gmd:eastBoundLongitude>
+            <gmd:southBoundLatitude>
+              <gco:Decimal>' || miny || '</gco:Decimal>
+            </gmd:southBoundLatitude>
+            <gmd:northBoundLatitude>
+              <gco:Decimal>' || maxy || '</gco:Decimal>
+            </gmd:northBoundLatitude>
+          </gmd:EX_GeographicBoundingBox>
+        </gmd:geographicElement>
+        <gmd:geographicElement>
+          <gmd:EX_BoundingPolygon>
+            <gmd:polygon> ' || gml || '</gmd:polygon>
+          </gmd:EX_BoundingPolygon>
+        </gmd:geographicElement>
+      </gmd:EX_Extent>' AS data,
+      (SELECT value FROM settings WHERE name = 'system/site/siteId') AS source,
+      '' AS title,
+      '' AS root,
+      '' AS harvestuuid,
+      (SELECT id FROM users WHERE name = 'admin' ORDER by 1 LIMIT 1) AS owner,
+      (SELECT id FROM groups WHERE name = 'SUBTEMPLATES' ORDER by 1 LIMIT 1) AS groupowner,
+      '' AS harvesturi,
+      0 AS rating,
+      0 AS popularity,
+      null AS displayorder,
+      null AS doctype,
+      null AS extra
+       FROM (
+    SELECT "OBJECTVAL"::varchar id, "GEMNAME" AS label,
+      ST_AsGML(ST_Transform(the_geom, 2056))  gml,
+      ST_XMin(ST_Transform(the_geom, 4326)) AS minx,
+      ST_YMin(ST_Transform(the_geom, 4326)) AS miny,
+      ST_XMax(ST_Transform(the_geom, 4326)) AS maxx,
+      ST_YMax(ST_Transform(the_geom, 4326)) AS maxy
+      FROM "gemeindenBB" WHERE "OBJECTVAL" in (1003, 1006, 1138, 1096, 1006, 1060, 1092, 2013, 2270, 2277, 6471, 6401, 6403, 5826, 5800)) AS extent
+);
+
+UPDATE metadata SET data = replace (data, 'xlink:show="replace"', '') WHERE data like '%xlink:show="replace"%';
