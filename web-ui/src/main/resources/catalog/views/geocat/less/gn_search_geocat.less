@@ -1,1 +1,107 @@
 @import "../../default/less/gn_search_default.less";
+
+@gcat-main-color: rgb(95, 186, 218);
+@gcat-secondary-color: #1d3067;
+@gcat-bg-overlay: rgba(255, 255, 255, 0.8);
+@gcat-shadow: 0 2px 4px rgba(0, 0, 0, 0.22);
+
+@brand-primary: @gcat-main-color;
+@panel-border-radius: 0px;
+@panel-default-border: @gcat-main-color;
+@panel-default-heading-bg: @gcat-main-color;
+@body-bg: #f7f7f7;
+.panel {
+   box-shadow: @gcat-shadow;
+}
+body {
+}
+
+[data-gn-slide-toggle]:before {
+    position: initial;
+    margin: 0px;
+}
+
+.gn-search-page {
+    overflow: hidden;
+}
+
+.gcat-body-container {
+    position: relative;
+}
+
+.gcat-header {
+    height: 300px;
+    position: relative;
+    color: white;
+    margin: 32px 46px;
+
+    .gcat-search-any, .gcat-search-catalogue {
+        border-bottom: 4px solid white; 
+        box-shadow: inset @gcat-shadow;
+        border-radius: 2px;
+        background-color: rgba(0, 0, 0, 0.03);
+        padding: 8px 16px;
+
+        & > * {
+            text-shadow: @gcat-shadow;
+        }
+
+        input {
+            background: none;
+            border: none;
+            height: 1.1em;
+            min-width: 0px;
+
+            &::placeholder {
+                color: white;
+                opacity: 0.6;
+            }
+        }
+        
+        &.gcat-search-any {
+            width: 50%;
+            margin-bottom: 20px;
+            input {
+                font-size: 2.2em;
+            }
+        }
+        &.gcat-search-catalogue {
+            width: 40%;
+            margin-right: 10%;
+            input {
+                font-size: 1.9em;
+            }
+        }
+    }
+}
+
+.gcat-header-bg {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(@gcat-shadow);
+
+    rect {
+        fill: @gcat-main-color;
+    }
+}
+
+.gcat-bg-overlay {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-image: url("../catalog/views/geocat/images/bg-texture.png");
+    background-size: 10%;
+    opacity: 0.35;
+}
+
+.gcat-logo {
+    width: 100%;
+    img {
+        width: 500px;
+    }
+}
