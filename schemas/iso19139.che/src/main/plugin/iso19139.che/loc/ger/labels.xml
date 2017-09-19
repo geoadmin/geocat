@@ -339,12 +339,6 @@
     <description>Attribut einer Klasse</description>
     <condition/>
   </element>
-  <element name="che:CHE_SV_ServiceIdentification" id="40.0">
-    <label>Basisinformation zum Dienst</label>
-    <description>Basisinformation zum Leistungsumfang des bereit gestellten Dienstes gemäss ISO 19119, bzw. Profil
-      GM03_2+
-    </description>
-  </element>
   <element name="che:inspireServiceType">
     <label>INSPIRE Dienste-Typ</label>
     <description></description>

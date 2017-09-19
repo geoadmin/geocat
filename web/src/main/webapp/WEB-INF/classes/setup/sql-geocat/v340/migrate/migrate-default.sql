@@ -4,7 +4,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES
   ('system/csw/enabledWhenIndexing', 'true', 2, 1211, 'y');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES
-  ('metadata/import/restrict', 'iso19139.che', 0, 11000, 'y');
+  ('metadata/import/restrict', 'iso19139.che,iso19139', 0, 11000, 'y');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES
   ('system/metadatacreate/generateUuid', 'true', 2, 9100, 'n');
@@ -213,6 +213,8 @@ DELETE FROM harvesterSettings WHERE id IN (
 -- kantoneBB
 -- kantone_search
 
+-- DELETE FROM metadata WHERE uuid like 'geocatch-subtpl-extent-custom-%';
+
 -- Create extent subtemplate for non reference datasets (ie. list above):
 -- Reproject to MN95
 INSERT INTO metadata (
@@ -224,7 +226,7 @@ INSERT INTO metadata (
       'n' AS isHarvested,
       to_char(current_timestamp, 'YYYY-MM-DD"T"HH:MI:SS') AS createdate,
       to_char(current_timestamp, 'YYYY-MM-DD"T"HH:MI:SS') AS changedate,
-      '<gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">
+      '<gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml">
         <gmd:description>
          <gmd:PT_FreeText>
           <gmd:textGroup>
@@ -402,7 +404,7 @@ DROP TABLE geom_table_lastmodified;
 -- ) AS xlinks
 --   WHERE
 --     xlink NOT LIKE 'https://%thesaurus.download%' AND
---     xlink NOT LIKE '%GetRecordById%';
+--     xlink NOT LIKE '%GetRecordById%' AND xlink like '%gn:xlinks%' AND xlink like '%.0&amp;%';
 
 -- Temporary account
 -- INSERT INTO Users (id, username, password, name, surname, profile, kind, organisation, security, authtype, isenabled) VALUES  (111111,'fxp','46e44386069f7cf0d4f2a420b9a2383a612f316e2024b0fe84052b0b96c479a23e8a0be8b90fb8c2','fxp','fxp',0,'','','','', 'y');
@@ -419,4 +421,51 @@ UPDATE metadata
 DELETE FROM selectionsdes;
 DELETE FROM Selections;
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/import/restrict', 'iso19139.che', 0, 11000, 'y');
+
+-- Now done in migration3_4.xsl
+-- UPDATE metadata
+--   SET data = replace(data, 'geocatch-subtpl-extent-landesgebiet-0', 'geocatch-subtpl-extent-landesgebiet-CH')
+--   WHERE data like '%geocatch-subtpl-extent-landesgebiet-0%';
+--
+-- UPDATE metadata
+--   SET data = replace(data, 'geocatch-subtpl-extent-landesgebiet-1', 'geocatch-subtpl-extent-landesgebiet-LI')
+--   WHERE data like '%geocatch-subtpl-extent-landesgebiet-1%';
+
+-- UPDATE metadata
+--    SET data = regexp_replace(data,
+--                     'geocatch-subtpl-extent-kantonsgebiet-([0-9]*).0',
+--                     E'geocatch-subtpl-extent-kantonsgebiet-\\1', 'g')
+--    WHERE data like '%geocatch-subtpl-extent-kantonsgebiet-%.0?%';
+--
+-- UPDATE metadata
+--    SET data = regexp_replace(data,
+--                     'geocatch-subtpl-extent-hoheitsgebiet-([0-9]*).0',
+--                     E'geocatch-subtpl-extent-hoheitsgebiet-\\1', 'g')
+--    WHERE data like '%geocatch-subtpl-extent-hoheitsgebiet-%.0?%';
+--
+-- UPDATE metadata
+--    SET data = regexp_replace(data,
+--                     'geocatch-subtpl-extent-custom-([0-9]*).0',
+--                     E'geocatch-subtpl-extent-custom-\\1', 'g')
+--    WHERE data like '%geocatch-subtpl-extent-custom-%.0?%';
+
+
+-- Remaining indexing problems:
+-- 58 empty polygon geometries
+-- SELECT * FROM metadata WHERE data like '%<gml:posList />%'
+
+-- One record linked to a non existing xlinks
+-- SELECT * FROM metadata WHERE data like '%id=253%'
+-- https://www.geocat.ch/geonetwork/srv/fre/xml.extent.get?id=253&wfs=default&typename=gn:xlinks&format=GMD_COMPLETE&extentTypeCode=true
+-- e15b7d2b-1f66-4e84-8e2e-42020dd99f83
+
+
+-- --
+-- SELECT "OBJECTVAL", "GEMNAME" FROM "gemeindenBB"
+--    WHERE "OBJECTVAL" in (1003, 1006, 1138, 1096, 1006, 1060, 1092, 2013, 2270, 2277, 6471, 6401, 6403, 5826, 5800) ORDER BY 2;
+--
+-- SELECT * FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1006';
+--
+-- SELECT * FROM "xlinks" WHERE "ID" in (151, 150, 8, 81, 9, 59, 145);
+--
+-- SELECT * FROM metadata WHERE uuid = 'geocatch-subtpl-extent-custom-150';

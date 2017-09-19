@@ -32,6 +32,7 @@ import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -295,8 +296,11 @@ public class KeywordsApi {
         if(langs == null) {
             langs = context.getLanguage().split(",");
         }
+        String[] iso3langCodes = Arrays.copyOf(langs, langs.length);
         for (int i = 0; i < langs.length; i++) {
-            langs[i] = mapper.iso639_2_to_iso639_1(langs[i], langs[i].substring(2));
+            if (StringUtils.isNotEmpty(langs[i])) {
+                langs[i] = mapper.iso639_2_to_iso639_1(langs[i], langs[i].substring(2));
+            }
         }
 
         Element descKeys;
@@ -347,7 +351,12 @@ public class KeywordsApi {
 
         Element requestParams = new Element ("request");
         for (Map.Entry<String, String> e : allRequestParams.entrySet()) {
-            requestParams.addContent(new Element(e.getKey()).setText(e.getValue()));
+            if (e.getKey().equals("lang")) {
+                requestParams.addContent(new Element(e.getKey())
+                    .setText(String.join(",", iso3langCodes)));
+            } else {
+                requestParams.addContent(new Element(e.getKey()).setText(e.getValue()));
+            }
         }
         root.addContent(requestParams);
         root.addContent(descKeys);
