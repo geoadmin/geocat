@@ -352,6 +352,17 @@ INSERT INTO validation
     FROM metadata WHERE uuid like 'geocatch-subtpl-extent-custom-%';
 
 
+-- Report validation status from extra column to validation table for subtemplate
+INSERT INTO validation
+  SELECT id, 'subtemplate', 1, 0, 0, createdate, true
+    FROM metadata WHERE isTemplate = 's' AND extra = 'validated';
+
+
+INSERT INTO validation
+  SELECT id, 'subtemplate', 0, 0, 0, createdate, true
+    FROM metadata WHERE isTemplate = 's' AND extra = 'nonvalidated';
+
+
 -- Set publish to all
 INSERT INTO operationallowed
   SELECT 1, id, 0
@@ -380,6 +391,12 @@ DROP TABLE non_validated;
 DROP TABLE hiddenmetadataelements;
 DROP TABLE deletedobjects;
 DROP TABLE geom_table_lastmodified;
+DROP TABLE countries;
+DROP TABLE countriesBB;
+DROP TABLE gemeindenBB;
+DROP TABLE kantonBB;
+DROP TABLE kanton_search;
+DROP TABLE gemeinden_search;
 
 -- TODO publish_tracking
 
