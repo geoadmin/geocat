@@ -1,0 +1,24 @@
+<div class="gn-search-page"
+     data-ng-controller="GnSearchController">
+  <cookiewarning></cookiewarning>
+  <div class=""
+       data-ng-controller="gnsDefault">
+    <gn-extend-mainctrl></gn-extend-mainctrl>
+
+    <div>
+      <h1>geocat.ch<br><small>geographic catalog</small></h1>
+      <h2>search by text: <input type="text"></h2>
+      <h2>search by catalogue: <input type="text"></h2>
+    </div>
+
+    <div data-gn-saved-selections="">
+      <div data-ng-include="'../../catalog/views/geocat/templates/results.html'">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="navbar navbar-default gn-bottom-bar" role="navigation"
+     data-ng-include="'../../catalog/views/default/templates/footer.html'">
+</div>
