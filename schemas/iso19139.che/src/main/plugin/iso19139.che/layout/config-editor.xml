@@ -171,6 +171,7 @@
       <directiveAttributes data-include="external.theme.inspire-theme,external.place.regions"/>
       -->
       <directiveAttributes
+        data-allow-free-text-keywords="false"
         data-transformation="to-iso19139-keyword-as-xlink"
         data-include="xpath::string-join(che:CHE_MD_Metadata/gmd:identificationInfo
                           //gmd:thesaurusName/*/gmd:identifier/*/
