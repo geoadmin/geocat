@@ -69,7 +69,8 @@ dockerBuild {
     }
   }
   stage('Build/publish a docker image') {
-    def dockerImageName = "camptocamp/geocat:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+    def shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
+    def dockerImageName = "camptocamp/geocat:${env.BRANCH_NAME}-${env.BUILD_NUMBER}-${shortCommit}"
     // one-liner to setup docker
     executeInContainer(buildContainerName, "curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-17.05.0-ce.tgz && tar --strip-components=1 -xvzf docker-17.05.0-ce.tgz -C /usr/local/bin")
     executeInContainer(buildContainerName, "mvn -s /settings.xml ${mavenOpts} -pl web -Pdocker -DdockerImageName=${dockerImageName} docker:build docker:push")
