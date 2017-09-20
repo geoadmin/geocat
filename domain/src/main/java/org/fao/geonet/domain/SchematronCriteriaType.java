@@ -52,6 +52,12 @@ public enum SchematronCriteriaType {
         public boolean accepts(ApplicationContext applicationContext, String value, int metadataId, Element metadata,
                                List<Namespace> metadataNamespaces) {
 
+            // if values is empty, consider the criteria as not accepted.
+            // Since the value is editable in the schematron admin interface
+            // we cannot rely on this user input.
+            if (value == null || value.equals("")) {
+                return false;
+            }
 
             String[] values = value.split(",");
             Integer[] ids = new Integer[values.length];
