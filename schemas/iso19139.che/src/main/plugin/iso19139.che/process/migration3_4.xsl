@@ -241,67 +241,72 @@
   <xsl:template match="gmd:parentIdentifier"/>
 
   <xsl:template match="gmd:identificationInfo/*">
-    <xsl:element name="{name()}">
-      <xsl:copy-of select="@*"/>
-      <xsl:apply-templates select="gmd:citation"/>
-      <xsl:apply-templates select="gmd:abstract"/>
-      <xsl:apply-templates select="gmd:purpose"/>
-      <xsl:apply-templates select="gmd:credit"/>
-      <xsl:apply-templates select="gmd:status"/>
 
-      <!-- If expiry then flag record as completed -->
-      <xsl:if test="$hasExpiryDate and
-                    count(gmd:status[gmd:MD_ProgressCode/@codeListValue = 'completed']) = 0">
-        <gmd:status>
-          <gmd:MD_ProgressCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ProgressCode"
-                               codeListValue="completed"/>
-        </gmd:status>
-      </xsl:if>
+    <!-- In production, some service records contains
+    first an empty DataIdentification block that we ignore here -->
+    <xsl:if test="name(following-sibling::*[1]) != 'che:CHE_SV_ServiceIdentification'">
+      <xsl:element name="{name()}">
+        <xsl:copy-of select="@*"/>
+        <xsl:apply-templates select="gmd:citation"/>
+        <xsl:apply-templates select="gmd:abstract"/>
+        <xsl:apply-templates select="gmd:purpose"/>
+        <xsl:apply-templates select="gmd:credit"/>
+        <xsl:apply-templates select="gmd:status"/>
 
-      <xsl:apply-templates select="gmd:pointOfContact"/>
-      <xsl:apply-templates select="gmd:resourceMaintenance"/>
-      <xsl:apply-templates select="gmd:graphicOverview"/>
-      <xsl:apply-templates select="gmd:resourceFormat"/>
-      <xsl:apply-templates select="gmd:descriptiveKeywords"/>
-      <xsl:apply-templates select="gmd:resourceSpecificUsage"/>
-      <xsl:apply-templates select="gmd:resourceConstraints"/>
-      <xsl:apply-templates select="gmd:aggregationInfo"/>
+        <!-- If expiry then flag record as completed -->
+        <xsl:if test="$hasExpiryDate and
+                      count(gmd:status[gmd:MD_ProgressCode/@codeListValue = 'completed']) = 0">
+          <gmd:status>
+            <gmd:MD_ProgressCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ProgressCode"
+                                 codeListValue="completed"/>
+          </gmd:status>
+        </xsl:if>
 
-      <!-- Move the parent identifier to an aggregate-->
-      <xsl:variable name="parentIdentifier"
-                    select="ancestor::che:CHE_MD_Metadata/gmd:parentIdentifier/gco:CharacterString"/>
-      <xsl:if test="normalize-space($parentIdentifier) != ''">
-        <gmd:aggregationInfo>
-          <gmd:MD_AggregateInformation>
-            <gmd:aggregateDataSetIdentifier>
-              <gmd:MD_Identifier>
-                <gmd:code>
-                  <gco:CharacterString>
-                    <xsl:value-of select="$parentIdentifier"/>
-                  </gco:CharacterString>
-                </gmd:code>
-              </gmd:MD_Identifier>
-            </gmd:aggregateDataSetIdentifier>
-            <gmd:associationType>
-              <gmd:DS_AssociationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#DS_AssociationTypeCode"
-                                          codeListValue="largerWorkCitation"/>
-            </gmd:associationType>
-          </gmd:MD_AggregateInformation>
-        </gmd:aggregationInfo>
-      </xsl:if>
+        <xsl:apply-templates select="gmd:pointOfContact"/>
+        <xsl:apply-templates select="gmd:resourceMaintenance"/>
+        <xsl:apply-templates select="gmd:graphicOverview"/>
+        <xsl:apply-templates select="gmd:resourceFormat"/>
+        <xsl:apply-templates select="gmd:descriptiveKeywords"/>
+        <xsl:apply-templates select="gmd:resourceSpecificUsage"/>
+        <xsl:apply-templates select="gmd:resourceConstraints"/>
+        <xsl:apply-templates select="gmd:aggregationInfo"/>
 
-      <xsl:apply-templates select="gmd:spatialRepresentationType"/>
-      <xsl:apply-templates select="gmd:spatialResolution"/>
-      <xsl:apply-templates select="gmd:language"/>
-      <xsl:apply-templates select="gmd:characterSet"/>
-      <xsl:apply-templates select="gmd:topicCategory"/>
-      <xsl:apply-templates select="gmd:environmentDescription"/>
-      <xsl:apply-templates select="gmd:extent"/>
-      <xsl:apply-templates select="gmd:supplementalInformation"/>
+        <!-- Move the parent identifier to an aggregate-->
+        <xsl:variable name="parentIdentifier"
+                      select="ancestor::che:CHE_MD_Metadata/gmd:parentIdentifier/gco:CharacterString"/>
+        <xsl:if test="normalize-space($parentIdentifier) != ''">
+          <gmd:aggregationInfo>
+            <gmd:MD_AggregateInformation>
+              <gmd:aggregateDataSetIdentifier>
+                <gmd:MD_Identifier>
+                  <gmd:code>
+                    <gco:CharacterString>
+                      <xsl:value-of select="$parentIdentifier"/>
+                    </gco:CharacterString>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:aggregateDataSetIdentifier>
+              <gmd:associationType>
+                <gmd:DS_AssociationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#DS_AssociationTypeCode"
+                                            codeListValue="largerWorkCitation"/>
+              </gmd:associationType>
+            </gmd:MD_AggregateInformation>
+          </gmd:aggregationInfo>
+        </xsl:if>
 
-      <xsl:apply-templates select="srv:*"/>
-      <xsl:apply-templates select="che:*"/>
-    </xsl:element>
+        <xsl:apply-templates select="gmd:spatialRepresentationType"/>
+        <xsl:apply-templates select="gmd:spatialResolution"/>
+        <xsl:apply-templates select="gmd:language"/>
+        <xsl:apply-templates select="gmd:characterSet"/>
+        <xsl:apply-templates select="gmd:topicCategory"/>
+        <xsl:apply-templates select="gmd:environmentDescription"/>
+        <xsl:apply-templates select="gmd:extent"/>
+        <xsl:apply-templates select="gmd:supplementalInformation"/>
+
+        <xsl:apply-templates select="srv:*"/>
+        <xsl:apply-templates select="che:*"/>
+      </xsl:element>
+    </xsl:if>
   </xsl:template>
 
   <!-- Do a copy of every nodes (removing extra namespaces) -->
