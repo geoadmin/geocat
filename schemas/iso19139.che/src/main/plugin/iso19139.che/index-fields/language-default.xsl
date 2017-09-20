@@ -108,8 +108,7 @@
              store="true" index="true"/>
 
       <xsl:variable name="title"
-                    select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo//gmd:citation//gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId]"/>
-
+                    select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*/gmd:citation/*/gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId]"/>
       <!-- not tokenized title for sorting -->
       <xsl:choose>
         <xsl:when test="normalize-space($title) = ''">
@@ -620,14 +619,14 @@
       <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions">
         <xsl:variable name="tPosition" select="position()"></xsl:variable>
         <xsl:for-each select="gmd:onLine/gmd:CI_OnlineResource[
-        gmd:name/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] or
-        gmd:description/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId]
-        ]">
+          gmd:name/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] or
+          gmd:description/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId]
+          ]">
           <xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
           <xsl:variable name="linkage"
-                        select="gmd:linkage/gmd:URL[not(..//che:LocalisedURL[@locale=$langId])] |
+                        select="(gmd:linkage/gmd:URL[not(..//che:LocalisedURL[@locale=$langId])] |
                                 gmd:linkage//che:LocalisedURL[@locale=$langId]  |
-                                gmd:linkage//che:LocalisedURL[not(ancestor::gmd:linkage//che:LocalisedURL[@locale=$langId]) and @locale!=$langId]"/>
+                                gmd:linkage//che:LocalisedURL[not(ancestor::gmd:linkage//che:LocalisedURL[@locale=$langId]) and @locale!=$langId])[1]"/>
           <xsl:variable name="title"
                         select="if (gmd:name/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] != '')
                                 then normalize-space(gmd:name/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId])

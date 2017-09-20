@@ -789,9 +789,9 @@
           </xsl:variable>
           <!--<xsl:variable name="linkage" select="gmd:linkage/gmd:URL"/>-->
           <xsl:variable name="linkage"
-                        select="gmd:linkage/gmd:URL |
+                        select="(gmd:linkage/gmd:URL |
                           gmd:linkage//che:LocalisedURL[not(ancestor::gmd:linkage/gmd:URL) and @locale=$langId] |
-                          gmd:linkage//che:LocalisedURL[not(ancestor::gmd:linkage//che:LocalisedURL[@locale=$langId]) and @locale!=$langId]"/>
+                          gmd:linkage//che:LocalisedURL[not(ancestor::gmd:linkage//che:LocalisedURL[@locale=$langId]) and @locale!=$langId])[1]"/>
 
           <xsl:variable name="title"
                         select="normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)"/>
