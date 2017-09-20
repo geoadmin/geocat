@@ -1,0 +1,27 @@
+<div class="gn-search-page"
+     data-ng-controller="GnSearchController">
+
+  <svg class="gcat-header-bg" viewBox="0 0 10 10"
+    preserveAspectRatio="xMaxYMin">
+    <rect x="0" y="0" width="100" height="100"
+      transform="translate(-91, 0) rotate(40 100 0)"></rect>
+  </svg>
+
+  <div class="gcat-bg-overlay"></div>
+
+  <cookiewarning></cookiewarning>
+  <div class=""
+       data-ng-controller="gnsGeocat">
+    <gn-extend-mainctrl></gn-extend-mainctrl>
+
+    <div data-gn-saved-selections="">
+      <div data-ng-include="'../../catalog/views/geocat/templates/results.html'">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="navbar navbar-default gn-bottom-bar" role="navigation"
+     data-ng-include="'../../catalog/views/default/templates/footer.html'">
+</div>

@@ -1,0 +1,112 @@
+<div class="container gcat-body-container"
+     data-ng-search-form=""
+     data-runSearch="true">
+
+  <div class="row">
+    <div class="gcat-header flex-col flex-center flex-align-center">
+      <div class="gcat-logo flex-row flex-align-center">
+        <img src="../../catalog/views/geocat/images/geocat_logo.png">
+      </div>
+      <div class="gcat-search-any flex-row">
+        <input type="text" placeholder="{{'anyPlaceHolder' | translate}}"
+          class="flex-grow">
+        <div class="flex-spacer"></div>
+        <i class="fa fa-2x fa-search"/>
+      </div>
+      <div class="gcat-search-catalogue flex-row">
+        <input type="text" placeholder="{{'catalogueSearch' | translate}}"
+          class="flex-grow">
+      </div>
+    </div>
+  </div>
+
+  <div gn-grid-related-query="searchResults.records"></div>
+  <div class="row">
+    <div class="col-md-3 gn-search-facet">
+
+      <div data-ng-show="searchResults.records.length > 0"
+           data-gn-saved-selections-panel="user"></div>
+
+      <!-- Hierachical facet mode -->
+      <div class="panel panel-default"
+           data-ng-show="searchResults.records.length > 0">
+        <div class="panel-heading">
+          <span translate>refineSearch</span>
+        </div>
+        <div class="panel-body">
+          <div data-gn-facet-dimension-list="searchResults.dimension"
+               data-params="searchObj.params"
+               data-facet-type="facetsSummaryType"
+               data-facet-list="facetConfig"
+               data-current-facets="currentFacets">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-md-9"
+         data-gn-facet-dimension-list="searchResults.dimension"
+         data-params="searchObj.params"
+         data-facet-type="facetsSummaryType"
+         data-facet-list="facetConfig"
+         data-current-facets="currentFacets"
+         data-tab-field="facetTabField"></div>
+
+    <div class="col-md-3 relative"
+         data-ng-show="searchResults.records.length > 0">
+      <div data-gn-selection-widget=""
+           data-results="searchResults"></div>
+    </div>
+
+    <div class="col-md-6"
+         data-ng-show="searchResults.records.length > 0">
+
+      <div class="pull-right"
+           data-sortby-combo=""
+           data-params="searchObj.params"
+           data-gn-sortby-values="searchObj.sortbyValues"></div>
+      <div class="pull-right"
+           data-gn-pagination="paginationInfo"
+           data-hits-values="searchObj.hitsperpageValues"
+           data-enable-hot-keys=""
+           data-enable-events=""></div>
+    </div>
+
+    <div class="col-md-9">
+      <span class="loading fa fa-spinner fa-spin"
+            data-ng-show="searching"></span>
+
+      <div class="alert alert-warning" role="alert"
+           ng-if="!searching && searchResults.count == 0">
+        <i class="fa fa-frown-o"></i>
+        <span data-translate="">zarooResult</span>
+      </div>
+
+      <div data-ng-show="searchResults.records.length > 0"
+           data-gn-results-container=""
+           data-search-results="searchResults"
+           data-template-url="resultTemplate"
+           data-map="searchObj.searchMap"></div>
+
+      <div class=""
+           data-gn-pagination="paginationInfo"
+           data-hits-values="searchObj.hitsperpageValues"
+           data-enable-hot-keys=""></div>
+      <br/>
+    </div>
+  </div>
+
+  <div data-gn-map-field="searchObj.searchMap"
+       data-gn-map-field-geom="searchObj.params.geometry"
+       data-gn-map-field-opt="searchObj.mapfieldOption"
+       class="gn-search-map">
+  </div>
+
+  <button data-ng-click="toggleMap()"
+          title="{{'toggleMiniMap' | translate}}"
+          class="gn-toggle gn-minimap-toggle btn btn-link gn-minimap-button">
+    <i class="fa fa-angle-double-right" ></i>
+    <b class="gn-minimap-toggle gn-minimap-text" data-translate="">map</b>
+  </button>
+</div>
