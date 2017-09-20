@@ -912,6 +912,9 @@
                            access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/getSLD/.*" access="permitAll"/>
 
+        <!--Geocat-->
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/aap.report.csv!?.*" access="hasRole('Administrator')"/>
+
         <sec:intercept-url pattern="/.*" access="denyAll"/>
       </sec:filter-security-metadata-source>
     </property>

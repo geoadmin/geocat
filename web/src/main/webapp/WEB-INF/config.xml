@@ -229,6 +229,12 @@
       <!-- Still used by ExtJS search form criteria on language -->
       <class name="org.fao.geonet.guiservices.isolanguages.Get"/>
     </service>
+
+    <service name="aap.report.csv">
+      <class name=".geocat.services.aap.AapMetadataReport"/>
+      <output sheet="../xslt/geocat/aap-report-csv.xsl" contentType="text/csv; charset=UTF-8"/>
+    </service>
+
   </services>
 
   <!-- ====================================================================== -->
