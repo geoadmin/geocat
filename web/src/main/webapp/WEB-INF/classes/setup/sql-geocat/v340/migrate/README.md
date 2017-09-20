@@ -132,6 +132,20 @@ curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/
 
 ```
 
+
+Set all extent subtemplate loaded valid in the database:
+
+```
+
+INSERT INTO validation
+  SELECT id, 'subtemplate', 1, 0, 0, createdate, true
+    FROM metadata WHERE uuid like 'geocatch-subtpl-extent-land-%'
+    or  uuid like 'geocatch-subtpl-extent-kanton-%' 
+    or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%';
+    
+```
+
+
 TODO: There is an issue with BatchOpsMetadataReindexer to solve here as the number of subtemplate
 in the catalogue is correct only after a reindex.
 
