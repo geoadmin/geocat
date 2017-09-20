@@ -8,12 +8,21 @@
 @brand-primary: @gcat-main-color;
 @panel-border-radius: 0px;
 @panel-default-border: @gcat-main-color;
-@panel-default-heading-bg: @gcat-main-color;
+@panel-default-heading-bg: white;
 @body-bg: #f7f7f7;
+
+// panel styles override
 .panel {
    box-shadow: @gcat-shadow;
-}
-body {
+   border: none;
+   .panel-heading {
+       color: rgb(95, 186, 218);
+       text-transform: uppercase;
+       font-weight: bold;
+       text-align: center;
+       font-size: 0.9em;
+       border-bottom: 1px solid fade(@gcat-main-color, 50%);
+   }
 }
 
 [data-gn-slide-toggle]:before {
