@@ -723,8 +723,14 @@
       </gmd:topicCategory>
 
       <!-- XLink migration -->
+      <gmd:extent xlink:href="http://www.geocat.ch:80/geonetwork/srv/deu/xml.extent.get?wfs=default&amp;format=gmd_complete&amp;typename=gn:countries&amp;id=1&amp;extentTypeCode=true"/>
+      <gmd:extent xlink:href="http://www.geocat.ch:80/geonetwork/srv/deu/xml.extent.get?wfs=default&amp;format=gmd_complete&amp;typename=gn:countries&amp;id=14&amp;extentTypeCode=true"/>
+      <gmd:extent xlink:href="http://www.geocat.ch:80/geonetwork/srv/deu/xml.extent.get?wfs=default&amp;format=gmd_complete&amp;typename=gn:countries&amp;id=0&amp;extentTypeCode=true"/>
       <gmd:extent xlink:href="http://www.geocat.ch:80/geonetwork/srv/deu/xml.extent.get?wfs=default&amp;format=gmd_complete&amp;typename=gn:kantoneBB&amp;id=14&amp;extentTypeCode=true"/>
-
+      <gmd:extent xlink:href="http://www.geocat.ch:80/geonetwork/srv/deu/xml.extent.get?wfs=default&amp;format=gmd_complete&amp;typename=gn:kantoneBB&amp;id=1&amp;extentTypeCode=true"/>
+      <gmd:extent xlink:href="http://www.geocat.ch:80/geonetwork/srv/deu/xml.extent.get?wfs=default&amp;format=gmd_complete&amp;typename=gn:kantoneBB&amp;id=0&amp;extentTypeCode=true"/>
+      <gmd:extent xlink:href="http://www.geocat.ch:80/geonetwork/srv/deu/xml.extent.get?wfs=default&amp;format=gmd_complete&amp;typename=gn:gemeindenBB&amp;id=1151.0&amp;extentTypeCode=true"/>
+      
       <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink">
         <gmd:EX_Extent>
           <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
@@ -747,6 +753,29 @@
               </gmd:textGroup>
             </gmd:PT_FreeText>
           </gmd:description>
+          
+          <gmd:geographicElement>
+            <gmd:EX_BoundingPolygon>
+              <gmd:extentTypeCode>
+                <gco:Boolean>true</gco:Boolean>
+              </gmd:extentTypeCode>
+              <gmd:polygon>
+                <gml:MultiSurface gml:id="N10285">
+                  <gml:surfaceMember>
+                    <gml:Polygon gml:id="N1028A">
+                      <gml:exterior>
+                        <gml:LinearRing>
+                          <gml:posList />
+                        </gml:LinearRing>
+                      </gml:exterior>
+                    </gml:Polygon>
+                  </gml:surfaceMember>
+                </gml:MultiSurface>
+              </gmd:polygon>
+            </gmd:EX_BoundingPolygon>
+          </gmd:geographicElement>
+          
+          
           <gmd:geographicElement>
             <gmd:EX_GeographicDescription>
               <gmd:geographicIdentifier>
@@ -821,6 +850,17 @@
   </gmd:identificationInfo>
   <gmd:distributionInfo>
     <gmd:MD_Distribution>
+      <gmd:distributionFormat xmlns:xlink="http://www.w3.org/1999/xlink" 
+        xlink:href="local://xml.format.get?id=42" xlink:role="" xlink:show="embed">
+        <gmd:MD_Format xmlns:gco="http://www.isotc211.org/2005/gco">
+          <gmd:name>
+            <gco:CharacterString>PDF</gco:CharacterString>
+          </gmd:name>
+          <gmd:version>
+            <gco:CharacterString>-</gco:CharacterString>
+          </gmd:version>
+        </gmd:MD_Format>
+      </gmd:distributionFormat>
       <gmd:distributionFormat xmlns:xlink="http://www.w3.org/1999/xlink">
         <gmd:MD_Format>
           <gmd:name>
