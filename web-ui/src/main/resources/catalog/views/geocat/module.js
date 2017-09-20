@@ -33,4 +33,12 @@
   var module = angular.module('gn_search_geocat',
       ['gn_search_default']);
 
+  module.controller('gnsGeocat', [
+    '$scope',
+    '$controller',
+    function($scope, $controller) {
+      angular.extend(this, $controller('gnsDefault', { $scope: $scope }));
+      $scope.resultTemplate = '../../catalog/views/geocat/templates/geocat.html';
+    }
+  ]);
 })();
