@@ -468,7 +468,16 @@
              index="false"/>
 
 
-      <xsl:for-each select="//gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString |
+      <xsl:for-each select="gmd:pointOfContact">
+        <xsl:apply-templates mode="index-contact"
+                             select="gmd:CI_ResponsibleParty|*[@gco:isoType = 'gmd:CI_ResponsibleParty']">
+          <xsl:with-param name="type" select="'resource'"/>
+          <xsl:with-param name="fieldPrefix" select="'responsibleParty'"/>
+          <xsl:with-param name="position" select="position()"/>
+        </xsl:apply-templates>
+      </xsl:for-each>
+
+      <!--<xsl:for-each select="//gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString |
 				//che:CHE_CI_ResponsibleParty/gmd:organisationName/gco:CharacterString |
 				//che:CHE_CI_ResponsibleParty/che:organisationAcronym/gco:CharacterString">
         <Field name="orgName" string="{string(.)}" store="true" index="true"/>
@@ -477,7 +486,7 @@
 				//che:CHE_CI_ResponsibleParty/che:individualFirstName/gco:CharacterString|
 				//che:CHE_CI_ResponsibleParty/che:individualLastName/gco:CharacterString">
         <Field name="creator" string="{string(.)}" store="true" index="true"/>
-      </xsl:for-each>
+      </xsl:for-each>-->
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -939,6 +948,18 @@
     <xsl:for-each select="gmd:dateStamp/gco:DateTime">
       <Field name="changeDate" string="{string(.)}" store="true" index="true"/>
     </xsl:for-each>
+
+    <xsl:for-each select="gmd:contact">
+      <Field name="metadataPOC"
+             string="{string(*/gmd:organisationName/(gco:CharacterString|gmx:Anchor))}"
+             store="true" index="true"/>
+      <xsl:apply-templates mode="index-contact" select="*">
+        <xsl:with-param name="type" select="'metadata'"/>
+        <xsl:with-param name="fieldPrefix" select="'responsibleParty'"/>
+        <xsl:with-param name="position" select="position()"/>
+      </xsl:apply-templates>
+    </xsl:for-each>
+
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- === Reference system info === -->
 
@@ -1059,6 +1080,59 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+
+
+  <xsl:template mode="index-contact" match="gmd:CI_ResponsibleParty|*[@gco:isoType = 'gmd:CI_ResponsibleParty']">
+    <xsl:param name="type"/>
+    <xsl:param name="fieldPrefix"/>
+    <xsl:param name="position" select="'0'"/>
+
+    <xsl:variable name="orgName" select="gmd:organisationName/(gco:CharacterString|gmx:Anchor)"/>
+
+    <Field name="orgName" string="{string($orgName)}" store="true" index="true"/>
+    <Field name="orgNameTree" string="{string($orgName)}" store="true" index="true"/>
+
+    <xsl:variable name="uuid" select="@uuid"/>
+    <xsl:variable name="role" select="gmd:role/*/@codeListValue"/>
+    <xsl:variable name="roleTranslation"
+                  select="util:getCodelistTranslation('gmd:CI_RoleCode', string($role), string($isoLangId))"/>
+    <xsl:variable name="logo" select=".//gmx:FileName/@src"/>
+    <xsl:variable name="email"
+                  select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString"/>
+    <xsl:variable name="phone"
+                  select="gmd:contactInfo/*/gmd:phone/*/gmd:voice[normalize-space(.) != '']/*/text()"/>
+    <xsl:variable name="individualName"
+                  select="concat(che:individualFirstName/gco:CharacterString/text(), ' ', che:individualLastName/gco:CharacterString/text())"/>
+    <xsl:variable name="positionName"
+                  select="gmd:positionName/gco:CharacterString/text()"/>
+    <xsl:variable name="address" select="string-join(gmd:contactInfo/*/gmd:address/*/(
+                                        gmd:deliveryPoint|gmd:postalCode|gmd:city|
+                                        gmd:administrativeArea|gmd:country)/gco:CharacterString/text(), ', ')"/>
+
+    <Field name="{$fieldPrefix}"
+           string="{concat($roleTranslation, '|', $type,'|',
+                             $orgName, '|',
+                             $logo, '|',
+                             string-join($email, ','), '|',
+                             $individualName, '|',
+                             $positionName, '|',
+                             $address, '|',
+                             string-join($phone, ','), '|',
+                             $uuid, '|',
+                             $position)}"
+           store="true" index="false"/>
+
+    <xsl:for-each select="$email">
+      <Field name="{$fieldPrefix}Email" string="{string(.)}" store="true" index="true"/>
+      <Field name="{$fieldPrefix}RoleAndEmail" string="{$role}|{string(.)}" store="true" index="true"/>
+    </xsl:for-each>
+    <xsl:for-each select="@uuid">
+      <Field name="{$fieldPrefix}Uuid" string="{string(.)}" store="true" index="true"/>
+      <Field name="{$fieldPrefix}RoleAndUuid" string="{$role}|{string(.)}" store="true" index="true"/>
+    </xsl:for-each>
+  </xsl:template>
+
 
   <!-- ========================================================================================= -->
   <!-- xlinks -->
