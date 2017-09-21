@@ -1,0 +1,30 @@
+<form class="form-horizontal"
+      role="form">
+  <input type="hidden" name="_csrf" value="{{csrf}}"/>
+
+  <div class="row">
+      <div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">
+        <div class="gcat-search-any flex-row">
+          <input type="text"
+            class="form-control input-lg flex-grow"
+            id="gn-any-field"
+            data-ng-model="searchObj.params.any"
+            placeholder="{{'anyPlaceHolder' | translate}}"
+            data-ng-keyup="$event.keyCode == 13 && triggerSearch()"
+            data-typeahead="address for address in getAnySuggestions($viewValue)"
+            data-typeahead-loading="anyLoading" class="form-control"
+            data-typeahead-min-length="1"
+            data-typeahead-focus-first="false"
+            data-typeahead-wait-ms="300">
+          <i class="fa fa-2x fa-search"/>
+          <div class="flex-spacer"></div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-5">
+        <div class="gcat-search-catalogue flex-row">
+          <input type="text" placeholder="{{'catalogueSearch' | translate}}"
+            class="flex-grow">
+        </div>
+      </div>
+    </div>
+</form>
