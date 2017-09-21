@@ -2,7 +2,7 @@
       role="form">
   <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
-  <div class="row">
+  <div class="row" ng-controller="gcSearchFormCtrl as searchCtrl">
       <div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">
         <div class="gcat-search-any flex-row">
           <input type="text"
@@ -22,8 +22,9 @@
       </div>
       <div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-5">
         <div class="gcat-search-catalogue flex-row">
-          <input type="text" placeholder="{{'catalogueSearch' | translate}}"
-            class="flex-grow">
+            <input type="text" class="form-control flex-grow"  placeholder="{{'catalogueSearch' | translate}}"
+                   gn-values="searchObj.params._groupOwner"
+                   gn-typeahead="searchCtrl.catalogOptions"/>
         </div>
       </div>
     </div>
