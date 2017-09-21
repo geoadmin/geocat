@@ -194,8 +194,8 @@
       <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>
       <script type="text/javascript">
         var module = angular.module('gn_search');
-        module.config(['gnViewerSettings', 'gnGlobalSettings',
-        function(gnViewerSettings, gnGlobalSettings) {
+        module.config(['gnViewerSettings', 'gnGlobalSettings', 'gnSearchSettings',
+        function(gnViewerSettings, gnGlobalSettings, gnSearchSettings) {
         <xsl:if test="$owsContext">
           gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
         </xsl:if>
@@ -204,7 +204,14 @@
           gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
           gnViewerSettings.layerGroup = '<xsl:value-of select="$layerGroup"/>';
         </xsl:if>
+
+        // GEOCAT specific
+        gnSearchSettings.gnStores = {
+        'topicCat': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/schemas/iso19139.che/codelists/codelist[@name='gmd:MD_TopicCategoryCode']/entry" mode="js-translations-topicCat"/>],
+        'formats': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/formats/record" mode="js-translations-formats"/>]
+        };
         }]);
+
       </script>
     </xsl:if>
 
@@ -224,4 +231,11 @@
       }]);
     </script>
   </xsl:template>
+
+  <xsl:template match="entry" mode="js-translations-topicCat">
+    ,["<xsl:value-of select="code"/>", "<xsl:value-of select="label"/>"]</xsl:template>
+
+  <xsl:template match="record" mode="js-translations-formats">
+    ,["<xsl:value-of select="name"/><xsl:if test="version != '-'">_<xsl:value-of select="version"/></xsl:if>", "<xsl:value-of select="name"/> (<xsl:value-of select="version"/>)"]</xsl:template>
+
 </xsl:stylesheet>

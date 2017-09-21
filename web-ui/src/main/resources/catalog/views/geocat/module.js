@@ -35,6 +35,12 @@
     'gc_searchform'
   ]);
 
+  module.config(['$LOCALES',
+    function($LOCALES) {
+      $LOCALES.push('geocat');
+
+    }]);
+
   module.controller('gnsGeocat', [
     '$scope',
     '$controller',

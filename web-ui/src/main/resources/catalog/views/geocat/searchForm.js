@@ -29,7 +29,11 @@
   ]);
 
 
-  var SearchFormController = function($http, $q, gnLangs) {
+  var SearchFormController = function(
+    $http,
+    $q,
+    gnLangs,
+    gnSearchSettings) {
 
     // Catalog search tagsinput values (groups)
     this.catalogOptions = {
@@ -50,6 +54,85 @@
         return defer.promise;
       })()
     };
+
+    // data store for topic category
+    if (gnSearchSettings.gnStores) {
+      var topicCats = gnSearchSettings.gnStores.topicCat;
+      topicCats.forEach(function(cat, i) {
+        topicCats[i] = {
+          id: cat[0],
+          name: cat[1],
+          hierarchy: cat[0].indexOf('_') > 0 ? 'second' : 'main'
+        };
+      });
+      this.topicCatsOptions = {
+        mode: 'local',
+        data: topicCats,
+        config: {
+          templates: {
+            suggestion: Handlebars.compile(
+              '<p class="topiccat-{{hierarchy}}">{{name}}</p>')
+          }
+        }
+      };
+
+      // data store for formats
+      this.formatsOptions = {
+        mode: 'local',
+        data: topicCats //TODO
+      };
+    }
+
+    // data store for types field
+    this.types = [
+      'dataset',
+      'basicgeodata',
+      'basicgeodata-federal',
+      'basicgeodata-cantonal',
+      'basicgeodata-communal',
+      'service',
+      'service-OGC:WMS',
+      'service-OGC:WFS'
+    ];
+
+    // data store for types field
+    this.geodataTypes = [
+      'basicGeodata',
+      'oereb',
+      'oerebRegister',
+      'openGovernmentData',
+      'openData',
+      'referenceGeodata'
+    ];
+
+    // data store for archives field
+    this.archives = [{
+      value: '',
+      label: 'archiveincluded'
+    }, {
+      value: 'n',
+      label: 'archiveexcluded'
+    },{
+      value: 'y',
+      label: 'archiveonly'
+    }];
+
+    // data store for valid field
+    this.validStore = [{
+      value: '',
+      label: 'anyValue'
+    }, {
+      value: '1',
+      label: 'yes'
+    }, {
+      value: '0',
+      label: 'no'
+    },{
+      value: '-1',
+      label: 'unchecked'
+    }];
+
+
   };
 
 
@@ -59,7 +142,8 @@
   SearchFormController['$inject'] = [
     '$http',
     '$q',
-    'gnLangs'
+    'gnLangs',
+    'gnSearchSettings'
   ];
 
   module.controller('gcSearchFormCtrl', SearchFormController);

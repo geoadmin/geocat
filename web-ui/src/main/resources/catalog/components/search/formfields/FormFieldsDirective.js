@@ -60,6 +60,9 @@
             gnValues: '='
           },
           link: function(scope, element, attrs) {
+            if(!scope.options) {
+              console.warn(attrs.gnValues)
+            }
             var config = scope.options.config || {};
             var doLink = function(data, remote) {
 
