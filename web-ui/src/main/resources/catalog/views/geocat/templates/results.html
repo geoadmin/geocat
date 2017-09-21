@@ -1,24 +1,7 @@
 <div class="container gcat-body-container"
      data-ng-search-form=""
      data-runSearch="true">
-
-  <div class="row">
-    <div class="gcat-header flex-col flex-center flex-align-center">
-      <div class="gcat-logo flex-row flex-align-center">
-        <img src="../../catalog/views/geocat/images/geocat_logo.png">
-      </div>
-      <div class="gcat-search-any flex-row">
-        <input type="text" placeholder="{{'anyPlaceHolder' | translate}}"
-          class="flex-grow">
-        <div class="flex-spacer"></div>
-        <i class="fa fa-2x fa-search"/>
-      </div>
-      <div class="gcat-search-catalogue flex-row">
-        <input type="text" placeholder="{{'catalogueSearch' | translate}}"
-          class="flex-grow">
-      </div>
-    </div>
-  </div>
+  <div data-ng-include="'../../catalog/views/geocat/templates/searchForm.html'"></div>
 
   <div gn-grid-related-query="searchResults.records"></div>
   <div class="row">
