@@ -2,16 +2,14 @@
   <li class="list-group-item result" data-ng-repeat="md in searchResults.records" gn-displayextent-onhover="" gn-zoomto-onclick
       gc-fix-mdlinks="">
 
-    <div class="media">
-
-      <div class="media-body">
+    <div>
+      <div>
         <div data-ng-class="{dropup: $last && !$first}" gc-md-actions-menu="md" class="pull-right"></div>
-        <div ng-if="user['@authenticated'] == 'true'" class="pull-right gn-publishinfo">
+        <div ng-if="user" class="pull-right gn-publishinfo">
           <span class="fa" data-ng-class="md.isPublished() ? 'fa-unlock' : 'fa-lock'"></span>
         </div>
 
         <h4>
-
           <input data-gn-selection-md type="checkbox"
                  data-ng-model="md['geonet:info'].selected"
                  data-ng-change="change()"/>
