@@ -1,7 +1,7 @@
 @import "../../default/less/gn_search_default.less";
 
 @gcat-main-color: rgb(95, 186, 218);
-@gcat-secondary-color: #1d3067;
+@gcat-secondary-color: #6097ab;
 @gcat-accent-color: #ffc440;
 @gcat-bg-overlay: rgba(255, 255, 255, 0.8);
 @gcat-shadow: 0 2px 4px rgba(0, 0, 0, 0.22);
@@ -60,6 +60,15 @@
     text-shadow: @gcat-shadow;
   }
 
+  .input-clear-button {
+    font-size: 3em;
+    line-height: 1em;
+    cursor: pointer;
+    &:hover {
+      color: @gcat-accent-color;
+    }
+  }
+
   input {
     background: none;
     border: none;
@@ -67,6 +76,7 @@
     min-width: 0px;
     padding: 8px 16px;
     color: @gcat-text-color-highlight;
+    box-shadow: none;
 
     &::placeholder {
       color: @gcat-text-color-highlight;
@@ -79,6 +89,22 @@
     }
   }
 
+  .bootstrap-tagsinput {
+    background: none;
+    border: none;
+    padding: 0px;
+    margin: 0px;
+    box-shadow: none;
+
+    .tagsinput-trigger {
+      font-size: 1.6em;
+    }
+
+    .tt-input {
+      text-shadow: @gcat-shadow;
+    }
+  }
+
   &.gcat-search-any {
     input {
       font-size: 2.2em;
@@ -87,6 +113,25 @@
   &.gcat-search-catalogue {
     input {
       font-size: 1.9em;
+    }
+  }
+}
+
+.gcat-header-link {
+  margin-top: -8px;
+  margin-bottom: 20px;
+  font-size: 1.2em;
+  color: @gcat-text-color-highlight;
+  font-weight: bold;
+  * {
+    text-decoration: none;
+    text-shadow: @gcat-shadow;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+    &:hover {
+      color: @gcat-accent-color;
     }
   }
 }
@@ -276,6 +321,7 @@
 }
 
 .tt-suggestion {
+  text-shadow: none;
   p.topiccat-main {
     font-weight: bold;
   }
@@ -283,4 +329,25 @@
     padding-left: 40px;
   }
   font-size: 13px;
+}
+
+.gcat-advanced-form {
+  margin: 0px 15px 20px;
+  padding: 4px;
+  background-color: white;
+  box-shadow: @gcat-shadow;
+
+  fieldset {
+    color: @gcat-secondary-color;
+    legend {
+      color: @gcat-secondary-color;
+      font-size: 1.4em;
+      padding-top: 8px;
+      margin-bottom: 14px;
+    }
+    label {
+      text-transform: uppercase;
+      font-size: 0.8em;
+    }
+  }
 }
