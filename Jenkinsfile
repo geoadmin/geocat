@@ -42,27 +42,27 @@ dockerBuild {
   stage('First build without test') {
     executeInContainer(buildContainerName, "MAVEN_OPTS=-Xmx8192m mvn clean install ${mavenOpts} -DskipTests")
   }
-  stage('Second build with tests') {
-    try {
-      executeInContainer(buildContainerName,"MAVEN_OPTS=-Xmx8192m mvn clean install ${mavenOpts} ")
-    } finally {
-      junit '**/target/surefire-reports/TEST-*.xml'
-    }
-  }
-  stage('calculating coverage') {
-    executeInContainer(buildContainerName, "MAVEN_OPTS=-Xmx8192m mvn cobertura:cobertura ${mavenOpts} -Dcobertura.report.format=xml")
-    step([$class: 'CoberturaPublisher',
-        autoUpdateHealth: false,
-        autoUpdateStability: false,
-        coberturaReportFile: '**/target/site/cobertura/coverage.xml',
-        failNoReports: true,
-        failUnhealthy: false,
-        failUnstable: false,
-        maxNumberOfBuilds: 0,
-        onlyStable: false,
-        sourceEncoding: 'UTF_8',
-        zoomCoverageChart: true])
-  }
+//  stage('Second build with tests') {
+//    try {
+//      executeInContainer(buildContainerName,"MAVEN_OPTS=-Xmx8192m mvn clean install ${mavenOpts} ")
+//    } finally {
+//      junit '**/target/surefire-reports/TEST-*.xml'
+//    }
+//  }
+//  stage('calculating coverage') {
+//    executeInContainer(buildContainerName, "MAVEN_OPTS=-Xmx8192m mvn cobertura:cobertura ${mavenOpts} -Dcobertura.report.format=xml")
+//    step([$class: 'CoberturaPublisher',
+//        autoUpdateHealth: false,
+//        autoUpdateStability: false,
+//        coberturaReportFile: '**/target/site/cobertura/coverage.xml',
+//        failNoReports: true,
+//        failUnhealthy: false,
+//        failUnstable: false,
+//        maxNumberOfBuilds: 0,
+//        onlyStable: false,
+//        sourceEncoding: 'UTF_8',
+//        zoomCoverageChart: true])
+//  }
   stage('configure georchestra c2c docker-hub account') {
     withCredentials([file(credentialsId: 'docker-maven-c2cgeorchestra', variable: 'FILE')]) {
       sh "docker cp ${FILE} ${buildContainerName}:/settings.xml"
