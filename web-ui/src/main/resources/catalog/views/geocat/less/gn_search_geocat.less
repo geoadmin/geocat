@@ -2,6 +2,7 @@
 
 @gcat-main-color: rgb(95, 186, 218);
 @gcat-secondary-color: #1d3067;
+@gcat-accent-color: #ffc440;
 @gcat-bg-overlay: rgba(255, 255, 255, 0.8);
 @gcat-shadow: 0 2px 4px rgba(0, 0, 0, 0.22);
 @gcat-text-color-highlight: white;
@@ -11,18 +12,21 @@
 @panel-default-border: @gcat-main-color;
 @panel-default-heading-bg: white;
 @body-bg: #f7f7f7;
+@link-hover-color: @gcat-secondary-color;
 
 // panel styles override
 .panel {
   box-shadow: @gcat-shadow;
   border: none;
   .panel-heading {
-    color: rgb(95, 186, 218);
+    color: @gcat-main-color;
     text-transform: uppercase;
     font-weight: bold;
     text-align: center;
     font-size: 0.9em;
     border-bottom: 1px solid fade(@gcat-main-color, 50%);
+    padding: 10px 4px;
+    line-height: 1.8em;
   }
 }
 
@@ -101,7 +105,7 @@
 }
 
 .gcat-header-bg-small {
-  background-color: #5fbada;
+  background-color: @gcat-main-color;
   top: 0px;
   left: 0px;
   width: 100%;
@@ -132,80 +136,142 @@
   margin-right: .4em;
 }
 
-.gn-publishinfo {
-  margin-right: 10px;
-}
-
 [data-search-results] {
   .list-group-item.result {
     min-height: 120px;
     border-radius: 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.22);
-    .pull-left {
-      margin-right: .8em;
-      clear: right;
+    box-shadow: @gcat-shadow;
+    margin: 0px;
+    margin-top: 15px;
+    padding: 12px;
+    background: white;
+
+    & > * {
+      position: relative;
     }
+
+    &.selected {
+      border-left: 6px solid @gcat-accent-color;
+      padding-left: 6px;
+    }
+
     &:hover {
-      background: #f6fcfd;
+      background: white;
     }
-  }
 
-  .media, .media-body {
-    overflow: visible;
-  }
+    .gcat-result-header {
+      font-size: 1.2em;
 
-  h4 .fa {
-    font-size: 14px;
-    color: lighten(@gray, 15);
-    &.gc-checkbox {
-      color: black;
+      label {
+        font-size: 18px;
+        margin: 0px;
+        cursor: pointer;
+        color: @gcat-main-color;
+        height: 24px;
+        width: 24px;
+        padding-left: 4px;
+
+        &:hover {
+          color: @gcat-secondary-color;
+        }
+        & > input[type=checkbox] {
+          margin: 0px;
+          display: none;
+        }
+      }
+
+      .md-actions {
+        margin: -10px -4px;
+      }
     }
-  }
 
-  .md-actions {
-    margin-top: -.35em;
-    .dropdown-menu {
+    .collapse-text-toggle {
+      color: @gcat-main-color;
+      text-decoration: underline;
+      cursor: pointer;
+
+      &:hover {
+        color: @gcat-secondary-color;
+      }
+    }
+
+    .media, .media-body {
+      overflow: visible;
+    }
+
+    .md-actions {
       .dropdown-menu {
-        left: -100%;
-        right: auto;
-        border-radius: 4px 0 4px 4px;
-      }
-      .fa {
-        margin-right: .4em;
-      }
-      a.disabled {
-        color: #d3d3d3;
-        cursor: not-allowed;
+        .dropdown-menu {
+          left: -100%;
+          right: auto;
+          border-radius: 4px 0 4px 4px;
+        }
+        .fa {
+          margin-right: .4em;
+          width: 1.2em;
+          text-align: center;
+        }
+        a.disabled {
+          color: #d3d3d3;
+          cursor: not-allowed;
+        }
       }
     }
-  }
 
-  .md-contact {
-    color: lighten(@gray, 15);
-  }
+    .md-contact {
+      color: lighten(@gray, 15);
+    }
 
-  .md-links {
-    margin-top: .5em;
+    .md-links {
+      margin-top: .5em;
+      .dropdown-menu {
+        max-height: 300px;
+        overflow-y: auto;
+        li a {
+          line-height: normal;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 300px;
+        }
+      }
+    }
+
     .dropdown-menu {
-      max-height: 300px;
-      overflow-y: auto;
-      li a {
-        line-height: normal;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        max-width: 300px;
+      font-size: 13px;
+    }
+
+    img.media-object {
+      max-width: 128px;
+      max-height: 60px;
+    }
+
+    .gcat-type-icon {
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      left: 0px;
+      top: 0px;
+      color: @gcat-text-color-highlight;
+
+      & > * {
+        position: relative;
+      }
+      svg {
+        bottom: 0px;
+        right: 0px;
+        left: 0px;
+        height: 150px;
+        position: absolute;
+      }
+      rect {
+        fill: #b3dfef;
+      }
+      span {
+        margin-bottom: 6px;
+        margin-right: 6px;
       }
     }
-  }
-
-  .dropdown-menu {
-    font-size: 13px;
-  }
-
-  img.media-object {
-    max-width: 128px;
-    max-height: 60px;
   }
 }
 

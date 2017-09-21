@@ -1,42 +1,75 @@
 <ul class="list-group gn-resultview">
-  <li class="list-group-item result" data-ng-repeat="md in searchResults.records" gn-displayextent-onhover="" gn-zoomto-onclick
-      gc-fix-mdlinks="">
+  <li class="list-group-item result flex-col"
+    ng-repeat="md in searchResults.records"
+    ng-class="{'selected': md['geonet:info'].selected}"
+    gn-displayextent-onhover gn-zoomto-onclick gc-fix-mdlinks>
 
-    <div>
-      <div>
-        <div data-ng-class="{dropup: $last && !$first}" gc-md-actions-menu="md" class="pull-right"></div>
-        <div ng-if="user" class="pull-right gn-publishinfo">
-          <span class="fa" data-ng-class="md.isPublished() ? 'fa-unlock' : 'fa-lock'"></span>
-        </div>
-
-        <h4>
-          <input data-gn-selection-md type="checkbox"
-                 data-ng-model="md['geonet:info'].selected"
-                 data-ng-change="change()"/>
-          <span data-placement="right" gn-tooltip ng-if="md.historicalArchive === 'y'" class="fa fa-archive" title="dataset"></span>
-          <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('dataset')>=0" class="fa fa-database" title="dataset"></span>
-          <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('software')>=0" class="fa fa-hdd-o" title="software"></span>
-          <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('basicgeodata')>=0" class="fa fa-globe" title="geodata"></span>
-          <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('service')>=0" class="fa fa-globe" title="service"></span>
-          <a href="md.viewer#/full_view/{{md.getUuid()}}" data-ng-click="collapsed.beforeedit = collapsed.facet; collapsed.facet=true" gn-metadata-open="md"
-             gn-metadata-open-selector=".gn-resultview" title="{{md.title || md.defaultTitle}}">{{md.title || md.defaultTitle}}</a>
-        </h4>
-
-        <a class="pull-left" ng-if="::md.groupWebsite" href="{{::md.groupWebsite}}" title="{{::getGroupById(md.groupOwner).name}}" target="_blank">
-          <img ng-src="../..{{::md.logo}}" class="media-object"/>
-        </a>
-        <a class="pull-left" ng-if="::!md.groupWebsite" title="{{::getGroupById(md.groupOwner).name}}">
-          <img ng-src="../..{{::md.logo}}" class="media-object"/>
-        </a>
-
-        <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350" dd-text-collapse-text="{{md.abstract || md.defaultAbstract}}"></p>
-        <p data-ng-if="user.isUserAdminOrMore()" class="md-owner">
-          (<i translate>owner</i> : <a href="{{pages.admin}}#/organization/users?userOrGroupId={{md.owner}}" target="_blank">{{md.getOwnername()}}</a>)</p>
-      </div>
+    <div class="gcat-type-icon flex-row flex-end flex-align-end">
+      <svg viewBox="0 0 10 10"
+        preserveAspectRatio="xMaxYMax">
+        <rect x="0" y="0" width="100" height="100"
+          transform="translate(5, -90) rotate(40 0 100)"></rect>
+      </svg>
+      <span data-placement="right" gn-tooltip ng-if="md.historicalArchive === 'y'"
+        class="fa fa-3x fa-archive" title="dataset"></span>
+      <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('dataset')>=0"
+        class="fa fa-3x fa-database" title="dataset"></span>
+      <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('software')>=0"
+        class="fa fa-3x fa-hdd-o" title="software"></span>
+      <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('basicgeodata')>=0"
+        class="fa fa-3x fa-globe" title="geodata"></span>
+      <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('service')>=0"
+        class="fa fa-3x fa-globe" title="service"></span>
     </div>
 
-    <div class="md-links">
+    <div class="flex-row width-100 flex-align-center gcat-result-header">
 
+      <label class="select-box">
+        <input data-gn-selection-md type="checkbox"
+          data-ng-model="md['geonet:info'].selected"
+          data-ng-change="change()"/>
+        <i class="fa"
+          ng-class="{ 'fa-check-square-o': md['geonet:info'].selected, 'fa-square-o': !md['geonet:info'].selected }"/>
+      </label>
+
+      <div class="flex-spacer"></div>
+
+      <a href="md.viewer#/full_view/{{md.getUuid()}}" data-ng-click="collapsed.beforeedit = collapsed.facet; collapsed.facet=true" gn-metadata-open="md"
+          gn-metadata-open-selector=".gn-resultview" title="{{md.title || md.defaultTitle}}">{{md.title || md.defaultTitle}}</a>
+      <div class="flex-spacer flex-grow"></div>
+
+      <div ng-if="user" class="gn-publishinfo">
+        <span class="fa" data-ng-class="md.isPublished() ? 'fa-unlock' : 'fa-lock'"></span>
+      </div>
+
+      <div class="flex-spacer"></div>
+
+      <div ng-class="{dropup: $last && !$first}" gc-md-actions-menu="md"
+        class="pull-right"></div>
+    </div>
+
+    <div class="flex-spacer"></div>
+    <div class="flex-row flex-align-start">
+      <a ng-if="::md.groupWebsite" href="{{::md.groupWebsite}}" title="{{::getGroupById(md.groupOwner).name}}" target="_blank">
+        <img ng-src="../..{{::md.logo}}" class="media-object"/>
+      </a>
+      <a ng-if="::!md.groupWebsite" title="{{::getGroupById(md.groupOwner).name}}">
+        <img ng-src="../..{{::md.logo}}" class="media-object"/>
+      </a>
+      <div class="flex-spacer"></div>
+      <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350"
+        dd-text-collapse-text="{{md.abstract || md.defaultAbstract}}"></p>
+    </div>
+
+    <div class="flex-spacer" ng-if="user.isUserAdminOrMore()"></div>
+    <div>
+        <p ng-if="user.isUserAdminOrMore()" class="md-owner">
+            (<span translate>owner</span> : <a href="{{pages.admin}}#/organization/users?userOrGroupId={{md.owner}}" target="_blank">{{md.getOwnername()}}</a>)
+        </p>
+    </div>
+
+    <div class="flex-spacer"></div>
+    <div class="md-links flex-row flex-align-center">
       <!--HTTP Links-->
       <div data-ng-class="{dropup: $last && !$first}" class="btn-group clearfix" ng-if="links.length > 0">
         <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
@@ -50,6 +83,7 @@
             <a href="{{link.url}}" target="_blank">{{link.desc || link.url}}</a></li>
         </ul>
       </div>
+      <div class="flex-spacer" ng-if="links.length > 0"gn-resultview></div>
 
       <!--Downloads-->
       <div data-ng-class="{dropup: $last && !$first}" class="btn-group clearfix" ng-if="downloads.length > 0">
@@ -66,6 +100,7 @@
               {{link.desc || link.url}} </a></li>
         </ul>
       </div>
+      <div class="flex-spacer" ng-if="downloads.length > 0"></div>
 
       <!--Layers-->
       <div data-ng-class="{dropup: $last && !$first}" class="btn-group clearfix" ng-if="layers.length > 0">
@@ -93,8 +128,7 @@
           </li>
         </ul>
       </div>
-
+      <div class="flex-spacer" ng-if="layers.length > 0"></div>
     </div>
-
   </li>
 </ul>
