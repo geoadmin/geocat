@@ -2,11 +2,12 @@
 
 @gcat-main-color: rgb(95, 186, 218);
 @gcat-secondary-color: #6097ab;
-@gcat-accent-color: #ffc440;
+@gcat-accent-color: #ffb646;
 @gcat-bg-overlay: rgba(255, 255, 255, 0.8);
 @gcat-shadow: 0 2px 4px rgba(0, 0, 0, 0.22);
 @gcat-text-color-highlight: white;
 
+@brand-info: @gcat-accent-color;
 @brand-primary: @gcat-main-color;
 @panel-border-radius: 0px;
 @panel-default-border: @gcat-main-color;
@@ -49,21 +50,18 @@
 }
 
 .gcat-search-any, .gcat-search-catalogue {
-  border-bottom: 4px solid @gcat-text-color-highlight;
+  border-bottom: 4px solid @gcat-accent-color;
   box-shadow: inset @gcat-shadow;
   border-radius: 2px;
   background-color: rgba(0, 0, 0, 0.03);
   margin-bottom: 20px;
   color: @gcat-text-color-highlight;
 
-  & > * {
-    text-shadow: @gcat-shadow;
-  }
-
   .input-clear-button {
-    font-size: 3em;
-    line-height: 1em;
+    font-size: 2.3em;
+    margin-right: 0.2em;
     cursor: pointer;
+    text-shadow: @gcat-shadow;
     &:hover {
       color: @gcat-accent-color;
     }
@@ -76,6 +74,7 @@
     min-width: 0px;
     padding: 8px 16px;
     color: @gcat-text-color-highlight;
+    text-shadow: @gcat-shadow;
     box-shadow: none;
 
     &::placeholder {
@@ -109,10 +108,21 @@
     input {
       font-size: 2.2em;
     }
+    button {
+      height: 3.5em;
+      border: none;
+      border-radius: 0px 2px 0px 0px;
+    }
   }
   &.gcat-search-catalogue {
     input {
       font-size: 1.9em;
+    }
+    .tag.label {
+      color: @gcat-main-color;
+      background-color: @gcat-text-color-highlight;
+      margin-left: 4px;
+      margin-right: -4px;
     }
   }
 }

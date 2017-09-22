@@ -6,20 +6,21 @@
     <div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">
       <div class="gcat-search-any flex-row flex-align-center">
         <input type="text" autocomplete="false"
-               class="form-control input-lg flex-grow"
-               id="gn-any-field"
-               data-ng-model="searchObj.params.any"
-               placeholder="{{'anyPlaceHolder' | translate}}"
-               data-ng-keyup="$event.keyCode == 13 && triggerSearch()"
-               data-typeahead="address for address in getAnySuggestions($viewValue)"
-               data-typeahead-loading="anyLoading" class="form-control"
-               data-typeahead-min-length="1"
-               data-typeahead-focus-first="false"
-               data-typeahead-wait-ms="300">
-        <i class="fa fa-2x fa-search" ng-show="!searchObj.params.any"/>
+              class="form-control input-lg flex-grow"
+              id="gn-any-field"
+              data-ng-model="searchObj.params.any"
+              placeholder="{{'anyPlaceHolder' | translate}}"
+              data-ng-keyup="$event.keyCode == 13 && triggerSearch()"
+              data-typeahead="address for address in getAnySuggestions($viewValue)"
+              data-typeahead-loading="anyLoading" class="form-control"
+              data-typeahead-min-length="1"
+              data-typeahead-focus-first="false"
+              data-typeahead-wait-ms="300">
         <span class="input-clear-button" ng-show="searchObj.params.any"
           ng-click="searchObj.params.any = ''">×</span>
-        <div class="flex-spacer"></div>
+        <button class="btn btn-info" ng-click="triggerSearch()">
+          <i class="fa fa-2x fa-search"/>
+        </button>
       </div>
     </div>
     <div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-5">
@@ -28,7 +29,8 @@
                class="form-control flex-grow"
                placeholder="{{'source' | translate}}"
                gn-values="searchObj.params._groupOwner"
-               gn-typeahead="searchFormCtrl.catalogOptions"/>
+               gn-typeahead="searchFormCtrl.catalogOptions"
+               gn-typeahead-disable-hint="true"/>
       </div>
     </div>
   </div>
