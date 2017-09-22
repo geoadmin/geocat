@@ -1,7 +1,7 @@
 @import "../../default/less/gn_search_default.less";
 
 @gcat-main-color: rgb(95, 186, 218);
-@gcat-secondary-color: #6097ab;
+@gcat-secondary-color: #335f6f;
 @gcat-accent-color: #ffb646;
 @gcat-bg-overlay: rgba(255, 255, 255, 0.8);
 @gcat-shadow: 0 2px 4px rgba(0, 0, 0, 0.22);
@@ -359,5 +359,22 @@
       text-transform: uppercase;
       font-size: 0.8em;
     }
+  }
+}
+
+@navbar-default-bg: @gcat-main-color;
+@navbar-default-color: @gcat-text-color-highlight;
+// @navbar-height: 35px;
+@navbar-default-link-color: @gcat-text-color-highlight;
+@navbar-default-link-active-color: @gcat-text-color-highlight;
+@navbar-default-link-hover-color: @gcat-secondary-color;
+@navbar-default-toggle-icon-bar-bg: @gcat-main-color;
+@navbar-default-toggle-hover-bg: @gcat-secondary-color;
+@navbar-default-toggle-border-color: @gcat-text-color-highlight;
+.navbar {
+  margin: 0px;
+  box-shadow: @gcat-shadow;
+  .navbar-toggle .icon-bar {
+    background-color: @gcat-text-color-highlight;
   }
 }
