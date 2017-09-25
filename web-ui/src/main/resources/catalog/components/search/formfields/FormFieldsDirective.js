@@ -60,6 +60,9 @@
             gnValues: '='
           },
           link: function(scope, element, attrs) {
+            if(!scope.options) {
+              console.warn(attrs.gnValues)
+            }
             var config = scope.options.config || {};
             var doLink = function(data, remote) {
 
@@ -118,7 +121,7 @@
               var field = $(element).tagsinput('input');
               field.typeahead({
                 minLength: 0,
-                hint: true,
+                hint: scope.$eval(attrs.gnTypeaheadDisableHint) ? false : true,
                 highlight: true
               }, angular.extend({
                 name: 'datasource',

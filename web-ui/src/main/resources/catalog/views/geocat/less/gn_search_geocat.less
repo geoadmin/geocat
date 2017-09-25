@@ -1,0 +1,407 @@
+@import "../../default/less/gn_search_default.less";
+
+@gcat-main-color: rgb(95, 186, 218);
+@gcat-secondary-color: #335f6f;
+@gcat-accent-color: #ffb646;
+@gcat-bg-overlay: rgba(255, 255, 255, 0.8);
+@gcat-shadow: 0 2px 4px rgba(0, 0, 0, 0.22);
+@gcat-text-color-highlight: white;
+
+@brand-info: @gcat-accent-color;
+@brand-primary: @gcat-main-color;
+@panel-border-radius: 0px;
+@panel-default-border: @gcat-text-color-highlight;
+@panel-default-heading-bg: @gcat-text-color-highlight;
+@body-bg: #f7f7f7;
+@link-hover-color: @gcat-secondary-color;
+
+// panel styles override
+.panel {
+  box-shadow: @gcat-shadow;
+  // border: none;
+  .panel-heading {
+    color: @gcat-main-color;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+    font-size: 0.9em;
+    border-bottom: 1px solid fade(@gcat-main-color, 50%);
+    padding: 10px 4px;
+    line-height: 1.8em;
+  }
+}
+
+[data-gn-slide-toggle]:before {
+  position: initial;
+  margin: 0px;
+}
+
+.gn-search-page {
+  overflow: hidden;
+  & > * {
+    position: relative;
+  }
+}
+
+.gcat-body-container {
+  position: relative;
+}
+
+.gcat-header {
+  position: relative;
+  margin: 32px 0px;
+}
+
+.gcat-search-any, .gcat-search-catalogue {
+  border-bottom: 4px solid @gcat-accent-color;
+  box-shadow: inset @gcat-shadow;
+  border-radius: 2px;
+  background-color: rgba(0, 0, 0, 0.03);
+  margin-bottom: 20px;
+  color: @gcat-text-color-highlight;
+
+  .input-clear-button {
+    font-size: 2.3em;
+    margin-right: 0.2em;
+    cursor: pointer;
+    text-shadow: @gcat-shadow;
+    &:hover {
+      color: @gcat-accent-color;
+    }
+  }
+
+  input {
+    background: none;
+    border: none;
+    height: 1.6em;
+    min-width: 0px;
+    padding: 8px 16px;
+    color: @gcat-text-color-highlight;
+    text-shadow: @gcat-shadow;
+    box-shadow: none;
+
+    &::placeholder {
+      color: @gcat-text-color-highlight;
+      opacity: 0.6;
+    }
+    &:focus {
+      outline: none;
+      border: 0;
+      box-shadow: none;
+    }
+  }
+
+  .bootstrap-tagsinput {
+    background: none;
+    border: none;
+    padding: 0px;
+    margin: 0px;
+    box-shadow: none;
+
+    .tagsinput-trigger {
+      font-size: 1.6em;
+    }
+
+    .tt-input {
+      text-shadow: @gcat-shadow;
+    }
+  }
+
+  &.gcat-search-any {
+    input {
+      font-size: 2.2em;
+    }
+    button {
+      height: 3.5em;
+      border: none;
+      border-radius: 0px 2px 0px 0px;
+    }
+  }
+  &.gcat-search-catalogue {
+    input {
+      font-size: 1.9em;
+    }
+    .tag.label {
+      color: @gcat-main-color;
+      background-color: @gcat-text-color-highlight;
+      margin-left: 4px;
+      margin-right: -4px;
+    }
+  }
+}
+
+.gcat-header-link {
+  margin-top: -8px;
+  margin-bottom: 20px;
+  font-size: 1.2em;
+  color: @gcat-text-color-highlight;
+  font-weight: bold;
+  * {
+    text-decoration: none;
+    text-shadow: @gcat-shadow;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+    &:hover {
+      color: @gcat-secondary-color;
+    }
+  }
+}
+
+.gcat-header-bg {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(@gcat-shadow);
+
+  rect {
+    fill: @gcat-main-color;
+  }
+}
+
+.gcat-header-bg-small {
+  background-color: @gcat-main-color;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 420px;
+  position: absolute;
+  box-shadow: @gcat-shadow;
+}
+
+.gcat-bg-overlay {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background-image: url("../catalog/views/geocat/images/bg-texture.png");
+  background-size: 10%;
+  opacity: 0.35;
+}
+
+.gcat-logo {
+  img {
+    width: 100%;
+    max-width: 500px;
+  }
+}
+
+.dropdown-menu .fa {
+  margin-right: .4em;
+}
+
+[data-search-results] {
+  ul.gn-resultview {
+    margin-right: 0px;
+  }
+
+  .list-group-item.result {
+    min-height: 120px;
+    border-radius: 0;
+    box-shadow: @gcat-shadow;
+    margin: 0px;
+    margin-top: 15px;
+    padding: 12px;
+    background: @gcat-text-color-highlight;
+
+    & > * {
+      position: relative;
+    }
+
+    &.selected {
+      border-left: 6px solid @gcat-accent-color;
+      padding-left: 6px;
+    }
+
+    &:hover {
+      background: @gcat-text-color-highlight;
+    }
+
+    .gcat-result-header {
+      font-size: 1.2em;
+
+      label {
+        font-size: 18px;
+        margin: 0px;
+        cursor: pointer;
+        color: @gcat-main-color;
+        height: 24px;
+        width: 24px;
+        padding-left: 4px;
+
+        &:hover {
+          color: @gcat-secondary-color;
+        }
+        & > input[type=checkbox] {
+          margin: 0px;
+          display: none;
+        }
+      }
+
+      .md-actions {
+        margin: -10px -4px;
+      }
+    }
+
+    .collapse-text-toggle {
+      color: @gcat-main-color;
+      text-decoration: underline;
+      cursor: pointer;
+
+      &:hover {
+        color: @gcat-secondary-color;
+      }
+    }
+
+    .media, .media-body {
+      overflow: visible;
+    }
+
+    .md-actions {
+      .dropdown-menu {
+        .dropdown-menu {
+          left: -100%;
+          right: auto;
+          border-radius: 4px 0 4px 4px;
+        }
+        .fa {
+          margin-right: .4em;
+          width: 1.2em;
+          text-align: center;
+        }
+        a.disabled {
+          color: #d3d3d3;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .md-contact {
+      color: lighten(@gray, 15);
+    }
+
+    .md-links {
+      margin-top: .5em;
+      .dropdown-menu {
+        max-height: 300px;
+        overflow-y: auto;
+        li a {
+          line-height: normal;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 300px;
+        }
+      }
+    }
+
+    .dropdown-menu {
+      font-size: 13px;
+    }
+
+    img.media-object {
+      max-width: 128px;
+      max-height: 60px;
+    }
+
+    .gcat-type-icon {
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      left: 0px;
+      top: 0px;
+      color: @gcat-text-color-highlight;
+
+      & > * {
+        position: relative;
+      }
+      svg {
+        bottom: 0px;
+        right: 0px;
+        left: 0px;
+        height: 150px;
+        position: absolute;
+      }
+      rect {
+        fill: #b3dfef;
+      }
+      span {
+        margin-bottom: 6px;
+        margin-right: 6px;
+      }
+    }
+  }
+}
+
+.tt-suggestion {
+  text-shadow: none;
+  p.topiccat-main {
+    font-weight: bold;
+  }
+  p.topiccat-second {
+    padding-left: 40px;
+  }
+  font-size: 13px;
+}
+
+.gcat-advanced-form {
+  margin: 0px 15px 20px;
+  padding: 4px;
+  background-color: @gcat-text-color-highlight;
+  box-shadow: @gcat-shadow;
+
+  fieldset {
+    color: @gcat-secondary-color;
+    legend {
+      color: @gcat-secondary-color;
+      font-size: 1.4em;
+      padding-top: 8px;
+      margin-bottom: 14px;
+    }
+    label {
+      text-transform: uppercase;
+      font-size: 0.8em;
+    }
+  }
+}
+
+@navbar-default-bg: @gcat-main-color;
+@navbar-default-color: @gcat-text-color-highlight;
+// @navbar-height: 35px;
+@navbar-default-link-color: @gcat-text-color-highlight;
+@navbar-default-link-active-color: @gcat-text-color-highlight;
+@navbar-default-link-hover-color: @gcat-secondary-color;
+@navbar-default-toggle-icon-bar-bg: @gcat-main-color;
+@navbar-default-toggle-hover-bg: @gcat-secondary-color;
+@navbar-default-toggle-border-color: @gcat-text-color-highlight;
+.navbar {
+  margin: 0px;
+  box-shadow: @gcat-shadow;
+  .navbar-toggle .icon-bar {
+    background-color: @gcat-text-color-highlight;
+  }
+}
+
+// custom styles fort select, sort & pager widgets
+.gn-sort-by .btn-group > button {
+  .btn-default();
+  color: @gcat-main-color;
+  text-decoration: none !important;
+}
+.gn-select.btn-group, .gn-pager > .pagination, .gn-sort-by > .btn-group {
+  box-shadow: @gcat-shadow;
+  & > .btn-group > .btn, & > .btn, & > li > a {
+    border-radius: 0px;
+    border-width: 0px;
+  }
+}
+.gn-pager > .pagination > li:not(:first-child) > a {
+  border-left-width: 1px;
+}
+.gn-select.btn-group > .btn-group:not(:first-child) > .btn {
+  border-left-width: 1px;
+}

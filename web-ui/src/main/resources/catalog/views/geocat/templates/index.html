@@ -1,0 +1,50 @@
+<div class="navbar navbar-default gn-top-bar"
+  role="navigation"
+  data-ng-include="'../../catalog/templates/top-toolbar.html'"
+  xmlns="http://www.w3.org/1999/html">
+</div>
+
+<div class="gn-search-page"
+     data-ng-controller="GnSearchController">
+
+  <svg class="gcat-header-bg hidden-xs hidden-sm" viewBox="0 0 10 10"
+    preserveAspectRatio="xMaxYMin">
+    <rect x="0" y="0" width="100" height="100"
+      transform="translate(-91, 0) rotate(40 100 0)"></rect>
+  </svg>
+  <div class="gcat-header-bg-small hidden-md hidden-lg">
+  </div>
+
+  <div class="gcat-bg-overlay"></div>
+
+  <cookiewarning></cookiewarning>
+
+  <div class="container">
+    <div class="row gcat-header">
+      <div class="col-sm-8 col-sm-offset-2 col-md-offset-1 col-md-6 gcat-logo">
+        <img src="../../catalog/views/geocat/images/geocat_logo.png">
+      </div>
+    </div>
+  </div>
+
+  <div class=""
+       data-ng-controller="gnsGeocat">
+    <gn-extend-mainctrl></gn-extend-mainctrl>
+
+    <div data-gn-saved-selections="">
+      <div data-ng-include="'../../catalog/views/geocat/templates/home.html'"
+           data-ng-show="activeTab == '/home'"/>
+      <div data-ng-include="'../../catalog/views/geocat/templates/results.html'"
+           data-ng-show="activeTab == '/search'"/>
+      <div data-ng-if="isMapViewerEnabled"
+           data-ng-include="'../../catalog/views/default/templates/map.html'"
+           data-ng-show="activeTab == '/map'"/>
+      <div data-ng-include="'../../catalog/views/default/templates/recordView.html'"
+           data-ng-show="activeTab == '/metadata'"/>
+    </div>
+  </div>
+</div>
+
+<div class="navbar navbar-default gn-bottom-bar" role="navigation"
+     data-ng-include="'../../catalog/views/default/templates/footer.html'">
+</div>

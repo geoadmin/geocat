@@ -1,0 +1,18 @@
+{
+  "basicgeodata": "Geodati di base",
+  "basicgeodata-federal": "Geodati di base – livello federale",
+  "basicgeodata-cantonal": "Geodati di base – livello cantonale",
+  "basicgeodata-communal": "Geodati di base – livello comunale",
+  "service-OGC:WMS": "Servizi WMS",
+  "service-OGC:WFS": "Servizi WFS",
+  "any": "- Qualsiasi -",
+  "indexSelectedRecordConfirm": "Confermare l’indicizzazione del/i [[selectedCount]] record selezionato/i",
+  "index": "Indice",
+  "geodataType": "Geodati",
+  "basicGeodata": "Geodati di base11.\tGeodati di base",
+  "oereb": "CRDPP",
+  "oerebRegister": "Registro CRDPP",
+  "openGovernmentData": "Open Government Data",
+  "openData": "Open Data",
+  "referenceGeodata": "Geodati di riferimento"
+}
