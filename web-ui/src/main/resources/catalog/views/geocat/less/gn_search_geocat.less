@@ -10,15 +10,15 @@
 @brand-info: @gcat-accent-color;
 @brand-primary: @gcat-main-color;
 @panel-border-radius: 0px;
-@panel-default-border: @gcat-main-color;
-@panel-default-heading-bg: white;
+@panel-default-border: @gcat-text-color-highlight;
+@panel-default-heading-bg: @gcat-text-color-highlight;
 @body-bg: #f7f7f7;
 @link-hover-color: @gcat-secondary-color;
 
 // panel styles override
 .panel {
   box-shadow: @gcat-shadow;
-  border: none;
+  // border: none;
   .panel-heading {
     color: @gcat-main-color;
     text-transform: uppercase;
@@ -195,6 +195,10 @@
 }
 
 [data-search-results] {
+  ul.gn-resultview {
+    margin-right: 0px;
+  }
+
   .list-group-item.result {
     min-height: 120px;
     border-radius: 0;
@@ -202,7 +206,7 @@
     margin: 0px;
     margin-top: 15px;
     padding: 12px;
-    background: white;
+    background: @gcat-text-color-highlight;
 
     & > * {
       position: relative;
@@ -214,7 +218,7 @@
     }
 
     &:hover {
-      background: white;
+      background: @gcat-text-color-highlight;
     }
 
     .gcat-result-header {
@@ -347,7 +351,7 @@
 .gcat-advanced-form {
   margin: 0px 15px 20px;
   padding: 4px;
-  background-color: white;
+  background-color: @gcat-text-color-highlight;
   box-shadow: @gcat-shadow;
 
   fieldset {
@@ -380,4 +384,24 @@
   .navbar-toggle .icon-bar {
     background-color: @gcat-text-color-highlight;
   }
+}
+
+// custom styles fort select, sort & pager widgets
+.gn-sort-by .btn-group > button {
+  .btn-default();
+  color: @gcat-main-color;
+  text-decoration: none !important;
+}
+.gn-select.btn-group, .gn-pager > .pagination, .gn-sort-by > .btn-group {
+  box-shadow: @gcat-shadow;
+  & > .btn-group > .btn, & > .btn, & > li > a {
+    border-radius: 0px;
+    border-width: 0px;
+  }
+}
+.gn-pager > .pagination > li:not(:first-child) > a {
+  border-left-width: 1px;
+}
+.gn-select.btn-group > .btn-group:not(:first-child) > .btn {
+  border-left-width: 1px;
 }
