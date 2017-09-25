@@ -60,9 +60,10 @@
       var topicCats = gnSearchSettings.gnStores.topicCat;
       topicCats.forEach(function(cat, i) {
         topicCats[i] = {
-          id: cat[0],
-          name: cat[1],
-          hierarchy: cat[0].indexOf('_') > 0 ? 'second' : 'main'
+          id: cat.id || cat[0],
+          name: cat.name || cat[1],
+          hierarchy: cat.hierarchy ||
+            (cat[0].indexOf('_') > 0 ? 'second' : 'main')
         };
       });
       this.topicCatsOptions = {
