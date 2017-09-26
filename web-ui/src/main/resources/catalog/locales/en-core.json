@@ -352,5 +352,7 @@
     "usersAndGroups": "Users and groups",
     "settings": "Settings",
     "tools": "Tools",
+    "collapseAllFacetLabel": "Collapse",
+    "expandAllFacetLabel": "Expand",
     "resultXonY": "on"
 }

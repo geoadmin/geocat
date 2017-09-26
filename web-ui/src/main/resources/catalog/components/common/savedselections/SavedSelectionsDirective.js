@@ -323,10 +323,12 @@
             window[selection.storage].setItem(key, angular.toJson(records));
           }
         }
-        var idx = selection.records.indexOf(uuid);
-        if (idx > -1) {
-          selection.records.splice(idx, 1);
-          this.init(this.userId, true);
+        if(selection.records) {
+          var idx = selection.records.indexOf(uuid);
+          if (idx > -1) {
+            selection.records.splice(idx, 1);
+            this.init(this.userId, true);
+          }
         }
       };
 
