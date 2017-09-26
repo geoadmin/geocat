@@ -808,6 +808,9 @@
     </profile>
     <profile>
       <id>docker</id>
+      <properties>
+        <dockerImageName>camptocamp/geocat:latest</dockerImageName>
+      </properties>
       <build>
         <plugins>
           <plugin>
@@ -815,7 +818,7 @@
             <artifactId>docker-maven-plugin</artifactId>
             <version>0.4.14</version>
             <configuration>
-              <imageName>camptocamp/geocat:${project.version}</imageName>
+              <imageName>${dockerImageName}</imageName>
               <baseImage>tomcat:8-jre8</baseImage>
               <resources>
                 <resource>
