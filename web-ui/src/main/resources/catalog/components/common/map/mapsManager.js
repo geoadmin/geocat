@@ -94,6 +94,57 @@
             })
           });
 
+          // < GEOCAT -- add wmts background (only in swiss projection)
+          if(gnMap.getMapConfig().projection == 'EPSG:21781') {
+            var resolutions = [
+              4000, 3750, 3500, 3250, 3000, 2750, 2500, 2250, 2000, 1750, 1500, 1250,
+              1000, 750, 650, 500, 250, 100, 50, 20, 10, 5, 2.5, 2, 1.5, 1, 0.5
+            ];
+
+            var matrixIds = [];
+            for (var i = 0; i < resolutions.length; i++) {
+              matrixIds.push(i);
+            }
+
+            var tileGrid = new ol.tilegrid.WMTS({
+              origin: [420000, 350000],
+              resolutions: resolutions,
+              matrixIds: matrixIds
+            });
+
+            var defaultUrl = '//wmts{5-9}.geo.admin.ch/1.0.0/{Layer}/default/' +
+              '20140520/21781/' +
+              '{TileMatrix}/{TileRow}/{TileCol}.jpeg';
+
+            var chLayer = new ol.layer.Tile({
+              source: new ol.source.WMTS(({
+                crossOrigin: 'anonymous',
+                url: defaultUrl,
+                tileGrid: tileGrid,
+                layer: 'ch.swisstopo.pixelkarte-farbe',
+                requestEncoding: 'REST',
+                projection: 'EPSG:21781'
+              })),
+              extent: [434250, 37801.909073720046, 894750, 337801.90907372005],
+              useInterimTilesOnError: false
+            });
+            map = new ol.Map({
+              layers: [chLayer],
+              view: new ol.View({
+                resolutions: [1250, 1000, 750, 650, 500, 250, 100, 50, 20,
+                  10, 5, 2.5, 2, 1, 0.5, 0.25, 0.1],
+                extent: [420000, 30000, 900000, 350000],
+                projection: 'EPSG:21781',
+                center: [660000, 190000],
+                zoom: 3
+              })
+            });
+
+            // no other layers on top
+            config.layers = [];
+          }
+          // GEOCAT >
+
           // no config found: return empty map
           if (!config) {
             console.warn('Map config not found for type \'' + type + '\'');
