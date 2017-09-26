@@ -13,7 +13,8 @@
 @panel-default-border: @gcat-text-color-highlight;
 @panel-default-heading-bg: @gcat-text-color-highlight;
 @body-bg: #f7f7f7;
-@link-hover-color: @gcat-secondary-color;
+@link-color: @gcat-secondary-color;
+@link-hover-color: darken(@gcat-secondary-color, 20%);
 
 // panel styles override
 .panel {
@@ -216,13 +217,13 @@
         font-size: 18px;
         margin: 0px;
         cursor: pointer;
-        color: @gcat-main-color;
+        color: @link-color;
         height: 24px;
         width: 24px;
         padding-left: 4px;
 
         &:hover {
-          color: @gcat-secondary-color;
+          color: @link-hover-color;
         }
         & > input[type=checkbox] {
           margin: 0px;
@@ -377,7 +378,6 @@
 // custom styles fort select, sort & pager widgets
 .gn-sort-by .btn-group > button {
   .btn-default();
-  color: @gcat-main-color;
   text-decoration: none !important;
 }
 .gn-select.btn-group, .gn-pager > .pagination, .gn-sort-by > .btn-group {
@@ -385,6 +385,7 @@
   & > .btn-group > .btn, & > .btn, & > li > a {
     border-radius: 0px;
     border-width: 0px;
+    color: @text-color;
   }
 }
 .gn-pager > .pagination > li:not(:first-child) > a {
@@ -436,4 +437,8 @@
   background: @gcat-text-color-highlight;
   box-shadow: @gcat-shadow;
   position: relative;
+}
+
+.gcat-home-container {
+  padding: 16px 16px;
 }

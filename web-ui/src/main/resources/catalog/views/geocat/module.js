@@ -44,9 +44,29 @@
   module.controller('gnsGeocat', [
     '$scope',
     '$controller',
-    function($scope, $controller) {
+    'gnSearchManagerService',
+    'Metadata',
+    function($scope, $controller, gnSearchManagerService, Metadata) {
       angular.extend(this, $controller('gnsDefault', { $scope: $scope }));
       $scope.resultTemplate = '../../catalog/views/geocat/templates/list.html';
+
+      var callSearch = function(sortBy, to) {
+        return gnSearchManagerService.gnSearch({
+          sortBy: sortBy,
+          fast: 'index',
+          from: 1,
+          to: to,
+          _content_type: 'json'
+        });
+      };
+
+      // Fill last updated section
+      callSearch('changeDate', 15).then(function(data) {
+        $scope.lastUpdated = [];
+        for (var i = 0; i < data.metadata.length; i++) {
+          $scope.lastUpdated.push(new Metadata(data.metadata[i]));
+        }
+      });
     }
   ]);
 
