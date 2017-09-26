@@ -18,17 +18,6 @@
 // panel styles override
 .panel {
   box-shadow: @gcat-shadow;
-  // border: none;
-  .panel-heading {
-    color: @gcat-main-color;
-    text-transform: uppercase;
-    font-weight: bold;
-    text-align: center;
-    font-size: 0.9em;
-    border-bottom: 1px solid fade(@gcat-main-color, 50%);
-    padding: 10px 4px;
-    line-height: 1.8em;
-  }
 }
 
 [data-gn-slide-toggle]:before {
@@ -179,7 +168,6 @@
   width: 100%;
   height: 100%;
   background-image: url("../catalog/views/geocat/images/bg-texture.png");
-  background-size: 10%;
   opacity: 0.35;
 }
 
@@ -404,4 +392,41 @@
 }
 .gn-select.btn-group > .btn-group:not(:first-child) > .btn {
   border-left-width: 1px;
+}
+
+.gn-facet {
+  margin: 0 -0.4em;
+  h4 {
+    margin-bottom: 0.2em;
+  }
+  .gn-facet-toggle {
+    flex-shrink: 0;
+  }
+  .list-group {
+    border: none;
+    margin-left: .2em;
+    padding: 0px;
+  }
+  .list-group-item {
+    input[type=checkbox] {
+      display: none;
+    }
+    & > label {
+      margin-left: 0.2em;
+      & > .gn-facet-label {
+        margin-left: 0.4em;
+      }
+      &:before {
+        content: ' ';
+        font-family: FontAwesome;
+        width: 10px;
+        text-align: center;
+        position: absolute;
+        left: 13px;
+      }
+      &.gn-facet-active:before {
+        content: "\f00c";
+      }
+    }
+  }
 }
