@@ -93,7 +93,7 @@ dockerBuild {
 
     stage("Prepare caas-dev access") {
       withCredentials([file(credentialsId: 'jenkins-caas-dev-bgdi.ch.json', variable: 'FILE')]) {
-        sh "docker cp ${FILE} ${deployContainerName}:/root/.rancher/caas.dev.bgdi.ch.json"
+        sh "docker cp ${FILE} ${deployContainerName}:/root/.rancher/cli-caas.dev.bgdi.ch.json"
       } // withCredentials
     } // stage
 
