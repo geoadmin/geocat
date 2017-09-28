@@ -91,7 +91,12 @@
               center: [0, 0],
               projection: gnMap.getMapConfig().projection,
               zoom: 2
-            })
+            }),
+            // apply default controls if not in editor map
+            controls: type !== this.EDITOR_MAP ? [] : [
+              new ol.control.Zoom(),
+              new ol.control.Rotate()
+            ]
           });
 
           // < GEOCAT -- add wmts background (only in swiss projection)
@@ -137,7 +142,11 @@
                 projection: 'EPSG:21781',
                 center: [660000, 190000],
                 zoom: 3
-              })
+              }),
+              controls: type !== this.EDITOR_MAP ? [] : [
+                new ol.control.Zoom(),
+                new ol.control.Rotate()
+              ]
             });
 
             // no other layers on top
