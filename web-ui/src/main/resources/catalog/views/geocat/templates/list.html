@@ -49,7 +49,7 @@
     </div>
 
     <div class="flex-spacer"></div>
-    <div class="flex-row flex-align-start">
+    <div class="flex-row flex-align-start width-100">
       <a ng-if="::md.groupWebsite" href="{{::md.groupWebsite}}" title="{{::getGroupById(md.groupOwner).name}}" target="_blank">
         <img ng-src="../..{{::md.logo}}" class="media-object"/>
       </a>
@@ -62,7 +62,7 @@
     </div>
 
     <div class="flex-spacer" ng-if="user.isUserAdminOrMore()"></div>
-    <div>
+    <div class="width-100">
         <p ng-if="user.isUserAdminOrMore()" class="md-owner">
             (<span translate>owner</span> : <a href="{{pages.admin}}#/organization/users?userOrGroupId={{md.owner}}" target="_blank">{{md.getOwnername()}}</a>)
         </p>

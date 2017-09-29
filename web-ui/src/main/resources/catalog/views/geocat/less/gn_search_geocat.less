@@ -1,5 +1,9 @@
 @import "../../default/less/gn_search_default.less";
 
+::-ms-clear {
+  display: none;
+}
+
 @gcat-main-color: rgb(95, 186, 218);
 @gcat-secondary-color: #335f6f;
 @gcat-accent-color: #ffb646;
@@ -27,7 +31,6 @@
 }
 
 .gn-search-page {
-  overflow: hidden;
   & > * {
     position: relative;
   }
@@ -102,7 +105,7 @@
       font-size: 2.2em;
     }
     button {
-      height: 3.5em;
+      height: 3.6em;
       border: none;
       border-radius: 0px 2px 0px 0px;
     }
@@ -424,6 +427,7 @@
         text-align: center;
         position: absolute;
         left: 13px;
+        top: 0px;
       }
       &.gn-facet-active:before {
         content: "\f00c";
@@ -441,4 +445,14 @@
 
 .gcat-home-container {
   padding: 16px 16px;
+}
+
+// layout fix for IE11
+// (min-height bug: https://github.com/philipwalton/flexbugs#3-min-height-on-a-flex-container-wont-apply-to-its-flex-items)
+body {
+  display: flex;
+  flex-direction: column;
+}
+.navbar {
+  flex-shrink: 0;
 }

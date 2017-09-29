@@ -5,8 +5,8 @@
   <div class="row">
     <div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">
       <div class="gcat-search-any flex-row flex-align-center">
-        <input type="text" autocomplete="false"
-              class="form-control input-lg flex-grow"
+        <input type="search" autocomplete="off"
+              class="input-lg flex-grow"
               id="gn-any-field"
               data-ng-model="searchObj.params.any"
               placeholder="{{'anyPlaceHolder' | translate}}"
@@ -25,8 +25,8 @@
     </div>
     <div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-5">
       <div class="gcat-search-catalogue flex-row">
-        <input type="text" autocomplete="false"
-               class="form-control flex-grow"
+        <input type="search" autocomplete="off"
+               class="flex-grow"
                placeholder="{{'source' | translate}}"
                gn-values="searchObj.params._groupOwner"
                gn-typeahead="searchFormCtrl.catalogOptions"
