@@ -345,7 +345,7 @@
     "facetIndicatorHelp": "Les statistiques sur les fiches reposent sur la configuration des facettes et peuvent ne représenter qu'un sous-ensemble du catalogue.",
     "fees": "Honnoraires",
     "filesystem-beforeScript": "Script à exécuter avant le moissonnage",
-    "filesystem-beforeScriptHelp": "Peut être utiliser pour exécuter rsync ou une commande similaire. N'excute rien si elle vide",
+    "filesystem-beforeScriptHelp": "Peut être utiliser pour exécuter rsync ou une commande similaire. N'exécute rien si elle vide",
     "filesystem-checkFileLastModifiedForUpdate": "Mettre à jour les fiches dans le catalogue uniquement si la date du fichier a été modifiée",
     "filesystem-checkFileLastModifiedForUpdateHelp": "Mettre à jour les fiches dans le catalogue uniquement si la date du fichier a été modifiée",
     "filesystem-directory": "Répertoire",
