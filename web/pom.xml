@@ -820,7 +820,6 @@
             <configuration>
               <imageName>${dockerImageName}</imageName>
               <dockerDirectory>web/src/docker</dockerDirectory>
-              <baseImage>tomcat:8-jre8</baseImage>
               <resources>
                 <resource>
                   <targetPath>/usr/local/tomcat/webapps</targetPath>
@@ -831,6 +830,16 @@
                   <targetPath>/usr/local/bin/</targetPath>
                   <directory>${project.basedir}/../</directory>
                   <include>s3sync-geocat-folders.sh</include>
+                </resource>
+                <resource>
+                  <targetPath>/</targetPath>
+                  <directory>${project.basedir}/src/docker/</directory>
+                  <include>docker-entrypoint.sh</include>
+                </resource>
+                <resource>
+                  <targetPath>/</targetPath>
+                  <directory>${project.basedir}/src/docker/</directory>
+                  <include>docker-entrypoint.d</include>
                 </resource>
               </resources>
               <!-- This will require a settings.xml file for maven -->
