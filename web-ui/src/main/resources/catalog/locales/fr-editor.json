@@ -360,5 +360,6 @@
     "inputGeometryIsInvalid": "Il y a une erreur dans la géométrie :",
     "inputGeometryHint": "Copier ici une géométrie dans le format et la projection choisi. ",
     "inputGeometryReadOnlyHint": "La géométrie est en lecture-seule.",
-    "selectKeyword": "Add keywords"
+    "selectKeyword": "Add keywords",
+    "saveLinkToSibling": "Enregistrer la liaison entre les métadonnées"
 }
