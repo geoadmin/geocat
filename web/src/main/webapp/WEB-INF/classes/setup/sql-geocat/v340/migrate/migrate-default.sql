@@ -4,7 +4,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES
   ('system/csw/enabledWhenIndexing', 'true', 2, 1211, 'y');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES
-  ('metadata/import/restrict', 'iso19139.che,iso19139', 0, 11000, 'y');
+  ('metadata/import/restrict', 'iso19139.che', 0, 11000, 'y');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES
   ('system/metadatacreate/generateUuid', 'true', 2, 9100, 'n');
@@ -562,3 +562,5 @@ INSERT INTO metadata (
 );
 
 UPDATE metadata SET data = replace (data, 'xlink:show="replace"', '') WHERE data like '%xlink:show="replace"%';
+
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/backuparchive/enable', 'true', 2, 12000, 'n');
