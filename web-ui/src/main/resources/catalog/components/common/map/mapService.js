@@ -833,13 +833,16 @@
 
               if (angular.isArray(getCapLayer.Dimension)) {
                 for (var i = 0; i < getCapLayer.Dimension.length; i++) {
-                  if (getCapLayer.Dimension[i].name == 'elevation') {
-                    layer.set('elevation',
-                        getCapLayer.Dimension[i].values.split(','));
+                  var dimension = getCapLayer.Dimension[i];
+                  if (dimension.name == 'elevation') {
+                    layer.set('elevation', {
+                      units: dimension.units,
+                      values: dimension.values.split(',')
+                  });
                   }
-                  if (getCapLayer.Dimension[i].name == 'time') {
+                  if (dimension.name == 'time') {
                     layer.set('time',
-                        getCapLayer.Dimension[i].values.split(','));
+                      dimension.values.split(','));
                   }
                 }
               }
@@ -1187,21 +1190,25 @@
                   olL = $this.createOlWMSFromCap(map, capL, url);
 
                   var finishCreation = function() {
-                    if (!createOnly) {
-                      map.addLayer(olL);
-                    }
-                    gnWmsQueue.removeFromQueue(url, name);
-                    defer.resolve(olL);
+
+                    $q.resolve(olL).
+                    then(gnViewerSettings.getPreAddLayerPromise).
+                    finally(
+                      function(){
+                        if (!createOnly) {
+                          map.addLayer(olL);
+                        }
+                        gnWmsQueue.removeFromQueue(url, name);
+                        defer.resolve(olL);
+                      });
                   };
 
-                  // attach the md object to the layer
-                  if (md) {
-                    olL.set('md', md);
-                    finishCreation();
-                  }
-                  else {
-                    $this.feedLayerMd(olL).finally(finishCreation);
-                  }
+                  var feedMdPromise = md ?
+                    $q.resolve(md).then(function(md) {
+                      olL.set('md', md);
+                    }) : $this.feedLayerMd(olL);
+
+                  feedMdPromise.then(finishCreation);
                 }
 
               }, function() {

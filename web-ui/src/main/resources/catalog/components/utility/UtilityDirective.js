@@ -848,22 +848,30 @@
             if (rendered) {
               $(element).datepicker('destroy');
             }
-            $(element).datepicker(angular.isDefined(scope.dates) ? {
-              beforeShowDay: function(dt, a, b) {
-                var isEnable = available(dt);
-                return highlight ? (isEnable ? 'gn-date-hl' : undefined) :
-                    isEnable;
-              },
-              startDate: limits.min,
-              endDate: limits.max,
+
+            var datepickConfig = {
               container: typeof sxtSettings != 'undefined' ?
-                  '.g' : 'body',
+                '.g' : 'body',
               autoclose: true,
               keepEmptyValues: true,
               clearBtn: true,
               todayHighlight: false,
               language: gnLangs.getIso2Lang(gnLangs.getCurrent())
-            } : {}).on('changeDate clearDate', function(ev) {
+            };
+
+            if(angular.isDefined(scope.dates)) {
+              angular.extend(datepickConfig, {
+                beforeShowDay: function(dt, a, b) {
+                  var isEnable = available(dt);
+                  return highlight ? (isEnable ? 'gn-date-hl' : undefined) :
+                    isEnable;
+                },
+                startDate: limits.min,
+                endDate: limits.max
+              });
+            }
+            $(element).datepicker(datepickConfig)
+              .on('changeDate clearDate', function(ev) {
               // view -> model
               scope.$apply(function() {
                 if (!isRange) {
@@ -1153,7 +1161,7 @@
             var targetPath =
               link.match(pathRE) ? link.match(pathRE)[1] : '';
             var isActive = currentService == targetService &&
-              (!targetPath || currentPath == targetPath);
+              (!targetPath || currentPath.indexOf(targetPath) > -1);
 
             if (isActive) {
               element.parent().addClass('active');
