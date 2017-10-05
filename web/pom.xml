@@ -819,12 +819,27 @@
             <version>0.4.14</version>
             <configuration>
               <imageName>${dockerImageName}</imageName>
-              <baseImage>tomcat:8-jre8</baseImage>
+              <dockerDirectory>web/src/docker</dockerDirectory>
               <resources>
                 <resource>
                   <targetPath>/usr/local/tomcat/webapps</targetPath>
                   <directory>${project.build.directory}</directory>
                   <include>geonetwork.war</include>
+                </resource>
+                <resource>
+                  <targetPath>/usr/local/bin/</targetPath>
+                  <directory>${project.basedir}/../</directory>
+                  <include>s3sync-geocat-folders.sh</include>
+                </resource>
+                <resource>
+                  <targetPath>/</targetPath>
+                  <directory>${project.basedir}/src/docker/</directory>
+                  <include>docker-entrypoint.sh</include>
+                </resource>
+                <resource>
+                  <targetPath>/</targetPath>
+                  <directory>${project.basedir}/src/docker/</directory>
+                  <include>docker-entrypoint.d</include>
                 </resource>
               </resources>
               <!-- This will require a settings.xml file for maven -->
