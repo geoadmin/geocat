@@ -14,5 +14,6 @@
   "oerebRegister": "registre RDDPF",
   "openGovernmentData": "Open Government Data",
   "openData": "Open Data",
-  "referenceGeodata": "Géodonnée de référence"
+  "referenceGeodata": "Géodonnée de référence",
+  "catalogPlaceholder": "Catalogue(s)"
 }
