@@ -320,6 +320,10 @@
     </xsl:copy>
   </xsl:template>
 
+
+
+
+
   <xsl:template match="che:basicGeodataIDType">
     <xsl:copy>
       <xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
@@ -379,20 +383,16 @@
 
     <xsl:copy>
       <xsl:copy-of select="@*"/>
-      <gmd:linkage>
-        <gmd:URL>
-          <xsl:value-of select="gmd:linkage/gmd:URL"/>
-        </gmd:URL>
-      </gmd:linkage>
-      <xsl:copy-of select="gmd:protocol"/>
-      <xsl:copy-of select="gmd:applicationProfile"/>
+      <xsl:apply-templates select="gmd:linkage"/>
+      <xsl:apply-templates select="gmd:protocol"/>
+      <xsl:apply-templates select="gmd:applicationProfile"/>
       <gmd:name>
         <gmx:MimeFileType type="{$mimeType}">
           <xsl:value-of select="$fname"/>
         </gmx:MimeFileType>
       </gmd:name>
-      <xsl:copy-of select="gmd:description"/>
-      <xsl:copy-of select="gmd:function"/>
+      <xsl:apply-templates select="gmd:description"/>
+      <xsl:apply-templates select="gmd:function"/>
     </xsl:copy>
   </xsl:template>
 
@@ -410,14 +410,14 @@
 
     <xsl:copy>
       <xsl:copy-of select="@*"/>
-      <xsl:copy-of select="gmd:linkage"/>
-      <xsl:copy-of select="gmd:protocol"/>
-      <xsl:copy-of select="gmd:applicationProfile"/>
+      <xsl:apply-templates select="gmd:linkage"/>
+      <xsl:apply-templates select="gmd:protocol"/>
+      <xsl:apply-templates select="gmd:applicationProfile"/>
       <gmd:name>
         <gmx:MimeFileType type="{$mimeType}"/>
       </gmd:name>
-      <xsl:copy-of select="gmd:description"/>
-      <xsl:copy-of select="gmd:function"/>
+      <xsl:apply-templates select="gmd:description"/>
+      <xsl:apply-templates select="gmd:function"/>
     </xsl:copy>
   </xsl:template>
 

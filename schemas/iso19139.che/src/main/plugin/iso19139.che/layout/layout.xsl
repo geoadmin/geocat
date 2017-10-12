@@ -91,7 +91,7 @@
   </xsl:template>-->
 
   <xsl:template mode="mode-iso19139" priority="200"
-                match="*[che:PT_FreeURL|che:LocalisedURL]">
+                match="*[gmd:URL|che:PT_FreeURL][$schema = 'iso19139.che']">
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
 
@@ -153,15 +153,16 @@
 
     <xsl:variable name="values">
       <xsl:if test="$isMultilingualElement">
-
+        <xsl:variable name="url"
+                      select="normalize-space(gmd:URL)"/>
         <values>
-          <!-- Or the PT_FreeText element matching the main language -->
+          <!-- Or the PT_FreeText element matching the main language
           <xsl:if test="gmd:URL">
             <value ref="{$theElement/gn:element/@ref}"
                    lang="{$metadataLanguage}">
               <xsl:value-of select="gmd:URL"/>
             </value>
-          </xsl:if>
+          </xsl:if> -->
 
           <!-- the existing translation -->
           <xsl:for-each select="che:PT_FreeURL/che:URLGroup/che:LocalisedURL">
@@ -174,12 +175,28 @@
           <!-- and create field for none translated language -->
           <xsl:for-each select="$metadataOtherLanguages/lang">
             <xsl:variable name="currentLanguageId" select="@id"/>
-            <xsl:if test="count($theElement/parent::node()/
-                che:PT_FreeURL/che:URLGroup/
-                che:LocalisedURL[@locale = concat('#',$currentLanguageId)]) = 0">
-              <value ref="lang_{@id}_{$theElement/parent::node()/gn:element/@ref}"
-                     lang="{@id}"></value>
-            </xsl:if>
+            <xsl:variable name="code" select="@code"/>
+            <xsl:variable name="ptFreeElementDoesNotExist"
+                          select="count($theElement/parent::node()/
+                              che:PT_FreeURL/che:URLGroup/
+                              che:LocalisedURL[@locale = concat('#',$currentLanguageId)]) = 0"/>
+
+
+            <xsl:choose>
+              <!-- In case we have a gmd:URL set and a PTFreeUrl not
+              set for the main language. Inject this value.-->
+              <xsl:when test="$url != '' and
+                            $code = $metadataLanguage and
+                            $ptFreeElementDoesNotExist">
+                <value ref="lang_{@id}_{$theElement/parent::node()/gn:element/@ref}"
+                       lang="{@id}"><xsl:value-of select="$url"/></value>
+              </xsl:when>
+              <xsl:when test="$ptFreeElementDoesNotExist">
+                <value ref="lang_{@id}_{$theElement/parent::node()/gn:element/@ref}"
+                       lang="{@id}"></value>
+              </xsl:when>
+            </xsl:choose>
+
           </xsl:for-each>
         </values>
       </xsl:if>
