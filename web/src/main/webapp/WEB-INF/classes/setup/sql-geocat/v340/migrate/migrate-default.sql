@@ -385,6 +385,9 @@ UPDATE Metadata SET data = replace(data, 'local._none_.geocat.ch', 'local.theme.
 UPDATE Metadata SET data = replace(data, 'external._none_.gemet', 'external.theme.gemet')
   WHERE data LIKE '%external._none_.gemet%';
 
+UPDATE Metadata SET data = replace(data, 'WWW:DOWNLOAD-URL', 'WWW:DOWNLOAD-1.0-http--download')
+  WHERE data LIKE '%WWW:DOWNLOAD-URL%';
+
 
 
 DROP TABLE non_validated;
