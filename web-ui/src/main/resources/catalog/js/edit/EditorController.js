@@ -454,7 +454,13 @@
           // when the editor was not opened by a script.
         }
 
-        window.history.back();
+        // specific geocat
+        var debug = /(&|\?)debug/.test(window.location) ? '?debug' : '';
+        var url = 'catalog.search' + debug + '#/metadata/' +
+          gnCurrentEdit.uuid;
+
+        window.location = url;
+        // window.history.back();
       };
 
       $scope.cancel = function(refreshForm) {
