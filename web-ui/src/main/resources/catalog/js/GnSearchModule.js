@@ -58,6 +58,10 @@
         'codelists/gmd%3ADS_AssociationTypeCode');
     $LOCALES.push('/../api/0.1/standards/iso19139/' +
         'codelists/gmd%3ADS_InitiativeTypeCode');
+
+    // iso19139.che codelist translations
+    $LOCALES.push('/../api/0.1/standards/iso19139.che/' +
+        'codelists/gmd%3AMD_TopicCategoryCode');
   }]);
 
 })();
