@@ -171,7 +171,6 @@ public class ISO19139cheSchemaPlugin
         try {
             XPath xpath = XPath.newInstance(path);
             matches = xpath.selectNodes(element);
-            return matches;
         } catch (Exception e) {
             Log.debug(LOGGER_NAME, String.format(
                 "%s: getTranslationForElement failed on element %s using XPath '%s' updatedLocalizedTextElement exception %s",
@@ -182,11 +181,10 @@ public class ISO19139cheSchemaPlugin
         // If none found, check ISO19139.che localised URL type
         if (matches == null || matches.isEmpty()) {
             path = ".//che:LocalisedURL" +
-                "[@locale='#" + languageIdentifier + "' and ../local-name() == 'URLGroup']";
+                "[@locale='#" + languageIdentifier + "']";
             try {
                 XPath xpath = XPath.newInstance(path);
                 matches = xpath.selectNodes(element);
-                return matches;
             } catch (Exception e) {
                 Log.debug(LOGGER_NAME, String.format(
                     "%s: getTranslationForElement LocalisedURL failed on element %s using XPath '%s' updatedLocalizedTextElement exception %s",
@@ -194,7 +192,7 @@ public class ISO19139cheSchemaPlugin
             }
         }
 
-        return null;
+        return matches;
     }
 
     /**
