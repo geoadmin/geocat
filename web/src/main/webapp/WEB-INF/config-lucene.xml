@@ -181,6 +181,7 @@
       <field name="standardName" tagName="standardName"/>
       <field name="_groupWebsite" tagName="groupWebsite"/>
       <field name="attributeTable" tagName="attributeTable"/>
+      <field name="wms_uri" tagName="wmsuri"/> <!--geocat-->
     </dumpFields>
   </search>
 

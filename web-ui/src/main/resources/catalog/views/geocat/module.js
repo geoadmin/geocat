@@ -46,7 +46,10 @@
     '$controller',
     'gnSearchManagerService',
     'Metadata',
-    function($scope, $controller, gnSearchManagerService, Metadata) {
+    'gnMap',
+    'gnUrlUtils',
+    function($scope, $controller, gnSearchManagerService, Metadata, gnMap,
+             gnUrlUtils) {
       angular.extend(this, $controller('gnsDefault', { $scope: $scope }));
       $scope.resultTemplate = '../../catalog/views/geocat/templates/list.html';
 
@@ -67,6 +70,38 @@
           $scope.lastUpdated.push(new Metadata(data.metadata[i]));
         }
       });
+
+      // Override add layer to map functions
+      var map = $scope.searchObj.searchMap;
+      $scope.resultviewFns = {
+        addMdLayerToMap: function(link) {
+          // manage bad formed onlineresource where name is in the url getMap
+          if(!link.name) {
+            var parts = link.url.split('?');
+            if(parts.length == 2) {
+              var p = gnUrlUtils.parseKeyValue(parts[1]);
+              link.name = p.layers;
+              link.url = parts[0]
+            }
+          }
+          if(link.name && link.url) {
+            map.addLayer(gnMap.createOlWMS(map, {
+              LAYERS: link.name
+            },{
+              url: link.url
+            }));
+          }
+          else {
+            console.warn('The layer cannot be added, missing parameters');
+          }
+        },
+        addAllMdLayersToMap: function (layers, md) {
+          angular.forEach(layers, function (layer) {
+            $scope.resultviewFns.addMdLayerToMap(layer, md);
+          });
+        }
+      };
+
     }
   ]);
 
