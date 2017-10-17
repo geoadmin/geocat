@@ -87,7 +87,7 @@
             </a>
           </li>
         </ul>
-        <ul data-ng-if="user.isAdministrator()" class="dropdown-menu hidden-xs" role="menu">
+        <ul data-ng-if="user.isAdministrator()" class="dropdown-menu" role="menu">
           <li data-ng-repeat="t in adminMenu">
             <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}{{t.route}}">
               <i class="fa fa-fw {{t.icon}}"/>&nbsp;<span data-translate="">{{t.name | translate}}</span>
