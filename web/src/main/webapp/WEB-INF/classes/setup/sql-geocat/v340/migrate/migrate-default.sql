@@ -338,7 +338,7 @@ INSERT INTO metadata (
       COALESCE((xpath(
       '//EN/text()',
       concat('<root>', replace(replace("DESC", ']]>', ''), '<![CDATA[', ''), '</root>')::xml)::varchar[])[1], '') AS endesc,
-      ST_AsGML(ST_Transform(the_geom, 2056))  gml,
+      ST_AsGML(3, ST_Transform(ST_Force2D(the_geom), 2056))  gml,
       ST_XMin(ST_Transform(the_geom, 4326)) AS minx,
       ST_YMin(ST_Transform(the_geom, 4326)) AS miny,
       ST_XMax(ST_Transform(the_geom, 4326)) AS maxx,
@@ -556,12 +556,12 @@ INSERT INTO metadata (
       null AS extra
        FROM (
     SELECT "OBJECTVAL"::varchar id, "GEMNAME" AS label,
-      ST_AsGML(ST_Transform(the_geom, 2056))  gml,
+      ST_AsGML(3, ST_Transform(ST_Force2D(the_geom), 2056))  gml,
       ST_XMin(ST_Transform(the_geom, 4326)) AS minx,
       ST_YMin(ST_Transform(the_geom, 4326)) AS miny,
       ST_XMax(ST_Transform(the_geom, 4326)) AS maxx,
       ST_YMax(ST_Transform(the_geom, 4326)) AS maxy
-      FROM "gemeindenBB" WHERE "OBJECTVAL" in (1003, 1006, 1138, 1096, 1006, 1060, 1092, 2013, 2270, 2277, 6471, 6401, 6403, 5826, 5800)) AS extent
+      FROM "gemeindenBB" WHERE "OBJECTVAL" in (1003, 1006, 1138, 1096, 1006, 1060, 1092, 2013, 2270, 2277, 6471, 6401, 6403, 6484, 5826, 5800, 6406)) AS extent
 );
 
 UPDATE metadata SET data = replace (data, 'xlink:show="replace"', '') WHERE data like '%xlink:show="replace"%';
