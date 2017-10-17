@@ -79,6 +79,15 @@
         <i class="fa fa-sitemap"></i>&nbsp;
         <span data-translate="">createChild</span>
       </a></li>
+      <!-- Specific Geocat -->
+      <li class="divider" data-ng-if="user.canEditRecord(md)"></li>
+      <li><a ng-click="mdService.deleteMd(md)"
+             ng-if="user.canEditRecord(md)"
+             data-gn-confirm-click="{{'deleteRecordConfirm' | translate:md}}">
+        <i class="fa fa-trash-o"></i>&nbsp;
+        <span translate>delete</span>
+      </a></li>
+      <!-- End specific geocat -->
     </ul>
   </div>
   <div class="btn-group md-actions">
