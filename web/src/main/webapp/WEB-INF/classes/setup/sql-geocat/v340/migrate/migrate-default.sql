@@ -489,7 +489,41 @@ DELETE FROM Selections;
 -- SELECT * FROM "xlinks" WHERE "ID" in (151, 150, 8, 81, 9, 59, 145);
 --
 -- SELECT * FROM metadata WHERE uuid = 'geocatch-subtpl-extent-custom-150';
-
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1003');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1006');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1138');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1096');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1006');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1060');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1092');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-2013');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-2270');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-2277');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6471');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6401');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6403');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6484');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-5826');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-5800');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6406');
+--
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1003';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1006';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1138';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1096';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1006';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1060';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1092';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-2013';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-2270';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-2277';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6471';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6401';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6403';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6484';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-5826';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-5800';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6406';
 
 INSERT INTO metadata (
   SELECT
@@ -567,3 +601,4 @@ INSERT INTO metadata (
 UPDATE metadata SET data = replace (data, 'xlink:show="replace"', '') WHERE data like '%xlink:show="replace"%';
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/backuparchive/enable', 'true', 2, 12000, 'n');
+
