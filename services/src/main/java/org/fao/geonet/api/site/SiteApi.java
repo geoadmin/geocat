@@ -712,7 +712,8 @@ public class SiteApi {
             List<String> list = new ArrayList<>();
             for (Path sheet : sheets) {
                 String id = sheet.toString();
-                if (id != null && id.endsWith(".xsl")) {
+                // geocat specific CHE.xsl
+                if (id != null && id.endsWith("CHE.xsl")) {
                     String name = com.google.common.io.Files.getNameWithoutExtension(
                         sheet.getFileName().toString());
                     list.add(name);
