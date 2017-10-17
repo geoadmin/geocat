@@ -15,5 +15,8 @@
   "openGovernmentData": "Open Government Data",
   "openData": "Open Data",
   "referenceGeodata": "Reference Geodata",
-  "catalogPlaceholder": "Catalogs"
+  "catalogPlaceholder": "Catalogs",
+  "exportXML": "Export (XML ISO19139)",
+  "exportcheXML": "Export (XML ISO19139.che)",
+  "exportGM03": "Export (GM03)"
 }

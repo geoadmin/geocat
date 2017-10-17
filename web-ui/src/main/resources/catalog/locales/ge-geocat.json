@@ -22,5 +22,9 @@
   "what": "Was?",
   "recordType": "Datensatzart?",
   "When": "Wann?",
-  "when": "Wann?"
+  "when": "Wann?",
+  "catalogPlaceholder": "Catalogs",
+  "exportXML": "Exportieren (XML ISO19139)",
+  "exportcheXML": "Speichern als XML (ISO19139.che)",
+  "exportGM03": "(als GM03) exportieren"
 }

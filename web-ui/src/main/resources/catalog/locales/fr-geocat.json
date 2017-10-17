@@ -17,5 +17,8 @@
   "referenceGeodata": "Géodonnée de référence",
   "catalogPlaceholder": "Catalogue(s)",
   "clear": "Réinitialiser",
-  "identifier": "Identifiant de géodonnée de base"
+  "identifier": "Identifiant de géodonnée de base",
+  "exportXML": "Export (XML ISO19139)",
+  "exportcheXML": "Export (XML ISO19139.che)",
+  "exportGM03": "Export (GM03)"
 }
