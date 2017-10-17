@@ -15,5 +15,12 @@
   "openGovernmentData": "opendata.swiss",
   "openData": "Open Data",
   "referenceGeodata": "Referenz Geodaten",
-  "catalogPlaceholder": "Catalogs"
+  "catalogPlaceholder": "Katalog(e)",
+  "clear": "Zurücksetzen",
+  "identifier": "Geobasisdaten-ID",
+  "What": "Was?",
+  "what": "Was?",
+  "recordType": "Datensatzart?",
+  "When": "Wann?",
+  "when": "Wann?"
 }

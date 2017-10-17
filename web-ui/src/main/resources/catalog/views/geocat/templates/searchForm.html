@@ -193,13 +193,11 @@
           </div>
         </div>
 
-        <!-- Archives Combo (from a local scope array) -->
+        <!-- UUID -->
         <div class="form-group">
-          <label class="col-sm-4 control-label" translate>archive</label>
+          <label class="col-sm-4 control-label">UUID</label>
           <div class="col-sm-8">
-            <select class="form-control input-sm" data-ng-model="searchObj.params.historicalArchive" name="">
-              <option data-ng-repeat="a in searchFormCtrl.archives" value="{{a.value}}" translate>{{a.label}}</option>
-            </select>
+            <input id="uuidF" type="text" data-ng-model="searchObj.params.uuid" class="form-control">
           </div>
         </div>
       </fieldset>

@@ -106,18 +106,6 @@
       'referenceGeodata'
     ];
 
-    // data store for archives field
-    this.archives = [{
-      value: '',
-      label: 'archiveincluded'
-    }, {
-      value: 'n',
-      label: 'archiveexcluded'
-    },{
-      value: 'y',
-      label: 'archiveonly'
-    }];
-
     // data store for valid field
     this.validStore = [{
       value: '',

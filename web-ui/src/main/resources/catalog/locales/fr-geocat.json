@@ -15,5 +15,7 @@
   "openGovernmentData": "Open Government Data",
   "openData": "Open Data",
   "referenceGeodata": "Géodonnée de référence",
-  "catalogPlaceholder": "Catalogue(s)"
+  "catalogPlaceholder": "Catalogue(s)",
+  "clear": "Réinitialiser",
+  "identifier": "Identifiant de géodonnée de base"
 }
