@@ -146,7 +146,8 @@
         <h2 data-translate="">aboutThisResource</h2>
         <table class="table table-striped">
           <tbody>
-          <tr data-ng-if="mdView.current.record.inspirethemewithac.length > 0 ||
+          <!-- Specific Geocat -->
+          <!-- <tr data-ng-if="mdView.current.record.inspirethemewithac.length > 0 ||
                           mdView.current.record.inspirethemewithac.length > 0">
             <th data-translate="">inspireThemes</th>
             <td>
@@ -157,7 +158,8 @@
                 <span class="iti-{{cat.split('|')[0]}}"></span>
               </button>
             </td>
-          </tr>
+          </tr> -->
+          <!-- End Specific Geocat -->
           <tr data-ng-if="mdView.current.record.category.length > 0 ||
                       mdView.current.record.topicCat.length > 0">
             <th data-translate="">listOfCategories</th>
@@ -318,8 +320,11 @@
           <tr data-ng-if="mdView.current.record.format">
             <th data-translate="">format</th>
             <td>
-              <span data-ng-repeat="f in mdView.current.record.format track by $index"
-                    class="badge">{{f}}</span>
+              <!-- Specific Geocat-->
+              <span data-ng-repeat="f in mdView.current.record.format track by $index">
+                {{f + $index < mdView.current.record.format.length - 1 ? ', ' : ''}}
+              </span>
+              <!-- End Specific Geocat-->
             </td>
           </tr>
           <tr data-ng-if="mdView.current.record.lineage">
@@ -567,14 +572,16 @@
         </section>
         </br>
 
-        <section>
+        <!-- Specific Geocat -->
+        <!-- <section>
           <h4>
             <i class="fa fa-fw"></i>
             <span data-translate="">rate</span>
           </h4>
           <div data-gn-metadata-rate="mdView.current.record"/>
 
-        </section>
+        </section> -->
+        <!-- End Specific Geocat -->
       </div>
 
     </div>

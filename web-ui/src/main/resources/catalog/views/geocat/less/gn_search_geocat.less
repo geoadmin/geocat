@@ -478,3 +478,24 @@ body {
 .fa[class*="gn-icon-structure"]:before { content: @fa-var-building }
 .fa[class*="gn-icon-transportation"]:before { content: @fa-var-truck }
 .fa[class*="gn-icon-utilitiesCommunication"]:before { content: @fa-var-phone }
+
+// hide MD status
+.gn-status-mdview {
+  display: none;
+}
+
+.gn-metadata-display {
+  .table-striped {
+    table-layout: fixed;
+  }
+}
+
+.gn-md-view table tr {
+  th {
+    width: 30%;
+  }
+  th, td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
