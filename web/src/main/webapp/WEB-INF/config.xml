@@ -230,9 +230,24 @@
       <class name="org.fao.geonet.guiservices.isolanguages.Get"/>
     </service>
 
+    <!--Geocat specific services-->
     <service name="aap.report.csv">
       <class name=".geocat.services.aap.AapMetadataReport"/>
       <output sheet="../xslt/geocat/aap-report-csv.xsl" contentType="text/csv; charset=UTF-8"/>
+    </service>
+
+    <service name="gm03.xml" type="xml">
+      <class name="org.fao.geonet.api.gm03.Gm03Service">
+        <param name="xsl" value="WEB-INF/data/config/schema_plugins/iso19139.che/convert/ISO19139CHE-to-GM03.xsl" />
+        <param name="xsd" value="WEB-INF/data/config/schema_plugins/iso19139.che/GM03_2_1.xsd" />
+      </class>
+    </service>
+
+    <service name="gm03small.xml" type="xml">
+      <class name="org.fao.geonet.api.gm03.Gm03smallService">
+        <param name="xsl" value="WEB-INF/data/config/schema_plugins/iso19139.che/convert/ISO19139CHE-to-GM03small.xsl" />
+        <param name="xsd" value="WEB-INF/data/config/schema_plugins/iso19139.che/gm03small.xsd" />
+      </class>
     </service>
 
   </services>
