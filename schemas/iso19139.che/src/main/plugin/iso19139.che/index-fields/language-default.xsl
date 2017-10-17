@@ -415,7 +415,7 @@
         <xsl:variable name="email"   select="../../../../gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString"/>
         <xsl:variable name="phone"   select="../../../../gmd:contactInfo/*/gmd:phone/*/gmd:voice[normalize-space(.) != '']/*/text()"/>
         <xsl:variable name="individualName"
-                      select="concat(che:individualFirstName/gco:CharacterString/text(), ' ', che:individualLastName/gco:CharacterString/text())"/>
+                      select="../../../../concat(che:individualFirstName/gco:CharacterString/text(), ' ', ../../../../che:individualLastName/gco:CharacterString/text())"/>
         <xsl:variable name="positionName"   select="../../../../gmd:positionName/gco:CharacterString/text()"/>
         <xsl:variable name="address" select="string-join(../../../../gmd:contactInfo/*/gmd:address/*/(
                                     gmd:deliveryPoint|gmd:postalCode|gmd:city|
@@ -785,7 +785,7 @@
       <xsl:variable name="email" select="../../../../gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString"/>
       <xsl:variable name="phone" select="../../../../gmd:contactInfo/*/gmd:phone/*/gmd:voice[normalize-space(.) != '']/*/text()"/>
       <xsl:variable name="individualName"
-                    select="concat(che:individualFirstName/gco:CharacterString/text(), ' ', che:individualLastName/gco:CharacterString/text())"/>
+                    select="concat(../../../../che:individualFirstName/gco:CharacterString/text(), ' ', ../../../../che:individualLastName/gco:CharacterString/text())"/>
       <xsl:variable name="positionName" select="../../../../gmd:positionName/gco:CharacterString/text()"/>
       <xsl:variable name="address" select="string-join(../../../../gmd:contactInfo/*/gmd:address/*/(
                                       gmd:deliveryPoint|gmd:postalCode|gmd:city|
