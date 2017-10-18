@@ -115,8 +115,7 @@ dockerBuild {
     } // stage
 
     stage('Terraforming') {
-        //if (env.BRANCH_NAME == 'geocat_3.4.x') {
-        if (env.BRANCH_NAME == 'auto_deploy') {
+        if (env.BRANCH_NAME.endsWith("auto-deploy") || env.BRANCH_NAME == "geocat_3.4.x") {
           executeInContainer(deployContainerName, """cd /terraform-geocat &&
             ln -s /root/bin/terraform /usr/bin             &&
             make install                                   &&
