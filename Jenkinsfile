@@ -68,9 +68,10 @@ dockerBuild {
       sh "docker cp ${FILE} ${buildContainerName}:/settings.xml"
     }
   }
+  def shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
+  def dockerTag = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}-${shortCommit}"
   stage('Build/publish a docker image') {
-    def shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
-    def dockerImageName = "camptocamp/geocat:${env.BRANCH_NAME}-${env.BUILD_NUMBER}-${shortCommit}"
+    def dockerImageName = "camptocamp/geocat:${dockerTag}"
     // one-liner to setup docker
     executeInContainer(buildContainerName, "curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-17.05.0-ce.tgz && tar --strip-components=1 -xvzf docker-17.05.0-ce.tgz -C /usr/local/bin")
     executeInContainer(buildContainerName, "mvn -s /settings.xml ${mavenOpts} -pl web -Pdocker -DdockerImageName=${dockerImageName} docker:build docker:push")
@@ -114,13 +115,14 @@ dockerBuild {
     } // stage
 
     stage('Terraforming') {
-        if (env.BRANCH_NAME == 'geocat_3.4.x') {
+        //if (env.BRANCH_NAME == 'geocat_3.4.x') {
+        if (env.BRANCH_NAME == 'auto_deploy') {
           executeInContainer(deployContainerName, """cd /terraform-geocat &&
             ln -s /root/bin/terraform /usr/bin             &&
             make install                                   &&
             make init                                      &&
             cd rancher-environments/geocat-dev             &&
-            terraform apply""")
+            terraform apply -var geocat_tag=${dockerTag}""")
         } else {
           println "Not onto the 'geocat_3.4.x' branch, skipping redeploy"
         }// if
