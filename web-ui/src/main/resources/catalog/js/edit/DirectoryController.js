@@ -73,7 +73,7 @@
       // once validated, only administrators can
       // Edit/Delete/Set privileges/Validate/Reject
       // If false, user who can edit, can validate/reject
-      $scope.restrictValidationToAdmin = false;
+      $scope.restrictValidationToAdmin = true;
 
 
       // when subtemplate is validated,

@@ -221,7 +221,7 @@
                         {{'duplicate' | translate}}</a>
                       </li>
                       <li><a href
-                             data-ng-if="user.canEditRecord(md)"
+                             data-ng-if="user.isAdministratorOrMore() && user.canEditRecord(md)"
                              ng-click="startPermissionsEdit(md)">
                         <i class="fa fa-key fa-fw" />&nbsp;
                         {{'directoryEntryPermissions' | translate}}</a>
