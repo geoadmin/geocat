@@ -20,15 +20,18 @@
   to the GN localized string structure -->
   <xsl:template mode="get-iso19139-localized-url" match="*">
 
+    <xsl:variable name="metadata"
+                  select="ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata']"/>
     <xsl:variable name="mainLanguage"
-                  select="string(ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata']/gmd:language/gco:CharacterString)"/>
+                  select="string($metadata/gmd:language/gco:CharacterString|
+                                 $metadata/gmd:language/gmd:LanguageCode/@codeListValue)"/>
 
     <xsl:for-each select="gmd:URL|che:PT_FreeURL/*/che:LocalisedURL">
       <xsl:variable name="localeId"
                     select="substring-after(@locale, '#')"/>
 
       <value lang="{if (@locale)
-                  then ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata']/gmd:locale/*[@id = $localeId]/gmd:languageCode/*/@codeListValue
+                  then $metadata/gmd:locale/*[@id = $localeId]/gmd:languageCode/*/@codeListValue
                   else if ($mainLanguage) then $mainLanguage else $lang}">
         <xsl:value-of select="string(.)"/>
       </value>
