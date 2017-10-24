@@ -133,21 +133,37 @@ curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/
 ```
 
 
-Set all extent subtemplate loaded valid in the database:
+Set all extent subtemplate loaded valid and publish them to all in the database:
 
 ```
-
 INSERT INTO validation
   SELECT id, 'subtemplate', 1, 0, 0, createdate, true
     FROM metadata WHERE uuid like 'geocatch-subtpl-extent-land-%'
     or  uuid like 'geocatch-subtpl-extent-kanton-%' 
     or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%';
     
+    
+-- Set publish to all
+INSERT INTO operationallowed
+  SELECT 1, id, 0
+    FROM metadata WHERE uuid like 'geocatch-subtpl-extent-land-%'
+                           or  uuid like 'geocatch-subtpl-extent-kanton-%' 
+                           or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%';
+
+-- Set edit privileges to SUBTEMPLATES group
+INSERT INTO operationallowed
+  SELECT (SELECT id FROM groups WHERE name = 'SUBTEMPLATES' ORDER by 1 LIMIT 1),
+        id, 2
+    FROM metadata WHERE  uuid like 'geocatch-subtpl-extent-land-%'
+                            or  uuid like 'geocatch-subtpl-extent-kanton-%' 
+                            or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%';
+    
 ```
 
 
-TODO: There is an issue with BatchOpsMetadataReindexer to solve here as the number of subtemplate
-in the catalogue is correct only after a reindex.
+
+
+TODO: There is an issue with BatchOpsMetadataReindexer to solve here as the number of subtemplate in the catalogue is correct only after a reindex.
 
 
 
@@ -251,19 +267,3 @@ Copy current thesaurus from ```/srv/tomcat/geocat/private/geocat/config/codelist
 in new installation (or use admin interface).
 
 
-
-## Indexing errors
-
-```
-Error on line 621 of language-default.xsl:
-  XTTE0790: A sequence of more than one item is not allowed as the first argument of
-  geonet:protocolMimeType() ("https://map.geo.admin.ch/?topi...",
-  "https://map.geo.admin.ch/?topi...", ...) 
-2017-09-18 09:19:49,769 ERROR [geonetwork.index] - Indexing stylesheet contains errors: A sequence of more than one item is not allowed as the first argument of geonet:protocolMimeType() ("https://map.geo.admin.ch/?topi...", "https://map.geo.admin.ch/?topi...", ...)  
-	 Marking the metadata as _indexingError=1 in index
-	 
-	 
-	 
-	 
-2017-09-18 09:45:07,448 WARN  [geonetwork.index] - Invalid value. Field 'denominator' is not added to the document. Error is: For input string: "25'000"
-```

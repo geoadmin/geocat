@@ -230,19 +230,19 @@ INSERT INTO metadata (
         <gmd:description>
          <gmd:PT_FreeText>
           <gmd:textGroup>
-          <gmd:LocalisedCharacterString locale="#EN">  ' || endesc || '</gmd:LocalisedCharacterString>
+          <gmd:LocalisedCharacterString locale="#EN">' || endesc || '</gmd:LocalisedCharacterString>
           </gmd:textGroup>
           <gmd:textGroup>
-          <gmd:LocalisedCharacterString locale="#DE">  ' || dedesc || '</gmd:LocalisedCharacterString>
+          <gmd:LocalisedCharacterString locale="#DE">' || dedesc || '</gmd:LocalisedCharacterString>
           </gmd:textGroup>
           <gmd:textGroup>
-          <gmd:LocalisedCharacterString locale="#FR">  ' || frdesc || '</gmd:LocalisedCharacterString>
+          <gmd:LocalisedCharacterString locale="#FR">' || frdesc || '</gmd:LocalisedCharacterString>
           </gmd:textGroup>
           <gmd:textGroup>
-          <gmd:LocalisedCharacterString locale="#IT">  ' || itdesc || '</gmd:LocalisedCharacterString>
+          <gmd:LocalisedCharacterString locale="#IT">' || itdesc || '</gmd:LocalisedCharacterString>
           </gmd:textGroup>
           <gmd:textGroup>
-          <gmd:LocalisedCharacterString locale="#RM">  ' || rmdesc || '</gmd:LocalisedCharacterString>
+          <gmd:LocalisedCharacterString locale="#RM">' || rmdesc || '</gmd:LocalisedCharacterString>
           </gmd:textGroup>
           </gmd:PT_FreeText>
         </gmd:description>
@@ -253,19 +253,19 @@ INSERT INTO metadata (
                 <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
                   <gmd:PT_FreeText>
                   <gmd:textGroup>
-                  <gmd:LocalisedCharacterString locale="#EN">  ' || enid || '</gmd:LocalisedCharacterString>
+                  <gmd:LocalisedCharacterString locale="#EN">' || enid || '</gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                   <gmd:textGroup>
-                  <gmd:LocalisedCharacterString locale="#DE">  ' || deid || '</gmd:LocalisedCharacterString>
+                  <gmd:LocalisedCharacterString locale="#DE">' || deid || '</gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                   <gmd:textGroup>
-                  <gmd:LocalisedCharacterString locale="#FR">  ' || frid || '</gmd:LocalisedCharacterString>
+                  <gmd:LocalisedCharacterString locale="#FR">' || frid || '</gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                   <gmd:textGroup>
-                  <gmd:LocalisedCharacterString locale="#IT">  ' || itid || '</gmd:LocalisedCharacterString>
+                  <gmd:LocalisedCharacterString locale="#IT">' || itid || '</gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                   <gmd:textGroup>
-                  <gmd:LocalisedCharacterString locale="#RM">  ' || rmid || '</gmd:LocalisedCharacterString>
+                  <gmd:LocalisedCharacterString locale="#RM">' || rmid || '</gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                   </gmd:PT_FreeText>
                 </gmd:code>
@@ -306,7 +306,7 @@ INSERT INTO metadata (
       0 AS popularity,
       null AS displayorder,
       null AS doctype,
-      null AS extra
+      'validated' AS extra
        FROM (
     SELECT "ID"::varchar id, COALESCE((xpath(
       '//DE/text()',
@@ -345,6 +345,125 @@ INSERT INTO metadata (
       ST_YMax(ST_Transform(the_geom, 4326)) AS maxy
       FROM xlinks) AS extent
 );
+
+-- --
+-- SELECT "OBJECTVAL", "GEMNAME" FROM "gemeindenBB"
+--    WHERE "OBJECTVAL" in (1003, 1006, 1138, 1096, 1006, 1060, 1092, 2013, 2270, 2277, 6471, 6401, 6403, 5826, 5800) ORDER BY 2;
+--
+-- SELECT * FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1006';
+--
+-- SELECT * FROM "xlinks" WHERE "ID" in (151, 150, 8, 81, 9, 59, 145);
+--
+-- SELECT * FROM metadata WHERE uuid = 'geocatch-subtpl-extent-custom-150';
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1003');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1006');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1138');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1096');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1006');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1060');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1092');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-2013');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-2270');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-2277');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6471');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6401');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6403');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6484');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-5826');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-5800');
+-- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6406');
+--
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1003';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1006';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1138';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1096';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1006';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1060';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1092';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-2013';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-2270';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-2277';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6471';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6401';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6403';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6484';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-5826';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-5800';
+-- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6406';
+
+INSERT INTO metadata (
+  SELECT
+      nextval('hibernate_sequence') as id,
+      concat('geocatch-subtpl-extent-hoheitsgebiet-', id) AS uuid,
+      'iso19139' AS schemaId,
+      's' AS istemplate,
+      'n' AS isHarvested,
+      to_char(current_timestamp, 'YYYY-MM-DD"T"HH:MI:SS') AS createdate,
+      to_char(current_timestamp, 'YYYY-MM-DD"T"HH:MI:SS') AS changedate,
+      '<gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml">
+        <gmd:description>
+         <gmd:PT_FreeText>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#EN">' || label || '</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#DE">' || label || '</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#FR">' || label || '</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#IT">' || label || '</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#RM">' || label || '</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          </gmd:PT_FreeText>
+        </gmd:description>
+        <gmd:geographicElement>
+          <gmd:EX_GeographicBoundingBox>
+            <gmd:westBoundLongitude>
+              <gco:Decimal>' || minx || '</gco:Decimal>
+            </gmd:westBoundLongitude>
+            <gmd:eastBoundLongitude>
+              <gco:Decimal>' || maxx || '</gco:Decimal>
+            </gmd:eastBoundLongitude>
+            <gmd:southBoundLatitude>
+              <gco:Decimal>' || miny || '</gco:Decimal>
+            </gmd:southBoundLatitude>
+            <gmd:northBoundLatitude>
+              <gco:Decimal>' || maxy || '</gco:Decimal>
+            </gmd:northBoundLatitude>
+          </gmd:EX_GeographicBoundingBox>
+        </gmd:geographicElement>
+        <gmd:geographicElement>
+          <gmd:EX_BoundingPolygon>
+            <gmd:polygon> ' || gml || '</gmd:polygon>
+          </gmd:EX_BoundingPolygon>
+        </gmd:geographicElement>
+      </gmd:EX_Extent>' AS data,
+      (SELECT value FROM settings WHERE name = 'system/site/siteId') AS source,
+      '' AS title,
+      '' AS root,
+      '' AS harvestuuid,
+      (SELECT id FROM users WHERE name = 'admin' ORDER by 1 LIMIT 1) AS owner,
+      (SELECT id FROM groups WHERE name = 'SUBTEMPLATES' ORDER by 1 LIMIT 1) AS groupowner,
+      '' AS harvesturi,
+      0 AS rating,
+      0 AS popularity,
+      null AS displayorder,
+      null AS doctype,
+      'validated' AS extra
+       FROM (
+    SELECT "OBJECTVAL"::varchar id, "GEMNAME" AS label,
+      ST_AsGML(3, ST_Transform(ST_Force2D(the_geom), 2056))  gml,
+      ST_XMin(ST_Transform(the_geom, 4326)) AS minx,
+      ST_YMin(ST_Transform(the_geom, 4326)) AS miny,
+      ST_XMax(ST_Transform(the_geom, 4326)) AS maxx,
+      ST_YMax(ST_Transform(the_geom, 4326)) AS maxy
+      FROM "gemeindenBB" WHERE "OBJECTVAL" in (1003, 1006, 1138, 1096, 1006, 1060, 1092, 2013, 2270, 2277, 6471, 6401, 6403, 6484, 5826, 5800, 6406)) AS extent
+);
+
 
 -- Make xlink subtemplate valid
 INSERT INTO validation
@@ -389,17 +508,6 @@ UPDATE Metadata SET data = replace(data, 'WWW:DOWNLOAD-URL', 'WWW:DOWNLOAD-1.0-h
   WHERE data LIKE '%WWW:DOWNLOAD-URL%';
 
 
-
-DROP TABLE non_validated;
-DROP TABLE hiddenmetadataelements;
-DROP TABLE deletedobjects;
-DROP TABLE geom_table_lastmodified;
-DROP TABLE countries;
-DROP TABLE countriesBB;
-DROP TABLE gemeindenBB;
-DROP TABLE kantonBB;
-DROP TABLE kanton_search;
-DROP TABLE gemeinden_search;
 
 -- TODO publish_tracking
 
@@ -480,125 +588,20 @@ DELETE FROM Selections;
 -- e15b7d2b-1f66-4e84-8e2e-42020dd99f83
 
 
--- --
--- SELECT "OBJECTVAL", "GEMNAME" FROM "gemeindenBB"
---    WHERE "OBJECTVAL" in (1003, 1006, 1138, 1096, 1006, 1060, 1092, 2013, 2270, 2277, 6471, 6401, 6403, 5826, 5800) ORDER BY 2;
---
--- SELECT * FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1006';
---
--- SELECT * FROM "xlinks" WHERE "ID" in (151, 150, 8, 81, 9, 59, 145);
---
--- SELECT * FROM metadata WHERE uuid = 'geocatch-subtpl-extent-custom-150';
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1003');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1006');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1138');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1096');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1006');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1060');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1092');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-2013');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-2270');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-2277');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6471');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6401');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6403');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6484');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-5826');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-5800');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6406');
---
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1003';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1006';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1138';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1096';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1006';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1060';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1092';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-2013';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-2270';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-2277';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6471';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6401';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6403';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6484';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-5826';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-5800';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6406';
-
-INSERT INTO metadata (
-  SELECT
-      nextval('hibernate_sequence') as id,
-      concat('geocatch-subtpl-extent-hoheitsgebiet-', id) AS uuid,
-      'iso19139' AS schemaId,
-      's' AS istemplate,
-      'n' AS isHarvested,
-      to_char(current_timestamp, 'YYYY-MM-DD"T"HH:MI:SS') AS createdate,
-      to_char(current_timestamp, 'YYYY-MM-DD"T"HH:MI:SS') AS changedate,
-      '<gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml">
-        <gmd:description>
-         <gmd:PT_FreeText>
-          <gmd:textGroup>
-          <gmd:LocalisedCharacterString locale="#EN">  ' || label || '</gmd:LocalisedCharacterString>
-          </gmd:textGroup>
-          <gmd:textGroup>
-          <gmd:LocalisedCharacterString locale="#DE">  ' || label || '</gmd:LocalisedCharacterString>
-          </gmd:textGroup>
-          <gmd:textGroup>
-          <gmd:LocalisedCharacterString locale="#FR">  ' || label || '</gmd:LocalisedCharacterString>
-          </gmd:textGroup>
-          <gmd:textGroup>
-          <gmd:LocalisedCharacterString locale="#IT">  ' || label || '</gmd:LocalisedCharacterString>
-          </gmd:textGroup>
-          <gmd:textGroup>
-          <gmd:LocalisedCharacterString locale="#RM">  ' || label || '</gmd:LocalisedCharacterString>
-          </gmd:textGroup>
-          </gmd:PT_FreeText>
-        </gmd:description>
-        <gmd:geographicElement>
-          <gmd:EX_GeographicBoundingBox>
-            <gmd:westBoundLongitude>
-              <gco:Decimal>' || minx || '</gco:Decimal>
-            </gmd:westBoundLongitude>
-            <gmd:eastBoundLongitude>
-              <gco:Decimal>' || maxx || '</gco:Decimal>
-            </gmd:eastBoundLongitude>
-            <gmd:southBoundLatitude>
-              <gco:Decimal>' || miny || '</gco:Decimal>
-            </gmd:southBoundLatitude>
-            <gmd:northBoundLatitude>
-              <gco:Decimal>' || maxy || '</gco:Decimal>
-            </gmd:northBoundLatitude>
-          </gmd:EX_GeographicBoundingBox>
-        </gmd:geographicElement>
-        <gmd:geographicElement>
-          <gmd:EX_BoundingPolygon>
-            <gmd:polygon> ' || gml || '</gmd:polygon>
-          </gmd:EX_BoundingPolygon>
-        </gmd:geographicElement>
-      </gmd:EX_Extent>' AS data,
-      (SELECT value FROM settings WHERE name = 'system/site/siteId') AS source,
-      '' AS title,
-      '' AS root,
-      '' AS harvestuuid,
-      (SELECT id FROM users WHERE name = 'admin' ORDER by 1 LIMIT 1) AS owner,
-      (SELECT id FROM groups WHERE name = 'SUBTEMPLATES' ORDER by 1 LIMIT 1) AS groupowner,
-      '' AS harvesturi,
-      0 AS rating,
-      0 AS popularity,
-      null AS displayorder,
-      null AS doctype,
-      null AS extra
-       FROM (
-    SELECT "OBJECTVAL"::varchar id, "GEMNAME" AS label,
-      ST_AsGML(3, ST_Transform(ST_Force2D(the_geom), 2056))  gml,
-      ST_XMin(ST_Transform(the_geom, 4326)) AS minx,
-      ST_YMin(ST_Transform(the_geom, 4326)) AS miny,
-      ST_XMax(ST_Transform(the_geom, 4326)) AS maxx,
-      ST_YMax(ST_Transform(the_geom, 4326)) AS maxy
-      FROM "gemeindenBB" WHERE "OBJECTVAL" in (1003, 1006, 1138, 1096, 1006, 1060, 1092, 2013, 2270, 2277, 6471, 6401, 6403, 6484, 5826, 5800, 6406)) AS extent
-);
 
 UPDATE metadata SET data = replace (data, 'xlink:show="replace"', '') WHERE data like '%xlink:show="replace"%';
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/backuparchive/enable', 'true', 2, 12000, 'n');
 
+
+DROP TABLE non_validated;
+DROP TABLE hiddenmetadataelements;
+DROP TABLE deletedobjects;
+DROP TABLE geom_table_lastmodified;
+DROP TABLE countries;
+DROP TABLE countriesBB;
+DROP TABLE gemeindenBB;
+DROP TABLE kantonBB;
+DROP TABLE kanton_search;
+DROP TABLE gemeinden_search;
+DROP TABLE xlinks;
