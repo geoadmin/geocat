@@ -461,14 +461,9 @@ INSERT INTO metadata (
       ST_YMin(ST_Transform(the_geom, 4326)) AS miny,
       ST_XMax(ST_Transform(the_geom, 4326)) AS maxx,
       ST_YMax(ST_Transform(the_geom, 4326)) AS maxy
-      FROM "gemeindenBB" WHERE "OBJECTVAL" in (1003, 1006, 1138, 1096, 1006, 1060, 1092, 2013, 2270, 2277, 6471, 6401, 6403, 6484, 5826, 5800, 6406)) AS extent
+      FROM "gemeindenBB" WHERE "OBJECTVAL" in (1003, 1138, 1096, 1006, 1060, 1092, 2013, 2270, 2277, 6471, 6401, 6403, 6484, 5826, 5800, 6406)) AS extent
 );
 
-
--- Make xlink subtemplate valid
-INSERT INTO validation
-  SELECT id, 'subtemplate', 1, 0, 0, createdate, true
-    FROM metadata WHERE uuid like 'geocatch-subtpl-extent-custom-%';
 
 
 -- Report validation status from extra column to validation table for subtemplate
@@ -479,19 +474,25 @@ INSERT INTO validation
 
 INSERT INTO validation
   SELECT id, 'subtemplate', 0, 0, 0, createdate, true
-    FROM metadata WHERE isTemplate = 's' AND extra = 'nonvalidated';
+    FROM metadata WHERE isTemplate = 's' AND extra = 'nonvalidated' AND
+        id not in (SELECT metadataid FROM validation WHERE valtype = 'subtemplate');
 
 
--- Set publish to all
+
+-- Set publish to all for all validated subtemplates
+-- In old geocat, subtemplates were only published to intranet and 9999
 INSERT INTO operationallowed
   SELECT 1, id, 0
-    FROM metadata WHERE uuid like 'geocatch-subtpl-extent-custom-%';
+    FROM metadata WHERE isTemplate = 's' AND extra = 'validated';
+
 
 -- Set edit privileges to SUBTEMPLATES group
 INSERT INTO operationallowed
   SELECT (SELECT id FROM groups WHERE name = 'SUBTEMPLATES' ORDER by 1 LIMIT 1),
         id, 2
     FROM metadata WHERE uuid like 'geocatch-subtpl-extent-custom-%';
+
+
 
 DELETE FROM Settings WHERE name like 'system/shib%';
 
@@ -599,9 +600,18 @@ DROP TABLE hiddenmetadataelements;
 DROP TABLE deletedobjects;
 DROP TABLE geom_table_lastmodified;
 DROP TABLE countries;
-DROP TABLE countriesBB;
-DROP TABLE gemeindenBB;
-DROP TABLE kantonBB;
-DROP TABLE kanton_search;
+DROP TABLE "countriesBB";
+DROP TABLE "gemeindenBB";
+DROP TABLE "kantoneBB";
+DROP TABLE kantone_search;
 DROP TABLE gemeinden_search;
 DROP TABLE xlinks;
+
+
+
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/xlinkResolver/referencedDeletionAllowed', 'true', 2, 2313, 'n');
+
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/enable', 'false', 2, 1910, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/publickey', '', 0, 1910, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/secretkey', '', 0, 1910, 'y');
+

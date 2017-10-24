@@ -28,6 +28,11 @@ pg_dump -Fc geocat | gzip -9 -c > geocat-$todaydate.gz
 scp -3 geocat-prod-bd:/home/admin/geocat-$todaydate.gz publicshare.camptocamp.com:/var/www/publicshare/htdocs/
 
 
+# Download from 
+
+wget http://dev.camptocamp.com/files/geocat-$todaydate.gz
+
+
 # create geocat database with postgis extension
 psql 
 
@@ -60,12 +65,17 @@ wget https://raw.githubusercontent.com/geoadmin/geocat/geocat_3.4.x/web/src/main
 psql -d geocat -f migrate-default.sql 
 ```
 Run geonetwork.
+
+
 If DB init issues, then update privileges (to geonetwork)
 ```
 for tbl in `psql -qAt -c "select tablename from pg_tables where schemaname = 'public';" geocat` ; do  psql -c "alter table \"$tbl\" owner to geonetwork" geocat ; done
 
 for tbl in `psql -qAt -c "select sequence_name from information_schema.sequences where sequence_schema = 'public';" geocat` ; do  psql -c "alter table \"$tbl\" owner to geonetwork" geocat ; done
 ```
+
+On first start, the catalog update the index (and fails on resolving XLinks which will be updated later).
+
 
 TODO:
 
@@ -90,7 +100,6 @@ wget http://files.titellus.net/gis/ch/hoheitsgebiet.zip
 Load ZIP files using the API (see api-load-extent-subtemplate.png):
 
 ```
-#export CATALOG=http://localhost:8080/geonetwork
 export CATALOG=http://geocat-dev.dev.bgdi.ch/geonetwork
 export CATALOGUSER=admin
 export CATALOGPASS=admin
@@ -102,7 +111,7 @@ export TOKEN=`grep XSRF-TOKEN /tmp/cookie | cut -f 7`;
 curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
   "$CATALOG/srv/eng/info?type=me"
 
-# MUST return authenticated = true
+# MUST return @authenticated = true
 
 
 
@@ -128,7 +137,7 @@ curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/
  "$CATALOG/srv/api/0.1/registries/actions/entries/import/spatial?uuidAttribute=BFS_NUMMER&uuidPattern=geocatch-subtpl-extent-hoheitsgebiet-%7B%7Buuid%7D%7D&descriptionAttribute=NAME&geomProjectionTo=EPSG%3A4326&lenient=true&onlyBoundingBox=false&process=build-extent-subtemplate&schema=iso19139&uuidProcessing=OVERWRITE"
  
 # Check in db select count(*) from metadata where uuid like 'geocatch-subtpl-extent-hoheitsgebiet%'
-# = 2285
+# = 2285+Number of migrated extent (ie.16) = 2301
 
 ```
 
@@ -136,27 +145,31 @@ curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/
 Set all extent subtemplate loaded valid and publish them to all in the database:
 
 ```
+
 INSERT INTO validation
   SELECT id, 'subtemplate', 1, 0, 0, createdate, true
-    FROM metadata WHERE uuid like 'geocatch-subtpl-extent-land-%'
-    or  uuid like 'geocatch-subtpl-extent-kanton-%' 
-    or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%';
+    FROM metadata WHERE uuid like 'geocatch-subtpl-extent-landesgebiet-%'
+    or  uuid like 'geocatch-subtpl-extent-kantonsgebiet-%' 
+    or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%'
+    and id not in (SELECT metadataid FROM validation);
     
     
 -- Set publish to all
 INSERT INTO operationallowed
   SELECT 1, id, 0
-    FROM metadata WHERE uuid like 'geocatch-subtpl-extent-land-%'
-                           or  uuid like 'geocatch-subtpl-extent-kanton-%' 
-                           or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%';
+    FROM metadata WHERE (uuid like 'geocatch-subtpl-extent-landesgebiet-%'
+                           or  uuid like 'geocatch-subtpl-extent-kantonsgebiet-%' 
+                           or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%')
+                           and id not in (SELECT metadataid FROM operationallowed);
 
 -- Set edit privileges to SUBTEMPLATES group
 INSERT INTO operationallowed
   SELECT (SELECT id FROM groups WHERE name = 'SUBTEMPLATES' ORDER by 1 LIMIT 1),
         id, 2
-    FROM metadata WHERE  uuid like 'geocatch-subtpl-extent-land-%'
-                            or  uuid like 'geocatch-subtpl-extent-kanton-%' 
-                            or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%';
+    FROM metadata WHERE (uuid like 'geocatch-subtpl-extent-landesgebiet-%'
+                            or  uuid like 'geocatch-subtpl-extent-kantonsgebiet-%' 
+                            or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%')
+                           and id not in (SELECT metadataid FROM operationallowed);
     
 ```
 
