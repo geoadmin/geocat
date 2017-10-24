@@ -24,7 +24,7 @@ dockerBuild {
   def deployContainerName = "geocat-deployer"
   def deployContainerImage = "ubuntu"
 
-  def mavenOpts = '-B -fn -Dmaven.repo.local=./.m2_repo -Ddb.username=geonetwork -Ddb.name=geonetwork -Ddb.type=postgres-postgis -Ddb.host=database -Ddb.password=geonetwork'
+  def mavenOpts = '-B -fn -Dmaven.repo.local=./.m2_repo -Ddb.username=db_username -Ddb.name=db_name -Ddb.type=postgres-postgis -Ddb.host=db_host -Ddb.password=db_password'
 
   stage('docker pull') {
     sh "docker pull ${mavenContainerImage}"
