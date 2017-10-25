@@ -1,0 +1,3 @@
+#!/bin/bash
+
+rm -fr /mnt/geonetwork_data/data/metadata_subversion
