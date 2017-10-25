@@ -28,9 +28,11 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:saxon="http://saxon.sf.net/"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:java="java:org.fao.geonet.util.XslUtil"
+                extension-element-prefixes="saxon"
                 version="2.0" exclude-result-prefixes="#all">
 
   <xsl:include href="../iso19139/convert/functions.xsl"/>
@@ -73,7 +75,7 @@
 
 
   <xsl:template match="/root">
-    <xsl:apply-templates select="*:MD_Metadata"/>
+    <xsl:apply-templates select="gmd:*"/>
   </xsl:template>
 
 
@@ -247,8 +249,10 @@
       <xsl:apply-templates select="@*[not(name() = 'gco:nilReason') and not(name() = 'xsi:type')]"/>
 
       <!-- Add nileason if text is empty -->
+      <xsl:variable name="isEmpty"
+                    select="normalize-space(gco:CharacterString)=''"/>
       <xsl:choose>
-        <xsl:when test="normalize-space(gco:CharacterString)=''">
+        <xsl:when test="$isEmpty">
           <xsl:attribute name="gco:nilReason">
             <xsl:choose>
               <xsl:when test="@gco:nilReason">
@@ -258,7 +262,7 @@
             </xsl:choose>
           </xsl:attribute>
         </xsl:when>
-        <xsl:when test="@gco:nilReason!='missing' and normalize-space(gco:CharacterString)!=''">
+        <xsl:when test="@gco:nilReason != 'missing' and not($isEmpty)">
           <xsl:copy-of select="@gco:nilReason"/>
         </xsl:when>
       </xsl:choose>
@@ -298,7 +302,8 @@
                 <xsl:value-of select="gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
                                             @locale = concat('#', $mainLanguageId)]/text()"/>
               </gco:CharacterString>
-              <xsl:apply-templates select="gmd:PT_FreeText"/>
+              <!-- Copy all non empty PT_FreeText -->
+              <xsl:apply-templates select="gmd:PT_FreeText[gmd:textGroup]"/>
             </xsl:when>
             <xsl:otherwise>
               <!-- Populate PT_FreeText for default language if not existing. -->
