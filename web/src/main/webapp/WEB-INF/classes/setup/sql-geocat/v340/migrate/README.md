@@ -100,8 +100,8 @@ wget http://files.titellus.net/gis/ch/hoheitsgebiet.zip
 Load ZIP files using the API (see api-load-extent-subtemplate.png):
 
 ```
-export CATALOG=http://geocat-dev.dev.bgdi.ch/geonetwork
-export CATALOGUSER=admin
+export CATALOG=http://localhost:8080/geonetwork
+export CATALOGUSER=fxp
 export CATALOGPASS=admin
 
 
@@ -148,9 +148,9 @@ Set all extent subtemplate loaded valid and publish them to all in the database:
 
 INSERT INTO validation
   SELECT id, 'subtemplate', 1, 0, 0, createdate, true
-    FROM metadata WHERE uuid like 'geocatch-subtpl-extent-landesgebiet-%'
+    FROM metadata WHERE (uuid like 'geocatch-subtpl-extent-landesgebiet-%'
     or  uuid like 'geocatch-subtpl-extent-kantonsgebiet-%' 
-    or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%'
+    or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%')
     and id not in (SELECT metadataid FROM validation);
     
     
@@ -184,8 +184,6 @@ TODO: There is an issue with BatchOpsMetadataReindexer to solve here as the numb
 
 Copy folder from old version to the new one.
 
-TODO: Cleanup ISO19110 uploaded files (#MGEO_SB-97)
-
 
 ## Metadata records migration
 
@@ -193,7 +191,7 @@ See https://github.com/geoadmin/geocat/blob/geocat_3.4.x/schemas/iso19139.che/sr
 
 Apply the transformation to all metadata records.
 
-0. (optinal) Turn off xlink resolution to make this faster.
+0. (optional) Turn off xlink resolution to make this faster.
 
 
 1. Search all records to be updated
@@ -203,7 +201,7 @@ In a browser:
 http://localhost:8080/geonetwork/srv/eng/q?_schema=iso19139.che&_isTemplate=y%20or%20n&_isHarvested=n&bucket=m&summaryOnly=true
 ``` 
 
-In command line (does not work use browser mode):
+In command line (does not work yet, so use browser mode):
 ``` 
 export CATALOG=http://geocat-dev.dev.bgdi.ch/geonetwork
 export CATALOGUSER=admin
