@@ -290,11 +290,15 @@ public class Aligner extends BaseAligner {
             setCreateDate(new ISODate(ri.changeDate));
         metadata.getSourceInfo().
             setSourceId(params.getUuid()).
-            setOwner(ownerId).
-            setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
+            setOwner(ownerId);
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid());
+
+        try {
+            metadata.getSourceInfo().setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
+        } catch (NumberFormatException e) {
+        }
 
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
@@ -358,7 +362,10 @@ public class Aligner extends BaseAligner {
                 metadata.getMetadataCategories().clear();
                 addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
 
-                metadata.getSourceInfo().setGroupOwner(Integer.parseInt(params.getOwnerIdGroup()));
+                try {
+                    metadata.getSourceInfo().setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
+                } catch (NumberFormatException e) {
+                }
 
                 dataMan.flush();
 
