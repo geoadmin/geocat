@@ -362,11 +362,6 @@ public class Aligner extends BaseAligner {
                 metadata.getMetadataCategories().clear();
                 addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
 
-                try {
-                    metadata.getSourceInfo().setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
-                } catch (NumberFormatException e) {
-                }
-
                 dataMan.flush();
 
                 dataMan.indexMetadata(id, Math.random() < 0.01, null);
