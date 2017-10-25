@@ -138,4 +138,25 @@ public class BackupArchiveApi {
         return "{\"success\":true}";
     }
 
+    @ApiOperation(value = "Trigger MEF backup archive",
+            notes = "The backup contains all metadata not harvested including templates.",
+            nickname = "triggerBackup")
+    @RequestMapping(
+            value="/tmp",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Return succeed message.")
+    })
+    @ResponseBody
+    public String tmp(HttpServletRequest request) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        final Trigger trigger = newTrigger().forJob("unpublishInvalidMetadata", "gnBackgroundTasks").startNow().build();
+        context.getApplicationContext().getBean("gnBackgroundJobScheduler", Scheduler.class).scheduleJob(trigger);
+
+        return "{\"success\":true}";
+    }
+
 }
