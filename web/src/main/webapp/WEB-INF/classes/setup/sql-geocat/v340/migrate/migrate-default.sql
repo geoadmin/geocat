@@ -514,12 +514,6 @@ UPDATE Metadata SET data = replace(data, 'WWW:DOWNLOAD-URL', 'WWW:DOWNLOAD-1.0-h
 
 -- TODO metadata.extra is this really useful ?
 
--- TODO Search statistics to drop or move to ES
--- params
--- params_temp ?
--- params_v2 ?
--- requests
--- requests_v2
 
 
 -- XLink migration
@@ -615,3 +609,11 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/publickey', '', 0, 1910, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/secretkey', '', 0, 1910, 'y');
 
+
+
+-- TODO Search statistics to drop or move to ES
+-- DROP TABLE params;
+-- DROP TABLE params_temp;
+-- DROP TABLE params_v2;
+-- DROP TABLE requests;
+-- DROP TABLE requests_v2;
