@@ -16,11 +16,11 @@
   <xsl:output method="html"/>
 
   <!-- Those templates should be overriden in the schema plugin - start -->
-  <xsl:template mode="getMetadataTitle" match="undefined"/>
-  <xsl:template mode="getMetadataAbstract" match="undefined"/>
-  <xsl:template mode="getMetadataHierarchyLevel" match="undefined"/>
-  <xsl:template mode="getOverviews" match="undefined"/>
-  <xsl:template mode="getMetadataHeader" match="undefined"/>
+  <xsl:template mode="getMetadataTitle" match="*"/>
+  <xsl:template mode="getMetadataAbstract" match="*"/>
+  <xsl:template mode="getMetadataHierarchyLevel" match="*"/>
+  <xsl:template mode="getOverviews" match="*"/>
+  <xsl:template mode="getMetadataHeader" match="*"/>
   <!-- Those templates should be overriden in the schema plugin - end -->
 
   <!-- Starting point -->
@@ -79,7 +79,7 @@
 
               <div gn-related="md"
                    data-user="user"
-                   data-types="onlines"/>
+                   data-types="onlines">&#160;</div>
 
               <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
             </header>
@@ -266,7 +266,7 @@
   <xsl:template mode="render-view"
                 match="section[@xpath]">
     <div id="gn-view-{generate-id()}">
-      <xsl:apply-templates mode="render-view" select="@xpath"/>
+      <xsl:apply-templates mode="render-view" select="@xpath"/>&#160;
     </div>
   </xsl:template>
 
@@ -284,7 +284,7 @@
         </xsl:element>
       </xsl:if>
       <xsl:apply-templates mode="render-view"
-                           select="section|field"/>
+                           select="section|field"/>&#160;
     </div>
   </xsl:template>
 
