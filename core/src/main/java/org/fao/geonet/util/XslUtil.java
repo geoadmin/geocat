@@ -35,6 +35,11 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import net.sf.saxon.Configuration;
+import net.sf.saxon.om.DocumentInfo;
+import net.sf.saxon.om.NodeInfo;
+import net.sf.saxon.om.SingletonIterator;
+import net.sf.saxon.om.UnfailingIterator;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
@@ -44,6 +49,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
@@ -66,6 +72,7 @@ import org.geotools.xml.Parser;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.DOMOutputter;
+import org.json.XML;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
@@ -76,6 +83,9 @@ import org.w3c.dom.Node;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -760,6 +770,38 @@ public final class XslUtil {
                 build();
     }
 
+    // Geocat specific
+    public static UnfailingIterator parse(Configuration configuration, String string, boolean printError)
+            throws Exception {
+        String resultString = "<div>" + string + "</div>";
+
+        try {
+            Source xmlSource = new StreamSource(new ByteArrayInputStream(resultString.getBytes("UTF-8")));
+            DocumentInfo doc = configuration.buildDocument(xmlSource);
+            return SingletonIterator.makeIterator(doc);
+        } catch (Exception e) {
+            org.jdom.Element error = JeevesException.toElement(e);
+            Log.warning(Log.SERVICE, e.getMessage() + XML.toString(error));
+            return null;
+        }
+    }
+
+    public static UnfailingIterator parse(NodeInfo text)
+            throws Exception {
+        String resultString = "<div>" + text.getStringValue() + "</div>";
+
+        try {
+            Source xmlSource = new StreamSource(new ByteArrayInputStream(resultString.getBytes("UTF-8")));
+            DocumentInfo doc = text.getConfiguration().buildDocument(xmlSource);
+            return SingletonIterator.makeIterator(doc);
+        } catch (Exception e) {
+            org.jdom.Element error = JeevesException.toElement(e);
+            Log.warning(Log.SERVICE, e.getMessage() + XML.toString(error));
+            return null;
+        }
+    }
+
+    // End geocat
     public static boolean validateURL(final String urlString) throws ExecutionException {
         return URL_VALIDATION_CACHE.get(urlString, new Callable<Boolean>() {
             @Override

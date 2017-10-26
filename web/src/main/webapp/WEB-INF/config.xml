@@ -231,6 +231,22 @@
     </service>
 
     <!--Geocat specific services-->
+    <service name="unpublish.invalid.metadata">
+      <class name=".kernel.unpublish.UnpublishInvalidMetadataJobService" />
+    </service>
+
+    <service name="unpublish.report.xml"  contentType="text/xml; charset=UTF-8">
+      <class name=".kernel.unpublish.UnpublishInvalidMetadataReport"/>
+    </service>
+    <service name="unpublish.report.csv">
+      <class name=".kernel.unpublish.UnpublishInvalidMetadataReport"/>
+      <output sheet="../xslt/geocat/unpublish-report.xsl" contentType="text/csv; charset=UTF-8"/>
+    </service>
+    <service name="unpublish.report.html">
+      <class name=".kernel.unpublish.UnpublishInvalidMetadataReport"/>
+      <output sheet="../xslt/geocat/unpublish-report-html.xsl" contentType="text/html; charset=UTF-8"/>
+    </service>
+
     <service name="aap.report.csv">
       <class name=".geocat.services.aap.AapMetadataReport"/>
       <output sheet="../xslt/geocat/aap-report-csv.xsl" contentType="text/csv; charset=UTF-8"/>

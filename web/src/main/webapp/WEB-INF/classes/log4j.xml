@@ -133,6 +133,9 @@
   <logger name="geonetwork.backup">
     <level value="DEBUG"/>
   </logger>
+  <logger name="geonetwork.unpublish">
+    <level value="DEBUG"/>
+  </logger>
 
   <!--  Jeeves module and submodule logger configuration -->
   <logger name="jeeves" additivity="false">
