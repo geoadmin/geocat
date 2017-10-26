@@ -169,10 +169,6 @@ UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
 -- ) AS links;
 
 
-
--- TODO UI: geocat view does not exist yet. Swith to default for now
-UPDATE settings SET value = 'default' WHERE name = 'system/ui/defaultView';
-
 -- TODO CGP
 -- Remove CGP harvester for the time being.
 DELETE FROM harvesterSettings WHERE id IN (
