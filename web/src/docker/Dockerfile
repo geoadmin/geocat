@@ -5,4 +5,8 @@ RUN apt update && apt install -y python-pip && pip install awscli && rm -rf /var
 
 ADD . /
 
+RUN cd /usr/local/tomcat/webapps && \
+  unzip -d geonetwork geonetwork.war && \
+  rm geonetwork.war
+
 ENTRYPOINT ["/docker-entrypoint.sh", "catalina.sh", "run"]
