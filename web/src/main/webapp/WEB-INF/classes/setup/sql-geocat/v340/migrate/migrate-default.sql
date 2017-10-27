@@ -606,6 +606,11 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/secretkey', '', 0, 1910, 'y');
 
 
+INSERT INTO GroupsDes (iddes, langid, label) VALUES (99999,'eng','Directory entries');
+INSERT INTO GroupsDes (iddes, langid, label) VALUES (99999,'fre','Annuaires');
+INSERT INTO GroupsDes (iddes, langid, label) VALUES (99999,'roh','Directory entries');
+INSERT INTO GroupsDes (iddes, langid, label) VALUES (99999,'ger','Directory entries');
+INSERT INTO GroupsDes (iddes, langid, label) VALUES (99999,'ita','Directory entries');
 
 -- TODO Search statistics to drop or move to ES
 -- DROP TABLE params;
