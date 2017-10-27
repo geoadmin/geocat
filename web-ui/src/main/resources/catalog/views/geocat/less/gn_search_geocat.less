@@ -20,7 +20,6 @@
 @body-bg: #f7f7f7;
 @link-color: @gcat-secondary-color;
 @link-hover-color: darken(@gcat-secondary-color, 20%);
-@grid-gutter-width: 60px;
 @pagination-disabled-bg: #eee;
 
 // panel styles override
@@ -28,8 +27,8 @@
   box-shadow: @gcat-shadow;
 }
 
-// navbar input override
-.navbar-form .form-control {
+// navbar language input override
+#navbar > .navbar-form .form-control {
   border-width: 0px;
   border-radius: 0px;
   box-shadow: @gcat-shadow;
@@ -510,9 +509,21 @@ body {
   }
 }
 
+// adjust margins for search results only (small hack to avoid overriding
+// all BS classes)
+.gcat-body-container {
+  .gn-search-facet {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+  .gcat-search-results {
+    padding-right: 15px !important;
+  }
+}
+
 // center column width fix
 @media (min-width: @screen-md-min) {
   .gcat-body-container .gn-search-facet {
-    padding-right: 0px
+    padding-right: 15px;
   }
 }
