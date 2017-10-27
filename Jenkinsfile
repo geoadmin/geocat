@@ -44,7 +44,7 @@ dockerBuild {
   }
   stage('Second build with tests') {
     try {
-      executeInContainer(buildContainerName,"MAVEN_OPTS=-Xmx8192m mvn clean install ${mavenOpts} ")
+      executeInContainer(buildContainerName,"MAVEN_OPTS=-Xmx512m mvn clean install ${mavenOpts} ")
     } finally {
       junit '**/target/surefire-reports/TEST-*.xml'
     }
