@@ -244,7 +244,8 @@
 
     <!-- In production, some service records contains
     first an empty DataIdentification block that we ignore here -->
-    <xsl:if test="name(following-sibling::*[1]) != 'che:CHE_SV_ServiceIdentification'">
+    <xsl:if test="name(following-sibling::*[1]) != 'che:CHE_SV_ServiceIdentification' and 
+                  name(following-sibling::*[1]) != 'srv:SV_ServiceIdentification'">
       <xsl:element name="{name()}">
         <xsl:copy-of select="@*"/>
         <xsl:apply-templates select="gmd:citation"/>
