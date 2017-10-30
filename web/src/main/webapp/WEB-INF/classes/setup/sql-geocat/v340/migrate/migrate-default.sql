@@ -612,6 +612,34 @@ INSERT INTO GroupsDes (iddes, langid, label) VALUES (99999,'roh','Directory entr
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (99999,'ger','Directory entries');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (99999,'ita','Directory entries');
 
+update harvestersettings set value = replace(value, '/var/cache/s3/', '/mnt/s3/') where value like '/var/cache/s3/%';
+update harvestersettings set value = replace(value, '/usr/bin/sudo -u s3syncuser ', '') where value like '/usr/bin/sudo -u s3syncuser %';
+
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('7ea582d4-9ddf-422e-b28f-29760a4c0147','eng','geocat.ch direct partners');
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('7ea582d4-9ddf-422e-b28f-29760a4c0147','roh','geocat.ch direct partners');
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('7ea582d4-9ddf-422e-b28f-29760a4c0147','ger','geocat.ch direct partners');
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('7ea582d4-9ddf-422e-b28f-29760a4c0147','ita','geocat.ch direct partners');
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('7ea582d4-9ddf-422e-b28f-29760a4c0147','fre','geocat.ch partenaires');
+
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('d3419577-46f7-4bdb-b592-8c833dd8b069','eng','ASIT-VD');
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('d3419577-46f7-4bdb-b592-8c833dd8b069','roh','ASIT-VD');
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('d3419577-46f7-4bdb-b592-8c833dd8b069','ger','ASIT-VD');
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('d3419577-46f7-4bdb-b592-8c833dd8b069','ita','ASIT-VD');
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('d3419577-46f7-4bdb-b592-8c833dd8b069','fre','ASIT-VD');
+
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('4018ffe4-a3ba-4ef6-8943-8769679d9069','eng','GeORG');
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('4018ffe4-a3ba-4ef6-8943-8769679d9069','roh','GeORG');
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('4018ffe4-a3ba-4ef6-8943-8769679d9069','ger','GeORG: Geopotenziale des tieferen Untergrundes im Oberrheingraben');
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('4018ffe4-a3ba-4ef6-8943-8769679d9069','ita','GeORG');
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('4018ffe4-a3ba-4ef6-8943-8769679d9069','fre','GeORG');
+
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('3d0e7213-74b5-4de4-8d36-b23edd56886e','eng','IG-GIS');
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('3d0e7213-74b5-4de4-8d36-b23edd56886e','roh','IG-GIS');
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('3d0e7213-74b5-4de4-8d36-b23edd56886e','ger','IG-GIS');
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('3d0e7213-74b5-4de4-8d36-b23edd56886e','ita','IG-GIS');
+INSERT INTO sourcesdes (iddes, langid, label) VALUES ('3d0e7213-74b5-4de4-8d36-b23edd56886e','fre','IG-GIS');
+
+
 -- TODO Search statistics to drop or move to ES
 -- DROP TABLE params;
 -- DROP TABLE params_temp;
