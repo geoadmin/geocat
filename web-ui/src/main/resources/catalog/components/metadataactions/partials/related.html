@@ -152,7 +152,7 @@
                data-ng-if="mainType.indexOf('MD') == -1">
               <span data-translate="">otherLinkDetails</span><br/>
               <a href="{{r.url | gnLocalized: lang}}" target="_blank">
-                {{r.url | gnLocalized: lang}} </a>
+                {{(r.description | gnLocalized: lang | striptags | words:35) || (r.url | gnLocalized: lang)}} </a>
             </p>
           </div>
         </div>
