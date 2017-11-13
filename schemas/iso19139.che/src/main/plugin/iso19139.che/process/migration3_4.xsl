@@ -28,6 +28,21 @@
                         */gmd:language/gmd:LanguageCode/@codeListValue|
                         */gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue"/>
 
+
+
+  <xsl:variable name="sb218matchText"
+                select="'Modèle de géodonnées'"/>
+
+  <xsl:variable name="isInScopeOfSb218"
+                select="count(*/gmd:identificationInfo/*/gmd:citation/*/
+                          gmd:title[
+                            starts-with(gco:CharacterString, $sb218matchText) or
+                           */gmd:textGroup/gmd:LocalisedCharacterString[
+                              starts-with(., $sb218matchText)]
+                          ]) = 1"/>
+
+
+
   <xsl:variable name="hasExpiryDate"
                 select="count(//gmd:CI_DateTypeCode/@codeListValue = 'expiry') > 0"/>
   <!--
@@ -83,6 +98,23 @@
     <xsl:attribute name="codeListValue">lastRevision</xsl:attribute>
   </xsl:template>
 
+  <!-- https://jira.swisstopo.ch/browse/MGEO_SB-218
+   Move description to name for all gmd:CI_OnlineResource
+   where title starts with Modèle de géodonnées -->
+  <xsl:template match="gmd:CI_OnlineResource[$isInScopeOfSb218]">
+    <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+      <xsl:apply-templates select="gmd:linkage"/>
+      <xsl:apply-templates select="gmd:protocol"/>
+      <xsl:apply-templates select="gmd:applicationProfile"/>
+      <xsl:if test="gmd:description">
+        <gmd:name>
+          <xsl:apply-templates select="gmd:description/*"/>
+        </gmd:name>
+      </xsl:if>
+      <xsl:apply-templates select="gmd:function"/>
+    </xsl:copy>
+  </xsl:template>
 
 
   <!-- Replace old link to resources.get to attachement API -->
@@ -244,7 +276,7 @@
 
     <!-- In production, some service records contains
     first an empty DataIdentification block that we ignore here -->
-    <xsl:if test="name(following-sibling::*[1]) != 'che:CHE_SV_ServiceIdentification' and 
+    <xsl:if test="name(following-sibling::*[1]) != 'che:CHE_SV_ServiceIdentification' and
                   name(following-sibling::*[1]) != 'srv:SV_ServiceIdentification'">
       <xsl:element name="{name()}">
         <xsl:copy-of select="@*"/>
