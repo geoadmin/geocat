@@ -343,7 +343,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
     private boolean checkIfNeedsUnpublishingAndSavePublishedRecord(ServiceContext context, Metadata metadataRecord,
                                                                    DataManager dataManager) throws Exception {
         String id = "" + metadataRecord.getId();
-        Element md   = xmlSerializer.selectNoXLinkResolver(String.valueOf(metadataRecord.getId()), true, false);
+        Element md   = xmlSerializer.select(context, String.valueOf(metadataRecord.getId()));
         String schema = metadataRecord.getDataInfo().getSchemaId();
         PublishRecord todayRecord;
         boolean published = isPublished(id, context);
