@@ -334,7 +334,7 @@ INSERT INTO metadata (
       COALESCE((xpath(
       '//EN/text()',
       concat('<root>', replace(replace("DESC", ']]>', ''), '<![CDATA[', ''), '</root>')::xml)::varchar[])[1], '') AS endesc,
-      ST_AsGML(3, ST_Transform(ST_Force2D(the_geom), 2056))  gml,
+      ST_AsGML(3, ST_Transform(ST_Force2D(the_geom), 4326))  gml,
       ST_XMin(ST_Transform(the_geom, 4326)) AS minx,
       ST_YMin(ST_Transform(the_geom, 4326)) AS miny,
       ST_XMax(ST_Transform(the_geom, 4326)) AS maxx,
@@ -452,7 +452,7 @@ INSERT INTO metadata (
       'validated' AS extra
        FROM (
     SELECT "OBJECTVAL"::varchar id, "GEMNAME" AS label,
-      ST_AsGML(3, ST_Transform(ST_Force2D(the_geom), 2056))  gml,
+      ST_AsGML(3, ST_Transform(ST_Force2D(the_geom), 4326))  gml,
       ST_XMin(ST_Transform(the_geom, 4326)) AS minx,
       ST_YMin(ST_Transform(the_geom, 4326)) AS miny,
       ST_XMax(ST_Transform(the_geom, 4326)) AS maxx,
