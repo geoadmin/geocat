@@ -48,8 +48,10 @@
     'Metadata',
     'gnMap',
     'gnUrlUtils',
+    'gnGlobalSettings',
+    'gnLangs',
     function($scope, $controller, gnSearchManagerService, Metadata, gnMap,
-             gnUrlUtils) {
+             gnUrlUtils, gnGlobalSettings, gnLangs) {
       angular.extend(this, $controller('gnsDefault', { $scope: $scope }));
       $scope.resultTemplate = '../../catalog/views/geocat/templates/list.html';
 
@@ -102,6 +104,8 @@
         }
       };
 
+      // save admin app url on scope
+      $scope.adminAppUrl = gnGlobalSettings.gnCfg.mods.admin.appUrl.replace('{{lang}}', gnLangs.getCurrent());
     }
   ]);
 
