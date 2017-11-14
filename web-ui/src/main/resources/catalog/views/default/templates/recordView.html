@@ -323,7 +323,7 @@
             <td>
               <!-- Specific Geocat-->
               <span data-ng-repeat="f in mdView.current.record.format track by $index">
-                {{f + $index < mdView.current.record.format.length - 1 ? ', ' : ''}}
+                {{f + ($index < mdView.current.record.format.length - 1 ? ', ' : '')}}
               </span>
               <!--
                             <span data-ng-repeat="f in mdView.current.record.format track by $index"
