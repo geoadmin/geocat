@@ -6,7 +6,7 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:util="xalan://org.fao.geonet.util.XslUtil"
+                xmlns:util="java://org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="che gco gmd gml util">
 
     <!-- ================================================================================== -->

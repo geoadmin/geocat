@@ -6,7 +6,7 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns:util="xalan://org.fao.geonet.util.XslUtil"
+                xmlns:util="java://org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="che gco gmd util">
 
     <xsl:template mode="RespParty" match="che:CHE_CI_ResponsibleParty|gmd:CI_ResponsibleParty">

@@ -7,9 +7,10 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
-                xmlns:util="xalan://org.fao.geonet.util.XslUtil"
-                xmlns:xalan="http://xml.apache.org/xalan" 
-                exclude-result-prefixes="che gco gmd gml srv xalan util">
+                xmlns:util="java://org.fao.geonet.util.XslUtil"
+                xmlns:utilgc="java://org.fao.geonet.schema.iso19139che.ISO19139cheUtil"
+                xmlns:xalan="http://xml.apache.org/xalan"
+                exclude-result-prefixes="#all">
 
     <xsl:template mode="Extent" match="gmd:extent">
         <xsl:apply-templates mode="Extent" select="gmd:EX_Extent"/>
@@ -153,7 +154,7 @@
     </xsl:template>
 
     <xsl:template mode="gml" match="gml:posList">
-        <xsl:variable name="line" select="util:posListToGM03Coords(node(),string(.),'2')"/>
+        <xsl:variable name="line" select="utilgc:posListToGM03Coords(node(),string(.),'2')"/>
         <xsl:copy-of select="$line"/>
     </xsl:template>
     
