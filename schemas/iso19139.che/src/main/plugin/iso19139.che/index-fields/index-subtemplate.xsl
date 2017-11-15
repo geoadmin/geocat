@@ -42,8 +42,19 @@
 
     <xsl:variable name="firstName" select="normalize-space((.//che:individualFirstName)[1])" />
     <xsl:variable name="lastName" select="normalize-space((.//che:individualLastName)[1])" />
-    <xsl:variable name="org"
-                  select="if($isMultilingual) then normalize-space(gmd:organisationName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]) else normalize-space(gmd:organisationName/gco:CharacterString)"/>
+    <xsl:variable name="org">
+      <xsl:choose>
+        <xsl:when test="normalize-space(gmd:organisationName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]) != ''">
+          <xsl:copy-of select="normalize-space(gmd:organisationName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale])"/>
+        </xsl:when>
+        <xsl:when test="$isMultilingual">
+          <xsl:copy-of select="normalize-space((gmd:organisationName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[./text()!=''])[1])"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:copy-of select="normalize-space(gmd:organisationName/gco:CharacterString)"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
 
     <xsl:choose>
       <xsl:when test="$isMultilingual">
