@@ -198,7 +198,7 @@
                   <span data-ng-if="!user.canEditRecord(md)">{{md.title || md.defaultTitle}}</span>
                 </div>
 
-                <div class="entry-info" ng-if="!templatesShown()">
+                <div class="entry-info flex-row flex-align-center" ng-if="!templatesShown()">
                   <small class="text-muted" translate
                     translate-values="{ownerName: getOwnerName(md), updateDate: getChangeDate(md)}">
                     directoryEntryInfo
@@ -490,9 +490,9 @@
           </div>
         </div>
         <div class="panel-body">
-          <fieldset data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
-            <div data-ng-include="editorFormUrl"
-                 data-onload="onFormLoad()"></div>
+          <fieldset ng-if="activeEntry"
+                    ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
+            <div id="gn-editor-container-{{activeEntry['geonet:info'].id}}"></div>
           </fieldset>
         </div>
       </div>

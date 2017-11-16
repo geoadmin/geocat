@@ -1362,9 +1362,8 @@
 
                     if (!scope.isEditing) {
                       resetForm();
+                      initMultilingualFields();
                     }
-
-                    initMultilingualFields();
 
                     if (newValue.sources && newValue.sources.metadataStore) {
                       scope.$broadcast('resetSearch',
