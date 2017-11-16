@@ -647,3 +647,5 @@ INSERT INTO sourcesdes (iddes, langid, label) VALUES ('3d0e7213-74b5-4de4-8d36-b
 -- DROP TABLE requests;
 -- DROP TABLE requests_v2;
 DELETE FROM Settings WHERE  name = 'metadata/editor/schemaConfig';
+
+UPDATE harvestersettings SET value = 'GM03-to-ISO19139CHE' WHERE value = '/srv/tomcat/geocat/webapps/geonetwork/xsl/conversion/import/GM03-to-ISO19139CHE.xsl';
