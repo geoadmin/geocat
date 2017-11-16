@@ -404,7 +404,7 @@
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-      <xsl:for-each select="gmd:pointOfContact/gmd:CI_ResponsibleParty|gmd:contact/gmd:CI_ResponsibleParty|
+      <xsl:for-each select="gmd:pointOfContact/gmd:CI_ResponsibleParty|gmd:contact/gmd:CI_ResponsibleParty|ancestor::che:CHE_MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty|ancestor::che:CHE_MD_Metadata/gmd:contact/che:CHE_CI_ResponsibleParty|
             gmd:pointOfContact/*[@gco:isoType = 'gmd:CI_ResponsibleParty']|gmd:contact/*[@gco:isoType = 'gmd:CI_ResponsibleParty']">
 
         <xsl:variable name="orgname" select="if(gmd:organisationName//gmd:LocalisedCharacterString[@locale=$langId]/text() != '' ) then gmd:organisationName//gmd:LocalisedCharacterString[@locale=$langId]/text() else gmd:organisationName/gco:CharacterString/text()"/>
