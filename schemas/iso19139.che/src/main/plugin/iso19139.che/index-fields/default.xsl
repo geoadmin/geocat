@@ -94,8 +94,6 @@
     <xsl:variable name="poundLangId"
                   select="concat('#', upper-case(util:twoCharLangCode(normalize-space(string($isoLangId)))))"/>
     <Document locale="{$isoLangId}">
-      <xsl:apply-templates mode="xlinks"/>
-      <xsl:apply-templates mode="broken-xlinks"/>
       <Field name="_locale" string="{$isoLangId}" store="true" index="true"/>
 
       <Field name="_docLocale" string="{$isoLangId}" store="true" index="true"/>
@@ -1135,71 +1133,6 @@
 
 
   <!-- ========================================================================================= -->
-  <!-- xlinks -->
-
-  <xsl:template match="*[contains(string(@xlink:href),'xml.reusable.deleted')]" mode="xlinks" priority="100">
-    <Field name="xlink_deleted" string="{@xlink:href}" store="true" index="true"/>
-  </xsl:template>
-
-  <xsl:template match="*[@xlink:href and @xlink:role = 'http://www.geonetwork.org/non_valid_obj']" mode="xlinks">
-    <xsl:apply-templates select="." mode="non-valid-xlink"/>
-    <xsl:apply-templates/>
-  </xsl:template>
-
-  <xsl:template match="*[@xlink:href and not(@xlink:role = 'http://www.geonetwork.org/non_valid_obj')]" mode="xlinks">
-    <xsl:apply-templates select="." mode="valid-xlink"/>
-    <xsl:apply-templates/>
-  </xsl:template>
-
-  <xsl:template match="*" mode="xlinks">
-    <xsl:apply-templates mode="xlinks"/>
-  </xsl:template>
-
-  <xsl:template match="text()" mode="xlinks">
-  </xsl:template>
-
-  <xsl:template mode="non-valid-xlink" match="gmd:extent|srv:extent">
-    <Field name="invalid_xlink_extent" string="{@xlink:href}" store="true" index="true"/>
-  </xsl:template>
-  <xsl:template mode="valid-xlink" match="gmd:extent|srv:extent">
-    <Field name="valid_xlink_extent" string="{@xlink:href}" store="true" index="true"/>
-  </xsl:template>
-
-  <xsl:template mode="non-valid-xlink" match="gmd:distributorFormat|gmd:distributionFormat|gmd:resourceFormat">
-    <Field name="invalid_xlink_format" string="{@xlink:href}" store="true" index="true"/>
-  </xsl:template>
-  <xsl:template mode="valid-xlink" match="gmd:distributorFormat|gmd:distributionFormat|gmd:resourceFormat">
-    <Field name="valid_xlink_format" string="{@xlink:href}" store="true" index="true"/>
-  </xsl:template>
-
-  <xsl:template mode="non-valid-xlink" match="gmd:descriptiveKeywords">
-    <Field name="invalid_xlink_keyword" string="{@xlink:href}" store="true" index="true"/>
-  </xsl:template>
-  <xsl:template mode="valid-xlink" match="gmd:descriptiveKeywords">
-    <Field name="valid_xlink_keyword" string="{@xlink:href}" store="true" index="true"/>
-  </xsl:template>
-
-  <xsl:template mode="non-valid-xlink"
-                match="che:parentResponsibleParty|gmd:citedResponsibleParty|gmd:pointOfContact|gmd:contact|gmd:userContactInfo|gmd:distributorContact">
-    <Field name="invalid_xlink_contact" string="{@xlink:href}" store="true" index="true"/>
-  </xsl:template>
-  <xsl:template mode="valid-xlink"
-                match="che:parentResponsibleParty|gmd:citedResponsibleParty|gmd:pointOfContact|gmd:contact|gmd:userContactInfo|gmd:distributorContact">
-    <Field name="valid_xlink_contact" string="{@xlink:href}" store="true" index="true"/>
-  </xsl:template>
-
-  <xsl:template match="text()" mode="non-valid-xlink">
-  </xsl:template>
-  <xsl:template match="text()" mode="valid-xlink">
-  </xsl:template>
-
-  <xsl:template match="*[@xlink:href and count(./*) = 0]" mode="broken-xlinks" priority="100">
-    <Field name="xlink_unresolved" string="{@xlink:href}" store="true" index="true"/>
-    <Field name="metadata_broken_xlink" string="1" store="true" index="true"/>
-  </xsl:template>
-
-  <xsl:template match="text()" mode="broken-xlinks">
-  </xsl:template>
 
   <xsl:template match="text()">
   </xsl:template>
