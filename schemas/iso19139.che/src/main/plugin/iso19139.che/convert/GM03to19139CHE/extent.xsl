@@ -24,11 +24,11 @@
                         </xsl:variable>
                         <xsl:if test="normalize-space($polygon) != ''">
                             <gmd:geographicElement>
-                                <xsl:copy-of select="util:multipolygon(string(description), $polygon)"/>
+                                <xsl:copy-of select="cheutil:multipolygon(string(description), $polygon)"/>
                             </gmd:geographicElement>
                             <xsl:if test="GM03Core.Core.EX_ExtentgeographicElement[.//GM03Core.Core.EX_GeographicBoundingBox]">
                                 <gmd:geographicElement>
-                                    <xsl:copy-of select="util:bbox(string(description), $polygon)"/>
+                                    <xsl:copy-of select="cheutil:bbox(string(description), $polygon)"/>
                                 </gmd:geographicElement>
                             </xsl:if>
                         </xsl:if>
@@ -204,9 +204,9 @@
             </xsl:if>
           </xsl:variable>
           <xsl:if test="normalize-space($polygon) != ''">
-              <xsl:copy-of select="util:multipolygon(string(description), $polygon)" />
+              <xsl:copy-of select="cheutil:multipolygon(string(description), $polygon)" />
             <xsl:if test="spatialExtent[.//GM03Core.Core.EX_GeographicBoundingBox]">
-                <xsl:copy-of select="util:bbox(string(description), $polygon)" />
+                <xsl:copy-of select="cheutil:bbox(string(description), $polygon)" />
             </xsl:if>
           </xsl:if>
           <xsl:apply-templates mode="Extent"

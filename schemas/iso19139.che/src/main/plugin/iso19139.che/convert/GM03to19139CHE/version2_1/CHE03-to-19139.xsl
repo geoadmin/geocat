@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0"
+<xsl:stylesheet version="1.0"
                 xmlns:comp="http://toignore"
                 xmlns:che="http://www.geocat.ch/2008/che"
                 xmlns:srv="http://www.isotc211.org/2005/srv"

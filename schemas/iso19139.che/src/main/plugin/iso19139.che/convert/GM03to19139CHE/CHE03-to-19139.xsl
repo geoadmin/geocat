@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0"
+<xsl:stylesheet version="1.0"
                 xmlns:comp="http://www.geocat.ch/2003/05/gateway/GM03Comprehensive"
                 xmlns:che="http://www.geocat.ch/2008/che"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
@@ -23,7 +23,7 @@
     <xsl:include href="ref-system.xsl"/>
     <xsl:include href="legislation.xsl"/>
 
-  <xsl:param name="uuid"/>
+    <xsl:param name="uuid"/>
     <xsl:param name="DEBUG">0</xsl:param>
     <xsl:template match="/comp:TRANSFER/comp:DATASECTION/comp:GM03Comprehensive.Comprehensive|/comp:TRANSFER/comp:DATASECTION/comp:GM03Core.Core"
                   priority="10">
