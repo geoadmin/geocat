@@ -291,10 +291,13 @@
         <xsl:variable name="readonly" select="ancestor-or-self::node()[@xlink:href] != ''"/>
 
         <br />
+        <!-- specific Geocat: always export geometries as 4326 -->
         <gn-bounding-polygon polygon-xml="{saxon:serialize($geometry, 'default-serialize-mode')}"
                              identifier="{$identifier}"
-                             read-only="{$readonly}">
+                             read-only="{$readonly}"
+                             output-crs="EPSG:4326">
         </gn-bounding-polygon>
+        <!-- end specific geocat -->
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
