@@ -433,7 +433,7 @@
                                       gmd:administrativeArea|gmd:country)/gco:CharacterString/text(), ', ')"/>
 
         <Field name="responsibleParty"
-               string="{concat($roleTranslation, '|' , $type, '|', $orgname, '|', $logo, '|',  string-join($email, ','), '|', $individualName, '|', $positionName, '|', $address, '|', string-join($phone, ','))}"
+               string="{concat($roleTranslation, '|' , $type, '|', $orgname[1], '|', $logo, '|',  string-join($email, ','), '|', $individualName, '|', $positionName, '|', $address, '|', string-join($phone, ','))}"
                store="true" index="false"/>
 
       </xsl:for-each>
@@ -638,10 +638,11 @@
                         select="if (gmd:name/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] != '')
                                 then normalize-space(gmd:name/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId])
                                 else normalize-space(gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType)"/>
+
           <xsl:variable name="desc"
                         select="if (gmd:description/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] != '')
-                                then normalize-space(gmd:description/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId])
-                                else normalize-space(gmd:description/gco:CharacterString)"/>
+                                then normalize-space((gmd:description/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId])[1]/text())
+                                else normalize-space(gmd:description/gco:CharacterString[1])"/>
           <xsl:variable name="protocol" select="normalize-space(gmd:protocol/gco:CharacterString)"/>
           <xsl:variable name="applicationProfile" select="normalize-space(gmd:applicationProfile/gco:CharacterString)"/>
           <xsl:variable name="mimetype" select="if ($linkage != '') then geonet:protocolMimeType($linkage, $protocol, gmd:name/gmx:MimeFileType/@type) else ''"/>
