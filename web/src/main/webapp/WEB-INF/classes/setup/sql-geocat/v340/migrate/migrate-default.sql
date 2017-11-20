@@ -639,6 +639,62 @@ INSERT INTO sourcesdes (iddes, langid, label) VALUES ('3d0e7213-74b5-4de4-8d36-b
 INSERT INTO sourcesdes (iddes, langid, label) VALUES ('3d0e7213-74b5-4de4-8d36-b23edd56886e','ita','IG-GIS');
 INSERT INTO sourcesdes (iddes, langid, label) VALUES ('3d0e7213-74b5-4de4-8d36-b23edd56886e','fre','IG-GIS');
 
+--
+-- groups used by harvesters
+--
+INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction, defaultcategory_id) VALUES (50000000, 'ASIT-VD', 'ASIT-VD', '', NULL, 'asit.gif', NULL, 'n', NULL);
+INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction, defaultcategory_id) VALUES (50000001, 'SO!GIS', 'Canton de Soleure (SO!GIS)', '', NULL, 'sogis.gif', NULL, 'n', NULL);
+INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction, defaultcategory_id) VALUES (50000002, 'GeORG', 'GeORG: Geopotenziale des tieferen Untergrundes im Oberrheingraben', '', NULL, 'georg_logo.gif', NULL, 'n', NULL);
+INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction, defaultcategory_id) VALUES (50000003, 'Genève SITG', 'Genève SITG', '', NULL, 'Genève-SITG-New.gif', NULL, 'n', NULL);
+INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction, defaultcategory_id) VALUES (50000004, 'Kanton Schaffhausen', 'Kanton Schaffhausen', '', NULL, 'sh_wappen.gif', NULL, 'n', NULL);
+INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction, defaultcategory_id) VALUES (50000005, 'Kanton Zürich', 'Kanton Zürich', '', NULL, 'ZHkl.gif', NULL, 'n', NULL);
+INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction, defaultcategory_id) VALUES (50000006, 'Stadt Zürich', 'Stadt Zürich', '', NULL, 'logo_stzh_stzh_sw_pos_1.png', NULL, 'n', NULL);
+INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction, defaultcategory_id) VALUES (50000007, 'IG-GIS', 'IG-GIS', '', NULL, 'ig_gis.gif', NULL, 'n', NULL);
+
+--
+-- harvester groups descriptions
+--
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000000, 'ger', 'ASIT-VD');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000000, 'ita', 'ASIT-VD');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000000, 'fre', 'ASIT-VD');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000000, 'roh', 'ASIT-VD');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000000, 'eng', 'ASIT-VD');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000001, 'ger', 'Canton de Soleure (SO!GIS)');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000001, 'ita', 'Canton de Soleure (SO!GIS)');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000001, 'fre', 'Canton de Soleure (SO!GIS)');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000001, 'roh', 'Canton de Soleure (SO!GIS)');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000001, 'eng', 'Canton de Soleure (SO!GIS)');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000002, 'ger', 'GeORG: Geopotenziale des tieferen Untergrundes im Oberrheingraben');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000002, 'ita', 'GeORG: Geopotenziale des tieferen Untergrundes im Oberrheingraben');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000002, 'fre', 'GeORG: Geopotenziale des tieferen Untergrundes im Oberrheingraben');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000002, 'roh', 'GeORG: Geopotenziale des tieferen Untergrundes im Oberrheingraben');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000002, 'eng', 'GeORG: Geopotenziale des tieferen Untergrundes im Oberrheingraben');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000003, 'ger', 'Genève SITG');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000003, 'ita', 'Genève SITG');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000003, 'fre', 'Genève SITG');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000003, 'roh', 'Genève SITG');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000003, 'eng', 'Genève SITG');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000004, 'ger', 'Kanton Schaffhausen');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000004, 'ita', 'Kanton Schaffhausen');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000004, 'fre', 'Kanton Schaffhausen');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000004, 'roh', 'Kanton Schaffhausen');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000004, 'eng', 'Kanton Schaffhausen');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000005, 'ger', 'Kanton Zürich');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000005, 'ita', 'Kanton Zürich');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000005, 'fre', 'Kanton Zürich');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000005, 'roh', 'Kanton Zürich');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000005, 'eng', 'Kanton Zürich');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000006, 'ger', 'Stadt Zürich');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000006, 'ita', 'Stadt Zürich');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000006, 'fre', 'Stadt Zürich');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000006, 'roh', 'Stadt Zürich');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000006, 'eng', 'Stadt Zürich');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000007, 'ger', 'IG-GIS');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000007, 'ita', 'IG-GIS');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000007, 'fre', 'IG-GIS');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000007, 'roh', 'IG-GIS');
+INSERT INTO groupsdes (iddes, langid, label) VALUES (50000007, 'eng', 'IG-GIS');
+
 
 -- TODO Search statistics to drop or move to ES
 -- DROP TABLE params;
