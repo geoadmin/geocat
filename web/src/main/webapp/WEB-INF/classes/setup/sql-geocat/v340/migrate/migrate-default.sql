@@ -695,6 +695,33 @@ INSERT INTO groupsdes (iddes, langid, label) VALUES (50000007, 'fre', 'IG-GIS');
 INSERT INTO groupsdes (iddes, langid, label) VALUES (50000007, 'roh', 'IG-GIS');
 INSERT INTO groupsdes (iddes, langid, label) VALUES (50000007, 'eng', 'IG-GIS');
 
+--
+-- link between harvesters and their respective groups
+--
+UPDATE harvestersettings
+  SET value = 50000000
+  WHERE name = 'ownerGroup' and parentid = (select parentid from harvestersettings where name = 'name' and value = 'ASIT-VD');
+UPDATE harvestersettings
+  SET value = 50000001
+  WHERE name = 'ownerGroup' and parentid = (select parentid from harvestersettings where name = 'name' and value = 'Canton de Soleure (SO!GIS)');
+UPDATE harvestersettings
+  SET value = 50000002
+  WHERE name = 'ownerGroup' and parentid = (select parentid from harvestersettings where name = 'name' and value = 'GeORG: Geopotenziale des tieferen Untergrundes im Oberrheingraben');
+UPDATE harvestersettings
+  SET value = 50000003
+  WHERE name = 'ownerGroup' and parentid = (select parentid from harvestersettings where name = 'name' and value = 'Genève SITG');
+UPDATE harvestersettings
+  SET value = 50000004
+  WHERE name = 'ownerGroup' and parentid = (select parentid from harvestersettings where name = 'name' and value = 'Kanton Schaffhausen');
+UPDATE harvestersettings
+  SET value = 50000005
+  WHERE name = 'ownerGroup' and parentid = (select parentid from harvestersettings where name = 'name' and value = 'Kanton Zürich');
+UPDATE harvestersettings
+  SET value = 50000006
+  WHERE name = 'ownerGroup' and parentid = (select parentid from harvestersettings where name = 'name' and value = 'Stadt Zürich');
+UPDATE harvestersettings
+  SET value = 50000007
+  WHERE name = 'ownerGroup' and parentid = (select parentid from harvestersettings where name = 'name' and value = 'IG-GIS');
 
 -- TODO Search statistics to drop or move to ES
 -- DROP TABLE params;
