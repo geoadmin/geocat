@@ -132,7 +132,7 @@
   <summaryTypes>
     <summaryType name="details" format="DIMENSION">
       <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
-      <item facet="mdActions"/>
+      <!-- <item facet="mdActions"/> --> <!-- Specific Geocat -->
       <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
       <item facet="keyword" max="15"/>
       <item facet="orgName" max="25"/>
