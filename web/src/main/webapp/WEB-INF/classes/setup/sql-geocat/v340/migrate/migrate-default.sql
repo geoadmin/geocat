@@ -732,3 +732,7 @@ UPDATE harvestersettings
 DELETE FROM Settings WHERE  name = 'metadata/editor/schemaConfig';
 
 UPDATE harvestersettings SET value = 'GM03-to-ISO19139CHE' WHERE value = '/srv/tomcat/geocat/webapps/geonetwork/xsl/conversion/import/GM03-to-ISO19139CHE.xsl';
+
+
+
+UPDATE metadata SET data = replace(data, 'file:///srv/tomcat/geocat/private/geocat/config/codelist/external/thesauri/theme/theme/', 'http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Ftheme%2F') where data like '%file:///srv/tomcat/geocat/private/geocat/config/codelist/external/thesauri/theme/theme/%';
