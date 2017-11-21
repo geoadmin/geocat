@@ -7,8 +7,8 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
-                xmlns:util="java://org.fao.geonet.util.XslUtil"
-                xmlns:utilgc="java://org.fao.geonet.schema.iso19139che.ISO19139cheUtil"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:utilgc="java:org.fao.geonet.schema.iso19139che.ISO19139cheUtil"
                 xmlns:xalan="http://xml.apache.org/xalan"
                 exclude-result-prefixes="#all">
 

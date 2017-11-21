@@ -6,7 +6,7 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                xmlns:util="java://org.fao.geonet.util.XslUtil"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 exclude-result-prefixes="che gco gmd srv util gmx">
 

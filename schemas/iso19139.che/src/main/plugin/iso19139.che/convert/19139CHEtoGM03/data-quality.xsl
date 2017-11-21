@@ -8,7 +8,7 @@
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:gmi="http://www.isotc211.org/2005/gmi"
                 xmlns:xalan="http://xml.apache.org/xalan"
-                xmlns:util="java://org.fao.geonet.util.XslUtil"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="che gco gmd gml xalan gmi util">
 
     <xsl:template mode="DataQuality" match="gmd:DQ_DataQuality">
