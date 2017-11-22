@@ -161,8 +161,20 @@ abstract class AbstractFormatService {
                     throw new ResourceNotFoundEx(
                         "A uuid or an id MUST be provided.");
                 }
-                Integer.parseInt(id);
-                resolvedId = id;
+                // specific geocat, keep compatibility with id as uuid
+                try {
+                    Integer.parseInt(id);
+                    resolvedId = id;
+                } catch (NumberFormatException e) {
+                    try {
+                        resolvedId = ApplicationContextHolder.get().getBean(DataManager.class).getMetadataId(id);
+                    } catch (Exception e2) {
+                        throw new ResourceNotFoundEx("Metadata with id: id");
+                    }
+                }
+//                Integer.parseInt(id);
+//                resolvedId = id;
+                //End geocat
             }
         } catch (NumberFormatException e) {
             throw new BadParameterEx(
