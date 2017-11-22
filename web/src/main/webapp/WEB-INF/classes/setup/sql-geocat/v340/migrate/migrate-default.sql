@@ -642,14 +642,14 @@ INSERT INTO sourcesdes (iddes, langid, label) VALUES ('3d0e7213-74b5-4de4-8d36-b
 --
 -- groups used by harvesters
 --
-INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction, defaultcategory_id) VALUES (50000000, 'ASIT-VD', 'ASIT-VD', '', NULL, 'asit.gif', NULL, 'n', NULL);
-INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction, defaultcategory_id) VALUES (50000001, 'SO!GIS', 'Canton de Soleure (SO!GIS)', '', NULL, 'sogis.gif', NULL, 'n', NULL);
-INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction, defaultcategory_id) VALUES (50000002, 'GeORG', 'GeORG: Geopotenziale des tieferen Untergrundes im Oberrheingraben', '', NULL, 'georg_logo.gif', NULL, 'n', NULL);
-INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction, defaultcategory_id) VALUES (50000003, 'Genève SITG', 'Genève SITG', '', NULL, 'Genève-SITG-New.gif', NULL, 'n', NULL);
-INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction, defaultcategory_id) VALUES (50000004, 'Kanton Schaffhausen', 'Kanton Schaffhausen', '', NULL, 'sh_wappen.gif', NULL, 'n', NULL);
-INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction, defaultcategory_id) VALUES (50000005, 'Kanton Zürich', 'Kanton Zürich', '', NULL, 'ZHkl.gif', NULL, 'n', NULL);
-INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction, defaultcategory_id) VALUES (50000006, 'Stadt Zürich', 'Stadt Zürich', '', NULL, 'logo_stzh_stzh_sw_pos_1.png', NULL, 'n', NULL);
-INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction, defaultcategory_id) VALUES (50000007, 'IG-GIS', 'IG-GIS', '', NULL, 'ig_gis.gif', NULL, 'n', NULL);
+INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction) VALUES (50000000, 'ASIT-VD', 'ASIT-VD', '', NULL, 'asit.gif', NULL, 'n');
+INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction) VALUES (50000001, 'SO!GIS', 'Canton de Soleure (SO!GIS)', '', NULL, 'sogis.gif', NULL, 'n');
+INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction) VALUES (50000002, 'GeORG', 'GeORG: Geopotenziale des tieferen Untergrundes im Oberrheingraben', '', NULL, 'georg_logo.gif', NULL, 'n');
+INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction) VALUES (50000003, 'Genève SITG', 'Genève SITG', '', NULL, 'Genève-SITG-New.gif', NULL, 'n');
+INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction) VALUES (50000004, 'Kanton Schaffhausen', 'Kanton Schaffhausen', '', NULL, 'sh_wappen.gif', NULL, 'n');
+INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction) VALUES (50000005, 'Kanton Zürich', 'Kanton Zürich', '', NULL, 'ZHkl.gif', NULL, 'n');
+INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction) VALUES (50000006, 'Stadt Zürich', 'Stadt Zürich', '', NULL, 'logo_stzh_stzh_sw_pos_1.png', NULL, 'n');
+INSERT INTO groups (id, name, description, email, referrer, logo, website, enablecategoriesrestriction) VALUES (50000007, 'IG-GIS', 'IG-GIS', '', NULL, 'ig_gis.gif', NULL, 'n');
 
 --
 -- harvester groups descriptions
