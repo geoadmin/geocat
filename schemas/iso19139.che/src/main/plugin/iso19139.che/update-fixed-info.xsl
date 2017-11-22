@@ -54,6 +54,9 @@
   <xsl:variable name="isMultilingual"
                 select="count(/root/*/gmd:locale[*/gmd:languageCode/*/@codeListValue != $mainLanguage]) > 0"/>
 
+  <xsl:variable name="languages"
+                select="/root/*/gmd:locale/*"/>
+
   <xsl:variable name="mainLanguageId"
                 select="upper-case(java:twoCharLangCode($mainLanguage))"/>
 
@@ -244,15 +247,43 @@
 
   <!-- ================================================================= -->
 
+  <!-- Replace by PT_FreeURL if only gmd:URL set in multilingual records. -->
+  <xsl:template match="gmd:linkage[$isMultilingual and
+                                   gmd:URL and
+                                   not(che:PT_FreeURL)]">
+    <xsl:variable name="url"
+                  select="gmd:URL"/>
+    <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+      <xsl:attribute name="xsi:type">che:PT_FreeURL_PropertyType</xsl:attribute>
+
+      <che:PT_FreeURL>
+        <xsl:for-each select="$languages/@id">
+          <che:URLGroup>
+            <che:LocalisedURL locale="#{.}">
+              <xsl:value-of select="$url"/>
+            </che:LocalisedURL>
+          </che:URLGroup>
+        </xsl:for-each>
+      </che:PT_FreeURL>
+    </xsl:copy>
+  </xsl:template>
+
+
   <xsl:template match="*[gco:CharacterString|gmd:PT_FreeText]">
     <xsl:copy>
       <xsl:apply-templates select="@*[not(name() = 'gco:nilReason') and not(name() = 'xsi:type')]"/>
 
+      <xsl:variable name="valueInPtFreeTextForMainLanguage"
+                    select="normalize-space(gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
+                                            @locale = concat('#', $mainLanguageId)])"/>
+
       <!-- Add nileason if text is empty -->
       <xsl:variable name="isEmpty"
                     select="if ($isMultilingual)
-                            then normalize-space(gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
-                                                  @locale = concat('#', $mainLanguageId)]) = ''
+                            then $valueInPtFreeTextForMainLanguage = ''
+                            else if ($valueInPtFreeTextForMainLanguage != '')
+                            then $valueInPtFreeTextForMainLanguage = ''
                             else normalize-space(gco:CharacterString) = ''"/>
 
       <xsl:choose>
@@ -281,7 +312,21 @@
 
       <xsl:variable name="excluded"
                     select="gn-fn-iso19139:isNotMultilingualField(., $editorConfig)"/>
+
       <xsl:choose>
+        <!-- Check record does not contains multilingual elements
+          matching the main language. This may happen if the main
+          language is declared in locales and only PT_FreeText are set.
+          It should not be possible in GeoNetwork, but record user can
+          import may use this encoding. -->
+        <xsl:when test="not($isMultilingual) and
+                        $valueInPtFreeTextForMainLanguage != '' and
+                        normalize-space(gco:CharacterString) = ''">
+
+          <gco:CharacterString>
+            <xsl:value-of select="$valueInPtFreeTextForMainLanguage"/>
+          </gco:CharacterString>
+        </xsl:when>
         <xsl:when test="not($isMultilingual) or
                         $excluded">
           <!-- Copy gco:CharacterString only. PT_FreeText are removed if not multilingual. -->

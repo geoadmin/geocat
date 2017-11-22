@@ -29,6 +29,7 @@ Insert is made in first transferOptions found.
 <xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 version="2.0" xmlns:che="http://www.geocat.ch/2008/che">
 
   <!-- Main properties for the link.
@@ -194,11 +195,11 @@ Insert is made in first transferOptions found.
               </xsl:if>
               <gmd:CI_OnlineResource>
                 <gmd:linkage>
-
                   <xsl:choose>
-
                     <!--Multilingual-->
                     <xsl:when test="contains($url, '#')">
+                      <xsl:attribute name="xsi:type">che:PT_FreeURL_PropertyType</xsl:attribute>
+
                       <xsl:for-each select="tokenize($url, $separator)">
                         <xsl:variable name="urlLang"
                                       select="substring-before(., '#')"></xsl:variable>
@@ -334,6 +335,8 @@ Insert is made in first transferOptions found.
 
                   <!--Multilingual-->
                   <xsl:when test="contains($url, '#')">
+                    <xsl:attribute name="xsi:type">che:PT_FreeURL_PropertyType</xsl:attribute>
+
                     <xsl:for-each select="tokenize($url, $separator)">
                       <xsl:variable name="urlLang"
                                     select="substring-before(., '#')"></xsl:variable>
