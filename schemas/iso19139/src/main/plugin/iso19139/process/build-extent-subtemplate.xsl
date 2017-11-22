@@ -52,6 +52,23 @@
           <gco:CharacterString>
             <xsl:value-of select="$description"/>
           </gco:CharacterString>
+          <gmd:PT_FreeText>
+            <gmd:textGroup>
+              <gmd:LocalisedCharacterString locale="#EN"><xsl:value-of select="$description"/></gmd:LocalisedCharacterString>
+            </gmd:textGroup>
+            <gmd:textGroup>
+              <gmd:LocalisedCharacterString locale="#DE"><xsl:value-of select="$description"/></gmd:LocalisedCharacterString>
+            </gmd:textGroup>
+            <gmd:textGroup>
+              <gmd:LocalisedCharacterString locale="#FR"><xsl:value-of select="$description"/></gmd:LocalisedCharacterString>
+            </gmd:textGroup>
+            <gmd:textGroup>
+              <gmd:LocalisedCharacterString locale="#IT"><xsl:value-of select="$description"/></gmd:LocalisedCharacterString>
+            </gmd:textGroup>
+            <gmd:textGroup>
+              <gmd:LocalisedCharacterString locale="#RM"><xsl:value-of select="$description"/></gmd:LocalisedCharacterString>
+            </gmd:textGroup>
+          </gmd:PT_FreeText>
         </gmd:description>
       </xsl:if>
       <gmd:geographicElement>
