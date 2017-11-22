@@ -359,5 +359,7 @@
     "inputGeometryHint": "Copier ici une géométrie dans le format et la projection choisi. ",
     "inputGeometryReadOnlyHint": "La géométrie est en lecture-seule.",
     "selectKeyword": "Ajouter des mots-clés",
-    "saveLinkToSibling": "Enregistrer la liaison entre les métadonnées"
+    "saveLinkToSibling": "Enregistrer la liaison entre les métadonnées",
+    "confirmCloseInvalidTitle": "Confirmer la fermeture de l'éditeur",
+    "confirmCloseInvalidMetadata": "Cette métadonnée n'est plus valide et sera dépubliée.<br><br>Voulez-vous continuer ?"
 }
