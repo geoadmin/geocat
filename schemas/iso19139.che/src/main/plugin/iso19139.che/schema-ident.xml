@@ -16,7 +16,7 @@
   </description>
   <standardUrl xml:lang="en">https://www.geocat.admin.ch/en/documentation/gm03-metadata-model.html</standardUrl>
   <standardUrl xml:lang="fr">https://www.geocat.admin.ch/fr/documentation/gm03-metadata-model.html</standardUrl>
-  <schemaLocation>http://www.geocat.ch/2008/che http://www.isotc211.org/2005/gmd
+  <schemaLocation>http://www.geocat.ch/2008/che https://www.geocat.ch/geonetwork/xml/schemas/iso19139.che/schema/che/che.xsd http://www.isotc211.org/2005/gmd
     http://www.isotc211.org/2005/gmd/gmd.xsd http://www.isotc211.org/2005/srv
     http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd
   </schemaLocation>
