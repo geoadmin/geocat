@@ -358,10 +358,9 @@
               // Moment will properly parse YYYY, YYYY-MM,
               // YYYY-MM-DDTHH:mm:ss which are the formats
               // used in the common metadata standards.
-              // By the way check Z
-              var date = null, suffix = 'Z';
-              if (originalDate.indexOf(suffix,
-                  originalDate.length - suffix.length) !== -1) {
+              // By the way check Z which may be used in GML times
+              var date = null;
+              if (originalDate.match("[Zz]$") !== null) {
                 date = moment(originalDate, 'YYYY-MM-DDtHH-mm-SSSZ');
               } else {
                 date = moment(originalDate);
@@ -1240,7 +1239,7 @@
 
       } else if (angular.isString(value)) {
         if (value) {
-          return value.replace(/(\r)?\n/g, '<br/>');
+          return value.replace(/(\r)?\n/g, '<br/>').replace(/(&#13;)?&#10;/g, '<br/>');
         } else {
           return value;
         }
