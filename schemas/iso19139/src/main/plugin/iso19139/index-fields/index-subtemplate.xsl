@@ -241,8 +241,9 @@
 
 
     <xsl:template mode="index" match="gmd:MD_Format[count(ancestor::node()) =  1]">
+        <xsl:variable name="_title" select="concat(gmd:name/gco:CharacterString, ' ', gmd:version/gco:CharacterString)"/>
         <Field name="_title"
-               string="{if ($title != '') then $title else gmd:name/gco:CharacterString}"
+               string="{$_title}"
                store="true" index="true"/>
         <Field name="__name"
                string="{gmd:name/gco:CharacterString}"
