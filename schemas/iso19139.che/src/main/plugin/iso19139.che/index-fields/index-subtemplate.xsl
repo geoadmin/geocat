@@ -42,40 +42,53 @@
 
     <xsl:variable name="firstName" select="normalize-space((.//che:individualFirstName)[1])" />
     <xsl:variable name="lastName" select="normalize-space((.//che:individualLastName)[1])" />
-    <xsl:variable name="org">
-      <xsl:choose>
-        <xsl:when test="normalize-space(gmd:organisationName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]) != ''">
-          <xsl:copy-of select="normalize-space(gmd:organisationName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale])"/>
-        </xsl:when>
-        <xsl:when test="$isMultilingual">
-          <xsl:copy-of select="normalize-space((gmd:organisationName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[./text()!=''])[1])"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:copy-of select="normalize-space(gmd:organisationName/gco:CharacterString)"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+    <Field name="firstName" string="{$firstName}" store="true" index="true"/>
+    <Field name="lastName" string="{$lastName}" store="true" index="true"/>
+
+    <xsl:for-each
+            select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString">
+      <Field name="email" string="{.}" store="true" index="true"/>
+    </xsl:for-each>
+    <xsl:for-each
+            select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString">
+      <Field name="_email" string="{.}" store="true" index="true"/>
+    </xsl:for-each>
+
 
     <xsl:choose>
       <xsl:when test="$isMultilingual">
-        <xsl:for-each
-                select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress">
-          <Field name="email" string="{gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]}" store="true" index="true"/>
-        </xsl:for-each>
+        <xsl:variable name="org">
+          <xsl:choose>
+            <xsl:when test="normalize-space(gmd:organisationName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]) != ''">
+              <xsl:copy-of select="normalize-space(gmd:organisationName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale])"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:copy-of select="normalize-space((gmd:organisationName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[./text()!=''])[1])"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="name"
+                      select="normalize-space(gmd:individualName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale])"/>
+        <Field name="individualName" string="{$name}" store="true" index="true"/>
+        <Field name="_orgName" string="{$org}" store="true" index="true"/>
+        <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
+        <xsl:variable name="basicTitle" select="concat($firstName, ' ', $lastName, ' ', $org)" />
+        <Field name="_title" string="{$basicTitle}" store="true" index="false" />
+
       </xsl:when>
       <xsl:otherwise>
-        <xsl:for-each
-                select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString">
-          <Field name="email" string="{.}" store="true" index="true"/>
-        </xsl:for-each>
+        <xsl:variable name="org"
+                      select="normalize-space(gmd:organisationName/gco:CharacterString)"/>
+        <xsl:variable name="name"
+                      select="normalize-space(gmd:individualName/gco:CharacterString)"/>
+        <Field name="individualName" string="{$name}" store="true" index="true"/>
+        <Field name="_orgName" string="{$org}" store="true" index="true"/>
+        <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
+        <xsl:variable name="basicTitle" select="concat($firstName, ' ', $lastName, ' ', $org)" />
+        <Field name="_title" string="{$basicTitle}" store="true" index="false" />
       </xsl:otherwise>
     </xsl:choose>
 
-    <xsl:variable name="basicTitle" select="concat($firstName, ' ', $lastName, ' ', $org)" />
-
-    <Field name="orgName" string="{$org}" store="true" index="true"/>
-    <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
-    <Field name="_title" string="{$basicTitle}" store="true" index="false" />
 
     <xsl:call-template name="subtemplate-common-fields"/>
 
