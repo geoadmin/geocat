@@ -3,10 +3,19 @@ package org.fao.geonet.schema.iso19139che;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang.StringUtils;
-
-import org.fao.geonet.kernel.schema.*;
+import org.fao.geonet.kernel.schema.AssociatedResource;
+import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
+import org.fao.geonet.kernel.schema.ExportablePlugin;
+import org.fao.geonet.kernel.schema.ISOPlugin;
+import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
+import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
+import org.fao.geonet.kernel.schema.subtemplate.KeywordReplacer;
+import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
+import org.fao.geonet.kernel.schema.subtemplate.SubtemplateAwareSchemaPlugin;
+import org.fao.geonet.kernel.schema.subtemplate.SubtemplatesByLocalXLinksReplacer;
+import org.fao.geonet.schema.iso19139.ExtentReplacer;
+import org.fao.geonet.schema.iso19139.FormatReplacer;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
-import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -15,6 +24,7 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -30,7 +40,8 @@ public class ISO19139cheSchemaPlugin
     AssociatedResourcesSchemaPlugin,
     MultilingualSchemaPlugin,
     ExportablePlugin,
-    ISOPlugin {
+    ISOPlugin,
+    SubtemplateAwareSchemaPlugin {
     public static final String IDENTIFIER = "iso19139.che";
 
     public static ImmutableSet<Namespace> allNamespaces;
@@ -66,6 +77,8 @@ public class ISO19139cheSchemaPlugin
             // GEOCAT-TODO: Add GM03
             .build();
     }
+
+    private SubtemplatesByLocalXLinksReplacer subtemplatesByLocalXLinksReplacer;
 
     public ISO19139cheSchemaPlugin() {
         super(IDENTIFIER, allNamespaces);
@@ -340,5 +353,27 @@ public class ISO19139cheSchemaPlugin
             }
         }
         return element;
+    }
+
+    @Override
+    public Element replaceSubtemplatesByLocalXLinks(Element dataXml, String templatesToOperateOn) {
+        return subtemplatesByLocalXLinksReplacer.replaceSubtemplatesByLocalXLinks(
+                dataXml,
+                templatesToOperateOn);
+    }
+
+    @Override
+    public void init(ManagersProxy managersProxy, ConstantsProxy constantsProxy) {
+        subtemplatesByLocalXLinksReplacer = new SubtemplatesByLocalXLinksReplacer(managersProxy);
+        List<Namespace> namespaces = new ArrayList<>(allNamespaces);
+        subtemplatesByLocalXLinksReplacer.addReplacer(new FormatReplacer(namespaces, managersProxy, constantsProxy));
+        subtemplatesByLocalXLinksReplacer.addReplacer(new ContactReplacer(namespaces, managersProxy, constantsProxy));
+        subtemplatesByLocalXLinksReplacer.addReplacer(new ExtentReplacer(namespaces, managersProxy, constantsProxy));
+        subtemplatesByLocalXLinksReplacer.addReplacer(new KeywordReplacer(managersProxy));
+    }
+
+    @Override
+    public boolean isInitialised() {
+        return subtemplatesByLocalXLinksReplacer!=null;
     }
 }

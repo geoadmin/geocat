@@ -256,6 +256,15 @@
     <Field name="_groupPublished" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
     <Field name="_source" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
 
+    <Field name="firstName" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
+    <Field name="lastName" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
+    <Field name="_email" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
+    <Field name="_orgName" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
+    <Field name="_individualName" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
+    <Field name="__name" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
+    <Field name="__version" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
+    <Field name="__title" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
+
   </fieldSpecificAnalyzer>
 
   <fieldSpecificSearchAnalyzer>
@@ -338,6 +347,15 @@
     <Field name="specificationTitle"/>
     <Field name="levelName"/>
     <Field name="subject"/>
+
+    <Field name="lastName"/>
+    <Field name="firstName"/>
+    <Field name="_email"/>
+    <Field name="_orgName"/>
+    <Field name="_individualName"/>
+    <Field name="__name"/>
+    <Field name="__version"/>
+    <Field name="__title"/>
   </tokenized>
 
   <!-- All Lucene numeric fields.
