@@ -26,9 +26,9 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.core.StopFilter;
+import org.apache.lucene.analysis.core.WhitespaceTokenizer;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.standard.StandardFilter;
-import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
@@ -38,13 +38,11 @@ import java.io.Reader;
 import java.util.Set;
 
 /**
- * Default Lucene analyzer for GeoNetwork, based on a modified version of StandardTokenizer and
+ * Default Lucene analyzer for GeoNetwork, based on a modified version of WhitespaceTokenizer and
  * with added LowercaseFilter and ASCIIFoldingFilter, and optionally StopFilter.
  * <p/>
- *
- * @author heikki doeleman
- */
-public final class GeoNetworkAnalyzer extends Analyzer {
+  */
+public final class AnalyzerWhiteSpaceLowerCaseStopWord extends Analyzer {
 
     private final char[] charsToIgnore;
     private final CharArraySet stopwords;
@@ -52,14 +50,14 @@ public final class GeoNetworkAnalyzer extends Analyzer {
     /**
      * Creates this analyzer using no stopwords.
      */
-    public GeoNetworkAnalyzer() {
+    public AnalyzerWhiteSpaceLowerCaseStopWord() {
         this(null, null);
     }
 
     /**
      *
      */
-    public GeoNetworkAnalyzer(final Set<String> stopwords, char[] charsToIgnore) {
+    public AnalyzerWhiteSpaceLowerCaseStopWord(final Set<String> stopwords, char[] charsToIgnore) {
         if (stopwords == null || stopwords.isEmpty()) {
             this.stopwords = CharArraySet.EMPTY_SET;
         } else {
@@ -87,7 +85,7 @@ public final class GeoNetworkAnalyzer extends Analyzer {
      */
     @Override
     protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
-        final Tokenizer source = new StandardTokenizer(Geonet.LUCENE_VERSION, reader);
+        final Tokenizer source = new WhitespaceTokenizer(Geonet.LUCENE_VERSION, reader);
         ASCIIFoldingFilter asciiFoldingFilter = new ASCIIFoldingFilter(new LowerCaseFilter(Geonet.LUCENE_VERSION,
             new StandardFilter(Geonet.LUCENE_VERSION, source)));
 
@@ -95,24 +93,16 @@ public final class GeoNetworkAnalyzer extends Analyzer {
             return new TokenStreamComponents(source, new StopFilter(Geonet.LUCENE_VERSION, asciiFoldingFilter, this.stopwords)) {
                 @Override
                 protected void setReader(final Reader reader) throws IOException {
-                    super.setReader(wrapReader(reader));
+                    super.setReader(reader);
                 }
             };
         } else {
             return new TokenStreamComponents(source, asciiFoldingFilter) {
                 @Override
                 protected void setReader(final Reader reader) throws IOException {
-                    super.setReader(wrapReader(reader));
+                    super.setReader(reader);
                 }
             };
-        }
-    }
-
-    private Reader wrapReader(final Reader reader) {
-        if (charsToIgnore != null && charsToIgnore.length > 0) {
-            return new CharToSpaceReader(reader, charsToIgnore);
-        } else {
-            return reader;
         }
     }
 }

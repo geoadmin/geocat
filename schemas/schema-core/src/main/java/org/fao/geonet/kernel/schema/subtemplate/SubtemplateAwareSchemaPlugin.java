@@ -21,27 +21,19 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.kernel.schema;
+package org.fao.geonet.kernel.schema.subtemplate;
 
 import org.jdom.Element;
-import org.jdom.JDOMException;
 
-import java.util.List;
+public interface SubtemplateAwareSchemaPlugin {
 
-/**
- * Created by francois on 8/20/14.
- */
-public interface MultilingualSchemaPlugin {
-    /**
-     * Return the sub element matching the requested language.
-     *
-     * @param element            The element to search in
-     * @param languageIdentifier The translation language to search for
-     */
-    public List<Element> getTranslationForElement(Element element, String languageIdentifier);
+    Element replaceSubtemplatesByLocalXLinks(
+            Element dataXml,
+            String templatesToOperateOn);
 
-    public void addTranslationToElement(Element element, String languageIdentifier, String value);
+    void init(ManagersProxy managersProxy,
+              ConstantsProxy constantsProxy);
 
-    public Element removeTranslationFromElement(Element element, List<String> mdLang) throws JDOMException;
-
+    boolean isInitialised();
 }
+

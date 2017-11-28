@@ -21,27 +21,26 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.kernel.schema;
+package org.fao.geonet.kernel.schema.subtemplate;
 
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.index.IndexReader;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Path;
 
-/**
- * Created by francois on 8/20/14.
- */
-public interface MultilingualSchemaPlugin {
-    /**
-     * Return the sub element matching the requested language.
-     *
-     * @param element            The element to search in
-     * @param languageIdentifier The translation language to search for
-     */
-    public List<Element> getTranslationForElement(Element element, String languageIdentifier);
+public interface ManagersProxy {
 
-    public void addTranslationToElement(Element element, String languageIdentifier, String value);
+    Path getSchemaDir();
 
-    public Element removeTranslationFromElement(Element element, List<String> mdLang) throws JDOMException;
+    IndexReader getIndexReader(String lang) throws IOException;
 
+    void releaseIndexReader(IndexReader reader) throws IOException, InterruptedException;
+
+    String getIso1LangCode(String Iso2LangCode);
+
+    Status replaceAllKeyword(Element md);
+
+    Analyzer getAnalyzer(String lang);
 }
