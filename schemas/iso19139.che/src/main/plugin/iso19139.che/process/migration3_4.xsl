@@ -112,6 +112,11 @@
           <xsl:apply-templates select="gmd:description/*"/>
         </gmd:name>
       </xsl:if>
+      <xsl:if test="gmd:name">
+        <gmd:description>
+          <xsl:apply-templates select="gmd:name/*"/>
+        </gmd:description>
+      </xsl:if>
       <xsl:apply-templates select="gmd:function"/>
     </xsl:copy>
   </xsl:template>
