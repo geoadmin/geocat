@@ -44,7 +44,7 @@
 
 
   <xsl:variable name="hasExpiryDate"
-                select="count(//gmd:CI_DateTypeCode/@codeListValue = 'expiry') > 0"/>
+                select="count(//gmd:CI_DateTypeCode[@codeListValue = 'expiry']) > 0"/>
   <!--
   Remove hardcoded schemaLocation in records. Schema location
   is added by the application depending on the schema configuration
