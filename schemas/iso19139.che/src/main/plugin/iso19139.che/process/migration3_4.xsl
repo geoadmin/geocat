@@ -112,6 +112,11 @@
           <xsl:apply-templates select="gmd:description/*"/>
         </gmd:name>
       </xsl:if>
+      <xsl:if test="gmd:name">
+        <gmd:description>
+          <xsl:apply-templates select="gmd:name/*"/>
+        </gmd:description>
+      </xsl:if>
       <xsl:apply-templates select="gmd:function"/>
     </xsl:copy>
   </xsl:template>
@@ -237,7 +242,7 @@
   <!-- Remove non validated XLinks.
   eg. local://eng/xml.keyword.get?thesaurus=local._none_.non_validated&amp;id=http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%2301521da7-8aa1-42da-b73c-271f5c566def,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23f5099d41-2b76-4efa-9736-918caccfa675,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23c93b198f-156c-4dc0-a0a8-9a237bd7304c,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%2335d4f0be-449b-4f5d-b7c2-002160a07e17,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%236deb04a9-cb57-4020-8925-9bf69de563f4,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%230fe4668b-02f2-4800-a01c-8c381c15e03d,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%239e6e35d9-a2c7-4f31-8f3a-476bdb7bda37,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%238853db72-01d2-4df9-9567-fd6d2f3e3c1e,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%231f09df8a-d811-44be-8748-56d70437fef0,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23a395a4c2-33da-4dc9-9282-9021173ef08a,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23be8f32a1-54f2-41b8-96a1-48480f753df1,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%231d495352-eb56-4f5e-b7c7-94f23e8e5fca,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23f2a4aaca-efdd-4927-8bb6-e750208ab19a,http%3A%2F%2Fcustom.shared.obj.ch%2Fconcept%23af1a6e79-f33e-4adf-87f1-b1671c6f35ce&amp;multiple=true&amp;lang=eng,ger,ita,fre,roh&amp;textgroupOnly=true&amp;skipdescriptivekeywords=true
   -->
-  <xsl:template match="@xlink:href[starts-with(., 'local://eng/xml.keyword.get?') and contains(., 'keyword.get?thesaurus=local._none_.non_validated')]" priority="10"/>
+  <xsl:template match="*[starts-with(@xlink:href, 'local://eng/xml.keyword.get?') and contains(@xlink:href, 'keyword.get?thesaurus=local._none_.non_validated')]" priority="10"/>
 
   <xsl:template match="@xlink:href[starts-with(., 'local://eng/xml.keyword.get?') or starts-with(., 'local://che.keyword.get?')]">
 
