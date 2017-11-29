@@ -51,11 +51,15 @@
     <link href="{/root/gui/url}/static/{$customFilename}.css{$minimizedParam}" rel="stylesheet"
           media="screen"/>
 
+<!--
     <link href="{/root/gui/url}/static/bootstrap-table.min.css" rel="stylesheet"
           media="screen"></link>
+-->
     <link href="{/root/gui/url}/static/ng-skos.css" rel="stylesheet" media="screen"></link>
+<!--
     <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css{$minimizedParam}"
           rel="stylesheet" media="screen"/>
+-->
   </xsl:template>
 
 
@@ -194,10 +198,12 @@
                   select="util:getSettingValue('ui/config')"/>
 
     <xsl:if test="$angularApp = 'gn_search'">
+<!-- geocat doesn't need viewer tools
       <script src="{$uiResourcesPath}lib/d3_timeseries/d3.min.js"></script>
       <script src="{$uiResourcesPath}lib/timeline/timeline-zoomable.js"></script>
       <link rel="stylesheet" href="{$uiResourcesPath}lib/timeline/timeline.css"/>
       <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>
+-->
       <script type="text/javascript">
         var module = angular.module('gn_search');
         module.config(['gnViewerSettings', 'gnGlobalSettings', 'gnSearchSettings',
