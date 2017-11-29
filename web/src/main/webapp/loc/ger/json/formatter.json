@@ -10,5 +10,6 @@
     "testString": "Dieser dient für Tests, bitte nicht löschen!",
     "xml": "XML",
     "uncategorizedKeywords":"Keine Kategorie",
-    "related-link": "Relations"
+    "related-link": "Relations",
+    "associated-link": "Verbunden"
 }
