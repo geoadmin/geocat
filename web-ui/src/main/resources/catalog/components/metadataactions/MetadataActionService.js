@@ -375,6 +375,14 @@
       this.getPermalink = function(md) {
         var url = $location.absUrl().split('#')[0] + '#/metadata/' +
             md.getUuid();
+
+        // geocat specific
+        url = $location.absUrl().split('#')[0];
+        url = url.split("?")[0];
+        url = new RegExp("(.*)/.+").exec(url)[1];
+        url += "/md.viewer#/full_view/" + md.getUuid();
+        // end geocat
+
         gnUtilityService.getPermalink(md.title || md.defaultTitle, url);
       };
 
