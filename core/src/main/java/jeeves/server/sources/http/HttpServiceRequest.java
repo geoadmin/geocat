@@ -68,16 +68,6 @@ public class HttpServiceRequest extends ServiceRequest {
 
         if (contentDisposition != null)
             httpRes.addHeader("Content-disposition", contentDisposition);
-        else {
-            //--- this else is needed by IExplorer6
-            //--- maybe we can use the <meta> tag instead of these lines
-
-            if (!cache) {
-                httpRes.addHeader("Pragma", "no-cache");
-                httpRes.addHeader("Cache-Control", "no-cache");
-                httpRes.addHeader("Expires", "-1");
-            }
-        }
     }
 
     //---------------------------------------------------------------------------
