@@ -738,3 +738,4 @@ UPDATE harvestersettings SET value = 'GM03-to-ISO19139CHE' WHERE value = '/srv/t
 
 UPDATE metadata SET data = replace(data, 'file:///srv/tomcat/geocat/private/geocat/config/codelist/external/thesauri/theme/theme/', 'http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Ftheme%2F') where data like '%file:///srv/tomcat/geocat/private/geocat/config/codelist/external/thesauri/theme/theme/%';
 
+update groups set logo = concat(logo, '.png')  where logo !='' and id < 50000000;
