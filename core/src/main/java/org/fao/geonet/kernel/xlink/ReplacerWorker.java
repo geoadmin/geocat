@@ -43,6 +43,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -100,7 +102,12 @@ public class ReplacerWorker {
         KeywordBean keywordBean = searchInAnyThesaurus(keyword);
         if (keywordBean != null) {
             String thesaurus = keywordBean.getThesaurusKey();
-            String uriCode = keywordBean.getUriCode();
+            String uriCode = null;
+            try {
+                uriCode = URLEncoder.encode(keywordBean.getUriCode(), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
 
             // do not add if a keyword with the same ID and thesaurus has previously been added
             if (addedIds.add(thesaurus + "@@" + uriCode)) {
@@ -160,7 +167,7 @@ public class ReplacerWorker {
                 ISO19139KeywordReplacer.localXlinkUrlPrefix + "thesaurus=" + thesaurus +
 
                         "&id=" + StringUtils.join(keywords, ",") +
-                        "&multiple=false&lang=fre,eng,ger,ita,roh&textgroupOnly&skipdescriptivekeywords");
+                        "&multiple=false&lang=fre,eng,ger,ita,roh&textgroupOnly&skipdescriptivekeywords", XLink.NAMESPACE_XLINK);
 
         return descriptiveKeywords;
     }
