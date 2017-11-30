@@ -209,6 +209,11 @@
               $(element).on('change', function() {
                 resetElt.toggle($(element).val() != '');
               });
+
+              // prevent dropdown close when clicking on the scrollbar
+              $(element).parent().click(function (e) {
+                e.preventDefault();
+              })
             };
 
             if (scope.options.mode == 'prefetch') {
