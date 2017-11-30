@@ -90,7 +90,7 @@
           $scope.loading = false;
         });
 
-        var url = '../api/records/' + mdId + '/formatters/' + formatter;
+        var url = '../api/records/' + mdId + '/formatters/' + formatter + '?output=xml';
 
         gnMdFormatter.load(mdId, '.formatter-container', $scope, url);
       }]);
