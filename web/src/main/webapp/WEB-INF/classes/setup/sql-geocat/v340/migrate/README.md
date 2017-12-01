@@ -97,7 +97,7 @@ wget http://files.titellus.net/gis/ch/cantons.zip
 wget http://files.titellus.net/gis/ch/hoheitsgebiet.zip
 ```
 
-Load ZIP files using the API (see api-load-extent-subtemplate.png):
+Load ZIP files using the API (see api-load-extent-subtemplate.png) - can be launched while catalogue is indexing records on first start:
 
 ```
 export CATALOG=http://localhost:8080/geonetwork
@@ -171,18 +171,27 @@ INSERT INTO operationallowed
                             or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%')
                            and id not in (SELECT metadataid FROM operationallowed);
     
+
+-- Assign ownership to geocat admin
+UPDATE metadata SET owner = 1 WHERE (uuid like 'geocatch-subtpl-extent-landesgebiet-%'
+                                     or  uuid like 'geocatch-subtpl-extent-kantonsgebiet-%' 
+                                     or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%');
 ```
 
 
 
-
-TODO: There is an issue with BatchOpsMetadataReindexer to solve here as the number of subtemplate in the catalogue is correct only after a reindex.
-
+After the change in the database, trigger a reindex of the catalogue.
 
 
 ## Data directory migration
 
 Copy folder from old version to the new one.
+
+
+## Thesaurus migration
+
+Copy current thesaurus from ```/srv/tomcat/geocat/private/geocat/config/codelist```
+in new installation (or use admin interface).
 
 
 ## Metadata records migration
@@ -211,9 +220,13 @@ export CATALOGPASS=admin
 rm -f /tmp/cookie; 
 curl -s -c /tmp/cookie -o /dev/null -X POST "$CATALOG/srv/eng/info?type=me"; 
 export TOKEN=`grep XSRF-TOKEN /tmp/cookie | cut -f 7`; 
-curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
+curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie -c /tmp/cookie \
   "$CATALOG/srv/eng/q?_schema=iso19139.che&_isTemplate=y%20or%20n&_isHarvested=n&summaryOnly=true&bucket=m"
 ```
+
+Should be around 4870 records (depending on the db version used).
+
+
 
 2. Select all records to be updated
 
@@ -227,21 +240,21 @@ Parameters:
 ``` 
 curl -X PUT --header 'Content-Type: application/json' \
   --header 'Accept: application/json' \
-  -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
+  -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie -c /tmp/cookie \
   "$CATALOG/srv/api/0.1/selections/m"
   
   
 curl -X GET \
   --header 'Content-Type: application/json' \
   --header 'Accept: application/json' \
-  -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
+  -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie -c /tmp/cookie \
   "$CATALOG/srv/api/0.1/selections/m"
 ```
 
-Should return around 4757 records to update (depending on the db version used).
+Should return around 4870 records to update.
 
 
-3. Apply migration process to selection (~1.2hour without indexing)
+3. Apply migration process to selection (~1.2hour without indexing, ~2hours with)
 
 
 http://localhost:8080/geonetwork/doc/api/#!/processes/processRecordsUsingXslt_1
@@ -257,24 +270,17 @@ Parameters:
 ``` 
 curl -X POST --header 'Content-Type: application/json' \
   --header 'Accept: application/json' \
-  -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
+  -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie -c /tmp/cookie \
   "$CATALOG/srv/api/0.1/processes/migration3_4?index=false"
 ```
 
 4. Follow progress
 ``` 
 curl -X GET --header 'Accept: application/json' \
-  "$CATALOG/srv/api/0.1/processes/reports"
+    -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie -c /tmp/cookie \
+    "$CATALOG/srv/api/0.1/processes/reports"
 ```
 
 5. (optional - if you did not turned off xlinks resolution) Reindex the catalogue from the admin page.
-
-
-
-## Thesaurus migration
-
-
-Copy current thesaurus from ```/srv/tomcat/geocat/private/geocat/config/codelist```
-in new installation (or use admin interface).
 
 
