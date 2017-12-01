@@ -334,7 +334,13 @@ INSERT INTO metadata (
       COALESCE((xpath(
       '//EN/text()',
       concat('<root>', replace(replace("DESC", ']]>', ''), '<![CDATA[', ''), '</root>')::xml)::varchar[])[1], '') AS endesc,
-      ST_AsGML(3, ST_FlipCoordinates(ST_Transform(ST_Force2D(the_geom), 4326)))  gml,
+      replace(
+        replace(
+        ST_AsGML(3, ST_FlipCoordinates(ST_Transform(ST_Force2D(the_geom), 4326)), 6, 0),
+              '<gml:MultiSurface',
+              concat('<gml:MultiSurface gml:id="_ms', "ID", cast(row_number() over() as text), '"')),
+              '<gml:Polygon',
+              concat('<gml:Polygon gml:id="_p', "ID", cast(row_number() over() as text), '"'))  gml,
       ST_XMin(ST_Transform(the_geom, 4326)) AS minx,
       ST_YMin(ST_Transform(the_geom, 4326)) AS miny,
       ST_XMax(ST_Transform(the_geom, 4326)) AS maxx,
@@ -342,50 +348,6 @@ INSERT INTO metadata (
       FROM xlinks) AS extent
 );
 
--- --
--- SELECT "OBJECTVAL", "GEMNAME" FROM "gemeindenBB"
---    WHERE "OBJECTVAL" in (1003, 1006, 1138, 1096, 1006, 1060, 1092, 2013, 2270, 2277, 6471, 6401, 6403, 5826, 5800) ORDER BY 2;
---
--- SELECT * FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1006';
---
--- SELECT * FROM "xlinks" WHERE "ID" in (151, 150, 8, 81, 9, 59, 145);
---
--- SELECT * FROM metadata WHERE uuid = 'geocatch-subtpl-extent-custom-150';
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1003');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1006');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1138');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1096');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1006');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1060');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-1092');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-2013');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-2270');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-2277');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6471');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6401');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6403');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6484');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-5826');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-5800');
--- DELETE FROM validation WHERE metadataid = (SELECT id FROM metadata WHERE uuid =  'geocatch-subtpl-extent-hoheitsgebiet-6406');
---
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1003';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1006';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1138';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1096';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1006';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1060';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-1092';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-2013';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-2270';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-2277';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6471';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6401';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6403';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6484';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-5826';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-5800';
--- DELETE FROM metadata WHERE uuid = 'geocatch-subtpl-extent-hoheitsgebiet-6406';
 
 INSERT INTO metadata (
   SELECT
@@ -452,7 +414,13 @@ INSERT INTO metadata (
       'validated' AS extra
        FROM (
     SELECT "OBJECTVAL"::varchar id, "GEMNAME" AS label,
-      ST_AsGML(3, ST_Transform(ST_Force2D(the_geom), 4326))  gml,
+      replace(
+        replace(
+        ST_AsGML(3, ST_FlipCoordinates(ST_Transform(ST_Force2D(the_geom), 4326)), 6, 0),
+              '<gml:MultiSurface',
+              concat('<gml:MultiSurface gml:id="_ms', "OBJECTVAL", cast(row_number() over() as text), '"')),
+              '<gml:Polygon',
+              concat('<gml:Polygon gml:id="_p', "OBJECTVAL", cast(row_number() over() as text), '"'))  gml,
       ST_XMin(ST_Transform(the_geom, 4326)) AS minx,
       ST_YMin(ST_Transform(the_geom, 4326)) AS miny,
       ST_XMax(ST_Transform(the_geom, 4326)) AS maxx,
@@ -525,59 +493,12 @@ UPDATE Metadata SET data = replace(data, 'WWW:DOWNLOAD-URL', 'WWW:DOWNLOAD-1.0-h
 --     xlink NOT LIKE 'https://%thesaurus.download%' AND
 --     xlink NOT LIKE '%GetRecordById%' AND xlink like '%gn:xlinks%' AND xlink like '%.0&amp;%';
 
--- Temporary account
--- INSERT INTO Users (id, username, password, name, surname, profile, kind, organisation, security, authtype, isenabled) VALUES  (111111,'fxp','46e44386069f7cf0d4f2a420b9a2383a612f316e2024b0fe84052b0b96c479a23e8a0be8b90fb8c2','fxp','fxp',0,'','','','', 'y');
--- INSERT INTO Address (id, address, city, country, state, zip) VALUES  (111111, '', '', '', '', '');
--- INSERT INTO UserAddress (userid, addressid) VALUES  (111111, 111111);
-
--- UPDATE metadata
---   SET data = replace(data, ' xlink:show="replace"', '')
---   WHERE data like '% xlink:show="replace"%';
 UPDATE metadata
   SET data = replace(data, 'skipdescriptivekeywords=true&amp;', '')
   WHERE data like '%skipdescriptivekeywords=true&amp;%';
 
 DELETE FROM selectionsdes;
 DELETE FROM Selections;
-
-
--- Now done in migration3_4.xsl
--- UPDATE metadata
---   SET data = replace(data, 'geocatch-subtpl-extent-landesgebiet-0', 'geocatch-subtpl-extent-landesgebiet-CH')
---   WHERE data like '%geocatch-subtpl-extent-landesgebiet-0%';
---
--- UPDATE metadata
---   SET data = replace(data, 'geocatch-subtpl-extent-landesgebiet-1', 'geocatch-subtpl-extent-landesgebiet-LI')
---   WHERE data like '%geocatch-subtpl-extent-landesgebiet-1%';
-
--- UPDATE metadata
---    SET data = regexp_replace(data,
---                     'geocatch-subtpl-extent-kantonsgebiet-([0-9]*).0',
---                     E'geocatch-subtpl-extent-kantonsgebiet-\\1', 'g')
---    WHERE data like '%geocatch-subtpl-extent-kantonsgebiet-%.0?%';
---
--- UPDATE metadata
---    SET data = regexp_replace(data,
---                     'geocatch-subtpl-extent-hoheitsgebiet-([0-9]*).0',
---                     E'geocatch-subtpl-extent-hoheitsgebiet-\\1', 'g')
---    WHERE data like '%geocatch-subtpl-extent-hoheitsgebiet-%.0?%';
---
--- UPDATE metadata
---    SET data = regexp_replace(data,
---                     'geocatch-subtpl-extent-custom-([0-9]*).0',
---                     E'geocatch-subtpl-extent-custom-\\1', 'g')
---    WHERE data like '%geocatch-subtpl-extent-custom-%.0?%';
-
-
--- Remaining indexing problems:
--- 58 empty polygon geometries
--- SELECT * FROM metadata WHERE data like '%<gml:posList />%'
-
--- One record linked to a non existing xlinks
--- SELECT * FROM metadata WHERE data like '%id=253%'
--- https://www.geocat.ch/geonetwork/srv/fre/xml.extent.get?id=253&wfs=default&typename=gn:xlinks&format=GMD_COMPLETE&extentTypeCode=true
--- e15b7d2b-1f66-4e84-8e2e-42020dd99f83
-
 
 
 UPDATE metadata SET data = replace (data, 'xlink:show="replace"', '') WHERE data like '%xlink:show="replace"%';
