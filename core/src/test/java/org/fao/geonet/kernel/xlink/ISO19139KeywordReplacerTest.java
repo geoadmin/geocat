@@ -26,6 +26,7 @@ import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.schema.subtemplate.Status;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -84,11 +85,14 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
         assertTrue(themes.contains("external.place.regions|CAF"));
         assertTrue(themes.contains("external.place.regions|ECU"));
 
-        assertEquals("local://srv/api/registries/vocabularies/keyword?thesaurus=external.theme.gemet&"+
-                        "id=http://www.eionet.europa.eu/gemet/concept/6549&multiple=false&"+
+
+
+
+        assertEquals("local://srv/api/registries/vocabularies/keyword?thesaurus=external.theme.gemet&" +
+                        "id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F6549&multiple=false&" +
                         "lang=fre,eng,ger,ita,roh&textgroupOnly&skipdescriptivekeywords",
-                    ((Element)Xml.selectNodes(md, ".//gmd:descriptiveKeywords").get(0))
-                        .getAttribute("href").getValue());
+                ((Element)Xml.selectNodes(md, ".//gmd:descriptiveKeywords").get(0))
+                        .getAttribute("href", ISO19139Namespaces.XLINK).getValue());
     }
 
     @Test
@@ -163,15 +167,14 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
         Element md = getSubtemplateXml(KEYWORD_RESOURCE);
         List<Element> descKeywords = (List<Element>) Xml.selectNodes(md, ".//gmd:descriptiveKeywords");
         descKeywords.get(1).detach();
-        Element xlinkedElem = Xml.loadString(
-                "<gmd:descriptiveKeywords xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" " +
-                        "xmlns:xlink=\"http://www.w3.org/1999/xlink\" " + "" +
-                        "xlink:show=\"embed\" " +
-                        "href=\"local://srv/api/registries/vocabularies/keyword?thesaurus=external.place.regions&amp;" +
-                        "id=http://www.naturalearthdata.com/ne_admin#Country/ECU&amp;multiple=false&amp;" +
-                        "lang=fre,eng,ger,ita,roh&amp;textgroupOnly&amp;skipdescriptivekeywords\" />", false);
+        Element xlinkedElem = Xml.loadString("<gmd:descriptiveKeywords xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" " +
+                "xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:show=\"embed\" " +
+                "xlink:href=\"local://srv/api/registries/vocabularies/keyword?thesaurus=external.place.regions&amp;" +
+                "id=http%3A%2F%2Fwww.naturalearthdata.com%2Fne_admin%23Country%2FECU&amp;multiple=false&amp;" +
+                "lang=fre,eng,ger,ita,roh&amp;textgroupOnly&amp;skipdescriptivekeywords\" />", false);
         ((Element)descKeywords.get(0).getParent()).addContent(xlinkedElem);
         Status status = toTest.replaceAll(md);
+
 
         assertFalse(status.isError());
         Set<String> themes = getXLinkedKeyword(md);
@@ -218,11 +221,11 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
     }
 
     private Set<String> getXLinkedKeyword(Element md) throws JDOMException {
-        Pattern p = Pattern.compile(".*thesaurus=(.+?)\\&.*id=.*/(.+?)\\&.*");
+        Pattern p = Pattern.compile(".*thesaurus=(.+?)\\&.*id=.*%2F(.+?)\\&.*");
         return Xml.selectNodes(md, ".//gmd:descriptiveKeywords")
                 .stream()
                 .map(object -> {
-                    Matcher matcher = p.matcher(((Element) object).getAttribute("href").getValue());
+                    Matcher matcher = p.matcher(((Element) object).getAttribute("href", ISO19139Namespaces.XLINK).getValue());
                     matcher.matches();
                     return String.format("%s|%s", matcher.group(1), matcher.group(2));
                 })
