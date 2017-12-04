@@ -14,6 +14,8 @@ INSERT INTO Settings (name, value, datatype, position, internal)
 INSERT INTO Settings (name, value, datatype, position, internal)
   VALUES ('system/oai/maxrecords', '10', 1, 7040, 'y');
 
+INSERT INTO Settings (name, value, datatype, position, internal) 
+  VALUES ('system/metadatacreate/generateUuid', 'true', 2, 9100, 'n');
 
 
 ALTER TABLE HarvesterData RENAME COLUMN "key" TO keyvalue;
@@ -456,6 +458,7 @@ INSERT INTO operationallowed
         id, 2
     FROM metadata WHERE uuid like 'geocatch-subtpl-extent-custom-%';
 
+-- DELETE FROM metadata WHERE uuid like 'geocatch-subtpl-extent-custom-%';
 
 
 DELETE FROM Settings WHERE name like 'system/shib%';
