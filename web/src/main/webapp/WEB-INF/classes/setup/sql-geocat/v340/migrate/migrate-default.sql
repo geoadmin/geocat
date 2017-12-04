@@ -336,11 +336,12 @@ INSERT INTO metadata (
       concat('<root>', replace(replace("DESC", ']]>', ''), '<![CDATA[', ''), '</root>')::xml)::varchar[])[1], '') AS endesc,
       replace(
         replace(
-        ST_AsGML(3, ST_FlipCoordinates(ST_Transform(ST_Force2D(the_geom), 4326)), 6, 0),
+        replace(
+        ST_AsGML(3, (ST_Transform(ST_Force2D(the_geom), 4326)), 6, 0),
               '<gml:MultiSurface',
               concat('<gml:MultiSurface gml:id="_ms', "ID", cast(row_number() over() as text), '"')),
               '<gml:Polygon',
-              concat('<gml:Polygon gml:id="_p', "ID", cast(row_number() over() as text), '"'))  gml,
+              concat('<gml:Polygon gml:id="_p', "ID", cast(row_number() over() as text), '"')), 'srsName="EPSG:4326"', '')  gml,
       ST_XMin(ST_Transform(the_geom, 4326)) AS minx,
       ST_YMin(ST_Transform(the_geom, 4326)) AS miny,
       ST_XMax(ST_Transform(the_geom, 4326)) AS maxx,
@@ -414,13 +415,14 @@ INSERT INTO metadata (
       'validated' AS extra
        FROM (
     SELECT "OBJECTVAL"::varchar id, "GEMNAME" AS label,
-      replace(
+    replace(
         replace(
-        ST_AsGML(3, ST_FlipCoordinates(ST_Transform(ST_Force2D(the_geom), 4326)), 6, 0),
+        replace(
+        ST_AsGML(3, (ST_Transform(ST_Force2D(the_geom), 4326)), 6, 0),
               '<gml:MultiSurface',
               concat('<gml:MultiSurface gml:id="_ms', "OBJECTVAL", cast(row_number() over() as text), '"')),
               '<gml:Polygon',
-              concat('<gml:Polygon gml:id="_p', "OBJECTVAL", cast(row_number() over() as text), '"'))  gml,
+              concat('<gml:Polygon gml:id="_p', "OBJECTVAL", cast(row_number() over() as text), '"')), 'srsName="EPSG:4326"', '') gml,
       ST_XMin(ST_Transform(the_geom, 4326)) AS minx,
       ST_YMin(ST_Transform(the_geom, 4326)) AS miny,
       ST_XMax(ST_Transform(the_geom, 4326)) AS maxx,
@@ -469,15 +471,8 @@ UPDATE Metadata SET data = replace(data, 'local._none_.geocat.ch', 'local.theme.
 UPDATE Metadata SET data = replace(data, 'external._none_.gemet', 'external.theme.gemet')
   WHERE data LIKE '%external._none_.gemet%';
 
-UPDATE Metadata SET data = replace(data, 'WWW:DOWNLOAD-URL', 'WWW:DOWNLOAD-1.0-http--download')
-  WHERE data LIKE '%WWW:DOWNLOAD-URL%';
-
-
 
 -- TODO publish_tracking
-
--- TODO metadata.extra is this really useful ?
-
 
 
 -- XLink migration
