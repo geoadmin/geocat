@@ -398,6 +398,18 @@
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
     <xsl:variable name="elementName" select="name()"/>
+    <xsl:variable name="labelConfig">
+      <xsl:choose>
+        <xsl:when test="$overrideLabel != ''">
+          <element>
+            <label><xsl:value-of select="$overrideLabel"/></label>
+          </element>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:copy-of select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), '', $xpath)"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
 
     <!-- check iso19139.che first, then fall back to iso19139 -->
     <xsl:variable name="listOfValues" as="node()">
@@ -418,10 +430,7 @@
 
 
     <xsl:call-template name="render-element">
-      <xsl:with-param name="label"
-                      select="if ($overrideLabel != '')
-                              then $overrideLabel
-                              else gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
+      <xsl:with-param name="label" select="$labelConfig/*"/>
       <xsl:with-param name="value" select="*/@codeListValue"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>
