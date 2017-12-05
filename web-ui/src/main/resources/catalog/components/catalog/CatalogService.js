@@ -527,7 +527,7 @@
         'securityConstraints', 'resourceConstraints', 'legalConstraints',
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
-        'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails', 'formatWithVersion'];
+        'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails'];
       // See below; probably not necessary
       var listOfJsonFields = ['keywordGroup', 'crsDetails'];
       var record = this;

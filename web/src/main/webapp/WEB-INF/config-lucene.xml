@@ -148,7 +148,6 @@
       <field name="image" tagName="image"/>
       <field name="link" tagName="link"/>
       <field name="format" tagName="format"/>
-      <field name="formatWithVersion" tagName="formatWithVersion"/>
       <field name="denominator" tagName="denominator"/>
       <field name="resolution" tagName="resolution"/>
       <field name="crs" tagName="crs"/>
