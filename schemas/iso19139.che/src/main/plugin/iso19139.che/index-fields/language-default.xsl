@@ -579,8 +579,9 @@
       </xsl:for-each>
 
       <xsl:for-each select="gmd:resourceFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
-        <Field name="format" string="{normalize-space(.)} ({normalize-space(../../gmd:version)})"
-               store="true" index="true"/>
+        <Field name="format" string="{if (../../gmd:version/gco:CharacterString != '')
+            then concat(normalize-space(.) , ' (', normalize-space(../../gmd:version/*), ')')
+            else normalize-space(.)}" store="true" index="true"/>
       </xsl:for-each>
 
       <xsl:for-each select="gmd:resourceFormat/gmd:MD_Format/gmd:version/gco:CharacterString">
@@ -621,10 +622,14 @@
 
     <xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
       <xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
-        <Field name="format" string="{normalize-space(.)} ({normalize-space(../../gmd:version)})" store="true" index="true"/>
+        <Field name="format" string="{if (../../gmd:version/gco:CharacterString != '')
+            then concat(normalize-space(.) , ' (', normalize-space(../../gmd:version/*), ')')
+            else normalize-space(.)}" store="true" index="true"/>
       </xsl:for-each>
       <xsl:for-each select="gmd:distributor/gmd:MD_Distributor/gmd:distributorFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
-        <Field name="format" string="{normalize-space(.)} ({normalize-space(../../gmd:version)})" store="true" index="true"/>
+        <Field name="format" string="{if (../../gmd:version/gco:CharacterString != '')
+            then concat(normalize-space(.) , ' (', normalize-space(../../gmd:version/*), ')')
+            else normalize-space(.)}" store="true" index="true"/>
       </xsl:for-each>
 
       <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions">
