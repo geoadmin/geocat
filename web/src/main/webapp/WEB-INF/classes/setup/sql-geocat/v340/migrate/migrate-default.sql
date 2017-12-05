@@ -1,3 +1,9 @@
+DELETE FROM MetadataCateg WHERE metadataid IN (SELECT id FROM Metadata WHERE isHarvested = 'y');
+DELETE FROM operationallowed WHERE metadataid IN (SELECT id FROM Metadata WHERE isHarvested = 'y');
+DELETE FROM validation WHERE metadataid IN (SELECT id FROM Metadata WHERE isHarvested = 'y');
+DELETE FROM metadatafiledownloads WHERE id IN (SELECT id FROM Metadata WHERE isHarvested = 'y');
+DELETE FROM metadatafileuploads WHERE id IN (SELECT id FROM Metadata WHERE isHarvested = 'y');
+DELETE FROM Metadata WHERE isHarvested = 'y';
 
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES
@@ -222,8 +228,8 @@ INSERT INTO metadata (
       'n' AS isHarvested,
       to_char(current_timestamp, 'YYYY-MM-DD"T"HH:MI:SS') AS createdate,
       to_char(current_timestamp, 'YYYY-MM-DD"T"HH:MI:SS') AS changedate,
-      '<gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml">
-        <gmd:description>
+      '<gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml">
+        <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
          <gmd:PT_FreeText>
           <gmd:textGroup>
           <gmd:LocalisedCharacterString locale="#EN">' || endesc || '</gmd:LocalisedCharacterString>
@@ -246,7 +252,7 @@ INSERT INTO metadata (
           <gmd:EX_GeographicDescription>
             <gmd:geographicIdentifier>
               <gmd:MD_Identifier>
-                <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                <gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
                   <gmd:PT_FreeText>
                   <gmd:textGroup>
                   <gmd:LocalisedCharacterString locale="#EN">' || enid || '</gmd:LocalisedCharacterString>
@@ -350,6 +356,7 @@ INSERT INTO metadata (
 );
 
 
+
 INSERT INTO metadata (
   SELECT
       nextval('hibernate_sequence') as id,
@@ -359,8 +366,8 @@ INSERT INTO metadata (
       'n' AS isHarvested,
       to_char(current_timestamp, 'YYYY-MM-DD"T"HH:MI:SS') AS createdate,
       to_char(current_timestamp, 'YYYY-MM-DD"T"HH:MI:SS') AS changedate,
-      '<gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml">
-        <gmd:description>
+      '<gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml">
+        <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
          <gmd:PT_FreeText>
           <gmd:textGroup>
           <gmd:LocalisedCharacterString locale="#EN">' || label || '</gmd:LocalisedCharacterString>
