@@ -32,6 +32,7 @@
   var SearchFormController = function(
     $http,
     $q,
+    suggestService,
     gnLangs,
     gnSearchSettings) {
 
@@ -79,8 +80,13 @@
 
       // data store for formats
       this.formatsOptions = {
-        mode: 'local',
-        data: topicCats //TODO
+        mode: 'remote',
+        remote: {
+          url: suggestService.getUrl('QUERY', 'format',
+            'STARTSWITHFIRST'),
+          filter: suggestService.bhFilter,
+          wildcard: 'QUERY'
+        }
       };
     }
 
@@ -131,6 +137,7 @@
   SearchFormController['$inject'] = [
     '$http',
     '$q',
+    'suggestService',
     'gnLangs',
     'gnSearchSettings'
   ];
