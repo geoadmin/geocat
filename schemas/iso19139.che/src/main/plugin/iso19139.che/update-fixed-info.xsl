@@ -274,13 +274,16 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[not(name() = 'gco:nilReason') and not(name() = 'xsi:type')]"/>
 
+      <xsl:variable name="excluded"
+                    select="gn-fn-iso19139:isNotMultilingualField(., $editorConfig)"/>
+
       <xsl:variable name="valueInPtFreeTextForMainLanguage"
                     select="normalize-space(gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
                                             @locale = concat('#', $mainLanguageId)])"/>
 
       <!-- Add nileason if text is empty -->
       <xsl:variable name="isEmpty"
-                    select="if ($isMultilingual)
+                    select="if ($isMultilingual and not($excluded))
                             then $valueInPtFreeTextForMainLanguage = ''
                             else if ($valueInPtFreeTextForMainLanguage != '')
                             then $valueInPtFreeTextForMainLanguage = ''
@@ -309,9 +312,6 @@
        the same value as the default language PT_FreeText.
       -->
       <xsl:variable name="element" select="name()"/>
-
-      <xsl:variable name="excluded"
-                    select="gn-fn-iso19139:isNotMultilingualField(., $editorConfig)"/>
 
       <xsl:choose>
         <!-- Check record does not contains multilingual elements
