@@ -84,13 +84,16 @@
   </xsl:template>
 
   <!-- Encode language following INSPIRE rules -->
-  <xsl:template match="gmd:language[gco:CharacterString]">
+  <xsl:template match="gmd:language[gco:CharacterString != '']">
     <xsl:element name="{name()}">
       <xsl:apply-templates select="@*"/>
       <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/"
                         codeListValue="{gco:CharacterString}"/>
     </xsl:element>
   </xsl:template>
+  <!-- Remove empty language which will break on schematron rule
+  checking non empty values in codelist -->
+  <xsl:template match="gmd:language[gco:CharacterString = '']"/>
 
 
   <!-- Convert expiry codelist to lastRevision -->
