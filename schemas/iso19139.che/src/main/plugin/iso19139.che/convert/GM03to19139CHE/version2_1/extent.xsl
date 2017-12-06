@@ -5,6 +5,7 @@
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:cheutil="java:org.fao.geonet.schema.iso19139che.ISO19139cheUtil"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 exclude-result-prefixes="#all"
                 xmlns:int="http://www.interlis.ch/INTERLIS2.3">
@@ -23,11 +24,11 @@
                         </xsl:variable>
                         <xsl:if test="normalize-space($polygon) != ''">
                             <gmd:geographicElement>
-                                <xsl:copy-of select="util:multipolygon(string(int:description), $polygon)"/>
+                                <xsl:copy-of select="cheutil:multipolygon(string(int:description), $polygon)"/>
                             </gmd:geographicElement>
                             <xsl:if test="int:GM03_2_1Core.Core.EX_ExtentgeographicElement[.//int:GM03_2_1Core.Core.EX_GeographicBoundingBox]">
                                 <gmd:geographicElement>
-                                    <xsl:copy-of select="util:bbox(string(int:description), $polygon)"/>
+                                    <xsl:copy-of select="cheutil:bbox(string(int:description), $polygon)"/>
                                 </gmd:geographicElement>
                             </xsl:if>
                         </xsl:if>
@@ -203,9 +204,9 @@
             </xsl:if>
           </xsl:variable>
           <xsl:if test="normalize-space($polygon) != ''">
-              <xsl:copy-of select="util:multipolygon(string(int:description), $polygon)" />
+              <xsl:copy-of select="cheutil:multipolygon(string(int:description), $polygon)" />
             <xsl:if test="int:spatialExtent[.//int:GM03_2_1Core.Core.EX_GeographicBoundingBox]">
-                <xsl:copy-of select="util:bbox(string(int:description), $polygon)" />
+                <xsl:copy-of select="cheutil:bbox(string(int:description), $polygon)" />
             </xsl:if>
           </xsl:if>
           <xsl:apply-templates mode="Extent"
