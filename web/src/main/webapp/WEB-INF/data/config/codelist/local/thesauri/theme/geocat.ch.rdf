@@ -9,7 +9,7 @@
 
 <rdf:Description rdf:about="http://www.geocat.ch/concept">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
-	<dc:title>Keyword for geocat.ch</dc:title>
+	<dc:title>geocat.ch</dc:title>
 	<dc:description></dc:description>
 	<dc:creator rdf:nodeID="node1bmg97ps6x1"/>
 	<dc:rights></dc:rights>
