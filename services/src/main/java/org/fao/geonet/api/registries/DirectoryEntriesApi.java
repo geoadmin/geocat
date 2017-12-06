@@ -130,7 +130,7 @@ public class DirectoryEntriesApi {
             required = false
         )
         @RequestParam(
-            required = false, defaultValue = "iso19139"
+            required = false, defaultValue = "iso19139.che"
         )
             String schema,
         @ApiIgnore

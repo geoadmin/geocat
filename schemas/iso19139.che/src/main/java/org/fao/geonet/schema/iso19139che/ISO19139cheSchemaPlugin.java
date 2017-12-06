@@ -336,6 +336,38 @@ public class ISO19139cheSchemaPlugin
             }
         }
 
+        List<Element> nodesWithUrls = (List<Element>) Xml.selectNodes(element, "*//che:PT_FreeURL", Arrays.asList(ISO19139cheNamespaces.CHE));
+
+        for(Element e : nodesWithUrls) {
+            // Retrieve or create the main language element
+            Element mainCharacterString = ((Element)e.getParent()).getChild("URL", ISO19139Namespaces.GMD);
+            if (mainCharacterString == null) {
+                // create it if it does not exist
+                mainCharacterString = new Element("URL", ISO19139Namespaces.GMD);
+                ((Element)e.getParent()).addContent(0, mainCharacterString);
+            }
+
+            // Retrieve the main language value if exist
+            List<Element> mainLangElement = (List<Element>) Xml.selectNodes(
+                    e,
+                    "*//che:LocalisedURL[@locale='" + mainLanguage + "']",
+                    Arrays.asList(ISO19139cheNamespaces.CHE));
+
+            // Set the main language value
+            if (mainLangElement.size() == 1) {
+                String mainLangString = mainLangElement.get(0).getText();
+
+                if (StringUtils.isNotEmpty(mainLangString)) {
+                    mainCharacterString.setText(mainLangString);
+                } else if (mainCharacterString.getAttribute("nilReason", ISO19139Namespaces.GCO) == null){
+                    ((Element)mainCharacterString.getParent()).setAttribute("nilReason", "missing", ISO19139Namespaces.GCO);
+                }
+            } else if (StringUtils.isEmpty(mainCharacterString.getText()) &&
+                    mainCharacterString.getAttribute("nilReason", ISO19139Namespaces.GCO) == null) {
+                ((Element)mainCharacterString.getParent()).setAttribute("nilReason", "missing", ISO19139Namespaces.GCO);
+            }
+        }
+
         // Remove unused lang entries
         List<Element> translationNodes = (List<Element>)Xml.selectNodes(element, "*//node()[@locale]");
         for(Element el : translationNodes) {
@@ -348,6 +380,11 @@ public class ISO19139cheSchemaPlugin
         }
         // Remove PT_FreeText which might be emptied by above processing
         for(Element el : nodesWithStrings) {
+            if (el.getChildren().size() == 0) {
+                el.detach();
+            }
+        }
+        for(Element el : nodesWithUrls) {
             if (el.getChildren().size() == 0) {
                 el.detach();
             }
