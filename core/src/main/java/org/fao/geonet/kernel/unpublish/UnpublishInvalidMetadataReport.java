@@ -144,16 +144,11 @@ public class UnpublishInvalidMetadataReport implements Service {
             }
 
             if (logoUrl == null && logoUUID != null) {
-                final Path logosDir = Resources.locateLogosDir(context);
-                final String[] logosExt = {"png", "PNG", "gif", "GIF", "jpg", "JPG", "jpeg", "JPEG", "bmp", "BMP",
-                        "tif", "TIF", "tiff", "TIFF"};
-                for (String ext : logosExt) {
-                    final Path logoPath = logosDir.resolve(logoUUID + "." + ext);
-                    if (Files.exists(logoPath)) {
-                        logoUrl = "/images/logos/" + logoUUID + "." + ext;
-                        sourceAndGroupToLogo.put(logoUUID, logoUrl);
-                        break;
-                    }
+                final Path logosDir = Resources.locateHarvesterLogosDir(context);
+                final Path logoPath = logosDir.resolve(logoUUID);
+                if (Files.exists(logoPath)) {
+                    logoUrl = "/images/harvesting/" + logoUUID;
+                    sourceAndGroupToLogo.put(logoUUID, logoUrl);
                 }
             }
 
