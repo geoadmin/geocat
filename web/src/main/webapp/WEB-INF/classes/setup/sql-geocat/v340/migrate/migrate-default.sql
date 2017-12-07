@@ -663,3 +663,5 @@ UPDATE metadata SET data = replace(data, 'file:///srv/tomcat/geocat/private/geoc
 
 update groups set logo = concat(logo, '.png')  where logo !='' and id < 50000000;
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/validation/removeSchemaLocation', 'true', 2, 9170, 'n');
+
+UPDATE schematroncriteria SET value = uivalue WHERE type = 'XPATH' and uivalue != '';
