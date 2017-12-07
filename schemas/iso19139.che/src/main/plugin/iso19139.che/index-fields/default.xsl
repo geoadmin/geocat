@@ -512,9 +512,9 @@
 
       <xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
         <Field name="topicCat" string="{string(.)}" store="true" index="true"/>
-        <Field name="keyword"
+        <!-- <Field name="keyword"
                string="{util:getCodelistTranslation('gmd:MD_TopicCategoryCode', string(.), string($isoLangId))}"
-               store="true" index="true"/>
+               store="true" index="true"/> -->
       </xsl:for-each>
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
