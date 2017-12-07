@@ -345,9 +345,9 @@ INSERT INTO metadata (
         replace(
         ST_AsGML(3, (ST_Transform(ST_Force2D(the_geom), 4326)), 6, 0),
               '<gml:MultiSurface',
-              concat('<gml:MultiSurface gml:id="_ms', "ID", cast(row_number() over() as text), '"')),
+              concat('<gml:MultiSurface gml:id="_ms', "ID", floor(random() * 10000000000), '"')),
               '<gml:Polygon',
-              concat('<gml:Polygon gml:id="_p', "ID", cast(row_number() over() as text), '"')), 'srsName="EPSG:4326"', '')  gml,
+              concat('<gml:Polygon gml:id="_p', "ID", floor(random() * 10000000000), '"')), 'srsName="EPSG:4326"', '')  gml,
       ST_XMin(ST_Transform(the_geom, 4326)) AS minx,
       ST_YMin(ST_Transform(the_geom, 4326)) AS miny,
       ST_XMax(ST_Transform(the_geom, 4326)) AS maxx,
@@ -427,9 +427,9 @@ INSERT INTO metadata (
         replace(
         ST_AsGML(3, (ST_Transform(ST_Force2D(the_geom), 4326)), 6, 0),
               '<gml:MultiSurface',
-              concat('<gml:MultiSurface gml:id="_ms', "OBJECTVAL", cast(row_number() over() as text), '"')),
+              concat('<gml:MultiSurface gml:id="_ms', "OBJECTVAL", floor(random() * 10000000000), '"')),
               '<gml:Polygon',
-              concat('<gml:Polygon gml:id="_p', "OBJECTVAL", cast(row_number() over() as text), '"')), 'srsName="EPSG:4326"', '') gml,
+              concat('<gml:Polygon gml:id="_p', "OBJECTVAL", floor(random() * 10000000000), '"')), 'srsName="EPSG:4326"', '') gml,
       ST_XMin(ST_Transform(the_geom, 4326)) AS minx,
       ST_YMin(ST_Transform(the_geom, 4326)) AS miny,
       ST_XMax(ST_Transform(the_geom, 4326)) AS maxx,
