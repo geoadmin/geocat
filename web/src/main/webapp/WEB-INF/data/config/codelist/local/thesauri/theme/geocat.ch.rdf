@@ -2,8 +2,8 @@
 <rdf:RDF
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:dc="http://purl.org/dc/elements/1.1/"
 	xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
 	xmlns:ns4="http://www.opengis.net/gml#"
 	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
 
@@ -11,7 +11,7 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
 	<dc:title>geocat.ch</dc:title>
 	<dc:description></dc:description>
-	<dc:creator rdf:nodeID="node1bmg97ps6x1"/>
+	<dc:creator rdf:nodeID="node1c05cbu4fx1"/>
 	<dc:rights></dc:rights>
 	<dcterms:issued></dcterms:issued>
 	<dcterms:modified>2009-04-09 07:57:15</dcterms:modified>
@@ -141,12 +141,17 @@
 	<skos:scopeNote xml:lang="de">Solarkataster</skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#267">
+<rdf:Description rdf:nodeID="node1c05cbu4fx2">
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#32b4aaed-2d13-45b6-9932-7d14e11785a1">
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#2bc5df5c-653b-4794-8611-2fdc37f82d25">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Stadtverkehrsnetz</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">réseau de transports urbains</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">rete di trasporto urbano</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">urban transport network</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#aad24e6c-4348-4c54-8458-abc757b7a2a1">
@@ -311,12 +316,14 @@
 	<skos:prefLabel xml:lang="en">Bisse</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#275">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Strukturlinie</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">ligne de structure</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">linea di struttura</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">structure line (?)</skos:prefLabel>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#aa321bbb-dab3-4cca-b081-0cb9f1880f39">
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx2"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx2">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#274">
@@ -601,12 +608,24 @@
 	<skos:prefLabel xml:lang="en">aviation facilities</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#288">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#19002174-c70c-4a44-a44c-705bd12db424">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx3"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#32b4aaed-2d13-45b6-9932-7d14e11785a1">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx4"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx4">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#2128cd0c-f454-45fc-b453-39db2bcf53d8">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Übersarung</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">épandage d'alluvions</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">overbank sedimentation</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">alluvionamento da sedimento</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#9bd3e05e-8b53-4bfa-af61-de3710f28146">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#eaeb5d8f-b32f-40dc-82e7-474ca2cfa29b">
@@ -633,12 +652,14 @@
 	<skos:prefLabel xml:lang="en">Transformer X-FORMER</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#287">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="it">Superposizionamento</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">Blending</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Überblenden</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Superposition</skos:prefLabel>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#9bd3e05e-8b53-4bfa-af61-de3710f28146">
+	<skos:prefLabel xml:lang="fr">Propriété collective</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Allmend</skos:prefLabel>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx5">
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#5028d751-f7f9-44e6-a3c6-2e983985f280">
@@ -675,12 +696,12 @@
 	<skos:scopeNote xml:lang="de">Störfallverordung</skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#292">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="it">Cambiamento di destinazione</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">Change of use (?)</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Umnutzung</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Réaffectation</skos:prefLabel>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#aa321bbb-dab3-4cca-b081-0cb9f1880f39">
+	<skos:prefLabel xml:lang="fr">endroit de mesurage</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Messstellen</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">posizione di misura</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#293">
@@ -764,12 +785,12 @@
 	<skos:prefLabel xml:lang="en">Cantonal boundary</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#159">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="it">Corporazione</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">Corporation</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Korporation</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Corporation</skos:prefLabel>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#7f2b3647-168c-4a2d-8c03-31459116940f">
+	<skos:prefLabel xml:lang="en">Crete</skos:prefLabel>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#158">
@@ -844,12 +865,12 @@
 	<skos:prefLabel xml:lang="en">cycle</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#296">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Urstromtal, Endmoräne</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">canal proglaciaire</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">canale proglaciale</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">ice marginal valley</skos:prefLabel>
+<rdf:Description rdf:about="http://geocat.ch/concept#6dced9b5-f579-4de5-9180-7c19d9e86fe3">
+	<skos:prefLabel xml:lang="en">Protective function</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Fonction protectrice</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Schutzfunktion</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">funzione protettiva</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#295">
@@ -870,10 +891,13 @@
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#9bd3e05e-8b53-4bfa-af61-de3710f28146">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Allmend</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Allmend</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Allmend</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">Almenda</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fed4e2d6-2fcd-4b9f-b1e8-18ac9ec3a482">
+	<skos:prefLabel xml:lang="fr">Protection naturelle et paysagère</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">natural and landscape protection</skos:prefLabel>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#efb52b6e-ca1a-42ac-99b7-d75cb43c7437">
@@ -1014,12 +1038,12 @@
 	<skos:scopeNote xml:lang="de">mineralische Bauabfälle</skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#225">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Randzone</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">zone suburbaine</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">zona periferica</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">suburban zone</skos:prefLabel>
+<rdf:Description rdf:about="http://geocat.ch/concept#7aed1a69-896a-4f8b-8e39-cf1904d359dd">
+	<skos:prefLabel xml:lang="de">Tagesstruktur</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">centro (di accoglienza) diurno</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#123">
@@ -1102,12 +1126,18 @@
 	<skos:prefLabel xml:lang="en">Boundary line</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#122">
+<rdf:Description rdf:about="http://geocat.ch/concept#a2bb0609-ee3f-49c9-bdd9-90b2f008c72b">
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx6"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx6">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#dbd14ac6-342f-40fd-b22b-e1f17f9ab485">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Grenzpunkt</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">point de limite</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">punto di confine</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">frontier point (?)</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#354272b9-e3d2-4c7a-8f1d-0f2044c73856">
@@ -1127,12 +1157,11 @@
 	<skos:prefLabel xml:lang="en">structure plan</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#232">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ae21d759-4f43-4997-8c10-c147390a9361">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Rohdaten</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Données brutes</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">dati originali</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">raw data</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">good water status</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">bon état des eaux</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Gewässerzustand</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#230">
@@ -1210,12 +1239,12 @@
 	<skos:prefLabel xml:lang="en">red zone</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#136">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="it">Elicottero</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">Helicopter</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Helikopter</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Hélicoptère</skos:prefLabel>
+<rdf:Description rdf:about="http://geocat.ch/concept#e81fb2ec-6fa3-465c-9b48-b7dd64adfd66">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx7"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#239">
@@ -1242,12 +1271,13 @@
 	<skos:prefLabel xml:lang="fr">Déclivité</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#237">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">SBB</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">CFF</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">FFS</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">SBB</skos:prefLabel>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#10348ab2-0689-4dbb-a72e-303891a39bc2">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx8"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx8">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#135">
@@ -1298,12 +1328,12 @@
 	<skos:prefLabel xml:lang="en">green belt</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#131">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="it">Capannone</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">Hall</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Halle</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Halle</skos:prefLabel>
+<rdf:Description rdf:about="http://geocat.ch/concept#a2bb0609-ee3f-49c9-bdd9-90b2f008c72b">
+	<skos:prefLabel xml:lang="de">Asyl</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Asilo</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#f9b04274-5404-404a-8ac2-2a0ac988b4dc">
@@ -1450,8 +1480,11 @@
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c3eaef2c-2bf3-4b92-83a6-e174a3a9fd35">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="fr">ZCB (Zone de Constructions Basses)</skos:prefLabel>
-	<skos:scopeNote xml:lang="fr">ZCB (Zone de Constructions Basses)</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#d76687b8-27bc-41e9-9e0e-ca4c8f10f62e">
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:prefLabel xml:lang="fr">ZCF (Zone de Crêtes et de Forêts)</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#242">
@@ -1723,8 +1756,11 @@
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#d43a68c0-b473-4f5d-8e68-fdeaea482c8f">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Schonzone</skos:prefLabel>
-	<skos:scopeNote xml:lang="de">Schonzone</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx9">
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#114">
@@ -1861,8 +1897,11 @@
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#d76687b8-27bc-41e9-9e0e-ca4c8f10f62e">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="fr">ZCF (Zone de Crêtes et de Forêts)</skos:prefLabel>
-	<skos:scopeNote xml:lang="fr">ZCF (Zone de Crêtes et de Forêts)</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#d43a68c0-b473-4f5d-8e68-fdeaea482c8f">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#19cef360-5d76-45c7-b6b1-ec58dc063caa">
@@ -1904,8 +1943,11 @@
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#7f23bbc2-b347-45ae-baef-91799dc4215e">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="fr">PDQ ( Plan Directeur de Quartier)</skos:prefLabel>
-	<skos:scopeNote xml:lang="fr">PDQ ( Plan Directeur de Quartier)</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c3eaef2c-2bf3-4b92-83a6-e174a3a9fd35">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#307f7372-59e2-4853-b1eb-38e1aa1f1532">
@@ -1954,13 +1996,16 @@
 	<skos:scopeNote xml:lang="de">Kanton, kantonal</skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#a1a74690-0116-4488-aebc-12c9f427c140">
+<rdf:Description rdf:about="http://geocat.ch/concept#7738cfcd-ae7f-4fc0-8fad-d1b01babbe94">
+	<skos:prefLabel xml:lang="it">aree tranquillities</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#e81fb2ec-6fa3-465c-9b48-b7dd64adfd66">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="fr">Illégal</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">illegal</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">Illegale</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">Illegal</skos:prefLabel>
-	<skos:scopeNote xml:lang="de">illegal</skos:scopeNote>
+	<skos:prefLabel xml:lang="en">Bikesharing</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Partage de vélo</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Bikesharing</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Bikesharing</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#4a247507-2ca0-45af-b80f-29da80747033">
@@ -2001,9 +2046,8 @@
 	<skos:scopeNote xml:lang="fr">randonnée</skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#9eccb42a-c07a-480f-8113-f4b3d78659b3">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Biotop</skos:prefLabel>
+<rdf:Description rdf:about="http://geocat.ch/concept#4020caf9-20f7-4cb6-bb98-712eb76860e0">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c7623af7-aa48-4ee5-b4b6-0defa4aa5602">
@@ -2059,12 +2103,11 @@
 	<skos:scopeNote xml:lang="de">Waldabstand</skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#abba257b-e9f4-4b64-ac63-4c22f51e9706">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Fire protection expert</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Expert de sécurité contre l'incendie, Experte de sécurité contre l'incendie</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Brandschutzexperte, Brandschutzexpertin</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">Esperto in protezioni antincendio, Esperta in protezioni antincendio</skos:prefLabel>
+<rdf:Description rdf:about="http://geocat.ch/concept#4020caf9-20f7-4cb6-bb98-712eb76860e0">
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:prefLabel xml:lang="en">Point of Interest (POI)</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Point d'intérêt</skos:prefLabel>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#354d9241-902c-4f80-89a6-3bf56944410e">
@@ -2079,10 +2122,10 @@
 	<skos:prefLabel xml:lang="de">Biotopverbund</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#8cf93a98-0808-45e8-bc22-c1a39772aad6">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="fr">PQ (Plan de Quartier)</skos:prefLabel>
-	<skos:scopeNote xml:lang="fr">PQ (Plan de Quartier)</skos:scopeNote>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#7f23bbc2-b347-45ae-baef-91799dc4215e">
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#35ef285c-6d0d-4353-ad31-d2ff3cf5843b">
@@ -2146,10 +2189,10 @@
 	<skos:scopeNote xml:lang="de">Grünflächenkataster</skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c132bfeb-27c2-4bc4-a910-e1a8c145aa7b">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Grundlagendaten</skos:prefLabel>
-	<skos:scopeNote xml:lang="de">Grundlagendaten</skos:scopeNote>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#7f23bbc2-b347-45ae-baef-91799dc4215e">
+	<skos:prefLabel xml:lang="it">Piano direttore per quartiere</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">PDQ ( Plan Directeur de Quartier)</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">structure plan for quarters</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#3b169da4-6e14-43a0-a0d4-24070cdceb21">
@@ -2240,12 +2283,12 @@
 	<skos:scopeNote xml:lang="de">INSPIRE</skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#16">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Anlegestelle</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">poste d'amarrage</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">posto d'ormeggio</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">mooring place</skos:prefLabel>
+<rdf:Description rdf:about="http://geocat.ch/concept#38db7b25-0538-403d-909c-27b866f05a44">
+	<skos:prefLabel xml:lang="en">kindergarten</skos:prefLabel>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:prefLabel xml:lang="de">Kindergarten</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">asilo infantile</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Jardin d'enfants</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#5ee157e1-12c9-4bec-acbe-3e545dbd8723">
@@ -2257,15 +2300,15 @@
 	<skos:scopeNote xml:lang="fr">observation</skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x2">
+<rdf:Description rdf:nodeID="node1c05cbu4fx10">
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0d5ee014-66ef-43a6-bb86-a280fd9b008b">
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x3"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx11"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x3">
+<rdf:Description rdf:nodeID="node1c05cbu4fx11">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -2398,12 +2441,10 @@
 	<skos:prefLabel xml:lang="fr">Borne</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#12">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="it">Età</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Alter</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Âge</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">Age</skos:prefLabel>
+<rdf:Description rdf:about="http://geocat.ch/concept#38db7b25-0538-403d-909c-27b866f05a44">
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#11">
@@ -2688,11 +2729,20 @@
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#1852861b-0d95-4331-8b7d-bd60b04230eb">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Average daily traffic</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Trafic journalier moyen</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Durchschnittliche tägliche Verkehrs</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">Traffico giornaliero medio</skos:prefLabel>
-	<skos:scopeNote xml:lang="fr">trafic journalier moyen</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#20afde3b-c5d0-4137-a952-65dfdc0af5b4">
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#4020caf9-20f7-4cb6-bb98-712eb76860e0">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx12">
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#8dcafa5b-be56-4207-af7f-312c28ad34f8">
@@ -2777,13 +2827,13 @@
 	<skos:prefLabel xml:lang="en">Federal inventory</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b3df68a6-759e-4c90-8a90-490c2385ba64">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="fr">Postes de rétablissement</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Retablierungsstellen</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">posti di ristabilimento</skos:prefLabel>
-	<skos:scopeNote xml:lang="fr">Postes de rétablissement</skos:scopeNote>
-	<skos:scopeNote xml:lang="de">Retablierungsstellen</skos:scopeNote>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ae21d759-4f43-4997-8c10-c147390a9361">
+	<skos:prefLabel xml:lang="it">stato delle acque</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx13"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#f3449716-cf05-42d5-ada8-0bcdc9935684">
@@ -2799,23 +2849,26 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x4">
+<rdf:Description rdf:nodeID="node1c05cbu4fx14">
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#095767e7-4955-4b85-b9d1-8c73321c5484">
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x4"/>
-	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx14"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#515baf62-961e-424e-8921-e0699aae31cf">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Geometrisches Normalprofil</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">Profilo geometrico tipo</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Profil géométrique type</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">Geometric standard cross section</skos:prefLabel>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ed329b28-1236-44ea-af43-1da8e077ff0a">
+	<skos:prefLabel xml:lang="it">attitudine</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Eignung</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#dbd14ac6-342f-40fd-b22b-e1f17f9ab485">
+	<skos:prefLabel xml:lang="en">Pedestrian</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">piéton</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Fussgänger</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">pedonale</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#d8b89f3a-c79b-4c9f-9314-b522e7638075">
@@ -2894,8 +2947,11 @@
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#50153f09-60b7-4743-aec1-32275d6f1429">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="fr">ZVG (Zone de Vignes et de Grèves)</skos:prefLabel>
-	<skos:scopeNote xml:lang="fr">ZVG (Zone de Vignes et de Grèves)</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#7f23bbc2-b347-45ae-baef-91799dc4215e">
+	<skos:prefLabel xml:lang="de">Quartierrichtplan</skos:prefLabel>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#e02ee093-2522-46e5-9edd-0d5a90c7fc44">
@@ -2949,8 +3005,11 @@
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#14cdc04b-2cd6-4098-9d6c-ecac9819fb79">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="fr">Grève</skos:prefLabel>
-	<skos:scopeNote xml:lang="fr">Grève</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#50153f09-60b7-4743-aec1-32275d6f1429">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:prefLabel xml:lang="de">Weinbau- und Strandzone</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#322">
@@ -2997,12 +3056,21 @@
 	<skos:prefLabel xml:lang="en">economic branch</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#326">
+<rdf:Description rdf:nodeID="node1c05cbu4fx15">
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx4">
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#a676f035-814c-4740-b2c3-28b3eeb2f7ff">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#bc9c99c7-f46e-47bc-8ab6-e546b389c9ac">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="it">Domicilio</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">Residence</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Wohnort</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Domicile</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">walking routes</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#d5e9f21a-e44e-427d-b1e3-fbacddf74eb7">
@@ -3119,24 +3187,23 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x5">
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://geocat.ch/concept#4a8c5753-3328-4330-9e20-a47f6eae3cdc">
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x5"/>
-	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bmg97ps6x6">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://geocat.ch/concept#4a8c5753-3328-4330-9e20-a47f6eae3cdc">
+<rdf:Description rdf:about="http://geocat.ch/concept#38db7b25-0538-403d-909c-27b866f05a44">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Mil_Zivil-Mil Kooperation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#6326aee7-3e04-4c05-92b7-36264e7621b0">
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx16"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#14cdc04b-2cd6-4098-9d6c-ecac9819fb79">
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx16">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#bd145036-5551-4082-ace8-2552bd226bf0">
@@ -3164,12 +3231,16 @@
 	<skos:prefLabel xml:lang="en">plan of zones</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#332">
+<rdf:Description rdf:about="http://geocat.ch/concept#2128cd0c-f454-45fc-b453-39db2bcf53d8">
+	<skos:prefLabel xml:lang="fr">Arbre-habitat</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx17">
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#80738f4c-8582-4180-8e08-ac44ec9610b0">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">feeder pipe</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Zubringerleitung</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Conduite d'amenée</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">conduttura di alimentazione</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#5b3febc9-a6d0-47ae-b151-6f51e02c65b0">
@@ -3190,13 +3261,16 @@
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#2e40e3a6-b7f6-47ca-b9fd-fbef64157a88">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="fr">ANTP (Association Neuchâteloise de Tourisme Pédestre)</skos:prefLabel>
-	<skos:scopeNote xml:lang="fr">ANTP (Association Neuchâteloise de Tourisme Pédestre)</skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0ac2559f-b4d7-410a-81d0-dd5a5729bf67">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:prefLabel xml:lang="en">subsoil categories</skos:prefLabel>
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Baugrundklassen</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#4594c232-eafe-4f42-a375-74fc3032e220">
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#2a5c0347-942a-44e3-80ef-1e8b20d13875">
@@ -3272,12 +3346,17 @@
 	<skos:scopeNote xml:lang="fr">EGIP (European Geothermal Information Platform)</skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#300">
+<rdf:Description rdf:nodeID="node1c05cbu4fx18">
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#a676f035-814c-4740-b2c3-28b3eeb2f7ff">
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Verkehrszeichen</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">panneau de signalisation</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">segnale stradale</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">traffic sign</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#6dced9b5-f579-4de5-9180-7c19d9e86fe3">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#86b0b24a-0ceb-4bc9-9116-69681e48d377">
@@ -3387,12 +3466,14 @@
 	<skos:prefLabel xml:lang="it">Spostamento di terreno permanente</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#310">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Waldkarte</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">carte forestière</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">carta forestale</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">forest map</skos:prefLabel>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#bc9c99c7-f46e-47bc-8ab6-e546b389c9ac">
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx18"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx18">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#311">
@@ -3427,12 +3508,12 @@
 	<skos:prefLabel xml:lang="fr">Lisière</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#318">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Wasseroberfläche</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Plan d'eau</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">superficie d'acqua</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">water surface</skos:prefLabel>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#bc9c99c7-f46e-47bc-8ab6-e546b389c9ac">
+	<skos:prefLabel xml:lang="fr">Randonnées pédestres</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Wanderrouten</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">percorsi a piedi</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#319">
@@ -3671,12 +3752,18 @@
 	<skos:scopeNote xml:lang="de">Bausperrgut</skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#025b2be2-0a54-4b45-be55-3bf94d67a7dd">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Building surveyor</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Inspecteur de chantier, Inspectrice de chantier</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Bauinspektor, Bauinspektorin</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">Ispettore edile, Ispettrice edile</skos:prefLabel>
+<rdf:Description rdf:nodeID="node1c05cbu4fx19">
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#ba96b1d3-de6b-4470-95ed-37f4df27d425">
+	<skos:prefLabel xml:lang="fr">Vieux bois</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">old wood</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#ec537020-2f3f-4d01-b793-038fde2b4713">
+	<skos:prefLabel xml:lang="fr">KLARA - micro-station d'épuration</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">KLARA - small wastewater treatment plant</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#90">
@@ -3703,10 +3790,10 @@
 	<skos:prefLabel xml:lang="en">hazard inventory</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#798cacec-72a9-4212-b55a-f0adfa6e2f5f">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="fr">cnoidale</skos:prefLabel>
-	<skos:scopeNote xml:lang="fr">cnoidale</skos:scopeNote>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#2e40e3a6-b7f6-47ca-b9fd-fbef64157a88">
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0bfd68fd-58ac-4a97-81eb-3cd01558227d">
@@ -3720,9 +3807,9 @@
 	<skos:scopeNote xml:lang="it">Armée Centre Logistique ALC</skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#beeb3e13-d603-4462-ac9a-135be0164cc9">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="fr">Colerpa</skos:prefLabel>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#2e40e3a6-b7f6-47ca-b9fd-fbef64157a88">
+	<skos:prefLabel xml:lang="fr">ANTP (Association Neuchâteloise de Tourisme Pédestre)</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">ANTP (Association Neuchâteloise de Tourisme Pédestre)</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#11f96cd3-261c-4ef1-933a-105a2ee06e9a">
@@ -3735,18 +3822,25 @@
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#17c25f8a-a2cd-4d6e-817c-f959e67a0538">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Mountain bike</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">VTT (Vélo Tout Terrain)</skos:prefLabel>
-	<skos:scopeNote xml:lang="fr">vélo tout-terrains</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#2e40e3a6-b7f6-47ca-b9fd-fbef64157a88">
+	<skos:prefLabel xml:lang="it">ANTP (Association Neuchâteloise de Tourisme Pédestre)</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">ANTP (Association Neuchâteloise de Tourisme Pédestre)</skos:prefLabel>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#7f2b3647-168c-4a2d-8c03-31459116940f">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="fr">Crète</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Kreta</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">Creta</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">Crete</skos:prefLabel>
-	<skos:scopeNote xml:lang="fr">crète</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx20">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx21">
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ef050a66-ded6-4022-b4fe-90aab4a9079e">
@@ -3767,8 +3861,11 @@
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b4daac05-1bdb-412e-8f7f-4494890119ef">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="fr">Rive</skos:prefLabel>
-	<skos:scopeNote xml:lang="fr">Rive</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#17c25f8a-a2cd-4d6e-817c-f959e67a0538">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#39f85d62-bdd1-4927-913f-67c3efcda5df">
@@ -3808,12 +3905,21 @@
 	<skos:prefLabel xml:lang="en">Crayfish</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#78c096d4-6a6a-41ac-94d2-add485bb02e0">
+<rdf:Description rdf:about="http://geocat.ch/concept#4020caf9-20f7-4cb6-bb98-712eb76860e0">
+	<skos:prefLabel xml:lang="de">Point of Interest (POI)</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#ba96b1d3-de6b-4470-95ed-37f4df27d425">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx22"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx22">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#ec537020-2f3f-4d01-b793-038fde2b4713">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">area reserved for promoting biodiversity</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">surface de compensation écologique</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Biodiversitätsförderflächen (BFF)</skos:prefLabel>
-	<skos:scopeNote xml:lang="de">Biodiversitätsförderflächen (BFF)</skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#6ab1fd5e-1e4c-49a6-b0b4-71eeac92fe57">
@@ -3825,14 +3931,14 @@
 	<skos:scopeNote xml:lang="de">Isohypsen</skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#305f4085-130d-4bdc-a9bb-f82643db9e2f">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Discharge</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Décharge</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Entladung</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">Scarico</skos:prefLabel>
-	<skos:scopeNote xml:lang="fr">Décharges</skos:scopeNote>
-	<skos:scopeNote xml:lang="de">Deponien</skos:scopeNote>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#1852861b-0d95-4331-8b7d-bd60b04230eb">
+	<skos:prefLabel xml:lang="it">Traffico giornaliero medio</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Trafic journalier moyen</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Average daily traffic</skos:prefLabel>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#331b5b6e-65c1-494a-9074-034cc0f3acf4">
@@ -4057,12 +4163,15 @@
 	<skos:prefLabel xml:lang="it">Zecca</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#cbc663aa-a5a6-4b37-90b5-f319adcbfc7a">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Landschaftsentwicklung</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">sviluppo del paesaggio</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">évolution du paysage</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">landscape development</skos:prefLabel>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c1d0acc2-ce83-4867-90be-382971a86fef">
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx21"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#7f2b3647-168c-4a2d-8c03-31459116940f">
+	<skos:prefLabel xml:lang="it">Creta</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Crête</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Krete</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#84">
@@ -4186,12 +4295,15 @@
 	<skos:prefLabel xml:lang="en">Ecomorphology</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#80">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Fördergebiet</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">zone d'aide</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">zona d'aiuto</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">assisted area</skos:prefLabel>
+<rdf:Description rdf:about="http://geocat.ch/concept#dbd14ac6-342f-40fd-b22b-e1f17f9ab485">
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx12"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#1852861b-0d95-4331-8b7d-bd60b04230eb">
+	<skos:prefLabel xml:lang="de">Durchschnittlicher täglicher Verkehrs</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#81">
@@ -4202,12 +4314,21 @@
 	<skos:prefLabel xml:lang="en">forest district</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#202">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Ökologisches Netz</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">réseau écologique</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">rete ecologica</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">ecological network</skos:prefLabel>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#9bd3e05e-8b53-4bfa-af61-de3710f28146">
+	<skos:prefLabel xml:lang="en">common land</skos:prefLabel>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#2128cd0c-f454-45fc-b453-39db2bcf53d8">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx17"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx17">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#2128cd0c-f454-45fc-b453-39db2bcf53d8">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#6ff51089-d9bc-4459-8dc8-c8256c876288">
@@ -4293,13 +4414,19 @@
 	<skos:prefLabel xml:lang="en">Land use planning</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#63e3a0d7-159f-40fe-b11e-5e8cbb300a9d">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="fr">âge harmonisé</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">harmonised age</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">harmonisiertes Zeitalter</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">età armonizzata</skos:prefLabel>
-	<skos:scopeNote xml:lang="de">harmonisiertes Zeitalter</skos:scopeNote>
+<rdf:Description rdf:nodeID="node1c05cbu4fx7">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#20afde3b-c5d0-4137-a952-65dfdc0af5b4">
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx23"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fed4e2d6-2fcd-4b9f-b1e8-18ac9ec3a482">
+	<skos:prefLabel xml:lang="de">Natur- und Landschaftsschutz</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">protezione del paesaggio e della natura</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#adab909a-7347-42bd-990a-83fbe68496a2">
@@ -4381,12 +4508,21 @@
 	<skos:prefLabel xml:lang="en">e-geo.ch geoportal</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#53">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#20afde3b-c5d0-4137-a952-65dfdc0af5b4">
+	<skos:prefLabel xml:lang="de">Oekomorphologie</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#4020caf9-20f7-4cb6-bb98-712eb76860e0">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx24"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx24">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#ba96b1d3-de6b-4470-95ed-37f4df27d425">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Druckleitung</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Conduite forcée</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">condotta forzata</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">pressure pipe</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#56">
@@ -4397,12 +4533,12 @@
 	<skos:prefLabel xml:lang="fr">Propriétaire</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#55">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#20afde3b-c5d0-4137-a952-65dfdc0af5b4">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:prefLabel xml:lang="it"></skos:prefLabel>
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="it">Permeabilità</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">Permeability</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Durchlässigkeit</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Perméabilité</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Ecomorphology</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Ecomorphologie</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#50">
@@ -4431,7 +4567,10 @@
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#d4d3c1ef-87e1-43b6-90d9-e708fe67e623">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Spektrale Mikrozonierung</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b4daac05-1bdb-412e-8f7f-4494890119ef">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#68">
@@ -4470,12 +4609,14 @@
 	<skos:scopeNote xml:lang="de">Aussenbewirtung</skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#8d142336-00e8-4bdc-ad1a-e5597c843dc8">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Jesse En</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Jesse FR</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Jesse DE</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">Jesse En</skos:prefLabel>
+<rdf:Description rdf:nodeID="node1c05cbu4fx3">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fed4e2d6-2fcd-4b9f-b1e8-18ac9ec3a482">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#8">
@@ -4702,8 +4843,11 @@
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#5d92a1b7-0942-4029-9410-fa143a2bce97">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Allee</skos:prefLabel>
-	<skos:scopeNote xml:lang="de">Allee</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#d4d3c1ef-87e1-43b6-90d9-e708fe67e623">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#912f0579-e416-4fbe-8322-12e6b9ba5792">
@@ -4836,12 +4980,10 @@
 	<skos:prefLabel xml:lang="fr">District</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#33">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Bewirtschafter</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">exploitant agricole</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">operatore agricolo</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">farm manager</skos:prefLabel>
+<rdf:Description rdf:about="http://geocat.ch/concept#ba96b1d3-de6b-4470-95ed-37f4df27d425">
+	<skos:prefLabel xml:lang="it">vecchio legno</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Altholz</skos:prefLabel>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#48">
@@ -4960,12 +5102,18 @@
 	<skos:scopeNote xml:lang="de">Oberflächenablagerung</skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#37fb8091-efd8-465c-a8c2-3327fea33403">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Construction method</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Procédé d'exécution</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Bauverfahren</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">Procedimento di costruzione</skos:prefLabel>
+<rdf:Description rdf:about="http://geocat.ch/concept#ba96b1d3-de6b-4470-95ed-37f4df27d425">
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#ec537020-2f3f-4d01-b793-038fde2b4713">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx19"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx19">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#40">
@@ -5035,10 +5183,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x7"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx25"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x7">
+<rdf:Description rdf:nodeID="node1c05cbu4fx25">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5055,123 +5203,111 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 	<skos:scopeNote xml:lang="rm"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x8"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx26"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x8">
+<rdf:Description rdf:nodeID="node1c05cbu4fx26">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x9">
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://geocat.ch/concept#3249d234-5d50-4f9e-98dc-553d64acacd4">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#5d92a1b7-0942-4029-9410-fa143a2bce97">
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x9"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bmg97ps6x9">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://geocat.ch/concept#3249d234-5d50-4f9e-98dc-553d64acacd4">
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<skos:prefLabel xml:lang="de">Allee</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">viale</skos:prefLabel>
 	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:prefLabel xml:lang="fr">LFDMO</skos:prefLabel>
-	<skos:prefLabel xml:lang="en">LFDMO</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">allée</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">alley</skos:prefLabel>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#77579584-6138-47b7-aa71-39862f9790f9">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<skos:prefLabel xml:lang="de">Mil_Personelles</skos:prefLabel>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x10"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx27"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x10">
+<rdf:Description rdf:nodeID="node1c05cbu4fx27">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#f97de428-5414-4a36-8fe6-147a60481333">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Mil_Nachrichtendienst</skos:prefLabel>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#d76687b8-27bc-41e9-9e0e-ca4c8f10f62e">
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x11"/>
+	<skos:prefLabel xml:lang="de">Kreten- und Waldzone</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x11">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c3eaef2c-2bf3-4b92-83a6-e174a3a9fd35">
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:prefLabel xml:lang="de">Tiefbauzone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">ZCB (Zone de Constructions Basses)</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">civil engineering zone</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#f274d9cd-0562-4a87-a2d3-42bf2e54ae4a">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Mil_Operationen</skos:prefLabel>
+<rdf:Description rdf:about="http://geocat.ch/concept#ec537020-2f3f-4d01-b793-038fde2b4713">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#38db7b25-0538-403d-909c-27b866f05a44">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx9"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#d43a68c0-b473-4f5d-8e68-fdeaea482c8f">
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:prefLabel xml:lang="de">Schonzone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone de ménagement</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">careful treatment zone</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#50153f09-60b7-4743-aec1-32275d6f1429">
+	<skos:prefLabel xml:lang="fr">ZVG (Zone de Vignes et de Grèves)</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">viniculture and beach zone</skos:prefLabel>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x12"/>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x12">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#14cdc04b-2cd6-4098-9d6c-ecac9819fb79">
+	<skos:prefLabel xml:lang="it">riva</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Grève</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#fe9dbfd1-b261-45cd-82f3-2773a0a64072">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Mil_Logistik-u-San</skos:prefLabel>
+<rdf:Description rdf:about="http://geocat.ch/concept#ec537020-2f3f-4d01-b793-038fde2b4713">
+	<skos:prefLabel xml:lang="it">KLARA - piccoli sistemi di trattamento</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">KLARA - Kleinkläranlage</skos:prefLabel>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x13"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bmg97ps6x13">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://geocat.ch/concept#c2eb2509-6961-48ba-a7de-5a95b9465eb0">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Mil_Planung</skos:prefLabel>
-	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x14"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bmg97ps6x14">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://geocat.ch/concept#9d52c6a5-0a3a-4529-84bf-309209890036">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Mil_Führungsunterstützung</skos:prefLabel>
-	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x15"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bmg97ps6x15">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#4594c232-eafe-4f42-a375-74fc3032e220">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 	<skos:prefLabel xml:lang="de">Mil_Ausbildung</skos:prefLabel>
-	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x16"/>
+	<skos:prefLabel xml:lang="it">Mil_formazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Mil_formation</skos:prefLabel>
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x16">
+<rdf:Description rdf:about="http://geocat.ch/concept#6326aee7-3e04-4c05-92b7-36264e7621b0">
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#4594c232-eafe-4f42-a375-74fc3032e220">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx28"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx28">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#35976990-b847-4c75-b8d3-c3af6a31a88c">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="de">Mil_Finanzen</skos:prefLabel>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#14cdc04b-2cd6-4098-9d6c-ecac9819fb79">
+	<skos:prefLabel xml:lang="en">Beach</skos:prefLabel>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x6"/>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<skos:prefLabel xml:lang="de">Ufer / Strand</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ab642d3d-d74f-400c-bb01-81c6dde26247">
@@ -5186,10 +5322,10 @@
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#94202915-c2c1-44fd-a106-71488110e399">
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x17"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx29"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x17">
+<rdf:Description rdf:nodeID="node1c05cbu4fx29">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -5197,7 +5333,7 @@
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x17">
+<rdf:Description rdf:nodeID="node1c05cbu4fx29">
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -5222,10 +5358,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x18"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx30"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x18">
+<rdf:Description rdf:nodeID="node1c05cbu4fx30">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5240,10 +5376,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x19"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx31"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x19">
+<rdf:Description rdf:nodeID="node1c05cbu4fx31">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5258,10 +5394,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x20"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx32"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x20">
+<rdf:Description rdf:nodeID="node1c05cbu4fx32">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5276,102 +5412,120 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x21"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx33"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x21">
+<rdf:Description rdf:nodeID="node1c05cbu4fx33">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0971d6a3-5577-4c88-a965-12ee192f493d">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">communal</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">communal</skos:prefLabel>
-	<skos:prefLabel xml:lang="de"></skos:prefLabel>
-	<skos:prefLabel xml:lang="it"></skos:prefLabel>
-	<skos:scopeNote xml:lang="en">communal</skos:scopeNote>
-	<skos:scopeNote xml:lang="fr">communal</skos:scopeNote>
-	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x22"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x22">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#d4d3c1ef-87e1-43b6-90d9-e708fe67e623">
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:prefLabel xml:lang="en">spectral micro-zoning</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">icrozonage spectral</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">microzonazione spettrale</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b4daac05-1bdb-412e-8f7f-4494890119ef">
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#d4d3c1ef-87e1-43b6-90d9-e708fe67e623">
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:prefLabel xml:lang="de">Spektrale Mikrozonierung</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0971d6a3-5577-4c88-a965-12ee192f493d">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx34"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx34">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#e1394517-8871-4f07-b8b9-dae527a63116">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en"></skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">dégâts de tirs</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Schiessschaden</skos:prefLabel>
-	<skos:prefLabel xml:lang="it"></skos:prefLabel>
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
-	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x23"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x23">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0971d6a3-5577-4c88-a965-12ee192f493d">
+	<skos:prefLabel xml:lang="de">Gemeinde</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:prefLabel xml:lang="en">communal</skos:prefLabel>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#e1394517-8871-4f07-b8b9-dae527a63116">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx35"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx35">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c689897e-d48d-4dda-b0b2-181330551843">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Sports event</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">manifestation sportive</skos:prefLabel>
-	<skos:prefLabel xml:lang="de"></skos:prefLabel>
-	<skos:prefLabel xml:lang="it"></skos:prefLabel>
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
-	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x24"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x24">
+<rdf:Description rdf:about="http://geocat.ch/concept#e1394517-8871-4f07-b8b9-dae527a63116">
+	<skos:prefLabel xml:lang="de">Schiessschaden</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:prefLabel xml:lang="fr">dégâts de tirs</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">shooting demage</skos:prefLabel>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c689897e-d48d-4dda-b0b2-181330551843">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx36"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx36">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b3df68a6-759e-4c90-8a90-490c2385ba64">
-	<skos:prefLabel xml:lang="en"></skos:prefLabel>
-	<skos:prefLabel xml:lang="it"></skos:prefLabel>
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
-	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x25"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bmg97ps6x25">
+<rdf:Description rdf:nodeID="node1c05cbu4fx13">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#3be05f8f-a399-48b9-926a-effe5c6df6cc">
+<rdf:Description rdf:nodeID="node1c05cbu4fx20">
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#7aed1a69-896a-4f8b-8e39-cf1904d359dd">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en"></skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Sondes géothermiques</skos:prefLabel>
-	<skos:prefLabel xml:lang="de"></skos:prefLabel>
-	<skos:prefLabel xml:lang="it"></skos:prefLabel>
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:scopeNote xml:lang="fr">Sondes géothermiques</skos:scopeNote>
+	<skos:prefLabel xml:lang="en">day center</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">centre d'accueil de jour</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0971d6a3-5577-4c88-a965-12ee192f493d">
+	<skos:prefLabel xml:lang="it">communale</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">communal</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c689897e-d48d-4dda-b0b2-181330551843">
+	<skos:prefLabel xml:lang="it">manifestazione sportiva</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">manifestation sportive</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Sports event</skos:prefLabel>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x26"/>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:prefLabel xml:lang="de">Sportveranstaltung</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x26">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bmg97ps6x27">
+<rdf:Description rdf:nodeID="node1c05cbu4fx37">
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
@@ -5385,10 +5539,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x27"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx37"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x27">
+<rdf:Description rdf:nodeID="node1c05cbu4fx37">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -5402,10 +5556,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x28"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx38"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x28">
+<rdf:Description rdf:nodeID="node1c05cbu4fx38">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5420,10 +5574,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x29"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx39"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x29">
+<rdf:Description rdf:nodeID="node1c05cbu4fx39">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5438,10 +5592,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x30"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx40"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x30">
+<rdf:Description rdf:nodeID="node1c05cbu4fx40">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5456,10 +5610,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x31"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx41"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x31">
+<rdf:Description rdf:nodeID="node1c05cbu4fx41">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5474,10 +5628,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x32"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx42"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x32">
+<rdf:Description rdf:nodeID="node1c05cbu4fx42">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5492,10 +5646,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x33"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx43"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x33">
+<rdf:Description rdf:nodeID="node1c05cbu4fx43">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5510,10 +5664,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x34"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx44"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x34">
+<rdf:Description rdf:nodeID="node1c05cbu4fx44">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5528,10 +5682,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x35"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx45"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x35">
+<rdf:Description rdf:nodeID="node1c05cbu4fx45">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5546,10 +5700,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x36"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx46"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x36">
+<rdf:Description rdf:nodeID="node1c05cbu4fx46">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5564,10 +5718,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x37"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx47"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x37">
+<rdf:Description rdf:nodeID="node1c05cbu4fx47">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5582,10 +5736,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x38"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx48"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x38">
+<rdf:Description rdf:nodeID="node1c05cbu4fx48">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5600,30 +5754,42 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x39"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx49"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x39">
+<rdf:Description rdf:nodeID="node1c05cbu4fx49">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fe9ee72f-e706-4f6c-9873-6922ceda63e7">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#19002174-c70c-4a44-a44c-705bd12db424">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Insulae</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Insula</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Insulae</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">Insulae</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#7738cfcd-ae7f-4fc0-8fad-d1b01babbe94">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx50"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx50">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#7738cfcd-ae7f-4fc0-8fad-d1b01babbe94">
 	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:prefLabel xml:lang="fr">Zones de tranquillités</skos:prefLabel>
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx50">
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#7738cfcd-ae7f-4fc0-8fad-d1b01babbe94">
+	<skos:prefLabel xml:lang="en">Zones of tranquility</skos:prefLabel>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x40"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bmg97ps6x40">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:prefLabel xml:lang="de">Wildruhezonen</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#07ccc616-0918-45e0-adb9-c3a8af224903">
@@ -5636,10 +5802,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x41"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx51"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x41">
+<rdf:Description rdf:nodeID="node1c05cbu4fx51">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5654,48 +5820,55 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x42"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx52"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x42">
+<rdf:Description rdf:nodeID="node1c05cbu4fx52">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#cc273460-cb9f-4b1d-a266-ae7ede9bbbc8">
+<rdf:Description rdf:nodeID="node1c05cbu4fx53">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#a676f035-814c-4740-b2c3-28b3eeb2f7ff">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx54"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx54">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#32b4aaed-2d13-45b6-9932-7d14e11785a1">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Roman walls</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Murs romains</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Römische Mauern</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">Mura romane</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">depth of the groundwater</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#a676f035-814c-4740-b2c3-28b3eeb2f7ff">
+	<skos:prefLabel xml:lang="de">Höchsthochwasserstand</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">niveau d'eau maximal</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">maximum water level</skos:prefLabel>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#32b4aaed-2d13-45b6-9932-7d14e11785a1">
+	<skos:prefLabel xml:lang="it"></skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#352d18f2-5223-4d59-aa85-a15867a34ae9">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">micro-organisme</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">le micro-organisme</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Kleinlebewesen</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">microorganismo</skos:prefLabel>
 	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x43"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bmg97ps6x43">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#86fa79d0-8cff-434a-8452-a11f00710b87">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Roman roads</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Voies romaines</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Römische Strassen</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">Strade romane</skos:prefLabel>
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
-	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x44"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bmg97ps6x44">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx53"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#44157dac-756a-414b-9259-e6b0e312accb">
@@ -5708,10 +5881,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x45"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx55"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x45">
+<rdf:Description rdf:nodeID="node1c05cbu4fx55">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5726,10 +5899,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x46"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx56"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x46">
+<rdf:Description rdf:nodeID="node1c05cbu4fx56">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5744,10 +5917,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x47"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx57"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x47">
+<rdf:Description rdf:nodeID="node1c05cbu4fx57">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5762,10 +5935,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x48"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx58"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x48">
+<rdf:Description rdf:nodeID="node1c05cbu4fx58">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5780,10 +5953,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x49"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx59"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x49">
+<rdf:Description rdf:nodeID="node1c05cbu4fx59">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5798,10 +5971,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x50"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx60"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x50">
+<rdf:Description rdf:nodeID="node1c05cbu4fx60">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5816,10 +5989,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x51"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx61"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x51">
+<rdf:Description rdf:nodeID="node1c05cbu4fx61">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5834,10 +6007,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x52"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx62"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x52">
+<rdf:Description rdf:nodeID="node1c05cbu4fx62">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5852,30 +6025,33 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x53"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx63"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x53">
+<rdf:Description rdf:nodeID="node1c05cbu4fx63">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#2d66ec2d-c3cb-45a7-a99f-65d1e0dfed8b">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en"></skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Régions</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Regionen</skos:prefLabel>
-	<skos:prefLabel xml:lang="it"></skos:prefLabel>
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0ac2559f-b4d7-410a-81d0-dd5a5729bf67">
+	<skos:prefLabel xml:lang="fr">classes de sol de fondation</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#17c25f8a-a2cd-4d6e-817c-f959e67a0538">
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:prefLabel xml:lang="de">Mountainbike</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">mountain bike</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">VTT (Vélo Tout Terrain)</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Mountain bike</skos:prefLabel>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x54"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x54">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#b4daac05-1bdb-412e-8f7f-4494890119ef">
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:prefLabel xml:lang="de">Ufer</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">riva</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Rive</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">shore</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#5904b8ab-993e-4fe1-a3fe-69336c756242">
@@ -5888,10 +6064,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x55"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx64"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x55">
+<rdf:Description rdf:nodeID="node1c05cbu4fx64">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5906,10 +6082,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x56"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx65"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x56">
+<rdf:Description rdf:nodeID="node1c05cbu4fx65">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5924,10 +6100,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x57"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx66"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x57">
+<rdf:Description rdf:nodeID="node1c05cbu4fx66">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5942,10 +6118,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x58"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx67"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x58">
+<rdf:Description rdf:nodeID="node1c05cbu4fx67">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5960,10 +6136,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x59"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx68"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x59">
+<rdf:Description rdf:nodeID="node1c05cbu4fx68">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5978,10 +6154,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x60"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx69"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x60">
+<rdf:Description rdf:nodeID="node1c05cbu4fx69">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -5996,29 +6172,27 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x61"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx70"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x61">
+<rdf:Description rdf:nodeID="node1c05cbu4fx70">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#63e3a0d7-159f-40fe-b11e-5e8cbb300a9d">
-	<skos:prefLabel xml:lang="en">Harmonized age</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Epoque harmonisée</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Harmonisiertes Zeitalter</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">Età armonizzato</skos:prefLabel>
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#19002174-c70c-4a44-a44c-705bd12db424">
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x62"/>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:prefLabel xml:lang="de">Hindernisbegrenzungskataster</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Catasto delle limitazione degli ostacoli</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Cadastre limitation obstacles</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x62">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+<rdf:Description rdf:about="http://geocat.ch/concept#a2bb0609-ee3f-49c9-bdd9-90b2f008c72b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">Asylum</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Asile</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#98f43043-3ca7-4839-baa3-57200075b1a4">
@@ -6031,10 +6205,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x63"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx71"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x63">
+<rdf:Description rdf:nodeID="node1c05cbu4fx71">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6049,10 +6223,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x64"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx72"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x64">
+<rdf:Description rdf:nodeID="node1c05cbu4fx72">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6067,10 +6241,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x65"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx73"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x65">
+<rdf:Description rdf:nodeID="node1c05cbu4fx73">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6085,10 +6259,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x66"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx74"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x66">
+<rdf:Description rdf:nodeID="node1c05cbu4fx74">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6103,10 +6277,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x67"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx75"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x67">
+<rdf:Description rdf:nodeID="node1c05cbu4fx75">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6121,10 +6295,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x68"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx76"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x68">
+<rdf:Description rdf:nodeID="node1c05cbu4fx76">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6139,10 +6313,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x69"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx77"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x69">
+<rdf:Description rdf:nodeID="node1c05cbu4fx77">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6157,10 +6331,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x70"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx78"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x70">
+<rdf:Description rdf:nodeID="node1c05cbu4fx78">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6175,10 +6349,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x71"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx79"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x71">
+<rdf:Description rdf:nodeID="node1c05cbu4fx79">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6193,28 +6367,40 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x72"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx80"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x72">
+<rdf:Description rdf:nodeID="node1c05cbu4fx80">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ed329b28-1236-44ea-af43-1da8e077ff0a">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Aptitude</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Aptitude</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Eignung</skos:prefLabel>
-	<skos:prefLabel xml:lang="it"></skos:prefLabel>
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
-	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x73"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x73">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0ac2559f-b4d7-410a-81d0-dd5a5729bf67">
+	<skos:prefLabel xml:lang="it">terreni di fondazione</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Baugrundklassen</skos:prefLabel>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#4594c232-eafe-4f42-a375-74fc3032e220">
+	<skos:prefLabel xml:lang="en">Mil_training</skos:prefLabel>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0ac2559f-b4d7-410a-81d0-dd5a5729bf67">
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ed329b28-1236-44ea-af43-1da8e077ff0a">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx81"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx81">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6229,10 +6415,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x74"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx82"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x74">
+<rdf:Description rdf:nodeID="node1c05cbu4fx82">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6247,10 +6433,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x75"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx83"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x75">
+<rdf:Description rdf:nodeID="node1c05cbu4fx83">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6265,10 +6451,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x76"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx84"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x76">
+<rdf:Description rdf:nodeID="node1c05cbu4fx84">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6283,22 +6469,23 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x77"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx85"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x77">
+<rdf:Description rdf:nodeID="node1c05cbu4fx85">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#095767e7-4955-4b85-b9d1-8c73321c5484">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en"></skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Station service</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Tankstellen</skos:prefLabel>
-	<skos:prefLabel xml:lang="it"></skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ed329b28-1236-44ea-af43-1da8e077ff0a">
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:prefLabel xml:lang="en">Aptitude</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Aptitude</skos:prefLabel>
 	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#bd5fb23a-002a-4fec-b23e-aeb6e23c42c4">
@@ -6322,10 +6509,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x78"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx86"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x78">
+<rdf:Description rdf:nodeID="node1c05cbu4fx86">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6340,30 +6527,28 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x79"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx87"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x79">
+<rdf:Description rdf:nodeID="node1c05cbu4fx87">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#48776d3b-fbcc-4ee4-9d66-723837665eea">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Zone planning</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Planification de zone</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Zonenplanung</skos:prefLabel>
-	<skos:prefLabel xml:lang="it"></skos:prefLabel>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#80738f4c-8582-4180-8e08-ac44ec9610b0">
+	<skos:prefLabel xml:lang="en">Hiking trail network</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Réseau de chemins de randonnée</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Wanderwegnetz</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Rete dei sentieri</skos:prefLabel>
 	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x80"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx15"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x80">
+<rdf:Description rdf:nodeID="node1c05cbu4fx15">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#f6a06480-5764-4b85-b047-44fc13197605">
@@ -6376,10 +6561,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x81"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx88"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x81">
+<rdf:Description rdf:nodeID="node1c05cbu4fx88">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6394,23 +6579,23 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x82"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx89"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x82">
+<rdf:Description rdf:nodeID="node1c05cbu4fx89">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x3">
+<rdf:Description rdf:nodeID="node1c05cbu4fx11">
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#243dc800-194f-46b4-9f51-898a8a4e9653">
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x2"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx10"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x2">
+<rdf:Description rdf:nodeID="node1c05cbu4fx10">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 </rdf:Description>
 
@@ -6428,10 +6613,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x83"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx90"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x83">
+<rdf:Description rdf:nodeID="node1c05cbu4fx90">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6459,54 +6644,62 @@
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#958f7315-5325-4c50-b323-28337162019f">
-	<skos:prefLabel xml:lang="de">Arealentwicklung</skos:prefLabel>
-	<skos:prefLabel xml:lang="it"></skos:prefLabel>
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#095767e7-4955-4b85-b9d1-8c73321c5484">
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x84"/>
+	<skos:prefLabel xml:lang="it">stazione di servizio</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Tankstelle</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x84">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#958f7315-5325-4c50-b323-28337162019f">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx91"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx91">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fff9ac81-3cb2-48eb-a9c6-d7fe2fb8bc1b">
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x85"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx92"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x85">
+<rdf:Description rdf:nodeID="node1c05cbu4fx92">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#958f7315-5325-4c50-b323-28337162019f">
-	<skos:prefLabel xml:lang="en">area-developpement</skos:prefLabel>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#095767e7-4955-4b85-b9d1-8c73321c5484">
+	<skos:prefLabel xml:lang="en">filling station</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#7564b6ea-121b-4fff-a532-d4b00ee0dd8f">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en"></skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">plan local de l'urbanisme</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Rahmennutzungsplan</skos:prefLabel>
-	<skos:prefLabel xml:lang="it"></skos:prefLabel>
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
-	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x86"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x86">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#958f7315-5325-4c50-b323-28337162019f">
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:prefLabel xml:lang="en">area-developpement</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:prefLabel xml:lang="de">Arealentwicklung</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">développement de surface</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#7564b6ea-121b-4fff-a532-d4b00ee0dd8f">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx93"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx93">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#095767e7-4955-4b85-b9d1-8c73321c5484">
+	<skos:prefLabel xml:lang="fr">Station service</skos:prefLabel>
+</rdf:Description>
+
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#958f7315-5325-4c50-b323-28337162019f">
-	<skos:prefLabel xml:lang="fr">développement de surface</skos:prefLabel>
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
@@ -6532,10 +6725,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x87"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx94"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x87">
+<rdf:Description rdf:nodeID="node1c05cbu4fx94">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6550,30 +6743,31 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x88"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx95"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x88">
+<rdf:Description rdf:nodeID="node1c05cbu4fx95">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#be1ee831-70f4-49ed-bce8-12e1cc37153e">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en"></skos:prefLabel>
-	<skos:prefLabel xml:lang="fr"></skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Kleinst-Abwasserreinigungsanlage</skos:prefLabel>
-	<skos:prefLabel xml:lang="it"></skos:prefLabel>
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ed329b28-1236-44ea-af43-1da8e077ff0a">
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#095767e7-4955-4b85-b9d1-8c73321c5484">
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#7564b6ea-121b-4fff-a532-d4b00ee0dd8f">
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:prefLabel xml:lang="de">Rahmennutzungsplan</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">piani particolareggiati</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">plan local de l'urbanisme</skos:prefLabel>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x89"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bmg97ps6x89">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#3ed11491-0175-4324-9d73-8076ee2e0cf1">
@@ -6586,48 +6780,44 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x90"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx96"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x90">
+<rdf:Description rdf:nodeID="node1c05cbu4fx96">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#47742ed3-66b3-4250-86c5-d3df52d1586d">
+<rdf:Description rdf:about="http://geocat.ch/concept#7aed1a69-896a-4f8b-8e39-cf1904d359dd">
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx20"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c1d0acc2-ce83-4867-90be-382971a86fef">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">nursing home</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">centre de soins</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Pflegeheim</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">casa di cura</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">drain</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">écoulement</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Abfluss</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">emissario</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#2bc5df5c-653b-4794-8611-2fdc37f82d25">
+	<skos:prefLabel xml:lang="en">River space</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Espace fluvial</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Gewässerraum</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Spazio fiume</skos:prefLabel>
 	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x91"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx97"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x91">
+<rdf:Description rdf:nodeID="node1c05cbu4fx97">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#d36dcb79-970a-4227-a162-3d0f3062dbc7">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Spitex</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">aide et soins à domicile</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Spitex</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">Spitex</skos:prefLabel>
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
-	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x92"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bmg97ps6x92">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#c4e98ef0-cc49-4f02-aa36-d10a55a58085">
@@ -6640,10 +6830,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x93"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx98"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x93">
+<rdf:Description rdf:nodeID="node1c05cbu4fx98">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6658,10 +6848,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x94"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx99"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x94">
+<rdf:Description rdf:nodeID="node1c05cbu4fx99">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6676,30 +6866,37 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x95"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx100"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x95">
+<rdf:Description rdf:nodeID="node1c05cbu4fx100">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#5c416fcc-3040-4409-ac4a-906cd3be6301">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">maintenance</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">maintenance</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Unterhalt</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">mantenimento</skos:prefLabel>
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+<rdf:Description rdf:about="http://geocat.ch/concept#6dced9b5-f579-4de5-9180-7c19d9e86fe3">
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x96"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx101"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x96">
+<rdf:Description rdf:nodeID="node1c05cbu4fx101">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx54">
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#32b4aaed-2d13-45b6-9932-7d14e11785a1">
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#aa321bbb-dab3-4cca-b081-0cb9f1880f39">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">point of mesurement</skos:prefLabel>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#3c170e9d-3b1a-4fc2-95f1-034919d1019d">
@@ -6712,10 +6909,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x97"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx102"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x97">
+<rdf:Description rdf:nodeID="node1c05cbu4fx102">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6730,30 +6927,33 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x98"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx103"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x98">
+<rdf:Description rdf:nodeID="node1c05cbu4fx103">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#cd6fe2d0-1719-46ab-8521-01d41d6ce102">
+<rdf:Description rdf:nodeID="node1c05cbu4fx97">
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#32b4aaed-2d13-45b6-9932-7d14e11785a1">
+	<skos:prefLabel xml:lang="fr">la hauteur d'eau souterraine</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Grundwassermächtigkeit</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#10348ab2-0689-4dbb-a72e-303891a39bc2">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">shooting gallery</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">stand de tir</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Schiessstand</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">poligono di tiro</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">Planning tool</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Outil de planification</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Planungsinstrument</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Strumento di pianificazione</skos:prefLabel>
 	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x99"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bmg97ps6x99">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://geocat.ch/concept#da5cf450-16f3-4d77-ac67-ea88d9899860">
@@ -6766,10 +6966,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x100"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx104"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x100">
+<rdf:Description rdf:nodeID="node1c05cbu4fx104">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6784,10 +6984,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x101"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx105"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x101">
+<rdf:Description rdf:nodeID="node1c05cbu4fx105">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6802,10 +7002,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x102"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx106"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x102">
+<rdf:Description rdf:nodeID="node1c05cbu4fx106">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6820,10 +7020,10 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x103"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx107"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x103">
+<rdf:Description rdf:nodeID="node1c05cbu4fx107">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6838,46 +7038,61 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x104"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx108"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x104">
+<rdf:Description rdf:nodeID="node1c05cbu4fx108">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#50fd25dd-f72d-494d-8e5c-422db835fbfa">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en"></skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Plan d'affectation communal</skos:prefLabel>
-	<skos:prefLabel xml:lang="de"></skos:prefLabel>
-	<skos:prefLabel xml:lang="it"></skos:prefLabel>
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+<rdf:Description rdf:about="http://geocat.ch/concept#43bacba2-6046-4dff-9cf2-d08cf839e7ff">
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x105"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx109"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x105">
+<rdf:Description rdf:nodeID="node1c05cbu4fx109">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#6326aee7-3e04-4c05-92b7-36264e7621b0">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">Forest function</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Fonction forestière</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Waldfunktion</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Funzione foresta</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fed4e2d6-2fcd-4b9f-b1e8-18ac9ec3a482">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en"></skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Protection naturelle et paysagère</skos:prefLabel>
-	<skos:prefLabel xml:lang="de"></skos:prefLabel>
-	<skos:prefLabel xml:lang="it"></skos:prefLabel>
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
-	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x106"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x106">
+<rdf:Description rdf:about="http://geocat.ch/concept#43bacba2-6046-4dff-9cf2-d08cf839e7ff">
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:prefLabel xml:lang="it">Produzione di legname</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Holzproduktion</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Production de bois</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx23">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#43bacba2-6046-4dff-9cf2-d08cf839e7ff">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">Timber production</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fed4e2d6-2fcd-4b9f-b1e8-18ac9ec3a482">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx110"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx110">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
@@ -6892,174 +7107,531 @@
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x107"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx5"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x107">
+<rdf:Description rdf:nodeID="node1c05cbu4fx5">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#19002174-c70c-4a44-a44c-705bd12db424">
-	<skos:prefLabel xml:lang="it"></skos:prefLabel>
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:scopeNote xml:lang="fr">Cadastre limitation obstacles</skos:scopeNote>
+<rdf:Description rdf:about="http://geocat.ch/concept#2128cd0c-f454-45fc-b453-39db2bcf53d8">
+	<skos:prefLabel xml:lang="en">Tree-habitat</skos:prefLabel>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x108"/>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:prefLabel xml:lang="de">Baum-Lebensraum</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmg97ps6x108">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#19002174-c70c-4a44-a44c-705bd12db424">
-	<skos:prefLabel xml:lang="de"></skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Cadastre limitation obstacles</skos:prefLabel>
-	<skos:prefLabel xml:lang="en"></skos:prefLabel>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#f0c6290c-d70a-44b9-90e3-6a4531dd061b">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#7738cfcd-ae7f-4fc0-8fad-d1b01babbe94">
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x109"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bmg97ps6x109">
-	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="http://geocat.ch/concept#7738cfcd-ae7f-4fc0-8fad-d1b01babbe94">
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:prefLabel xml:lang="fr">Zones de tranquillités</skos:prefLabel>
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bmg97ps6x109">
+<rdf:Description rdf:nodeID="node1c05cbu4fx111">
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#7738cfcd-ae7f-4fc0-8fad-d1b01babbe94">
-	<skos:prefLabel xml:lang="en">Zones of tranquility</skos:prefLabel>
-	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#f0c6290c-d70a-44b9-90e3-6a4531dd061b">
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
-	<skos:prefLabel xml:lang="de">Wildruhezonen</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">aree tranquillities</skos:prefLabel>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#e81fb2ec-6fa3-465c-9b48-b7dd64adfd66">
-	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Bikesharing</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Partage de vélo</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Bikesharing</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">Bikesharing</skos:prefLabel>
-	<skos:scopeNote xml:lang="en"></skos:scopeNote>
-	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
-	<skos:scopeNote xml:lang="de"></skos:scopeNote>
-	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmg97ps6x110"/>
-</rdf:Description>
-
-<rdf:Description rdf:nodeID="node1bmg97ps6x110">
+<rdf:Description rdf:nodeID="node1c05cbu4fx111">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
-	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#9e8a7820-f812-4e64-ab3a-a41c5f2799bb">
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#f0c6290c-d70a-44b9-90e3-6a4531dd061b">
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx111"/>
+	<skos:prefLabel xml:lang="de">Rutschprozess</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">processo di scivolamento</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">processus de glissement</skos:prefLabel>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#4e5d3d6c-3515-4f90-b518-e8825170f12c">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<skos:prefLabel xml:lang="en"></skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Biodiversité en forêt</skos:prefLabel>
-	<skos:prefLabel xml:lang="de"></skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">processus hydrologique</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Wasserprozess</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">processo idrologico</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx112"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx112">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#0eec01de-bb61-4f43-b1e2-c06eb386037b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">Excavation</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Fouille</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Ausgrabung</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Scavo</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx113"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx113">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#5334a3c9-a0e6-4088-a3b0-c5122fa3d1e9">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">historical watercourse</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">hydrosystème fluvial historique</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">historischer Wasserlauf</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">corso d'acqua storico</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx114"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx114">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#dd6b4072-a1c1-41d7-97fe-8b6978abe825">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">cultivated area</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">surfache cultivée</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Kulturfläche</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">superficie destinata ad una coltivazione</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx115"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx115">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#335eb0f8-8d2b-4d6f-9ece-313af5ddb7f8">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">town fortification</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">fortifications de la ville</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Stadtbefestigung</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">forificazione della città</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx116"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx116">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#765d157b-b6d0-48c5-ae20-28d4b8e7bd70">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">dates of waste collection</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">date ramassage déchets</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Abfuhrtermin</skos:prefLabel>
 	<skos:prefLabel xml:lang="it"></skos:prefLabel>
 	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmhkf916x1"/>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx117"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmhkf916x1">
+<rdf:Description rdf:nodeID="node1c05cbu4fx117">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#becf19db-d1d0-4f90-a391-1e9ee7824f03">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">waste collection zone</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone ramassage déchets</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Abfuhrzone</skos:prefLabel>
+	<skos:prefLabel xml:lang="it"></skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx118"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx118">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#8a20d9ed-123f-445d-9655-efa83d5bde4c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">Canton of St. Gallen (SG)</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">St. Gallen (SG)</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Kanton St.Gallen</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">St. Gallen (SG)</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx119"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx119">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#f89cdc55-5870-47e1-8ec1-327f2cf83e3e">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">meeting place</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">lieu de rencontre</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Begegnungsort</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">luogo d'incontro</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx120"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx120">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#35958b8e-46ab-4c82-babe-0963a13a2c30">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">streetworking</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">animation/travail de quartier</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Quartierarbeit</skos:prefLabel>
+	<skos:prefLabel xml:lang="it"></skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx121"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx121">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#5cef859a-3020-4a7a-a3e6-bc0dd725c6f9">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">meeting point</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">lieu de rencontre</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Treffpunkt</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">luogo di ritrovo</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx122"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx122">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#d468bdcc-27e4-44f5-ad3e-6fad310e2a56">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">Energy carrier</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Agent énergétique</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Energieträger</skos:prefLabel>
+	<skos:prefLabel xml:lang="it"></skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx123"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx123">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#dda62993-8aa7-44eb-8c9c-5be1d5440a9a">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">DIEMO</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Base de données nationale suisse des infrastructures de recharge DIEMO</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Daten-Infrastruktur Elektromobilität (DIEMO)</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">DIEMO</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx124"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx124">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#f0e75772-d759-47eb-875a-d9fd53336b3b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">Skating Route</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">Route de skating</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Skatingweg</skos:prefLabel>
+	<skos:prefLabel xml:lang="it"></skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c05cbu4fx125"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c05cbu4fx125">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#07613d5b-d057-4e80-9472-7b83dd8fa140">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">military shooting exercises</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">tir militaire</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Militärschiessen</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">tiro militare</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c06fc4fhx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c06fc4fhx1">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:lowerCorner> </ns4:lowerCorner>
 	<ns4:upperCorner> </ns4:upperCorner>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#a2bb0609-ee3f-49c9-bdd9-90b2f008c72b">
+<rdf:Description rdf:about="http://geocat.ch/concept#0be0fb62-7232-442f-86c8-0a5d1a5e67c2">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Asylum</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Asile</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Asyl</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">Asilo</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">restricted area</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">zone interdite</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Sperrgebiet</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">zone vietata</skos:prefLabel>
 	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmhkgqslx1"/>
+	<ns4:BoundedBy rdf:nodeID="node1c06fch7gx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmhkgqslx1">
+<rdf:Description rdf:nodeID="node1c06fch7gx1">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:lowerCorner> </ns4:lowerCorner>
 	<ns4:upperCorner> </ns4:upperCorner>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#dbd14ac6-342f-40fd-b22b-e1f17f9ab485">
+<rdf:Description rdf:about="http://geocat.ch/concept#5423e1e9-0b08-45fb-bb46-83708c5397e0">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en">Pedestrian</skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">piéton</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Fussgänger</skos:prefLabel>
-	<skos:prefLabel xml:lang="it">pedonale</skos:prefLabel>
+	<skos:prefLabel xml:lang="en">shooting range</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">place de tir</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Schiessplatz</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">piazza di tiro</skos:prefLabel>
 	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmhkl41ax1"/>
+	<ns4:BoundedBy rdf:nodeID="node1c06fd966x1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmhkl41ax1">
+<rdf:Description rdf:nodeID="node1c06fd966x1">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:lowerCorner> </ns4:lowerCorner>
 	<ns4:upperCorner> </ns4:upperCorner>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#4020caf9-20f7-4cb6-bb98-712eb76860e0">
+<rdf:Description rdf:about="http://geocat.ch/concept#6136cb3c-1e62-43a2-b8c3-d91406616d87">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<skos:prefLabel xml:lang="en"></skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Point d'intérêt</skos:prefLabel>
-	<skos:prefLabel xml:lang="de">Point of Interest (POI)</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">pompe à eau brute</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Rohwasserpumpe</skos:prefLabel>
 	<skos:prefLabel xml:lang="it"></skos:prefLabel>
 	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmhknuo6x1"/>
+	<ns4:BoundedBy rdf:nodeID="node1c06fdqm0x1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmhknuo6x1">
+<rdf:Description rdf:nodeID="node1c06fdqm0x1">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:lowerCorner> </ns4:lowerCorner>
 	<ns4:upperCorner> </ns4:upperCorner>
 	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
 </rdf:Description>
 
-<rdf:Description rdf:about="http://geocat.ch/concept#ba96b1d3-de6b-4470-95ed-37f4df27d425">
+<rdf:Description rdf:about="http://geocat.ch/concept#d17a378a-4ddc-49eb-8efb-8d3323a6ac89">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-	<skos:prefLabel xml:lang="en"></skos:prefLabel>
-	<skos:prefLabel xml:lang="fr">Vieux bois</skos:prefLabel>
-	<skos:prefLabel xml:lang="de"></skos:prefLabel>
-	<skos:prefLabel xml:lang="it"></skos:prefLabel>
+	<skos:prefLabel xml:lang="en">shooting date</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">jour de tir</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Schiessdaten</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">giorno di tiro</skos:prefLabel>
 	<skos:scopeNote xml:lang="en"></skos:scopeNote>
 	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
 	<skos:scopeNote xml:lang="de"></skos:scopeNote>
 	<skos:scopeNote xml:lang="it"></skos:scopeNote>
-	<ns4:BoundedBy rdf:nodeID="node1bmhkparpx1"/>
+	<ns4:BoundedBy rdf:nodeID="node1c06feeggx1"/>
 </rdf:Description>
 
-<rdf:Description rdf:nodeID="node1bmhkparpx1">
+<rdf:Description rdf:nodeID="node1c06feeggx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:lowerCorner> </ns4:lowerCorner>
+	<ns4:upperCorner> </ns4:upperCorner>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#4fd38790-0c39-4974-854a-85b7d54add57">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">shooting range</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">installation de tir</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Schiessanlage</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">impianto di tiro</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c06feqmkx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c06feqmkx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:lowerCorner> </ns4:lowerCorner>
+	<ns4:upperCorner> </ns4:upperCorner>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#b4974732-754f-4a6c-b346-be568bfa6724">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">shotting times</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">heure de tir</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Schiesszeiten</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">orari du tiro</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c06ffc1hx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c06ffc1hx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:lowerCorner> </ns4:lowerCorner>
+	<ns4:upperCorner> </ns4:upperCorner>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#8c39bcbf-8712-4a41-9aab-cc0e944d466b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">military construction or installation</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">construction ou installation militaire</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">militärische Baute oder Anlage</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Costruzioni e impianti militari</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c06fg5c7x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c06fg5c7x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:lowerCorner> </ns4:lowerCorner>
+	<ns4:upperCorner> </ns4:upperCorner>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#33e6396e-d5e5-42b3-bf2e-93f08bf2366a">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en"></skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">captage  d'eau souterraine</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Grundwasserfassung</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Captazione di acque sotterranee</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c06fgid9x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c06fgid9x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:lowerCorner> </ns4:lowerCorner>
+	<ns4:upperCorner> </ns4:upperCorner>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#7eca9b02-2569-429d-94ca-cca3f11e04e2">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en"></skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">captage d'eau de surface</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Oberflaechengewaesserfassung</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">Captazione di acque superficiali</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c06fgtsux1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c06fgtsux1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:lowerCorner> </ns4:lowerCorner>
+	<ns4:upperCorner> </ns4:upperCorner>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#9142420a-66e6-43f3-8f69-c71d9b1ca772">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">military activities</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">activité militaire</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">militärische Aktivitäten</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">attività militari</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c06fhd1nx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c06fhd1nx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:lowerCorner> </ns4:lowerCorner>
+	<ns4:upperCorner> </ns4:upperCorner>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geocat.ch/concept#dcc0b9c9-8c9c-4165-9b79-3a648ec9d956">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">shooting range bulletin</skos:prefLabel>
+	<skos:prefLabel xml:lang="fr">avis de tir</skos:prefLabel>
+	<skos:prefLabel xml:lang="de">Schiessanzeige</skos:prefLabel>
+	<skos:prefLabel xml:lang="it">avviso di tiro</skos:prefLabel>
+	<skos:scopeNote xml:lang="en"></skos:scopeNote>
+	<skos:scopeNote xml:lang="fr"></skos:scopeNote>
+	<skos:scopeNote xml:lang="de"></skos:scopeNote>
+	<skos:scopeNote xml:lang="it"></skos:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1c06fhnq1x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1c06fhnq1x1">
 	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
 	<ns4:lowerCorner> </ns4:lowerCorner>
 	<ns4:upperCorner> </ns4:upperCorner>
