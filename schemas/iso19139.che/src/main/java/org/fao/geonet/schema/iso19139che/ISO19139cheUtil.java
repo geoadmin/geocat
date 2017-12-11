@@ -134,7 +134,7 @@ public class ISO19139cheUtil {
             Transformer xformer = TransformerFactoryFactory.getTransformerFactory().newTransformer();
 
             xformer.transform(doc, result);
-            return out.toString("utf-8").replaceFirst("<\\?xml.+?>", "");
+            return out.toString("utf-8").replaceFirst("<\\?xml.+?>", "").replace("xmlns=\"\" ", "");
         } catch (Throwable e) {
             return doc.getStringValue();
         }
