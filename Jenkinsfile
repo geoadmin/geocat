@@ -24,7 +24,7 @@ dockerBuild {
   def deployContainerName = "geocat-deployer"
   def deployContainerImage = "ubuntu"
 
-  def mavenOpts = '-B -fn -Dmaven.repo.local=./.m2_repo -Ddb.username=db_username -Ddb.name=db_name -Ddb.type=postgres-postgis -Ddb.host=db_host -Ddb.password=db_password'
+  def mavenOpts = '-B -Dmaven.repo.local=./.m2_repo -Ddb.username=db_username -Ddb.name=db_name -Ddb.type=postgres-postgis -Ddb.host=db_host -Ddb.password=db_password'
 
   stage('docker pull') {
     sh "docker pull ${mavenContainerImage}"
@@ -40,7 +40,7 @@ dockerBuild {
     spawnContainer(buildContainerName, mavenContainerImage)
   }
   stage('First build without test') {
-    executeInContainer(buildContainerName, "MAVEN_OPTS=-Xmx8192m mvn clean install ${mavenOpts} -DskipTests")
+    executeInContainer(buildContainerName, "MAVEN_OPTS=-Xmx8192m mvn clean install ${mavenOpts} -fn -DskipTests")
   }
 //  stage('Second build with tests') {
 //    try {
