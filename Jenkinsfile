@@ -121,7 +121,7 @@ dockerBuild {
             make install                                   &&
             make init                                      &&
             cd rancher-environments/geocat-dev             &&
-            terraform apply -var geocat_tag=${dockerTag}""")
+            terraform apply -auto-approve -var geocat_tag=${dockerTag}""")
         } else {
           println "Not onto the 'geocat_3.4.x' branch, skipping redeploy"
         }// if
