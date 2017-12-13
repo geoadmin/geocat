@@ -261,6 +261,45 @@
     <to type="forward">/srv/$1/pdf?uuid=$2</to>
   </rule>
 
+  <!--Geocat rules-->
+  <rule>
+    <note>
+      map old main service to home search service
+      geonetwork/srv/ger/geocat
+    </note>
+    <from>^(.*)/([A-Za-z]{3})/geocat$</from>
+    <to type="permanent-redirect" last="true">%{context-path}$1/$2/catalog.search</to>
+  </rule>
+  <rule>
+    <note>
+      map old metadata.show requests to new formatter based viewer
+    </note>
+    <from>^(.*)/(.*)/metadata.show\?.*fileIdentifier=([^&amp;]+).*</from>
+    <to type="permanent-redirect" last="true">%{context-path}$1/$2/md.viewer#/full_view/$3</to>
+  </rule>
+  <rule>
+    <note>
+      map old metadata.show requests to new formatter based viewer
+    </note>
+    <from>^(.*)/(.*)/metadata.show\?.*id=([^&amp;]+).*</from>
+    <to type="permanent-redirect" last="true">%{context-path}$1/$2/md.viewer#/full_view/$3</to>
+  </rule>
+  <rule>
+    <note>
+      map old metadata.show requests to new formatter based viewer
+    </note>
+    <from>^(.*)/(.*)/metadata.show\?.*uuid=([^&amp;]+).*</from>
+    <to type="permanent-redirect" last="true">%{context-path}$1/$2/md.viewer#/full_view/$3</to>
+  </rule>
+  <rule>
+    <note>
+      map old metadata.formatter.html requests to new formatter based viewer
+    </note>
+    <from>^(.*)/(.*)/metadata.formatter.html\?xsl=([^&amp;]+).*uuid=([^&amp;]+).*</from>
+    <to type="permanent-redirect" last="true">%{context-path}$1/$2/md.format.html?xsl=$3&amp;id=$4</to>
+  </rule>
+  <!--End geocat rules-->
+
   <rule>
     <note>
       The metadata formatted with a specific formatter.
