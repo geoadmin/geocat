@@ -162,7 +162,7 @@
         <property name="group" value="gnBackgroundTasks" />
       </bean>
     </property>
-    <property name="cronExpression" value="0 0 6 ? * *" />
+    <property name="cronExpression" value="0 0 4 ? * *" />
   </bean>
 
 
