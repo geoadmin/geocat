@@ -54,6 +54,7 @@
   goog.require('gn_popup_service');
   goog.require('gn_search_default_directive');
   goog.require('gn_utility');
+  goog.require('gn_cors_interceptor');
 
 
 
@@ -68,7 +69,8 @@
     'gn_catalog_service',
     'gn_mdactions_service',
     'gn_utility',
-    'gn_mdview'
+    'gn_mdview',
+    'gn_cors_interceptor'
   ]);
 
   module.config(['$LOCALES', 'gnGlobalSettings',
