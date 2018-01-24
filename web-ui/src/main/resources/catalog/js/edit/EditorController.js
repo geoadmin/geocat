@@ -130,6 +130,7 @@
       $scope.gnConfig = gnConfig;
       $scope.unsupportedSchema = false;
       $scope.gnOnlinesrc = gnOnlinesrc;
+      $scope.redirectUrl = null;
 
       /**
        * Animation duration for slide up/down
@@ -172,13 +173,13 @@
               $scope.id = $routeParams.id;
 
               $scope.mdSchema = data.metadata[0]['geonet:info'].schema;
-              $scope.mdCategories = [];
+              $scope.mdCategories = {values: []};
               var categories = data.metadata[0].category;
               if (categories) {
                 if (angular.isArray(categories)) {
-                  $scope.mdCategories = categories;
+                  $scope.mdCategories.values = categories;
                 } else {
-                  $scope.mdCategories.push(categories);
+                  $scope.mdCategories.values.push(categories);
                 }
               }
 
@@ -188,7 +189,7 @@
 
               // Get the schema configuration for the current record
               gnCurrentEdit.metadata = new Metadata(data.metadata[0]);
-
+              $scope.redirectUrl = $location.search()['redirectUrl'];
 
               if ($scope.metadataFound) {
 
@@ -447,21 +448,26 @@
         // Close the editor tab
         window.onbeforeunload = null;
 
-        // if there is no history, attempt to close tab
-        if (window.history.length == 1) {
-          window.close();
-          // This last point may trigger
-          // "Scripts may close only the windows that were opened by it."
-          // when the editor was not opened by a script.
-        }
-
         // specific geocat
         var debug = /(&|\?)debug/.test(window.location) ? '?debug' : '';
         var url = 'catalog.search' + debug + '#/metadata/' +
           gnCurrentEdit.uuid;
 
         window.location = url;
-        // window.history.back();
+        return;
+        // End specific geocat
+
+        // if there is no history, attempt to close tab
+        if ($scope.redirectUrl != null) {
+          window.location.replace($scope.redirectUrl);
+        } else if (window.history.length == 1) {
+          window.close();
+          // This last point may trigger
+          // "Scripts may close only the windows that were opened by it."
+          // when the editor was not opened by a script.
+        } else {
+          window.history.back();
+        }
       };
 
       $scope.cancel = function(refreshForm) {
@@ -527,7 +533,7 @@
 
         // else: do a mandatory validation check to ensure that if the MD is
         // invalid, the user can decide to stay in the editor to fix it
-        gnValidation.errorCheck().then(function (hasErrors) {
+        gnValidation.errorCheck().then(function(hasErrors) {
           // if record unpublish on save is enabled: ask for confirmation
           // before saving and closing the editor
           if (hasErrors) {
@@ -536,7 +542,7 @@
             $scope.confirmClose();
           }
         });
-      }
+      };
       $scope.confirmClose = function() {
         var promise = gnEditor.save(false, null, true)
             .then(function(form) {

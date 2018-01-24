@@ -360,7 +360,7 @@
               // used in the common metadata standards.
               // By the way check Z which may be used in GML times
               var date = null;
-              if (originalDate.match("[Zz]$") !== null) {
+              if (originalDate.match('[Zz]$') !== null) {
                 date = moment(originalDate, 'YYYY-MM-DDtHH-mm-SSSZ');
               } else {
                 date = moment(originalDate);
@@ -1239,7 +1239,8 @@
 
       } else if (angular.isString(value)) {
         if (value) {
-          return value.replace(/(\r)?\n/g, '<br/>').replace(/(&#13;)?&#10;/g, '<br/>');
+          return value.replace(/(\r)?\n/g, '<br/>')
+              .replace(/(&#13;)?&#10;/g, '<br/>');
         } else {
           return value;
         }
@@ -1288,18 +1289,28 @@
     return {
       restrict: 'A',
       link: function(scope, element, attr, ngModel) {
+        var modalElt;
 
         element.bind('click', function() {
           var img = scope.$eval(attr['gnImgModal']);
+
+          // Toggle the modal if already displayed
+          if (modalElt) {
+            modalElt.modal('hide');
+            modalElt = null;
+            return;
+          }
           if (img) {
             var label = (img.label || (
                 $filter('gnLocalized')(img.title, scope.lang)) || '');
             var labelDiv =
                 '<div class="gn-img-background">' +
-                '  <div class="gn-img-thumbnail-caption">' + label + '</div>' +
+                '  <div class="gn-img-thumbnail-caption">' +
+                label + '</div>' +
                 '</div>';
-            var modalElt = angular.element('' +
-                '<div class="modal fade in">' +
+            modalElt = angular.element('' +
+                '<div class="modal fade in"' +
+                '     id="gn-img-modal-"' + img.id + '>' +
                 '<div class="modal-dialog gn-img-modal in">' +
                 '  <button type=button class="btn btn-link gn-btn-modal-img">' +
                 '<i class="fa fa-times text-danger"/></button>' +
@@ -1311,7 +1322,9 @@
             $(document.body).append(modalElt);
             modalElt.modal();
             modalElt.on('hidden.bs.modal', function() {
-              modalElt.remove();
+              if (modalElt) {
+                modalElt.remove();
+              }
             });
             modalElt.find('.gn-btn-modal-img').on('click', function() {
               modalElt.modal('hide');
@@ -1417,11 +1430,11 @@
             scope.value = scope.text.split('|')[2];
 
             element.replaceWith($compile('<a data-ng-href="{{link}}" ' +
-                'data-ng-bind-html="value"></a>')(scope));
+                'data-ng-bind-html="value | newlines"></a>')(scope));
           } else {
 
             element.replaceWith($compile('<span ' +
-                'data-ng-bind-html="text"></span>')(scope));
+                'data-ng-bind-html="text | linky | newlines"></span>')(scope));
           }
         }
 
