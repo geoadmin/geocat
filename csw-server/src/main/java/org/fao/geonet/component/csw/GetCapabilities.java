@@ -357,7 +357,12 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         vars.put("$PROTOCOL", sm.getValue(Settings.SYSTEM_SERVER_PROTOCOL));
         vars.put("$HOST", sm.getValue(Settings.SYSTEM_SERVER_HOST));
         String port = sm.getValue(Settings.SYSTEM_SERVER_PORT);
-        vars.put("$PORT", "80".equals(port) ? "" : ":" + port);
+
+        boolean hasToLetPortEmpty =
+                ("80".equals(port) && "http".equals(sm.getValue(Settings.SYSTEM_SERVER_PROTOCOL))) ||
+                ("443".equals(port) && "https".equals(sm.getValue(Settings.SYSTEM_SERVER_PROTOCOL)));
+
+        vars.put("$PORT", hasToLetPortEmpty ? "" : ":" + port);
         vars.put("$END-POINT", context.getService());
         vars.put("$NODE_ID", context.getNodeId());
 
