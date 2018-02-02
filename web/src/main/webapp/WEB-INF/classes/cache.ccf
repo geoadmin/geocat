@@ -34,7 +34,7 @@ jcs.region.xlink.elementattributes.IsLateral=true
 # SPATIAL Filter FEATURE CACHING
 jcs.region.SpatialFilterCache=DC
 jcs.region.SpatialFilterCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.SpatialFilterCache.cacheattributes.MaxObjects=5000
+jcs.region.SpatialFilterCache.cacheattributes.MaxObjects=10000
 jcs.region.SpatialFilterCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.SpatialFilterCache.elementattributes=org.apache.jcs.engine.ElementAttributes
 jcs.region.SpatialFilterCache.elementattributes.IsEternal=false
