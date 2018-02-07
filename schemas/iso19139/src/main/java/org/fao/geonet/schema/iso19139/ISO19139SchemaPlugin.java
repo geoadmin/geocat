@@ -335,8 +335,8 @@ public class ISO19139SchemaPlugin
 
     @Override
     public void init(ManagersProxy managersProxy, ConstantsProxy constantsProxy) {
-        subtemplatesByLocalXLinksReplacer = new SubtemplatesByLocalXLinksReplacer(managersProxy);
         List<Namespace> namespaces = new ArrayList<>(allNamespaces);
+        subtemplatesByLocalXLinksReplacer = new SubtemplatesByLocalXLinksReplacer(namespaces, managersProxy);
         subtemplatesByLocalXLinksReplacer.addReplacer(new FormatReplacer(namespaces, managersProxy, constantsProxy));
         subtemplatesByLocalXLinksReplacer.addReplacer(new ContactReplacer(namespaces, managersProxy, constantsProxy));
         subtemplatesByLocalXLinksReplacer.addReplacer(new ExtentReplacer(namespaces, managersProxy, constantsProxy));

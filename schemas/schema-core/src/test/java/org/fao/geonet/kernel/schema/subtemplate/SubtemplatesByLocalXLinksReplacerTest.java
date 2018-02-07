@@ -77,7 +77,7 @@ public class SubtemplatesByLocalXLinksReplacerTest {
                 .thenReturn(new Status());
         when(contactReplacer.replaceAll(any(Element.class), anyString(), any(IndexReader.class), anyString(), anyString(), anySet()))
                 .thenReturn(new Status());
-        toTest = new SubtemplatesByLocalXLinksReplacer(proxy);
+        toTest = new SubtemplatesByLocalXLinksReplacer(Collections.emptyList(), proxy);
         toTest.addReplacer(formatReplacer);
         toTest.addReplacer(extentReplacer);
         toTest.addReplacer(contactReplacer);
