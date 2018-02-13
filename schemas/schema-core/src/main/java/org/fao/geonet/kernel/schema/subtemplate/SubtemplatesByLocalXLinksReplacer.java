@@ -27,11 +27,13 @@ import org.apache.lucene.index.IndexReader;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Namespace;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,9 +42,11 @@ public class SubtemplatesByLocalXLinksReplacer  {
 
     private Map<String, Replacer> replacersDict = new HashMap<>();
     private ManagersProxy managersProxy;
+    private List<Namespace> namespaces;
 
-    public SubtemplatesByLocalXLinksReplacer(ManagersProxy managersProxy) {
+    public SubtemplatesByLocalXLinksReplacer(List<Namespace> namespaces, ManagersProxy managersProxy) {
         this.managersProxy = managersProxy;
+        this.namespaces = namespaces;
     }
 
     public static String FORMAT = "format";
@@ -101,10 +105,10 @@ public class SubtemplatesByLocalXLinksReplacer  {
     private String computeMetadataLang(Element dataXml) {
         String lang = "eng";
         try {
-            lang = Xml.selectElement(dataXml, ".//gmd:language/gmd:LanguageCode").getAttributeValue("codeListValue");
+            lang = Xml.selectElement(dataXml, ".//gmd:language/gmd:LanguageCode", namespaces).getAttributeValue("codeListValue");
         } catch (Exception e) {
             try {
-                lang = Xml.selectElement(dataXml, ".//gmd:language/gco:CharacterString").getText();
+                lang = Xml.selectElement(dataXml, ".//gmd:language/gco:CharacterString", namespaces).getText();
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
