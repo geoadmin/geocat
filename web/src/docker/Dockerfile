@@ -1,4 +1,4 @@
-FROM tomcat:8-jre8
+FROM tomcat:8.0-jre8
 
 # Install aws cli tool for S3 sync of MD
 RUN apt update && \
