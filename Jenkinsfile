@@ -3,7 +3,7 @@
 @Library('c2c-pipeline-library') import static com.camptocamp.utils.*
 
 selectNodes {
-  (it.memorysize_mb as Float) > 12000
+  (it.memorysize_mb as Float) > 6000
 }
 
 def spawnContainer(def containerName, def containerImage) {
