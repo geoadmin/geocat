@@ -719,7 +719,7 @@
     <label>Comment on archival value</label>
     <description>Comment on archival value</description>
   </element>
-  <element name="gmd:protocol" id="398.0">
+  <element name="gmd:protocol" id="398.0" alias="protocol">
     <label>Protocollo</label>
     <description>Protocollo di connessione utilizzato</description>
     <helper>

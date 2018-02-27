@@ -716,7 +716,7 @@
     <label>Bemerkung zur Archivwürdigkeit</label>
     <description>Bemerkung zur Archivwürdigkeit</description>
   </element>
-  <element name="gmd:protocol" id="398.0">
+  <element name="gmd:protocol" id="398.0" alias="protocol">
     <label>Protokoll</label>
     <description>Zu verwendendes Verbindungsprotokoll</description>
     <helper sort="true">
