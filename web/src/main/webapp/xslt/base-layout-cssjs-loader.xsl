@@ -165,6 +165,7 @@
 
         <script src="{$uiResourcesPath}lib/underscore/underscore-min.js"></script>
         <script src="{$uiResourcesPath}lib/recaptcha/angular-recaptcha.min.js"></script>
+        <script src="{$uiResourcesPath}lib/geohash.js"></script>
       </xsl:when>
       <xsl:otherwise>
       </xsl:otherwise>
@@ -206,23 +207,14 @@
 -->
       <script type="text/javascript">
         var module = angular.module('gn_search');
-        module.config(['gnViewerSettings', 'gnGlobalSettings', 'gnSearchSettings',
-        function(gnViewerSettings, gnGlobalSettings, gnSearchSettings) {
-        <xsl:if test="$owsContext">
-          gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
-        </xsl:if>
-        <xsl:if test="$wmsUrl and $layerName">
-          gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
-          gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
-          gnViewerSettings.layerGroup = '<xsl:value-of select="$layerGroup"/>';
-        </xsl:if>
-
-        // GEOCAT specific
-        gnSearchSettings.gnStores = {
-        'topicCat': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/schemas/iso19139.che/codelists/codelist[@name='gmd:MD_TopicCategoryCode']/entry" mode="js-translations-topicCat"/>],
-        'formats': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/formats/record" mode="js-translations-formats"/>]
-        };
-        gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
+        module.config(['gnGlobalSettings', 'gnSearchSettings',
+          function(gnGlobalSettings, gnSearchSettings) {
+          // GEOCAT specific
+          gnSearchSettings.gnStores = {
+          'topicCat': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/schemas/iso19139.che/codelists/codelist[@name='gmd:MD_TopicCategoryCode']/entry" mode="js-translations-topicCat"/>],
+          'formats': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/formats/record" mode="js-translations-formats"/>]
+          };
+          gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
         }]);
       </script>
     </xsl:if>

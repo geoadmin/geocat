@@ -113,10 +113,10 @@ public class CORSResponseFilter
                         httpResponse.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
                         httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
 
-/* Geocat specific
+                        /* Geocat specific
                         httpResponse.setHeader("Cache-Control", "no-cache");
                         httpResponse.setHeader("Pragma", "no-cache");
-*/
+                        */
                         httpResponse.setHeader("Vary", "Origin");
                     }
                 } catch (Exception e) {
