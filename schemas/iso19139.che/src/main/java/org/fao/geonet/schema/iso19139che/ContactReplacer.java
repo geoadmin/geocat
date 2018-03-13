@@ -23,7 +23,6 @@
 
 package org.fao.geonet.schema.iso19139che;
 
-import org.apache.lucene.search.BooleanQuery;
 import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
 import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
 import org.jdom.Element;
@@ -31,6 +30,7 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
 import java.util.List;
+import java.util.StringJoiner;
 
 public class ContactReplacer extends org.fao.geonet.schema.iso19139.ContactReplacer {
 
@@ -52,5 +52,15 @@ public class ContactReplacer extends org.fao.geonet.schema.iso19139.ContactRepla
         addWeightingClause(query, "lastName", lastName);
         addWeightingClause(query, "_orgName", organisationName);
         addWeightingClause(query, "_email", email);
+    }
+
+    @Override
+    protected void xlinkAddExtraParams(Element contact, StringJoiner params) throws JDOMException {
+        super.xlinkAddExtraParams(contact, params);
+        params.add("lang=fre");
+        params.add("lang=ger");
+        params.add("lang=eng");
+        params.add("lang=ita");
+        params.add("lang=roh");
     }
 }
