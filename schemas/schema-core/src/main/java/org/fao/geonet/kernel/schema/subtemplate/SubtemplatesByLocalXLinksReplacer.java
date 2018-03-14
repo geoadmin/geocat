@@ -118,7 +118,7 @@ public class SubtemplatesByLocalXLinksReplacer  {
 
     private Set<String> getLocalesAsHrefParam(Element dataXml) {
         try {
-            Set<String> locales = Xml.selectNodes(dataXml, ".//gmd:locale/gmd:PT_Locale/gmd:languageCode/*")
+            Set<String> locales = Xml.selectNodes(dataXml, ".//gmd:locale/gmd:PT_Locale/gmd:languageCode/*", namespaces)
                     .stream()
                     .map(element -> String.format("%s=%s", "lang", replaceToleredLanguageCodeByExpectedOnes(
                             ((Element) element).getAttribute("codeListValue").getValue())))
