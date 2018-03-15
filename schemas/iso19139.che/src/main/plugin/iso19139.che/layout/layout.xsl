@@ -90,7 +90,7 @@
     </xsl:if>
   </xsl:template>-->
 
-  <xsl:template mode="mode-iso19139" priority="200"
+  <xsl:template mode="mode-iso19139" priority="201"
                 match="*[gmd:URL|che:PT_FreeURL][$schema = 'iso19139.che']">
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
