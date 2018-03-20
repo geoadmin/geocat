@@ -139,8 +139,7 @@ Insert is made in first transferOptions found.
                         gmd:CI_OnlineResource/gmd:linkage/gmd:URL,
                         gmd:CI_OnlineResource/gmd:linkage/che:PT_FreeURL/che:URLGroup/che:LocalisedURL[@locale = '#DE'],
                         gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString,
-                        gmd:CI_OnlineResource/gmd:name/gco:CharacterString,
-                        gmd:CI_OnlineResource/gmd:name/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE'])
+                        gmd:CI_OnlineResource/gmd:name/gco:CharacterString)
                         ]">
     <xsl:call-template name="createOnlineSrc"/>
   </xsl:template>
