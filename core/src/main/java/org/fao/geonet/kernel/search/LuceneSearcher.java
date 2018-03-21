@@ -794,6 +794,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         addElement(info, Edit.Info.Elem.CREATE_DATE, createDate);
         addElement(info, Edit.Info.Elem.CHANGE_DATE, changeDate);
         addElement(info, Edit.Info.Elem.SOURCE, source);
+        addElement(info, "logo", doc.get(Geonet.IndexFieldNames.LOGO));
 
         HashSet<String> addedTranslation = new LinkedHashSet<String>();
         if ((dumpAllField || dumpFields != null) && searchLang != null && multiLangSearchTerm != null) {

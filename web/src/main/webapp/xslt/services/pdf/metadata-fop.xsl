@@ -223,7 +223,7 @@
             <fo:block>
               <fo:external-graphic content-width="35pt">
                 <xsl:attribute name="src">url('<xsl:value-of
-                  select="concat($baseURL, '/images/logos/', $source , '.gif')"
+                  select="concat($baseURL, $metadata/geonet:info/logo)"
                 />')"
                 </xsl:attribute>
               </fo:external-graphic>
