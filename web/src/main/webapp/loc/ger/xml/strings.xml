@@ -16,6 +16,7 @@
   <tur>Türkçe</tur> <!-- Do not translate! -->
   <pol>Polski</pol> <!-- Do not translate! -->
 
+  <pdfExportTitle>Metadatenexport geocat.ch</pdfExportTitle>
   <statusTitle>/ Metadata Workflow</statusTitle>
   <statusUserEdit>GeoNetwork user %s (%s) edited metadata record #%s</statusUserEdit>
   <statusInform>%s / Metadata Workflow / Metadata record(s) %s by %s (%s) (%s)</statusInform>
@@ -892,6 +893,8 @@
   <resetPassword>Passwort zurücksetzen</resetPassword>
   <resetSearch>Suchformular zurücksetzen</resetSearch>
   <ress>Ergebnis</ress>
+  <ress1>Treffer</ress1>
+  <ressMany>Treffer</ressMany>
   <restrictTo>Beschränken auf</restrictTo>
   <result>Letzte Ergebnisse</result>
   <searchResult>Suchergebnisse</searchResult>
