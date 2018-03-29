@@ -51,6 +51,7 @@
     "batchProcessTypeUnsupported": "Verarbeitungstyp {{type}} wird nicht unterstützt",
     "batchreplacer-addReplacement": "Ersatz hinzufügen",
     "massive-search-and-replace": "Suchen und ersetzen",
+    "dataseturi-add-https-if-missing": "For dataseturi, enforce https and static path",
     "batchreplacer-vacuum-mode": "Vakuummodus",
     "vacuum-none": "Kein (d.h. leeres Element erhalten)",
     "vacuum-element": "Entferne Elemente mit Leerwert nach der Ersetzung",
