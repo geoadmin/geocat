@@ -233,5 +233,9 @@
         ]
       }
     }
-  }]
+  }, {
+    "key": "dataseturi-add-https-if-missing",
+    "type": "fixed-params",
+    "params": []
+}]
 }
