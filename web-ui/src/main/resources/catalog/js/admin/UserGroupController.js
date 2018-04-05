@@ -117,34 +117,39 @@
       function loadGroups() {
         $scope.isLoadingGroups = true;
         // If not send profile, all groups are returned
-        var profile = ($scope.user.profile) ?
-            '?profile=' + $scope.user.profile : '';
 
-        $http.get('../api/groups' + profile).
-            success(function(data) {
-              $scope.groups = data;
-              angular.forEach($scope.groups, function(u) {
-                u.langlabel = getLabel(u);
-              });
-              $scope.isLoadingGroups = false;
-            }).error(function(data) {
-              // TODO
-              $scope.isLoadingGroups = false;
-            }).then(function() {
-              // Search if requested group in location is
-              // in the list and trigger selection.
-              // TODO: change route path when selected (issue - controller is
-              // reloaded)
-              if ($routeParams.userOrGroup || $routeParams.userOrGroupId) {
-                angular.forEach($scope.groups, function(u) {
-                  if (u.name === $routeParams.userOrGroup ||
-                      $routeParams.userOrGroupId === u.id.toString()) {
-                    $scope.selectGroup(u);
-                  }
-                });
-              }
+        $scope.loadProfilePromise.then(function(user) {
+
+          var profile = (user.profile) ?
+            '?profile=' + user.profile : '';
+
+          $http.get('../api/groups' + profile).
+          success(function(data) {
+            $scope.groups = data;
+            angular.forEach($scope.groups, function(u) {
+              u.langlabel = getLabel(u);
             });
+            $scope.isLoadingGroups = false;
+          }).error(function(data) {
+            // TODO
+            $scope.isLoadingGroups = false;
+          }).then(function() {
+            // Search if requested group in location is
+            // in the list and trigger selection.
+            // TODO: change route path when selected (issue - controller is
+            // reloaded)
+            if ($routeParams.userOrGroup || $routeParams.userOrGroupId) {
+              angular.forEach($scope.groups, function(u) {
+                if (u.name === $routeParams.userOrGroup ||
+                  $routeParams.userOrGroupId === u.id.toString()) {
+                  $scope.selectGroup(u);
+                }
+              });
+            }
+          });
+        })   ;
       }
+
       function loadUsers() {
         $scope.isLoadingUsers = true;
         $http.get('../api/users').success(function(data) {

@@ -594,8 +594,10 @@
                   $scope.authenticated = false;
                   $scope.user = undefined;
                 }
+                return $scope.user;
               });
         });
+        $scope.loadProfilePromise = userLogin;
 
 
         // Retrieve main search information
