@@ -585,7 +585,8 @@
         var userLogin = catInfo.then(function(value) {
           return $http.get('../api/me?_random=' +
               Math.floor(Math.random() * 10000)).
-              success(function(me, status) {
+              then(function(response) {
+                var me = response.data;
                 if (angular.isObject(me)) {
                   angular.extend($scope.user, me);
                   angular.extend($scope.user, userFn);
