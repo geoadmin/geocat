@@ -124,17 +124,14 @@
 
     <!-- ========================================================================== -->
 
-    <xsl:template mode="Identifier" match="GM03Core.Core.MD_Identifier">
-        <xsl:if test="code">
-            <gmd:MD_Identifier>
-                <xsl:for-each select="code">
-                    <gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
-                        <xsl:attribute name="xsi:type">gmd:PT_FreeText_PropertyType</xsl:attribute>
-                        <xsl:apply-templates mode="language" select="."/>
-                    </gmd:code>
-                </xsl:for-each>
-            </gmd:MD_Identifier>
-        </xsl:if>
+    <xsl:template mode="Identifier" match="GM03Core.Core.MD_Identifier/code/GM03Core.Core.PT_FreeText/textGroup">
+        <gmd:MD_Identifier>
+            <gmd:code>
+                <gco:CharacterString>
+                    <xsl:value-of select="GM03Core.Core.PT_Group/plainText[1]"/>
+                </gco:CharacterString>
+            </gmd:code>
+        </gmd:MD_Identifier>
     </xsl:template>
 
     <xsl:template mode="Identifier" match="GM03Comprehensive.Comprehensive.RS_Identifier">
