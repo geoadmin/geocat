@@ -264,6 +264,9 @@
     <Field name="__name" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
     <Field name="__version" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
     <Field name="__title" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
+    <Field name="dataSetURI" analyzer="org.apache.lucene.analysis.standard.UAX29URLEmailAnalyzer" >
+      <Param name="version" type="org.apache.lucene.util.Version"/>
+    </Field>
 
   </fieldSpecificAnalyzer>
 
