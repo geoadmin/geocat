@@ -489,6 +489,7 @@
     "logoUpdated": "Logo des Katalogs aktualisiert",
     "logoUploadHelp": "Hinzufügen von einem oder mehrerer Bilder zur Liste der Logos des Katalogs per drag & drop",
     "luceneConfigReloaded": "Konfiguration vollständig geladen",
+    "luceneQueryFromRawXmlHelp": "Ignored if parse error.",
     "main.home": "Veraltete Suche",
     "main.search.suggest": "Empfehlung",
     "mainContentStatistics": "Statistiken über den Inhalt des Katalogs",

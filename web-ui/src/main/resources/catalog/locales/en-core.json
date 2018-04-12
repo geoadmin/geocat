@@ -56,6 +56,7 @@
     "loadCapabilitiesLayers": "Load service layers",
     "any": "Full text",
     "anyPlaceHolder": "Search ...",
+    "rawXmlPlaceHolder": "Lucene Xml Query ...",
     "VALID": "Valid",
     "INVALID": "Invalid",
     "clickToFilterOn": "Click to filter on ",

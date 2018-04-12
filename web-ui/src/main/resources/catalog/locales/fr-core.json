@@ -56,6 +56,7 @@
     "loadCapabilitiesLayers": "Charger les couches du service",
     "any": "Plein texte",
     "anyPlaceHolder": "Rechercher ...",
+    "rawXmlPlaceHolder": "Lucene Xml Query ...",
     "VALID": "Valide",
     "INVALID": "Invalide",
     "clickToFilterOn": "Cliquer pour filtrer",
