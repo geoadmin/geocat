@@ -947,6 +947,11 @@
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+    <xsl:for-each select="gmd:dataSetURI/gco:CharacterString">
+      <Field name="dataSetURI" string="{string(.)}" store="true" index="true"/>
+    </xsl:for-each>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
     <xsl:for-each select="gmd:parentIdentifier/gco:CharacterString">
       <Field name="parentUuid" string="{string(.)}" store="true" index="true"/>
     </xsl:for-each>

@@ -489,6 +489,7 @@
     "logoUpdated": "Logo du catalogue mis à jour",
     "logoUploadHelp": "Glisser & déposer ici une ou plusieurs images à ajouter à la liste des logos",
     "luceneConfigReloaded": "Configuration rechargée",
+    "luceneQueryFromRawXmlHelp": "Ignored if parse error.",
     "main.home": "Ancien service",
     "main.search.suggest": "Autocompletion",
     "mainContentStatistics": "Statistiques sur le contenu",

@@ -23,26 +23,21 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.StringTokenizer;
-
+import com.google.common.base.Splitter;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.facet.DrillDownQuery;
 import org.apache.lucene.facet.FacetsConfig;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryparser.xml.CoreParser;
+import org.apache.lucene.queryparser.xml.DOMUtils;
+import org.apache.lucene.queryparser.xml.ParserException;
+import org.apache.lucene.queryparser.xml.QueryBuilder;
+import org.apache.lucene.queryparser.xml.builders.MatchAllDocsQueryBuilder;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
@@ -54,12 +49,25 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
+import org.apache.lucene.util.Version;
 import org.apache.lucene.util.automaton.LevenshteinAutomata;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
+import org.w3c.dom.Element;
 
-import com.google.common.base.Splitter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 /**
  * Class to create a Lucene query from a {@link LuceneQueryInput} representing a search request.
@@ -124,7 +132,10 @@ public class LuceneQueryBuilder {
 
     static Query constructQueryFromAnalyzedString(LuceneConfig luceneConfig, String string, String luceneIndexField, String similarity, Query query,
                                                   String analyzedString, Set<String> tokenizedFieldSet) {
-        if (StringUtils.isNotBlank(analyzedString)) {
+        if ("rawXmlQuery".equalsIgnoreCase(luceneIndexField)) {
+            query = getQueryFromRawXml(analyzedString);
+        }
+        else if (StringUtils.isNotBlank(analyzedString)) {
             // no wildcards
             if (string.indexOf('*') < 0 && string.indexOf('?') < 0) {
                 if (tokenizedFieldSet.contains(luceneIndexField) && analyzedString.contains(" ")) {
@@ -1270,5 +1281,39 @@ public class LuceneQueryBuilder {
             return path;
         }
 
+    }
+
+    /* For example:
+        <BooleanQuery fieldName="dataSetURI">
+            <Clause occurs="must"><MatchAllDocs/></Clause>
+            <Clause occurs="mustnot"><WildcardQuery>https://*</WildcardQuery></Clause>
+        </BooleanQuery>
+    */
+    private static Query getQueryFromRawXml(String analyzedString) {
+        Query query;
+        CoreParser parser = new CoreParser("", new StandardAnalyzer(Version.LUCENE_4_9));
+        parser.addQueryBuilder("MatchAllDocs", new MatchAllDocsQueryBuilder());
+        parser.addQueryBuilder("WildcardQuery", new QueryBuilder() {
+            @Override
+            public Query getQuery(Element element) throws ParserException {
+                String field = DOMUtils.getAttributeWithInheritanceOrFail(element, "fieldName");
+                String value = DOMUtils.getNonBlankTextOrFail(element);
+                WildcardQuery wildcardQuery = new WildcardQuery(new Term(field, value));
+                wildcardQuery.setBoost(DOMUtils.getAttribute(element, "boost", 1.0F));
+                return wildcardQuery;
+            }
+        });
+
+        try {
+            InputStream in = IOUtils.toInputStream(analyzedString, "UTF-8");
+            query = parser.parse(in);
+        } catch (ParserException e) {
+            e.printStackTrace();
+            query =  null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            query =  null;
+        }
+        return query;
     }
 }
