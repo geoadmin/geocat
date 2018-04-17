@@ -27,23 +27,40 @@
 
 package org.fao.geonet.kernel;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Sets;
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.transaction.TransactionManager;
-import jeeves.transaction.TransactionTask;
-import jeeves.xlink.Processor;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
+import static org.springframework.data.jpa.domain.Specifications.where;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.Root;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Priority;
 import org.eclipse.jetty.util.ConcurrentHashSet;
@@ -88,6 +105,7 @@ import org.fao.geonet.domain.SchematronRequirement;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;
+import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
@@ -129,6 +147,7 @@ import org.fao.geonet.repository.specification.MetadataStatusSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
+import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
@@ -155,38 +174,24 @@ import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.Root;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.Vector;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Sets;
 
-import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
-import static org.springframework.data.jpa.domain.Specifications.where;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
+import jeeves.xlink.Processor;
 
 /**
  * Handles all operations on metadata (select,insert,update,delete etc...).
@@ -1932,6 +1937,8 @@ public class DataManager implements ApplicationEventPublisherAware {
             uuid = extractUUID(schema, metadataXml);
         }
 
+        checkMetadataWithSameUuidExist(uuid, metadata.getId());
+
         //--- write metadata to dbms
         getXmlSerializer().update(metadataId, metadataXml, changeDate, updateDateStamp, uuid, context);
         // Notifies the metadata change to metadata notifier service
@@ -1963,6 +1970,27 @@ public class DataManager implements ApplicationEventPublisherAware {
 
         // Return an up to date metadata record
         return getMetadataRepository().findOne(metadataId);
+    }
+
+    /**
+     * Check if another record exist with that UUID. This is not allowed
+     * and would return a DataIntegrityViolationException
+     *
+     * @param uuid  The UUID to check for
+     * @param id    The current record id to compare with other record which may be found
+     * @return      An exception if another record is found, false otherwise
+     */
+    private boolean checkMetadataWithSameUuidExist(String uuid, int id) {
+        // Check if another record exist with that UUID
+        Metadata recordWithThatUuid = getMetadataRepository().findOneByUuid(uuid);
+        if (recordWithThatUuid != null &&
+            recordWithThatUuid.getId() != id) {
+            // If yes, this would have triggered a DataIntegrityViolationException
+            throw new IllegalArgumentException(String.format(
+                "Another record exist with UUID '%s'. This record as internal id '%d'. The record you're trying to update with id '%d' can not be saved.",
+                uuid, recordWithThatUuid.getId(), id));
+        }
+        return false;
     }
 
     /**
@@ -2233,6 +2261,9 @@ public class DataManager implements ApplicationEventPublisherAware {
         //--- remove operations
         deleteMetadataOper(context, id, false);
 
+        //--- remove user comments
+        deleteMetadataUserFeedback_byMetadataId(context, metadata.getUuid());
+
         int intId = Integer.parseInt(id);
         getApplicationContext().getBean(MetadataRatingByIpRepository.class).deleteAllById_MetadataId(intId);
         getBean(MetadataValidationRepository.class).deleteAllById_MetadataId(intId);
@@ -2253,6 +2284,14 @@ public class DataManager implements ApplicationEventPublisherAware {
 
         //--- remove metadata
         getXmlSerializer().delete(id, context);
+    }
+
+    /**
+     * Removes all userfeedbacks associated with metadata.
+     */
+    public void deleteMetadataUserFeedback_byMetadataId(ServiceContext context, String metadataUUId) throws Exception {
+        UserFeedbackRepository userfeedbackRepository = context.getBean(UserFeedbackRepository.class);
+        userfeedbackRepository.deleteByMetadata_Uuid(metadataUUId);
     }
 
     public MetaSearcher searcherForReferencingMetadata(ServiceContext context, Metadata metadata) throws Exception {

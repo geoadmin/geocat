@@ -405,20 +405,23 @@
               };
             });
 
-            indexObject.searchWithFacets({
-              params: scope.output,
-              geometry: scope.filterGeometry
-            }, aggs).
-                then(function(resp) {
-                  indexObject.pushState();
-                  scope.fields = resp.facets;
-                  scope.count = resp.count;
-                  angular.forEach(scope.fields, function(f) {
-                    if (expandedFields.indexOf(f.name) >= 0) {
-                      f.expanded = true;
-                    }
+            //indexObject is only available if Elastic is configured
+            if (indexObject) {
+              indexObject.searchWithFacets({
+                params: scope.output,
+                geometry: scope.filterGeometry
+              }, aggs).
+                  then(function(resp) {
+                    indexObject.pushState();
+                    scope.fields = resp.facets;
+                    scope.count = resp.count;
+                    angular.forEach(scope.fields, function(f) {
+                      if (expandedFields.indexOf(f.name) >= 0) {
+                        f.expanded = true;
+                      }
+                    });
                   });
-                });
+            }
           };
 
           scope.getMore = function(field) {
@@ -669,19 +672,19 @@
 
               // check if there is a valid "higher than" or "lower than" filter
               var lowerBound = field.dates && field.dates[0];
-              var upperBound = field.dates && field.dates[field.dates.length-1];
+              var upperBound = field.dates && field.dates[field.dates.length - 1];
               var lowerActive = values.from &&
-                moment(values.from, 'DD-MM-YYYY').startOf('day').valueOf()
-                > lowerBound;
+                  moment(values.from, 'DD-MM-YYYY').startOf('day').valueOf() >
+                  lowerBound;
               var upperActive = values.to &&
-                moment(values.to, 'DD-MM-YYYY').endOf('day').valueOf()
-                < upperBound;
+                  moment(values.to, 'DD-MM-YYYY').endOf('day').valueOf() <
+                  upperBound;
               return lowerActive || upperActive;
             }
 
             // other fields: the filter must be active
             return true;
-          }
+          };
         }
       };
     }]);
