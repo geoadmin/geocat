@@ -339,10 +339,6 @@
     <description>Attribut einer Klasse</description>
     <condition/>
   </element>
-  <element name="che:inspireServiceType">
-    <label>INSPIRE Dienste-Typ</label>
-    <description></description>
-  </element>
   <element name="che:legislationInformation" id="505">
     <label>Gesetzgebung</label>
     <help>Informationen über rechtliche Belange, welche die Ressource(n) betreffen. Diese Angaben
