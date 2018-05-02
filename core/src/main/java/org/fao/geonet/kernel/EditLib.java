@@ -290,9 +290,8 @@ public class EditLib {
         for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
             String nodeRef = entry.getKey();
             String[] nodeConfig = nodeRef.split("_");
-            nodeRef = nodeConfig[0];
 
-            Element el = findElement(md, nodeRef);
+            Element el = findElement(md, nodeConfig[0]);
             nodeRefToElem.put(nodeRef, el);
         }
 
@@ -308,18 +307,19 @@ public class EditLib {
             // * X125_replace
             // * X125_gmdCOLONkeywords
             // * X125_gmdCOLONkeywords_replace
+
+            Element el = nodeRefToElem.get(nodeRef);
             nodeRef = nodeConfig[0];
 
             if (nodeConfig[nodeConfig.length-1].equals("replace")) {
                 replaceExisting = true;
             }
 
-            if (nodeConfig.length > 1) {
+            if ((nodeConfig.length > 1) && !replaceExisting) {
                 nodeName = nodeConfig[1].replace(COLON_SEPARATOR, ":");
             }
 
             // Get element to fill
-            Element el = nodeRefToElem.get(nodeRef);
             if (el == null) {
                 LOGGER.error(MSG_ELEMENT_NOT_FOUND_AT_REF + nodeRef);
                 continue;
