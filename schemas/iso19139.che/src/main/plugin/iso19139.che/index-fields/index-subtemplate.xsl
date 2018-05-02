@@ -73,7 +73,7 @@
         <Field name="_orgName" string="{$org}" store="true" index="true"/>
         <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
         <xsl:variable name="basicTitle" select="concat($firstName, ' ', $lastName, ' ', $org)" />
-        <Field name="_title" string="{$basicTitle}" store="true" index="false" />
+        <Field name="_title" string="{$basicTitle}" store="true" index="true" />
 
       </xsl:when>
       <xsl:otherwise>
@@ -85,7 +85,7 @@
         <Field name="_orgName" string="{$org}" store="true" index="true"/>
         <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
         <xsl:variable name="basicTitle" select="concat($firstName, ' ', $lastName, ' ', $org)" />
-        <Field name="_title" string="{$basicTitle}" store="true" index="false" />
+        <Field name="_title" string="{$basicTitle}" store="true" index="true" />
       </xsl:otherwise>
     </xsl:choose>
 
