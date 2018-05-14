@@ -11,9 +11,9 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:java="java:org.fao.geonet.util.XslUtil"
     exclude-result-prefixes="xlink">
-	
+
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
-	
+
 	<xsl:template match="geonet:info" priority="2">
 		<xsl:if test="string($includeInfo) = 'true'">
 			<xsl:copy-of select="." />
@@ -40,6 +40,7 @@
 
 	<xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']" priority="101">
 		<gmd:MD_Metadata>
+      <xsl:attribute name="xsi:schemaLocation">http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd http://www.isotc211.org/2005/gmx http://www.isotc211.org/2005/gmx/gmx.xsd http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd</xsl:attribute>
 			<xsl:apply-templates select="*"/>
 		</gmd:MD_Metadata>
 	</xsl:template>
@@ -75,27 +76,28 @@
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template match="@xlink:*">
+    <xsl:template match="@xlink:*[name(..)!='srv:operatesOn']">
         <!--
             do not copy xlinks because they should be filled out and are not always viable when importing
             into other systems
+            Note: exception for xlinks in srv:operatesOn (these are kept)
          -->
     </xsl:template>
 
 
-	<!-- Remove all ISO profil specific elements 
-	<xsl:template match="*[not(@gco:isoType) and 
+	<!-- Remove all ISO profil specific elements
+	<xsl:template match="*[not(@gco:isoType) and
 		(namespace-uri(.) != 'http://www.isotc211.org/2005/gmd' or
 		namespace-uri(.) != 'http://www.isotc211.org/2005/gts' or
 		namespace-uri(.) != 'http://www.opengis.net/gml' or
 		namespace-uri(.) != 'http://www.isotc211.org/2005/gco')]" priority="100"/>-->
-		
+
 	<xsl:template match="@*|node()">
 		<xsl:copy>
 			<xsl:apply-templates select="@*|node()[name(self::*)!='geonet:info']"/>
 		</xsl:copy>
 	</xsl:template>
-	
+
 	<!-- Remove all extended categories -->
 	<xsl:template match="gmd:topicCategory[contains(gmd:MD_TopicCategoryCode,'_')]" >
 	</xsl:template>
