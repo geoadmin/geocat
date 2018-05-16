@@ -14,7 +14,7 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
+ * long with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
  *
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
@@ -22,12 +22,12 @@
  */
 
 (function() {
-  goog.provide('gn_md_feedback');
+  goog.provide('gn_gazetteer');
 
-  goog.require('gn_md_feedback_controller');
-  goog.require('gn_md_feedback_directive');
+  goog.require('gn_gazetteer_provider_service');
+  goog.require('gn_default_gazetteer_default_factory');
 
-  var module = angular.module('gn_md_feedback', ['gn_md_feedback_controller',
-    'gn_md_feedback_directive']);
-
+  angular.module('gn_gazetteer', [
+    'gn_gazetteer_provider_service',
+    'gn_default_gazetteer_default_factory']);
 })();

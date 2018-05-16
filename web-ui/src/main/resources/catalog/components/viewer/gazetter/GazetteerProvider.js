@@ -22,40 +22,28 @@
  */
 
 (function() {
-  goog.provide('gn_md_feedback_controller');
+  goog.provide('gn_gazetteer_provider_service');
 
-  var module = angular.module('gn_md_feedback_controller', []);
+  var module = angular.module('gn_gazetteer_provider_service', []);
 
-  module.controller('gnMdFeedbackController', [
-    '$scope', '$http', 'gnConfig',
-    function($scope, $http, gnConfig) {
-      $scope.isFeedbackEnabled = gnConfig[gnConfig.key.isFeedbackEnabled];
 
-      $scope.mdFeedbackOpen = false;
-      $scope.toggle = function() {
-        $scope.mdFeedbackOpen = !$scope.mdFeedbackOpen;
-      };
+  module.provider('gnGazetteerProvider', function() {
+    return {
+      $get : [
+        'gnViewerSettings',
+        'gnDefaultGazetteer',
+        function(gnViewerSettings, gnDefaultGazetteer) {
 
-      $scope.send = function(form, formId) {
-        if (form.$valid) {
-          $http({
-            url: 'contact.send?_content_type=json',
-            method: 'POST',
-            data: $(formId).serialize(),
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            }
-          }).then(function(response) {
-            // TODO: report no email sent
-            if (response.status === 200) {
-              $scope.success = true;
-            } else {
-              $scope.success = false;
-            }
-          });
-        }
-      };
+          if(gnViewerSettings.gazetteerProvider) {
+            // returns the gazetteer configured in config.js
+            return gnViewerSettings.gazetteerProvider;
+          } else {
+            // returns the default one
+            return gnDefaultGazetteer;
+          }
+
+        }]
     }
-  ]);
-
+  }
+  );
 })();
