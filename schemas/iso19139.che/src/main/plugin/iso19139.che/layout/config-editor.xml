@@ -235,6 +235,10 @@
     <name>che:CHE_MD_AbstractClass</name>
     <name>che:CHE_MD_Association</name>
     <name>che:CHE_MD_Class</name>
+    <name>gmd:distributionOrderProcess</name>
+    <name>gmd:distributorFormat</name>
+    <name>gmd:transferOptions</name>
+    <name>gmd:distributorTransferOptions</name>
   </fieldsWithFieldset>
 
   <multilingualFields>
@@ -402,6 +406,10 @@
         <for name="gmd:distributor"/>
         <for name="gmd:distributorContact"/>
         <for name="gmd:distributionOrderProcess"/>
+        <for name="gmd:fees"/>
+        <for name="gmd:plannedAvailableDateTime"/>
+        <for name="gmd:turnaround"/>
+        <for name="gmd:orderingInstructions"/>
         <for name="gmd:distributorFormat"/>
         <for name="gmd:distributorTransferOptions"/>
         <for name="gmd:processor"/>
@@ -411,6 +419,19 @@
         <for name="gmd:distributionFormat"/>
         <for name="gmd:topicCategory"/>
         <for name="gmd:transferOptions"/>
+        <for name="gmd:unitsOfDistribution"/>
+        <for name="gmd:transferSize"/>
+        <for name="gmd:onLine"/>
+        <for name="gmd:applicationProfile"/>
+        <for name="gmd:function"/>
+        <for name="gmd:offLine"/>
+        <for name="gmd:name"/>
+        <for name="gmd:density"/>
+        <for name="gmd:densityUnits"/>
+        <for name="gmd:volumes"/>
+        <for name="gmd:mediumFormat"/>
+        <for name="gmd:mediumNote"/>
+
         <for name="gmd:date"/>
         <!--<for name="che:appraisal"/>
         <for name="che:commentOnDurationOfConservation"/>
