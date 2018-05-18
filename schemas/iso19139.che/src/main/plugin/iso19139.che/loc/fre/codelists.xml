@@ -218,6 +218,33 @@
       <description/>
     </entry>
   </codelist>
+  <codelist name="gmd:LanguageCode">
+    <entry>
+      <code>ger</code>
+      <label>allemand</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>fre</code>
+      <label>français</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>ita</code>
+      <label>italien</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>eng</code>
+      <label>anglais</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>roh</code>
+      <label>romanche</label>
+      <description/>
+    </entry>
+  </codelist>
   <codelist name="che:CHE_CI_LegislationCode">
     <entry>
       <code>cantonalLaw</code>

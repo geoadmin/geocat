@@ -226,6 +226,33 @@
       <description/>
     </entry>
   </codelist>
+  <codelist name="gmd:LanguageCode">
+    <entry>
+      <code>ger</code>
+      <label>deutsch</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>fre</code>
+      <label>französish</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>ita</code>
+      <label>italienisch</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>eng</code>
+      <label>englisch</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>roh</code>
+      <label>rätoromanisch</label>
+      <description/>
+    </entry>
+  </codelist>
   <codelist name="gmd:MD_ScopeCode">
     <entry>
       <code>attribute</code>
