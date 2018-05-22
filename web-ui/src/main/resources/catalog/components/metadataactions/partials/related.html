@@ -38,15 +38,13 @@
           {{::(r.title | gnLocalized: lang) || (r.url | gnLocalized: lang)}}
         </h4>
         <!-- Display description if available -->
-        <!-- GEOCAT and if title displayed ! -->
         <h4 data-ng-if="(mainType === 'WMS' || mainType === 'WMSSERVICE' ||
                        mainType === 'WMTS' || mainType === 'WMTSSERVICE' ||
-                       (mainType === 'WFS' && r.protocol === 'OGC:WFS')) &&
-                       r.locDescription.length > 0 &&
-                       !isLayerProtocol(r) &&
-                       mainType !== 'WCS' &&
-                       mainType !== 'LINKDOWNLOAD' &&
-                       mainType !== 'LINK'">
+                       mainType === 'WCS' ||
+                       mainType.indexOf('LINK') === 0 ||
+                       mainType.indexOf('DEFAULT') === 0 ||
+                       r.protocol === 'OGC:WFS') &&
+                       r.locDescription.length > 0">
           {{::r.locDescription | striptags | characters:150}}
         </h4>
         <div data-ng-switch on="mainType">
