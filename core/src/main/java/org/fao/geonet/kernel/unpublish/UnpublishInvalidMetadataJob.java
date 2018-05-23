@@ -276,9 +276,8 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
                 serviceContext.setAsThreadLocal();
                 final String id = "" + metadataRecord.getId();
                 try {
-                     if(checkIfNeedsUnpublishingAndSavePublishedRecord(serviceContext, metadataRecord, dataManager)) {
-                         dataManager.indexMetadata(id, false, null);
-                     }
+                    checkIfNeedsUnpublishingAndSavePublishedRecord(serviceContext, metadataRecord, dataManager);
+                    dataManager.indexMetadata(id, false, null);
                 } catch (Exception e) {
                     String error = Xml.getString(JeevesException.toElement(e));
                     Log.error(UNPUBLISH_LOG, "Error during Validation/Unpublish process of metadata " + id + ".  Exception: " + error);
