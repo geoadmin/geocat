@@ -1591,7 +1591,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         _versionToken = indexAndTaxonomy.version;
         Pair<TopDocs, Element> results;
         try {
-            results = doSearchAndMakeSummary(endHit - startHit, startHit, endHit,
+            results = doSearchAndMakeSummary(endHit, startHit, endHit,
                 _language.presentationLanguage,
                 _summaryConfig, _luceneConfig,
                 indexAndTaxonomy.indexReader,
