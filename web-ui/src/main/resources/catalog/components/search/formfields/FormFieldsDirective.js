@@ -633,7 +633,7 @@
                 if (scope.type == 'codelist') {
                   gnSchemaManagerService.getCodelist(config).then(
                       function(data) {
-                        scope.infos = data.entry;
+                        scope.infos = angular.copy(data.entry);
                         addBlankValueAndSetDefault();
                       });
                 }
