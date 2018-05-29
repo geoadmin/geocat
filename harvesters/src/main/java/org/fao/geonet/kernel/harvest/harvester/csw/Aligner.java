@@ -274,7 +274,7 @@ public class Aligner extends BaseAligner {
         // insert metadata
         //
 
-        ownerId = Integer.parseInt(StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId());
+        ownerId = Integer.parseInt((StringUtils.isNumeric(params.getOwnerIdUser()) && params.getOwnerIdUser().length() > 0) ? params.getOwnerIdUser() : params.getOwnerId());
         Metadata metadata = new Metadata().setUuid(mdUuid);
 
         metadata.getDataInfo().
