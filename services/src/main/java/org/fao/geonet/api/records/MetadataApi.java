@@ -491,7 +491,15 @@ public class MetadataApi implements ApplicationContextAware {
 
         // TODO PERF: ByPass XSL processing and create response directly
         // At least for related metadata and keep XSL only for links
-        final ServiceContext context = ApiUtils.createServiceContext(request);
+        ServiceContext context;
+        if (ServiceContext.get() == null) {
+            context = ApiUtils.createServiceContext(request);
+            context.setAsThreadLocal();
+
+        } else {
+
+            context = ServiceContext.get();
+        }
         Element raw = new Element("root").addContent(Arrays.asList(
             new Element("gui").addContent(Arrays.asList(
                 new Element("language").setText(language),

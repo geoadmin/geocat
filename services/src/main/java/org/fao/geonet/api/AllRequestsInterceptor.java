@@ -71,7 +71,7 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
     private void createSessionForAllButNotCrawlers(HttpServletRequest request) {
         String userAgent = request.getHeader("user-agent");
 
-        if (!isCrawler(userAgent)) {
+        if (!isCrawler(userAgent) || userAgent.startsWith("Pingdom.com_bot_version_1.4")) {
             final HttpSession httpSession = request.getSession(true);
             UserSession session = (UserSession) httpSession.getAttribute(Jeeves.Elem.SESSION);
             if (session == null) {
