@@ -190,10 +190,7 @@
               <ul>
                 <li data-ng-repeat="k in keywords track by $index"
                     data-ng-if="k"
-                    title="{{'clickToFilterOn' | translate}} {{k}}"
                     class="tt-cursor">
-                    <a href="" data-ng-click="search({'keyword': k})">{{k}}</a>
-<!--
                     <span data-ng-show="k.link == ''">{{k.value}}</span>
                     <a href=""
                        data-ng-href="{{k.link}}"
@@ -204,7 +201,6 @@
                        data-ng-click="search({'keyword': k.value})">
                       <i class="fa fa-search"/>
                     </a>
--->
                 </li>
               </ul>
             </td>
