@@ -1254,5 +1254,6 @@
     "registryNoItemFound": "No collection found. Choose another item class.",
     "registryNoLanguage": "One language is required.",
     "registryNoClassFound": "No class found in that registry. Check the URL?",
-    "registryFailedToLoadClass": "No class found in that registry. Check the URL?"
+    "registryFailedToLoadClass": "No class found in that registry. Check the URL?",
+    "fix-parent-link": "Transform <aggregationInfo> parent link into <parentIdentifier> when association type is largerWorkCitation"
 }

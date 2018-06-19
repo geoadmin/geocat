@@ -1231,5 +1231,6 @@
     "wfsIndexingMetadataNotFound": "La métadonnée ne peut être trouvée",
     "wfsIndexingMetadataUuid": "UUID de la métadonnée",
     "wfsIndexingRefreshError": "Une erreur est survenue lors de la mise à jour de la liste:",
-    "wfsIndexingError": "Erreur rencontrée"
+    "wfsIndexingError": "Erreur rencontrée",
+    "fix-parent-link": "Transform <aggregationInfo> parent link into <parentIdentifier> when association type is largerWorkCitation"
 }

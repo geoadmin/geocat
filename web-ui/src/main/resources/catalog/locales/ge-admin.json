@@ -1229,5 +1229,6 @@
     "wfsIndexingMetadataNotFound": "Metadata could not be found.",
     "wfsIndexingMetadataUuid": "Metadata UUID",
     "wfsIndexingRefreshError": "An error occurred when refreshing the list:",
-    "wfsIndexingError": "Error encountered"
+    "wfsIndexingError": "Error encountered",
+    "fix-parent-link": "Transform <aggregationInfo> parent link into <parentIdentifier> when association type is largerWorkCitation"
 }

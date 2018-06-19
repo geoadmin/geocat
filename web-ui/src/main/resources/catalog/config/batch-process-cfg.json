@@ -225,7 +225,7 @@
           "iso19139\\..*\\.voice",
           "iso19139\\..*\\.facsimile"
         ]
-      }, 
+      },
       "dublin-core": {
         "elements": [
           "dublin-core.simpledc.creator",
@@ -235,6 +235,10 @@
     }
   }, {
     "key": "dataseturi-add-https-if-missing",
+    "type": "fixed-params",
+    "params": []
+  }, {
+    "key": "fix-parent-link",
     "type": "fixed-params",
     "params": []
 }]
