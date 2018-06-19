@@ -199,6 +199,9 @@ import jeeves.xlink.Processor;
  */
 //@Transactional(propagation = Propagation.REQUIRED, noRollbackFor = {XSDValidationErrorEx.class, NoSchemaMatchesException.class})
 public class DataManager implements ApplicationEventPublisherAware {
+    public static String VAL_STATUS_NOT_EVALUATED = "-1";
+    public static String VAL_STATUS_INVALID = "0";
+    public static String VAL_STATUS_VALID = "1";
 
     private static final int METADATA_BATCH_PAGE_SIZE = 100000;
     Lock waitLoopLock = new ReentrantLock();
@@ -826,14 +829,14 @@ public class DataManager implements ApplicationEventPublisherAware {
                 .class);
             List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id$);
             if (validationInfo.isEmpty()) {
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, "-1", true, true));
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, VAL_STATUS_NOT_EVALUATED, true, true));
             } else {
-                String isValid = "1";
+                String isValid = VAL_STATUS_VALID;
                 for (MetadataValidation vi : validationInfo) {
                     String type = vi.getId().getValidationType();
                     MetadataValidationStatus status = vi.getStatus();
                     if (status == MetadataValidationStatus.INVALID && vi.isRequired()) {
-                        isValid = "0";
+                        isValid = VAL_STATUS_INVALID;
                     }
                     moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID + "_" + type, status.getCode(), true, true));
                 }
