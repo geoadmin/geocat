@@ -20,68 +20,104 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-
 package org.fao.geonet.kernel.unpublish;
 
 import com.google.common.collect.Sets;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.*;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.SchematronRequirement;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.geocat.PublishRecord;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.search.DuplicateDocFilter;
-import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.geocat.PublishRecordRepository;
 import org.fao.geonet.repository.geocat.specification.PublishRecordSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Text;
 import org.jdom.filter.Filter;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.quartz.Scheduler;
-import org.quartz.Trigger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.fao.geonet.kernel.DataManager.VAL_STATUS_NOT_EVALUATED;
+import static org.fao.geonet.kernel.DataManager.VAL_STATUS_VALID;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.isPublic;
-import static org.quartz.TriggerBuilder.newTrigger;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 public class UnpublishInvalidMetadataJob extends QuartzJobBean {
-    public static final String UNPUBLISH_LOG = Geonet.GEONETWORK + ".unpublish";
+    public static final String AUTOMATED_ENTITY = "Automated";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.GEONETWORK + ".unpublish");
+    private static final Logger LOGGER_DATA_MAN = LoggerFactory.getLogger(Geonet.DATA_MANAGER);
+    private static final Logger LOGGER_GEONET = LoggerFactory.getLogger(Geonet.GEONETWORK);
+
+    @Autowired
+    private XmlSerializer xmlSerializer;
+    @Autowired
+    private ConfigurableApplicationContext context;
+    @Autowired
+    private ServiceManager serviceManager;
+    @Autowired
+    private OperationAllowedRepository operationAllowedRepository;
+    @Autowired
+    private MetadataValidationRepository metadataValidationRepository;
+    @Autowired
+    private DataManager dataManager;
+    @Autowired
+    private PublishRecordRepository publishRecordRepository;
+    @Autowired
+    private SearchManager searchManager;
+    @Autowired
+    private SettingManager settingManager;
+
+    private AtomicBoolean running = new AtomicBoolean(false);
+
     public static final Filter ReportFinder = new Filter() {
         private static final long serialVersionUID = 1L;
 
@@ -97,6 +133,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
             return false;
         }
     };
+
     public static final Filter ErrorFinder  = new Filter() {
         private static final long serialVersionUID = 1L;
 
@@ -114,21 +151,9 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
             return false;
         }
     };
-    @Autowired
-    XmlSerializer xmlSerializer;
-    @Autowired
-    private ConfigurableApplicationContext context;
-    @Autowired
-    private ServiceManager serviceManager;
-    @Autowired
-    private OperationAllowedRepository operationAllowedRepository;
-    static final String AUTOMATED_ENTITY = "Automated";
 
-    AtomicBoolean running = new AtomicBoolean(false);
 
-    public static Pair<String, String> failureReason(ServiceContext context, Element report) {
-
-        @SuppressWarnings("unchecked")
+    private Pair<String, String> failureReason(Element report) {
         Iterator<Element> reports = report.getDescendants(ReportFinder);
 
         StringBuilder rules = new StringBuilder();
@@ -141,13 +166,11 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
                 processSchematronError(report, rules, failures);
             }
         }
-
         return Pair.read(rules.toString(), failures.toString());
     }
 
-    private static void processXsdError(Element report, StringBuilder rules, StringBuilder failures) {
+    private void processXsdError(Element report, StringBuilder rules, StringBuilder failures) {
         String reportType = "Xsd Error";
-        @SuppressWarnings("unchecked")
         Iterator<Element> errors = report.getDescendants(ErrorFinder);
         if (errors.hasNext()) {
             rules.append("<div class=\"rule\">").append(reportType).append("</div>");
@@ -166,7 +189,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
         }
     }
 
-    private static void processSchematronError(Element report, StringBuilder rules, StringBuilder failures) {
+    private void processSchematronError(Element report, StringBuilder rules, StringBuilder failures) {
         String reportType = report.getAttributeValue("rule", Edit.NAMESPACE);
         reportType = reportType == null ? "No name for rule" : reportType;
 
@@ -225,7 +248,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
                 id = allByProfile.get(0).getId();
             }
         } catch (Throwable e) {
-            Log.error(Geonet.DATA_MANAGER, "Error during unpublish", e);
+            LOGGER_DATA_MAN.error("Error during unpublish", e);
         }
 
         ServiceContext serviceContext = serviceManager.createServiceContext("unpublishMetadata", context);
@@ -242,12 +265,10 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
         try {
             performJob(serviceContext);
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK, "Error running " + UnpublishInvalidMetadataJob.class.getSimpleName(), e);
+            LOGGER_GEONET.error("Error running {}", UnpublishInvalidMetadataJob.class.getSimpleName(), e);
         }
 
     }
-
-    // --------------------------------------------------------------------------------
 
     private void performJob(ServiceContext serviceContext) throws Exception {
         if (!running.compareAndSet(false, true)) {
@@ -255,146 +276,125 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
         }
         try {
             long startTime = System.currentTimeMillis();
-            Log.info(UNPUBLISH_LOG, "Starting Unpublish Invalid Metadata Job");
-            Integer keepDuration = serviceContext.getBean(SettingManager.class).getValueAsInt("system/metadata/publish_tracking_duration");
-            if (keepDuration == null) {
-                keepDuration = 100;
-            }
+            LOGGER.info("Starting Unpublish Invalid Metadata Job");
 
-
-            List<Metadata> metadataToTest;
+            serviceContext.setAsThreadLocal();
+            Integer keepDuration = settingManager.getValueAsInt("system/metadata/publish_tracking_duration", 100);
 
             // clean up expired changes
-            final PublishRecordRepository publishRepository = serviceContext.getBean(PublishRecordRepository.class);
-            publishRepository.deleteAll(PublishRecordSpecs.daysOldOrOlder(keepDuration));
+            publishRecordRepository.deleteAll(PublishRecordSpecs.daysOldOrOlder(keepDuration));
 
-            metadataToTest = lookUpMetadataIds(serviceContext.getBean(MetadataRepository.class));
-
-            DataManager dataManager = serviceContext.getBean(DataManager.class);
+            List<Metadata> metadataToTest = lookUpMetadataIds(serviceContext.getBean(MetadataRepository.class));
             for (Metadata metadataRecord : metadataToTest) {
-                ApplicationContextHolder.set(serviceContext.getApplicationContext());
-                serviceContext.setAsThreadLocal();
-                final String id = "" + metadataRecord.getId();
                 try {
-                    checkIfNeedsUnpublishingAndSavePublishedRecord(serviceContext, metadataRecord, dataManager);
-                    dataManager.indexMetadata(id, false, null);
+                    tryToValidatePublishedRecord(serviceContext, metadataRecord);
                 } catch (Exception e) {
                     String error = Xml.getString(JeevesException.toElement(e));
-                    Log.error(UNPUBLISH_LOG, "Error during Validation/Unpublish process of metadata " + id + ".  Exception: " + error);
+                    LOGGER.error("Error during Validation/Unpublish process of metadata {}.  Exception: {}", metadataRecord.getId(), error);
                 }
-
-                serviceContext.getBean(DataManager.class).flush();
+                dataManager.flush();
             }
 
-            long timeSec = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
-            Log.info(UNPUBLISH_LOG, "Finishing Unpublish Invalid Metadata Job.  Job took:  " + timeSec + " sec");
+            LOGGER.info("Finishing Unpublish Invalid Metadata Job.  Job took:  {} sec", MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime));
 
-            indexNonValidatedMetadata(serviceContext, dataManager);
+            indexMetadataWithNonEvaluatedOrIncoherentValidationStatus(serviceContext, dataManager);
+
         } finally {
             running.set(false);
         }
     }
 
-    private void indexNonValidatedMetadata(ServiceContext serviceContext, DataManager dataManager) throws Exception {
-        Log.info(UNPUBLISH_LOG, "Start Unpublish Invalid Metadata Job.");
+    private void indexMetadataWithNonEvaluatedOrIncoherentValidationStatus(ServiceContext serviceContext, DataManager dataManager) throws Exception {
+        LOGGER.info("Start indexing metadata with non evaluated or incoherent validation status.");
         long startTime = System.currentTimeMillis();
-        SearchManager searchManager = serviceContext.getBean(SearchManager.class);
-        Set<String> ids = Sets.newHashSet();
+        Set<String> toIndex = Sets.newHashSet();
         try (IndexAndTaxonomy iat = searchManager.getNewIndexReader(null)) {
             IndexSearcher searcher = new IndexSearcher(iat.indexReader);
             BooleanQuery query = new BooleanQuery();
-            query.add(new BooleanClause(new TermQuery(new Term("_valid", "-1")), BooleanClause.Occur.MUST));
             query.add(new BooleanClause(new TermQuery(new Term(Geonet.IndexFieldNames.IS_HARVESTED, "n")), BooleanClause.Occur.MUST));
             query.add(new BooleanClause(new TermQuery(new Term(Geonet.IndexFieldNames.IS_TEMPLATE, "n")), BooleanClause.Occur.MUST));
             query.add(new BooleanClause(new TermQuery(new Term(Geonet.IndexFieldNames.SCHEMA, "iso19139.che")), BooleanClause.Occur.MUST));
             TopDocs topDocs = searcher.search(query, new DuplicateDocFilter(query), Integer.MAX_VALUE);
             for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
-                ids.add(searcher.doc(scoreDoc.doc).get(Geonet.IndexFieldNames.ID));
+                Document doc = searcher.doc(scoreDoc.doc);
+                String indexedValidationStatus = doc.get("_valid");
+                String docId = doc.get(Geonet.IndexFieldNames.ID);
+                if (indexedValidationStatus.equalsIgnoreCase(VAL_STATUS_NOT_EVALUATED)) {
+                    toIndex.add(docId);
+                } else {
+                    boolean isIndexedValid = indexedValidationStatus.equalsIgnoreCase(VAL_STATUS_VALID);
+                    boolean persistedValid = isValid(Integer.parseInt(docId));
+                    boolean incoherentState = isIndexedValid != persistedValid;
+                    if (incoherentState) {
+                        toIndex.add(docId);
+                    }
+                }
             }
         }
 
-        for (String mdId : ids) {
+        for (String mdId : toIndex) {
             dataManager.indexMetadata(mdId, false, null);
         }
-        long timeSec = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
-        Log.info(UNPUBLISH_LOG, "Finishing Indexing metadata that have not been validated in for index.  "
-                                + "Job took:  " + timeSec + " sec");
+        long timeSec = MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
+        LOGGER.info("Finishing with non evaluated or incoherent validation status. It took: {} sec", timeSec);
     }
 
-    /**
-	 * Check if if the given metadata needs to be unpublished (because of
-	 * invalidation), then saves the publish record state into database and
-	 * unpublishes it if needed.
-	 *
-	 * @param context
-	 *            the application context
-	 * @param metadataRecord
-	 *            the metadata to check / unpublish
-	 * @param dataManager
-	 *            the datamanager object (used to check validity)
-	 *
-	 * @return true if the MD has been invalidated (was published, but has been
-	 *         unpublished), false otherwise (if already unpublished, or if
-	 *         published but recognized valid).
-	 *
-	 * @throws Exception
-	 */
-    private boolean checkIfNeedsUnpublishingAndSavePublishedRecord(ServiceContext context, Metadata metadataRecord,
-                                                                   DataManager dataManager) throws Exception {
+    private void tryToValidatePublishedRecord(ServiceContext context, Metadata metadataRecord) throws Exception {
         String id = "" + metadataRecord.getId();
+        boolean published = isPublished(id);
+
+        if (!published) {return;}
+
         Element md   = xmlSerializer.select(context, String.valueOf(metadataRecord.getId()));
         String schema = metadataRecord.getDataInfo().getSchemaId();
-        PublishRecord todayRecord;
-        boolean published = isPublished(id, context);
 
-        if (published) {
-            Element report = dataManager.doValidate(context.getUserSession(), schema, id, md, "eng", false).one();
+        Element report = dataManager.doValidate(context.getUserSession(), schema, id, md, "eng", false).one();
+        Pair<String, String> failureReport = failureReason(report);
+        String failureRule = failureReport.one();
+        String failureReasons = failureReport.two();
 
-            Pair<String, String> failureReport = failureReason(context, report);
-            String failureRule = failureReport.one();
-            String failureReasons = failureReport.two();
-            if (!failureRule.isEmpty()) {
-                todayRecord = new PublishRecord();
-                todayRecord.setChangedate(new Date());
-                todayRecord.setChangetime(new Date());
-                todayRecord.setFailurereasons(failureReasons);
-                todayRecord.setFailurerule(failureRule);
-                todayRecord.setUuid(metadataRecord.getUuid());
-                todayRecord.setEntity(AUTOMATED_ENTITY);
-                todayRecord.setPublished(false);
-                todayRecord.setGroupOwner(metadataRecord.getSourceInfo().getGroupOwner());
-                todayRecord.setSource(metadataRecord.getSourceInfo().getSourceId());
-                todayRecord.setValidated(PublishRecord.Validity.fromBoolean(false));
-                context.getBean(PublishRecordRepository.class).save(todayRecord);
+        if (failureRule.isEmpty()) {return; }
 
-                final Specifications<OperationAllowed> publicOps = Specifications.where(isPublic(ReservedOperation.view)).
-                        or(isPublic(ReservedOperation.download)).
-                        or(isPublic(ReservedOperation.editing)).
-                        or(isPublic(ReservedOperation.featured)).
-                        or(isPublic(ReservedOperation.dynamic));
-                operationAllowedRepository.deleteAll(Specifications.where(hasMetadataId(metadataRecord.getId())).and(publicOps));
-                return true;
-            }
-        }
+        PublishRecord todayRecord = new PublishRecord();
+        todayRecord.setChangedate(new Date());
+        todayRecord.setChangetime(new Date());
+        todayRecord.setFailurereasons(failureReasons);
+        todayRecord.setFailurerule(failureRule);
+        todayRecord.setUuid(metadataRecord.getUuid());
+        todayRecord.setEntity(AUTOMATED_ENTITY);
+        todayRecord.setPublished(false);
+        todayRecord.setGroupOwner(metadataRecord.getSourceInfo().getGroupOwner());
+        todayRecord.setSource(metadataRecord.getSourceInfo().getSourceId());
+        todayRecord.setValidated(PublishRecord.Validity.fromBoolean(false));
+        publishRecordRepository.save(todayRecord);
 
-        return false;
+        Specifications<OperationAllowed> publicOps = Specifications
+                .where(isPublic(ReservedOperation.view))
+                .or(isPublic(ReservedOperation.download))
+                .or(isPublic(ReservedOperation.editing))
+                .or(isPublic(ReservedOperation.featured))
+                .or(isPublic(ReservedOperation.dynamic));
+        operationAllowedRepository.deleteAll(Specifications.where(hasMetadataId(metadataRecord.getId())).and(publicOps));
     }
 
-    /**
-     * Returns whether the given metadata is published or not, i.e. if all reserved groups have the view operation set.
-     *
-     * @param id the metadata Identifier
-     * @param context the application context
-     * @return true if the metadata is published, false otherwise.
-     *
-     * @throws SQLException
-     */
-    public static boolean isPublished(String id, ServiceContext context) throws SQLException {
-        final OperationAllowedRepository allowedRepository = context.getBean(OperationAllowedRepository.class);
-
-        final Specifications<OperationAllowed> idAndPublishedSpec = where(isPublic(ReservedOperation.view)).and
+    private boolean isPublished(String id) throws SQLException {
+        Specifications<OperationAllowed> idAndPublishedSpec = where(isPublic(ReservedOperation.view)).and
                 (OperationAllowedSpecs.hasMetadataId(id));
-        return allowedRepository.count(idAndPublishedSpec) > 0;
+        return operationAllowedRepository.count(idAndPublishedSpec) > 0;
+    }
+
+    private boolean isValid(Integer id) {
+        List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id);
+        if (validationInfo == null || validationInfo.size() == 0) {
+            return false;
+        }
+        for (Object elem : validationInfo) {
+            MetadataValidation vi = (MetadataValidation) elem;
+            if (!vi.isValid() && vi.isRequired()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
