@@ -287,7 +287,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
             List<Metadata> metadataToTest = lookUpMetadataIds(serviceContext.getBean(MetadataRepository.class));
             for (Metadata metadataRecord : metadataToTest) {
                 try {
-                    tryToValidatePublishedRecord(serviceContext, metadataRecord);
+                    tryToValidateRecord(serviceContext, metadataRecord);
                 } catch (Exception e) {
                     String error = Xml.getString(JeevesException.toElement(e));
                     LOGGER.error("Error during Validation/Unpublish process of metadata {}.  Exception: {}", metadataRecord.getId(), error);
@@ -339,21 +339,21 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
         LOGGER.info("Finishing with non evaluated or incoherent validation status. It took: {} sec", timeSec);
     }
 
-    private void tryToValidatePublishedRecord(ServiceContext context, Metadata metadataRecord) throws Exception {
-        String id = "" + metadataRecord.getId();
-        boolean published = isPublished(id);
-
-        if (!published) {return;}
+    private void tryToValidateRecord(ServiceContext context, Metadata metadataRecord) throws Exception {
+        boolean published = isPublished(metadataRecord.getId());
+        boolean hasValidationRecord = hasValidationRecord(metadataRecord.getId());
+        if (!published && !hasValidationRecord) {return;}
 
         Element md   = xmlSerializer.select(context, String.valueOf(metadataRecord.getId()));
         String schema = metadataRecord.getDataInfo().getSchemaId();
 
+        String id = "" + metadataRecord.getId();
         Element report = dataManager.doValidate(context.getUserSession(), schema, id, md, "eng", false).one();
         Pair<String, String> failureReport = failureReason(report);
         String failureRule = failureReport.one();
         String failureReasons = failureReport.two();
 
-        if (failureRule.isEmpty()) {return; }
+        if (failureRule.isEmpty() || !published) {return; }
 
         PublishRecord todayRecord = new PublishRecord();
         todayRecord.setChangedate(new Date());
@@ -377,9 +377,10 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
         operationAllowedRepository.deleteAll(Specifications.where(hasMetadataId(metadataRecord.getId())).and(publicOps));
     }
 
-    private boolean isPublished(String id) throws SQLException {
-        Specifications<OperationAllowed> idAndPublishedSpec = where(isPublic(ReservedOperation.view)).and
-                (OperationAllowedSpecs.hasMetadataId(id));
+    private boolean isPublished(int id) throws SQLException {
+        Specifications<OperationAllowed> idAndPublishedSpec =
+                        where(isPublic(ReservedOperation.view)).
+                        and(OperationAllowedSpecs.hasMetadataId("" + id));
         return operationAllowedRepository.count(idAndPublishedSpec) > 0;
     }
 
@@ -393,6 +394,14 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
             if (!vi.isValid() && vi.isRequired()) {
                 return false;
             }
+        }
+        return true;
+    }
+
+    private boolean hasValidationRecord(Integer id) {
+        List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id);
+        if (validationInfo == null || validationInfo.size() == 0) {
+            return false;
         }
         return true;
     }
