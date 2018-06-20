@@ -340,14 +340,14 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
     }
 
     private void tryToValidatePublishedRecord(ServiceContext context, Metadata metadataRecord) throws Exception {
-        String id = "" + metadataRecord.getId();
-        boolean published = isPublished(id);
-
-        if (!published) {return;}
+        boolean published = isPublished(metadataRecord.getId());
+        boolean hasValidationRecord = hasValidationRecord(metadataRecord.getId());
+        if (!published && !hasValidationRecord) {return;}
 
         Element md   = xmlSerializer.select(context, String.valueOf(metadataRecord.getId()));
         String schema = metadataRecord.getDataInfo().getSchemaId();
 
+        String id = "" + metadataRecord.getId();
         Element report = dataManager.doValidate(context.getUserSession(), schema, id, md, "eng", false).one();
         Pair<String, String> failureReport = failureReason(report);
         String failureRule = failureReport.one();
@@ -377,9 +377,10 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
         operationAllowedRepository.deleteAll(Specifications.where(hasMetadataId(metadataRecord.getId())).and(publicOps));
     }
 
-    private boolean isPublished(String id) throws SQLException {
-        Specifications<OperationAllowed> idAndPublishedSpec = where(isPublic(ReservedOperation.view)).and
-                (OperationAllowedSpecs.hasMetadataId(id));
+    private boolean isPublished(int id) throws SQLException {
+        Specifications<OperationAllowed> idAndPublishedSpec =
+                        where(isPublic(ReservedOperation.view)).
+                        and(OperationAllowedSpecs.hasMetadataId("" + id));
         return operationAllowedRepository.count(idAndPublishedSpec) > 0;
     }
 
@@ -393,6 +394,14 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
             if (!vi.isValid() && vi.isRequired()) {
                 return false;
             }
+        }
+        return true;
+    }
+
+    private boolean hasValidationRecord(Integer id) {
+        List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id);
+        if (validationInfo == null || validationInfo.size() == 0) {
+            return false;
         }
         return true;
     }
