@@ -287,7 +287,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
             List<Metadata> metadataToTest = lookUpMetadataIds(serviceContext.getBean(MetadataRepository.class));
             for (Metadata metadataRecord : metadataToTest) {
                 try {
-                    tryToValidatePublishedRecord(serviceContext, metadataRecord);
+                    tryToValidateRecord(serviceContext, metadataRecord);
                 } catch (Exception e) {
                     String error = Xml.getString(JeevesException.toElement(e));
                     LOGGER.error("Error during Validation/Unpublish process of metadata {}.  Exception: {}", metadataRecord.getId(), error);
@@ -339,7 +339,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
         LOGGER.info("Finishing with non evaluated or incoherent validation status. It took: {} sec", timeSec);
     }
 
-    private void tryToValidatePublishedRecord(ServiceContext context, Metadata metadataRecord) throws Exception {
+    private void tryToValidateRecord(ServiceContext context, Metadata metadataRecord) throws Exception {
         boolean published = isPublished(metadataRecord.getId());
         boolean hasValidationRecord = hasValidationRecord(metadataRecord.getId());
         if (!published && !hasValidationRecord) {return;}
@@ -353,7 +353,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
         String failureRule = failureReport.one();
         String failureReasons = failureReport.two();
 
-        if (failureRule.isEmpty()) {return; }
+        if (failureRule.isEmpty() || !published) {return; }
 
         PublishRecord todayRecord = new PublishRecord();
         todayRecord.setChangedate(new Date());
