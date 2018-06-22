@@ -828,13 +828,13 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- === Free text search === -->
 
-    <Field name="any" store="false" index="true">
-      <xsl:attribute name="string">
-        <xsl:apply-templates select="." mode="allText">
-          <xsl:with-param name="langId" select="$langId"/>
-        </xsl:apply-templates>
-      </xsl:attribute>
-    </Field>
+    <xsl:variable name="any_var">
+      <xsl:apply-templates select="." mode="allText">
+        <xsl:with-param name="langId" select="$langId"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+
+    <Field name="any" store="false" index="true" string="{normalize-space($any_var)}"/>
 
     <xsl:apply-templates select="." mode="codeList"/>
 
@@ -877,6 +877,9 @@
 
     <xsl:choose>
       <xsl:when test="node()[@locale=$langId]">
+        <xsl:value-of select="concat(string(.),' ')"/>
+      </xsl:when>
+      <xsl:when test="gco:CharacterString">
         <xsl:value-of select="concat(string(.),' ')"/>
       </xsl:when>
       <xsl:when test="*">
