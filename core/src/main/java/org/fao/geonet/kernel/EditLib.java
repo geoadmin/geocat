@@ -158,7 +158,7 @@ public class EditLib {
      */
     public void removeEditingInfo(Element md) {
         //--- purge geonet: attributes
-        for (Attribute attr: (List<Attribute>)md.getAttributes()) {
+        for (Attribute attr: (List<Attribute>)new ArrayList(md.getAttributes())) {
             if (Edit.NAMESPACE.getPrefix().equals(attr.getNamespacePrefix())) {
                 attr.detach();
             }
