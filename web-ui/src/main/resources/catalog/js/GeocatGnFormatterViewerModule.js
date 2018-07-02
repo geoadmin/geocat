@@ -86,13 +86,15 @@
 
         var formatter = $routeParams.formatter;
         var mdId = $routeParams.mdId;
+        var activeTab = $routeParams.activeTab;
 
         $scope.loading = true;
         $scope.$on('mdLoadingEnd', function() {
           $scope.loading = false;
         });
 
-        var url = '../api/records/' + mdId + '/formatters/' + formatter + '?output=xml';
+        var url = '../api/records/' + mdId + '/formatters/' + formatter + '?output=xml' +
+          (activeTab ? '&tab=' + activeTab : '');
 
         gnMdFormatter.load(mdId, '.formatter-container', $scope, url);
       }]);
@@ -101,6 +103,9 @@
     var tpls = '../../catalog/templates/';
 
     $routeProvider.when('/:formatter/:mdId', { templateUrl: tpls +
+    'formatter-viewer.html', controller: 'GnFormatterViewer'});
+
+    $routeProvider.when('/:formatter/:mdId/tab/:activeTab', { templateUrl: tpls +
     'formatter-viewer.html', controller: 'GnFormatterViewer'});
   }]);
 })();
