@@ -13,10 +13,10 @@ Geocat.ch migration consist of 4 main steps:
 Database migration consist of:
 * migrate the database from geocat.ch production (~GN3.0.0) to current GeoNetwork develop (3.4.0).
 * migrate from PostGIS 1.5 to 2
-* update admin layers 
+* update admin layers
 * cleanup unused db tables (eg. related to shared objects)
 
- 
+
 ```
 todaydate=$(date +%Y%m%d)
 
@@ -28,13 +28,13 @@ pg_dump -Fc geocat | gzip -9 -c > geocat-$todaydate.gz
 scp -3 geocat-prod-bd:/home/admin/geocat-$todaydate.gz publicshare.camptocamp.com:/var/www/publicshare/htdocs/
 
 
-# Download from 
+# Download from
 
 wget http://dev.camptocamp.com/files/geocat-$todaydate.gz
 
 
 # create geocat database with postgis extension
-psql 
+psql
 
 >
 CREATE DATABASE geocat
@@ -46,7 +46,7 @@ CREATE DATABASE geocat
        CONNECTION LIMIT = -1;
 
 \c geocat
-       
+
 CREATE EXTENSION postgis;
 
 \q
@@ -62,7 +62,7 @@ gzip -d geocat-$todaydate.gz
 
 # Run migration (see migrate-default.sql)
 wget https://raw.githubusercontent.com/geoadmin/geocat/geocat_3.4.x/web/src/main/webapp/WEB-INF/classes/setup/sql-geocat/v340/migrate/migrate-default.sql
-psql -d geocat -f migrate-default.sql 
+psql -d geocat -f migrate-default.sql
 ```
 Run geonetwork.
 
@@ -105,9 +105,9 @@ export CATALOGUSER=fxp
 export CATALOGPASS=admin
 
 
-rm -f /tmp/cookie; 
-curl -s -c /tmp/cookie -o /dev/null -X POST "$CATALOG/srv/eng/info?type=me"; 
-export TOKEN=`grep XSRF-TOKEN /tmp/cookie | cut -f 7`; 
+rm -f /tmp/cookie;
+curl -s -c /tmp/cookie -o /dev/null -X POST "$CATALOG/srv/eng/info?type=me";
+export TOKEN=`grep XSRF-TOKEN /tmp/cookie | cut -f 7`;
 curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie \
   "$CATALOG/srv/eng/info?type=me"
 
@@ -135,7 +135,7 @@ curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/
   -H 'Content-Type: multipart/form-data' -H 'Accept: application/json' \
   -F file=@hoheitsgebiet.zip \
  "$CATALOG/srv/api/0.1/registries/actions/entries/import/spatial?uuidAttribute=BFS_NUMMER&uuidPattern=geocatch-subtpl-extent-hoheitsgebiet-%7B%7Buuid%7D%7D&descriptionAttribute=NAME&geomProjectionTo=EPSG%3A4326&lenient=true&onlyBoundingBox=false&process=build-extent-subtemplate&schema=iso19139&uuidProcessing=OVERWRITE"
- 
+
 # Check in db select count(*) from metadata where uuid like 'geocatch-subtpl-extent-hoheitsgebiet%'
 # = 2285+Number of migrated extent (ie.16) = 2301
 
@@ -149,16 +149,16 @@ Set all extent subtemplate loaded valid and publish them to all in the database:
 INSERT INTO validation
   SELECT id, 'subtemplate', 1, 0, 0, createdate, true
     FROM metadata WHERE (uuid like 'geocatch-subtpl-extent-landesgebiet-%'
-    or  uuid like 'geocatch-subtpl-extent-kantonsgebiet-%' 
+    or  uuid like 'geocatch-subtpl-extent-kantonsgebiet-%'
     or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%')
     and id not in (SELECT metadataid FROM validation);
-    
-    
+
+
 -- Set publish to all
 INSERT INTO operationallowed
   SELECT 1, id, 0
     FROM metadata WHERE (uuid like 'geocatch-subtpl-extent-landesgebiet-%'
-                           or  uuid like 'geocatch-subtpl-extent-kantonsgebiet-%' 
+                           or  uuid like 'geocatch-subtpl-extent-kantonsgebiet-%'
                            or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%')
                            and id not in (SELECT metadataid FROM operationallowed);
 
@@ -167,14 +167,14 @@ INSERT INTO operationallowed
   SELECT (SELECT id FROM groups WHERE name = 'SUBTEMPLATES' ORDER by 1 LIMIT 1),
         id, 2
     FROM metadata WHERE (uuid like 'geocatch-subtpl-extent-landesgebiet-%'
-                            or  uuid like 'geocatch-subtpl-extent-kantonsgebiet-%' 
+                            or  uuid like 'geocatch-subtpl-extent-kantonsgebiet-%'
                             or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%')
                            and id not in (SELECT metadataid FROM operationallowed);
-    
+
 
 -- Assign ownership to geocat admin
 UPDATE metadata SET owner = 1 WHERE (uuid like 'geocatch-subtpl-extent-landesgebiet-%'
-                                     or  uuid like 'geocatch-subtpl-extent-kantonsgebiet-%' 
+                                     or  uuid like 'geocatch-subtpl-extent-kantonsgebiet-%'
                                      or  uuid like 'geocatch-subtpl-extent-hoheitsgebiet-%');
 ```
 
@@ -206,20 +206,20 @@ Apply the transformation to all metadata records.
 1. Search all records to be updated
 
 In a browser:
-``` 
+```
 http://localhost:8080/geonetwork/srv/eng/q?_schema=iso19139.che&_isTemplate=y%20or%20n&_isHarvested=n&bucket=m&summaryOnly=true
-``` 
+```
 
 In command line (does not work yet, so use browser mode):
-``` 
+```
 export CATALOG=http://geocat-dev.dev.bgdi.ch/geonetwork
 export CATALOGUSER=admin
 export CATALOGPASS=admin
 
 
-rm -f /tmp/cookie; 
-curl -s -c /tmp/cookie -o /dev/null -X POST "$CATALOG/srv/eng/info?type=me"; 
-export TOKEN=`grep XSRF-TOKEN /tmp/cookie | cut -f 7`; 
+rm -f /tmp/cookie;
+curl -s -c /tmp/cookie -o /dev/null -X POST "$CATALOG/srv/eng/info?type=me";
+export TOKEN=`grep XSRF-TOKEN /tmp/cookie | cut -f 7`;
 curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie -c /tmp/cookie \
   "$CATALOG/srv/eng/q?_schema=iso19139.che&_isTemplate=y%20or%20n&_isHarvested=n&summaryOnly=true&bucket=m"
 ```
@@ -237,13 +237,13 @@ Parameters:
 * bucket=m
 
 
-``` 
+```
 curl -X PUT --header 'Content-Type: application/json' \
   --header 'Accept: application/json' \
   -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie -c /tmp/cookie \
   "$CATALOG/srv/api/0.1/selections/m"
-  
-  
+
+
 curl -X GET \
   --header 'Content-Type: application/json' \
   --header 'Accept: application/json' \
@@ -267,7 +267,7 @@ Parameters:
 
 
 
-``` 
+```
 curl -X POST --header 'Content-Type: application/json' \
   --header 'Accept: application/json' \
   -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie -c /tmp/cookie \
@@ -275,7 +275,7 @@ curl -X POST --header 'Content-Type: application/json' \
 ```
 
 4. Follow progress
-``` 
+```
 curl -X GET --header 'Accept: application/json' \
     -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie -c /tmp/cookie \
     "$CATALOG/srv/api/0.1/processes/reports"
@@ -284,3 +284,11 @@ curl -X GET --header 'Accept: application/json' \
 5. (optional - if you did not turned off xlinks resolution) Reindex the catalogue from the admin page.
 
 
+
+# Specific procedure for MGDI
+
+Use the following migration scripts for MGDI:
+```
+web/src/main/webapp/WEB-INF/classes/setup/sql-geocat/v340/migrate/migrate-mgdi.sql
+schemas/iso19139.che/src/main/plugin/iso19139.che/process/migration3_4-mgdi.xsl
+```

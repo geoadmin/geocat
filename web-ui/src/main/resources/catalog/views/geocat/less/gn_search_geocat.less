@@ -58,13 +58,7 @@
 
 .gcat-header {
   position: relative;
-  margin: 20px 0px 4px;
-
-  // compensate for logos alignment
-  @media (max-width: @screen-md-max) {
-    margin-left: -50px;
-    margin-right: -60px;
-  }
+  margin: 20px -20px 4px;
 }
 
 .gcat-search-any, .gcat-search-catalogue {
@@ -202,8 +196,8 @@
 .gcat-logo {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  padding: 0px 16px;
+  justify-content: center;
+  padding: 0px 0px;
   & > div {
     flex-shrink: 1;
     // max-width: 60%;
