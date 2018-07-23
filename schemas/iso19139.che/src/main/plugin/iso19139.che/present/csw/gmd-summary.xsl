@@ -17,4 +17,11 @@
 
   <!-- remove che:* elements w/o base type -->
   <xsl:template match="*[starts-with(name(.), 'che:') and not(@gco:isoType)]"/>
+
+  <!-- use iso19139 schemaLocation instead of the record one -->
+  <xsl:template match="@xsi:schemaLocation">
+    <xsl:attribute name="xsi:schemaLocation">http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd
+      http://www.isotc211.org/2005/gmx http://www.isotc211.org/2005/gmx/gmx.xsd
+      http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd</xsl:attribute>
+  </xsl:template>
 </xsl:stylesheet>
