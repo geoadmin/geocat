@@ -226,7 +226,7 @@
              element.data('map', map);
 
              // initialize extent & bbox on map load
-             map.get('creationPromise').then(function() {
+             map.get('sizePromise').then(function() {
                drawBbox();
 
                if (gnMap.isValidExtent(scope.extent.map)) {
