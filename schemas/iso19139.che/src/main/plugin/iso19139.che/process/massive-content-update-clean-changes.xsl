@@ -2,12 +2,13 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                version="1.0" exclude-result-prefixes="gmd geonet">
+                xmlns:che="http://www.geocat.ch/2008/che"
+                version="1.0" exclude-result-prefixes="gmd geonet che">
 
 
   <!-- ================================================================= -->
 
-  <xsl:template match="gmd:MD_Metadata">
+  <xsl:template match="che:CHE_MD_Metadata">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:apply-templates select="node()"/>
