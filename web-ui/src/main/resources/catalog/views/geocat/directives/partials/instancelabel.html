@@ -1,0 +1,5 @@
+<div class="gcat-instance-label" ng-if="::isDevInstance() || isIntInstance()"
+    ng-class="::{'dev': isDevInstance(), 'int': isIntInstance() }">
+  <i class="fa fa-exclamation-triangle"></i>&nbsp;
+  {{::isDevInstance() ? 'DEV' : 'INT'}} instance
+</div>
