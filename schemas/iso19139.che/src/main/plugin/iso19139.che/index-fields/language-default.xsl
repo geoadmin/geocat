@@ -370,9 +370,9 @@
             <xsl:if test="//gmd:MD_Keywords[gmd:thesaurusName]">,</xsl:if>
           </xsl:if>
           <xsl:for-each-group select="//gmd:MD_Keywords[
-                                        gmd:thesaurusName/*/gmd:title/*/text() != '' and
+                                        gmd:thesaurusName/*/gmd:title/gco:CharacterString/text() != '' and
                                         count(gmd:keyword//gmd:LocalisedCharacterString[@locale = $langId and text() != '']) > 0]"
-                              group-by="gmd:thesaurusName/*/gmd:title/*/text()">
+                              group-by="gmd:thesaurusName/*/gmd:title/gco:CharacterString/text()">
 
             '<xsl:value-of select="replace(current-grouping-key(), '''', '\\''')"/>' :[
             <xsl:for-each select="current-group()/gmd:keyword//gmd:LocalisedCharacterString[@locale = $langId and text() != '']">
