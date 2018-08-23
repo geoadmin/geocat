@@ -110,32 +110,6 @@
               ]
           });
 
-          var defer = $q.defer();
-          var sizeLoadPromise = defer.promise;
-          map.set('sizePromise', sizeLoadPromise);
-
-          // This is done to have no delay for the map size $watch
-          var unBindFn = $rootScope.$on('$locationChangeSuccess', function() {
-            setTimeout(function() {
-              $rootScope.$apply();
-            });
-          }.bind(this));
-
-          var unWatchFn = $rootScope.$watch(function() {
-            return map.getTargetElement() && Math.min(
-              map.getTargetElement().offsetWidth,
-              map.getTargetElement().offsetHeight
-            );
-          }, function(size) {
-            if (size > 0) {
-              map.updateSize();
-              map.renderSync();
-              defer.resolve();
-              unWatchFn();
-              unBindFn();
-            }
-          });
-
           // < GEOCAT -- add wmts background (only in swiss projection)
           if(gnMap.getMapConfig().projection == 'EPSG:21781') {
             var resolutions = [
@@ -190,6 +164,32 @@
             config.layers = [];
           }
           // GEOCAT >
+
+          var defer = $q.defer();
+          var sizeLoadPromise = defer.promise;
+          map.set('sizePromise', sizeLoadPromise);
+
+          // This is done to have no delay for the map size $watch
+          var unBindFn = $rootScope.$on('$locationChangeSuccess', function() {
+            setTimeout(function() {
+              $rootScope.$apply();
+            });
+          }.bind(this));
+
+          var unWatchFn = $rootScope.$watch(function() {
+            return map.getTargetElement() && Math.min(
+              map.getTargetElement().offsetWidth,
+              map.getTargetElement().offsetHeight
+            );
+          }, function(size) {
+            if (size > 0) {
+              map.updateSize();
+              map.renderSync();
+              defer.resolve();
+              unWatchFn();
+              unBindFn();
+            }
+          });
 
           // no config found: return empty map
           if (!config) {
