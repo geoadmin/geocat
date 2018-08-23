@@ -112,16 +112,28 @@
         <i class="fa fa-file-zip-o"></i>&nbsp;
         <span data-translate="">exportMEF</span>
       </a></li>
-      <!--geocat formatter-->
       <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/full_view?output=pdf"
              target="_blank">
         <i class="fa fa-file-pdf-o"></i>&nbsp;
         <span data-translate="">exportPDF</span>
       </a></li>
-      <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xml?attachment=true">
+      <!-- custom Geocat options -->
+      <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xml?attachment=true"
+             download="{{md.getUuid()}}.xml">
+        <i class="fa fa-file-code-o"></i>&nbsp;
+        <span data-translate="">exportcheXML</span>
+      </a></li>
+      <li><a data-ng-href="xml_iso19139?uuid={{md.getUuid()}}"
+             download="{{md.getUuid()}}.iso19139.xml">
         <i class="fa fa-file-code-o"></i>&nbsp;
         <span data-translate="">exportXML</span>
       </a></li>
+      <li><a data-ng-href="gm03.xml?uuid={{md.getUuid()}}"
+             download="{{md.getUuid()}}.gm03.xml">
+        <i class="fa fa-file-code-o"></i>&nbsp;
+        <span data-translate="">exportGM03</span>
+      </a></li>
+      <!-- end custom Geocat options -->
       <li><a data-ng-href=""
              data-ng-click="mdService.metadataRDF(md.getUuid())">
         <i class="fa fa-share-alt"></i>&nbsp;
