@@ -3,6 +3,13 @@
                 xmlns:geonet="http://www.fao.org/geonetwork" xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd" version="1.0" exclude-result-prefixes="exslt">
 
+  <!-- The keyword separator -->
+  <xsl:param name="separator">;</xsl:param>
+  <!-- The keyword to search for -->
+  <xsl:param name="search">key1;key2/</xsl:param>
+  <!-- The keyword to put in -->
+  <xsl:param name="replace">newkey1;newkey2</xsl:param>
+
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">
     <xsl:copy>
@@ -13,8 +20,12 @@
   <!-- Remove geonet:* elements. -->
   <xsl:template match="geonet:*" priority="2"/>
 
+  <!-- Build a map from the inputs parameters -->
   <xsl:variable name="map">
-    <map key="Env" value="Environment"/>
+    <xsl:for-each select="tokenize($search, $separator)">
+      <xsl:variable name="pos" select="position()"/>
+      <map key="{.}" value="{tokenize($replace, $separator)[position() = $pos]}"/>
+    </xsl:for-each>
   </xsl:variable>
 
   <!-- Map all keywords to new value.
