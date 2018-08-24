@@ -50,6 +50,9 @@
               name: a[i].label[gnLangs.current] || a[i].name
             });
           }
+          res.sort(function(a, b) {
+            return a.name.localeCompare(b.name);
+          });
           defer.resolve(res);
         });
         return defer.promise;
