@@ -448,8 +448,8 @@
           ]
           <xsl:if test="//gmd:MD_Keywords[gmd:thesaurusName]">,</xsl:if>
         </xsl:if>
-        <xsl:for-each-group select="//gmd:MD_Keywords[gmd:thesaurusName/*/gmd:title/*/text() != '']"
-                            group-by="gmd:thesaurusName/*/gmd:title/*/text()">
+        <xsl:for-each-group select="//gmd:MD_Keywords[gmd:thesaurusName/*/gmd:title/gco:CharacterString/text() != '']"
+                            group-by="gmd:thesaurusName/*/gmd:title/gco:CharacterString/text()">
           '<xsl:value-of select="replace(current-grouping-key(), '''', '\\''')"/>' :[
           <xsl:for-each select="current-group()/gmd:keyword/(gco:CharacterString|gmx:Anchor)">
             {'value': <xsl:value-of select="concat('''', replace(., '''', '\\'''), '''')"/>,
