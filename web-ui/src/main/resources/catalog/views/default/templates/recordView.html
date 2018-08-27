@@ -452,10 +452,14 @@
             <li data-ng-repeat="d in mdView.current.record.geoDesc">{{d}}</li>
           </ul>
           </p>
-          <!-- TODO: use map config -->
+          <!-- SPECIFIC GEOCAT: handle 4326 case -->
           <p data-ng-repeat="bbox in mdView.current.record.geoBox">
             <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
+                 ng-if="!mdView.current.record.isProj4326($index)"
                  data-ng-src="{{gnUrl}}/{{lang}}/region.getmap.png?mapsrs=EPSG:21781&width=250&background=settings&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon($index)}}"/>
+            <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
+                 ng-if="mdView.current.record.isProj4326($index)"
+                 data-ng-src="{{gnUrl}}/{{lang}}/region.getmap.png?mapsrs=EPSG:4326&width=250&background=osm&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon($index)}}"/>
           </p>
 
         </section>
