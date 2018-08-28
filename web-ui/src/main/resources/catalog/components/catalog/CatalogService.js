@@ -829,7 +829,7 @@
       },
 
       // SPECIFIC GEOCAT
-      isProj4326: function(i) {
+      isWorldExtentUsed: function(i) {
         if (!this.geoBox[i]) {
           return false;
         }

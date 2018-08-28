@@ -61,7 +61,7 @@ public class Handlers extends iso19139.Handlers {
   }
 
   // bbox bounds are checked against the limits of the swiss projection (EPSG:21781)
-  def isProj4326(extentEl) {
+  def isWorldExtentUsed(extentEl) {
       def bboxEl = extentEl.'*'.'gmd:EX_GeographicBoundingBox'
       if (bboxEl.isEmpty()) {
           return false
@@ -84,8 +84,8 @@ public class Handlers extends iso19139.Handlers {
           def mdId = env.getMetadataId();
           def xpath = f.getXPathFrom(el);
 
-          // Geocat specific: when extent is given in 4326, force values
-          if (isProj4326(el.parent().parent())) {
+          // Geocat specific: use 4326 projection when bbox bounds are too wide
+          if (isWorldExtentUsed(el.parent().parent())) {
             mapproj = 'EPSG:4326'
             background = 'osm'
           }
@@ -116,8 +116,8 @@ public class Handlers extends iso19139.Handlers {
               replacements['label'] = label
               replacements['pdfOutput'] = commonHandlers.func.isPDFOutput()
 
-              // Geocat specific: when extent is given in 4326, force values
-              if (isProj4326(el.parent().parent())) {
+              // Geocat specific: use 4326 projection when bbox bounds are too wide
+              if (isWorldExtentUsed(el.parent().parent())) {
                 replacements['mapconfig']['mapproj'] = 'EPSG:4326'
                 replacements['mapconfig']['background'] = 'osm'
               }
