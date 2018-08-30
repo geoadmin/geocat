@@ -1,13 +1,15 @@
 package org.fao.geonet.kernel.unpublish;
 
-import org.apache.commons.mail.EmailException;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.MailUtil;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MailSender {
 
@@ -15,14 +17,11 @@ public class MailSender {
     protected SettingManager settingManager;
 
     public void notifyOwners(List<Metadata> unpublishedRecords) {
-        HashMap<Integer, List<String>> groupedRecords = new HashMap<>();
-        unpublishedRecords.forEach(metadata -> {
-            int ownerId = metadata.getSourceInfo().getOwner();
-            if (!groupedRecords.containsKey(ownerId)) {
-                groupedRecords.put(ownerId, new ArrayList<>());
-            }
-            groupedRecords.get(ownerId).add(metadata.getUuid());
-        });
+        Map<Integer, List<String>> groupedRecords = unpublishedRecords
+                .stream()
+                .collect(Collectors.groupingBy(
+                        x-> ((Metadata)x).getSourceInfo().getOwner(),
+                        Collectors.mapping(Metadata::getUuid, Collectors.toList())));
 
         groupedRecords.forEach((ownerId, uuidList) -> {
             User owner = userRepository.findOne(ownerId);
@@ -31,8 +30,7 @@ public class MailSender {
     }
 
     public void notifyOwner(User owner, List<String> uuids) {
-        List<String> toAddress = new ArrayList<>();
-        toAddress.add(owner.getEmail());
+        List<String> toAddress = Collections.singletonList(owner.getEmail());
 
         String subject = "Geocat.ch notification of unpublished records";
 
