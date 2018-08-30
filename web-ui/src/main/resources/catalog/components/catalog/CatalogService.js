@@ -826,6 +826,21 @@
           });
         }
         return res;
+      },
+
+      // SPECIFIC GEOCAT
+      isWorldExtentUsed: function(i) {
+        if (!this.geoBox[i]) {
+          return false;
+        }
+        var coords = this.geoBox[i].split('|');
+        if (parseFloat(coords[0]) < 5.9700 ||
+            parseFloat(coords[2]) > 10.4900||
+            parseFloat(coords[1]) < 45.8300 ||
+            parseFloat(coords[3]) > 47.8100) {
+          return true
+        }
+        return false;
       }
     };
     return Metadata;
