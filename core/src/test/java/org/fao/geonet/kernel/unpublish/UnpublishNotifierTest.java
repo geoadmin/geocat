@@ -10,6 +10,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class UnpublishNotifierTest {
@@ -19,9 +21,9 @@ public class UnpublishNotifierTest {
     @Test
     public void nominalNotifyOwners() {
         mockUserRepository = Mockito.mock(UserRepository.class);
-        declareUser("user-one@test.org", 1);
-        declareUser("user-two@test.org", 2);
-        declareUser("user-three@test.org", 3);
+        declareUser("user-one@test.org", "John", "Doe",1);
+        declareUser("user-two@test.org", "John", "Doe",2);
+        declareUser("user-three@test.org", "John", "Doe",3);
         mockSettingManager = Mockito.mock(SettingManager.class);
 
         final UnpublishNotifier unpublishNotifierDelegateMock = Mockito.mock(UnpublishNotifier.class);
@@ -54,10 +56,40 @@ public class UnpublishNotifierTest {
         Assert.assertEquals("uuid6", uuidCaptor.getAllValues().get(2).get(2));
     }
 
-    private void declareUser(String mail, int id) {
+    @Test
+    public void nominalNotificationEmailSent() {
+        mockUserRepository = Mockito.mock(UserRepository.class);
+        mockSettingManager = Mockito.mock(SettingManager.class);
+
+        final UnpublishNotifier unpublishNotifierDelegateMock = Mockito.mock(UnpublishNotifier.class);
+        UnpublishNotifier toTest = new UnpublishNotifier(mockUserRepository, mockSettingManager);
+
+        User user = declareUser("john@test.com", "John", "Doe", 101);
+        List<String> uuids = Arrays.asList("uuid-invalid-0001", "uuid-invalid-0002", "uuid-invalid-0003", "uuid-invalid-0004");
+
+        Assert.assertEquals(
+                "Hi john-doe,<br>" +
+                "<br>" +
+                "At least one of your metadata records on Geocat.ch were automatically unpublished<br>" +
+                "because they were found to be invalid.<br>" +
+                "<br>" +
+                "The following records were affected:<br>" +
+                " - <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0001\">uuid-invalid-0001</a><br>" +
+                " - <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0002\">uuid-invalid-0002</a><br>" +
+                " - <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0003\">uuid-invalid-0003</a><br>" +
+                " - <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0004\">uuid-invalid-0004</a><br>" +
+                "",
+                toTest.generateEmailBody(user, uuids));
+    }
+
+    private User declareUser(String mail, String firstName, String lastName, int id) {
         User mockUser = Mockito.mock(User.class);
         Mockito.when(mockUser.getEmail()).thenReturn(mail);
+        Mockito.when(mockUser.getName()).thenReturn(firstName);
+        Mockito.when(mockUser.getSurname()).thenReturn(lastName);
+        Mockito.when(mockUser.getUsername()).thenReturn(String.format("%s-%s", firstName, lastName).toLowerCase());
         Mockito.when(mockUserRepository.findOne(id)).thenReturn(mockUser);
+        return mockUser;
     }
 
     private void addMetadata(List<Metadata> testData, String uuid1, int owner) {

@@ -6,9 +6,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.MailUtil;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class UnpublishNotifier {
@@ -34,22 +32,36 @@ public class UnpublishNotifier {
         });
     }
 
-    public void notifyOwner(User owner, List<String> uuids) {
+    protected void notifyOwner(User owner, List<String> uuids) {
         List<String> toAddress = Collections.singletonList(owner.getEmail());
 
         String subject = "Geocat.ch notification of unpublished records";
+        String htmlMessage = generateEmailBody(owner, uuids);
 
+        MailUtil.sendHtmlMail(toAddress, subject, htmlMessage, settingManager);
+    }
+
+    protected String generateEmailBody(User owner, List<String> uuids) {
         String htmlMessage =
-                "Hi " + owner.getUsername() + ",<br>" +
+                "Hi $$userName$$,<br>" +
                 "<br>" +
                 "At least one of your metadata records on Geocat.ch were automatically unpublished<br>" +
                 "because they were found to be invalid.<br>" +
                 "<br>" +
                 "The following records were affected:<br>" +
-                " - <br>" +
-                " - <br>" +
+                " - <a href=\"https://www.geocat.ch/geonetwork/metadata/$$metadataUuid$$\">$$metadataUuid$$</a><br>" +
                 "";
 
-        MailUtil.sendHtmlMail(toAddress, subject, htmlMessage, settingManager);
+        htmlMessage = htmlMessage.replace("$$userName$$", owner.getUsername());
+
+        List<String> lines = Arrays.asList(htmlMessage.split("<br>"));
+        String repeatedLine = lines.stream().filter(l -> l.indexOf("$$metadataUuid") > -1).findFirst().orElse("");
+
+        String newLines = uuids.stream()
+                .map(uuid -> repeatedLine.replace("$$metadataUuid$$", uuid))
+                .collect(Collectors.joining("<br>"));
+        htmlMessage = htmlMessage.replace(repeatedLine, newLines);
+
+        return htmlMessage;
     }
 }
