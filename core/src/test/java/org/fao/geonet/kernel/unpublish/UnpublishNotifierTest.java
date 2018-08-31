@@ -3,6 +3,7 @@ package org.fao.geonet.kernel.unpublish;
 import org.fao.geonet.Assert;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.UserRepository;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class UnpublishNotifierTest {
     UserRepository mockUserRepository;
-
+    SettingManager mockSettingManager;
 
     @Test
     public void nominalNotifyOwners() {
@@ -21,14 +22,14 @@ public class UnpublishNotifierTest {
         declareUser("user-one@test.org", 1);
         declareUser("user-two@test.org", 2);
         declareUser("user-three@test.org", 3);
+        mockSettingManager = Mockito.mock(SettingManager.class);
 
         final UnpublishNotifier unpublishNotifierDelegateMock = Mockito.mock(UnpublishNotifier.class);
-        UnpublishNotifier toTest = new UnpublishNotifier()  {
+        UnpublishNotifier toTest = new UnpublishNotifier(mockUserRepository, mockSettingManager)  {
             public void notifyOwner(User owner, List<String> uuids) {
                 unpublishNotifierDelegateMock.notifyOwner(owner, uuids);
             }
         };
-        toTest.userRepository = mockUserRepository;
         List<Metadata> testData = new ArrayList<>();
         addMetadata(testData, "uuid1", 3);
         addMetadata(testData, "uuid2", 3);

@@ -13,8 +13,13 @@ import java.util.stream.Collectors;
 
 public class UnpublishNotifier {
 
-    protected UserRepository userRepository;
-    protected SettingManager settingManager;
+    private UserRepository userRepository;
+    private SettingManager settingManager;
+
+    public UnpublishNotifier(UserRepository userRepository, SettingManager settingManager) {
+        this.userRepository = userRepository;
+        this.settingManager = settingManager;
+    }
 
     public void notifyOwners(List<Metadata> unpublishedRecords) {
         Map<Integer, List<String>> groupedRecords = unpublishedRecords

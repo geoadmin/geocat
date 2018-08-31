@@ -53,10 +53,12 @@ public class UnpublishJobTest {
         testData.add(createMetadata(in, 2,"uuid-valid-0002", "iso19139", 101));
         testData.add(createMetadata(inInvalid, 3,"uuid-invalid-0003", "iso19139", 101));
         testData.add(createMetadata(inInvalid, 4,"uuid-invalid-0004", "iso19139", 101));
+        testData.add(createMetadata(inInvalid, 5,"uuid-invalid-0005", "iso19139", 101));
         when(mockDataManager.doValidate(any(), any(), Mockito.eq("1"), any(), any(), anyBoolean())).thenReturn(REPORT_WITH_SUCCESS);
         when(mockDataManager.doValidate(any(), any(), Mockito.eq("2"), any(), any(), anyBoolean())).thenReturn(REPORT_WITH_SUCCESS);
         when(mockDataManager.doValidate(any(), any(), Mockito.eq("3"), any(), any(), anyBoolean())).thenReturn(REPORT_WITH_FAILURE);
         when(mockDataManager.doValidate(any(), any(), Mockito.eq("4"), any(), any(), anyBoolean())).thenReturn(REPORT_WITH_FAILURE);
+        when(mockDataManager.doValidate(any(), any(), Mockito.eq("5"), any(), any(), anyBoolean())).thenReturn(REPORT_WITH_FAILURE);
         when(mockMetadataRepository.findAll(any(Specifications.class))).thenReturn(testData);
 
         UnpublishInvalidMetadataJob toTest = createToTest();
@@ -65,10 +67,8 @@ public class UnpublishJobTest {
 
         ArgumentCaptor<List> impactedMetadaCaptor = ArgumentCaptor.forClass(List.class);
         verify(mockUnpublishNotifier).notifyOwners(impactedMetadaCaptor.capture());
-        Assert.assertEquals(2, impactedMetadaCaptor.getValue().size());
+        Assert.assertEquals(3, impactedMetadaCaptor.getValue().size());
     }
-
-
 
     private void initMock() {
         mockMetadataRepository = mock(MetadataRepository.class);

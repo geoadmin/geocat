@@ -243,6 +243,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext jobContext) throws JobExecutionException {
         ApplicationContextHolder.set(this.context);
         final UserRepository userRepository = context.getBean(UserRepository.class);
+        unpublishNotifier = new UnpublishNotifier(userRepository, settingManager);
 
         int id = 1;
 
