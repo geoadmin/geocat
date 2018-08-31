@@ -35,7 +35,7 @@ public class UnpublishJobTest {
     private static final Pair<Element, String> REPORT_WITH_FAILURE = Pair.read(new Element("test-validation-error"), "test-error");
 
     private MetadataRepository mockMetadataRepository;
-    private MailSender mockMailSender;
+    private UnpublishNotifier mockUnpublishNotifier;
     private ServiceContext mockServiceContext;
     private SettingManager mockSettingManager;
     private DataManager mockDataManager;
@@ -64,7 +64,7 @@ public class UnpublishJobTest {
         toTest.performJob(mockServiceContext);
 
         ArgumentCaptor<List> impactedMetadaCaptor = ArgumentCaptor.forClass(List.class);
-        verify(mockMailSender).notifyOwners(impactedMetadaCaptor.capture());
+        verify(mockUnpublishNotifier).notifyOwners(impactedMetadaCaptor.capture());
         Assert.assertEquals(2, impactedMetadaCaptor.getValue().size());
     }
 
@@ -72,7 +72,7 @@ public class UnpublishJobTest {
 
     private void initMock() {
         mockMetadataRepository = mock(MetadataRepository.class);
-        mockMailSender = mock(MailSender.class);
+        mockUnpublishNotifier = mock(UnpublishNotifier.class);
         mockServiceContext = mock(ServiceContext.class);
         mockSettingManager = mock(SettingManager.class);
         mockDataManager = mock(DataManager.class);
@@ -102,7 +102,7 @@ public class UnpublishJobTest {
                 return false;
             }
         };
-        toTest.setMailSender(mockMailSender);
+        toTest.setUnpublishNotifier(mockUnpublishNotifier);
         toTest.settingManager = mockSettingManager;
         toTest.dataManager = mockDataManager;
         toTest.publishRecordRepository = mockPublishRecordRepository;

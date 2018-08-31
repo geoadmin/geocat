@@ -26,7 +26,6 @@ import com.google.common.collect.Sets;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
-import org.apache.commons.mail.EmailException;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
@@ -35,7 +34,6 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
-import org.eclipse.emf.common.util.ArrayDelegatingEList;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -64,7 +62,6 @@ import org.fao.geonet.repository.geocat.PublishRecordRepository;
 import org.fao.geonet.repository.geocat.specification.PublishRecordSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
-import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Text;
@@ -97,11 +94,11 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
     private static final Logger LOGGER_DATA_MAN = LoggerFactory.getLogger(Geonet.DATA_MANAGER);
     private static final Logger LOGGER_GEONET = LoggerFactory.getLogger(Geonet.GEONETWORK);
 
-    public void setMailSender(MailSender mailSender) {
-        this.mailSender = mailSender;
+    public void setUnpublishNotifier(UnpublishNotifier unpublishNotifier) {
+        this.unpublishNotifier = unpublishNotifier;
     }
 
-    private MailSender mailSender;
+    private UnpublishNotifier unpublishNotifier;
     private List<Metadata> unpublishedRecords = new ArrayList<>();
 
     @Autowired
@@ -302,7 +299,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
                 }
                 dataManager.flush();
             }
-            mailSender.notifyOwners(unpublishedRecords);
+            unpublishNotifier.notifyOwners(unpublishedRecords);
 
             LOGGER.info("Finishing Unpublish Invalid Metadata Job.  Job took:  {} sec", MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime));
 

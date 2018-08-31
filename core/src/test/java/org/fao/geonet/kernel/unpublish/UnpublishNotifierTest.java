@@ -11,7 +11,7 @@ import org.mockito.Mockito;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MailSenderTest {
+public class UnpublishNotifierTest {
     UserRepository mockUserRepository;
 
 
@@ -22,10 +22,10 @@ public class MailSenderTest {
         declareUser("user-two@test.org", 2);
         declareUser("user-three@test.org", 3);
 
-        final MailSender mailSenderDelegateMock = Mockito.mock(MailSender.class);
-        MailSender toTest = new MailSender()  {
+        final UnpublishNotifier unpublishNotifierDelegateMock = Mockito.mock(UnpublishNotifier.class);
+        UnpublishNotifier toTest = new UnpublishNotifier()  {
             public void notifyOwner(User owner, List<String> uuids) {
-                mailSenderDelegateMock.notifyOwner(owner, uuids);
+                unpublishNotifierDelegateMock.notifyOwner(owner, uuids);
             }
         };
         toTest.userRepository = mockUserRepository;
@@ -41,7 +41,7 @@ public class MailSenderTest {
 
         ArgumentCaptor<User> ownerCaptor = ArgumentCaptor.forClass(User.class);
         ArgumentCaptor<List> uuidCaptor = ArgumentCaptor.forClass(List.class);
-        Mockito.verify(mailSenderDelegateMock, Mockito.times(3)).notifyOwner(ownerCaptor.capture(), uuidCaptor.capture());
+        Mockito.verify(unpublishNotifierDelegateMock, Mockito.times(3)).notifyOwner(ownerCaptor.capture(), uuidCaptor.capture());
         Assert.assertEquals("user-one@test.org", ownerCaptor.getAllValues().get(0).getEmail());
         Assert.assertEquals("user-two@test.org", ownerCaptor.getAllValues().get(1).getEmail());
         Assert.assertEquals("user-three@test.org", ownerCaptor.getAllValues().get(2).getEmail());
