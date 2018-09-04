@@ -45,5 +45,8 @@
   module.config(['$LOCALES',
     function($LOCALES) {
       $LOCALES.push('admin');
+
+      // custom geocat locales
+      $LOCALES.push('geocat');
     }]);
 })();

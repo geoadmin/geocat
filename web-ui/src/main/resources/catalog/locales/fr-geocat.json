@@ -22,5 +22,7 @@
   "exportcheXML": "Export (XML ISO19139.che)",
   "exportGM03": "Export (GM03)",
   "resolutions": "Résolutions",
-  "documentation": "Documentation"
+  "documentation": "Documentation",
+  "editorHome": "Liste des fiches",
+  "adminHome": "Vue d'ensemble"
 }
