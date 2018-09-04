@@ -8,6 +8,8 @@ RUN apt update && \
 
 ADD . /
 
+LABEL "io.upkick.warn_only"="true"
+
 # Enable Gzip compression on tomcat
 RUN cat /enable_gzip.augtool | augtool --noload --noautoload --echo
 
