@@ -56,7 +56,7 @@
       $scope.occurs = ['+', ' ', '-'];
       $scope.showExplicitQuery = false;
       $scope.filterHelper = ['any', 'title', 'abstract', 'keyword',
-        'denominator', '_source', '_cat', '_groupPublished'];
+        'denominator', '_source', '_cat', '_groupPublished', '_groupOwner'];
 
       var operation = '';
 
@@ -91,7 +91,7 @@
             .success(function(data) {
               var params = [], formParams = ['abstract', 'title',
                 '_source', '_cat', 'any', '_groupPublished', 'keyword',
-                'denominator', 'type'];
+                'denominator', 'type', '_groupOwner'];
               angular.copy(data.parameter, params);
               $scope.virtualCSWSelected = data;
               // $scope.virtualCSWSelected.serviceParameters = {};
