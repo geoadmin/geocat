@@ -834,10 +834,12 @@
           return false;
         }
         var coords = this.geoBox[i].split('|');
-        if (parseFloat(coords[0]) < 5.9700 ||
-            parseFloat(coords[2]) > 10.4900||
-            parseFloat(coords[1]) < 45.8300 ||
-            parseFloat(coords[3]) > 47.8100) {
+        // bounds are from the EPSG 21781: http://spatialreference.org/ref/epsg/ch1903-lv03/
+        // a buffer of 200% was applied
+        if (parseFloat(coords[0]) <  1.45 ||
+            parseFloat(coords[2]) > 15.01 ||
+            parseFloat(coords[1]) < 43.79 ||
+            parseFloat(coords[3]) > 49.82) {
           return true
         }
         return false;

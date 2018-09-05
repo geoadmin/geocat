@@ -66,10 +66,12 @@ public class Handlers extends iso19139.Handlers {
       if (bboxEl.isEmpty()) {
           return false
       }
-      if (bboxEl.'gmd:westBoundLongitude'.'gco:Decimal'.text().toFloat() < 5.9700 ||
-          bboxEl.'gmd:eastBoundLongitude'.'gco:Decimal'.text().toFloat() > 10.4900||
-          bboxEl.'gmd:southBoundLatitude'.'gco:Decimal'.text().toFloat() < 45.8300 ||
-          bboxEl.'gmd:northBoundLatitude'.'gco:Decimal'.text().toFloat() > 47.8100) {
+      // bounds are from the EPSG 21781: http://spatialreference.org/ref/epsg/ch1903-lv03/
+      // a buffer of 200% was applied
+      if (bboxEl.'gmd:westBoundLongitude'.'gco:Decimal'.text().toFloat() <  1.45 ||
+          bboxEl.'gmd:eastBoundLongitude'.'gco:Decimal'.text().toFloat() > 15.01 ||
+          bboxEl.'gmd:southBoundLatitude'.'gco:Decimal'.text().toFloat() < 43.79 ||
+          bboxEl.'gmd:northBoundLatitude'.'gco:Decimal'.text().toFloat() > 49.82) {
           return true
       }
       return false
