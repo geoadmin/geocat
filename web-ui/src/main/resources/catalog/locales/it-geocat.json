@@ -19,5 +19,11 @@
   "exportXML": "Exporta (XML ISO19139)",
   "exportcheXML": "Exporta (XML ISO19139.che)",
   "exportGM03": "Exporta (GM03 XML)",
-  "documentation": "Documentazione"
+  "documentation": "Documentazione",
+  "contribute": "Editare",
+  "editorHome": "Lista dei file",
+  "addRecord": "Aggiungi nuovo record",
+  "ImportRecord": "Importa nuovi record",
+  "directoryManager": "Gestisci rubriche",
+  "batchEditing": "Modifiche batch"
 }

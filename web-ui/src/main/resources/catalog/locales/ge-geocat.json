@@ -28,5 +28,7 @@
   "exportGM03": "(als GM03) exportieren",
   "uuid": "Metadatenidentifikator",
   "resolutions": "Auflösung",
-  "documentation": "Dokumentation"
+  "documentation": "Dokumentation",
+  "contribute": "Editieren",
+  "editorHome": "Metadatenliste"
 }
