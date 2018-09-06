@@ -148,6 +148,9 @@ public class VirtualCswApi {
                 "A service already exist with this name '%s'. Choose another name.",
                 service.getName()));
         }
+        service.getParameters().forEach(p -> {
+            p.setService(service);
+        });
         serviceRepository.save(service);
         applicationContext.getBean(JeevesEngine.class)
             .loadConfigDB(applicationContext, service.getId());
