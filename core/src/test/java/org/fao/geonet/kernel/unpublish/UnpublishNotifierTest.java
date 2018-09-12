@@ -61,7 +61,6 @@ public class UnpublishNotifierTest {
         mockUserRepository = Mockito.mock(UserRepository.class);
         mockSettingManager = Mockito.mock(SettingManager.class);
 
-        final UnpublishNotifier unpublishNotifierDelegateMock = Mockito.mock(UnpublishNotifier.class);
         UnpublishNotifier toTest = new UnpublishNotifier(mockUserRepository, mockSettingManager);
 
         User user = declareUser("john@test.com", "John", "Doe", 101);
@@ -74,11 +73,10 @@ public class UnpublishNotifierTest {
                 "because they were found to be invalid.<br>" +
                 "<br>" +
                 "The following records were affected:<br>" +
-                " - <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0001\">uuid-invalid-0001</a><br>" +
-                " - <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0002\">uuid-invalid-0002</a><br>" +
-                " - <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0003\">uuid-invalid-0003</a><br>" +
-                " - <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0004\">uuid-invalid-0004</a><br>" +
-                "",
+                "- <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0001\">uuid-invalid-0001</a><br>" +
+                "- <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0002\">uuid-invalid-0002</a><br>" +
+                "- <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0003\">uuid-invalid-0003</a><br>" +
+                "- <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0004\">uuid-invalid-0004</a><br>",
                 toTest.generateEmailBody(user, uuids));
     }
 
