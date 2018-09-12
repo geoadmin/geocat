@@ -857,6 +857,18 @@ public final class XslUtil {
         }
     }
 
+    public static boolean findAndValidateURLs(final String textContent) throws ExecutionException {
+        Pattern p = Pattern.compile("(http|ftp|https):\\/\\/([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:\\/~+#-]*[\\w@?^=%&\\/~+#-])?");
+        Matcher m = p.matcher(textContent);
+        boolean result = true;
+
+        while (m.find()) {
+            result = result && validateURL(m.group());
+        }
+
+        return result;
+    }
+
     // End geocat
     public static boolean validateURL(final String urlString) throws ExecutionException {
         return URL_VALIDATION_CACHE.get(urlString, new Callable<Boolean>() {

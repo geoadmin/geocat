@@ -28,4 +28,19 @@
         </sch:rule>
     </sch:pattern>
 
+    <sch:pattern>
+        <sch:title>$loc/strings/invalidURLCheck</sch:title>
+        <!-- Check specification names and status -->
+        <sch:rule context="//gco:CharacterString[matches(., 'http|ftp')] |
+                           //gmd:LocalisedCharacterString[matches(., 'http|ftp')]">
+
+            <sch:let name="isValidUrl" value="xslutil:findAndValidateURLs(text())" />
+
+            <sch:assert test="$isValidUrl = true()">
+                <sch:value-of select="$loc/strings/alert.invalidURL/div" />
+                '<sch:value-of select="string(.)" />'
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
 </sch:schema>
