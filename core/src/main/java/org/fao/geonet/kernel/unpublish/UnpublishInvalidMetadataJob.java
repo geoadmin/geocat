@@ -77,10 +77,7 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -97,24 +94,31 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
     private static final Logger LOGGER_DATA_MAN = LoggerFactory.getLogger(Geonet.DATA_MANAGER);
     private static final Logger LOGGER_GEONET = LoggerFactory.getLogger(Geonet.GEONETWORK);
 
+    public void setUnpublishNotifier(UnpublishNotifier unpublishNotifier) {
+        this.unpublishNotifier = unpublishNotifier;
+    }
+
+    private UnpublishNotifier unpublishNotifier;
+    private List<Metadata> unpublishedRecords = new ArrayList<>();
+
     @Autowired
-    private XmlSerializer xmlSerializer;
+    protected XmlSerializer xmlSerializer;
     @Autowired
     private ConfigurableApplicationContext context;
     @Autowired
     private ServiceManager serviceManager;
     @Autowired
-    private OperationAllowedRepository operationAllowedRepository;
+    protected OperationAllowedRepository operationAllowedRepository;
     @Autowired
     private MetadataValidationRepository metadataValidationRepository;
     @Autowired
-    private DataManager dataManager;
+    protected DataManager dataManager;
     @Autowired
-    private PublishRecordRepository publishRecordRepository;
+    protected PublishRecordRepository publishRecordRepository;
     @Autowired
     private SearchManager searchManager;
     @Autowired
-    private SettingManager settingManager;
+    protected SettingManager settingManager;
 
     private AtomicBoolean running = new AtomicBoolean(false);
 
@@ -134,7 +138,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
         }
     };
 
-    public static final Filter ErrorFinder  = new Filter() {
+    public static final Filter ErrorFinder = new Filter() {
         private static final long serialVersionUID = 1L;
 
         @Override
@@ -153,7 +157,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
     };
 
 
-    private Pair<String, String> failureReason(Element report) {
+    protected Pair<String, String> failureReason(Element report) {
         Iterator<Element> reports = report.getDescendants(ReportFinder);
 
         StringBuilder rules = new StringBuilder();
@@ -239,6 +243,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext jobContext) throws JobExecutionException {
         ApplicationContextHolder.set(this.context);
         final UserRepository userRepository = context.getBean(UserRepository.class);
+        unpublishNotifier = new UnpublishNotifier(userRepository, settingManager);
 
         int id = 1;
 
@@ -270,7 +275,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
 
     }
 
-    private void performJob(ServiceContext serviceContext) throws Exception {
+    protected void performJob(ServiceContext serviceContext) throws Exception {
         if (!running.compareAndSet(false, true)) {
             throw new IllegalStateException("Unpublish Job is already running");
         }
@@ -285,6 +290,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
             publishRecordRepository.deleteAll(PublishRecordSpecs.daysOldOrOlder(keepDuration));
 
             List<Metadata> metadataToTest = lookUpMetadataIds(serviceContext.getBean(MetadataRepository.class));
+            unpublishedRecords.clear();
             for (Metadata metadataRecord : metadataToTest) {
                 try {
                     tryToValidateRecord(serviceContext, metadataRecord);
@@ -294,6 +300,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
                 }
                 dataManager.flush();
             }
+            unpublishNotifier.notifyOwners(unpublishedRecords);
 
             LOGGER.info("Finishing Unpublish Invalid Metadata Job.  Job took:  {} sec", MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime));
 
@@ -304,7 +311,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
         }
     }
 
-    private void indexMetadataWithNonEvaluatedOrIncoherentValidationStatus(ServiceContext serviceContext, DataManager dataManager) throws Exception {
+    protected void indexMetadataWithNonEvaluatedOrIncoherentValidationStatus(ServiceContext serviceContext, DataManager dataManager) throws Exception {
         LOGGER.info("Start indexing metadata with non evaluated or incoherent validation status.");
         long startTime = System.currentTimeMillis();
         Set<String> toIndex = Sets.newHashSet();
@@ -342,9 +349,11 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
     private void tryToValidateRecord(ServiceContext context, Metadata metadataRecord) throws Exception {
         boolean published = isPublished(metadataRecord.getId());
         boolean hasValidationRecord = hasValidationRecord(metadataRecord.getId());
-        if (!published && !hasValidationRecord) {return;}
+        if (!published && !hasValidationRecord) {
+            return;
+        }
 
-        Element md   = xmlSerializer.select(context, String.valueOf(metadataRecord.getId()));
+        Element md = xmlSerializer.select(context, String.valueOf(metadataRecord.getId()));
         String schema = metadataRecord.getDataInfo().getSchemaId();
 
         String id = "" + metadataRecord.getId();
@@ -353,7 +362,9 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
         String failureRule = failureReport.one();
         String failureReasons = failureReport.two();
 
-        if (failureRule.isEmpty() || !published) {return; }
+        if (failureRule.isEmpty() || !published) {
+            return;
+        }
 
         PublishRecord todayRecord = new PublishRecord();
         todayRecord.setChangedate(new Date());
@@ -375,11 +386,13 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
                 .or(isPublic(ReservedOperation.featured))
                 .or(isPublic(ReservedOperation.dynamic));
         operationAllowedRepository.deleteAll(Specifications.where(hasMetadataId(metadataRecord.getId())).and(publicOps));
+
+        unpublishedRecords.add(metadataRecord);
     }
 
-    private boolean isPublished(int id) throws SQLException {
+    protected boolean isPublished(int id) throws SQLException {
         Specifications<OperationAllowed> idAndPublishedSpec =
-                        where(isPublic(ReservedOperation.view)).
+                where(isPublic(ReservedOperation.view)).
                         and(OperationAllowedSpecs.hasMetadataId("" + id));
         return operationAllowedRepository.count(idAndPublishedSpec) > 0;
     }
@@ -398,7 +411,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
         return true;
     }
 
-    private boolean hasValidationRecord(Integer id) {
+    protected boolean hasValidationRecord(Integer id) {
         List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id);
         if (validationInfo == null || validationInfo.size() == 0) {
             return false;
@@ -408,14 +421,13 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
 
     /**
      * Creates a list of metadata needed to be schematron checked, i.e.:
-     *
-     *  - not harvested
-     *  - of type Metadata (no template nor subtemplate)
-     *  - of schema ISO19139.che
+     * <p>
+     * - not harvested
+     * - of type Metadata (no template nor subtemplate)
+     * - of schema ISO19139.che
      *
      * @param repo the MetadataRepository JPA
      * @return a list of metadata objects to check
-     *
      * @throws SQLException
      */
     private List<Metadata> lookUpMetadataIds(MetadataRepository repo) throws SQLException {
@@ -428,11 +440,10 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
     /**
      * Gets a list of published states for the MDs, between 2 dates given as argument.
      *
-     * @param context a ServiceContext object, used to get a hook onto the JPA repositories
+     * @param context     a ServiceContext object, used to get a hook onto the JPA repositories
      * @param startOffset
      * @param endOffset
      * @return the list of published states (see the publish_tracking table in db)
-     *
      * @throws Exception
      */
     static List<PublishRecord> values(ServiceContext context, int startOffset, int endOffset) throws Exception {
