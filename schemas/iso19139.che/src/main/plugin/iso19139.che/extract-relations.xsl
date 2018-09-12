@@ -21,7 +21,7 @@
   <xsl:template mode="get-iso19139-localized-url" match="*">
 
     <xsl:variable name="metadata"
-                  select="ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata']"/>
+                  select="ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata' or name()='che:CHE_MD_Metadata']"/>
     <xsl:variable name="mainLanguage"
                   select="string($metadata/gmd:language/gco:CharacterString|
                                  $metadata/gmd:language/gmd:LanguageCode/@codeListValue)"/>
