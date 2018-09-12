@@ -11,7 +11,6 @@ import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class UnpublishNotifierTest {
@@ -57,7 +56,7 @@ public class UnpublishNotifierTest {
     }
 
     @Test
-    public void nominalNotificationEmailSent() {
+    public void nominalGenerateEmail() {
         mockUserRepository = Mockito.mock(UserRepository.class);
         mockSettingManager = Mockito.mock(SettingManager.class);
 
@@ -65,6 +64,7 @@ public class UnpublishNotifierTest {
 
         User user = declareUser("john@test.com", "John", "Doe", 101);
         List<String> uuids = Arrays.asList("uuid-invalid-0001", "uuid-invalid-0002", "uuid-invalid-0003", "uuid-invalid-0004");
+        String emailBodyToTest = toTest.generateEmailBody(user, uuids);
 
         Assert.assertEquals(
                 "Hi john-doe,<br>" +
@@ -77,7 +77,7 @@ public class UnpublishNotifierTest {
                 "- <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0002\">uuid-invalid-0002</a><br>" +
                 "- <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0003\">uuid-invalid-0003</a><br>" +
                 "- <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0004\">uuid-invalid-0004</a><br>",
-                toTest.generateEmailBody(user, uuids));
+                emailBodyToTest);
     }
 
     private User declareUser(String mail, String firstName, String lastName, int id) {
@@ -90,9 +90,9 @@ public class UnpublishNotifierTest {
         return mockUser;
     }
 
-    private void addMetadata(List<Metadata> testData, String uuid1, int owner) {
+    private void addMetadata(List<Metadata> testData, String uuid, int owner) {
         Metadata md = new Metadata();
-        md.setUuid(uuid1);
+        md.setUuid(uuid);
         md.getSourceInfo().setOwner(owner);
         testData.add(md);
     }

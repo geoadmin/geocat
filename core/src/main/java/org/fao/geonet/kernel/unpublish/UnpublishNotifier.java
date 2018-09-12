@@ -6,7 +6,12 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.MailUtil;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class UnpublishNotifier {
@@ -24,7 +29,7 @@ public class UnpublishNotifier {
         Map<Integer, List<String>> groupedRecords = unpublishedRecords
                 .stream()
                 .collect(Collectors.groupingBy(
-                        x-> x.getSourceInfo().getOwner(),
+                        x -> x.getSourceInfo().getOwner(),
                         Collectors.mapping(Metadata::getUuid, Collectors.toList())));
 
         groupedRecords.forEach((ownerId, uuidList) -> {
