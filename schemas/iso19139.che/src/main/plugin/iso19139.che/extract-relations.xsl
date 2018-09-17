@@ -32,6 +32,8 @@
     </xsl:variable>
 
     <xsl:for-each select="gmd:URL|che:PT_FreeURL/*/che:LocalisedURL">
+      <!-- GEOCAT, as when url not defined for ui language, the first one returned by getRelated is used,
+      sort getrelated ouput by other languages -->
       <xsl:sort select="string((string-length(substring-before($otherLanguage, @locale)) - 1) div 4)"/>
       <xsl:variable name="localeId" select="substring-after(@locale, '#')"/>
       <value lang="{if (@locale)
