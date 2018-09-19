@@ -198,7 +198,8 @@
             $scope.keywords = data;
             gnSearchManagerService.gnSearch({
               summaryOnly: 'true',
-              thesaurusIdentifier: $scope.thesaurusSelected.key}).
+              thesaurusIdentifier: $scope.thesaurusSelected.key,
+              _content_type: 'json'}).
                 then(function(results) {
                   $scope.recordsRelatedToThesaurus = parseInt(results.count);
                 });
@@ -401,7 +402,8 @@
 
       $scope.reindexRecords = function() {
         gnSearchManagerService.indexSetOfRecords({
-          thesaurusIdentifier: $scope.thesaurusSelected.key}).
+          thesaurusIdentifier: $scope.thesaurusSelected.key,
+          _content_type: 'json'}).
             then(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title:
