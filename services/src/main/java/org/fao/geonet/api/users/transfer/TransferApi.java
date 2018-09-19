@@ -133,14 +133,19 @@ public class TransferApi {
         final UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
         List<UserGroupsResponse> list = new ArrayList<>();
         if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin) {
-            // add all admins first
-            List<User> allAdmin = userRepository.findAllByProfile(Profile.Administrator);
-            Group adminGroup = new Group();
-            adminGroup.setName("allAdmins");
-            for (User u : allAdmin) {
-                list.add(
-                    new UserGroupsResponse(u, adminGroup, Profile.Administrator.name())
-                );
+
+            // GEOCAT: only transfer to admins if admin myself
+            // note: transfer to admins is not actually prevented but only not accessible through the UI
+            if (myProfile == Profile.Administrator) {
+                // add all admins first
+                List<User> allAdmin = userRepository.findAllByProfile(Profile.Administrator);
+                Group adminGroup = new Group();
+                adminGroup.setName("allAdmins");
+                for (User u : allAdmin) {
+                    list.add(
+                            new UserGroupsResponse(u, adminGroup, Profile.Administrator.name())
+                    );
+                }
             }
 
             // add all users

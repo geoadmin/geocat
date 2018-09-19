@@ -25,5 +25,6 @@
   "addRecord": "Aggiungi nuovo record",
   "ImportRecord": "Importa nuovi record",
   "directoryManager": "Gestisci rubriche",
-  "batchEditing": "Modifiche batch"
+  "batchEditing": "Modifiche batch",
+  "allAdmins": "Administrators"
 }
