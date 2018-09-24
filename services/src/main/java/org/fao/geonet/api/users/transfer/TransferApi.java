@@ -52,6 +52,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -154,7 +155,9 @@ public class TransferApi {
             if (myProfile == Profile.Administrator) {
                 userGroups = userGroupRepository.findAll();
             } else {
-                userGroups  = userGroupRepository.findAll(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
+                List<Integer> myGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(session.getUserIdAsInt()))
+                        .stream().map(ug -> ug.getGroup().getId()).collect(Collectors.toList());
+                userGroups = userGroupRepository.findAll(UserGroupSpecs.hasGroupIds(myGroups));
             }
 
             for (UserGroup ug : userGroups) {
