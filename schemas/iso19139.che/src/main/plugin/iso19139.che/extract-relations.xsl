@@ -26,14 +26,14 @@
                   select="string($metadata/gmd:language/gco:CharacterString|
                                  $metadata/gmd:language/gmd:LanguageCode/@codeListValue)"/>
     <xsl:variable name="otherLanguage">
+      <xsl:copy-of select="concat('#', upper-case(util:twoCharLangCode($mainLanguage, '')))"/>
         <xsl:for-each select="$metadata/gmd:locale/gmd:PT_Locale/@id">
           <xsl:copy-of select="concat('#', .)"/>
         </xsl:for-each>
     </xsl:variable>
-
     <xsl:for-each select="gmd:URL|che:PT_FreeURL/*/che:LocalisedURL">
       <!-- GEOCAT, as when url not defined for ui language, the first one returned by getRelated is used,
-      sort getrelated ouput by other languages -->
+      sort getrelated ouput by other languages, adding main language at first index if exist -->
       <xsl:sort select="string((string-length(substring-before($otherLanguage, @locale)) - 1) div 4)"/>
       <xsl:variable name="localeId" select="substring-after(@locale, '#')"/>
       <value lang="{if (@locale)
