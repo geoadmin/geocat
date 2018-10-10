@@ -1,6 +1,10 @@
 <strings>
-  <schematron.title>AAP</schematron.title>
+  <!--<-->
+
   <mandatoryFields>Check mandatory fields</mandatoryFields>
+
+  <appraisalSectionRequired>Appraisal section has to be defined when AAP keyword is used.</appraisalSectionRequired>
+  <notAppraisalSectionRequired>AAP keyword is not used or appraisal section is defined.</notAppraisalSectionRequired>
 
   <durationOfConservationRequired>durationOfConservation is required (integer)</durationOfConservationRequired>
   <durationOfConservationReport>duration of conservation:</durationOfConservationReport>
@@ -8,10 +12,16 @@
   <appraisalOfArchivalValueRequired>appraisalOfArchivalValue is required (codelist)</appraisalOfArchivalValueRequired>
   <appraisalOfArchivalValueReport>appraisal of archival value:</appraisalOfArchivalValueReport>
 
-  <reasonForArchivalValuePresence>Test presence or absence of reasonForArchivalValue field
-  </reasonForArchivalValuePresence>
-  <reasonForArchivalValuePresenceReport>reasonForArchivalValue:</reasonForArchivalValuePresenceReport>
-  <reasonForArchivalValuePresent>Field is present</reasonForArchivalValuePresent>
+  <!--<-->
+  <reasonForArchivalValuePresence>Test presence or absence of reasonForArchivalValue field</reasonForArchivalValuePresence>
+
   <reasonForArchivalValueAbsent>Field is absent</reasonForArchivalValueAbsent>
+  <notReasonForArchivalValueAbsent>Field is present or optionnal</notReasonForArchivalValueAbsent>
+
+  <!--<-->
+  <officalAndAAP>Official and AAP</officalAndAAP>
+
+  <cantSetManyTopicsWhenOfficalAndAAP>Using both AAP and official keywords forbid definition of many topics.</cantSetManyTopicsWhenOfficalAndAAP>
+  <notCantSetManyTopicsWhenOfficalAndAAP>Either this metadata is not both official and AAP, or it does not relate to many topics.</notCantSetManyTopicsWhenOfficalAndAAP>
 
 </strings>

@@ -16,13 +16,27 @@
 
   <sch:pattern>
     <sch:title>$loc/strings/mandatoryFields</sch:title>
-    <sch:rule context="/che:CHE_MD_Metadata/gmd:metadataMaintenance/che:CHE_MD_MaintenanceInformation/che:appraisal/che:CHE_MD_Appraisal_AAP">
+
+    <sch:rule context="//gmd:identificationInfo/che:CHE_MD_DataIdentification">
+        <sch:let name="AAPKeyworkSet" value="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[contains(., 'AAP')]"/>
+        <sch:let name="appraisalSectionDefined" value="//gmd:resourceMaintenance/che:CHE_MD_MaintenanceInformation/che:appraisal/che:CHE_MD_Appraisal_AAP"/>
+
+        <sch:let name="failure" value="$AAPKeyworkSet and not($appraisalSectionDefined)"/>
+
+        <sch:assert test="not($failure)">
+            <sch:value-of select="$loc/strings/appraisalSectionRequired"/>
+        </sch:assert>
+        <sch:report test="not($failure)">
+            <sch:value-of select="$loc/strings/notAppraisalSectionRequired"/>
+        </sch:report>
+    </sch:rule>
+
+    <sch:rule context="//gmd:resourceMaintenance/che:CHE_MD_MaintenanceInformation/che:appraisal/che:CHE_MD_Appraisal_AAP">
 
       <sch:let name="durationOfConservation" value="che:durationOfConservation/gco:Integer/text()"/>
       <sch:let name="appraisalOfArchivalValue" value="che:appraisalOfArchivalValue/che:CHE_AppraisalOfArchivalValueCode/@codeListValue" />
       <sch:let name="reasonForArchiving" value="che:reasonForArchivingValue/che:CHE_ReasonForArchivingValueCode/@codeListValue" />
 
-      <!-- duration of conservation -->
       <sch:assert test="string-length($durationOfConservation) &gt; 0">
         <sch:value-of select="$loc/strings/durationOfConservationRequired"/>
       </sch:assert>
@@ -31,7 +45,6 @@
         <sch:value-of select="floor($durationOfConservation)"/>
       </sch:report>
 
-      <!-- appraisal of archival value (codelist) -->
       <sch:assert test="string-length($appraisalOfArchivalValue) &gt; 0">
         <sch:value-of select="$loc/strings/appraisalOfArchivalValueRequired"/>
       </sch:assert>
@@ -45,21 +58,43 @@
 
   <sch:pattern>
     <sch:title>$loc/strings/reasonForArchivalValuePresence</sch:title>
-    <sch:rule context="/che:CHE_MD_Metadata/gmd:metadataMaintenance/che:CHE_MD_MaintenanceInformation/che:appraisal/che:CHE_MD_Appraisal_AAP">
+    <sch:rule context="//gmd:resourceMaintenance/che:CHE_MD_MaintenanceInformation/che:appraisal/che:CHE_MD_Appraisal_AAP">
       <sch:let name="appraisalOfArchivalValue" value="che:appraisalOfArchivalValue/che:CHE_AppraisalOfArchivalValueCode/@codeListValue" />
       <sch:let name="archWurdigOrSampling" value="$appraisalOfArchivalValue = 'S' or $appraisalOfArchivalValue = 'A'" />
       <sch:let name="reasonForArchiving" value="che:reasonForArchivingValue/che:CHE_ReasonForArchivingValueCode/@codeListValue" />
       <sch:let name="reasonPresent" value="string-length($reasonForArchiving) &gt; 0" />
-      <sch:let name="reasonReport" value="if ($reasonPresent) then $loc/strings/reasonForArchivalValuePresent else $loc/strings/reasonForArchivalValueAbsent" />
 
-      <sch:assert test="($archWurdigOrSampling and $reasonPresent) or (not($archWurdigOrSampling) and not($reasonPresent))">
-        <sch:value-of select="$reasonReport" />
+      <sch:let name="failure" value="not($reasonPresent) and $archWurdigOrSampling"/>
+
+      <sch:assert test="not($failure)">
+        <sch:value-of select="$loc/strings/reasonForArchivalValueAbsent" />
       </sch:assert>
-      <sch:report test="($archWurdigOrSampling and $reasonPresent) or (not($archWurdigOrSampling) and not($reasonPresent))">
-        <sch:value-of select="$loc/strings/reasonForArchivalValuePresenceReport" />
-        <sch:value-of select="$reasonReport" />
+      <sch:report test="not($failure)">
+        <sch:value-of select="$loc/strings/notReasonForArchivalValueAbsent" />
       </sch:report>
 
+    </sch:rule>
+  </sch:pattern>
+
+  <sch:pattern>
+    <sch:title>$loc/strings/officalAndAAP</sch:title>
+    <sch:rule context="//gmd:identificationInfo/che:CHE_MD_DataIdentification">
+        <sch:let name="AAPKeyworkSet" value="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[contains(., 'AAP')]"/>
+        <sch:let name="debase" value="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[contains(., 'géodonnée de base')]"/>
+        <sch:let name="basis" value="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[contains(., 'Geobasisdaten')]"/>
+        <sch:let name="dibase" value="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[contains(., 'geodati di base')]"/>
+        <sch:let name="official" value="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[contains(., 'official geodata')]"/>
+        <sch:let name="officialKeyworkSet" value="$debase or $basis or $dibase or $official"/>
+        <sch:let name="manyTopicSet" value="count(//gmd:MD_TopicCategoryCode) > 1"/>
+
+        <sch:let name="failure" value="$manyTopicSet and $AAPKeyworkSet and $officialKeyworkSet" />
+
+        <sch:assert test="not($failure)">
+            <sch:value-of select="$loc/strings/cantSetManyTopicsWhenOfficalAndAAP"/>
+        </sch:assert>
+        <sch:report test="not($failure)">
+            <sch:value-of select="$loc/strings/notCantSetManyTopicsWhenOfficalAndAAP"/>
+        </sch:report>
     </sch:rule>
   </sch:pattern>
 
