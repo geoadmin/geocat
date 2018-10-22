@@ -21,7 +21,7 @@
   <!--<-->
   <officalAndAAP>Official and AAP</officalAndAAP>
 
-  <cantSetManyTopicsWhenOfficalAndAAP>Using both AAP and official keywords forbid definition of many topics.</cantSetManyTopicsWhenOfficalAndAAP>
+  <cantSetManyTopicsWhenOfficalAndAAP>Only one topic category is allowed when using keywords "AAP" and "official geodata.</cantSetManyTopicsWhenOfficalAndAAP>
   <notCantSetManyTopicsWhenOfficalAndAAP>Either this metadata is not both official and AAP, or it does not relate to many topics.</notCantSetManyTopicsWhenOfficalAndAAP>
 
 </strings>
