@@ -295,21 +295,10 @@
       <xsl:when
         test="$invalidValue='true' and count(//gmd:topicCategory[starts-with(gmd:MD_TopicCategoryCode, concat($value, '_'))]) > 0">
 
-        <!-- Not sure why this has been done, cause we just need not to display the element ? -->
-
-        <!--Hide the topic cat if it is a root one and one of its children is within the metadata-->
-        <!--<div class="form-group gn-field hidden" data-gn-field-highlight="">
-          <label for="{$fieldId}" class="col-sm-2 control-label">
-            <xsl:value-of select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), '', '')/label"/>
-          </label>
-          <div class="col-sm-9 gn-value">
-            <input id="{$fieldId}" class="form-control" name="_{gn:element/@ref}"  type="text" value="{$value}"></input>
-          </div>
-        </div>-->
       </xsl:when>
 
       <xsl:otherwise>
-        <div class="form-group gn-field {$invalidCls} gn-required" data-gn-field-highlight="">
+        <div class="form-group gn-field {$invalidCls} gn-required" data-gn-field-highlight="" id="gn-el-{gn:element/@ref}">
           <label for="{$fieldId}" class="col-sm-2 control-label">
             <xsl:value-of select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), '', '')/label"/>
           </label>
@@ -357,11 +346,9 @@
             </select>
           </div>
           <div class="col-sm-1 gn-control" data-gn-field-highlight="">
-            <!--
-                    <xsl:call-template name="render-boxed-element-control">
-                      <xsl:with-param name="editInfo" select="gn:element"/>
-                    </xsl:call-template>
-            -->
+            <xsl:call-template name="render-boxed-element-control">
+              <xsl:with-param name="editInfo" select="gn:element"/>
+            </xsl:call-template>
           </div>
 
         </div>
