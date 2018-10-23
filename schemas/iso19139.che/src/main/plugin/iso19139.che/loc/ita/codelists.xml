@@ -225,6 +225,43 @@
       <description>Basi, strutture e attività militari
         Esempi: addestramento, trasporto militare, raccolta di informazioni</description>
     </entry>
+    <entry>
+      <code>intelligenceMilitary_R1</code>
+      <label>Fgg1Personelles</label>
+    </entry>
+    <entry>
+      <code>intelligenceMilitary_R2</code>
+      <label>Fgg2Nachrichtendienst</label>
+    </entry>
+    <entry>
+      <code>intelligenceMilitary_R3</code>
+      <label>Fgg3Operationen</label>
+    </entry>
+    <entry>
+      <code>intelligenceMilitary_R4</code>
+      <label>Fgg4LogistikUndSan</label>
+    </entry>
+    <entry>
+      <code>intelligenceMilitary_R5</code>
+      <label>Fgg5Planung</label>
+    </entry>
+    <entry>
+      <code>intelligenceMilitary_R6</code>
+      <label>Fgg6Fuehrungsunterstuetzung</label>
+    </entry>
+    <entry>
+      <code>intelligenceMilitary_R7</code>
+      <label>Fgg7Ausbildung</label>
+    </entry>
+    <entry>
+      <code>intelligenceMilitary_R8</code>
+      <label>Fgg8Finanzen</label>
+    </entry>
+    <entry>
+      <code>intelligenceMilitary_R9</code>
+      <label>Fgg9ZivMilKooperation</label>
+    </entry>
+
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>farming</code>
