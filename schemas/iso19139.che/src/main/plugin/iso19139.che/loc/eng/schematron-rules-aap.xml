@@ -17,7 +17,7 @@
   <reasonForArchivalValuePresence>Test presence or absence of reasonForArchivalValue field</reasonForArchivalValuePresence>
 
   <reasonForArchivalValueAbsent>Field is absent</reasonForArchivalValueAbsent>
-  <notReasonForArchivalValueAbsent>Field is present or optionnal</notReasonForArchivalValueAbsent>
+  <notReasonForArchivalValueAbsent>Field is present or optional</notReasonForArchivalValueAbsent>
 
   <!--<-->
   <officalAndAAP>Official and AAP</officalAndAAP>

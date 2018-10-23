@@ -17,12 +17,12 @@
   <reasonForArchivalValuePresence>Test presence or absence of reasonForArchivalValue field</reasonForArchivalValuePresence>
 
   <reasonForArchivalValueAbsent>Field is absent</reasonForArchivalValueAbsent>
-  <notReasonForArchivalValueAbsent>Field is present or optionnal</notReasonForArchivalValueAbsent>
+  <notReasonForArchivalValueAbsent>Field is present or optional</notReasonForArchivalValueAbsent>
 
   <!--<-->
   <officalAndAAP>Official and AAP</officalAndAAP>
 
-  <cantSetManyTopicsWhenOfficalAndAAP>Nur eine Thematik erlaubt bei Verwendung der Schlüsselwörter "Geobasisdaten" und "AAP".</cantSetManyTopicsWhenOfficalAndAAP>
+  <cantSetManyTopicsWhenOfficalAndAAP>Only one topic category is allowed when using keywords "AAP" and "official geodata.</cantSetManyTopicsWhenOfficalAndAAP>
   <notCantSetManyTopicsWhenOfficalAndAAP>Either this metadata is not both official and AAP, or it does not relate to many topics.</notCantSetManyTopicsWhenOfficalAndAAP>
 
 </strings>
