@@ -253,49 +253,39 @@
     <xsl:variable name="name" select="name(.)"/>
     <xsl:variable name="value" select="string(.)"/>
 
-    <xsl:variable name="invalidValue"
-                  select="if($value = 'environment' or $value = 'geoscientificInformation'
-                          or $value = 'planningCadastre' or $value = 'imageryBaseMapsEarthCover'
-                          or $value= 'utilitiesCommunication') then 'true' else 'false'"/>
-
-    <xsl:variable name="invalidCls" select="if($invalidValue = 'true') then 'has-error' else ''"/>
 
     <xsl:variable name="list">
       <items>
         <xsl:for-each select="gn:element/gn:text">
           <xsl:variable name="choiceValue" select="string(@value)"/>
           <xsl:variable name="label" select="$codelists/codelist[@name = $name]/entry[code = $choiceValue]/label"/>
-
-          <item>
-            <value>
-              <xsl:if test="contains(@value,'_')">
-                <xsl:attribute name="parent">
-                  <xsl:value-of select="substring-before(@value, '_')"/>
-                </xsl:attribute>
-              </xsl:if>
-              <xsl:value-of select="@value"/>
-            </value>
-            <label>
-              <xsl:choose>
-                <xsl:when test="$label">
+          <xsl:if test="$label">
+            <item>
+              <value>
+                <xsl:if test="contains(@value,'_')">
+                  <xsl:attribute name="parent">
+                    <xsl:value-of select="substring-before(@value, '_')"/>
+                  </xsl:attribute>
+                </xsl:if>
+                <xsl:value-of select="@value"/>
+              </value>
+              <label>
                   <xsl:value-of select="$label"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:value-of select="$choiceValue"/>
-                </xsl:otherwise>
-              </xsl:choose>
-            </label>
-          </item>
+              </label>
+            </item>
+        </xsl:if>
         </xsl:for-each>
       </items>
     </xsl:variable>
     <xsl:variable name="fieldId" select="concat('gn-field-', gn:element/@ref)"/>
 
-    <xsl:choose>
-      <xsl:when
-        test="$invalidValue='true' and count(//gmd:topicCategory[starts-with(gmd:MD_TopicCategoryCode, concat($value, '_'))]) > 0">
+    <xsl:variable name="possible_derivation_count" select="count($list/items/item/value[@parent=$value])" />
+    <xsl:variable name="effective_derivation_count" select="count(//gmd:topicCategory[starts-with(gmd:MD_TopicCategoryCode, concat($value, '_'))])" />
+    <xsl:variable name="invalidCls" select="if($possible_derivation_count >0 and effective_derivation_count=0) then 'has-error' else ''"/>
+    <xsl:variable name="unavalaibleLabel" select="$value and $possible_derivation_count=0 and count($list/items/item/value[text() = $value]) = 0"/>
 
-      </xsl:when>
+    <xsl:choose>
+      <xsl:when test="($possible_derivation_count > 0 and $effective_derivation_count > 0) or $unavalaibleLabel"/>
 
       <xsl:otherwise>
         <div class="form-group gn-field {$invalidCls} gn-required" data-gn-field-highlight="" id="gn-el-{gn:element/@ref}">
@@ -306,16 +296,16 @@
             <select id="{$fieldId}" class="form-control" name="_{gn:element/@ref}" size="1">
               <option name=""/>
 
-              <xsl:for-each select="exslt:node-set($list)//item">
+              <xsl:for-each select="$list/items/item">
                 <xsl:sort select="label"/>
                 <xsl:variable name="curValue" select="value"/>
                 <xsl:choose>
-                  <xsl:when test="count(exslt:node-set($list)//item/value[@parent=$curValue]) > 0">
+                  <xsl:when test="count($list/items/item/value[@parent=$curValue]) > 0">
                     <optgroup>
                       <xsl:attribute name="label">
                         <xsl:value-of select="label"/>
                       </xsl:attribute>
-                      <xsl:for-each select="exslt:node-set($list)//item[value/@parent=$curValue]">
+                      <xsl:for-each select="$list/items/item[value/@parent=$curValue]">
                         <option>
                           <xsl:if test="value=$value">
                             <xsl:attribute name="selected"/>
@@ -346,8 +336,9 @@
             </select>
           </div>
           <div class="col-sm-1 gn-control" data-gn-field-highlight="">
-            <xsl:call-template name="render-boxed-element-control">
+            <xsl:call-template name="render-form-field-control-remove">
               <xsl:with-param name="editInfo" select="gn:element"/>
+              <xsl:with-param name="parentEditInfo" select="../gn:element"/>
             </xsl:call-template>
           </div>
 

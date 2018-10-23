@@ -292,6 +292,15 @@
       <xs:enumeration value="imageryBaseMapsEarthCover_EarthCover"/>
       <xs:enumeration value="imageryBaseMapsEarthCover_Imagery"/>
       <xs:enumeration value="intelligenceMilitary"/>
+      <xs:enumeration value="intelligenceMilitary_R1"/>
+      <xs:enumeration value="intelligenceMilitary_R2"/>
+      <xs:enumeration value="intelligenceMilitary_R3"/>
+      <xs:enumeration value="intelligenceMilitary_R4"/>
+      <xs:enumeration value="intelligenceMilitary_R5"/>
+      <xs:enumeration value="intelligenceMilitary_R6"/>
+      <xs:enumeration value="intelligenceMilitary_R7"/>
+      <xs:enumeration value="intelligenceMilitary_R8"/>
+      <xs:enumeration value="intelligenceMilitary_R9"/>
       <xs:enumeration value="inlandWaters"/>
       <xs:enumeration value="location"/>
       <xs:enumeration value="oceans"/>
