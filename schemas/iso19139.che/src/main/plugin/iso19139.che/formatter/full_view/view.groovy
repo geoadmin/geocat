@@ -7,7 +7,7 @@ isoHandlers.addDefaultHandlers()
 
 def iso19139TopicCategories = ['planningCadastre', 'environment', 'geoscientificInformation', 'imageryBaseMapsEarthCover', 'utilitiesCommunication', 'intelligenceMilitary']
 handlers.add name: 'gmd:topicCategory', select: 'gmd:topicCategory', group: true, priority: 5, { elems ->
-  def listItems = elems.findAll { !it.text().isEmpty() && !iso19139TopicCategories.contains(it.text()) }.collect {
+  def listItems = elems.findAll { !it.text().isEmpty() && !iso19139TopicCategories.contains(it.text()) }.sort{f.codelistValueLabel("MD_TopicCategoryCode", it.text())}.collect {
     f.codelistValueLabel("MD_TopicCategoryCode", it.text())
   };
   handlers.fileResult("html/list-entry.html", [label: f.nodeLabel(elems[0]), listItems: listItems])
