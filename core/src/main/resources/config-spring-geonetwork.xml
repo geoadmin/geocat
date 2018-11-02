@@ -180,4 +180,6 @@
   </bean>
   <!--End geocat-->
 
+  <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false"/>
+
 </beans>
