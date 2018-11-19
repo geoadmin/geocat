@@ -30,6 +30,7 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.index.SpatialIndex;
 import com.vividsolutions.jts.index.strtree.STRtree;
+
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
@@ -60,11 +61,8 @@ import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.identity.FeatureId;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Path;
@@ -77,6 +75,8 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.logging.Level;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 /**
  * This class is responsible for extracting geographic information from metadata and writing that
  * information to a storage mechanism.
@@ -85,7 +85,6 @@ import java.util.logging.Level;
  */
 @SuppressWarnings("unchecked")
 public class SpatialIndexWriter implements FeatureListener {
-    private static Logger LOGGER = LoggerFactory.getLogger(Geonet.SPATIAL);
 
     public static final String _IDS_ATTRIBUTE_NAME = "metadataid";
     public static final String _SPATIAL_INDEX_TYPENAME = "spatialindex";
@@ -369,20 +368,12 @@ public class SpatialIndexWriter implements FeatureListener {
 
     }
 
-    static int indexNotReusedCount = 0;
-
     public SpatialIndex getIndex() throws IOException {
         _lock.lock();
         try {
 
             if (_index == null) {
-                indexNotReusedCount ++;
-                if (indexNotReusedCount > 5) {
-                    LOGGER.error(("more than five consecutive populate index."));
-                }
                 populateIndex();
-            } else {
-                indexNotReusedCount = 0;
             }
             return _index;
         } finally {
