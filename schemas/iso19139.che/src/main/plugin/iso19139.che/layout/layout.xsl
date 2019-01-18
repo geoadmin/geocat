@@ -229,7 +229,7 @@
       <xsl:with-param name="attributesSnippet" select="$attributes"/>
       <xsl:with-param name="type"
                       select="gn-fn-metadata:getFieldType($editorConfig, name(),
-        name($theElement))"/>
+        name($theElement), 'xpath_need_to_be_computed_merging_in_progress')"/>
       <xsl:with-param name="name"
                       select="if ($isEditing = true)
                               then $theElement/gn:element/@ref else ''"/>
