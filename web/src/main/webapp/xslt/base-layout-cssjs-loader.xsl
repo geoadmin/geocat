@@ -208,11 +208,14 @@
             <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>
 -->
             <script type="text/javascript">
-              var module = angular.module('gn_search');
-              module.config(['gnGlobalSettings',
-              function(gnGlobalSettings) {
+              module.config(['gnGlobalSettings', 'gnSearchSettings',
+              function(gnGlobalSettings, gnSearchSettings) {
+              // GEOCAT specific
+              gnSearchSettings.gnStores = {
+              'topicCat': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/schemas/iso19139.che/codelists/codelist[@name='gmd:MD_TopicCategoryCode']/entry" mode="js-translations-topicCat"/>],
+              'formats': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/formats/record" mode="js-translations-formats"/>]
+              };
               gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
-              }]);
             </script>
           </xsl:if>
 
@@ -227,14 +230,6 @@
           </xsl:if>
 
           <!-- XML highlighter JS dependency. -->
-        module.config(['gnGlobalSettings', 'gnSearchSettings',
-          function(gnGlobalSettings, gnSearchSettings) {
-          // GEOCAT specific
-          gnSearchSettings.gnStores = {
-          'topicCat': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/schemas/iso19139.che/codelists/codelist[@name='gmd:MD_TopicCategoryCode']/entry" mode="js-translations-topicCat"/>],
-          'formats': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/formats/record" mode="js-translations-formats"/>]
-          };
-          gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
 
     <xsl:if test="$angularApp = 'gn_editor' or $angularApp = 'gn_admin'">
       <script type="text/javascript" src="{$uiResourcesPath}lib/ace/ace.js?v={$buildNumber}"></script>
