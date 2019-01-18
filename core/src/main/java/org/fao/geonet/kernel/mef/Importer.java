@@ -25,16 +25,15 @@ package org.fao.geonet.kernel.mef;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
-
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.MetadataResourceDatabaseMigration;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -69,6 +68,7 @@ import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.DirectoryStream;
@@ -83,8 +83,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Nonnull;
 
 import static org.fao.geonet.domain.Localized.translationXmlToLangMap;
 
@@ -518,7 +516,7 @@ public class Importer {
         return metadataIdMap;
     }
 
-    public static void addCategoriesToMetadata(Metadata metadata, Element finalCategs, ServiceContext context) {
+    public static void addCategoriesToMetadata(AbstractMetadata metadata, Element finalCategs, ServiceContext context) {
         if (finalCategs != null) {
             final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
             for (Object cat : finalCategs.getChildren()) {

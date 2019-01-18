@@ -296,20 +296,17 @@ public class EditLib {
         }
 
         for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
-            String nodeRef = entry.getKey();
             String xmlSnippetAsString = entry.getValue();
             String nodeName = null;
             boolean replaceExisting = false;
 
-            String[] nodeConfig = nodeRef.split("_");
+            String[] nodeConfig = entry.getKey().split("_");
             // Possibilities:
             // * X125
             // * X125_replace
             // * X125_gmdCOLONkeywords
             // * X125_gmdCOLONkeywords_replace
-
-            Element el = nodeRefToElem.get(nodeRef);
-            nodeRef = nodeConfig[0];
+            String nodeRef = nodeConfig[0];
 
             if (nodeConfig[nodeConfig.length-1].equals("replace")) {
                 replaceExisting = true;
@@ -319,7 +316,7 @@ public class EditLib {
                 nodeName = nodeConfig[1].replace(COLON_SEPARATOR, ":");
             }
 
-            // Get element to fill
+            Element el = nodeRefToElem.get(nodeRef);
             if (el == null) {
                 LOGGER.error(MSG_ELEMENT_NOT_FOUND_AT_REF + nodeRef);
                 continue;
@@ -1137,7 +1134,10 @@ public class EditLib {
      * Given an unexpanded tree, creates container elements and their children.
      */
     public void expandElements(String schema, Element md) throws Exception {
-
+        // Do not process GeoNetwork element eg. validation report
+        if (md.getNamespace() == Edit.NAMESPACE) {
+            return;
+        }
         //--- create containers and fill them with elements using a depth first
         //--- search
 

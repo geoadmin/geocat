@@ -50,6 +50,7 @@ import org.fao.geonet.domain.geocat.PublishRecord;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.search.DuplicateDocFilter;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -81,8 +82,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static org.fao.geonet.kernel.DataManager.VAL_STATUS_NOT_EVALUATED;
-import static org.fao.geonet.kernel.DataManager.VAL_STATUS_VALID;
+import static org.fao.geonet.kernel.datamanager.IMetadataIndexer.VAL_STATUS_NOT_EVALUATED;
+import static org.fao.geonet.kernel.datamanager.IMetadataIndexer.VAL_STATUS_VALID;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.isPublic;
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -119,6 +120,8 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
     private SearchManager searchManager;
     @Autowired
     protected SettingManager settingManager;
+    @Autowired
+    protected IMetadataValidator metadataValidator;
 
     private AtomicBoolean running = new AtomicBoolean(false);
 
@@ -357,7 +360,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
         String schema = metadataRecord.getDataInfo().getSchemaId();
 
         String id = "" + metadataRecord.getId();
-        Element report = dataManager.doValidate(context.getUserSession(), schema, id, md, "eng", false).one();
+        Element report = metadataValidator.doValidate(context.getUserSession(), schema, id, md, "eng", false).one();
         Pair<String, String> failureReport = failureReason(report);
         String failureRule = failureReport.one();
         String failureReasons = failureReport.two();

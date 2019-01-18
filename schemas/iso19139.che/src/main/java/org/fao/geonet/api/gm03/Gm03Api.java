@@ -31,6 +31,7 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
@@ -100,7 +101,7 @@ public class Gm03Api  {
     )
             throws Exception {
 
-        Metadata metadata;
+        AbstractMetadata metadata;
 
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);

@@ -25,7 +25,6 @@
 
 package org.fao.geonet.web;
 
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.DatabaseMigrationTask;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.log.QueryRequest;
@@ -46,13 +45,13 @@ import static org.fao.geonet.kernel.search.log.LuceneQueryParamType.isExcludedFi
 
 /**
  */
-public class SearchStatisticsDatabaseMigration implements DatabaseMigrationTask {
+public class SearchStatisticsDatabaseMigration extends DatabaseMigrationTask {
 
     @Override
     public void update(Connection connection) throws SQLException {
         Log.debug(Geonet.DB, "SearchStatisticsDatabaseMigration");
 
-        SearcherLogger searcherLogger = ApplicationContextHolder.get().getBean(SearcherLogger.class);
+        SearcherLogger searcherLogger = applicationContext.getBean(SearcherLogger.class);
 
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(
@@ -108,7 +107,7 @@ public class SearchStatisticsDatabaseMigration implements DatabaseMigrationTask 
                 queryRequest.setSpatialFilter(resultSet.getString(8));
                 queryRequest.isSimpleQuery();
 
-                if (!queryRequest.storeToEs(searcherLogger.getIndex())) {
+                if (!queryRequest.storeToEs(searcherLogger.getIndex(), searcherLogger.getIndexType())) {
                     Log.warning(Geonet.SEARCH_LOGGER, "unable to log query into database...");
                 } else {
                     if (Log.isDebugEnabled(Geonet.SEARCH_LOGGER))

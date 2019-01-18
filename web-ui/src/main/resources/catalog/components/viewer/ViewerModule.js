@@ -33,6 +33,7 @@
   goog.require('gn_heatmap');
   goog.require('gn_index');
   goog.require('gn_layermanager');
+  goog.require('gn_projectionswitcher');
   goog.require('gn_localisation');
   goog.require('gn_measure');
   goog.require('gn_module');
@@ -50,6 +51,8 @@
   goog.require('gn_wmsimport');
   goog.require('gn_wps');
   goog.require('gn_gazetteer');
+  goog.require('gn_legendpanel_directive');
+
 
   /**
    * @ngdoc overview
@@ -66,6 +69,7 @@
     'gn_wfs_directive',
     'gn_owscontext',
     'gn_layermanager',
+    'gn_projectionswitcher',
     'gn_baselayerswitcher',
     'gn_measure',
     'gn_draw',
@@ -84,7 +88,8 @@
     'gn_geometry',
     'gn_profile',
     'gn_heatmap',
-    'gn_gazetteer'
+    'gn_gazetteer',
+    'gn_legendpanel_directive'
   ]);
 
   module.controller('gnViewerController', [

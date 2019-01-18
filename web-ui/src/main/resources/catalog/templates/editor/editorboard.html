@@ -28,6 +28,7 @@
                        data-ng-model="searchObj.params.any"
                        data-ng-model-options="modelOptions"
                        placeholder="{{'anyPlaceHolder' | translate}}"
+                       aria-label="{{'anyPlaceHolder' | translate}}"
                        data-typeahead="address for address in getAnySuggestions($viewValue)"
                        data-typeahead-loading="anyLoading" class="form-control"
                        data-typeahead-min-length="1">
@@ -35,11 +36,12 @@
                 <div class="input-group-btn">
                   <button type="button"
                           data-ng-click="triggerSearch()"
+                          title="{{'search' | translate}}"
                           class="btn btn-default">
                     <i class="fa fa-search"></i>
                   </button>
                   <button type="button"
-                          data-ng-click="onlyMyRecord = false;resetSearch(defaultSearchObj.params);"
+                          data-ng-click="onlyMyRecord = false;resetSearch(defaultSearchObj.defaultParams);"
                           title="{{'ClearTitle' | translate}}"
                           class="btn btn-default">
                     <i class="fa fa-times"></i>
@@ -62,6 +64,10 @@
               <a href="#/batchedit" class="btn btn-default"
                  ng-if="user.isEditorOrMore()">
                 <i class="fa fa-pencil"/>&nbsp;<span class="hidden-xs hidden-sm hidden-md" data-translate="">batchEditing</span>
+              </a>
+              <a href="#/accessManager" class="btn btn-default"
+                 ng-if="user.isAdministratorOrMore() && healthCheck.IndexHealthCheck === true">
+                <i class="fa fa-lock"/>&nbsp;<span class="hidden-xs hidden-sm hidden-md" data-translate="">accessManager</span>
               </a>
             </div>
           </div>

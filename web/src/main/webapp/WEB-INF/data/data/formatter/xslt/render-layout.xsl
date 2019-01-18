@@ -96,7 +96,10 @@
             <div>
               <xsl:apply-templates mode="render-toc" select="$viewConfig"/>
               <!-- Tab panes -->
-              <div class="tab-content">
+              <div>
+                <xsl:if test="$tabs = 'true'">
+                  <xsl:attribute name="class" select="'tab-content'"/>
+                </xsl:if>
                 <xsl:for-each select="$viewConfig/*">
                   <xsl:sort select="@formatter-order"
                             data-type="number"/>
@@ -118,32 +121,34 @@
                    src="{$nodeUrl}../images/logos/{$source}.png" />
             </section>
 
-            <section class="gn-md-side-social">
-              <h4>
-                <i class="fa fa-fw fa-share-square-o">&#160;</i>
-                <span><xsl:value-of select="$schemaStrings/shareOnSocialSite"/></span>
-              </h4>
-              <a href="https://twitter.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                 target="_blank" class="btn btn-default">
-                <i class="fa fa-fw fa-twitter">&#160;</i>
-              </a>
-              <a href="https://plus.google.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                 target="_blank" class="btn btn-default">
-                <i class="fa fa-fw fa-google-plus">&#160;</i>
-              </a>
-              <a href="https://www.facebook.com/sharer.php?u={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                 target="_blank" class="btn btn-default">
-                <i class="fa fa-fw fa-facebook">&#160;</i>
-              </a>
-              <a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=Hydrological Basins in Africa (Sample record, please remove!)&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                 target="_blank" class="btn btn-default">
-                <i class="fa fa-fw fa-linkedin">&#160;</i>
-              </a>
-              <a href="mailto:?subject={$title}&amp;body={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                 target="_blank" class="btn btn-default">
-                <i class="fa fa-fw fa-envelope-o">&#160;</i>
-              </a>
-            </section>
+            <xsl:if test="$isSocialbarEnabled">
+              <section class="gn-md-side-social">
+                <h4>
+                  <i class="fa fa-fw fa-share-square-o">&#160;</i>
+                  <span><xsl:value-of select="$schemaStrings/shareOnSocialSite"/></span>
+                </h4>
+                <a href="https://twitter.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                  target="_blank" class="btn btn-default">
+                  <i class="fa fa-fw fa-twitter">&#160;</i>
+                </a>
+                <a href="https://plus.google.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                  target="_blank" class="btn btn-default">
+                  <i class="fa fa-fw fa-google-plus">&#160;</i>
+                </a>
+                <a href="https://www.facebook.com/sharer.php?u={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                  target="_blank" class="btn btn-default">
+                  <i class="fa fa-fw fa-facebook">&#160;</i>
+                </a>
+                <a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                  target="_blank" class="btn btn-default">
+                  <i class="fa fa-fw fa-linkedin">&#160;</i>
+                </a>
+                <a href="mailto:?subject={$title}&amp;body={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                  target="_blank" class="btn btn-default">
+                  <i class="fa fa-fw fa-envelope-o">&#160;</i>
+                </a>
+              </section>
+            </xsl:if>
 
             <!-- Display link to portal and other view only
             when in pure HTML mode. -->
@@ -229,7 +234,7 @@
 
   <!-- Render list of tabs in the current view -->
   <xsl:template mode="render-toc" match="view">
-    <xsl:if test="count(tab) > 1">
+    <xsl:if test="$tabs = 'true' and count(tab) > 1">
       <ul class="view-outline nav nav-tabs nav-tabs-advanced">
         <xsl:for-each select="tab">
           <li>

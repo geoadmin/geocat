@@ -29,8 +29,8 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>3.4.3-SNAPSHOT</version>
-  <name>GeoNetwork opensource for geocat.ch</name>
+  <version>3.5.0-SNAPSHOT</version>
+  <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
     resources through the web.
@@ -262,7 +262,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.18.1</version>
         <configuration>
-          <argLine>-Dfile.encoding=UTF-8 -Xmx1024M</argLine>
+          <argLine>-Dfile.encoding=UTF-8 -Xmx20484M -Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
           <!--<rerunFailingTestsCount>5</rerunFailingTestsCount>-->
           <runOrder>alphabetical</runOrder>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
@@ -998,7 +998,7 @@
       <dependency>
         <groupId>com.fasterxml.jackson.datatype</groupId>
         <artifactId>jackson-datatype-hibernate4</artifactId>
-        <version>2.7.4</version>
+        <version>2.9.7</version>
       </dependency>
 
       <dependency>
@@ -1032,17 +1032,17 @@
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <version>2.5.5</version>
+        <version>2.9.7</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
-        <version>2.5.5</version>
+        <version>2.9.7</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
-        <version>2.5.5</version>
+        <version>2.9.7</version>
       </dependency>
       <dependency>
         <groupId>javax.xml.bind</groupId>
@@ -1068,7 +1068,7 @@
       <dependency>
         <groupId>io.searchbox</groupId>
         <artifactId>jest</artifactId>
-        <version>2.0.3</version>
+        <version>6.3.1</version>
       </dependency>
 
       <!-- Apache commons csv -->
@@ -1234,7 +1234,6 @@
         <module>web-ui</module>
         <module>web-ui-docs</module>
         <module>web</module>
-        <module>e2e-tests</module>
       </modules>
     </profile>
     <profile>
@@ -1257,6 +1256,7 @@
     <db.properties>WEB-INF/config-db/jdbc.properties</db.properties>
     <!--<db.properties>file:/${geonetwork.dir}/jdbc.properties</db.properties>-->
 
+    <application.name>geonetwork</application.name>
     <app.properties>WEB-INF/config.properties</app.properties>
     <!--<app.properties>file:/${geonetwork.dir}/config.properties</app.properties>-->
 
@@ -1290,14 +1290,17 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>5.6.1</es.version>
-    <es.version.md5>9b426819d29ef8dd499c593629feede8</es.version.md5>
-    <es.port>9200</es.port>
-    <es.host>localhost</es.host>
-    <es.url>http://${es.host}:${es.port}</es.url>
-    <es.index.features>features</es.index.features>
-    <es.index.records>records</es.index.records>
-    <es.index.searchlogs>searchlogs</es.index.searchlogs>
+    <es.version>6.4.2</es.version>
+    <es.version.sha512>23c610a8cd33d4229e8b79b0dc5e1f106e5f186d45c83e9994bb15708d2ce4e763fcb7c9be0f652ebdf12905be7f4ced14e1d8e18f6240dfe5ccb4a064239f86</es.version.sha512>
+    <es.port></es.port>
+    <es.host></es.host>
+    <es.url></es.url>
+    <es.index.features></es.index.features>
+    <es.index.features.type></es.index.features.type>
+    <es.index.records></es.index.records>
+    <es.index.records.type></es.index.records.type>
+    <es.index.searchlogs></es.index.searchlogs>
+    <es.index.searchlogs.type></es.index.searchlogs.type>
 
     <!-- to load spring configurations related to es and camel,
     you should use maven "es" profile (defined in web).
@@ -1308,9 +1311,9 @@
     <es.username></es.username>
     <es.password></es.password>
 
-    <kb.version.md5>e44777c3fb7ccfa4300884ce72869180</kb.version.md5>
-    <kb.port>5601</kb.port>
-    <kb.url>http://localhost:${kb.port}</kb.url>
+    <kb.version.sha512>b3b422c3bd157e363f528a27f5243f2ee13eba3e3bb22e1a7a9f24ea33f75b864643e297047379dfbef040a0eaa05ed6d998dd2cfe798b9d058f5b3d346f4d1d</kb.version.sha512>
+    <kb.port></kb.port>
+    <kb.url></kb.url>
 
     <jms.url>tcp://localhost:61616</jms.url>
     <activemq.version>5.6.0</activemq.version>
@@ -1327,8 +1330,9 @@
     <cors.allowedHosts>*</cors.allowedHosts>
 
 
-    <jetty.version>9.3.9.v20160517</jetty.version>
-
+    <jetty.version>9.4.12.v20180830</jetty.version>
+    <jetty.file>jetty-distribution-9.4.12.v20180830</jetty.file>
+    <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.12.v20180830/${jetty.file}.tar.gz</jetty.download>
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
@@ -1356,5 +1360,6 @@
     <xbean.version>3.18</xbean.version>
     <jolokia.version>1.6.0</jolokia.version>
     <httpcomponents.version>4.4.1</httpcomponents.version>
+    <gn.schemas.version>3.5</gn.schemas.version>
   </properties>
 </project>

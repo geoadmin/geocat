@@ -23,10 +23,21 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.transaction.AfterCommitTransactionListener;
-import jeeves.transaction.BeforeRollbackTransactionListener;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.sql.Connection;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.Nonnull;
+import javax.sql.DataSource;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -34,7 +45,7 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.Operation;
@@ -72,21 +83,12 @@ import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.sql.Connection;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.transaction.AfterCommitTransactionListener;
+import jeeves.transaction.BeforeRollbackTransactionListener;
 
-import javax.annotation.Nonnull;
-import javax.sql.DataSource;
+import static org.fao.geonet.kernel.setting.Settings.METADATA_VCS;
 
 public class SvnManager implements AfterCommitTransactionListener, BeforeRollbackTransactionListener {
     private static String username = "geonetwork";
@@ -108,6 +110,12 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
     public void init() throws Exception {
 
         SettingManager _settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        if (!_settingManager.getValueAsBool(METADATA_VCS)) {
+            Log.debug(Geonet.SVN_MANAGER, String.format(
+                "VCS is disabled. Change the %s setting and restart the application", METADATA_VCS
+            ));
+            return;
+        }
         DataSource _dataSource = ApplicationContextHolder.get().getBean(DataSource.class);
 
         this._enabled = true;
@@ -689,7 +697,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
         // get owner from the database
         Set<Integer> ids = new HashSet<Integer>();
         ids.add(Integer.valueOf(id));
-        Metadata metadata = this.context.getBean(MetadataRepository.class).findOne(id);
+        AbstractMetadata metadata = this.context.getBean(MetadataRepository.class).findOne(id);
         User user = this.context.getBean(UserRepository.class).findOne(metadata.getSourceInfo().getOwner());
         // Backwards compatibility.  Format the metadata as XML in same format as previous versions.
         Element xml = new Element("results").addContent(

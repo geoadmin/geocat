@@ -6,6 +6,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -38,10 +39,11 @@ public class UnpublishJobTest {
     private UnpublishNotifier mockUnpublishNotifier;
     private ServiceContext mockServiceContext;
     private SettingManager mockSettingManager;
-    private DataManager mockDataManager;
+    private IMetadataValidator mockValidator;
     private PublishRecordRepository mockPublishRecordRepository;
     private XmlSerializer mockXmlSerializer;
     private OperationAllowedRepository mockOperationAllowedRepository;
+    private DataManager mockDataManager;
 
     @Test
     public void testOwnerNotifiedWhenMetadataUnpublished() throws Exception {
@@ -54,11 +56,11 @@ public class UnpublishJobTest {
         testData.add(createMetadata(inInvalid, 3,"uuid-invalid-0003", "iso19139", 101));
         testData.add(createMetadata(inInvalid, 4,"uuid-invalid-0004", "iso19139", 101));
         testData.add(createMetadata(inInvalid, 5,"uuid-invalid-0005", "iso19139", 101));
-        when(mockDataManager.doValidate(any(), any(), Mockito.eq("1"), any(), any(), anyBoolean())).thenReturn(REPORT_WITH_SUCCESS);
-        when(mockDataManager.doValidate(any(), any(), Mockito.eq("2"), any(), any(), anyBoolean())).thenReturn(REPORT_WITH_SUCCESS);
-        when(mockDataManager.doValidate(any(), any(), Mockito.eq("3"), any(), any(), anyBoolean())).thenReturn(REPORT_WITH_FAILURE);
-        when(mockDataManager.doValidate(any(), any(), Mockito.eq("4"), any(), any(), anyBoolean())).thenReturn(REPORT_WITH_FAILURE);
-        when(mockDataManager.doValidate(any(), any(), Mockito.eq("5"), any(), any(), anyBoolean())).thenReturn(REPORT_WITH_FAILURE);
+        when(mockValidator.doValidate(any(), any(), Mockito.eq("1"), any(), any(), anyBoolean())).thenReturn(REPORT_WITH_SUCCESS);
+        when(mockValidator.doValidate(any(), any(), Mockito.eq("2"), any(), any(), anyBoolean())).thenReturn(REPORT_WITH_SUCCESS);
+        when(mockValidator.doValidate(any(), any(), Mockito.eq("3"), any(), any(), anyBoolean())).thenReturn(REPORT_WITH_FAILURE);
+        when(mockValidator.doValidate(any(), any(), Mockito.eq("4"), any(), any(), anyBoolean())).thenReturn(REPORT_WITH_FAILURE);
+        when(mockValidator.doValidate(any(), any(), Mockito.eq("5"), any(), any(), anyBoolean())).thenReturn(REPORT_WITH_FAILURE);
         when(mockMetadataRepository.findAll(any(Specifications.class))).thenReturn(testData);
 
         UnpublishInvalidMetadataJob toTest = createToTest();
@@ -75,10 +77,11 @@ public class UnpublishJobTest {
         mockUnpublishNotifier = mock(UnpublishNotifier.class);
         mockServiceContext = mock(ServiceContext.class);
         mockSettingManager = mock(SettingManager.class);
-        mockDataManager = mock(DataManager.class);
+        mockValidator = mock(IMetadataValidator.class);
         mockPublishRecordRepository = mock(PublishRecordRepository.class);
         mockXmlSerializer = mock(XmlSerializer.class);
         mockOperationAllowedRepository = mock(OperationAllowedRepository.class);
+        mockDataManager = mock(DataManager.class);
         when(mockServiceContext.getBean(MetadataRepository.class)).thenReturn(mockMetadataRepository);
         when(mockSettingManager.getValueAsInt("system/metadata/publish_tracking_duration", 100)).thenReturn(100);
     }
@@ -104,10 +107,11 @@ public class UnpublishJobTest {
         };
         toTest.setUnpublishNotifier(mockUnpublishNotifier);
         toTest.settingManager = mockSettingManager;
-        toTest.dataManager = mockDataManager;
+        toTest.metadataValidator = mockValidator;
         toTest.publishRecordRepository = mockPublishRecordRepository;
         toTest.xmlSerializer = mockXmlSerializer;
         toTest.operationAllowedRepository = mockOperationAllowedRepository;
+        toTest.dataManager = mockDataManager;
         return toTest;
     }
 

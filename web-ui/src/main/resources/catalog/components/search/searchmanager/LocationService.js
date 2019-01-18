@@ -31,9 +31,15 @@
     '$rootScope',
     '$timeout',
     'gnGlobalSettings',
-    function($location, $rootScope, $timeout, gnGlobalSettings) {
+    'gnExternalViewer',
+    function($location,
+      $rootScope,
+      $timeout,
+      gnGlobalSettings,
+      gnExternalViewer) {
 
       this.SEARCH = '/search';
+      this.SEARCHPAGES = /\/search|\/board/;
       this.MAP = '/map';
       this.METADATA = '/metadata/';
       this.HOME = '/home';
@@ -53,8 +59,8 @@
       };
       /** ---- **/
 
-      this.isSearch = function() {
-        return $location.path() == this.SEARCH;
+      this.isSearch = function(path) {
+        return (path || $location.path()).match(this.SEARCHPAGES) !== null;
       };
 
       this.isMdView = function(path) {
@@ -88,13 +94,16 @@
       };
 
       this.setMap = function() {
-        if (gnGlobalSettings.isMapViewerEnabled) {
+        if (gnGlobalSettings.isMapViewerEnabled &&
+            !gnExternalViewer.isEnabled()) {
           $location.path(this.MAP);
         }
       };
 
       this.setSearch = function(params) {
-        $location.path(this.SEARCH);
+        if (!this.isSearch()) {
+          $location.path(this.SEARCH);
+        }
         if (params) {
           $location.search(params);
         }
@@ -152,8 +161,8 @@
           }
           $rootScope.$broadcast('locationBackToSearch');
         }
-        if (state.old.path == that.SEARCH &&
-            state.current.path != that.SEARCH) {
+        if (that.isSearch(state.old.path) &&
+            !that.isSearch(state.current.path)) {
           state.lastSearchParams = state.old.params;
           that.lastSearchUrl = oldUrl;
         }

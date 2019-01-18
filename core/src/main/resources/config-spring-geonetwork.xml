@@ -180,6 +180,16 @@
   </bean>
   <!--End geocat-->
 
+
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataManager"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataValidator"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataOperations"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataStatus"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataSchemaUtils"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataCategory"/>
+
   <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false"/>
 
 </beans>

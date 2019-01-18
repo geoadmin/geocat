@@ -26,6 +26,7 @@ package org.fao.geonet.api.records;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.MetadataValidation;
@@ -35,6 +36,8 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
+import org.fao.geonet.kernel.datamanager.base.BaseMetadataManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -85,8 +88,18 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     @Autowired
     private SpringLocalServiceInvoker invoker;
 
+
+    @Autowired
+    protected IMetadataIndexer indexer;
+
     @Autowired
     protected DataManager dataManager;
+
+    @Autowired
+    protected BaseMetadataManager metadataManager;
+
+    @Autowired
+    protected SearchManager metadataSearcher;
 
     @Autowired
     private SchemaManager schemaManager;
@@ -118,21 +131,21 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
 
     @Test
     public void insertMetadataHasToReplaceContactExtentAndFormatByXlink() throws Exception {
-        Metadata decoyExtent = insertSubtemplate(EXTENT_RESOURCE,
+        AbstractMetadata decoyExtent = insertSubtemplate(EXTENT_RESOURCE,
                 element -> Xml.selectElement(element,
                         "gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal")
                         .setText("-61.79842"));
-        Metadata decoyContact = insertSubtemplate(CONTACT_RESOURCE,
+        AbstractMetadata decoyContact = insertSubtemplate(CONTACT_RESOURCE,
                 element -> Xml.selectElement(element,
                         "gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString")
                         .setText("babar@csc.org"));
-        Metadata decoyFormat = insertSubtemplate(FORMAT_RESOURCE,
+        AbstractMetadata decoyFormat = insertSubtemplate(FORMAT_RESOURCE,
                 element -> Xml.selectElement(element,
                         "gmd:version/gco:CharacterString")
                         .setText("42"));
-        Metadata format = insertSubtemplate(FORMAT_RESOURCE);
-        Metadata contact = insertSubtemplate(CONTACT_RESOURCE);
-        Metadata extent = insertSubtemplate(EXTENT_RESOURCE);
+        AbstractMetadata format = insertSubtemplate(FORMAT_RESOURCE);
+        AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE);
+        AbstractMetadata extent = insertSubtemplate(EXTENT_RESOURCE);
 
         String vicinityMapUuid = insertVicinityMap();
 
@@ -140,23 +153,23 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         assertVicinityMapXLinkTo(extent, vicinityMapUuid);
         assertVicinityMapXLinkTo(format, vicinityMapUuid);
 
-        Element metadata = dataManager.getMetadata(dataManager.getMetadataId(vicinityMapUuid));
+        Element metadata = metadataManager.getMetadata(dataManager.getMetadataId(vicinityMapUuid));
         assertEquals(
         "local://srv/api/registries/entries/" +
                 contact.getUuid() +
                 "?process=gmd:role/gmd:CI_RoleCode/@codeListValue~resourceProvider&lang=fre&lang=eng&lang=ger&lang=ita",
                 ((Attribute)(Xml.selectElement(metadata, "*//gmd:pointOfContact").getAttributes().get(1))).getValue());
 
-        dataManager.getMetadata(dataManager.getMetadataId(vicinityMapUuid));
+        metadataManager.getMetadata(dataManager.getMetadataId(vicinityMapUuid));
     }
 
     @Test
     public void invalidTemplateAreNotTakenIntoAccount() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage("extent-found no match for query: +_isTemplate:s^0.0 +_valid:1^0.0 __title:\"-61.798, 55.855, -21.371, 51.088\"");
-        Metadata format = insertSubtemplate(FORMAT_RESOURCE);
-        Metadata contact = insertSubtemplate(CONTACT_RESOURCE);
-        Metadata extent = insertSubtemplate(EXTENT_RESOURCE);
+        AbstractMetadata format = insertSubtemplate(FORMAT_RESOURCE);
+        AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE);
+        AbstractMetadata extent = insertSubtemplate(EXTENT_RESOURCE);
         extent = validate(extent, false);
 
         String vicinityMapUuid = insertVicinityMap();
@@ -166,7 +179,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void multilingualContactEn() throws Exception {
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
-        Metadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
+        AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
 
         String vicinityMapUuid = insertVicinityMap(element -> {
             Xml.selectElement(element,
@@ -184,7 +197,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void multilingualContactGer() throws Exception {
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
-        Metadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
+        AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
 
         String vicinityMapUuid = insertVicinityMap(element -> {
             Xml.selectElement(element,
@@ -205,7 +218,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void templateInEngButCharacterStringInGer() throws Exception {
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
-        Metadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
+        AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
 
         String vicinityMapUuid = insertVicinityMap(element -> {
             Xml.selectElement(element,
@@ -226,7 +239,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void noCharacterStringButKindOfFrenchTranslationAvailable() throws Exception {
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
-        Metadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
+        AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
 
         String vicinityMapUuid = insertVicinityMap(element -> {
             Xml.selectElement(element,
@@ -243,7 +256,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void noCharacterStringButKindOfGermanTranslationAvailable() throws Exception {
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
-        Metadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
+        AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
 
         String vicinityMapUuid = insertVicinityMap(element -> {
             Xml.selectElement(element,
@@ -261,7 +274,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s^0.0 +_valid:1^0.0 -_individualName:* _orgName:csc -_email:*");
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
-        Metadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
+        AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
 
         String vicinityMapUuid = insertVicinityMap(element -> {
             Xml.selectElement(element,
@@ -295,8 +308,8 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
                         "||contact-found no match for query: +_isTemplate:s^0.0 +_valid:1^0.0 _individualName:babar _orgName:csc _email:info@csc.org");
         URL extentResource = AbstractCoreIntegrationTest.class.getResource(EXTENT_RESOURCE);
         Element subtemplateElement = Xml.loadStream(extentResource.openStream());
-        Metadata decoyExtentInsertedAsMetadata  = insertTemplateResourceInDb(subtemplateElement, METADATA);
-        Metadata extent = insertSubtemplate(EXTENT_RESOURCE);
+        AbstractMetadata decoyExtentInsertedAsMetadata  = insertTemplateResourceInDb(subtemplateElement, METADATA);
+        AbstractMetadata extent = insertSubtemplate(EXTENT_RESOURCE);
 
         insertVicinityMap();
     }
@@ -305,9 +318,9 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void insertMetadataCantReplaceExtentNoMatch() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage("||extent-found no match for query: +_isTemplate:s^0.0 +_valid:1^0.0 __title:\"-61.798, 55.855, -21.371, 51.088\"");
-        Metadata format = insertSubtemplate(FORMAT_RESOURCE);
-        Metadata contact = insertSubtemplate(CONTACT_RESOURCE);
-        Metadata extent = insertSubtemplate(EXTENT_RESOURCE,
+        AbstractMetadata format = insertSubtemplate(FORMAT_RESOURCE);
+        AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE);
+        AbstractMetadata extent = insertSubtemplate(EXTENT_RESOURCE,
                 element -> Xml.selectElement(element,
                         "gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal")
                         .setText("-61.79842"));
@@ -319,21 +332,21 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void insertMetadataCantReplaceContactNoMatch() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s^0.0 +_valid:1^0.0 _individualName:babar _orgName:csc _email:info@csc.org");
-        Metadata contact = insertSubtemplate(CONTACT_RESOURCE,
+        AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE,
                 element -> {Xml.selectElement(element,
                         "gmd:individualName/gco:CharacterString")
                         .setText("totor");
                     });
-        Metadata format = insertSubtemplate(FORMAT_RESOURCE);
-        Metadata extent = insertSubtemplate(EXTENT_RESOURCE);
+        AbstractMetadata format = insertSubtemplate(FORMAT_RESOURCE);
+        AbstractMetadata extent = insertSubtemplate(EXTENT_RESOURCE);
 
         insertVicinityMap();
     }
 
     @Test
     public void insertMetadataHasToReplaceExtentAndFormatByXlinkWhenNoContact() throws Exception {
-        Metadata format = insertSubtemplate(FORMAT_RESOURCE);
-        Metadata extent = insertSubtemplate(EXTENT_RESOURCE);
+        AbstractMetadata format = insertSubtemplate(FORMAT_RESOURCE);
+        AbstractMetadata extent = insertSubtemplate(EXTENT_RESOURCE);
 
         String vicinityMapUuid = insertVicinityMap(element -> Xml.selectElement(element,
                 ".//gmd:pointOfContact")
@@ -348,10 +361,10 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void insertMetadataCantReplaceContactWhenToManyMatch() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage("||contact-found too many matches for query: +_isTemplate:s^0.0 +_valid:1^0.0 individualName:babar orgName:csc _email:\"info csc.org\"");
-        Metadata contact = insertSubtemplate(CONTACT_RESOURCE);
-        Metadata contactClone = insertSubtemplate(CONTACT_RESOURCE);
-        Metadata format = insertSubtemplate(FORMAT_RESOURCE);
-        Metadata extent = insertSubtemplate(EXTENT_RESOURCE);
+        AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE);
+        AbstractMetadata contactClone = insertSubtemplate(CONTACT_RESOURCE);
+        AbstractMetadata format = insertSubtemplate(FORMAT_RESOURCE);
+        AbstractMetadata extent = insertSubtemplate(EXTENT_RESOURCE);
 
         insertVicinityMap();
     }
@@ -360,8 +373,8 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void forExtentDescriptionTakePrecedenceOverGeom() throws Exception {
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(CONTACT_RESOURCE);
-        Metadata decoyExtent = insertSubtemplate(EXTENT_RESOURCE);
-        Metadata extent = insertSubtemplate(EXTENT_RESOURCE, element -> {
+        AbstractMetadata decoyExtent = insertSubtemplate(EXTENT_RESOURCE);
+        AbstractMetadata extent = insertSubtemplate(EXTENT_RESOURCE, element -> {
             Xml.selectElement(element,
                     "gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal")
                     .setText("-61.79842");
@@ -380,7 +393,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void contactOrgNameWithCaseShift() throws Exception {
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
-        Metadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
+        AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
                 ".//gmd:organisationName/gco:CharacterString")
                 .setText("SwissTOpô"));
 
@@ -395,7 +408,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void contactOrgNameWithSpecialChar() throws Exception {
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
-        Metadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
+        AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
             ".//gmd:organisationName/gco:CharacterString")
             .setText("Cantons [D+M]"));
 
@@ -411,7 +424,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void contactOrgNameEmpty() throws Exception {
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
-        Metadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
+        AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
                 ".//gmd:organisationName/gco:CharacterString")
                 .setText(""));
 
@@ -442,7 +455,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void contactOrgWithSpaces() throws Exception {
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
-        Metadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
+        AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
                 ".//gmd:organisationName/gco:CharacterString")
                 .setText("genérale des eaux"));
 
@@ -458,7 +471,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void contactIndividualNameWithSpacesAndCaseShift() throws Exception {
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
-        Metadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
+        AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
                 ".//gmd:/gco:CharacterString")
                 .setText("jéaN regis"));
 
@@ -473,7 +486,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void extentDescriptionWithCaseShift() throws Exception {
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(CONTACT_RESOURCE);
-        Metadata extent = insertSubtemplate(EXTENT_RESOURCE, element -> {
+        AbstractMetadata extent = insertSubtemplate(EXTENT_RESOURCE, element -> {
             element.addContent(new Element("description", GMD).addContent(
                     new Element("CharacterString", GCO).setText("description avec des espaces")));
         });
@@ -513,15 +526,15 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         return insertVicinityMap(new NoRework());
     }
 
-    private Metadata insertSubtemplate(String resourceName, TestFileReworker reworker) throws Exception {
+    private AbstractMetadata insertSubtemplate(String resourceName, TestFileReworker reworker) throws Exception {
         URL contactResource = AbstractCoreIntegrationTest.class.getResource(resourceName);
         Element subtemplateElement = Xml.loadStream(contactResource.openStream());
         reworker.rework(subtemplateElement);
-        Metadata metadata = insertTemplateResourceInDb(subtemplateElement, SUB_TEMPLATE);
+        AbstractMetadata metadata = insertTemplateResourceInDb(subtemplateElement, SUB_TEMPLATE);
         return validate(metadata, true);
     }
 
-    private Metadata insertSubtemplate(String resourceName) throws Exception {
+    private AbstractMetadata insertSubtemplate(String resourceName) throws Exception {
         return insertSubtemplate(resourceName, new NoRework());
     }
 
@@ -534,10 +547,10 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         public void rework(Element element) {}
     }
 
-    private Metadata insertTemplateResourceInDb(Element element, MetadataType type) throws Exception {
+    private AbstractMetadata insertTemplateResourceInDb(Element element, MetadataType type) throws Exception {
         loginAsAdmin(context);
 
-        Metadata metadata = new Metadata()
+        AbstractMetadata metadata= new Metadata()
                 .setDataAndFixCR(element)
                 .setUuid(UUID.randomUUID().toString());
         metadata.getDataInfo()
@@ -551,7 +564,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         metadata.getHarvestInfo()
                 .setHarvested(false);
 
-        Metadata dbInsertedMetadata = dataManager.insertMetadata(
+        AbstractMetadata dbInsertedMetadata = metadataManager.insertMetadata(
                 context,
                 metadata,
                 element,
@@ -564,7 +577,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         return dbInsertedMetadata;
     }
 
-    private Metadata validate(Metadata metadata, boolean isvalid) throws Exception {
+    private AbstractMetadata validate(AbstractMetadata metadata, boolean isvalid) throws Exception {
         MetadataValidation metadataValidation = new MetadataValidation().
                 setId(new MetadataValidationId(metadata.getId(), "subtemplate")).
                 setStatus(isvalid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID).
@@ -572,13 +585,13 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
                 setNumTests(0).
                 setNumFailures(0);
         this.metadataValidationRepository.save(metadataValidation);
-        dataManager.indexMetadata(("" + metadata.getId()), true, null);
+        indexer.indexMetadata(("" + metadata.getId()), true, null);
         return metadata;
     }
 
-    private void assertVicinityMapXLinkTo(Metadata subtemplateMetadata, String vicinityMapUuid) throws Exception {
-        MetaSearcher referencingContactSearcher = dataManager.searcherForReferencingMetadata(context, subtemplateMetadata);
-        Map<Integer, Metadata> result = ((LuceneSearcher) referencingContactSearcher).getAllMdInfo(context, 1);
+    private void assertVicinityMapXLinkTo(AbstractMetadata subtemplateMetadata, String vicinityMapUuid) throws Exception {
+        MetaSearcher referencingContactSearcher = metadataManager.searcherForReferencingMetadata(context, subtemplateMetadata);
+        Map<Integer, AbstractMetadata> result = ((LuceneSearcher) referencingContactSearcher).getAllMdInfo(context, 1);
         assertEquals(vicinityMapUuid, result.values().iterator().next().getUuid());
     }
 

@@ -36,11 +36,13 @@ import org.fao.geonet.api.records.model.Direction;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.events.history.RecordUpdatedEvent;
 import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -51,6 +53,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -141,7 +144,7 @@ public class MetadataEditingApi {
             Map<String,String> allRequestParams,
         HttpServletRequest request
         ) throws Exception {
-        Metadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         boolean showValidationErrors = false;
         boolean starteditingsession = true;
@@ -238,7 +241,7 @@ public class MetadataEditingApi {
         @ApiParam(hidden = true)
             HttpSession httpSession
         ) throws Exception {
-        Metadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
         AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
 //        ajaxEditUtils.preprocessUpdate(allRequestParams, context);
@@ -246,10 +249,9 @@ public class MetadataEditingApi {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         DataManager dataMan = applicationContext.getBean(DataManager.class);
         UserSession session = ApiUtils.getUserSession(httpSession);
-
+        IMetadataValidator validator = applicationContext.getBean(IMetadataValidator.class);
         String id = String.valueOf(metadata.getId());
         String isTemplate = allRequestParams.get(Params.TEMPLATE);
-
 //        boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
 //        boolean forget = config.getValue(Params.FORGET, "no").equals("yes");
 //        boolean commit = config.getValue(Params.START_EDITING_SESSION, "no").equals("yes");
@@ -272,6 +274,7 @@ public class MetadataEditingApi {
         StatusActionsFactory saf = context.getBean(StatusActionsFactory.class);
         StatusActions sa = saf.createStatusActions(context);
         sa.onEdit(iLocalId, minor);
+        Element beforeMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
 
         if (StringUtils.isNotEmpty(data)) {
             Element md = Xml.loadString(data, false);
@@ -282,8 +285,19 @@ public class MetadataEditingApi {
             dataMan.updateMetadata(context, id, md,
                 withValidationErrors, ufo, index,
                 context.getLanguage(), changeDate, updateDateStamp);
+
+            XMLOutputter outp = new XMLOutputter();
+            String xmlBefore = outp.outputString(beforeMetadata);
+            String xmlAfter = outp.outputString(md);
+            new RecordUpdatedEvent(Long.parseLong(id), session.getUserIdAsInt(), xmlBefore, xmlAfter).publish(applicationContext);
         } else {
             ajaxEditUtils.updateContent(params, false, true);
+
+            Element afterMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
+            XMLOutputter outp = new XMLOutputter();
+            String xmlBefore = outp.outputString(beforeMetadata);
+            String xmlAfter = outp.outputString(afterMetadata);
+            new RecordUpdatedEvent(Long.parseLong(id), session.getUserIdAsInt(), xmlBefore, xmlAfter).publish(applicationContext);
         }
 
         //-----------------------------------------------------------------------
@@ -311,8 +325,7 @@ public class MetadataEditingApi {
 
             // Save validation if the forceValidationOnMdSave is enabled
             if (forceValidationOnMdSave) {
-                dataMan.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
-                    new Document(metadata.getXmlData(false)), context.getLanguage());
+                validator.doValidate(metadata, context.getLanguage());
                 reindex = true;
             }
 
@@ -407,7 +420,7 @@ public class MetadataEditingApi {
         @ApiParam(hidden = true)
             HttpSession httpSession
     ) throws Exception {
-        Metadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         DataManager dataMan = applicationContext.getBean(DataManager.class);
@@ -458,6 +471,13 @@ public class MetadataEditingApi {
             required = false
         )
             String child,
+        @ApiParam(
+            value = "Should attributes be shown on the editor snippet?",
+            required = false)
+        @RequestParam(
+                defaultValue = "false"
+            )
+                boolean displayAttributes,
         @ApiIgnore
         @ApiParam(hidden = true)
         @RequestParam
@@ -467,7 +487,7 @@ public class MetadataEditingApi {
         @ApiParam(hidden = true)
             HttpSession httpSession
     ) throws Exception {
-        Metadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
@@ -537,6 +557,13 @@ public class MetadataEditingApi {
             required = true)
         @PathVariable
             Direction direction,
+        @ApiParam(
+            value = "Should attributes be shown on the editor snippet?",
+            required = false)
+        @RequestParam(
+                defaultValue = "false"
+            )
+                boolean displayAttributes,
         @ApiIgnore
         @ApiParam(hidden = true)
         @RequestParam
@@ -546,7 +573,7 @@ public class MetadataEditingApi {
         @ApiParam(hidden = true)
             HttpSession httpSession
     ) throws Exception {
-        Metadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         new AjaxEditUtils(context).swapElementEmbedded(
@@ -593,12 +620,19 @@ public class MetadataEditingApi {
             required = true)
         @RequestParam
             String parent,
+        @ApiParam(
+            value = "Should attributes be shown on the editor snippet?",
+            required = false)
+        @RequestParam(
+                defaultValue = "false"
+            )
+                boolean displayAttributes,
         HttpServletRequest request,
         @ApiIgnore
         @ApiParam(hidden = true)
             HttpSession httpSession
     ) throws Exception {
-        Metadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         String id = String.valueOf(metadata.getId());
@@ -638,12 +672,19 @@ public class MetadataEditingApi {
             required = true)
         @RequestParam
             String ref,
+        @ApiParam(
+            value = "Should attributes be shown on the editor snippet?",
+            required = false)
+        @RequestParam(
+                defaultValue = "false"
+            )
+                boolean displayAttributes,
         HttpServletRequest request,
         @ApiIgnore
         @ApiParam(hidden = true)
             HttpSession httpSession
     ) throws Exception {
-        Metadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         new AjaxEditUtils(context).deleteAttributeEmbedded(

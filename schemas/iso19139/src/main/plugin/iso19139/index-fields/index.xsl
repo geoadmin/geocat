@@ -29,6 +29,8 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
+                xmlns:index="java:org.fao.geonet.kernel.search.EsSearchManager"
                 xmlns:daobs="http://daobs.org"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
@@ -36,7 +38,8 @@
                 version="2.0">
 
   <xsl:import href="fn.xsl"/>
-  <xsl:import href="inspire-constant.xsl"/>
+  <xsl:import href="common/inspire-constant.xsl"/>
+  <xsl:import href="common/index-utils.xsl"/>
 
   <xsl:output method="xml" indent="yes"/>
 
@@ -51,25 +54,11 @@
   -->
   <xsl:variable name="operatesOnSetByProtocol" select="false()"/>
 
-  <!-- Define if search for regulation title should be strict or light. -->
-  <xsl:variable name="inspireRegulationLaxCheck" select="false()"/>
-
   <!-- List of keywords to search for to flag a record as opendata.
    Do not put accents or upper case letters here as comparison will not
    take them in account. -->
   <xsl:variable name="openDataKeywords"
                 select="'opendata|open data|donnees ouvertes'"/>
-
-  <xsl:variable name="dateFormat" as="xs:string"
-                select="'[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]'"/>
-
-  <xsl:variable name="separator" as="xs:string"
-                select="'|'"/>
-
-  <!-- To avoid Document contains at least one immense term
-  in field="resourceAbstract" (whose UTF8 encoding is longer
-  than the max length 32766. -->
-  <xsl:variable name="maxFieldLength" select="32000" as="xs:integer"/>
 
   <xsl:template match="/">
     <xsl:apply-templates mode="index"/>
@@ -87,7 +76,11 @@
 
   <xsl:template match="gmi:MI_Metadata|gmd:MD_Metadata"
                 mode="index">
-    <!-- Main variables for the document -->
+    <!-- Main variables for the document
+
+    TODO: GN does not assign UUIDs to template. Maybe it should ?
+      XTTE0570: An empty sequence is not allowed as the value of variable $identifier
+    -->
     <xsl:variable name="identifier" as="xs:string"
                   select="gmd:fileIdentifier/gco:CharacterString[. != '']"/>
 
@@ -112,10 +105,6 @@
     <xsl:variable name="isService" as="xs:boolean"
                   select="
                       count(gmd:hierarchyLevel[gmd:MD_ScopeCode/@codeListValue='service']) > 0"/>
-
-    <xsl:message><xsl:value-of select="concat(
-      '#', count(preceding-sibling::gmd:MD_Metadata), $identifier)"/>
-    </xsl:message>
 
     <!-- Create a first document representing the main record. -->
     <doc>
@@ -345,8 +334,7 @@
           <xsl:for-each select="gco:CharacterString[. != '']|
                                 gmx:Anchor[. != '']">
             <xsl:variable name="inspireTheme" as="xs:string"
-                          select="text()"/>
-
+                          select="index:analyzeField('synInspireThemes', text())"/>
             <inspireTheme_syn>
               <xsl:value-of select="text()"/>
             </inspireTheme_syn>
@@ -366,11 +354,13 @@
                 <xsl:value-of select="$inspireTheme"/>
               </inspireThemeFirst>
               <inspireAnnexForFirstTheme>
-                <xsl:value-of select="$inspireTheme"/>
+                <xsl:value-of
+                  select="index:analyzeField('synInspireAnnexes', $inspireTheme)"/>
               </inspireAnnexForFirstTheme>
             </xsl:if>
             <inspireAnnex>
-              <xsl:value-of select="text()"/>
+              <xsl:value-of
+                select="index:analyzeField('synInspireAnnexes', $inspireTheme)"/>
             </inspireAnnex>
           </xsl:for-each>
         </xsl:for-each>
@@ -441,15 +431,14 @@
 
         <!-- Index all keywords having a specific thesaurus -->
         <xsl:for-each
-          select="*/gmd:MD_Keywords[gmd:thesaurusName]/
-                            gmd:keyword">
+          select="*/gmd:MD_Keywords[gmd:thesaurusName]">
 
           <xsl:variable name="thesaurusName"
-                        select="../gmd:thesaurusName[1]/gmd:CI_Citation/
+                        select="gmd:thesaurusName[1]/gmd:CI_Citation/
                                   gmd:title[1]/gco:CharacterString"/>
 
           <xsl:variable name="thesaurusId"
-                        select="normalize-space(../gmd:thesaurusName/gmd:CI_Citation/
+                        select="normalize-space(gmd:thesaurusName/gmd:CI_Citation/
                                   gmd:identifier[position() = 1]/gmd:MD_Identifier/
                                     gmd:code/(gco:CharacterString|gmx:Anchor)/text())"/>
 
@@ -461,8 +450,7 @@
               <!-- Try to build a thesaurus key based on the name
               by removing space - to be improved. -->
               <xsl:when test="normalize-space($thesaurusName) != ''">
-                <!--TODO handle special character to build a valid key usable for field
-                <xsl:value-of select="replace($thesaurusName, ' ', '-')"/>-->
+                <xsl:value-of select="replace($thesaurusName, ' ', '-')"/>
               </xsl:when>
             </xsl:choose>
           </xsl:variable>
@@ -471,10 +459,17 @@
             <!-- Index keyword characterString including multilingual ones
              and element like gmx:Anchor including the href attribute
              which may contains keyword identifier. -->
-            <xsl:for-each select="*[normalize-space() != '']|
+            <xsl:variable name="thesaurusField"
+                          select="concat('thesaurus_', replace($key, '[^a-zA-Z0-9]', ''))"/>
+
+            <xsl:element name="{$thesaurusField}Number">
+              <xsl:value-of select="count(gmd:keyword/(*[normalize-space() != '']))"/>
+            </xsl:element>
+
+            <xsl:for-each select="gmd:keyword/(*[normalize-space() != '']|
                                   */@xlink:href[normalize-space() != '']|
-                                  gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space() != '']">
-              <xsl:element name="thesaurus_{replace($key, '[^a-zA-Z0-9]', '')}">
+                                  gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space() != ''])">
+              <xsl:element name="{$thesaurusField}">
                 <xsl:value-of select="normalize-space(.)"/>
               </xsl:element>
             </xsl:for-each>
@@ -640,7 +635,8 @@
             <xsl:value-of select="text()"/>
           </serviceType>
           <xsl:variable name="inspireServiceType" as="xs:string"
-                        select="text()"/>
+                        select="index:analyzeField(
+                                  'keepInspireServiceTypes', text())"/>
           <xsl:if test="$inspireServiceType != ''">
             <inspireServiceType>
               <xsl:value-of select="lower-case($inspireServiceType)"/>
@@ -768,7 +764,10 @@
         <xsl:for-each select="gmd:transferOptions/*/
                                 gmd:onLine/*[gmd:linkage/gmd:URL != '']">
 
-          <xsl:variable name="protocol" select="gmd:protocol/gco:CharacterString/text()"/>
+          <xsl:variable name="protocol"
+                        select="gmd:protocol/gco:CharacterString/text()"/>
+          <xsl:variable name="linkName"
+                        select="gn-fn-index:json-escape(gmd:name/gco:CharacterString/text())"/>
 
           <linkUrl>
             <xsl:value-of select="gmd:linkage/gmd:URL"/>
@@ -776,14 +775,24 @@
           <linkProtocol>
             <xsl:value-of select="$protocol"/>
           </linkProtocol>
-          <link>
-            <xsl:value-of select="gmd:protocol/*/text()"/>
-            <xsl:text>|</xsl:text>
+          <xsl:element name="linkUrlProtocol{replace($protocol, '[^a-zA-Z0-9]', '')}">
             <xsl:value-of select="gmd:linkage/gmd:URL"/>
-            <xsl:text>|</xsl:text>
-            <xsl:value-of select="gmd:name/*/text()"/>
-            <xsl:text>|</xsl:text>
-            <xsl:value-of select="gmd:description/*/text()"/>
+          </xsl:element>
+          <link type="object">{
+            "protocol":"<xsl:value-of select="gn-fn-index:json-escape(gmd:protocol/*/text())"/>",
+            "url":"<xsl:value-of select="gn-fn-index:json-escape(gmd:linkage/gmd:URL)"/>",
+            "name":"<xsl:value-of select="$linkName"/>",
+            "description":"<xsl:value-of select="gn-fn-index:json-escape(gmd:description/gco:CharacterString/text())"/>"
+            }
+            <!--Link object in Angular used to be
+            //     name: linkInfos[0],
+            //     title: linkInfos[0],
+            //     url: linkInfos[2],
+            //     desc: linkInfos[1],
+            //     protocol: linkInfos[3],
+            //     contentType: linkInfos[4],
+            //     group: linkInfos[5] ? parseInt(linkInfos[5]) : undefined,
+            //     applicationProfile: linkInfos[6]-->
           </link>
 
           <xsl:if test="$operatesOnSetByProtocol and normalize-space($protocol) != ''">

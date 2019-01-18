@@ -26,13 +26,17 @@
 
   goog.require('Filter_1_0_0');
   goog.require('Filter_1_1_0');
+  goog.require('Filter_2_0');
   goog.require('GML_2_1_2');
   goog.require('GML_3_1_1');
   goog.require('OWS_1_0_0');
+  goog.require('OWS_1_1_0');
   goog.require('SMIL_2_0');
   goog.require('SMIL_2_0_Language');
   goog.require('WFS_1_0_0');
   goog.require('WFS_1_1_0');
+  goog.require('WFS_2_0');
+  goog.require('WCS_1_1');
   goog.require('XLink_1_0');
 
   var module = angular.module('gn_ows_service', [
@@ -51,22 +55,36 @@
       }
       );
   var context110 = new Jsonix.Context(
-      [XLink_1_0, OWS_1_0_0,
+      [XLink_1_0, OWS_1_1_0, OWS_1_0_0,
        Filter_1_1_0,
        GML_3_1_1,
        SMIL_2_0, SMIL_2_0_Language,
-       WFS_1_1_0],
+       WFS_1_1_0, WCS_1_1],
       {
         namespacePrefixes: {
           'http://www.w3.org/1999/xlink': 'xlink',
           'http://www.opengis.net/ows/1.1': 'ows',
-          'http://www.opengis.net/wfs': 'wfs'
+          'http://www.opengis.net/wfs': 'wfs',
+          'http://www.opengis.net/wcs': 'wcs'
+        }
+      }
+      );
+  var context20 = new Jsonix.Context(
+      [XLink_1_0, OWS_1_1_0,
+       SMIL_2_0, SMIL_2_0_Language,
+       Filter_2_0, GML_3_1_1, WFS_2_0],
+      {
+        namespacePrefixes: {
+          'http://www.w3.org/1999/xlink': 'xlink',
+          'http://www.opengis.net/ows/1.1': 'ows',
+          'http://www.opengis.net/wfs/2.0': 'wfs',
+          'http://www.opengis.net/fes/2.0':'fes'
         }
       }
       );
   var unmarshaller100 = context100.createUnmarshaller();
   var unmarshaller110 = context110.createUnmarshaller();
-
+  var unmarshaller20 = context20.createUnmarshaller();
 
   module.provider('gnOwsCapabilities', function() {
     this.$get = ['$http', '$q', '$translate',
@@ -128,12 +146,39 @@
           return result.Contents;
         };
 
+        var parseWCSCapabilities = function(data) {
+          var version = '1.1.1';
+
+          try {
+            var xml = $.parseXML(data);
+            var xfsCap = unmarshaller110.unmarshalDocument(xml).value;
+            return xfsCap;
+          } catch (e){
+            console.warn(e);
+          }
+        };
+
         var parseWFSCapabilities = function(data) {
           var version = '1.1.0';
 
           try {
-            //First cleanup not supported INSPIRE extensions:
+
+            //check the version (some wfs responds in other version then requested)
+            if (data.indexOf('version="2.0.0"')>-1){
+              version = "2.0";
+            } else if (data.indexOf('version="1.1.0"')>-1) {
+              version = "1.1.0";
+            } else if (data.indexOf('version="1.0.0"')>-1) {
+              version = "1.0.0";
+            } else {
+              console.warn('no version detected');
+              defer.reject({msg: 'wfsGetCapabilitiesFailed',
+                owsExceptionReport: 'No WFS version detected on response'});
+            }
+
             var xml = $.parseXML(data);
+
+            //First cleanup not supported INSPIRE extensions:
             if (xml.getElementsByTagName('ExtendedCapabilities').length > 0) {
               var cleanup = function(i, el) {
                 if (el.tagName.endsWith('ExtendedCapabilities')) {
@@ -148,33 +193,27 @@
 
             //Now process the capabilities
             var xfsCap;
+
             if (version === '1.1.0') {
               xfsCap = unmarshaller110.unmarshalDocument(xml).value;
             } else if (version === '1.0.0') {
               xfsCap = unmarshaller100.unmarshalDocument(xml).value;
+            } else if (version === '2.0') {
+              xfsCap = unmarshaller20.unmarshalDocument(xml).value;
+            } else {
+              console.warn('WFS version '+version+' not supported.');
             }
 
-            return xfsCap;
-
-            /* if (xfsCap.exception != undefined) {
-              //defer.reject({msg: 'wfsGetCapabilitiesFailed',
-              //  owsExceptionReport: xfsCap});
+            if (xfsCap.exception != undefined) {
+              console.log(xfsCap.exception);
+              return xfsCap;
+            } else {
               return xfsCap;
             }
-            else {
-              //defer.resolve(xfsCap);
-              return xfsCap;
-            }*/
           } catch (e) {
-            //alert('WFS version not supported.');
-            //defer.reject({msg: 'wfsGetCapabilitiesFailed',
-            // owsExceptionReport: e.message});
-            //return e.message;
+            console.warn(e.message);
+            return e.message;
           }
-
-          //result.contents.Layer = result.contents.layers;
-          //result.Contents.operationsMetadata = result.OperationsMetadata;
-          //return result.Contents;
         };
 
         var mergeParams = function(url, Params) {
@@ -203,8 +242,6 @@
 
           return gnUrlUtils.append(parts[0],
               gnUrlUtils.toKeyValue(defaultParams));
-
-
         };
         return {
           mergeDefaultParams: mergeDefaultParams,
@@ -221,7 +258,8 @@
               //send request and decode result
               if (true) {
                 $http.get(url, {
-                  cache: true
+                  cache: true,
+                  timeout: 5000
                 })
                     .success(function(data) {
                       try {
@@ -233,7 +271,8 @@
                     })
                     .error(function(data, status) {
                       defer.reject(
-                      $translate.instant('checkCapabilityUrl',
+                      $translate.instant(
+                        status === 401 ? 'checkCapabilityUrlUnauthorized' : 'checkCapabilityUrl',
                       {url: url, status: status}));
                     });
               }
@@ -248,14 +287,15 @@
             var defer = $q.defer();
             if (url) {
               url = mergeDefaultParams(url, {
-                REQUEST: 'GetCapabilities',
+                request: 'GetCapabilities',
                 service: 'WMTS'
               });
 
               if (gnUrlUtils.isValid(url)) {
 
                 $http.get(url, {
-                  cache: true
+                  cache: true,
+                  timeout: 5000
                 })
                     .success(function(data, status, headers, config) {
                       if (data) {
@@ -279,8 +319,43 @@
               defaultVersion = '1.1.0';
               version = version || defaultVersion;
               url = mergeDefaultParams(url, {
-                REQUEST: 'GetCapabilities',
+                request: 'GetCapabilities',
                 service: 'WFS',
+                version: version
+              });
+
+              if (gnUrlUtils.isValid(url)) {
+                $http.get(url, {
+                  cache: true,
+                  timeout: 5000
+                })
+                    .success(function(data, status, headers, config) {
+                      var xfsCap = parseWFSCapabilities(data);
+
+                      if (!xfsCap || xfsCap.exception != undefined) {
+                        defer.reject({msg: $translate.instant('wfsGetCapabilitiesFailed'),
+                          owsExceptionReport: xfsCap});
+                      } else {
+                        defer.resolve(xfsCap);
+                      }
+
+                    })
+                    .error(function(data, status, headers, config) {
+                      defer.reject($translate.instant('wfsGetCapabilitiesFailed'));
+                    });
+              }
+            }
+            return defer.promise;
+          },
+
+          getWCSCapabilities: function(url, version) {
+            var defer = $q.defer();
+            if (url) {
+              defaultVersion = '1.1.0';
+              version = version || defaultVersion;
+              url = mergeDefaultParams(url, {
+                REQUEST: 'GetCapabilities',
+                service: 'WCS',
                 version: version
               });
 
@@ -289,10 +364,10 @@
                   cache: true
                 })
                     .success(function(data, status, headers, config) {
-                      var xfsCap = parseWFSCapabilities(data);
+                      var xfsCap = parseWCSCapabilities(data);
 
                       if (!xfsCap || xfsCap.exception != undefined) {
-                        defer.reject({msg: 'wfsGetCapabilitiesFailed',
+                        defer.reject({msg: 'wcsGetCapabilitiesFailed',
                           owsExceptionReport: xfsCap});
                       } else {
                         defer.resolve(xfsCap);

@@ -13,6 +13,9 @@
   * div render a div element to be embedded in an existing webpage. -->
   <xsl:param name="root" select="'html'"/>
 
+  <!-- Enable tab view mode or not -->
+  <xsl:param name="tabs" select="'true'"/>
+
   <!-- Define the full portal link. By default, it will link
   to the catalog.search main page of the catalog. To configure a custom
   use {{uuid}} to be replaced by the record UUID.
@@ -66,4 +69,7 @@
   <!-- Flat mode is defined in the first tab of the view -->
   <xsl:variable name="isFlatMode"
                 select="$viewConfig/tab[1]/@mode = 'flat'"/>
+
+  <!-- Regex for matching image filenames -->
+  <xsl:variable name="imageExtensionsRegex" select="'\.(gif|png|jpg|jpeg|svg)$'"/>
 </xsl:stylesheet>

@@ -85,6 +85,7 @@
     <xsl:param name="overrideLabel" select="''" required="no"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="tooltip" select="concat($schema, '|', name(.), '|', name(..), '|', $xpath)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
     <xsl:variable name="labelConfig"
                   select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
@@ -132,9 +133,11 @@
       </div>
       <div class="col-sm-6 gn-value">
         <div data-gn-date-picker="{gco:Date|gco:DateTime}"
+             data-gn-field-tooltip="{$tooltip}"
              data-label=""
              data-element-name="{name(gco:Date|gco:DateTime)}"
-             data-element-ref="{concat('_X', gn:element/@ref)}">
+             data-element-ref="{concat('_X', gn:element/@ref)}"
+             data-hide-time="{if ($viewConfig/@hideTimeInCalendar = 'true') then 'true' else 'false'}">
         </div>
 
 
@@ -171,6 +174,7 @@
     <xsl:param name="overrideLabel" select="''" required="no"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="tooltip" select="concat($schema, '|', name(.), '|', name(..), '|', $xpath)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
     <xsl:variable name="labelConfig"
                   select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
@@ -192,11 +196,13 @@
           </xsl:otherwise>
         </xsl:choose>
       </label>
-      <div class="col-sm-9 gn-value nopadding-in-table">
+      <div class="col-sm-9 col-xs-11 gn-value nopadding-in-table">
         <div data-gn-date-picker="{gco:Date|gco:DateTime}"
+             data-gn-field-tooltip="{$tooltip}"
              data-label=""
              data-element-name="{name(gco:Date|gco:DateTime)}"
-             data-element-ref="{concat('_X', gn:element/@ref)}">
+             data-element-ref="{concat('_X', gn:element/@ref)}"
+             data-hide-time="{if ($viewConfig/@hideTimeInCalendar = 'true') then 'true' else 'false'}">
         </div>
 
 
@@ -212,7 +218,7 @@
           </xsl:apply-templates>
         </div>
       </div>
-      <div class="col-sm-1 gn-control">
+      <div class="col-sm-1 col-xs-1 gn-control">
         <xsl:call-template name="render-form-field-control-remove">
           <xsl:with-param name="editInfo" select="gn:element"/>
         </xsl:call-template>

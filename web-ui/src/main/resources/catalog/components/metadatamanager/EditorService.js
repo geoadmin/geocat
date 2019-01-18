@@ -87,16 +87,16 @@
              }
            }
          };
-         // When adding a new element and the cardinality is 0-1,
+         // When adding a new element and the cardinality is 0-1 or 1-1,
          // then hide the add control.
-         // When an element is removed and the cardinality is 0-1,
+         // When an element is removed and the cardinality is 0-1 or 1-1,
          // then display the add control
          var checkAddControls = function(element, isRemoved) {
            var addElement = $(element).next();
            if (addElement !== undefined) {
              var addBlock = addElement.get(0);
              if ($(addBlock).hasClass('gn-add-field') &&
-                 $(addBlock).attr('data-gn-cardinality') === '0-1') {
+                 (($(addBlock).attr('data-gn-cardinality') === '0-1') || ($(addBlock).attr('data-gn-cardinality') === '1-1'))) {
                $(addBlock).toggleClass('hidden', isRemoved ? false : true);
              }
            }
@@ -211,6 +211,7 @@
              gnCurrentEdit.working = true;
              $http.post(
              '../api/records/' + gnCurrentEdit.id + '/editor?' +
+             (gnCurrentEdit.showValidationErrors ? '&withValidationErrors=true' : '') +
              (refreshForm ? '' : '&commit=true') +
              (terminate ? '&terminate=true' : ''),
              getFormParameters(),
@@ -333,6 +334,14 @@
                find('input[id="' + id + '"]').val();
              };
 
+             var extent = [], value = getInputValue('extent');
+             try {
+               extent = angular.fromJson(value);
+             } catch (e) {
+               console.warn(
+                 'Failed to parse the following extent as JSON: ' +
+               value);
+             }
              angular.extend(gnCurrentEdit, {
                isService: getInputValue('isService') == 'true',
                isTemplate: getInputValue('template'),
@@ -353,13 +362,22 @@
                tab: getInputValue('currTab'),
                geoPublisherConfig:
                angular.fromJson(getInputValue('geoPublisherConfig')),
-               extent:
-               angular.fromJson(getInputValue('extent')),
+               extent: extent,
                isMinor: getInputValue('minor') === 'true',
                layerConfig:
                angular.fromJson(getInputValue('layerConfig')),
                saving: false
              });
+
+             gnCurrentEdit.allLanguages = {code2iso: {}, iso2code: {}, iso: []};
+             if (gnCurrentEdit.mdOtherLanguages != '') {
+               angular.forEach(JSON.parse(gnCurrentEdit.mdOtherLanguages), function(code, iso) {
+                 gnCurrentEdit.allLanguages.code2iso[code] = iso;
+                 gnCurrentEdit.allLanguages.iso2code[iso] = code;
+                 gnCurrentEdit.allLanguages.iso.push(iso);
+                 ;
+               });
+             }
 
              if (angular.isFunction(gnCurrentEdit.formLoadExtraFn)) {
                gnCurrentEdit.formLoadExtraFn();
@@ -387,6 +405,7 @@
 
              var defer = $q.defer();
              $http.put(this.buildEditUrlPrefix('editor/elements') +
+             '&displayAttributes=' + gnCurrentEdit.displayAttributes +
              '&ref=' + ref + '&name=' + name + attributeAction)
               .success(function(data) {
                // Append HTML snippet after current element - compile Angular
@@ -424,6 +443,7 @@
            insertRef, position) {
              var defer = $q.defer();
              $http.put(this.buildEditUrlPrefix('editor/elements') +
+             '&displayAttributes=' + gnCurrentEdit.displayAttributes +
              '&ref=' + ref +
              '&name=' + parent +
              '&child=' + name).success(function(data) {
@@ -453,7 +473,9 @@
              // Call service to remove element from metadata record in session
              var defer = $q.defer();
              $http.delete('../api/records/' + gnCurrentEdit.id +
-             '/editor/elements?ref=' + ref + '&parent=' + parent)
+             '/editor/elements?ref=' + ref +
+             '&displayAttributes=' + gnCurrentEdit.displayAttributes +
+             '&parent=' + parent)
               .success(function(data) {
                // For a fieldset, domref is equal to ref.
                // For an input, it may be different because

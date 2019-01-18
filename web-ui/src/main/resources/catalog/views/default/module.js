@@ -52,7 +52,7 @@
         params: {
           sortBy: 'popularity',
           from: 1,
-          to: 9
+          to: 12
         }
       };
     }]);
@@ -68,7 +68,7 @@
         params: {
           sortBy: 'changeDate',
           from: 1,
-          to: 9
+          to: 12
         }
       };
     }]);
@@ -112,12 +112,13 @@
     'gnOwsContextService',
     'hotkeys',
     'gnGlobalSettings',
+    'gnExternalViewer',
     function($scope, $location, $filter,
              suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
              gnMap, gnMdView, mdView, gnWmsQueue,
              gnSearchLocation, gnOwsContextService,
-             hotkeys, gnGlobalSettings) {
+             hotkeys, gnGlobalSettings, gnExternalViewer) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -129,6 +130,7 @@
       $scope.gnWmsQueue = gnWmsQueue;
       $scope.$location = $location;
       $scope.activeTab = '/home';
+      $scope.listOfResultTemplate = gnGlobalSettings.gnCfg.mods.search.resultViewTpls;
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
       $scope.advandedSearchTemplate = gnSearchSettings.advancedSearchTemplate;
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType;
@@ -224,6 +226,14 @@
         }
       };
 
+      /**
+       * Toggle the list types on the homepage
+       * @param  {String} type Type of list selected
+       */
+      $scope.toggleListType = function(type) {
+        $scope.type = type;
+      };
+      
       $scope.infoTabs = {
         lastRecords: {
           title: 'lastRecords',
@@ -278,6 +288,20 @@
             // Related service return a property title for the name
           } else if (link.title) {
             config.name = link.title;
+          }
+
+          // if an external viewer is defined, use it here
+          if (gnExternalViewer.isEnabled()) {
+            gnExternalViewer.viewService({
+              id: md ? md.getId() : null,
+              uuid: config.uuid
+            }, {
+              type: config.type,
+              url: config.url,
+              name: config.name,
+              title: link.title
+            });
+            return;
           }
 
           // This is probably only a service
@@ -336,7 +360,7 @@
           sortBy: gnSearchSettings.sortBy || 'relevance'
         },
         params: {
-          'facet.q': '',
+          'facet.q': gnSearchSettings.defaultSearchString || '',
           resultType: gnSearchSettings.facetsSummaryType || 'details',
           sortBy: gnSearchSettings.sortBy || 'relevance'
         },

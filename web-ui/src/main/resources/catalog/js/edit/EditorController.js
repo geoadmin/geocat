@@ -95,6 +95,9 @@
           when('/batchedit', {
             templateUrl: tplFolder + 'batchedit.html',
             controller: 'GnBatchEditController'}).
+          when('/accessManager', {
+            templateUrl: tplFolder + 'accessManager.html',
+            controller: 'GnAccessManagerController'}).
           when('/board', {
             templateUrl: tplFolder + 'editorboard.html',
             controller: 'GnEditorBoardController'}).
@@ -112,13 +115,13 @@
     'gnEditor', 'gnSearchManagerService', 'gnSchemaManagerService',
     'gnConfigService', 'gnUtilityService', 'gnOnlinesrc',
     'gnCurrentEdit', 'gnConfig', 'gnMetadataActions', 'Metadata',
-    'gnValidation',
+    'gnValidation', 'gnGlobalSettings',
     function($q, $scope, $routeParams, $http, $rootScope,
         $translate, $compile, $timeout, $location,
         gnEditor, gnSearchManagerService, gnSchemaManagerService,
         gnConfigService, gnUtilityService, gnOnlinesrc,
         gnCurrentEdit, gnConfig, gnMetadataActions, Metadata,
-        gnValidation) {
+        gnValidation, gnGlobalSettings) {
       $scope.savedStatus = null;
       $scope.savedTime = null;
       $scope.formId = null;
@@ -186,6 +189,7 @@
 
               // Get the schema configuration for the current record
               gnCurrentEdit.metadata = new Metadata(data.metadata[0]);
+              gnCurrentEdit.schema = $scope.mdSchema;
               $scope.redirectUrl = $location.search()['redirectUrl'];
 
               if ($scope.metadataFound) {
@@ -234,7 +238,7 @@
                   compileScope: $scope,
                   formScope: $scope.$new(),
                   sessionStartTime: moment(),
-                  formLoadExtraFn: setViewMenuInTopToolbar,
+                  formLoadExtraFn: formLoadExtraFunctions,
                   working: false
                 });
 
@@ -291,11 +295,40 @@
         });
       };
 
+      /**
+       * Extra functions to load after the form is loaded
+       */
+      var formLoadExtraFunctions = function() {
+        setViewMenuInTopToolbar();
+        setEditorIndentType();
+      };
+
+      $scope.$on('$locationChangeSuccess', function(e, newUrl, oldUrl) {
+        var target = $location.search()['scrollTo'];
+        if (target) {
+          gnUtilityService.scrollTo(target);
+        }
+      });
+
       $scope.$watch('gnCurrentEdit.isMinor', function() {
         if ($('#minor')[0]) {
           $('#minor')[0].value = $scope.gnCurrentEdit.isMinor;
         }
       });
+
+      /**
+       * Function to set the editor indent type
+       */
+      var setEditorIndentType = function() {
+        var f = $('form.gn-editor');
+        // If CSS class is defined in the view in config-editor.xml, don't do anything
+        if (!f.hasClass('gn-editor-config-css') &&
+          angular.isDefined(gnGlobalSettings.gnCfg.mods.editor.editorIndentType)) {
+          // add indent type to editor based on UI configuration
+          f.addClass(gnGlobalSettings.gnCfg.mods.editor.editorIndentType);
+        }
+
+      };
 
       /**
        * When the form is loaded, this function is called.
@@ -312,6 +345,7 @@
             });
           }
         });
+        
       };
 
       /**
@@ -349,7 +383,7 @@
         //        $($scope.formId + ' > fieldset').fadeOut(duration);
         $scope.save(true);
 
-        $location.search('tab', tabIdentifier);
+        $location.search('tab', tabIdentifier).replace();
       };
 
       /**
@@ -430,7 +464,21 @@
             insertRef, position);
       };
       $scope.remove = function(ref, parent, domRef) {
-        return gnEditor.remove(gnCurrentEdit.id, ref, parent, domRef);
+        // remove element and save the form
+        // after remove is done. When removing an element
+        // the button to add the element again is not available
+    	// in case of elements with max cardinality of 1.
+    	// Saving the form will show the add button again.
+        return gnEditor.remove(gnCurrentEdit.id, ref, parent, domRef).then(function(){
+          	gnEditor.save(true);
+        }, function(rejectedValue) {
+  			$rootScope.$broadcast('StatusUpdated', {
+  			  title: $translate.instant('runServiceError'),
+  			  error: rejectedValue,
+  			  timeout: 0,
+  			  type: 'danger'
+  			});
+        });
       };
       $scope.removeAttribute = function(ref) {
         return gnEditor.removeAttribute(gnCurrentEdit.id, ref);
@@ -440,7 +488,12 @@
         return $scope.save(refreshForm);
       };
 
-      $scope.save = function(refreshForm) {
+      $scope.save = function(refreshForm, validate) {
+        if (angular.isDefined(validate)) {
+          $('#showvalidationerrors')[0].value =
+            gnCurrentEdit.showValidationErrors = validate;
+        }
+
         $scope.saveError = false;
         var promise = gnEditor.save(refreshForm)
             .then(function(form) {
@@ -598,11 +651,6 @@
           insertRef, position, attribute) {
             $scope.add(ref, name, insertRef, position, attribute);
           });
-
-      $scope.validate = function() {
-        $('#showvalidationerrors')[0].value = 'true';
-        return $scope.save(true);
-      };
 
       init();
 

@@ -192,6 +192,8 @@
     <xsl:param name="base" as="node()"/>
 
     <xsl:if test="@xpath">
+      <xsl:variable name="config" select="."/>
+
       <!-- Seach any nodes in the metadata matching the XPath.
 
       We could have called saxon-evaluate from here like:
@@ -295,6 +297,7 @@
                                         then $overrideLabel
                                         else ''"/>
                   <xsl:with-param name="refToDelete" select="$refToDelete/gn:element"/>
+                  <xsl:with-param name="config" select="$config"/>
                 </saxon:call-template>
               </xsl:when>
               <xsl:otherwise>
@@ -318,6 +321,7 @@
                                         then $overrideLabel
                                         else ''"/>
                     <xsl:with-param name="refToDelete" select="$refToDelete/gn:element"/>
+                    <xsl:with-param name="config" select="$config"/>
                   </saxon:call-template>
                 </xsl:for-each>
               </xsl:otherwise>
@@ -351,6 +355,7 @@
                                 select="if ($configName != '')
                           then $strings/*[name() = $configName]
                           else $labelConfig/label"/>
+                <xsl:with-param name="class" select="if ($labelConfig/class) then $labelConfig/class else ''"/>
                 <xsl:with-param name="btnLabel" select="if ($labelConfig/btnLabel) then $labelConfig/btnLabel else ''"/>
                 <xsl:with-param name="btnClass" select="if ($labelConfig/btnClass) then $labelConfig/btnClass else ''"/>
                 <xsl:with-param name="directive" select="$directive"/>
@@ -695,6 +700,7 @@
                     select="if ($btnName != '')
                             then $btnName
                             else $labelConfig/label"/>
+      <xsl:variable name="class" select="if (@class != '') then @class else $labelConfig/class"/>
       <xsl:variable name="btnLabel" select="if (@btnLabel != '') then @btnLabel else $labelConfig/btnLabel"/>
       <xsl:variable name="btnClass" select="if (@btnClass != '') then @btnLabel else $labelConfig/btnClass"/>
       <xsl:variable name="btnLabelTranslation" select="$strings/*[name() = $btnLabel]"/>
@@ -723,6 +729,7 @@
             <xsl:with-param name="btnLabel"
                             select="if ($btnLabelTranslation != '') then $btnLabelTranslation else $btnLabel"/>
             <xsl:with-param name="btnClass" select="@btnClass"/>
+            <xsl:with-param name="class" select="@class"/>
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
@@ -734,6 +741,7 @@
               <xsl:with-param name="directive" select="$directive"/>
               <xsl:with-param name="childEditInfo" select="."/>
               <xsl:with-param name="parentEditInfo" select="../gn:element"/>
+              <xsl:with-param name="class" select="$class"/>
               <xsl:with-param name="btnClass" select="$btnClass"/>
               <xsl:with-param name="btnLabel" select="$btnLabelTranslation"/>
             </xsl:call-template>

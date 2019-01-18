@@ -23,7 +23,17 @@
 
 package org.fao.geonet.api.records;
 
-import io.swagger.annotations.*;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -31,10 +41,14 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.utils.ObjectJSONUtils;
+import org.fao.geonet.events.history.RecordCategoryChangeEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.springframework.context.ApplicationContext;
@@ -49,19 +63,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import jeeves.server.UserSession;
 import jeeves.services.ReadWriteController;
 import springfox.documentation.annotations.ApiIgnore;
-
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 
 @RequestMapping(value = {
     "/api/records",
@@ -102,7 +111,7 @@ public class MetadataTagApi {
             String metadataUuid,
         HttpServletRequest request
     ) throws Exception {
-        Metadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         return metadata.getMetadataCategories();
     }
@@ -145,11 +154,12 @@ public class MetadataTagApi {
             boolean clear,
         HttpServletRequest request
     ) throws Exception {
-        Metadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
+        Set<MetadataCategory> before = metadata.getMetadataCategories();
 
         if (clear) {
-            appContext.getBean(MetadataRepository.class).update(
+            appContext.getBean(IMetadataManager.class).update(
                 metadata.getId(), entity -> entity.getMetadataCategories().clear());
         }
 
@@ -169,6 +179,12 @@ public class MetadataTagApi {
         }
 
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
+
+        metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        Set<MetadataCategory> after = metadata.getMetadataCategories();
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
+        new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);;
+
     }
 
     @ApiOperation(
@@ -199,11 +215,12 @@ public class MetadataTagApi {
             Integer[] id,
         HttpServletRequest request
     ) throws Exception {
-        Metadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
+        Set<MetadataCategory> before = metadata.getMetadataCategories();
 
         if (id == null || id.length == 0) {
-            appContext.getBean(MetadataRepository.class).update(
+            appContext.getBean(IMetadataManager.class).update(
                 metadata.getId(), entity -> entity.getMetadataCategories().clear());
         }
 
@@ -217,6 +234,12 @@ public class MetadataTagApi {
         }
 
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
+
+        metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        Set<MetadataCategory> after = metadata.getMetadataCategories();
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
+        new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);;
+
     }
 
 
@@ -278,11 +301,13 @@ public class MetadataTagApi {
             final DataManager dataMan = context.getBean(DataManager.class);
             final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
             final AccessManager accessMan = context.getBean(AccessManager.class);
-            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+            final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+            final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
-                Metadata info = metadataRepository.findOneByUuid(uuid);
+                AbstractMetadata info = metadataRepository.findOneByUuid(uuid);
+                Set<MetadataCategory> before = info.getMetadataCategories();
                 if (info == null) {
                     report.incrementNullRecords();
                 } else if (!accessMan.canEdit(
@@ -306,10 +331,16 @@ public class MetadataTagApi {
                                 ));
                             }
                         }
-                        metadataRepository.save(info);
+                        metadataManager.save(info);
                         report.incrementProcessedRecords();
                     }
                 }
+
+                info = metadataRepository.findOneByUuid(uuid);
+                Set<MetadataCategory> after = info.getMetadataCategories();
+                UserSession userSession = ApiUtils.getUserSession(request.getSession());
+                new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);;
+
             }
             dataMan.flush();
             dataMan.indexMetadata(listOfUpdatedRecords);
@@ -370,11 +401,13 @@ public class MetadataTagApi {
             final DataManager dataMan = context.getBean(DataManager.class);
             final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
             final AccessManager accessMan = context.getBean(AccessManager.class);
-            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+            final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+            final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
-                Metadata info = metadataRepository.findOneByUuid(uuid);
+                AbstractMetadata info = metadataRepository.findOneByUuid(uuid);
+                Set<MetadataCategory> before = info.getMetadataCategories();
                 if (info == null) {
                     report.incrementNullRecords();
                 } else if (!accessMan.canEdit(
@@ -382,9 +415,14 @@ public class MetadataTagApi {
                     report.addNotEditableMetadataId(info.getId());
                 } else {
                     info.getMetadataCategories().clear();
-                    metadataRepository.save(info);
+                    metadataManager.save(info);
                     report.incrementProcessedRecords();
                 }
+
+                info = metadataRepository.findOneByUuid(uuid);
+                Set<MetadataCategory> after = info.getMetadataCategories();
+                UserSession userSession = ApiUtils.getUserSession(request.getSession());
+                new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);;
             }
             dataMan.flush();
             dataMan.indexMetadata(listOfUpdatedRecords);

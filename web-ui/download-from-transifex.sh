@@ -20,16 +20,17 @@ SRC_DIR=src/main/resources/catalog/locales
 l=(
     'es::es'
     'fr::fr'
-    'ge::de'
+    'de::de'
     'it::it'
     'ko::ko'
     'nl::nl'
-    'cz::cs_CZ'
+    'cs::cs_CZ'
     'ca::ca'
     'fi::fi'
     'is::is'
     'ru::ru'
-    'zh::zh'
+    'zh::zh',
+    'sk::sk_SK'
 )
 
 for index in "${l[@]}" ; do

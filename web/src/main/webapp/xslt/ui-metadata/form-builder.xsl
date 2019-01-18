@@ -25,6 +25,7 @@
 <xsl:stylesheet xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn="http://www.fao.org/geonetwork" xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:saxon="http://saxon.sf.net/" version="2.0"
@@ -60,11 +61,14 @@
     <!-- For editing -->
     <xsl:param name="name" required="no" as="xs:string" select="generate-id()"/>
 
-    <!-- The input type eg. number, date, datetime, email-->
+    <!-- The input type eg. number, date, datetime, email.
+    Can also be a directive name when starting with data-.
+    Then additional directiveAttributes may be set and are in the directive parameters.-->
     <xsl:param name="type" required="no" as="xs:string" select="''"/>
 
-    <!-- The AngularJS directive name eg. gn-field-duration -->
-    <xsl:param name="directive" required="no" as="xs:string" select="''"/>
+    <!-- The AngularJS attribute(s) directive.
+    The type parameter contains the directive name. -->
+    <xsl:param name="directiveAttributes" required="no" select="''"/>
 
     <xsl:param name="hidden" required="no" as="xs:boolean" select="false()"/>
     <xsl:param name="editInfo" required="no"/>
@@ -123,16 +127,20 @@
       </xsl:choose>
     </xsl:variable>
 
+
     <!-- The form field identified by the element ref.
             This HTML element should be removed when action remove is called.
         -->
+    <xsl:variable name="isDivLevelDirective"
+                  select="starts-with($type, 'data-') and ends-with($type, '-div')"/>
     <xsl:choose>
-      <xsl:when test="$directive != ''">
-        <div class="form-group" id="gn-el-{$editInfo/@ref}">
-          <div class="col-lg-10">
+      <xsl:when test="$isDivLevelDirective">
+        <div class="form-group gn-field" id="gn-el-{$editInfo/@ref}">
+          <!-- The DIV directive MUST populate the 11 slot of space available-->
+          <span>
             <xsl:choose>
               <xsl:when test="$isMultilingual">
-                <xsl:attribute name="data-{$directive}">
+                <xsl:attribute name="{$type}">
                 {
                 <xsl:for-each select="$value/values/value">
                   <xsl:sort select="@lang"/>
@@ -144,14 +152,14 @@
                 </xsl:attribute>
               </xsl:when>
               <xsl:otherwise>
-                <xsl:attribute name="data-{$directive}" select="$value"/>
+                <xsl:attribute name="{$type}" select="$value"/>
               </xsl:otherwise>
             </xsl:choose>
 
             <xsl:attribute name="data-ref" select="concat('_', $editInfo/@ref)"/>
             <xsl:attribute name="data-label" select="$label/label"/>
-          </div>
-          <div class="col-lg-2 gn-control">
+          </span>
+          <div class="col-sm-1 gn-control">
             <xsl:if test="not($isDisabled)">
               <xsl:call-template name="render-form-field-control-remove">
                 <xsl:with-param name="editInfo" select="$editInfo"/>
@@ -159,6 +167,9 @@
               </xsl:call-template>
             </xsl:if>
           </div>
+        </div>
+        <div class="col-sm-offset-2">
+          <xsl:call-template name="get-errors"/>
         </div>
       </xsl:when>
       <xsl:otherwise>
@@ -173,7 +184,7 @@
             <xsl:value-of select="$label/label"/>
           </label>
 
-          <div class="col-sm-9 gn-value nopadding-in-table">
+          <div class="col-sm-9 col-xs-11 gn-value nopadding-in-table">
             <xsl:if test="$isMultilingual">
               <xsl:attribute name="data-gn-multilingual-field"
                              select="$metadataOtherLanguagesAsJson"/>
@@ -198,6 +209,7 @@
                       <xsl:with-param name="lang" select="@lang"/>
                       <xsl:with-param name="value" select="."/>
                       <xsl:with-param name="type" select="$type"/>
+                      <xsl:with-param name="directiveAttributes" select="$directiveAttributes"/>
                       <xsl:with-param name="tooltip" select="$tooltip"/>
                       <xsl:with-param name="isRequired" select="$isRequired"/>
                       <xsl:with-param name="isReadOnly" select="$isReadOnly"/>
@@ -214,7 +226,9 @@
                 </xsl:for-each>
 
                 <!-- Display the helper for a multilingual field below the field.
-                 The helper will be used only to populate the main language. -->
+                 The helper will be used only to populate the main language.
+                 It is recommended to use a thesaurus instead of an helper for
+                 multilingual records. -->
                 <xsl:if test="count($listOfValues/*) > 0">
                   <xsl:call-template name="render-form-field-helper">
                     <xsl:with-param name="elementRef" select="concat('_', $editInfo/@ref)"/>
@@ -240,6 +254,7 @@
                   <xsl:with-param name="name" select="$name"/>
                   <xsl:with-param name="value" select="$value"/>
                   <xsl:with-param name="type" select="$type"/>
+                  <xsl:with-param name="directiveAttributes" select="$directiveAttributes"/>
                   <xsl:with-param name="tooltip"
                                   select="concat($schema, '|', name(.), '|', name(..), '|', $xpath)"/>
                   <xsl:with-param name="isRequired" select="$isRequired"/>
@@ -268,15 +283,10 @@
               </div>
             </xsl:if>
 
-            <xsl:if test="$errors">
-              <xsl:for-each select="$errors/errors/error">
-                <span class="help-block text-danger">
-                  <xsl:value-of select="."/>
-                </span>
-              </xsl:for-each>
-            </xsl:if>
+            <xsl:call-template name="get-errors"/>
+
           </div>
-          <div class="col-sm-1 gn-control">
+          <div class="col-sm-1 col-xs-1 gn-control">
             <xsl:if test="not($isDisabled)">
               <xsl:call-template name="render-form-field-control-remove">
                 <xsl:with-param name="editInfo" select="$editInfo"/>
@@ -292,13 +302,14 @@
     add a hidden add action in case the element is removed. If removed,
     the client app take care of displaying this control. -->
     <xsl:if test="$service = 'md.edit' and $parentEditInfo and $parentEditInfo/@min = 0 and $parentEditInfo/@max = 1">
-      <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, name())"/>
+      <xsl:variable name="addDirective" select="gn-fn-metadata:getFieldAddDirective($editorConfig, name())"/>
 
       <xsl:call-template name="render-element-to-add">
         <xsl:with-param name="label" select="$label/label"/>
+        <xsl:with-param name="class" select="if ($label/class) then $label/class else ''"/>
         <xsl:with-param name="btnLabel" select="if ($label/btnLabel) then $label/btnLabel else ''"/>
         <xsl:with-param name="btnClass" select="if ($label/btnClass) then $label/btnClass else ''"/>
-        <xsl:with-param name="directive" select="$directive"/>
+        <xsl:with-param name="directive" select="$addDirective"/>
         <xsl:with-param name="childEditInfo" select="$parentEditInfo"/>
         <xsl:with-param name="parentEditInfo" select="../gn:element"/>
         <xsl:with-param name="isFirst" select="false()"/>
@@ -384,13 +395,7 @@
         </div>
       </xsl:if>
 
-      <xsl:if test="normalize-space($errors) != ''">
-        <xsl:for-each select="$errors/errors/error">
-          <div class="alert alert-danger">
-            <xsl:value-of select="."/>
-          </div>
-        </xsl:for-each>
-      </xsl:if>
+      <xsl:call-template name="get-errors"/>
 
       <xsl:if test="$subTreeSnippet">
         <xsl:copy-of select="$subTreeSnippet"/>
@@ -432,6 +437,7 @@
     <xsl:param name="isMissingLabel" required="no"/>
     <xsl:param name="isFirst" required="no" as="xs:boolean" select="true()"/>
     <xsl:param name="isAddAction" required="no" as="xs:boolean" select="false()"/>
+    <xsl:param name="class" required="no" as="xs:string?" select="''"/>
     <xsl:param name="btnLabel" required="no" as="xs:string?" select="''"/>
     <xsl:param name="btnClass" required="no" as="xs:string?" select="''"/>
 
@@ -449,7 +455,7 @@
                   select="$template/values/key[position() = 1]/@label"/>
 
     <div
-      class="form-group gn-field gn-{$firstFieldKey} {if ($isFirst) then '' else 'gn-extra-field'} {if ($isAddAction) then 'gn-add-field' else ''}"
+      class="form-group gn-field gn-{$firstFieldKey} {if ($isFirst) then '' else 'gn-extra-field'} {if ($isAddAction) then 'gn-add-field' else ''} {$class}"
       id="gn-el-{if ($refToDelete) then $refToDelete/@ref else generate-id()}"
       data-gn-field-highlight="">
 
@@ -772,6 +778,7 @@
     <xsl:param name="isFirst" required="no" as="xs:boolean" select="true()"/>
     <xsl:param name="isHidden" required="no" as="xs:boolean" select="false()"/>
     <xsl:param name="name" required="no" as="xs:string" select="''"/>
+    <xsl:param name="class" required="no" as="xs:string?" select="''"/>
     <xsl:param name="btnLabel" required="no" as="xs:string?" select="''"/>
     <xsl:param name="btnClass" required="no" as="xs:string?" select="''"/>
 
@@ -786,7 +793,7 @@
 
       <!-- This element is replaced by the content received when clicking add -->
       <div
-        class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'} gn-add-field {if ($isHidden) then 'hidden' else ''}"
+        class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'} gn-add-field {if ($isHidden) then 'hidden' else ''} {$class}"
         id="gn-el-{$id}"
         data-gn-cardinality="{$childEditInfo/@min}-{$childEditInfo/@max}"
         data-gn-field-highlight="">
@@ -954,11 +961,14 @@
         </div>
       </div>
     </xsl:if>
+    <xsl:call-template name="get-errors-for-child"/>
+
   </xsl:template>
 
   <!-- Create a form field ie. a textarea, an input, a select, ...
 
-    This could be a directive which take care of rendering form elements ?
+    This could be a directive which take care of rendering form elements
+    See type parameter.
 
     -->
   <xsl:template name="render-form-field">
@@ -967,6 +977,7 @@
     <xsl:param name="lang" required="no"/>
     <xsl:param name="hidden"/>
     <xsl:param name="type"/>
+    <xsl:param name="directiveAttributes"/>
     <xsl:param name="tooltip" required="no"/>
     <xsl:param name="isRequired"/>
     <xsl:param name="isDisabled"/>
@@ -982,7 +993,6 @@
     <!-- Get variable from attribute (eg. codelist) or node (eg. gco:CharacterString).-->
     <xsl:variable name="valueToEdit"
                   select="if ($value/*) then $value/text() else $value"/>
-
     <!-- If a form field has suggestion list in helper
     then the element is hidden and the helper directive is added.
     ListOfValues could be a codelist (with entry children) or
@@ -1094,7 +1104,6 @@
           name="_{$name}"
           type="hidden"
           value="{$valueToEdit}"/>
-        <!-- FIXME : some JS here. Move to a directive ?-->
         <input class=""
                onclick="$('#{$elementId}').val(this.checked)"
                type="checkbox">
@@ -1109,13 +1118,14 @@
       <xsl:otherwise>
 
         <xsl:variable name="isDirective" select="starts-with($type, 'data-')"/>
-        <!-- Some directives needs to support values having cariage return in the
+        <!-- Some directives needs to support values having carriage return in the
         value. In that case a textarea field should be used with the value in it. -->
         <xsl:variable name="isTextareaDirective"
                       select="$isDirective and contains($type, '-textarea')"/>
 
         <xsl:variable name="textareaOrInput">
           <xsl:element name="{if ($isTextareaDirective) then 'textarea' else 'input'}">
+
             <xsl:attribute name="class"
                            select="concat('form-control ', if ($lang) then 'hidden' else '')"/>
             <xsl:attribute name="id"
@@ -1124,6 +1134,10 @@
                            select="concat('_', $name)"/>
             <xsl:if test="$isDirective">
               <xsl:attribute name="{$type}"/>
+
+              <xsl:if test="$directiveAttributes instance of node()+">
+                <xsl:copy-of select="$directiveAttributes//@*"/>
+              </xsl:if>
             </xsl:if>
             <xsl:if test="$tooltip">
               <xsl:attribute name="data-gn-field-tooltip" select="$tooltip"/>
@@ -1355,8 +1369,7 @@
     <xsl:variable name="attributeSpec" select="../gn:attribute[@name = $attributeName]"/>
 
     <xsl:variable name="directive"
-                  select="gn-fn-metadata:getFieldType($editorConfig, name(),
-      name(..))"/>
+                  select="gn-fn-metadata:getAttributeFieldType($editorConfig, concat(name(..), '/@', name()))"/>
 
     <!-- Form field name escaping ":" which will be invalid character for
     Jeeves request parameters. -->
@@ -1392,6 +1405,14 @@
                   <xsl:value-of select="if ($label) then $label else $optionValue"/>
                 </option>
               </xsl:for-each>
+
+
+              <xsl:if test="count($attributeSpec/gn:text[@value = $attributeValue]) = 0">
+                <option value="{$attributeValue}" selected="">
+                  <xsl:value-of select="$attributeValue"/>
+                </option>
+
+              </xsl:if>
             </select>
           </xsl:when>
           <xsl:otherwise>
@@ -1416,9 +1437,8 @@
   to a node (only for gn:attribute, see next template).
   -->
   <xsl:template mode="render-for-field-for-attribute"
-                match="@gn:xsderror|@gn:addedObj|
+                match="@gn:addedObj|@xsi:type|
           @min|@max|@name|@del|@add|@id|@uuid|@ref|@parent|@up|@down" priority="2"/>
-
 
   <!--
     Add attribute control

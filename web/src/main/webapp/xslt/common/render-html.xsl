@@ -50,7 +50,7 @@
       <head>
         <title><xsl:value-of select="$title"/></title>
         <meta charset="utf-8"/>
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+        <meta name="viewport" content="initial-scale=1.0"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
 
         <meta name="description" content="{normalize-space($description)}"/>
@@ -94,20 +94,23 @@
         </div>
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="http://code.jquery.com/jquery-1.12.4.min.js"
+        <script src="//code.jquery.com/jquery-1.12.4.min.js"
                 integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
                 crossorigin="anonymous">
           &#160;
         </script>
 
         <!-- Latest compiled and minified JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
                 crossorigin="anonymous">
           &#160;
         </script>
 
         <script type="text/javascript">
+          //show elements that require js
+          $(".hidden-nojs").removeClass('hidden-nojs');
+
           // attach click to tab
           $('.nav-tabs-advanced a').click(function (e) {
             e.preventDefault();

@@ -55,6 +55,7 @@
       <constructor-arg value="WEB-INF/classes/setup/sql-geocat/v340/data"/>
       <constructor-arg value="loc-ita-"/>
     </bean>
+
   </util:list>
 
 </beans>

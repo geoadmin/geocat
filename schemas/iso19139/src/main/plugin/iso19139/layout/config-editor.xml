@@ -51,7 +51,35 @@
     <for name="gmd:specificUsage" use="textarea"/>
     <for name="gmd:userNote" use="textarea"/>
     <for name="gmd:useLimitation" use="textarea"/>
+    <!-- Example configuration to use thesaurus to populate a CharacterString field
+    (including multilingual fields).
 
+    eg. INSPIRE codelist to set use limitation. This will apply to all views in the editor
+    1) Set the CharacterString value with the concept value
+    <for name="gmd:useLimitation"
+         use="data-gn-keyword-picker">
+      <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistLimitationsOnPublicAccess-LimitationsOnPublicAccess"/>
+    </for>
+
+    2) Use the concept Identifier in the xlink:href attribute.
+    This will automatically use the appropriate substitute depending on the presence
+    or not of the xlink:href. Either a CharacterString or an Anchor is used.
+    <for name="gmd:useLimitation"
+         use="data-gn-keyword-picker">
+      <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistLimitationsOnPublicAccess-LimitationsOnPublicAccess"
+                           data-thesaurus-concept-id-attribute="xlinkCOLONhref"/>
+    </for>
+
+    3) Use the concept identifier to populate another attribute (not having namespace)
+    <for name="gmd:featureTypes"
+         use="data-gn-keyword-picker">
+      <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistLimitationsOnPublicAccess-LimitationsOnPublicAccess"
+                           data-thesaurus-concept-id-attribute="codeSpace"/>
+    </for>
+    -->
+
+    <for name="gts:TM_PeriodDuration" use="data-gn-field-duration-div"/>
+    <for name="gml:duration" use="data-gn-field-duration-div"/>
 
     <for name="gco:Distance" use="number"/>
     <for name="gco:Decimal" use="number"/>
@@ -65,7 +93,7 @@
 
 
     <!-- gmx:FileName/@src attribute -->
-    <for name="src" use="data-gn-logo-selector"/>
+    <for name="gmx:FileName/@src" use="data-gn-logo-selector"/>
 
     <for name="gmd:electronicMailAddress" use="email"/>
 
@@ -166,6 +194,8 @@
     </for>
 
 
+
+
     <!-- Example configuration: Add onLine source from subtemplate
     <for name="gmd:onLine" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
@@ -183,7 +213,7 @@
 
       To restrict the list of thesaurus allowed, set the include attribute
       for the directive:
-      <directiveAttributes data-include="external.theme.inspire-theme,external.place.regions"/>
+      <directiveAttributes data-include="external.theme.httpinspireeceuropaeutheme-theme,external.place.regions"/>
 
       Exclude a thesaurus:
       <directiveAttributes data-include="-external.place.regions"/>
@@ -270,6 +300,7 @@
       <name>gmd:metadataStandardName</name>
       <name>gmd:metadataStandardVersion</name>
       <name>gmd:hierarchyLevelName</name>
+      <name>gmd:parentIdentifier</name>
       <name>gmd:dataSetURI</name>
       <name>gmd:postalCode</name>
       <name>gmd:city</name>
@@ -308,6 +339,8 @@
       <name>gmd:domainValue</name>
       <name>gmd:minimumValue</name>
       <name>gmd:maximumValue</name>
+      <name>gmd:dimensionSize</name>
+      <name>gmd:numberOfDimensions</name>
       <name>gmd:densityUnits</name>
       <name>gmd:descriptor</name>
       <name>gmd:denominator</name>
@@ -1206,8 +1239,8 @@
                           <gmd:MD_Identifier>
                             <gmd:code>
                               <gmx:Anchor
-                                xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.inspire-theme">
-                                geonetwork.thesaurus.external.theme.inspire-theme
+                                xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.httpinspireeceuropaeutheme-theme">
+                                geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme
                               </gmx:Anchor>
                             </gmd:code>
                           </gmd:MD_Identifier>
@@ -1332,9 +1365,10 @@
                    if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
               <template>
                 <values>
-                  <!-- Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
+                  <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree
+                        but this will make the XSLT formatter fails. Using // to access the element in both case. -->
                   <key label="beginPosition"
-                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:beginPosition"
                        use="gn-date-picker"
                        tooltip="gmd:extent|gmd:EX_TemporalExtent">
                     <directiveAttributes
@@ -1343,7 +1377,7 @@
 
                   </key>
                   <key label="endPosition"
-                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:endPosition"
                        use="gn-date-picker"
                        tooltip="gmd:extent|gmd:EX_TemporalExtent">
                     <directiveAttributes
@@ -1398,13 +1432,13 @@
                 <values>
                   <!-- Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
                   <key label="beginPosition"
-                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:beginPosition"
                        use="gn-date-picker"
                        tooltip="gmd:extent|gmd:EX_TemporalExtent">
                     <directiveAttributes data-tag-name="gml:beginPosition"/>
                   </key>
                   <key label="endPosition"
-                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:endPosition"
                        use="gn-date-picker"
                        tooltip="gmd:extent|gmd:EX_TemporalExtent"
                   >
@@ -3074,9 +3108,24 @@
 
     </view>
 
+    <!--
+    Customize the editor layout by adding a class attribute
+    <view name="default" class="gn-indent-bluescale gn-label-above-input">-->
     <view name="default">
       <sidePanel>
+        <!-- General online source manager
         <directive data-gn-onlinesrc-list=""/>
+        -->
+
+        <!-- Simple overview manager + online source manger for other types
+        Limit the max number of overviews with data-number-of-overviews="3" attribute.
+        In the full view, editor can access and manage the file store and
+        thumbnail name and description not supported by the overview manager.
+        -->
+        <directive data-gn-overview-manager=""/>
+        <directive data-gn-onlinesrc-list=""
+                   data-types="onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
+
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
@@ -3138,7 +3187,7 @@
       eg. only 2 INSPIRE themes with Anchor.
 
       <thesaurusList>
-        <thesaurus key="external.theme.inspire-theme"
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme"
                    maxtags="2"
                    fieldset="false"
                    transformations="to-iso19139-keyword-with-anchor"/>

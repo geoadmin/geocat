@@ -38,7 +38,7 @@
    * the input.
    *
    */
-  module.directive('gnTopiccategorySelector',
+  module.directive('gnTopiccategorySelectorDiv',
       ['$compile', '$timeout', '$translate',
        'gnTopicCategoryService', 'gnCurrentEdit',
        'TopicCategory', 'gnLangs',
@@ -50,7 +50,7 @@
            replace: true,
            transclude: true,
            scope: {
-             values: '@gnTopiccategorySelector',
+             values: '@gnTopiccategorySelectorDiv',
              label: '@label',
              ref: '@ref'
            },
@@ -77,7 +77,10 @@
              }
 
              var schema = gnCurrentEdit.schema;
-             scope.xpath = xpathBySchema[schema].xpath;
+
+             var schemaForXpath = (gnCurrentEdit.schema.indexOf("iso19139.") > -1)?
+               "iso19139":gnCurrentEdit.schema;
+             scope.xpath = xpathBySchema[schemaForXpath].xpath;
 
              // Initial values are comma separated encoded
              if (scope.values) {
@@ -224,7 +227,7 @@
              var getSnippet = function() {
                var xml = [];
                angular.forEach(getTopicCategoryIds(), function(t) {
-                 xml.push(xpathBySchema[schema].tpl.replace('{{t}}', t));
+                 xml.push(xpathBySchema[schemaForXpath].tpl.replace('{{t}}', t));
                });
                scope.snippets = xml;
              };

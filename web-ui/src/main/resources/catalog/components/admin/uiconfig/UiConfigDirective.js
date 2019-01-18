@@ -24,7 +24,7 @@
 (function() {
   goog.provide('gn_ui_config_directive');
 
-  var module = angular.module('gn_ui_config_directive', []);
+  var module = angular.module('gn_ui_config_directive', ['ui.ace']);
 
   module.directive('gnUiConfig', ['gnGlobalSettings',
     function(gnGlobalSettings) {
@@ -42,8 +42,21 @@
 
           // merge on top of default config
           scope.jsonConfig = angular.merge(
-              gnGlobalSettings.getMergeableDefaultConfig(),
+            // If the config is empty, use the default one set in CatController
+            (Object.keys(scope.config).length === 0 || scope.config === "null" || !scope.config ?
+              gnGlobalSettings.getDefaultConfig() :
+              gnGlobalSettings.getMergeableDefaultConfig()),
               angular.fromJson(scope.config));
+
+          // Make a copy as string for the ui-ace widget to work on
+          scope.$watch('jsonConfig', function (n) {
+            scope.jsonConfigSource = JSON.stringify(n, null, 2);
+          }, true);
+          scope.$watch('jsonConfigSource', function (n, o) {
+            if (n !== o) {
+              scope.jsonConfig = JSON.parse(n);
+            }
+          });
 
           scope.sortOrderChoices = ['', 'reverse'];
 
@@ -109,13 +122,20 @@
       },
       link: function(scope, element, attrs) {
         element.val(JSON.stringify(scope.value));
-        element.on('change', function() {
-          var newValue = $(this).val();
-          try {
-            angular.merge(scope.value, JSON.parse(newValue));
-          } catch (e) {
-            console.warn('Error parsing JSON: ', newValue);
-          }
+
+        scope.$watch('value', function(newValue, oldValue) {
+          element.val(JSON.stringify(newValue));
+        }, true);
+
+        element.on('change', function(eventObject) {
+          scope.$apply(function() {
+            var newValue = element.val();
+            try {
+              angular.merge(scope.value, JSON.parse(newValue));
+            } catch (e) {
+              console.warn('Error parsing JSON: ', newValue);
+            }
+          });
         });
       }
     };

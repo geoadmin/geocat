@@ -24,8 +24,10 @@
 package org.fao.geonet.kernel;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.SourceRepository;
@@ -40,7 +42,7 @@ public abstract class AbstractLocalXLinksTest extends AbstractIntegrationTestWit
     private static final int TEST_OWNER = 42;
 
     @Autowired
-    protected DataManager dataManager;
+    protected IMetadataManager dataManager;
 
     @Autowired
     protected SchemaManager schemaManager;
@@ -56,10 +58,10 @@ public abstract class AbstractLocalXLinksTest extends AbstractIntegrationTestWit
 
     protected ServiceContext context;
 
-    protected Metadata insertTemplateResourceInDb(Element element, MetadataType type) throws Exception {
+    protected AbstractMetadata  insertTemplateResourceInDb(Element element, MetadataType type) throws Exception {
         loginAsAdmin(context);
 
-        Metadata metadata = new Metadata()
+        AbstractMetadata metadata = new Metadata()
                 .setDataAndFixCR(element)
                 .setUuid(UUID.randomUUID().toString());
         metadata.getDataInfo()
@@ -73,7 +75,7 @@ public abstract class AbstractLocalXLinksTest extends AbstractIntegrationTestWit
         metadata.getHarvestInfo()
                 .setHarvested(false);
 
-        Metadata dbInsertedMetadata = dataManager.insertMetadata(
+        AbstractMetadata  dbInsertedMetadata = dataManager.insertMetadata(
                 context,
                 metadata,
                 element,

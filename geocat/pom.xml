@@ -5,7 +5,7 @@
     <parent>
         <artifactId>geonetwork</artifactId>
         <groupId>org.geonetwork-opensource</groupId>
-        <version>3.4.3-SNAPSHOT</version>
+        <version>3.5.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>org.geonetwork-opensource</groupId>
             <artifactId>schema-iso19139.che</artifactId>
-            <version>${project.version}</version>
+            <version>3.5</version>
         </dependency>
     </dependencies>
 </project>

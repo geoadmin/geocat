@@ -26,8 +26,25 @@
 
 package org.fao.geonet.kernel.harvest.harvester.thredds;
 
-import jeeves.server.context.ServiceContext;
-import jeeves.xlink.Processor;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.net.ssl.SSLHandshakeException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -35,6 +52,7 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -64,6 +82,8 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
+import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
 import thredds.catalog.InvAccess;
 import thredds.catalog.InvCatalogFactory;
 import thredds.catalog.InvCatalogImpl;
@@ -80,26 +100,6 @@ import ucar.nc2.dataset.NetcdfDatasetInfo;
 import ucar.nc2.ncml.NcMLWriter;
 import ucar.nc2.units.DateType;
 import ucar.unidata.util.StringUtil;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.net.ssl.SSLHandshakeException;
 
 //=============================================================================
 
@@ -174,105 +174,35 @@ import javax.net.ssl.SSLHandshakeException;
  *
  * @author Simon Pigot
  */
-class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
+class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<HarvestResult> {
 
-
-    //---------------------------------------------------------------------------
 
     static private final Namespace difNS = Namespace.getNamespace("http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/");
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
     static private final Namespace invCatalogNS = Namespace.getNamespace("http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0");
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //---------------------------------------------------------------------------
-
-    //---------------------------------------------------------------------------
     static private final Namespace gmd = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
-
-    //---------------------------------------------------------------------------
     static private final Namespace srv = Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
-
-    //---------------------------------------------------------------------------
     static private final Namespace xlink = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
 
-    //---------------------------------------------------------------------------
     private Logger log;
-
-    //---------------------------------------------------------------------------
     private ServiceContext context;
-
-    //---------------------------------------------------------------------------
-    private ThreddsParams params;
-
-    //---------------------------------------------------------------------------
     private DataManager dataMan;
-
-    //---------------------------------------------------------------------------
     private SchemaManager schemaMan;
-
-    //---------------------------------------------------------------------------
     private CategoryMapper localCateg;
-
-    //---------------------------------------------------------------------------
     private GroupMapper localGroups;
-
-    //---------------------------------------------------------------------------
     private UriMapper localUris;
-
-    //---------------------------------------------------------------------------
     private HarvestResult result;
-
-    //---------------------------------------------------------------------------
     private String hostUrl;
-
-    //---------------------------------------------------------------------------
     private HashSet<String> harvestUris = new HashSet<String>();
-
-    //---------------------------------------------------------------------------
     private Path cdmCoordsToIsoKeywordsStyleSheet;
-
-    //---------------------------------------------------------------------------
     private Path cdmCoordsToIsoMcpDataParametersStyleSheet;
-
-    //---------------------------------------------------------------------------
     private Path fragmentStylesheetDirectory;
-
-    //---------------------------------------------------------------------------
     private String metadataGetService;
-
-    //---------------------------------------------------------------------------
     private Map<String, ThreddsService> services = new HashMap<String, Harvester.ThreddsService>();
-
-    //---------------------------------------------------------------------------
     private InvCatalogImpl catalog;
-
-    //---------------------------------------------------------------------------
     private FragmentHarvester atomicFragmentHarvester;
-
-    //---------------------------------------------------------------------------
     private FragmentHarvester collectionFragmentHarvester;
-
-
-    //---------------------------------------------------------------------------
     private List<HarvestError> errors = new LinkedList<HarvestError>();
-
-    //---------------------------------------------------------------------------
-
-    /**
-     * Constructor
-     *
-     * @param context Jeeves context
-     * @param params  Information about harvesting configuration for the node
-     * @return null
-     **/
 
     public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, ThreddsParams params) {
         super(cancelMonitor);
@@ -535,27 +465,27 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         //
         // insert metadata
         //
-        Metadata metadata = new Metadata().setUuid(uuid);
+        AbstractMetadata metadata = new Metadata();
+        metadata.setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
             setType(MetadataType.METADATA);
         metadata.getSourceInfo().
             setSourceId(params.getUuid()).
-            setOwner(Integer.parseInt(
-                    StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId())).
+            setOwner(getOwner()).
             setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid()).
             setUri(uri);
 
-        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
         metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         dataMan.indexMetadata(id, true, null);
 
