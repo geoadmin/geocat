@@ -547,7 +547,7 @@
       <xsl:variable name="ptLocale"
                     select="$language[upper-case(replace(normalize-space(@id), '^#', ''))=string($currentLocale)]"/>
       <xsl:variable name="id"
-                    select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
+                    select="upper-case(java:twoCharLangCode(($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue)[1]))"/>
       <xsl:apply-templates select="@*"/>
       <xsl:if test="$id != '' and ($currentLocale='' or @locale!=concat('#', $id)) ">
         <xsl:attribute name="locale">
