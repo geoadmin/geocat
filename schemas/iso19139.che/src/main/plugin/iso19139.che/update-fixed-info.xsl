@@ -338,8 +338,8 @@
 
           <!-- Is the default language value set in a PT_FreeText ? -->
           <xsl:variable name="isInPTFreeText"
-                        select="count(gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
-                                            @locale = concat('#', $mainLanguageId)]) = 1"/>
+                        select="gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
+                                            @locale = concat('#', $mainLanguageId)]/text() != ''"/>
 
 
           <xsl:choose>

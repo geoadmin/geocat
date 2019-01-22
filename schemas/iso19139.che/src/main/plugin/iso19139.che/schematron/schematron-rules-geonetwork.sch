@@ -63,7 +63,7 @@
             <sch:let name="emptyText" value="gmd:textGroup/gmd:LocalisedCharacterString[not(text())]"/>
             <sch:let name="emptyGroup" value="gmd:textGroup[not(gmd:LocalisedCharacterString)]"/>
             <sch:let name="inXlink" value="ancestor::*[@xlink:href]"/>
-            <sch:assert test="not($emptyText or $emptyGroup) or $inXlink">$loc/strings/alert.emptyText</sch:assert>
+            <sch:assert test="not($emptyText or $emptyGroup) or $inXlink" see="../geonet:element/@ref">$loc/strings/alert.emptyText</sch:assert>
             <sch:report test="not($emptyText or $emptyGroup) or $inXlink">
                 <sch:value-of select="$loc/strings/report.emptyText"/>
             </sch:report>
