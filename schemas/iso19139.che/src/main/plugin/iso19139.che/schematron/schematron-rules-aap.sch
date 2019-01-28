@@ -23,7 +23,7 @@
 
         <sch:let name="failure" value="$AAPKeyworkSet and not($appraisalSectionDefined)"/>
 
-        <sch:assert test="not($failure)">
+        <sch:assert test="not($failure)" see="gmd:resourceMaintenance/che:CHE_MD_MaintenanceInformation/geonet:child[@name='appraisal']/@uuid">
             <sch:value-of select="$loc/strings/appraisalSectionRequired"/>
         </sch:assert>
         <sch:report test="not($failure)">
