@@ -288,8 +288,8 @@ public class EditLib {
         // Loop over each XML fragments to insert or replace
         HashMap<String, Element> nodeRefToElem = new HashMap<>();
         for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
-            String nodeRef = entry.getKey();
-            String[] nodeConfig = nodeRef.split("_");
+            String[] nodeConfig = entry.getKey().split("_");
+            String nodeRef = nodeConfig[0];
 
             Element el = findElement(md, nodeConfig[0]);
             nodeRefToElem.put(nodeRef, el);
