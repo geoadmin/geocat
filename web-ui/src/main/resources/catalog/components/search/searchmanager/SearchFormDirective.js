@@ -51,7 +51,7 @@
    * Controller to create new metadata record.
    */
   var searchFormController =
-      function($scope, $location, gnSearchManagerService,
+      function($scope, $q, $location, gnSearchManagerService,
                gnFacetService, Metadata, gnSearchLocation) {
     var defaultParams = {
       fast: 'index',
@@ -60,6 +60,9 @@
     var self = this;
 
     var hiddenParams = $scope.searchObj.hiddenParams;
+
+    this.promise = null;
+    this.canceller = null;
 
     /** State of the facets of the current search */
     $scope.currentFacets = [];
@@ -192,9 +195,15 @@
 
       var finalParams = angular.extend(params, hiddenParams);
       $scope.finalParams = finalParams;
-      gnSearchManagerService.gnSearch(
+
+      if (this.promise != null) {
+        this.canceller.resolve();
+      }
+      this.canceller = $q.defer();
+      this.promise = gnSearchManagerService.gnSearch(
                               finalParams, null,
-                              $scope.searchObj.internal).then(
+                              $scope.searchObj.internal,
+                              { timeout: this.canceller.promise }).then(
           function(data) {
             $scope.searchResults.records = [];
             for (var i = 0; i < data.metadata.length; i++) {
@@ -379,6 +388,7 @@
 
   searchFormController['$inject'] = [
     '$scope',
+    '$q',
     '$location',
     'gnSearchManagerService',
     'gnFacetService',
