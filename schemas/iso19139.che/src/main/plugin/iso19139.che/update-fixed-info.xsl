@@ -273,10 +273,11 @@
   </xsl:template>
 
 
-  <xsl:template match="*[gco:CharacterString|gmd:PT_FreeText]">
+  <xsl:template match="*[gco:CharacterString|gmx:Anchor|gmd:PT_FreeText]">
     <xsl:copy>
       <xsl:apply-templates select="@*[not(name() = 'gco:nilReason') and not(name() = 'xsi:type')]"/>
 
+      <!-- Add nileason if text is empty -->
       <xsl:variable name="excluded"
                     select="gn-fn-iso19139:isNotMultilingualField(., $editorConfig)"/>
 
@@ -290,7 +291,11 @@
                             then $valueInPtFreeTextForMainLanguage = ''
                             else if ($valueInPtFreeTextForMainLanguage != '')
                             then $valueInPtFreeTextForMainLanguage = ''
-                            else normalize-space(gco:CharacterString) = ''"/>
+                            else normalize-space(gco:CharacterString|gmx:Anchor) = ''"/>
+
+      <!-- TODO ? Removes @nilReason from parents of gmx:Anchor if anchor has @xlink:href attribute filled. -->
+      <xsl:variable name="isEmptyAnchor"
+                    select="normalize-space(gmx:Anchor/@xlink:href) = ''" />
 
       <xsl:choose>
         <xsl:when test="$isEmpty">
@@ -311,7 +316,7 @@
 
 
       <!-- For multilingual records, for multilingual fields,
-       create a gco:CharacterString containing
+       create a gco:CharacterString or gmx:Anchor containing
        the same value as the default language PT_FreeText.
       -->
       <xsl:variable name="element" select="name()"/>
@@ -324,16 +329,16 @@
           import may use this encoding. -->
         <xsl:when test="not($isMultilingual) and
                         $valueInPtFreeTextForMainLanguage != '' and
-                        normalize-space(gco:CharacterString) = ''">
-
-          <gco:CharacterString>
+                        normalize-space(gco:CharacterString|gmx:Anchor) = ''">
+          <xsl:element name="{if (gmx:Anchor) then 'gmx:Anchor' else 'gco:CharacterString'}">
+            <xsl:copy-of select="gmx:Anchor/@*"/>
             <xsl:value-of select="$valueInPtFreeTextForMainLanguage"/>
-          </gco:CharacterString>
+          </xsl:element>
         </xsl:when>
         <xsl:when test="not($isMultilingual) or
                         $excluded">
           <!-- Copy gco:CharacterString only. PT_FreeText are removed if not multilingual. -->
-          <xsl:apply-templates select="gco:CharacterString"/>
+          <xsl:apply-templates select="gco:CharacterString|gmx:Anchor"/>
         </xsl:when>
         <xsl:otherwise>
           <!-- Add xsi:type for multilingual element. -->
@@ -341,8 +346,8 @@
 
           <!-- Is the default language value set in a PT_FreeText ? -->
           <xsl:variable name="isInPTFreeText"
-                        select="gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
-                                            @locale = concat('#', $mainLanguageId)]/text() != ''"/>
+                        select="count(gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
+                                            @locale = concat('#', $mainLanguageId)]) = 1"/>
 
 
           <xsl:choose>
@@ -350,73 +355,28 @@
               <!-- Update gco:CharacterString to contains
                    the default language value from the PT_FreeText.
                    PT_FreeText takes priority. -->
-              <gco:CharacterString>
+              <xsl:element name="{if (gmx:Anchor) then 'gmx:Anchor' else 'gco:CharacterString'}">
+                <xsl:copy-of select="gmx:Anchor/@*"/>
                 <xsl:value-of select="gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
                                             @locale = concat('#', $mainLanguageId)]/text()"/>
-              </gco:CharacterString>
+              </xsl:element>
+
               <xsl:if test="gmd:PT_FreeText[normalize-space(.) != '']">
                 <gmd:PT_FreeText>
-                  <xsl:variable name="freeText"
-                                select="gmd:PT_FreeText/gmd:textGroup"/>
-
-                  <!-- Loop on locales in order to preserve order.
-                      Keep main language on top.
-                      Translations having no locale are ignored. eg. when removing a lang. -->
-                  <xsl:for-each select="$locales[@id = $mainLanguageId]">
-                    <xsl:variable name="localId"
-                                  select="@id"/>
-
-                    <xsl:variable name="element"
-                                  select="$freeText[*/@locale = concat('#', $localId)]"/>
-
-                    <xsl:apply-templates select="$element"/>
-                  </xsl:for-each>
-                  <xsl:for-each select="$locales[@id != $mainLanguageId]">
-                    <xsl:variable name="localId"
-                                  select="@id"/>
-
-                    <xsl:variable name="element"
-                                  select="$freeText[*/@locale = concat('#', $localId)]"/>
-
-                    <xsl:apply-templates select="$element"/>
-                  </xsl:for-each>
+                  <xsl:call-template name="populate-free-text"/>
                 </gmd:PT_FreeText>
               </xsl:if>
             </xsl:when>
             <xsl:otherwise>
               <!-- Populate PT_FreeText for default language if not existing. -->
-              <xsl:apply-templates select="gco:CharacterString"/>
+              <xsl:apply-templates select="gco:CharacterString|gmx:Anchor"/>
               <gmd:PT_FreeText>
                 <gmd:textGroup>
                   <gmd:LocalisedCharacterString locale="#{$mainLanguageId}">
                     <xsl:value-of select="gco:CharacterString"/>
                   </gmd:LocalisedCharacterString>
                 </gmd:textGroup>
-
-                <xsl:variable name="freeText"
-                              select="gmd:PT_FreeText/gmd:textGroup"/>
-
-                <!-- Loop on locales in order to preserve order.
-                    Keep main language on top.
-                    Translations having no locale are ignored. eg. when removing a lang. -->
-                <xsl:for-each select="$locales[@id = $mainLanguageId]">
-                  <xsl:variable name="localId"
-                                select="@id"/>
-
-                  <xsl:variable name="element"
-                                select="$freeText[*/@locale = concat('#', $localId)]"/>
-
-                  <xsl:apply-templates select="$element"/>
-                </xsl:for-each>
-                <xsl:for-each select="$locales[@id != $mainLanguageId]">
-                  <xsl:variable name="localId"
-                                select="@id"/>
-
-                  <xsl:variable name="element"
-                                select="$freeText[*/@locale = concat('#', $localId)]"/>
-
-                  <xsl:apply-templates select="$element"/>
-                </xsl:for-each>
+                <xsl:call-template name="populate-free-text"/>
               </gmd:PT_FreeText>
             </xsl:otherwise>
           </xsl:choose>
@@ -425,8 +385,100 @@
     </xsl:copy>
   </xsl:template>
 
+  <!-- For multilingual elements. Check that the local
+  is defined in record. If not, remove the element. -->
+  <xsl:template match="gmd:textGroup">
+    <xsl:variable name="elementLocalId"
+                  select="replace(gmd:LocalisedCharacterString/@locale, '^#', '')"/>
+    <xsl:choose>
+      <xsl:when test="count($locales[@id = $elementLocalId]) > 0">
+        <gmd:textGroup>
+          <gmd:LocalisedCharacterString>
+            <xsl:variable name="currentLocale"
+                          select="replace(gmd:LocalisedCharacterString/@locale, '^#', '')"/>
+            <xsl:variable name="ptLocale"
+                          select="$locales[@id = string($currentLocale)]"/>
+            <xsl:variable name="id"
+                          select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue[. != '']))"/>
+            <xsl:apply-templates select="@*"/>
+            <xsl:if test="$id != ''">
+              <xsl:attribute name="locale">
+                <xsl:value-of select="concat('#',$id)"/>
+              </xsl:attribute>
+            </xsl:if>
+
+            <xsl:apply-templates select="gmd:LocalisedCharacterString/text()"/>
+          </gmd:LocalisedCharacterString>
+        </gmd:textGroup>
+      </xsl:when>
+      <xsl:otherwise>
+        <!--<xsl:message>Removing <xsl:copy-of select="."/>.
+        This element was removed because not declared in record locales.</xsl:message>-->
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="populate-free-text">
+    <xsl:variable name="freeText"
+                  select="gmd:PT_FreeText/gmd:textGroup"/>
+
+    <!-- Loop on locales in order to preserve order.
+        Keep main language on top.
+        Translations having no locale are ignored. eg. when removing a lang. -->
+    <xsl:for-each select="$locales[@id = $mainLanguageId]">
+      <xsl:variable name="localId"
+                    select="@id"/>
+
+      <xsl:variable name="element"
+                    select="$freeText[*/@locale = concat('#', $localId)]"/>
+
+      <xsl:apply-templates select="$element"/>
+    </xsl:for-each>
+
+    <xsl:for-each select="$locales[@id != $mainLanguageId]">
+      <xsl:variable name="localId"
+                    select="@id"/>
+      <xsl:variable name="element"
+                    select="$freeText[*/@locale = concat('#', $localId)]"/>
+      <xsl:message>=<xsl:value-of select="$localId"/> </xsl:message>
+      <xsl:apply-templates select="$element"/>
+    </xsl:for-each>
+  </xsl:template>
 
 
+
+  <!-- For multilingual elements. Check that the local
+  is defined in record. If not, remove the element. -->
+  <xsl:template match="gmd:textGroup">
+    <xsl:variable name="elementLocalId"
+                  select="replace(gmd:LocalisedCharacterString/@locale, '^#', '')"/>
+    <xsl:choose>
+      <xsl:when test="count($locales[@id = $elementLocalId]) > 0">
+        <gmd:textGroup>
+          <gmd:LocalisedCharacterString>
+            <xsl:variable name="currentLocale"
+                          select="replace(gmd:LocalisedCharacterString/@locale, '^#', '')"/>
+            <xsl:variable name="ptLocale"
+                          select="$locales[@id = string($currentLocale)]"/>
+            <xsl:variable name="id"
+                          select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue[. != '']))"/>
+            <xsl:apply-templates select="@*"/>
+            <xsl:if test="$id != ''">
+              <xsl:attribute name="locale">
+                <xsl:value-of select="concat('#',$id)"/>
+              </xsl:attribute>
+            </xsl:if>
+
+            <xsl:apply-templates select="gmd:LocalisedCharacterString/text()"/>
+          </gmd:LocalisedCharacterString>
+        </gmd:textGroup>
+      </xsl:when>
+      <xsl:otherwise>
+        <!--<xsl:message>Removing <xsl:copy-of select="."/>.
+        This element was removed because not declared in record locales.</xsl:message>-->
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
 
   <xsl:template match="che:basicGeodataIDType">
@@ -569,11 +621,32 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:copy>
+  </xsl:template>
 
+  <!-- For XLinked subtemplates, the lang parameter MUST be in the same order as in the record.
+  Main language first, then other locales. If not, then the default CharacterString does not contain
+  the main language. It user change the language order in the record, the lang parameter needs to
+  be reordered too.
+
+  Example of URL:
+  <gmd:pointOfContact xmlns:xlink="http://www.w3.org/1999/xlink"
+                             xlink:href="local://srv/api/registries/entries/af9e5d4e-2c1a-48c0-853f-3a771fcf9ee3?
+                               process=gmd:role/gmd:CI_RoleCode/@codeListValue~distributor&amp;
+                               lang=eng,ara,spa,rus,fre,ger,chi&amp;
+                               schema=iso19139"
+  Can also be using lang=eng&amp;lang=ara.
+  -->
+  <xsl:template match="@xlink:href[starts-with(., 'local://srv/api/registries/entries')]">
+    <xsl:attribute name="xlink:href"
+                   select="replace(.,
+                                  '(&amp;lang=.*)+&amp;',
+                                  concat('&amp;lang=', $mainLanguage, ',',
+                                    string-join($locales//gmd:LanguageCode/@codeListValue[. != $mainLanguage], ','),
+                                    '&amp;'))"/>
   </xsl:template>
 
   <!-- ================================================================= -->
-  <!-- Set local identifier to the first 3 letters of iso code. Locale ids
+  <!-- Set local identifier to the first 2 letters of iso code. Locale ids
     are used for multilingual charcterString using #iso2code for referencing.
   -->
   <xsl:template match="gmd:PT_Locale">

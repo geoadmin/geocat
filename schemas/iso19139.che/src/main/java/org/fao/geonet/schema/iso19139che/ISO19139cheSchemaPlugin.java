@@ -491,6 +491,48 @@ public class ISO19139cheSchemaPlugin
                 el.detach();
             }
         }
+
+
+        // Sort all children elements translation
+        // according to the language list.
+        // When a directory entry is added as an xlink, the URL
+        // contains an ordered list of language and this ordre must
+        // be preserved in order to display fields in the editor in the same
+        // order as other element in the record.
+        if (langs.size() > 1) {
+            List<Element> elementList = (List<Element>)Xml.selectNodes(element,
+                ".//*[gmd:PT_FreeText]",
+                Arrays.asList(ISO19139Namespaces.GMD));
+            for(Element el : elementList) {
+                final Element ptFreeText = el.getChild("PT_FreeText", GMD);
+                List<Element> orderedTextGroup = new ArrayList<>();
+                for (String l : langs) {
+                    List<Element> node = (List<Element>) Xml.selectNodes(ptFreeText, "gmd:textGroup[*/@locale='" + l + "']", Arrays.asList(ISO19139Namespaces.GMD));
+                    if (node != null && node.size() == 1) {
+                        orderedTextGroup.add((Element) node.get(0).clone());
+                    }
+                }
+                ptFreeText.removeContent();
+                ptFreeText.addContent(orderedTextGroup);
+            }
+
+            List<Element> urlElementList = (List<Element>)Xml.selectNodes(element,
+                ".//*[che:PT_FreeURL]",
+                Arrays.asList(ISO19139cheNamespaces.CHE));
+            for(Element el : urlElementList) {
+                final Element ptFreeText = el.getChild("PT_FreeURL", ISO19139cheNamespaces.CHE);
+                List<Element> orderedTextGroup = new ArrayList<>();
+                for (String l : langs) {
+                    List<Element> node = (List<Element>) Xml.selectNodes(ptFreeText, "che:URLGroup[*/@locale='" + l + "']", Arrays.asList(ISO19139cheNamespaces.CHE));
+                    if (node != null && node.size() == 1) {
+                        orderedTextGroup.add((Element) node.get(0).clone());
+                    }
+                }
+                ptFreeText.removeContent();
+                ptFreeText.addContent(orderedTextGroup);
+            }
+        }
+
         return element;
     }
 
