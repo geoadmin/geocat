@@ -59,8 +59,8 @@
       var windowName = 'geonetwork';
       var windowOption = '';
       var translations = null;
-      $translate(['privilegesUpdated',
-        'privilegesUpdatedError']).then(function(t) {
+      $translate(['metadataPublished', 'metadataUnpublished',
+        'metadataPublishedError', 'metadataUnpublishedError']).then(function(t) {
         translations = t;
       });
       var alertResult = function(msg) {
@@ -68,25 +68,6 @@
           msg: msg,
           type: 'success'
         });
-      };
-
-      /**
-       * Open a popup and compile object content.
-       * Bind to an event to close the popup.
-       * @param {Object} o popup config
-       * @param {Object} scope to build content uppon
-       * @param {string} eventName
-       */
-      var openModal = function(o, scope, eventName) {
-        // var popup = gnPopup.create(o, scope);
-        var popup = gnPopup.createModal(o, scope);
-        var myListener = $rootScope.$on(eventName,
-            function(e, o) {
-              $timeout(function() {
-                popup.modal('hide');
-              }, 0);
-              myListener();
-            });
       };
 
       var callBatch = function(service) {
@@ -212,7 +193,7 @@
 
 
       this.openPrivilegesPanel = function(md, scope) {
-        openModal({
+        gnUtilityService.openModal({
           title: $translate.instant('privileges') + ' - ' +
               (md.title || md.defaultTitle),
           content: '<div gn-share="' + md.getId() + '"></div>',
@@ -222,7 +203,7 @@
 
       this.openUpdateStatusPanel = function(scope, statusType, t) {
         scope.task = t;
-        openModal({
+        gnUtilityService.openModal({
           title: 'updateStatus',
           content: '<div data-gn-metadata-status-updater="md" ' +
                         'data-status-type="' + statusType + '" task="t"></div>'
@@ -250,7 +231,7 @@
       };
 
       this.openPrivilegesBatchPanel = function(scope, bucket) {
-        openModal({
+        gnUtilityService.openModal({
           title: 'privileges',
           content: '<div gn-share="" ' +
               'gn-share-batch="true" ' +
@@ -262,7 +243,7 @@
         $location.path('/batchediting');
       };
       this.openCategoriesBatchPanel = function(bucket, scope) {
-        openModal({
+        gnUtilityService.openModal({
           title: 'categories',
           content: '<div gn-batch-categories="" ' +
               'selection-bucket="' + bucket + '"></div>'
@@ -273,7 +254,7 @@
         var uuid = md ? md.getUuid() : '';
         var ownerId = md ? md.getOwnerId() : '';
         var groupOwner = md ? md.getGroupOwner() : '';
-        openModal({
+        gnUtilityService.openModal({
           title: 'transferOwnership',
           content: '<div gn-transfer-ownership="' + uuid +
               '" gn-transfer-md-owner="' + ownerId + '" ' +
