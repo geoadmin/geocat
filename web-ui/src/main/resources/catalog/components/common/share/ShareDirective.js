@@ -27,7 +27,7 @@
   goog.require('gn_popup');
   goog.require('gn_share_service');
 
-  var module = angular.module('gn_share_directive', ['gn_share_service']);
+  var module = angular.module('gn_share_directive', ['gn_share_service', 'gn_popup']);
 
   /**
    * @ngdoc directive
@@ -47,8 +47,8 @@
    * TODO: User group only privilege
    */
   module.directive('gnShare', [
-    'gnShareService', 'gnShareConstants', 'gnConfig', '$translate', '$filter',
-    function(gnShareService, gnShareConstants, gnConfig, $translate, $filter) {
+    'gnShareService', 'gnShareConstants', 'gnConfig', 'gnUtilityService', '$translate', '$filter',
+    function(gnShareService, gnShareConstants, gnConfig, gnUtilityService, $translate, $filter) {
 
       return {
         restrict: 'A',
