@@ -92,8 +92,6 @@
             <sch:report
               test="$count > 0"
               ><sch:value-of select="$loc/strings/report.M8"/>
-                <sch:value-of select="gmd:CI_ResponsibleParty/gmd:organisationName"/>-
-                <sch:value-of select="gmd:CI_ResponsibleParty/gmd:individualName"/>
             </sch:report>
         </sch:rule>
     </sch:pattern>
