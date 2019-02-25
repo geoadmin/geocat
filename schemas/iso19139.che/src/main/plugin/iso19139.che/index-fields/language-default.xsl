@@ -636,15 +636,20 @@
 
       <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions">
         <xsl:variable name="tPosition" select="position()"></xsl:variable>
-        <xsl:for-each select="gmd:onLine/gmd:CI_OnlineResource[
-          gmd:name/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] or
-          gmd:description/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId]
-          ]">
+        <xsl:for-each select="gmd:onLine/gmd:CI_OnlineResource">
           <xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
+
+          <!-- Linkage, if not multilingual use gmd:URL,
+                else link in indexing document language,
+                 default to the first non empty multilingual link. -->
           <xsl:variable name="linkage"
-                        select="(gmd:linkage/gmd:URL[not(..//che:LocalisedURL[@locale=$langId])] |
-                                gmd:linkage//che:LocalisedURL[@locale=$langId]  |
-                                gmd:linkage//che:LocalisedURL[not(ancestor::gmd:linkage//che:LocalisedURL[@locale=$langId]) and @locale!=$langId])[1]"/>
+                        select="if (count(gmd:linkage//che:LocalisedURL) = 0)
+                                then gmd:linkage/gmd:URL
+                                else if (gmd:linkage//che:LocalisedURL[@locale=$langId] != '')
+                                then gmd:linkage//che:LocalisedURL[@locale=$langId]
+                                else gmd:linkage//che:LocalisedURL[. != ''][1]"/>
+
+
           <xsl:variable name="title"
                         select="if (gmd:name/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] != '')
                                 then normalize-space(gmd:name/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId])
@@ -661,6 +666,7 @@
           <!-- If the linkage points to WMS service and no protocol specified, manage as protocol OGC:WMS -->
           <xsl:variable name="wmsLinkNoProtocol" select="contains(lower-case($linkage), 'service=wms') and not(string($protocol))" />
 
+          
           <!-- ignore empty downloads -->
           <xsl:if test="string($linkage)!='' and not(contains($linkage,$download_check))">
             <Field name="protocol" string="{string($protocol)}" store="true" index="true"/>
