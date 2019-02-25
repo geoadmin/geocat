@@ -993,10 +993,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
     public static String analyzeText(String field, String requestStr, PerFieldAnalyzerWrapper a) {
 
         boolean phrase = false;
+        /* GEOCAT, 5/02/2019, as phrase query don't seems to work desactive it
         if ((requestStr.startsWith("\"") && requestStr.endsWith("\""))) {
             phrase = true;
         }
-
+        */
 
         List<String> tokenList = new ArrayList<String>();
         TokenStream ts = null;
