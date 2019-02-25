@@ -91,6 +91,7 @@ import java.util.regex.Pattern;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -385,6 +386,7 @@ public final class Xml {
     public static void transform(Element xml, Path styleSheetPath, OutputStream out) throws Exception {
         StreamResult resStream = new StreamResult(out);
         transform(xml, styleSheetPath, resStream, null);
+        out.close();
     }
 
     //--------------------------------------------------------------------------
