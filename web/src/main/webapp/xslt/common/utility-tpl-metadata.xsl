@@ -24,6 +24,7 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
                 xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 version="2.0"
 >
 
@@ -144,10 +145,21 @@
 
       <xsl:variable name="listOfErrors">
         <errors>
-          <xsl:for-each select="gn:validationReport|*/gn:validationReport">
+          <xsl:for-each select="gn:validationReport/@gn:message|*/gn:validationReport/@gn:message">
+
+            <!-- do not want *cvc-datatype-valid.1.2.3 to be displyed in situ -->
+            <xsl:analyze-string select="." regex=".*cvc-datatype-valid\.1\.2\.3: (.*)">
+            <xsl:non-matching-substring>
+
             <error type="xsd">
-              <xsl:value-of select="gn:parse-xsd-error(@gn:message, $schema, $labels, $strings)"/>
+              <xsl:value-of select="gn:parse-xsd-error(., $schema, $labels, $strings)"/>
             </error>
+
+            </xsl:non-matching-substring>
+            </xsl:analyze-string>
+
+            <!-- end do not want *cvc-datatype-valid.1.2.3 to be displyed in situ -->
+
           </xsl:for-each>
 
           <xsl:if test="name()  != 'geonet:child'">

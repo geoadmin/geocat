@@ -746,4 +746,9 @@
     </helper>
   </element>
 
+  <element name="gco:Date">
+    <label>data</label>
+    <description>data</description>
+  </element>
+
 </labels>

@@ -40,7 +40,7 @@
   <elementLocated>Parent element is</elementLocated>
   <missingElement>Missing element. The content of element:</missingElement>
   <invalidValue>Invalid or missing value.</invalidValue>
-  <notValidFor>is not a valid value for</notValidFor>
+  <notValidFor>is not a valid value for </notValidFor>
   <xsdErrorIs>XSD error is:</xsdErrorIs>
   <inElement>in element</inElement>
   <enum1>Value</enum1>

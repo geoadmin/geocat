@@ -41,7 +41,7 @@
   <elementLocated>L'élément parent est</elementLocated>
   <missingElement>Élément manquant. Le contenu de l'élément</missingElement>
   <invalidValue>Valeur manquante ou invalide.</invalidValue>
-  <notValidFor>n'est pas une valeur valide pour</notValidFor>
+  <notValidFor>n'est pas une valeur valide pour </notValidFor>
   <xsdErrorIs>L'erreur est :</xsdErrorIs>
   <inElement>dont le parent est</inElement>
   <enum1>La valeur</enum1>
