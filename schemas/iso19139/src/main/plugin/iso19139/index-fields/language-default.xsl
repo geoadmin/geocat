@@ -618,15 +618,6 @@
             <Field name="link" string="{concat($title, '|', $desc, '|', $linkage, '|', $protocol, '|', $mimetype, '|', $tPosition, '|', $applicationProfile)}" store="true" index="false"/>
           </xsl:if>
 
-          <!-- Add KML link if WMS -->
-          <xsl:if test="starts-with($protocol,'OGC:WMS') and
-                        string($linkage)!='' and string($title)!=''">
-            <!-- FIXME : relative path -->
-            <Field name="link" string="{concat($title, '|', $desc, '|',
-              '../../srv/en/google.kml?uuid=', /gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString, '&amp;layers=', $title,
-              '|application/vnd.google-earth.kml+xml|application/vnd.google-earth.kml+xml', '|', $tPosition, '|', $applicationProfile)}" store="true" index="false"/>
-          </xsl:if>
-
           <!-- Try to detect Web Map Context by checking protocol or file extension -->
           <xsl:if test="starts-with($protocol,'OGC:WMC') or contains($linkage,'.wmc')">
             <Field name="link" string="{concat($title, '|', $desc, '|',
