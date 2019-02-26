@@ -647,7 +647,7 @@
                                 then gmd:linkage/gmd:URL
                                 else if (gmd:linkage//che:LocalisedURL[@locale=$langId] != '')
                                 then gmd:linkage//che:LocalisedURL[@locale=$langId]
-                                else gmd:linkage//che:LocalisedURL[. != ''][1]"/>
+                                else (gmd:linkage//che:LocalisedURL[. != ''])[1]"/>
 
 
           <xsl:variable name="title"
@@ -666,7 +666,7 @@
           <!-- If the linkage points to WMS service and no protocol specified, manage as protocol OGC:WMS -->
           <xsl:variable name="wmsLinkNoProtocol" select="contains(lower-case($linkage), 'service=wms') and not(string($protocol))" />
 
-          
+
           <!-- ignore empty downloads -->
           <xsl:if test="string($linkage)!='' and not(contains($linkage,$download_check))">
             <Field name="protocol" string="{string($protocol)}" store="true" index="true"/>
