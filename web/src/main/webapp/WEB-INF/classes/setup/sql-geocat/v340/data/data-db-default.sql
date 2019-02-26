@@ -660,7 +660,7 @@ INSERT INTO MetadataIdentifierTemplate (id, name, template, isprovided) VALUES  
 INSERT INTO Selections (id, name, isWatchable) VALUES (0, 'PreferredList', 'n');
 INSERT INTO Selections (id, name, isWatchable) VALUES (1, 'WatchList', 'y');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/import/restrict', 'iso19139.che', 0, 11000, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/import/restrict', '', 0, 11000, 'y');
 
 
 
