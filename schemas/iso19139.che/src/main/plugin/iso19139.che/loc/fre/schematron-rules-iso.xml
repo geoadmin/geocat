@@ -225,27 +225,22 @@
   </alert.M61>
   <report.M61>Le niveau de hiérarchie est :</report.M61>
 
-  <alert.requiredAbstract>Identification des données Résumé est un élément obligatoire</alert.requiredAbstract>
-  <report.requiredAbstract>Identification des données Résumé trouvé</report.requiredAbstract>
-  <alert.requiredTitle>Identification des données Information de référence Titre est un élément obligatoire
-  </alert.requiredTitle>
-  <report.requiredTitle>Identification des données Information de référence Titre non trouvé</report.requiredTitle>
-  <alert.requiredDate>Identification des données Information de référence Date est un élément obligatoire
-  </alert.requiredDate>
-  <report.requiredDate>Identification des données Information de référence Date trouvée</report.requiredDate>
-  <alert.requiredDateType>Identification des données Information de référence Type de date est un élément obligatoire
-  </alert.requiredDateType>
-  <report.requiredDateType>Identification des données Information de référence Type de date trouvé
-  </report.requiredDateType>
+  <alert.requiredAbstract>Résumé est un élément obligatoire</alert.requiredAbstract>
+  <report.requiredAbstract>Résumé trouvé</report.requiredAbstract>
+  <alert.requiredTitle>Le titre est un élément obligatoire</alert.requiredTitle>
+  <report.requiredTitle>Titre trouvé</report.requiredTitle>
+  <alert.requiredDate>La date est un élément obligatoire</alert.requiredDate>
+  <report.requiredDate>Date trouvée</report.requiredDate>
+  <alert.requiredDateType>Type de date est un élément obligatoire</alert.requiredDateType>
+  <report.requiredDateType>Type de date trouvé</report.requiredDateType>
   <alert.requiredContact>Contact est un élément obligatoire</alert.requiredContact>
   <report.requiredContact>Contact trouvé</report.requiredContact>
   <alert.requiredLanguage>Langue est un élément obligatoire</alert.requiredLanguage>
   <report.requiredLanguage>Langue trouvée</report.requiredLanguage>
-  <alert.requiredLanguage>Identification des données Langue est un élément obligatoire</alert.requiredLanguage>
-  <report.requiredLanguage>Identification des données Langue trouvé</report.requiredLanguage>
-  <alert.requiredCitation>Identification des données Information de référence est un élément obligatoire
-  </alert.requiredCitation>
-  <report.requiredCitation>Identification des données Information de référence trouvé</report.requiredCitation>
+  <alert.requiredLanguage>La langue est un élément obligatoire</alert.requiredLanguage>
+  <report.requiredLanguage>Langue trouvé</report.requiredLanguage>
+  <alert.requiredCitation>Information de référence est un élément obligatoire</alert.requiredCitation>
+  <report.requiredCitation>Information de référence trouvé</report.requiredCitation>
 
   <requiredElements>Required Elements</requiredElements>
   <requireCitation>Citation</requireCitation>
