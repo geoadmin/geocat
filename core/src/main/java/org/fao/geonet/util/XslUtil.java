@@ -42,6 +42,7 @@ import net.sf.saxon.om.UnfailingIterator;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
@@ -216,6 +217,8 @@ public final class XslUtil {
                 SettingManager settingsMan = serviceContext.getBean(SettingManager.class);
                 if (settingsMan != null) {
                     String json = settingsMan.getValue(key);
+
+                    if (StringUtils.isEmpty(json)) return "";
 
                     ObjectMapper objectMapper = new ObjectMapper();
                     Object jsonObj = objectMapper.readValue(json, Object.class);

@@ -614,7 +614,8 @@
       };
 
       var createOrModifyGroup = function() {
-        if ($scope.groupSelected.defaultCategory === '') {
+        if (($scope.groupSelected.defaultCategory) &&
+            ($scope.groupSelected.defaultCategory.id == null)) {
           $scope.groupSelected.defaultCategory = null;
         }
         $http.put('../api/groups' + (
@@ -659,7 +660,7 @@
 
       $scope.deleteGroup = function(formId) {
         $http.delete('../api/groups/' +
-                $scope.groupSelected.id)
+                $scope.groupSelected.id + '?force=true')
             .success(function(data) {
               $scope.unselectGroup();
               loadGroups();

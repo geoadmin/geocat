@@ -150,7 +150,7 @@
           </div>
           <div data-gn-related="mdView.current.record"
               data-user="user"
-              data-types="siblings|associated|related"
+              data-types="siblings|associated"
               data-title="{{'siblings' | translate}}">
           </div>
         </div>
@@ -626,7 +626,7 @@
           <div data-gn-metadata-rate="mdView.current.record"/>
         </section>
 
-        <div data-ng-show="user.isEditorOrMore()"
+        <div data-ng-show="isRecordHistoryEnabled && user.isEditorOrMore()"
              data-gn-record-history="mdView.current.record"></div>
       </div>
 

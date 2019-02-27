@@ -34,6 +34,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.attachments.AttachmentsApi;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -71,6 +72,8 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.sql.SQLException;
 import java.util.*;
+
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 @RequestMapping(value = {
     "/api/groups",
@@ -457,7 +460,7 @@ public class GroupsApi {
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('UserAdmin')")
+    @PreAuthorize("hasRole('Administrator')")
     @ApiResponses(value = {
         @ApiResponse(code = 204, message = "Group removed."),
         @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
@@ -470,6 +473,11 @@ public class GroupsApi {
         )
         @PathVariable
             Integer groupIdentifier,
+        @ApiParam(
+            value = "Force removal even if records are assigned to that group."
+        )
+        @RequestParam(defaultValue = "false")
+            boolean force,
         @ApiIgnore
             ServletRequest request
     ) throws Exception {
@@ -484,13 +492,30 @@ public class GroupsApi {
             List<Integer> reindex = operationAllowedRepo.findAllIds(OperationAllowedSpecs.hasGroupId(groupIdentifier),
                 OperationAllowedId_.metadataId);
 
-            operationAllowedRepo.deleteAllByIdAttribute(OperationAllowedId_.groupId, groupIdentifier);
-            userGroupRepo.deleteAllByIdAttribute(UserGroupId_.groupId, Arrays.asList(groupIdentifier));
-            groupRepository.delete(groupIdentifier);
+            if (reindex.size() > 0 && force) {
+                operationAllowedRepo.deleteAllByIdAttribute(OperationAllowedId_.groupId, groupIdentifier);
 
-            //--- reindex affected metadata
-            DataManager dm = ApplicationContextHolder.get().getBean(DataManager.class);
-            dm.indexMetadata(Lists.transform(reindex, Functions.toStringFunction()));
+                //--- reindex affected metadata
+                DataManager dm = ApplicationContextHolder.get().getBean(DataManager.class);
+                dm.indexMetadata(Lists.transform(reindex, Functions.toStringFunction()));
+            } else if (reindex.size() > 0 && !force) {
+                throw new NotAllowedException(String.format(
+                    "Group %s has privileges associated with %d record(s). Add 'force' parameter to remove it or remove privileges associated with that group first.",
+                    group.getName(), reindex.size()
+                ));
+            }
+
+            final List<Integer> users = userGroupRepo.findUserIds(where(UserGroupSpecs.hasGroupId(group.getId())));
+            if (users.size() > 0 && force) {
+                userGroupRepo.deleteAllByIdAttribute(UserGroupId_.groupId, Arrays.asList(groupIdentifier));
+            } else if (users.size() > 0 && !force) {
+                throw new NotAllowedException(String.format(
+                    "Group %s is associated with %d user(s). Add 'force' parameter to remove it or remove users associated with that group first.",
+                    group.getName(), users.size()
+                ));
+            }
+
+            groupRepository.delete(groupIdentifier);
 
         } else {
             throw new ResourceNotFoundException(String.format(
