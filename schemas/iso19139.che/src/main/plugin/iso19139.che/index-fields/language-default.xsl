@@ -644,10 +644,10 @@
                  default to the first non empty multilingual link. -->
           <xsl:variable name="linkage"
                         select="if (count(gmd:linkage//che:LocalisedURL) = 0)
-                                then gmd:linkage/gmd:URL
+                                then (gmd:linkage/gmd:URL)[1]
                                 else if (gmd:linkage//che:LocalisedURL[@locale=$langId] != '')
-                                then gmd:linkage//che:LocalisedURL[@locale=$langId]
-                                else gmd:linkage//che:LocalisedURL[. != ''][1]"/>
+                                then (gmd:linkage//che:LocalisedURL[@locale=$langId])[1]
+                                else (gmd:linkage//che:LocalisedURL[. != ''])[1]"/>
           <xsl:variable name="title"
                         select="if (gmd:name/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] != '')
                                 then normalize-space(gmd:name/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId])
