@@ -160,6 +160,9 @@
         </xsl:call-template>
       </div>
     </div>
+    <div class="col-sm-offset-2">
+      <xsl:call-template name="get-errors"/>
+    </div>
   </xsl:template>
 
   <!--
@@ -223,6 +226,9 @@
           <xsl:with-param name="editInfo" select="gn:element"/>
         </xsl:call-template>
       </div>
+    </div>
+    <div class="col-sm-offset-2">
+      <xsl:call-template name="get-errors"/>
     </div>
   </xsl:template>
 

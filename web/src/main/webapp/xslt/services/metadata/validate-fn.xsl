@@ -98,6 +98,9 @@
       <rule errorType="type.3.1.3withparent">The value '(.*)' of element '(.*)' is not valid\. \(Element: ([a-z]{3}):(.*) with parent element: (.*)\)</rule>
       <rule errorType="type.3.1.3">The value '(.*)' of element '(.*)' is not valid\.</rule>
       <rule errorType="enumeration-valid">Value '(.*)' is not facet-valid with respect to enumeration '\[(.*)\]'\. It must be a value from the enumeration\. \(Element: ([a-z]{3}):(.*) with parent element: (.*)\)</rule>
+      <!--cvc-datatype-valid.1.2.3: '' is not a valid value of union type 'Date_Type'. (Element: gco:Date with parent element: gmd:date)-->
+      <rule errorType="datatype-valid.1.2.3withparent">'(.*)' is not a valid value of union type '(.*)'\. \(Element: (.*) with parent element: (.*)\)</rule>
+
     </xsl:variable>
 
     <xsl:variable name="errorWithParentName"
@@ -183,6 +186,21 @@
                     <xsl:value-of
                       select="geonet:getTitleWithoutContext($schema, regex-group(5), $labels)"/>
                     (<xsl:value-of select="regex-group(5)"/>).
+                  </xsl:if>
+                </xsl:when>
+                <xsl:when test="$errorType = 'datatype-valid.1.2.3'">
+                  <xsl:value-of select="$strings/invalidValue"/> '<xsl:value-of
+                        select="regex-group(1)"/>'
+                  <xsl:value-of select="$strings/notValidFor"/>
+                  <xsl:value-of
+                          select="geonet:getTitleWithoutContext($schema, regex-group(3), $labels)"
+                  /> (<xsl:value-of select="regex-group(3)"/>)
+
+                  <xsl:if test="$errorWithParentName">
+                    <xsl:value-of select="$strings/inElement"/>
+                    <xsl:value-of
+                            select="geonet:getTitleWithoutContext($schema, regex-group(4), $labels)"/>
+                    (<xsl:value-of select="regex-group(4)"/>).
                   </xsl:if>
                 </xsl:when>
                 <xsl:when test="$errorType = 'enumeration-valid'">

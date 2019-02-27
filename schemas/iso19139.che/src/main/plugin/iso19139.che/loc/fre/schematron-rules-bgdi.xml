@@ -10,19 +10,19 @@
   </frTitleRequired>
   <frTitleReport>Titre Français:</frTitleReport>
 
-  <translatedAltTitle>Traduction du titre court</translatedAltTitle>
-  <deAltTitleRequired>Identification des données / Information de référence / le titre court est obligatoire et
+  <translatedAltTitle>Traduction d'autre appellation ou acronyme</translatedAltTitle>
+  <deAltTitleRequired>Identification des données / Information de référence / autre appellation ou acronyme est obligatoire et
     nécessite une traduction en allemand
   </deAltTitleRequired>
-  <deAltTitleReport>Titre court Allemand:</deAltTitleReport>
-  <deAltTitleMaxLength>Le titre court Allemand est trop long, max 35c</deAltTitleMaxLength>
-  <deAltTitleMaxLengthReport>Longueur du titre court Allemand:</deAltTitleMaxLengthReport>
-  <frAltTitleRequired>Identification des données / Information de référence / le titre court est obligatoire et
+  <deAltTitleReport>Autre appellation ou acronyme en allemand:</deAltTitleReport>
+  <deAltTitleMaxLength>Autre appellation ou acronyme en allemand est trop long, max 35c</deAltTitleMaxLength>
+  <deAltTitleMaxLengthReport>Longueur d'autre appellation ou acronyme en allemand:</deAltTitleMaxLengthReport>
+  <frAltTitleRequired>Identification des données / Information de référence / autre appellation ou acronyme est obligatoire et
     nécessite une traduction en français
   </frAltTitleRequired>
-  <frAltTitleReport>Titre court Français:</frAltTitleReport>
-  <frAltTitleMaxLength>Le titre court Français est trop long, max 35c</frAltTitleMaxLength>
-  <frAltTitleMaxLengthReport>Longueur du titre court en français:</frAltTitleMaxLengthReport>
+  <frAltTitleReport>Autre appellation ou acronyme en français:</frAltTitleReport>
+  <frAltTitleMaxLength>Autre appellation ou acronyme en français est trop long, max 35c</frAltTitleMaxLength>
+  <frAltTitleMaxLengthReport>Longueur d'autre appellation ou acronyme en français:</frAltTitleMaxLengthReport>
 
   <translatedAbstract>Traduction du résumé</translatedAbstract>
   <deAbstractRequired>Identification des données / le résumé est obligatoire et nécessite une traduction en allemand
