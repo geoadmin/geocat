@@ -290,7 +290,7 @@
 				and (count(gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox) 
 				+ count (gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicDescription))=0"/>
             <sch:assert
-              test="$extent = false()"
+              test="$extent = false()" see="geonet:child[@name='extent']/@uuid"
               >$loc/strings/alert.M21</sch:assert>
             <sch:report
               test="$extent = false()"
