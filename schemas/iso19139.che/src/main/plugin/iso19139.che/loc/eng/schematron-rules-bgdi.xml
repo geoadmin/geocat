@@ -27,6 +27,6 @@
   <frAbstractReport>French abstract:</frAbstractReport>
 
   <pointOfContact>Point of Contact</pointOfContact>
-  <pointOfContactRequired>Data Identification / Point of Contact element is required</pointOfContactRequired>
+  <pointOfContactRequired>Identification / Point of Contact is required</pointOfContactRequired>
   <pointOfContactReport>Point of contact is present</pointOfContactReport>
 </strings>

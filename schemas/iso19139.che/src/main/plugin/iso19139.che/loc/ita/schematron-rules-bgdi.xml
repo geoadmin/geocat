@@ -35,7 +35,7 @@
   <frAbstractReport>Sommario in francese:</frAbstractReport>
 
   <pointOfContact>Punto di Contatto</pointOfContact>
-  <pointOfContactRequired>Identificazione dei dati / l’elemento Punto di Contatto è obbligatorio
+  <pointOfContactRequired>Identificazione / il Punto di Contatto è obbligatorio
   </pointOfContactRequired>
   <pointOfContactReport>Punto di Contatto è presente</pointOfContactReport>
 </strings>

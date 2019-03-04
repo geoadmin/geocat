@@ -115,7 +115,7 @@ queryBinding="xslt2">
     <sch:rule context="che:CHE_MD_Metadata/gmd:identificationInfo">
         <sch:let name="pointOfContact" value="*/gmd:pointOfContact"/>
 
-        <sch:assert test="$pointOfContact">
+        <sch:assert test="$pointOfContact" see="*/geonet:child[@name='pointOfContact']/@uuid">
             <sch:value-of select="$loc/strings/pointOfContactRequired"/>
         </sch:assert>
         <sch:report test="$pointOfContact">

@@ -33,7 +33,7 @@
   <frAbstractReport>Résumé Français:</frAbstractReport>
 
   <pointOfContact>Point de contact</pointOfContact>
-  <pointOfContactRequired>Identification des données / l'élément Point de contact est obligatoire
+  <pointOfContactRequired>Identification / Le point de contact est obligatoire
   </pointOfContactRequired>
   <pointOfContactReport>Le Point de contact est présent</pointOfContactReport>
 </strings>
