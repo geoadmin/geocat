@@ -481,12 +481,12 @@
 				//che:CHE_CI_ResponsibleParty/gmd:organisationName/gco:CharacterString |
 				//che:CHE_CI_ResponsibleParty/che:organisationAcronym/gco:CharacterString">
         <Field name="orgName" string="{string(.)}" store="true" index="true"/>
-      </xsl:for-each>
+      </xsl:for-each>-->
       <xsl:for-each select="//gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString|
 				//che:CHE_CI_ResponsibleParty/che:individualFirstName/gco:CharacterString|
 				//che:CHE_CI_ResponsibleParty/che:individualLastName/gco:CharacterString">
         <Field name="creator" string="{string(.)}" store="true" index="true"/>
-      </xsl:for-each>-->
+      </xsl:for-each>
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
