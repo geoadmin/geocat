@@ -26,10 +26,12 @@
 
   goog.require('gn_dbtranslation');
   goog.require('gn_multiselect');
+  goog.require('gn_mdtypewidget');
 
   var module = angular.module('gn_usergroup_controller', [
     'gn_dbtranslation',
     'gn_multiselect',
+    'gn_mdtypewidget',
     'blueimp.fileupload']);
 
 
@@ -45,7 +47,7 @@
 
       $scope.searchObj = {
         params: {
-          template: 'y or n',
+          template: 'y or n or s or t',
           sortBy: 'title'
         }
       };
@@ -276,7 +278,7 @@
 
         // Retrieve records in that group
         $scope.$broadcast('resetSearch', {
-          template: 'y or n',
+          template: 'y or n or s or t',
           _owner: u.id,
           sortBy: 'title'
         });
@@ -691,7 +693,7 @@
 
         // Retrieve records in that group
         $scope.$broadcast('resetSearch', {
-          template: 'y or n',
+          template: 'y or n or s or t',
           group: g.id,
           sortBy: 'title'
         });
