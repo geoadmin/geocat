@@ -17,7 +17,7 @@
   <M19>Au moins le format de distribution ou de diffusion doit être renseignés</M19>
   <M20>Au moins la description de l'étendue, l'élément géographique, temporel ou vertical doit être renseignés</M20>
   <M21>Au moins la description ou l'étendue spatiale doit être renseignées pour un jeu de données</M21>
-  <M22>Le thème doit être renseigné pour un jeu ou une collection de données</M22>
+  <M22>La thèmatique doit être renseigné pour un jeu ou une collection de données</M22>
   <M23>Au moins le nom ou l'identifiant du jeu de données aggregé doit être renseigné</M23>
   <M24>La langue est obligatoire</M24>
   <M25>Le jeu de caractère est obligatoire</M25>
@@ -30,7 +30,7 @@
   <M30>La description des points de calage est obligatoire si elle est disponible</M30>
   <M61>Le nom du niveau de hiérarchie doit être renseigné si le niveau hierarchique ne contient pas 'jeu de données'</M61>
   <alert.M6>
-    <div>Le thème doit être renseigné pour un jeu ou une collection de données.</div>
+    <div>La thèmatique doit être renseigné pour un jeu ou une collection de données.</div>
   </alert.M6>
   <report.M6>La thématique est :</report.M6>
   <alert.M6.characterString>
