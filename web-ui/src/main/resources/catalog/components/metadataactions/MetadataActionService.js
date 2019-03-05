@@ -318,22 +318,43 @@
             angular.isDefined(md) ? undefined : bucket,
             onOrOff, $rootScope.user)
             .then(
-            function(data) {
-              scope.$emit('PrivilegesUpdated', true);
-              scope.$broadcast('operationOnSelectionStop');
-              scope.$emit('StatusUpdated', {
-                msg: translations.privilegesUpdated,
-                timeout: 0,
-                type: 'success'});
+            function(response) {
+              if (response.data !== '') {
+                scope.processReport = response.data;
+
+                // A report is returned
+                gnUtilityService.openModal({
+                  title: onOrOff ? translations.metadataPublished :
+                    translations.metadataUnpublished,
+                  content: '<div gn-batch-report="processReport"></div>',
+                  className: 'gn-privileges-popup',
+                  onCloseCallback: function() {
+                    scope.$emit('PrivilegesUpdated', true);
+                    scope.$broadcast('operationOnSelectionStop');
+                    scope.processReport = null;
+                  }
+                }, scope, 'PrivilegesUpdated');
+
+              } else {
+                scope.$emit('PrivilegesUpdated', true);
+                scope.$broadcast('operationOnSelectionStop');
+                scope.$emit('StatusUpdated', {
+                  msg: onOrOff ? translations.metadataPublished :
+                    translations.metadataUnpublished,
+                  timeout: 0,
+                  type: 'success'});
+              }
+
               if (md) {
                 md.publish();
               }
-            }, function(data) {
+            }, function(response) {
               scope.$emit('PrivilegesUpdated', false);
               scope.$broadcast('operationOnSelectionStop');
               scope.$emit('StatusUpdated', {
-                title: translations.privilegesUpdatedError,
-                error: data,
+                title: onOrOff ? translations.metadataPublishedError :
+                  translations.metadataUnpublishedError,
+                error: response.data,
                 timeout: 0,
                 type: 'danger'});
             });
@@ -425,7 +446,7 @@
        */
       this.formatCrs = function(crsDetails) {
         var crs = (crsDetails.codeSpace && crsDetails.codeSpace + ':') +
-          crsDetails.code;
+            crsDetails.code;
         if (crsDetails.name) return crsDetails.name + ' (' + crs + ')';
         else return crs;
       };

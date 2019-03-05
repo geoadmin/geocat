@@ -24,6 +24,7 @@
 (function() {
   goog.provide('gn_share_directive');
 
+  goog.require('gn_popup');
   goog.require('gn_share_service');
 
   var module = angular.module('gn_share_directive', ['gn_share_service']);
@@ -154,17 +155,34 @@
                 scope.privileges,
                 scope.user,
                 replace).then(
-                function(data) {
-                  scope.$emit('PrivilegesUpdated', true);
-                  scope.$emit('StatusUpdated', {
-                    msg: translations.privilegesUpdated,
-                    timeout: 0,
-                    type: 'success'});
-                }, function(data) {
+
+                function(response) {
+                  if (response.data !== '') {
+                    scope.processReport = response.data;
+
+                    // A report is returned
+                    gnUtilityService.openModal({
+                      title: translations.privilegesUpdated,
+                      content: '<div gn-batch-report="processReport"></div>',
+                      className: 'gn-privileges-popup',
+                      onCloseCallback: function() {
+                        scope.$emit('PrivilegesUpdated', true);
+                        scope.processReport = null;
+                      }
+                    }, scope, 'PrivilegesUpdated');
+                  } else {
+                    scope.$emit('PrivilegesUpdated', true);
+                    scope.$emit('StatusUpdated', {
+                      msg: translations.privilegesUpdated,
+                      timeout: 0,
+                      type: 'success'});
+                  }
+
+                }, function(response) {
                   scope.$emit('PrivilegesUpdated', false);
                   scope.$emit('StatusUpdated', {
                     title: translations.privilegesUpdatedError,
-                    error: data,
+                    error: response.data,
                     timeout: 0,
                     type: 'danger'});
                 });
