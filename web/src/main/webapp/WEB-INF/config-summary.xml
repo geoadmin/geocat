@@ -127,6 +127,8 @@
     <facet name="maintenanceAndUpdateFrequency" indexKey="cl_maintenanceAndUpdateFrequency"
            label="maintenanceAndUpdateFrequencies"/>
     <facet name="mdActions" indexKey="_mdActions" label="mdActions"/>
+    <facet name="creator" indexKey="creator" label="creator"/>
+    <facet name="basicgeodataid" indexKey="basicgeodataid" label="basicgeodataid"/>
   </facets>
 
   <summaryTypes>
@@ -245,6 +247,8 @@
       <item facet="orgName" max="100"/>
       <item facet="metadataPOC"/>
       <item facet="serviceType"/>
+      <item facet="basicgeodataid" max="100"/>
+      <item facet="creator" max="100"/>
       <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
       <item facet="createDateYear" sortOrder="asc"/>
     </summaryType>
