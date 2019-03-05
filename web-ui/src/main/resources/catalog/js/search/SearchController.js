@@ -104,6 +104,24 @@
         }
       };
 
+      $scope.creatorOptions = {
+        mode: 'remote',
+        remote: {
+          url: suggestService.getUrl('QUERY', 'creator', 'STARTSWITHFIRST'),
+          filter: suggestService.bhFilter,
+          wildcard: 'QUERY'
+        }
+      };
+
+      $scope.basicgeodataidOptions = {
+        mode: 'remote',
+        remote: {
+          url: suggestService.getUrl('QUERY', 'basicgeodataid', 'STARTSWITHFIRST'),
+          filter: suggestService.bhFilter,
+          wildcard: 'QUERY'
+        }
+      };
+
       $scope.categoriesOptions = {
         mode: 'prefetch',
         promise: (function() {
