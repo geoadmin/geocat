@@ -30,6 +30,7 @@ Insert is made in first transferOptions found.
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
                 version="2.0" xmlns:che="http://www.geocat.ch/2008/che">
 
   <!-- Main properties for the link.
@@ -54,6 +55,17 @@ Insert is made in first transferOptions found.
   of URL+Protocol+Name -->
   <xsl:param name="updateKey"/>
 
+  <!-- The default language is also added as gmd:locale
+  for multilingual metadata records. -->
+  <xsl:variable name="mainLanguage"
+                select="/*/gmd:language/gco:CharacterString/text()|
+                        /*/gmd:language/gmd:LanguageCode/@codeListValue"/>
+
+  <xsl:variable name="mainLanguageId"
+                select="concat('#', upper-case(java:twoCharLangCode($mainLanguage)))"/>
+
+  <xsl:variable name="isMultilingual"
+                select="count(/*/gmd:locale[*/gmd:languageCode/*/@codeListValue != $mainLanguage]) > 0"/>
 
   <xsl:variable name="mainLang">
     <xsl:value-of
@@ -137,8 +149,9 @@ Insert is made in first transferOptions found.
   <!-- Updating the link matching the update key. -->
   <xsl:template match="gmd:onLine[
                         normalize-space($updateKey) = concat(
-                        gmd:CI_OnlineResource/gmd:linkage/gmd:URL,
-                        gmd:CI_OnlineResource/gmd:linkage/che:PT_FreeURL/che:URLGroup/che:LocalisedURL[@locale = '#DE'],
+                        (if ($isMultilingual)
+                        then gmd:CI_OnlineResource/gmd:linkage/che:PT_FreeURL/che:URLGroup/che:LocalisedURL[@locale = $mainLanguageId]
+                        else gmd:CI_OnlineResource/gmd:linkage/gmd:URL),
                         gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString,
                         gmd:CI_OnlineResource/gmd:name/gco:CharacterString)
                        ]">
