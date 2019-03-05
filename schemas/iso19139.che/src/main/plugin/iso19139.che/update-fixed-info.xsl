@@ -272,6 +272,11 @@
     </xsl:copy>
   </xsl:template>
 
+  <xsl:template match="gmd:linkage/che:PT_FreeURL">
+    <xsl:copy>
+      <xsl:call-template name="populate-free-text"/>
+    </xsl:copy>
+  </xsl:template>
 
   <xsl:template match="*[gco:CharacterString|gmx:Anchor|gmd:PT_FreeText]">
     <xsl:copy>
@@ -420,7 +425,7 @@
 
   <xsl:template name="populate-free-text">
     <xsl:variable name="freeText"
-                  select="gmd:PT_FreeText/gmd:textGroup"/>
+                  select="gmd:PT_FreeText/gmd:textGroup|che:URLGroup"/>
 
     <!-- Loop on locales in order to preserve order.
         Keep main language on top.
