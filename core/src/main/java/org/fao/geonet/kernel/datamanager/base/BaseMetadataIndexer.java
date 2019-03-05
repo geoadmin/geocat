@@ -524,7 +524,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 				moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.CAT, category.getName(), true, true));
 			}
 
-			// get status
+
+            // get status
 			Sort statusSort = new Sort(Sort.Direction.DESC,
 					MetadataStatus_.id.getName() + "." + MetadataStatusId_.changeDate.getName());
 			List<MetadataStatus> statuses = statusRepository.findAllById_MetadataId(id$, statusSort);
@@ -556,7 +557,17 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 							true, true));
 				}
 				moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, isValid, true, true));
-			}
+                // GEOCAT
+                // toPublish index field: metadata is valid, schema=iso19139.che, not a template and not harvested
+                if (isValid.equals("1")
+                    && schema.equals("iso19139.che")
+                    && metadataType == MetadataType.METADATA
+                    && !fullMd.getHarvestInfo().isHarvested()
+                    && !isPublishedToAll) {
+                    moreFields.add(SearchManager.makeField("toPublish", "y", true, true));
+                }
+                // END GEOCAT
+            }
 
 			if (searchManager == null) {
 				searchManager = servContext.getBean(SearchManager.class);
