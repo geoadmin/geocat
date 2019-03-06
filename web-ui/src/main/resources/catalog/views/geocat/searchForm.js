@@ -60,8 +60,8 @@
     };
 
     // data store for topic category
-    if (gnSearchSettings.gnStores) {
-      var topicCats = gnSearchSettings.gnStores.topicCat;
+    if (gnStores) {
+      var topicCats = gnStores.topicCat;
       topicCats.forEach(function(cat, i) {
         topicCats[i] = {
           id: cat.id || cat[0],

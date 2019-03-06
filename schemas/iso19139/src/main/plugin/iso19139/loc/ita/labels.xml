@@ -2350,7 +2350,7 @@
     <description>Numero dei valori numerici discreti nella griglia di dati</description>
   </element>
   <element name="gmd:topicCategory" id="41.0">
-    <label>Tema</label>
+    <label>Categorie - ISO</label>
     <description>Tema principale cui si riferiscono i dati</description>
     <condition>obbligatorio</condition>
   </element>

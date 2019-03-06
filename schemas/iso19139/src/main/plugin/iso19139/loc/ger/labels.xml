@@ -2781,7 +2781,7 @@
     </description>
   </element>
   <element name="gmd:topicCategory" id="41">
-    <label>Thematik</label>
+    <label>ISO - Kategorien</label>
     <help/>
     <condition>Obligatorisch wenn Hierarchieebene = Datenbestand, bzw. auf
       alle Fälle obligatorisch nach INSPIRE
