@@ -2553,7 +2553,7 @@
     <description>Number of discrete numerical values in the grid data</description>
   </element>
   <element name="gmd:topicCategory" id="41.0">
-    <label>Topic category</label>
+    <label>Topic categorys - ISO</label>
     <description>Main theme(s) of the datset</description>
     <condition>mandatory</condition>
   </element>

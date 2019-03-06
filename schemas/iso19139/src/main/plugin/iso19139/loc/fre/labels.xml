@@ -5244,7 +5244,7 @@ l’IGN (WPS)
 
   </element>
   <element name="gmd:topicCategory" id="41.0">
-    <label>Catégorie ISO</label>
+    <label>Catégories ISO</label>
     <description>Thème(s) principal(aux) du jeu de données</description>
     <help>Thème principal (ou thèmes principaux) du jeu de données.
       Ce thème ou groupe de thèmes permet de trouver un jeu de données.
