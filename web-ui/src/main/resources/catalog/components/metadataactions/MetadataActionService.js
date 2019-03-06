@@ -260,7 +260,7 @@
               '" gn-transfer-md-owner="' + ownerId + '" ' +
               '" gn-transfer-md-group-owner="' + groupOwner + '" ' +
               'selection-bucket="' + bucket + '"></div>'
-        }, scope, 'TransferOwnership');
+        }, scope, 'TransferOwnershipDone');
       };
       /**
        * Duplicate the given metadata. Open the editor in new page.
@@ -426,7 +426,7 @@
        * @param {Object} crsDetails expected keys: code, codeSpace, name
        */
       this.formatCrs = function(crsDetails) {
-        var crs = (crsDetails.codeSpace && crsDetails.codeSpace + ':') +
+        var crs = (crsDetails.codeSpace ? (crsDetails.codeSpace + ':') : '') +
             crsDetails.code;
         if (crsDetails.name) return crsDetails.name + ' (' + crs + ')';
         else return crs;
