@@ -1,6 +1,6 @@
 <strings>
   <schematron.title>Regole di implementazione GM03</schematron.title>
-  <M100>[GM03_2] - Geodati di base</M100>
+  <M100>Geodati di base</M100>
   <alert.M100>
     <div>
       <h2>Il tipo di Geodati di base e obbligatorio se c'è un'identificatore di Geodati di base.</h2>
@@ -11,7 +11,7 @@
       <h2>Il tipo di Geodati di base e obbligatorio se c'è un'identificatore di Geodati di base.</h2>
     </div>
   </report.M100>
-  <M101>[GM03_2] - Tipo di modello</M101>
+  <M101>Tipo di modello</M101>
   <alert.M101>
     <div>
       <h2>Il tipo di modello è obbligatorio</h2>
@@ -22,7 +22,7 @@
       <h2>Il tipo di modello è obbligatorio</h2>
     </div>
   </report.M101>
-  <M102>[GM03_2] - Valori dei Codelist</M102>
+  <M102>Valori dei Codelist</M102>
   <alert.M102>
     <div>
       <h2>Selezionare un valore del codelist o rimuovere l'elemento completamente.</h2>
@@ -33,7 +33,7 @@
       <h2>Selezionare un valore del codelist o rimuovere l'elemento completamente.</h2>
     </div>
   </report.M102>
-  <M103>[GM03_2] - Titolo</M103>
+  <M103>Titolo</M103>
   <alert.M103>
     <div>
       <h2>I titoli sono obbligatori. Aggiungere un titolo o rimuove tutta la classe di citazione respettiva.</h2>
@@ -44,7 +44,7 @@
       <h2>I titoli sono obbligatori. Aggiungere un titolo o rimuove tutta la classe di citazione respettiva.</h2>
     </div>
   </report.M103>
-  <M104>[GM03_2_1] - Topic Categories</M104>
+  <M104>Topic Categories</M104>
   <alert.M104>
     <div>
       <h2>protezione dell’ambiente e della natura, pianificazione territoriale – catasto fondiario,
@@ -61,7 +61,7 @@
       </h2>
     </div>
   </report.M104>
-  <M105>[GM03_2_1] - Contact country code</M105>
+  <M105>Contact country code</M105>
   <alert.M105>
     <div>
       <h2>Country code is not valid for some contact select CH, LI, IT, AT, DE, FR value</h2>

@@ -1,6 +1,6 @@
 <strings>
   <schematron.title>GM03 implementing rules</schematron.title>
-  <M100>[GM03_2] - Basic geodata</M100>
+  <M100>Basic geodata</M100>
   <alert.M100>
     <div>
       <h2>Basic geodata type is mandatory if basic geodata identifier is defined.</h2>
@@ -11,7 +11,7 @@
       <h2>Basic geodata type is mandatory if basic geodata identifier is defined.</h2>
     </div>
   </report.M100>
-  <M101>[GM03_2] - Model type</M101>
+  <M101>Model type</M101>
   <alert.M101>
     <div>
       <h2>Model type is mandatory</h2>
@@ -22,7 +22,7 @@
       <h2>Model type is mandatory</h2>
     </div>
   </report.M101>
-  <M102>[GM03_2] - Codelist values</M102>
+  <M102>Codelist values</M102>
   <alert.M102>
     <div>
       <h2>Select one value from the codelist or remove the element.</h2>
@@ -33,7 +33,7 @@
       <h2>Select one value from the codelist or remove the element.</h2>
     </div>
   </report.M102>
-  <M103>[GM03_2] - Citation titles</M103>
+  <M103>Citation titles</M103>
   <alert.M103>
     <div>
       <h2>Citation titles are mandatory, give a title or remove the specific citation-Class.</h2>
@@ -44,7 +44,7 @@
       <h2>Citation titles are mandatory, give a title or remove the specific citation-Class.</h2>
     </div>
   </report.M103>
-  <M104>[GM03_2_1] - Topic Categories</M104>
+  <M104>Topic Categories</M104>
   <alert.M104>
     <div>
       <h2>environment, planningCadastre, geoscientificInformation, imageryBaseMapsEarthCover topic category is not a
@@ -59,7 +59,7 @@
       </h2>
     </div>
   </report.M104>
-  <M105>[GM03_2_1] - Contact country code</M105>
+  <M105>Contact country code</M105>
   <alert.M105>
     <div>
       <h2>Country code is not valid for some contact select CH, LI, IT, AT, DE, FR value</h2>

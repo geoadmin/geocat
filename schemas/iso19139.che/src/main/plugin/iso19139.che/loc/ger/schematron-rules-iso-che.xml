@@ -1,6 +1,6 @@
 <strings>
   <schematron.title>GM03 implementing rules</schematron.title>
-  <M100>[GM03_2] - Geobasisdaten</M100>
+  <M100>Geobasisdaten</M100>
   <alert.M100>
     <div>
       <h2>Art des Geobasisdaten-Identifikators ist obligatorisch, wenn ein Identifikator angegeben wurde.</h2>
@@ -11,7 +11,7 @@
       <h2>Art des Geobasisdaten-Identifikators ist obligatorisch, wenn ein Identifikator angegeben wurde.</h2>
     </div>
   </report.M100>
-  <M101>[GM03_2] - Art des Modells</M101>
+  <M101>Art des Modells</M101>
   <alert.M101>
     <div>
       <h2>Die Art des Modells ist obligatorisch anzugeben</h2>
@@ -22,7 +22,7 @@
       <h2>Die Art des Modells ist obligatorisch anzugeben</h2>
     </div>
   </report.M101>
-  <M102>[GM03_2] - Auswahlliste</M102>
+  <M102>Auswahlliste</M102>
   <alert.M102>
     <div>
       <h2>Es soll ein Wert aus der Liste ausgewählt werden, bzw. das Element entfernt werden.</h2>
@@ -33,7 +33,7 @@
       <h2>Es soll ein Wert aus der Liste ausgewählt werden, bzw. das Element entfernt werden.</h2>
     </div>
   </report.M102>
-  <M103>[GM03_2] - Titel</M103>
+  <M103>Titel</M103>
   <alert.M103>
     <div>
       <h2>Alle Titel in der Klasse "Bibliografische Angaben sind obligatorisch.</h2>
@@ -44,7 +44,7 @@
       <h2>Alle Titel in der Klasse "Bibliografische Angaben sind obligatorisch.</h2>
     </div>
   </report.M103>
-  <M104>[GM03_2_1] - Topic Categories</M104>
+  <M104>Topic Categories</M104>
   <alert.M104>
     <div>
       <h2>environment, planningCadastre, geoscientificInformation, imageryBaseMapsEarthCover: Thematik ist keine
@@ -59,7 +59,7 @@
       </h2>
     </div>
   </report.M104>
-  <M105>[GM03_2_1] - Contact country code</M105>
+  <M105>Contact country code</M105>
   <alert.M105>
     <div>
       <h2>Country code is not valid for some contact select CH, LI, IT, AT, DE, FR value</h2>

@@ -19,10 +19,13 @@
         <sch:title>$loc/strings/M100</sch:title>
         <sch:rule
             context="//che:CHE_MD_DataIdentification">
-        	<sch:let name="emptyGeoId" value="che:basicGeodataID/gco:CharacterString!='' and (not(che:basicGeodataIDType) or che:basicGeodataIDType/che:basicGeodataIDTypeCode/@codeListValue='')"/>
-   
+        	<sch:let name="emptyGeoId" value="che:basicGeodataID/gco:CharacterString!='' and che:basicGeodataIDType/che:basicGeodataIDTypeCode/@codeListValue=''"/>
+        	<sch:let name="noGeoId" value="che:basicGeodataID/gco:CharacterString!='' and not(che:basicGeodataIDType)"/>
+
             <!--  Check that basicGeodataId is defined -->
-            <sch:assert test="not($emptyGeoId)"><sch:value-of select="$loc/strings/alert.M100"/></sch:assert>
+            <sch:assert test="not($noGeoId)" see="./geonet:child[@name='basicGeodataIDType']/@uuid"><sch:value-of select="$loc/strings/alert.M100"/></sch:assert>
+
+            <sch:assert test="not($emptyGeoId)" see="./che:basicGeodataIDType/geonet:element/@ref"><sch:value-of select="$loc/strings/alert.M100"/></sch:assert>
             <sch:report test="not($emptyGeoId)"><sch:value-of select="$loc/strings/report.M100/div"/></sch:report>
         </sch:rule>
     </sch:pattern>
