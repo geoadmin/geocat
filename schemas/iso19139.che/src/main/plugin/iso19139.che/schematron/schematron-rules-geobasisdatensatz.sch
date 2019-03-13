@@ -35,10 +35,17 @@
         <sch:title>$loc/strings/basicGeoDataInfo</sch:title>
         <!-- Check specification names and status -->
         <sch:rule context="che:CHE_MD_Metadata/gmd:identificationInfo">
+            <sch:let name="geodataIdDefined" value="*/che:basicGeodataID/node()"/>
+            <sch:let name="geodataTypeDefined" value="*/che:basicGeodataIDType/node()"/>
+
             <sch:let name="geodataId" value="normalize-space(*/che:basicGeodataID/gco:CharacterString)"/>
             <sch:let name="geodataType" value="normalize-space(*/che:basicGeodataIDType/che:basicGeodataIDTypeCode/@codeListValue)"/>
 
-            <sch:assert test="string-length($geodataId) > 0">
+            <sch:assert test="$geodataIdDefined"  see="*/geonet:child[@name='basicGeodataID']/@uuid">
+                <sch:value-of select="$loc/strings/geodataIdRequired"/>
+            </sch:assert>
+
+            <sch:assert test="$geodataId != '' or not($geodataIdDefined) "  see="*/che:basicGeodataID/geonet:element/@ref">
                 <sch:value-of select="$loc/strings/geodataIdRequired"/>
             </sch:assert>
             <sch:report test="string-length($geodataId) > 0">
@@ -46,7 +53,11 @@
                 <sch:value-of select="$geodataId"/>
             </sch:report>
 
-            <sch:assert test="string-length($geodataType) > 0">
+            <sch:assert test="$geodataTypeDefined" see="*/geonet:child[@name='basicGeodataIDType']/@uuid">
+                <sch:value-of select="$loc/strings/geodataTypeRequired"/>
+            </sch:assert>
+
+            <sch:assert test="$geodataType !='' or not($geodataTypeDefined)" see="*/che:basicGeodataIDType/geonet:element/@ref">
                 <sch:value-of select="$loc/strings/geodataTypeRequired"/>
             </sch:assert>
             <sch:report test="string-length($geodataType) > 0">
