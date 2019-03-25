@@ -211,6 +211,7 @@
     <name>gmd:ellipsoid</name>
     <name>gmd:attributes</name>
     <name>gmd:verticalCRS</name>
+    <name>gmd:identifier</name>
     <name>gmd:geographicBox</name>
     <name>gmd:EX_TemporalExtent</name>
     <name>gmd:MD_Distributor</name>
