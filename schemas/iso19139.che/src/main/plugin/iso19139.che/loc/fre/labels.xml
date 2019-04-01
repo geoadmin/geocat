@@ -768,12 +768,6 @@ element name="che:language">
       ce qui concerne les métadonnées"
     </description>
   </element>
-  <element name="che:PT_FreeURL">
-    <label>PT_FreeURL</label>
-  </element>
-  <element name="che:URLGroup">
-    <label>URLGroup</label>
-  </element>
   <!--<element name="che:legislationConstraints">
    <label>legislationConstraints</label>
   </element>-->
