@@ -1126,6 +1126,8 @@
                              $position)}"
            store="true" index="false"/>
 
+    <Field name="creator" string="{$individualName}" store="true" index="true"/>
+
     <xsl:for-each select="$email">
       <Field name="{$fieldPrefix}Email" string="{string(.)}" store="true" index="true"/>
       <Field name="{$fieldPrefix}RoleAndEmail" string="{$role}|{string(.)}" store="true" index="true"/>

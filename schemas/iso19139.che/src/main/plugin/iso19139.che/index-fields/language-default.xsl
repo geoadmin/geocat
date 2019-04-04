@@ -434,18 +434,16 @@
                                       gmd:deliveryPoint|gmd:postalCode|gmd:city|
                                       gmd:administrativeArea|gmd:country)/gco:CharacterString/text(), ', ')"/>
 
+        <Field name="creator" string="{$individualName}" store="true" index="true"/>
         <Field name="responsibleParty"
                string="{concat($roleTranslation, '|' , $type, '|', $orgname[1], '|', $logo, '|',  string-join($email, ','), '|', $individualName, '|', $positionName, '|', $address, '|', string-join($phone, ','))}"
                store="true" index="false"/>
 
       </xsl:for-each>
 
-      <xsl:for-each select="//gmd:CI_ResponsibleParty/gmd:individualName//gmd:LocalisedCharacterString[@locale=$langId]|
-				//che:CHE_CI_ResponsibleParty/che:individualFirstName//gmd:LocalisedCharacterString[@locale=$langId]|
-				//che:CHE_CI_ResponsibleParty/che:individualLastName//gmd:LocalisedCharacterString[@locale=$langId]">
+      <xsl:for-each select="//gmd:CI_ResponsibleParty/gmd:individualName//gmd:LocalisedCharacterString[@locale=$langId]">
         <Field name="creator" string="{string(.)}" store="true" index="true"/>
       </xsl:for-each>
-
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
       <xsl:choose>

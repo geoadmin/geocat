@@ -262,6 +262,7 @@
     <Field name="_email" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
     <Field name="_orgName" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
     <Field name="_individualName" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
+    <Field name="creator" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
     <Field name="__name" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
     <Field name="__version" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
     <Field name="__title" analyzer="org.fao.geonet.kernel.search.AnalyzerWhiteSpaceLowerCaseStopWord"/>
@@ -354,6 +355,7 @@
 
     <Field name="lastName"/>
     <Field name="firstName"/>
+    <Field name="creator"/>
     <Field name="_email"/>
     <Field name="_orgName"/>
     <Field name="_individualName"/>
