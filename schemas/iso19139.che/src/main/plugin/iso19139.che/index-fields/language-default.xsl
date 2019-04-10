@@ -830,6 +830,15 @@
 
     <xsl:apply-templates select="." mode="codeList"/>
 
+    <!-- Index all codelist -->
+    <xsl:for-each select=".//*[*/@codeListValue != '']">
+      <Field name="cl_{local-name()}"
+             string="{*/@codeListValue}"
+             store="true" index="true"/>
+      <Field name="cl_{concat(local-name(), '_text')}"
+             string="{util:getCodelistTranslation(name(*), string(*/@codeListValue), string($docLangId))}"
+             store="true" index="true"/>
+    </xsl:for-each>
   </xsl:template>
 
   <!-- ========================================================================================= -->
