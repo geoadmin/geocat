@@ -16,7 +16,7 @@
     <div class="btn-toolbar" role="toolbar">
 
       <div class="btn-group" role="group">
-        <button class="btn btn-default"
+        <button class="btn btn-primary"
                 data-ng-click="closeRecord(mdView.current.record)">
           <i class="fa fa-fw fa-search"></i> <span><span>
           {{'backTo' + (fromView || 'search') | translate}}</span></span>
@@ -94,7 +94,7 @@
     <!-- End specific geocat -->
 
       <div class="btn-group pull-right" role="group">
-        <a class="btn btn-default gn-md-edit-btn"
+        <a class="btn btn-primary gn-md-edit-btn"
           data-ng-show="user.canEditRecord(mdView.current.record)"
           data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.getUuid()}}"
           title="{{'edit' | translate}}">
@@ -120,12 +120,13 @@
         <div class="lead1 gn-margin-bottom"
             data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | linky | newlines"/>
 
-        <!-- Display the first metadata status (apply to ISO19139 record) -->
+        <!-- Display the first metadata status (apply to ISO19139 record)
         <div data-ng-if="mdView.current.record.status_text.length > 0"
             title="{{mdView.current.record.status_text[0]}}"
             class="gn-status gn-status-mdview gn-status-{{mdView.current.record.status[0]}}">
           {{mdView.current.record.status_text[0]}}
         </div>
+        -->
 
         <div data-gn-related-observer>
           <div data-gn-related="mdView.current.record"
