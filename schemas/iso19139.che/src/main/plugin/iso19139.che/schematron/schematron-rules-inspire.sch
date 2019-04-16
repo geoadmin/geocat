@@ -669,7 +669,8 @@ USA.
             <sch:let name="missing" value="not(*/gmd:organisationName)
 				or (*/gmd:organisationName/@gco:nilReason)
 				or not(*/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress)
-				or (*/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/@gco:nilReason)"/>
+				or (*/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/@gco:nilReason)
+				or (normalize-space(*/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/*/text()) = '') "/>
             <sch:let name="organisationName" value="*/gmd:organisationName/*/text()"/>
             <sch:let name="role" value="normalize-space(*/gmd:role/*/@codeListValue)"/>
             <sch:let name="emptyRole" value="$role=''"/>
