@@ -1018,6 +1018,7 @@
     <description>Indirizzo di posta elettronica dell'organizzazione responsabile o
       contatto individuale
     </description>
+    <condition>required</condition>
   </element>
   <element name="gmd:environmentDescription" id="44.0">
     <label>Descrizione dell'ambiente</label>

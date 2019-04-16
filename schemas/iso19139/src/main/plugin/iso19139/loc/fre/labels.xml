@@ -2636,8 +2636,7 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
       responsable
     </description>
     <help>Adresse de courrier électronique de l'organisation ou de la personne responsable</help>
-    <condition/>
-
+    <condition>required</condition>
   </element>
   <element name="gmd:environmentDescription" id="44.0">
     <label>Description de l'environnement de travail</label>
