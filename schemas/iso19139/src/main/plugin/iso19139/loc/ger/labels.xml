@@ -2448,7 +2448,7 @@
   <element name="gmd:electronicMailAddress" id="386">
     <label>E-Mail</label>
     <help/>
-    <condition/>
+    <condition>required</condition>
     <description>E-Mail-Adresse</description>
   </element>
   <element name="gmd:CI_Contact" id="387">

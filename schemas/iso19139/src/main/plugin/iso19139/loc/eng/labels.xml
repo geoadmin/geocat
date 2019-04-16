@@ -1187,6 +1187,7 @@
     <description>Address of the electronic mailbox of the responsible organization or
       individual
     </description>
+    <condition>required</condition>
   </element>
   <element name="gmd:environmentDescription" id="44.0">
     <label>Environment description</label>
