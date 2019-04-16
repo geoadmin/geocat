@@ -80,7 +80,7 @@
 
   <facets>
     <facet name="keyword" indexKey="keyword" label="keywords" localized="true"/>
-    <facet name="topicCat" indexKey="topicCat" label="topicCats" localized="true"/>
+    <facet name="topicCat" indexKey="topicCat" label="topicCats"/>
     <facet name="category" indexKey="_cat" label="categories" localized="true"/>
     <facet name="inspireTheme" indexKey="inspiretheme" label="inspireThemes"/>
     <facet name="inspireThemeWithAc" indexKey="inspirethemewithac" label="inspireThemesWithAc"/>
