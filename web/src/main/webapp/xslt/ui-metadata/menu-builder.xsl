@@ -48,10 +48,10 @@
         <button type="button"
                 class="btn btn-default navbar-btn dropdown-toggle"
                 data-toggle="dropdown"
-                aria-label="{$i18n/selectView}"
-                title="{$i18n/selectView}"
-                aria-expanded="false">
+                aria-label="{{'selectView' | translate}}"
+                aria-expanded="true">
           <i class="fa fa-eye"></i>
+          <span class="visible-lg" data-translate="">selectView</span>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right" role="menu">
