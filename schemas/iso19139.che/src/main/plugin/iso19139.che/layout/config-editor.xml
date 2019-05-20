@@ -348,7 +348,8 @@
     <!--Turn off INSPIRE view by default -->
     <view name="default">
       <sidePanel>
-        <directive data-gn-onlinesrc-list=""/>
+        <directive data-gn-onlinesrc-list=""
+                   types="thumbnail|onlinesrc|dataset|service|sibling|associated|fcats"/>
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
