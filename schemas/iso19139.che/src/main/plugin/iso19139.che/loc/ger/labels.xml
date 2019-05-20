@@ -739,6 +739,19 @@
     </helper>
   </element>
 
+  <element name="gmd:extent">
+    <label>Ausdehnung</label>
+    <help/>
+    <condition>Wenn Hierarchieebene = Datenbestand, muss entweder eine
+      BoundingBox, ein BoundingPolygon oder eine geografische Beschreibung
+      ausgefüllt werden.
+    </condition>
+    <description>Ausdehnungsinformation einschliesslich des
+      Begrenzungsrechtecks (Bounding Box), des
+      Begrenzungspolygons sowie der vertikalen und zeitlichen Ausdehnung des
+      Datenbestands
+    </description>
+  </element>
   <element name="gco:Date">
     <label>Datum</label>
     <description>Datum</description>

@@ -657,6 +657,7 @@ element name="che:language">
     <description></description>
     <help></help>
   </element>
+
   <element name="che:CHE_MD_modelTypeCode">
     <label>Code du type de modèle</label>
     <description>Choix de la codeliste</description>
@@ -852,6 +853,18 @@ element name="che:language">
       <option value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</option>
       <option value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</option>
     </helper>
+  </element>
+
+  <element name="gmd:extent" id="45.0">
+    <label>Etendue</label>
+    <description>Information complémentaire sur les étendues spatiales et temporelles du jeu de
+      données, incluant le polygone de délimitation et les dimensions verticales et temporelles
+    </description>
+    <help>Informations supplémentaires concernant l'extension spatiale et temporelle des données,
+      incluant le polygone de délimitation, les altitudes et la durée de validité. Ces informations
+      sont du type EX_Extent et sont gérées dans la classe du même nom.
+    </help>
+    <condition>Condition</condition>
   </element>
 
   <element name="gco:Date">

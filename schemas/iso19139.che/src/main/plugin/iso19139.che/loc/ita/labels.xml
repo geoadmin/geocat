@@ -746,6 +746,14 @@
     </helper>
   </element>
 
+  <element name="gmd:extent">
+    <label>Estensione</label>
+    <description>Estensione spaziale e temporale dei dati</description>
+    <_condition>Conditional / if hierarchyLevel equals "dataset"? Either
+      extent.geographicElement.EX_GeographicBoundingBox or
+      extent.geographicElement.EX_GeographicDescription is required
+    </_condition>
+  </element>
   <element name="gco:Date">
     <label>data</label>
     <description>data</description>
