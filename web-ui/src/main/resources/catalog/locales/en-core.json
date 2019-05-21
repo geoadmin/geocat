@@ -441,5 +441,6 @@
     "metadataPublishedError": "Error occurred while publishing metadata.",
     "metadataUnpublished": "Metadata un-published.",
     "metadataUnpublishedError": "Error occurred while un-publishing metadata.",
-    "categoriesUpdated": "Categories updated."
+    "categoriesUpdated": "Categories updated.",
+    "harvestedRecord": "Harvested record"
 }
