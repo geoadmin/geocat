@@ -556,6 +556,9 @@
           <img ng-src="{{gnUrl}}../images/logos/{{mdView.current.record.source}}.png"
               aria-label="{{'sourceCatalog' | translate}}"
               class="gn-source-logo"/>
+          <i data-ng-if="mdView.current.record.isHarvested == 'y'"
+             title="{{'harvestedRecord' | translate}}"
+             class="fa fa-fw fa-cloud-download text-muted"/>
         </section>
 
         <section class="gn-md-side-calendar">
