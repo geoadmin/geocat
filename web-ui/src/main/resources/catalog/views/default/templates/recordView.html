@@ -138,7 +138,7 @@
 
           <div data-gn-related="mdView.current.record"
               data-user="user"
-              data-types="parent|children|services|datasets"
+              data-types="parent|children|services|datasets|siblings|associated"
               data-title="{{'associatedResources' | translate}}">
           </div>
         </div>
@@ -148,11 +148,6 @@
               data-user="user"
               data-types="fcats|related"
               data-title="{{'featureCatalog' | translate}}">
-          </div>
-          <div data-gn-related="mdView.current.record"
-              data-user="user"
-              data-types="siblings|associated"
-              data-title="{{'siblings' | translate}}">
           </div>
         </div>
 
@@ -359,7 +354,7 @@
               <p data-ng-bind-html="mdView.current.record.lineage | linky | newlines"/>
             </td>
           </tr>
-          <tr>
+          <!-- geocat.ch / No use of sources <tr>
             <th></th>
             <td>
               <div data-gn-related-observer>
@@ -379,7 +374,7 @@
                 </div>
               </div>
             </td>
-          </tr>
+          </tr>-->
           </tbody>
         </table>
 
