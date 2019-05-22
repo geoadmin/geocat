@@ -118,7 +118,11 @@
         </h1>
 
         <div class="lead1 gn-margin-bottom"
-            data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | linky | newlines"/>
+             data-ng-if="(mdView.current.record.abstract || mdView.current.record.defaultAbstract).indexOf('href=') !== -1"
+            data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | newlines"/>
+        <div class="lead1 gn-margin-bottom"
+             data-ng-if="(mdView.current.record.abstract || mdView.current.record.defaultAbstract).indexOf('href=') === -1"
+             data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | linky | newlines"/>
 
         <!-- Display the first metadata status (apply to ISO19139 record)
         <div data-ng-if="mdView.current.record.status_text.length > 0"

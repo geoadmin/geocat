@@ -59,8 +59,8 @@
         </a>
       </div>
       <div class="flex-spacer"></div>
-      <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="250"
-        dd-text-collapse-text="{{md.abstract || md.defaultAbstract}}"></p>
+      <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350"
+        dd-text-collapse-text="{{(md.abstract || md.defaultAbstract) | stripTags}}"></p>
     </div>
 
     <div class="flex-spacer"></div>
