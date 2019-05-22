@@ -92,7 +92,7 @@
       function($http, $q, $translate,
                gnUrlUtils, gnGlobalSettings) {
 
-        var displayFileContent = function(data) {
+        var displayFileContent = function(data, withGroupLayer) {
           var parser = new ol.format.WMSCapabilities();
           var result = parser.read(data);
 
@@ -105,6 +105,9 @@
           // Also adjust crs (by inheritance) and url
           var getFlatLayers = function(layer, inheritedCrs) {
             if (angular.isArray(layer)) {
+              if (withGroupLayer && layer.Name) {
+                layers.push(layer);
+              }
               for (var i = 0, len = layer.length; i < len; i++) {
                 getFlatLayers(layer[i], inheritedCrs);
               }
@@ -216,16 +219,28 @@
           }
         };
 
-        var mergeParams = function(url, Params) {
+        var mergeParams = function(url, Params, excludedParams) {
           //merge URL parameters with indicated ones
           var parts = url.split('?');
+          var combinedParams = {};
           var urlParams = angular.isDefined(parts[1]) ?
               gnUrlUtils.parseKeyValue(parts[1]) : {};
-          for (var p in Params) {
-            urlParams[p] = Params[p];
+
+          for (var p in urlParams) {
+            if (!angular.isArray(excludedParams) ||
+              (excludedParams.findIndex &&
+               excludedParams.findIndex(function(item) {
+                  return p.toLowerCase() === item.toLowerCase();}) === -1)) {
+              combinedParams[p] = urlParams[p];
+            }
           }
-          return gnUrlUtils.append(parts[0], gnUrlUtils.toKeyValue(urlParams));
+          for (var p in Params) {
+            combinedParams[p] = Params[p];
+          }
+
+          return gnUrlUtils.append(parts[0], gnUrlUtils.toKeyValue(combinedParams));
         };
+
         var mergeDefaultParams = function(url, defaultParams) {
           //merge URL parameters with default ones
           var parts = url.split('?');
@@ -243,11 +258,12 @@
           return gnUrlUtils.append(parts[0],
               gnUrlUtils.toKeyValue(defaultParams));
         };
+
         return {
           mergeDefaultParams: mergeDefaultParams,
           mergeParams: mergeParams,
 
-          getWMSCapabilities: function(url) {
+          getWMSCapabilities: function(url, withGroupLayer) {
             var defer = $q.defer();
             if (url) {
               url = mergeDefaultParams(url, {
@@ -263,7 +279,7 @@
                 })
                     .success(function(data) {
                       try {
-                        defer.resolve(displayFileContent(data));
+                        defer.resolve(displayFileContent(data, withGroupLayer));
                       } catch (e) {
                         defer.reject(
                         $translate.instant('failedToParseCapabilities'));
