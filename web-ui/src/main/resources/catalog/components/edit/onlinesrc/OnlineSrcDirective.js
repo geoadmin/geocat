@@ -1866,8 +1866,9 @@
 
                   // Append * for like search
                   scope.updateParams = function() {
-                    scope.searchObj.params.any =
-                        '*' + scope.searchObj.any + '*';
+                     scope.searchObj.params.any =
+                    // disabled in geocat.ch '*' + scope.searchObj.any + '*';
+                      scope.searchObj.any;
                   };
 
                   /**
@@ -1988,7 +1989,8 @@
                   // Append * for like search
                   scope.updateParams = function() {
                     scope.searchObj.params.any =
-                        '*' + scope.searchObj.any + '*';
+                        // disabled in geocat.ch '*' + scope.searchObj.any + '*';
+                        scope.searchObj.any;
                   };
 
                   // Based on initiative type and association type
