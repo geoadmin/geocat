@@ -182,7 +182,7 @@
     <div>Contact pour la ressource trouvé.</div>
   </report.M47>
   <alert.M47.info>
-    <div>Le nom de l'organisation et l'email du contact sur la ressource sont manquants.</div>
+    <div>Le nom de l'organisation et/ou l'email du contact sur la ressource sont manquants.</div>
   </alert.M47.info>
   <report.M47.info>
     <div>Le nom de l'organisation et l'email du contact sur la ressource sont définis pour :</div>
@@ -199,7 +199,7 @@
     <div>Le rôle du contact est vide.</div>
   </alert.M48.role>
   <alert.M48.info>
-    <div>Le nom de l'organisation et l'email du contact pour la métadonnées sont manquants.</div>
+    <div>Le nom de l'organisation et/ou l'email du contact pour la métadonnées sont manquants.</div>
   </alert.M48.info>
   <report.M48.info>
     <div>Le nom de l'organisation et l'email du contact pour la métadonnées sont définis pour :</div>

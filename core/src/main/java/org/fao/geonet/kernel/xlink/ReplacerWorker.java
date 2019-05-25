@@ -64,6 +64,7 @@ public class ReplacerWorker {
             Lists.newArrayList(
                     ISO19139Namespaces.GMD,
                     ISO19139Namespaces.GCO);
+    private final List<String> orderedListOfLanguages;
 
     private IsoLanguagesMapper isoLanguagesMapper;
 
@@ -71,9 +72,10 @@ public class ReplacerWorker {
 
     java.util.Set<String> addedIds = new HashSet<>();
 
-    public ReplacerWorker(IsoLanguagesMapper isoLanguagesMapper, ThesaurusManager thesaurusManager) {
+    public ReplacerWorker(List<String> orderedListOfLanguages, IsoLanguagesMapper isoLanguagesMapper, ThesaurusManager thesaurusManager) {
         this.isoLanguagesMapper = isoLanguagesMapper;
         this.thesaurusManager = thesaurusManager;
+        this.orderedListOfLanguages = orderedListOfLanguages;
     }
 
     public Status replaceAll(Element md) {
@@ -137,11 +139,9 @@ public class ReplacerWorker {
     protected KeywordBean searchInAnyThesaurus(String keyword) {
         KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(this.isoLanguagesMapper);
         builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.DESC));
-        builder.addLang("eng")
-                .addLang("ger")
-                .addLang("fre")
-                .addLang("ita")
-                .maxResults(1)
+
+        orderedListOfLanguages.forEach(l -> builder.addLang(l));
+        builder.maxResults(1)
                 .keyword(keyword, KeywordSearchType.MATCH, true);
 
         thesaurusManager.getThesauriMap().values().stream()
@@ -167,7 +167,9 @@ public class ReplacerWorker {
                 ISO19139KeywordReplacer.localXlinkUrlPrefix + "thesaurus=" + thesaurus +
 
                         "&id=" + StringUtils.join(keywords, ",") +
-                        "&multiple=false&lang=fre,eng,ger,ita,roh&textgroupOnly&skipdescriptivekeywords", XLink.NAMESPACE_XLINK);
+                        "&multiple=false&lang=" +
+                        String.join(",", orderedListOfLanguages) +
+                        "&textgroupOnly&skipdescriptivekeywords", XLink.NAMESPACE_XLINK);
 
         return descriptiveKeywords;
     }

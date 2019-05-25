@@ -23,12 +23,21 @@
 
 package org.fao.geonet.kernel.xlink;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.schema.subtemplate.Status;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Attribute;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
+import ucar.unidata.util.StringUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by fgravin on 10/26/17.
@@ -48,12 +57,13 @@ public class ISO19139KeywordReplacer {
     public ISO19139KeywordReplacer() {}
 
     public Status replaceAll(Element md) {
-       ReplacerWorker worker = new ReplacerWorker(isoLanguagesMapper, thesaurusManager);
-       return worker.replaceAll(md);
+        List<String> orderedListOfLanguages = ISO19139SchemaPlugin.getLanguages(md);
+        ReplacerWorker worker = new ReplacerWorker(orderedListOfLanguages, isoLanguagesMapper, thesaurusManager);
+        return worker.replaceAll(md);
     }
 
     protected KeywordBean searchInAnyThesaurus(String keyword) {
-        ReplacerWorker worker = new ReplacerWorker(isoLanguagesMapper, thesaurusManager);
+        ReplacerWorker worker = new ReplacerWorker(new ArrayList<>(), isoLanguagesMapper, thesaurusManager);
         return worker.searchInAnyThesaurus(keyword);
 
     }

@@ -348,11 +348,8 @@
     <!--Turn off INSPIRE view by default -->
     <view name="default">
       <sidePanel>
-        <directive data-gn-onlinesrc-list=""/>
-        <directive gn-geo-publisher=""
-                   data-ng-if="gnCurrentEdit.geoPublisherConfig"
-                   data-config="{{gnCurrentEdit.geoPublisherConfig}}"
-                   data-lang="lang"/>
+        <directive data-gn-onlinesrc-list=""
+                   types="thumbnail|onlinesrc|dataset|service|sibling|associated|fcats"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
@@ -462,11 +459,8 @@
     </view>
     <view name="advanced">
       <sidePanel>
-        <directive data-gn-onlinesrc-list=""/>
-        <directive gn-geo-publisher=""
-                   data-ng-if="gnCurrentEdit.geoPublisherConfig"
-                   data-config="{{gnCurrentEdit.geoPublisherConfig}}"
-                   data-lang="lang"/>
+        <directive data-gn-onlinesrc-list=""
+                   types="thumbnail|onlinesrc|dataset|service|sibling|associated|fcats"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
@@ -561,11 +555,8 @@
     </view>
     <view name="bgdi">
       <sidePanel>
-        <directive data-gn-onlinesrc-list=""/>
-        <directive gn-geo-publisher=""
-                   data-ng-if="gnCurrentEdit.geoPublisherConfig"
-                   data-config="{{gnCurrentEdit.geoPublisherConfig}}"
-                   data-lang="lang"/>
+        <directive data-gn-onlinesrc-list=""
+                   types="thumbnail|onlinesrc|dataset|service|sibling|associated|fcats"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
@@ -799,11 +790,8 @@
     <view name="inspire" upAndDownControlHidden="true" displayIfServiceInfo="/settings/system/inspire/enable='true'">
 
       <sidePanel>
-        <directive data-gn-onlinesrc-list=""/>
-        <directive gn-geo-publisher=""
-                   data-ng-if="gnCurrentEdit.geoPublisherConfig"
-                   data-config="{{gnCurrentEdit.geoPublisherConfig}}"
-                   data-lang="lang"/>
+        <directive data-gn-onlinesrc-list=""
+                   types="thumbnail|onlinesrc|dataset|service|sibling|associated|fcats"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
@@ -2418,11 +2406,8 @@
 
     <view name="xml">
       <sidePanel>
-        <directive data-gn-onlinesrc-list=""/>
-        <directive gn-geo-publisher=""
-                   data-ng-if="gnCurrentEdit.geoPublisherConfig"
-                   data-config="{{gnCurrentEdit.geoPublisherConfig}}"
-                   data-lang="lang"/>
+        <directive data-gn-onlinesrc-list=""
+                   types="thumbnail|onlinesrc|dataset|service|sibling|associated|fcats"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>

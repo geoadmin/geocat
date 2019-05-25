@@ -118,7 +118,11 @@
         </h1>
 
         <div class="lead1 gn-margin-bottom"
-            data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | linky | newlines"/>
+             data-ng-if="(mdView.current.record.abstract || mdView.current.record.defaultAbstract).indexOf('href=') !== -1"
+            data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | newlines"/>
+        <div class="lead1 gn-margin-bottom"
+             data-ng-if="(mdView.current.record.abstract || mdView.current.record.defaultAbstract).indexOf('href=') === -1"
+             data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | linky | newlines"/>
 
         <!-- Display the first metadata status (apply to ISO19139 record)
         <div data-ng-if="mdView.current.record.status_text.length > 0"
@@ -138,7 +142,7 @@
 
           <div data-gn-related="mdView.current.record"
               data-user="user"
-              data-types="parent|children|services|datasets"
+              data-types="parent|children|services|datasets|siblings|associated"
               data-title="{{'associatedResources' | translate}}">
           </div>
         </div>
@@ -148,11 +152,6 @@
               data-user="user"
               data-types="fcats|related"
               data-title="{{'featureCatalog' | translate}}">
-          </div>
-          <div data-gn-related="mdView.current.record"
-              data-user="user"
-              data-types="siblings|associated"
-              data-title="{{'siblings' | translate}}">
           </div>
         </div>
 
@@ -359,7 +358,7 @@
               <p data-ng-bind-html="mdView.current.record.lineage | linky | newlines"/>
             </td>
           </tr>
-          <tr>
+          <!-- geocat.ch / No use of sources <tr>
             <th></th>
             <td>
               <div data-gn-related-observer>
@@ -379,7 +378,7 @@
                 </div>
               </div>
             </td>
-          </tr>
+          </tr>-->
           </tbody>
         </table>
 
@@ -561,6 +560,9 @@
           <img ng-src="{{gnUrl}}../images/logos/{{mdView.current.record.source}}.png"
               aria-label="{{'sourceCatalog' | translate}}"
               class="gn-source-logo"/>
+          <i data-ng-if="mdView.current.record.isHarvested == 'y'"
+             title="{{'harvestedRecord' | translate}}"
+             class="fa fa-fw fa-cloud-download text-muted"/>
         </section>
 
         <section class="gn-md-side-calendar">
