@@ -47,6 +47,7 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -90,9 +91,6 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
         assertTrue(themes.contains("external.theme.gemet|6549"));
         assertTrue(themes.contains("external.place.regions|CAF"));
         assertTrue(themes.contains("external.place.regions|ECU"));
-
-
-
 
         assertEquals("local://srv/api/registries/vocabularies/keyword?thesaurus=external.theme.gemet&" +
                         "id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F6549&multiple=false&" +
@@ -149,7 +147,7 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
 
         assertFalse(status.isError());
         Set<String> themes = getXLinkedKeyword(md);
-        assertEquals(6, themes.size());
+        assertEquals(5, themes.size());
         assertTrue(themes.contains("external.theme.gemet|6549"));
     }
 
@@ -164,7 +162,7 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
 
         assertFalse(status.isError());
         Set<String> themes = getXLinkedKeyword(md);
-        assertEquals(6, themes.size());
+        assertEquals(5, themes.size());
         assertTrue(themes.contains("external.theme.gemet|6549"));
     }
 
@@ -222,6 +220,14 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
         ReplacerWorker worker = new ReplacerWorker(notorderedListOfLanguages, toTest.isoLanguagesMapper, thesaurusManager);
         KeywordBean keyword = worker.searchInAnyThesaurus("pêche (général)");
         assertNotNull(keyword);
+    }
+
+    @Test
+    public void searchInAnyTheasurusEmptyString() {
+        ThesaurusManager thesaurusManager = _applicationContext.getBean(ThesaurusManager.class);
+        ReplacerWorker worker = new ReplacerWorker(notorderedListOfLanguages, toTest.isoLanguagesMapper, thesaurusManager);
+        KeywordBean keyword = worker.searchInAnyThesaurus("");
+        assertNull(keyword);
     }
 
     private Element getSubtemplateXml(String path) throws IOException, JDOMException {

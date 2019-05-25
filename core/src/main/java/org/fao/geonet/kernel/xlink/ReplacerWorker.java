@@ -137,6 +137,9 @@ public class ReplacerWorker {
     }
 
     protected KeywordBean searchInAnyThesaurus(String keyword) {
+        if (StringUtils.isEmpty(keyword)) {
+            return null;
+        }
         KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(this.isoLanguagesMapper);
         builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.DESC));
 
