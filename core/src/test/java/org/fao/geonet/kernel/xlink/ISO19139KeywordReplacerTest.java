@@ -24,6 +24,7 @@ package org.fao.geonet.kernel.xlink;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.kernel.KeywordBean;
+import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.schema.subtemplate.Status;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
@@ -36,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -57,6 +59,8 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
     @Autowired
     private ISO19139KeywordReplacer toTest;
 
+    private List<String> notorderedListOfLanguages;
+
     @Before
     public void initLanguageMapper() {
         IsoLanguagesMapper isoLangMapper = new IsoLanguagesMapper() {
@@ -65,6 +69,8 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
                 _isoLanguagesMap639.put("de", "ger");
                 _isoLanguagesMap639.put("fr", "fre");
                 _isoLanguagesMap639.put("it", "ita");
+                _isoLanguagesMap639.put("rm", "roh");
+                notorderedListOfLanguages = new ArrayList<>(_isoLanguagesMap639.values());
             }
         };
         toTest.isoLanguagesMapper = isoLangMapper;
@@ -203,14 +209,18 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
     }
 
     @Test
-    public void searchInAnyTheasurusGer() throws Exception {
-        KeywordBean keyword = toTest.searchInAnyThesaurus("Fischerei");
+    public void searchInAnyTheasurusGer() {
+        ThesaurusManager thesaurusManager = _applicationContext.getBean(ThesaurusManager.class);
+        ReplacerWorker worker = new ReplacerWorker(notorderedListOfLanguages, toTest.isoLanguagesMapper, thesaurusManager);
+        KeywordBean keyword = worker.searchInAnyThesaurus("Fischerei");
         assertNotNull(keyword);
     }
 
     @Test
-    public void searchInAnyTheasurusFre() throws Exception {
-        KeywordBean keyword = toTest.searchInAnyThesaurus("pêche (général)");
+    public void searchInAnyTheasurusFre() {
+        ThesaurusManager thesaurusManager = _applicationContext.getBean(ThesaurusManager.class);
+        ReplacerWorker worker = new ReplacerWorker(notorderedListOfLanguages, toTest.isoLanguagesMapper, thesaurusManager);
+        KeywordBean keyword = worker.searchInAnyThesaurus("pêche (général)");
         assertNotNull(keyword);
     }
 
