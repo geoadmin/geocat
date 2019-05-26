@@ -26,19 +26,16 @@ package org.fao.geonet.kernel.schema.subtemplate;
 import org.apache.lucene.index.IndexReader;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-public class SubtemplatesByLocalXLinksReplacer  {
+public abstract class SubtemplatesByLocalXLinksReplacer  {
 
     private Map<String, Replacer> replacersDict = new HashMap<>();
     private ManagersProxy managersProxy;
@@ -59,7 +56,7 @@ public class SubtemplatesByLocalXLinksReplacer  {
 
         String localXlinkUrlPrefix = "local://srv/api/registries/entries/";
         final String lang = computeMetadataLang(dataXml);
-        final Set<String> localesAsHrefParam = getLocalesAsHrefParam(dataXml);
+        final List<String> localesAsHrefParam = getLocalesAsHrefParam(dataXml);
         final String localisedCharacterStringLanguageCode =
                 String.format("#%S", managersProxy.getIso1LangCode(lang));
 
@@ -116,18 +113,7 @@ public class SubtemplatesByLocalXLinksReplacer  {
         return replaceToleredLanguageCodeByExpectedOnes(lang);
     }
 
-    private Set<String> getLocalesAsHrefParam(Element dataXml) {
-        try {
-            Set<String> locales = Xml.selectNodes(dataXml, ".//gmd:locale/gmd:PT_Locale/gmd:languageCode/*", namespaces)
-                    .stream()
-                    .map(element -> String.format("%s=%s", "lang", replaceToleredLanguageCodeByExpectedOnes(
-                            ((Element) element).getAttribute("codeListValue").getValue())))
-                    .collect(Collectors.toSet());
-            return locales;
-        } catch (JDOMException e) {
-            return Collections.emptySet();
-        }
-    }
+    public abstract List<String> getLocalesAsHrefParam(Element dataXml);
 
     private String replaceToleredLanguageCodeByExpectedOnes(String lang) {
         if ("deu".compareTo(lang) == 0) {

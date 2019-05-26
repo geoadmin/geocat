@@ -16,6 +16,7 @@ import org.fao.geonet.kernel.schema.subtemplate.SubtemplatesByLocalXLinksReplace
 import org.fao.geonet.schema.iso19139.ExtentReplacer;
 import org.fao.geonet.schema.iso19139.FormatReplacer;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
+import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -546,7 +547,13 @@ public class ISO19139cheSchemaPlugin
     @Override
     public void init(ManagersProxy managersProxy, ConstantsProxy constantsProxy) {
         List<Namespace> namespaces = new ArrayList<>(allNamespaces);
-        subtemplatesByLocalXLinksReplacer = new SubtemplatesByLocalXLinksReplacer(namespaces,managersProxy);
+        subtemplatesByLocalXLinksReplacer = new SubtemplatesByLocalXLinksReplacer(namespaces,managersProxy) {
+
+            @Override
+            public List<String> getLocalesAsHrefParam(Element dataXml) {
+                return ISO19139SchemaPlugin.getLanguages(dataXml);
+            }
+        };
         subtemplatesByLocalXLinksReplacer.addReplacer(new FormatReplacer(namespaces, managersProxy, constantsProxy));
         subtemplatesByLocalXLinksReplacer.addReplacer(new ContactReplacer(namespaces, managersProxy, constantsProxy));
         subtemplatesByLocalXLinksReplacer.addReplacer(new ExtentReplacer(namespaces, managersProxy, constantsProxy));

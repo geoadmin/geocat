@@ -45,11 +45,13 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Namespace;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -61,6 +63,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.http.HttpSession;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 
@@ -157,7 +160,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         assertEquals(
         "local://srv/api/registries/entries/" +
                 contact.getUuid() +
-                "?process=gmd:role/gmd:CI_RoleCode/@codeListValue~resourceProvider&lang=fre&lang=eng&lang=ger&lang=ita",
+                "?process=gmd:role/gmd:CI_RoleCode/@codeListValue~resourceProvider&lang=eng,ger,ita,fre",
                 ((Attribute)(Xml.selectElement(metadata, "*//gmd:pointOfContact").getAttributes().get(1))).getValue());
 
         metadataManager.getMetadata(dataManager.getMetadataId(vicinityMapUuid));
@@ -191,8 +194,11 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         });
 
         assertVicinityMapXLinkTo(contact, vicinityMapUuid);
+        Element md = dataManager.getMetadata(dataManager.getMetadataId(vicinityMapUuid));
+        String href = ((Element)Xml.selectNodes(md, ".//*[@uuidref='" + contact.getUuid() + "']", new ArrayList<>(ISO19139SchemaPlugin.allNamespaces)).get(0))
+                .getAttributeValue("href", Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink"));
+        assertEquals("&lang=eng,ger,ita,fre", href.substring(href.indexOf("&")));
     }
-
     @Test
     public void multilingualContactGer() throws Exception {
         insertSubtemplate(FORMAT_RESOURCE);

@@ -26,7 +26,7 @@ package org.fao.geonet.kernel.schema.subtemplate;
 import org.apache.lucene.index.IndexReader;
 import org.jdom.Element;
 
-import java.util.Set;
+import java.util.List;
 
 public interface Replacer {
 
@@ -35,7 +35,7 @@ public interface Replacer {
                              IndexReader indexReader,
                              String localisedCharacterStringLanguageCode,
                              String lang,
-                             Set<String> localesAsHrefParam);
+                             List<String> localesAsHrefParam);
 
     public String getAlias();
 }
