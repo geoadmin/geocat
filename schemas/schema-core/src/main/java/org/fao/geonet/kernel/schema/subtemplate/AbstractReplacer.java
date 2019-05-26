@@ -67,7 +67,7 @@ public abstract class AbstractReplacer implements Replacer{
                              IndexReader indexReader,
                              String localisedCharacterStringLanguageCode,
                              String lang,
-                             Set<String> localesAsHrefParam) {
+                             List<String> localesAsHrefParam) {
         phraseQueryParser = new QueryParser(Version.LUCENE_4_9, null, managersProxy.getAnalyzer(lang));
         List<?> nodes = null;
         try {
@@ -86,7 +86,7 @@ public abstract class AbstractReplacer implements Replacer{
                              String localXlinkUrlPrefix,
                              IndexReader indexReader,
                              String localisedCharacterStringLanguageCode,
-                             Set<String> localesAsHrefParam) {
+                             List<String> localesAsHrefParam) {
         synchronized (indexReader) {
             QueryWithCounter query = new QueryWithCounter();
             try {
@@ -101,7 +101,7 @@ public abstract class AbstractReplacer implements Replacer{
 
                     StringJoiner params = new StringJoiner("&", "?", "");
                     xlinkAddExtraParams(element, params);
-                    localesAsHrefParam.stream().forEach(locale -> params.add(locale));
+                    params.add("lang=" + String.join(",", localesAsHrefParam));
 
                     StringBuffer href = new StringBuffer(localXlinkUrlPrefix);
                     href.append(uuid);

@@ -26,7 +26,11 @@ package org.fao.geonet.schema.iso19139;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.kernel.schema.*;
+import org.fao.geonet.kernel.schema.AssociatedResource;
+import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
+import org.fao.geonet.kernel.schema.ExportablePlugin;
+import org.fao.geonet.kernel.schema.ISOPlugin;
+import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
 import org.fao.geonet.kernel.schema.subtemplate.KeywordReplacer;
 import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
@@ -41,12 +45,18 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMX;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.SRV;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.XLINK;
 
 /**
@@ -458,7 +468,12 @@ public class ISO19139SchemaPlugin
     @Override
     public void init(ManagersProxy managersProxy, ConstantsProxy constantsProxy) {
         List<Namespace> namespaces = new ArrayList<>(allNamespaces);
-        subtemplatesByLocalXLinksReplacer = new SubtemplatesByLocalXLinksReplacer(namespaces, managersProxy);
+        subtemplatesByLocalXLinksReplacer = new SubtemplatesByLocalXLinksReplacer(namespaces, managersProxy) {
+            @Override
+            public List<String> getLocalesAsHrefParam(Element dataXml) {
+                return ISO19139SchemaPlugin.getLanguages(dataXml);
+            }
+        };
         subtemplatesByLocalXLinksReplacer.addReplacer(new FormatReplacer(namespaces, managersProxy, constantsProxy));
         subtemplatesByLocalXLinksReplacer.addReplacer(new ContactReplacer(namespaces, managersProxy, constantsProxy));
         subtemplatesByLocalXLinksReplacer.addReplacer(new ExtentReplacer(namespaces, managersProxy, constantsProxy));
