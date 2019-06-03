@@ -423,6 +423,7 @@
     "editorHome": "Editor board",
     "adminHome": "Summary",
     "allAdmins": "Administrators",
+    "docPageNotFoundAtUrl": "Documentation page not found at url: ",
     "group": "Group",
     "showOptions": "Show options",
     "projectionSwitcher": "Projection Switcher",
