@@ -182,7 +182,7 @@ public class Aligner extends BaseAligner<CswParams> {
             if (!exists(records, uuid)) {
                 String id = localUuids.getID(uuid);
                 log.debug("  - Removing old metadata with local id:" + id);
-                dataMan.deleteMetadata(context, id);
+                metadataManager.deleteMetadata(context, id);
 
                 dataMan.flush();
 

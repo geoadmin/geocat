@@ -190,15 +190,14 @@ public class MetadataInsertDeleteApi {
         if (notAdminAttemptingToDeleteValidatedSubtemplate(metadata, context)) {
             throw new SecurityException(String.format("You can't delete subtemplate with id %s", metadataUuid));
         }
-
-        if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
+       if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
                 && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
             MetadataUtils.backupRecord(metadata, context);
         }
 
         IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(dataDirectory, metadata.getId()));
 
-        dataManager.deleteMetadata(context, metadata.getId() + "");
+        metadataManager.deleteMetadata(context, metadata.getId() + "");
 
         searchManager.forceIndexChanges();
     }
@@ -236,7 +235,7 @@ public class MetadataInsertDeleteApi {
                 IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class),
                         String.valueOf(metadata.getId())));
 
-                dataManager.deleteMetadata(context, String.valueOf(metadata.getId()));
+                metadataManager.deleteMetadata(context, String.valueOf(metadata.getId()));
 
                 report.incrementProcessedRecords();
                 report.addMetadataId(metadata.getId());
