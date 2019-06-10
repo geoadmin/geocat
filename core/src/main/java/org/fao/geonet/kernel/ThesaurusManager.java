@@ -423,10 +423,17 @@ public class ThesaurusManager implements ThesaurusFinder {
             elFname.addContent(fname);
 
             Element elTitle = new Element("title");
-            String title = currentTh.getTitles(context.getApplicationContext()).get(context.getLanguage());
+
+            // SPECIFIC GEOCAT,
+            // as no translation provided for thesaurus titles, no need to look for one at every keyword resolution attempt,
+            // especially in ru.
+            String title =  currentTh.getTitle();
+            /*String title = currentTh.getTitles(context.getApplicationContext()).get(context.getLanguage());
             if (title == null) {
                 title = currentTh.getTitle();
-            }
+            }*/
+            // END SPECIFIC GEOCAT.
+
             elTitle.addContent(title);
 
             Element elType = new Element("type");
