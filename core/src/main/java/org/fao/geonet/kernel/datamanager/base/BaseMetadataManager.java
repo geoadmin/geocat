@@ -1304,4 +1304,19 @@ public class BaseMetadataManager implements IMetadataManager {
 			Specification<Metadata> harvested) {
 		metadataRepository.createBatchUpdateQuery(servicesPath, newUuid, harvested);
 	}
+
+	@Override
+	public boolean isValid(Integer id) {
+		List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id);
+		if (validationInfo == null || validationInfo.size() == 0) {
+			return false;
+		}
+		for (Object elem : validationInfo) {
+			MetadataValidation vi = (MetadataValidation) elem;
+			if (!vi.isValid() && vi.isRequired()) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
