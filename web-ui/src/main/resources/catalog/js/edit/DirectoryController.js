@@ -140,12 +140,13 @@
       var icons = {
         'gmd:CI_ResponsibleParty': 'fa-user',
         'cit:CI_Responsibility': 'fa-user',
+        'che:CHE_CI_ResponsibleParty': 'fa-user',
         'gmd:MD_Distribution': 'fa-link'
       };
 
       // List of record type to not take into account
       // Could be avoided if a new index field is created FIXME ?
-      var defaultType = 'gmd:CI_ResponsibleParty';
+      var defaultType = 'che:CHE_CI_ResponsibleParty';
       var unknownType = 'unknownType';
       var fullPrivileges = 'true';
 
