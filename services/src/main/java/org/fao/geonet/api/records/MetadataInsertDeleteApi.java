@@ -64,6 +64,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
@@ -186,6 +187,10 @@ public class MetadataInsertDeleteApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
 
+        if (notAdminAttemptingToDeleteValidatedSubtemplate(metadata, context)) {
+            throw new SecurityException(String.format("You can't delete subtemplate with id %s", metadataUuid));
+        }
+
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
                 && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
             MetadataUtils.backupRecord(metadata, context);
@@ -220,7 +225,7 @@ public class MetadataInsertDeleteApi {
             AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
             if (metadata == null) {
                 report.incrementNullRecords();
-            } else if (!accessMan.canEdit(context, String.valueOf(metadata.getId()))) {
+            } else if (!accessMan.canEdit(context, String.valueOf(metadata.getId())) || notAdminAttemptingToDeleteValidatedSubtemplate(metadata, context)) {
                 report.addNotEditableMetadataId(metadata.getId());
             } else {
                 if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
@@ -870,5 +875,18 @@ public class MetadataInsertDeleteApi {
 
         dataManager.indexMetadata(id.get(0), true, null);
         return Pair.read(Integer.valueOf(id.get(0)), uuid);
+    }
+
+    private boolean notAdminAttemptingToDeleteValidatedSubtemplate(AbstractMetadata md, ServiceContext context) {
+        if (Profile.Administrator == context.getUserSession().getProfile()) {
+            return false;
+        }
+        if (md.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
+            return false;
+        }
+        if (!metadataManager.isValid(md.getId())) {
+            return  false;
+        }
+        return true;
     }
 }
