@@ -237,4 +237,6 @@ public interface IMetadataManager {
      * @return a {@link BatchUpdateQuery} object to allow for updating multiple objects in a single query.
      */
     public void createBatchUpdateQuery(PathSpec<Metadata, String> servicesPath, String newUuid, Specification<Metadata> harvested);
+
+    boolean isValid(Integer id);
 }
