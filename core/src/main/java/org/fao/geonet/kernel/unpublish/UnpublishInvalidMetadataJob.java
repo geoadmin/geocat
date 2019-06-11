@@ -50,6 +50,7 @@ import org.fao.geonet.domain.geocat.PublishRecord;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.search.DuplicateDocFilter;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
@@ -122,6 +123,8 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
     protected SettingManager settingManager;
     @Autowired
     protected IMetadataValidator metadataValidator;
+    @Autowired
+    protected IMetadataManager metadataManager;
 
     private AtomicBoolean running = new AtomicBoolean(false);
 
@@ -333,7 +336,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
                     toIndex.add(docId);
                 } else {
                     boolean isIndexedValid = indexedValidationStatus.equalsIgnoreCase(VAL_STATUS_VALID);
-                    boolean persistedValid = isValid(Integer.parseInt(docId));
+                    boolean persistedValid = metadataManager.isValid(Integer.parseInt(docId));
                     boolean incoherentState = isIndexedValid != persistedValid;
                     if (incoherentState) {
                         toIndex.add(docId);
@@ -398,20 +401,6 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
                 where(isPublic(ReservedOperation.view)).
                         and(OperationAllowedSpecs.hasMetadataId("" + id));
         return operationAllowedRepository.count(idAndPublishedSpec) > 0;
-    }
-
-    private boolean isValid(Integer id) {
-        List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id);
-        if (validationInfo == null || validationInfo.size() == 0) {
-            return false;
-        }
-        for (Object elem : validationInfo) {
-            MetadataValidation vi = (MetadataValidation) elem;
-            if (!vi.isValid() && vi.isRequired()) {
-                return false;
-            }
-        }
-        return true;
     }
 
     protected boolean hasValidationRecord(Integer id) {
