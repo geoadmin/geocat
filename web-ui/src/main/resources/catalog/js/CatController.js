@@ -640,6 +640,18 @@ goog.require('gn_alert');
                   editable;
             }
             return editable;
+          },
+          canDeleteRecord: function(md) {
+            if (this.profile == 'Administrator') {
+                return true;
+            }
+            if (angular.isDefined(md) && !md.isValid()) {
+                return true
+            }
+            if (angular.isDefined(md) && !md.isTemplate == 's') {
+                return true
+            }
+            return false;
           }
         };
         // Build is<ProfileName> and is<ProfileName>OrMore functions
