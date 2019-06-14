@@ -270,7 +270,7 @@
                   </div>
 
                   <button class="btn btn-default btn-sm"
-                          data-ng-if="user.canEditRecord(md)"
+                          data-ng-if="user.canEditRecord(md) && user.canDeleteRecord(md)"
                           ng-click="delEntry(md)"
                           title="{{'delete' | translate}}">
                     <i class="fa fa-times text-danger" />
