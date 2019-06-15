@@ -108,53 +108,46 @@ public class ApiUtils {
     /**
      * Search if a record match the UUID on its UUID or an internal identifier
      */
-    public static String getInternalId(String uuidOrInternalId)
-        throws Exception {
-        String id;
+    public static String getInternalId(String uuidOrInternalId) throws Exception {
         DataManager dm = ApplicationContextHolder.get().getBean(DataManager.class);
 
-        id = dm.getMetadataId(uuidOrInternalId);
-        if (id == null) {
-            String checkingId = dm.getMetadataUuid(id);
-            if (checkingId == null) {
-                throw new ResourceNotFoundException(String.format(
-                    "Record with UUID '%s' not found in this catalog",
-                    uuidOrInternalId));
-            }
+        String id = dm.getMetadataId(uuidOrInternalId);
+        if (id != null) {
+            return id;
         }
-        return id;
+
+        id = dm.getMetadataUuid(id);
+        if (id != null) {
+            return id;
+        }
+
+        throw new ResourceNotFoundException(String.format("Record with UUID '%s' not found in this catalog", uuidOrInternalId));
     }
-    public static AbstractMetadata getRecord(String uuidOrInternalId)
-        throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
+
+    public static AbstractMetadata getRecord(String uuidOrInternalId) throws ResourceNotFoundException {
+        IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
         AbstractMetadata metadata = null;
+
         try {
             metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
-        } catch (IncorrectResultSizeDataAccessException e){
+            if (metadata != null) {
+                return metadata;
+            }
+        } catch (IncorrectResultSizeDataAccessException e) {
             Log.warning(Geonet.GEONETWORK, String.format(
                 "More than one record found with UUID '%s'. Error is '%s'.",
                 uuidOrInternalId, e.getMessage()));
         }
 
-        if (metadata == null) {
-            try {
-                metadata = metadataRepository.findOne(uuidOrInternalId);
-            } catch (InvalidDataAccessApiUsageException e) {
-                throw new ResourceNotFoundException(String.format(
-                    "Record with UUID '%s' not found in this catalog",
-                    uuidOrInternalId));
-            }
-            if (metadata == null) {
-                throw new ResourceNotFoundException(String.format(
-                    "Record with UUID '%s' not found in this catalog",
-                    uuidOrInternalId));
-            } else {
+        try {
+            metadata = metadataRepository.findOne(uuidOrInternalId);
+            if (metadata != null) {
                 return metadata;
             }
-        } else {
-            return metadata;
         }
+        catch (InvalidDataAccessApiUsageException e) {}
+
+        throw new ResourceNotFoundException(String.format("Record with UUID '%s' not found in this catalog", uuidOrInternalId));
     }
 
     /**
