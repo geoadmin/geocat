@@ -23,24 +23,12 @@
 
 package org.fao.geonet.api.links.model;
 
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserSearch;
-import org.fao.geonet.domain.UserSearchFeaturedType;
-import org.fao.geonet.repository.UserRepository;
-
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-/**
- * DTO class for user link information {@link link}.
- *
- */
 public class LinkDto implements Serializable {
 
     private static final long serialVersionUID = -2111281874868436021L;
@@ -112,7 +100,6 @@ public class LinkDto implements Serializable {
         this.logo = logo;
     }
 
-
     public Map<String, String> getNames() {
         return names;
     }
@@ -124,59 +111,6 @@ public class LinkDto implements Serializable {
     public void addName(String lang, String name) {
         this.names.put(lang, name);
     }
-
-    public UserSearch asUserSearch() {
-        UserSearch userSearch = new UserSearch();
-
-        userSearch.setId(this.getId());
-        userSearch.setUrl(this.getUrl());
-        userSearch.setLogo(this.getLogo());
-
-        try {
-            if (StringUtils.isNotEmpty(this.getFeaturedType()) &&
-                (this.getFeaturedType().length() == 1))
-            userSearch.setFeaturedType(UserSearchFeaturedType.byChar(this.getFeaturedType().charAt(0)));
-        } catch (IllegalArgumentException ex) {
-            // Ignore
-        }
-
-        try {
-            userSearch.setCreationDate(ISO_DATE_FORMAT.parse(this.getCreationDate()));
-        } catch (Exception ex) {
-            userSearch.setCreationDate(new Date());
-        }
-
-        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
-        User user = userRepository.findOne(this.getCreatorId());
-        if (user != null) {
-            userSearch.setCreator(user);
-        }
-
-        this.getNames().forEach((key, value) -> userSearch.getLabelTranslations().put(key, value));
-
-        return userSearch;
-    }
-
-
-    public static LinkDto from(UserSearch userSearch) {
-        LinkDto dto = new LinkDto();
-
-        dto.setId(userSearch.getId());
-        dto.setUrl(userSearch.getUrl());
-        dto.setLogo(userSearch.getLogo());
-        if (userSearch.getFeaturedType() != null) {
-            dto.setFeaturedType(userSearch.getFeaturedType().asString());
-        }
-        dto.setCreatorId(userSearch.getCreator().getId());
-        dto.setCreator(userSearch.getCreator().getUsername());
-
-        dto.setCreationDate(ISO_DATE_FORMAT.format(userSearch.getCreationDate()));
-
-        userSearch.getLabelTranslations().forEach((key, value) -> dto.addName(key, value));
-
-        return dto;
-    }
-
 
     @Override
     public boolean equals(Object o) {
