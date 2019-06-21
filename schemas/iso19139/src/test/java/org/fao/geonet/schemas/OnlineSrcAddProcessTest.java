@@ -25,11 +25,19 @@ package org.fao.geonet.schemas;
 
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
+import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 
+import javax.xml.transform.TransformerConfigurationException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,21 +49,19 @@ import static org.xmlunit.matchers.EvaluateXPathMatcher.hasXPath;
 /**
  * Created by francois on 25/05/16.
  */
-@Ignore
 public class OnlineSrcAddProcessTest extends XslProcessTest {
 
     public OnlineSrcAddProcessTest() {
         super();
-        this.setXslFilename("../../../../../../../iso19139/src/main/plugin/iso19139/process/onlinesrc-add.xsl");
-        this.setXmlFilename("xsl/process/input.xml");
+        this.setXslFilename("process/onlinesrc-add.xsl");
+        this.setXmlFilename("schemas/xsl/process/input.xml");
         this.setNs(ISO19139SchemaPlugin.allNamespaces);
     }
 
     @Test
     public void testAddSimpleLinkAndUpdate() throws Exception {
 
-        Element inputElement = Xml.loadFile(
-            root.resolve("xsl/process/input.xml"));
+        Element inputElement = Xml.loadFile(xmlFile);
 
         String resultString = Xml.getString(inputElement);
 
@@ -143,8 +149,7 @@ public class OnlineSrcAddProcessTest extends XslProcessTest {
     @Test
     public void testAddMultilingualLinkAndUpdate() throws Exception {
 
-        Element controlElement = Xml.loadFile(
-            root.resolve("xsl/process/onlinesrc-add-multilingual.xml"));
+        Element controlElement = Xml.loadFile(testClass.getClassLoader().getResource("schemas/xsl/process/onlinesrc-add-multilingual.xml"));
         String controlString = Xml.getString(controlElement);
 
         assertThat(

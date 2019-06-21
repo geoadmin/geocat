@@ -23,17 +23,18 @@
 
 package org.fao.geonet.schemas;
 
-import org.fao.geonet.schema.iso19139che.ISO19139cheSchemaPlugin;
+import com.google.common.collect.ImmutableSet;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
+import org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.xml.XMLConstants;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.xmlunit.matchers.EvaluateXPathMatcher.hasXPath;
 
@@ -42,16 +43,22 @@ public class XslMigrationProcessTest extends XslProcessTest {
 
     public XslMigrationProcessTest() {
         super();
-        this.setXslFilename("../../../../../../../iso19139.che/src/main/plugin/iso19139.che/process/migration3_4.xsl");
+        this.setXslFilename("process/migration3_4.xsl");
         this.setXmlFilename("dataset.xml");
-        this.setNs(ISO19139cheSchemaPlugin.allNamespaces);
+        ImmutableSet<Namespace> ns = ImmutableSet.<Namespace>builder()
+                .add(ISO19139Namespaces.GCO)
+                .add(ISO19139Namespaces.GMD)
+                .add(ISO19139Namespaces.SRV)
+                .add(ISO19139cheNamespaces.CHE)
+                .add( Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI))
+                .build();
+        this.setNs(ns);
     }
 
     @Test
     public void testDatasetMigration() throws Exception {
 
-        Element inputElement = Xml.loadFile(
-            root.resolve("xsl/process/dataset.xml"));
+        Element inputElement = Xml.loadFile(xmlFile);
 
         String resultString = Xml.getString(inputElement);
 
