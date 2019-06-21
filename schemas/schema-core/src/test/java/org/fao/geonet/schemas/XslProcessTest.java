@@ -29,7 +29,10 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
 import org.xmlunit.diff.DefaultNodeMatcher;
@@ -69,16 +72,12 @@ public abstract class XslProcessTest {
         return this;
     }
 
-    protected Path root;
     protected Path xslFile;
     protected Path xmlFile;
 
-    private String xslFilename;
-    private String xmlFilename;
+    protected String xslFilename;
+    protected String xmlFilename;
 
-    /**
-     *
-     */
     public XslProcessTest() {
     }
 
@@ -100,16 +99,27 @@ public abstract class XslProcessTest {
         return this;
     }
 
+    public Class testClass;
+
+    @Rule
+    public TestWatcher watchman= new TestWatcher() {
+
+        @Override
+        protected void starting(Description description) {
+
+            testClass = description.getTestClass();
+        }
+    };
+
     @Before
     public void setup() throws TransformerConfigurationException, URISyntaxException {
         TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
 
-        root = Paths.get(XslProcessTest.class.getResource(XslProcessTest.class.getSimpleName() + ".class").toURI()).getParent();
         if (xslFilename != null) {
-            xslFile = root.resolve(xslFilename);
+            xslFile = Paths.get(testClass.getClassLoader().getResource(xslFilename).toURI());
         }
         if (xmlFilename != null) {
-            xmlFile = root.resolve(xmlFilename);
+            xmlFile = Paths.get(testClass.getClassLoader().getResource(xmlFilename).toURI());
         }
     }
 
@@ -122,9 +132,7 @@ public abstract class XslProcessTest {
 
             // First, check that the process with no parameters
             // does not alter the record
-            Element resultElement = Xml.transform(
-                inputElement,
-                root.resolve(xslFilename));
+            Element resultElement = Xml.transform(inputElement, xslFile);
 
             String resultString = Xml.getString(resultElement);
             String controlString = Xml.getString(controlElement);
