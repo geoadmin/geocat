@@ -45,10 +45,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.transform.TransformerConfigurationException;
-
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 
 /**
  * Base class for XSL processing tests.
@@ -81,17 +78,9 @@ public abstract class XslProcessTest {
     public XslProcessTest() {
     }
 
-    public String getXslFilename() {
-        return xslFilename;
-    }
-
     public XslProcessTest setXslFilename(String xslFilename) {
         this.xslFilename = xslFilename;
         return this;
-    }
-
-    public String getXmlFilename() {
-        return xmlFilename;
     }
 
     public XslProcessTest setXmlFilename(String xmlFilename) {
@@ -103,16 +92,14 @@ public abstract class XslProcessTest {
 
     @Rule
     public TestWatcher watchman= new TestWatcher() {
-
         @Override
         protected void starting(Description description) {
-
             testClass = description.getTestClass();
         }
     };
 
     @Before
-    public void setup() throws TransformerConfigurationException, URISyntaxException {
+    public void setup() throws URISyntaxException {
         TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
 
         if (xslFilename != null) {
@@ -123,29 +110,28 @@ public abstract class XslProcessTest {
         }
     }
 
-    @Test
-    public void testMustNotAlterARecordWhenNoParameterProvided() throws Exception {
-        if (xmlFile != null && xslFilename != null) {
-            Element controlElement = Xml.loadFile(xmlFile);
-            Element inputElement = Xml.loadFile(xmlFile);
+    public Element testMustNotAlterARecordWhenNoParameterProvided() throws Exception {
+        Element controlElement = Xml.loadFile(xmlFile);
+        Element inputElement = Xml.loadFile(xmlFile);
 
 
-            // First, check that the process with no parameters
-            // does not alter the record
-            Element resultElement = Xml.transform(inputElement, xslFile);
+        // First, check that the process with no parameters
+        // does not alter the record
+        Element resultElement = Xml.transform(inputElement, xslFile);
 
-            String resultString = Xml.getString(resultElement);
-            String controlString = Xml.getString(controlElement);
-            Diff diffForNoParameter = DiffBuilder
-                .compare(Input.fromString(resultString))
-                .withTest(Input.fromString(controlString))
-                .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
-                .checkForSimilar()
-                .build();
+        String resultString = Xml.getString(resultElement);
+        String controlString = Xml.getString(controlElement);
+        Diff diffForNoParameter = DiffBuilder
+            .compare(Input.fromString(resultString))
+            .withTest(Input.fromString(controlString))
+            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+            .checkForSimilar()
+            .build();
 
-            assertFalse(
-                "Process does not alter the document.",
-                diffForNoParameter.hasDifferences());
-        }
+        assertFalse(
+            "Process does not alter the document.",
+            diffForNoParameter.hasDifferences());
+
+        return resultElement;
     }
 }

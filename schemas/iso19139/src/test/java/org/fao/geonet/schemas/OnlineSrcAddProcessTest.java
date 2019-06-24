@@ -23,32 +23,18 @@
 
 package org.fao.geonet.schemas;
 
-import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
-import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestWatcher;
-import org.junit.runner.Description;
 
-import javax.xml.transform.TransformerConfigurationException;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.xmlunit.matchers.EvaluateXPathMatcher.hasXPath;
 
-/**
- * Created by francois on 25/05/16.
- */
 public class OnlineSrcAddProcessTest extends XslProcessTest {
 
     public OnlineSrcAddProcessTest() {
@@ -56,6 +42,11 @@ public class OnlineSrcAddProcessTest extends XslProcessTest {
         this.setXslFilename("process/onlinesrc-add.xsl");
         this.setXmlFilename("schemas/xsl/process/input.xml");
         this.setNs(ISO19139SchemaPlugin.allNamespaces);
+    }
+
+    @Test
+    public void mustNotAlterARecordWhenNoParameterProvided() throws Exception {
+        super.testMustNotAlterARecordWhenNoParameterProvided();
     }
 
     @Test
