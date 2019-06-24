@@ -56,6 +56,11 @@ public class XslMigrationProcessTest extends XslProcessTest {
     }
 
     @Test
+    public void mustNotAlterARecordWhenNoParameterProvided() throws Exception {
+        super.testMustNotAlterARecordWhenNoParameterProvided();
+    }
+
+    @Test
     public void testDatasetMigration() throws Exception {
 
         Element inputElement = Xml.loadFile(xmlFile);
