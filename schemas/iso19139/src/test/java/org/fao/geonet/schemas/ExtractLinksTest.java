@@ -7,8 +7,8 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -29,15 +29,12 @@ public class ExtractLinksTest extends XslProcessTest {
         }
     }
 
-
-
     @Test
     public void urlEncounteredProcessingAMetadata() throws Exception {
         Element mdToprocess = Xml.loadFile(xmlFile);
-
-        List<TestLink> persisted = new ArrayList<TestLink>();
-        RawLinkPatternStreamer<TestLink> toTest = new RawLinkPatternStreamer(new ILinkBuilder<TestLink>() {
-
+        String ref = "metadata_reference";
+        Map<String, String> persisted = new HashMap();
+        RawLinkPatternStreamer<TestLink, String> toTest = new RawLinkPatternStreamer(new ILinkBuilder<TestLink, String>() {
             @Override
             public TestLink build() {
                 return new TestLink();
@@ -49,19 +46,19 @@ public class ExtractLinksTest extends XslProcessTest {
             }
 
             @Override
-            public void persist(TestLink link) {
-                persisted.add(link);
+            public void persist(TestLink link, String ref) {
+                persisted.put(link.url, ref);
             }
         });
         toTest.setNamespaces(ISO19139SchemaPlugin.allNamespaces.asList());
         toTest.setRawTextXPath(".//gco:CharacterString");
 
-        toTest.processAllRawText(mdToprocess);
+        toTest.processAllRawText(mdToprocess, ref);
 
-        assertEquals("HTTPS://acme.de/", persisted.get(0).url);
-        assertEquals("ftp://mon-site.mondomaine/mon-repertoire", persisted.get(1).url);
-        assertEquals("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail_s.gif", persisted.get(2).url);
-        assertEquals("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail.gif", persisted.get(3).url);
+        assertEquals(ref, persisted.get("HTTPS://acme.de/"));
+        assertEquals(ref, persisted.get("ftp://mon-site.mondomaine/mon-repertoire"));
+        assertEquals(ref, persisted.get("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail_s.gif"));
+        assertEquals(ref, persisted.get("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail.gif"));
     }
 }
 

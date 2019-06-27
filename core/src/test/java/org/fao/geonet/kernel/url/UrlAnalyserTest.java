@@ -5,6 +5,7 @@ import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Link;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataLink;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
@@ -12,14 +13,20 @@ import org.fao.geonet.kernel.schema.LinkAwareSchemaPlugin;
 import org.fao.geonet.kernel.schema.LinkPatternStreamer.ILinkBuilder;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.repository.LinkRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -45,6 +52,12 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
     @Autowired
     private LinkRepository linkRepository;
 
+    @Autowired
+    private MetadataRepository metadataRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
     private ServiceContext context;
 
     @Before
@@ -62,7 +75,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         SchemaPlugin schemaPlugin = schemaManager.getSchema(md.getDataInfo().getSchemaId()).getSchemaPlugin();
         if (schemaPlugin instanceof LinkAwareSchemaPlugin) {
 
-            ((LinkAwareSchemaPlugin) schemaPlugin).create(new ILinkBuilder<Link>() {
+            ((LinkAwareSchemaPlugin) schemaPlugin).create(new ILinkBuilder<Link, AbstractMetadata>() {
                 @Override
                 public Link build() {
                     return new Link();
@@ -74,11 +87,13 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
                 }
 
                 @Override
-                public void persist(Link link) {
-                    linkRepository.save(link);
+                public void persist(Link link, AbstractMetadata metadata) {
+                    MetadataLink metadataLink = new MetadataLink();
+                    entityManager.persist(link);
+                    metadataLink.setId(metadataRepository.findOne(metadata.getId()), link);
+                    entityManager.persist(metadataLink);
                 }
-            }).processAllRawText(element);
-
+            }).processAllRawText(element, md);
         }
 
         Set<String> urlFromDb = linkRepository.findAll().stream().map(Link::getUrl).collect(Collectors.toSet());
@@ -88,7 +103,17 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         assertTrue(urlFromDb.contains("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail.gif"));
         assertEquals(4, urlFromDb.size());
 
+        SimpleJpaRepository metadataLinkRepository = new SimpleJpaRepository<MetadataLink, Integer>(
+                MetadataLink.class, entityManager);
+        List<MetadataLink> metadataLinkList = metadataLinkRepository.findAll();
+        assertEquals(
+                metadataLinkList.stream().map(x -> x.getId().getLinkId()).collect(Collectors.toSet()),
+                linkRepository.findAll().stream().map(Link::getId).collect(Collectors.toSet()));
+        assertEquals(
+                metadataLinkList.stream().map(x -> x.getId().getMetadataId()).collect(Collectors.toSet()),
+                Collections.singleton(md.getId()));
     }
+
     private AbstractMetadata insertMetadataInDb(Element element) throws Exception {
         loginAsAdmin(context);
 
