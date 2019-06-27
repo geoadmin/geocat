@@ -7,13 +7,14 @@ import org.fao.geonet.domain.Link;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataLink;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +41,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
     private static final int TEST_OWNER = 42;
 
     @Autowired
-    private DataManager dataManager;
+    private IMetadataManager dataManager;
 
     @Autowired
     private SchemaManager schemaManager;
@@ -65,12 +67,11 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
 
     @Test
     public void encounteringAnUrlForTheFirstTimeAndPersistingIt() throws Exception {
-        URL mdResourceUrl = UrlAnalyserTest.class.getResource("input_with_url.xml");
-        Element element = Xml.loadStream(mdResourceUrl.openStream());
-        AbstractMetadata md = insertMetadataInDb(element);
+        Element mdAsXml = getMdAsXml();
+        AbstractMetadata md = insertMetadataInDb(mdAsXml);
         UrlAnalyser toTest = createToTest();
 
-        toTest.processMetadata(element, md);
+        toTest.processMetadata(mdAsXml, md);
 
         Set<String> urlFromDb = linkRepository.findAll().stream().map(Link::getUrl).collect(Collectors.toSet());
         assertTrue(urlFromDb.contains("HTTPS://acme.de/"));
@@ -91,14 +92,13 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
 
     @Test
     public void encounteringSameUrlInVariousMd() throws Exception {
-        URL mdResourceUrl = UrlAnalyserTest.class.getResource("input_with_url.xml");
-        Element element = Xml.loadStream(mdResourceUrl.openStream());
-        AbstractMetadata mdOne = insertMetadataInDb(element);
-        AbstractMetadata mdTwo = insertMetadataInDb(element);
+        Element mdAsXml = getMdAsXml();
+        AbstractMetadata mdOne = insertMetadataInDb(mdAsXml);
+        AbstractMetadata mdTwo = insertMetadataInDb(mdAsXml);
         UrlAnalyser toTest = createToTest();
 
-        toTest.processMetadata(element, mdOne);
-        toTest.processMetadata(element, mdTwo);
+        toTest.processMetadata(mdAsXml, mdOne);
+        toTest.processMetadata(mdAsXml, mdTwo);
 
         Set<String> urlFromDb = linkRepository.findAll().stream().map(Link::getUrl).collect(Collectors.toSet());
         assertEquals(4, urlFromDb.size());
@@ -113,12 +113,59 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         assertEquals(8, metadataLinkList.size());
     }
 
+    @Test
+    public void deleteMdCascade() throws Exception {
+        // user will have to purge himself orphan link (no metadatalink anymore) using ui:
+        //      one can imagine that when network switches for example url have to be kept aside
+        // orphan metadatalink (no metadata anymore) purge can be trigered when checking link:
+        //      this is toTest.purge method purpose.
+        // note that metadata table and medatalink table are loosely coupled:
+        //      no constraints beetween them.
+
+        Element mdAsXml = getMdAsXml();
+        AbstractMetadata md = insertMetadataInDb(mdAsXml);
+        UrlAnalyser toTest = createToTest();
+        toTest.processMetadata(mdAsXml, md);
+        SimpleJpaRepository metadataLinkRepository = new SimpleJpaRepository<MetadataLink, Integer>(MetadataLink.class, entityManager);
+        List<MetadataLink> metadataLinkList = metadataLinkRepository.findAll();
+        assertEquals(4, metadataLinkList.size());
+        dataManager.deleteMetadata(context, md.getId() + "");
+
+        linkRepository.findAll().stream().forEach(toTest::purgeMetataLink);
+
+        metadataLinkList = metadataLinkRepository.findAll();
+        assertEquals(0, metadataLinkList.size());
+        Set<String> urlFromDb = linkRepository.findAll().stream().map(Link::getUrl).collect(Collectors.toSet());
+        assertEquals(4, urlFromDb.size());
+    }
+
+    @Test
+    public void updateMdCascade() throws Exception {
+        // orphan metadatalink (no link anymore) purge is automatic...
+
+        Element mdAsXml = getMdAsXml();
+        AbstractMetadata md = insertMetadataInDb(mdAsXml);
+        UrlAnalyser toTest = createToTest();
+        toTest.processMetadata(mdAsXml, md);
+        SimpleJpaRepository metadataLinkRepository = new SimpleJpaRepository<MetadataLink, Integer>(MetadataLink.class, entityManager);
+        List<MetadataLink> metadataLinkList = metadataLinkRepository.findAll();
+        assertEquals(4, metadataLinkList.size());
+        Xml.selectElement(mdAsXml, ".//gmd:abstract/gco:CharacterString").setText("http://temporary_ressource_when_network_switch.org");
+
+        toTest.processMetadata(mdAsXml, md);
+
+        metadataLinkList = metadataLinkRepository.findAll();
+        assertEquals(3, metadataLinkList.size());
+        Set<String> urlFromDb = linkRepository.findAll().stream().map(Link::getUrl).collect(Collectors.toSet());
+        assertEquals(5, urlFromDb.size());
+    }
 
     private UrlAnalyser createToTest() {
         UrlAnalyser toTest = new UrlAnalyser();
         toTest.schemaManager = schemaManager;
         toTest.metadataRepository = metadataRepository;
         toTest.entityManager = entityManager;
+        toTest.init();
         return toTest;
     }
 
@@ -151,5 +198,10 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
                 false);
 
         return dbInsertedMetadata;
+    }
+
+    private Element getMdAsXml() throws IOException, JDOMException {
+        URL mdResourceUrl = UrlAnalyserTest.class.getResource("input_with_url.xml");
+        return Xml.loadStream(mdResourceUrl.openStream());
     }
 }
