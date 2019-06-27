@@ -7,10 +7,12 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ExtractLinksTest extends XslProcessTest {
 
@@ -29,8 +31,9 @@ public class ExtractLinksTest extends XslProcessTest {
         }
     }
 
+    private List<TestLink> persisted = new ArrayList<TestLink>();
+    private RawLinkPatternStreamer<TestLink> urlRegex = new RawLinkPatternStreamer(new ILinkBuilder<TestLink>() {
 
-    RawLinkPatternStreamer<TestLink> urlRegex = new RawLinkPatternStreamer(new ILinkBuilder<TestLink>() {
         @Override
         public TestLink build() {
             return new TestLink();
@@ -40,6 +43,11 @@ public class ExtractLinksTest extends XslProcessTest {
         public void setUrl(TestLink link, String url) {
             link.setUrl(url);
         }
+
+        @Override
+        public void persist(TestLink link) {
+            persisted.add(link);
+        }
     });
 
     @Test
@@ -48,15 +56,12 @@ public class ExtractLinksTest extends XslProcessTest {
         Element inputElement = Xml.loadFile(xmlFile);
         List<Element> encounteredLinks = (List<Element>) Xml.selectNodes(inputElement, ".//gco:CharacterString", ISO19139SchemaPlugin.allNamespaces.asList());
 
-        List<TestLink> encounteredUrl = encounteredLinks
-                .stream()
-                .flatMap(urlRegex::results).collect(Collectors.toList());
+        encounteredLinks.stream().forEach(urlRegex::results);
 
-        assertEquals("HTTPS://acme.de/", encounteredUrl.get(0).url);
-        assertEquals("ftp://mon-site.mondomaine/mon-repertoire", encounteredUrl.get(1).url);
-        assertEquals("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail_s.gif", encounteredUrl.get(2).url);
-        assertEquals("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail.gif", encounteredUrl.get(3).url);
-
+        assertEquals("HTTPS://acme.de/", persisted.get(0).url);
+        assertEquals("ftp://mon-site.mondomaine/mon-repertoire", persisted.get(1).url);
+        assertEquals("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail_s.gif", persisted.get(2).url);
+        assertEquals("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail.gif", persisted.get(3).url);
     }
 }
 

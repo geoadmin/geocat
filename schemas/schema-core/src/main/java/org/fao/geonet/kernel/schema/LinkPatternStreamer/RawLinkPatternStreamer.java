@@ -27,6 +27,7 @@ public class RawLinkPatternStreamer <L> {
         for (Matcher m = this.pattern.matcher(input.getValue()); m.find(); ) {
             L link = linkBuilder.build();
             linkBuilder.setUrl(link, m.toMatchResult().group());
+            linkBuilder.persist(link);
             builder.add(link);
         }
 

@@ -5,4 +5,6 @@ public interface ILinkBuilder<L> {
     L build();
 
     void setUrl(L link, String url);
+
+    void persist(L link);
 }
