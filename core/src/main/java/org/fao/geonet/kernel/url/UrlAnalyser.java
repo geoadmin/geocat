@@ -17,13 +17,13 @@ import javax.persistence.PersistenceContext;
 public class UrlAnalyser {
 
     @Autowired
-    private SchemaManager schemaManager;
+    protected SchemaManager schemaManager;
 
     @Autowired
-    private MetadataRepository metadataRepository;
+    protected MetadataRepository metadataRepository;
 
     @PersistenceContext
-    private EntityManager entityManager;
+    protected EntityManager entityManager;
 
     public void processMetadata(Element element, AbstractMetadata md) throws org.jdom.JDOMException {
         SchemaPlugin schemaPlugin = schemaManager.getSchema(md.getDataInfo().getSchemaId()).getSchemaPlugin();
