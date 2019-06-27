@@ -603,7 +603,7 @@ public class ISO19139SchemaPlugin
         return languages;
     }
 
-    public <L, M> RawLinkPatternStreamer<L, M> create(ILinkBuilder<L, M> linkbuilder) {
+    public <L, M> RawLinkPatternStreamer<L, M> createLinkStreamer(ILinkBuilder<L, M> linkbuilder) {
         RawLinkPatternStreamer patternStreamer = new RawLinkPatternStreamer(linkbuilder);
         patternStreamer.setNamespaces(ISO19139SchemaPlugin.allNamespaces.asList());
         patternStreamer.setRawTextXPath(".//gco:CharacterString");

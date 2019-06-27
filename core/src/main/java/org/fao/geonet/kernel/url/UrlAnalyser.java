@@ -50,7 +50,7 @@ public class UrlAnalyser {
                     .stream()
                     .forEach(entityManager::remove);
 
-            ((LinkAwareSchemaPlugin) schemaPlugin).create(new ILinkBuilder<Link, AbstractMetadata>() {
+            ((LinkAwareSchemaPlugin) schemaPlugin).createLinkStreamer(new ILinkBuilder<Link, AbstractMetadata>() {
                 @Override
                 public Link build() {
                     return new Link();
