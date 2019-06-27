@@ -10,6 +10,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.repository.LinkRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.fao.geonet.kernel.UpdateDatestamp.NO;
 import static org.junit.Assert.assertEquals;
@@ -41,6 +43,9 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
 
     @Autowired
     private SchemaManager schemaManager;
+
+    @Autowired
+    private MetadataRepository metadataRepository;
 
     @Autowired
     private SourceRepository sourceRepository;
@@ -63,7 +68,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         URL mdResourceUrl = UrlAnalyserTest.class.getResource("input_with_url.xml");
         Element element = Xml.loadStream(mdResourceUrl.openStream());
         AbstractMetadata md = insertMetadataInDb(element);
-        UrlAnalyser toTest = new UrlAnalyser();
+        UrlAnalyser toTest = createToTest();
 
         toTest.processMetadata(element, md);
 
@@ -81,6 +86,40 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         assertEquals(
                 metadataLinkList.stream().map(x -> x.getId().getMetadataId()).collect(Collectors.toSet()),
                 Collections.singleton(md.getId()));
+    }
+
+
+    @Test
+    public void encounteringSameUrlInVariousMd() throws Exception {
+        URL mdResourceUrl = UrlAnalyserTest.class.getResource("input_with_url.xml");
+        Element element = Xml.loadStream(mdResourceUrl.openStream());
+        AbstractMetadata mdOne = insertMetadataInDb(element);
+        AbstractMetadata mdTwo = insertMetadataInDb(element);
+        UrlAnalyser toTest = createToTest();
+
+        toTest.processMetadata(element, mdOne);
+        toTest.processMetadata(element, mdTwo);
+
+        Set<String> urlFromDb = linkRepository.findAll().stream().map(Link::getUrl).collect(Collectors.toSet());
+        assertEquals(4, urlFromDb.size());
+        SimpleJpaRepository metadataLinkRepository = new SimpleJpaRepository<MetadataLink, Integer>(MetadataLink.class, entityManager);
+        List<MetadataLink> metadataLinkList = metadataLinkRepository.findAll();
+        assertEquals(
+                metadataLinkList.stream().map(x -> x.getId().getLinkId()).collect(Collectors.toSet()),
+                linkRepository.findAll().stream().map(Link::getId).collect(Collectors.toSet()));
+        assertEquals(
+                metadataLinkList.stream().map(x -> x.getId().getMetadataId()).collect(Collectors.toSet()),
+                Stream.of(mdOne.getId(), mdTwo.getId()).collect(Collectors.toSet()));
+        assertEquals(8, metadataLinkList.size());
+    }
+
+
+    private UrlAnalyser createToTest() {
+        UrlAnalyser toTest = new UrlAnalyser();
+        toTest.schemaManager = schemaManager;
+        toTest.metadataRepository = metadataRepository;
+        toTest.entityManager = entityManager;
+        return toTest;
     }
 
     private AbstractMetadata insertMetadataInDb(Element element) throws Exception {
