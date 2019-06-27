@@ -51,7 +51,7 @@ public class MetadataLinkId implements Serializable {
      */
     public MetadataLinkId(int metadataId, int linkId) {
         this._metadataId = metadataId;
-        this._linkId = _linkId;
+        this._linkId = linkId;
     }
 
     /**

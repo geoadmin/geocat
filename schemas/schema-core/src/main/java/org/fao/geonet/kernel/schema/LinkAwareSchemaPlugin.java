@@ -5,5 +5,5 @@ import org.fao.geonet.kernel.schema.LinkPatternStreamer.RawLinkPatternStreamer;
 
 public interface LinkAwareSchemaPlugin {
 
-    <L> RawLinkPatternStreamer<L> create(ILinkBuilder<L> linkbuilder);
+    <L, M> RawLinkPatternStreamer<L, M> create(ILinkBuilder<L, M> linkbuilder);
 }
