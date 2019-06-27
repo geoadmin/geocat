@@ -9,10 +9,8 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class ExtractLinksTest extends XslProcessTest {
 
@@ -31,32 +29,34 @@ public class ExtractLinksTest extends XslProcessTest {
         }
     }
 
-    private List<TestLink> persisted = new ArrayList<TestLink>();
-    private RawLinkPatternStreamer<TestLink> urlRegex = new RawLinkPatternStreamer(new ILinkBuilder<TestLink>() {
 
-        @Override
-        public TestLink build() {
-            return new TestLink();
-        }
-
-        @Override
-        public void setUrl(TestLink link, String url) {
-            link.setUrl(url);
-        }
-
-        @Override
-        public void persist(TestLink link) {
-            persisted.add(link);
-        }
-    });
 
     @Test
     public void urlEncounteredProcessingAMetadata() throws Exception {
+        Element mdToprocess = Xml.loadFile(xmlFile);
 
-        Element inputElement = Xml.loadFile(xmlFile);
-        List<Element> encounteredLinks = (List<Element>) Xml.selectNodes(inputElement, ".//gco:CharacterString", ISO19139SchemaPlugin.allNamespaces.asList());
+        List<TestLink> persisted = new ArrayList<TestLink>();
+        RawLinkPatternStreamer<TestLink> toTest = new RawLinkPatternStreamer(new ILinkBuilder<TestLink>() {
 
-        encounteredLinks.stream().forEach(urlRegex::results);
+            @Override
+            public TestLink build() {
+                return new TestLink();
+            }
+
+            @Override
+            public void setUrl(TestLink link, String url) {
+                link.setUrl(url);
+            }
+
+            @Override
+            public void persist(TestLink link) {
+                persisted.add(link);
+            }
+        });
+        toTest.setNamespaces(ISO19139SchemaPlugin.allNamespaces.asList());
+        toTest.setRawTextXPath(".//gco:CharacterString");
+
+        toTest.processAllRawText(mdToprocess);
 
         assertEquals("HTTPS://acme.de/", persisted.get(0).url);
         assertEquals("ftp://mon-site.mondomaine/mon-repertoire", persisted.get(1).url);
