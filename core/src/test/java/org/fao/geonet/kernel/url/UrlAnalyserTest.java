@@ -25,6 +25,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.UpdateDatestamp.NO;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
@@ -76,7 +77,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
                 public void persist(Link link) {
                     linkRepository.save(link);
                 }
-            }).results(element);
+            }).processAllRawText(element);
 
         }
 
@@ -85,6 +86,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         assertTrue(urlFromDb.contains("ftp://mon-site.mondomaine/mon-repertoire"));
         assertTrue(urlFromDb.contains("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail_s.gif"));
         assertTrue(urlFromDb.contains("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail.gif"));
+        assertEquals(4, urlFromDb.size());
 
     }
     private AbstractMetadata insertMetadataInDb(Element element) throws Exception {

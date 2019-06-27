@@ -604,6 +604,9 @@ public class ISO19139SchemaPlugin
     }
 
     public <L> RawLinkPatternStreamer<L> create(ILinkBuilder<L> linkbuilder) {
-        return new RawLinkPatternStreamer(linkbuilder);
+        RawLinkPatternStreamer patternStreamer = new RawLinkPatternStreamer(linkbuilder);
+        patternStreamer.setNamespaces(ISO19139SchemaPlugin.allNamespaces.asList());
+        patternStreamer.setRawTextXPath(".//gco:CharacterString");
+        return patternStreamer;
     }
 }
