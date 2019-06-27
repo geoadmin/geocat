@@ -7,39 +7,30 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 
-public abstract class RawLinkPatternStreamer <L extends ILink, M, LM extends IMetadataLink<L, M>> {
+public class RawLinkPatternStreamer <L> {
 
 
     private Pattern pattern;
-    private M metadata;;
+    private ILinkBuilder<L> linkBuilder;
 
     public static final Pattern SEARCH_URL_IN_STRING_REGEX = Pattern.compile("(http|ftp|https):\\/\\/([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:\\/~+#-]*[\\w@?^=%&\\/~+#-])?", Pattern.CASE_INSENSITIVE);
 
 
-    public RawLinkPatternStreamer() {
+    public RawLinkPatternStreamer(ILinkBuilder linkBuilder)
+    {
         this.pattern = SEARCH_URL_IN_STRING_REGEX;
+        this.linkBuilder = linkBuilder;
     }
 
-    public void setMetadata(M metadata) {
-        this.metadata = metadata;
-    }
-
-    public Stream<LM> results(Element input) {
-        Stream.Builder<LM> builder = Stream.builder();
+    public Stream<L> results(Element input) {
+        Stream.Builder<L> builder = Stream.builder();
         for (Matcher m = this.pattern.matcher(input.getValue()); m.find(); ) {
-            LM lm = buildMetadataLink();
-            L link = buildLink();
-            link.setUrl(m.toMatchResult().group());
-            lm.setId(metadata, link);
-            builder.add(lm);
+            L link = linkBuilder.build();
+            linkBuilder.setUrl(link, m.toMatchResult().group());
+            builder.add(link);
         }
 
         return builder.build();
     }
-
-    protected abstract L buildLink();
-
-    protected abstract LM buildMetadataLink();
-
 }
 

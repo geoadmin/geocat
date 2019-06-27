@@ -30,6 +30,9 @@ import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.ExportablePlugin;
 import org.fao.geonet.kernel.schema.ISOPlugin;
+import org.fao.geonet.kernel.schema.LinkAwareSchemaPlugin;
+import org.fao.geonet.kernel.schema.LinkPatternStreamer.ILinkBuilder;
+import org.fao.geonet.kernel.schema.LinkPatternStreamer.RawLinkPatternStreamer;
 import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
 import org.fao.geonet.kernel.schema.subtemplate.KeywordReplacer;
@@ -69,7 +72,8 @@ public class ISO19139SchemaPlugin
     MultilingualSchemaPlugin,
     ExportablePlugin,
     ISOPlugin,
-    SubtemplateAwareSchemaPlugin {
+    SubtemplateAwareSchemaPlugin,
+        LinkAwareSchemaPlugin {
 
     public static final String IDENTIFIER = "iso19139";
     public static ImmutableSet<Namespace> allNamespaces;
@@ -599,4 +603,7 @@ public class ISO19139SchemaPlugin
         return languages;
     }
 
+    public <L> RawLinkPatternStreamer<L> create(ILinkBuilder<L> linkbuilder) {
+        return new RawLinkPatternStreamer(linkbuilder);
+    }
 }
