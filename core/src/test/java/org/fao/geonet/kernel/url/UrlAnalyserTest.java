@@ -10,7 +10,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.LinkAwareSchemaPlugin;
 import org.fao.geonet.kernel.schema.LinkPatternStreamer.ILinkBuilder;
-import org.fao.geonet.kernel.schema.LinkPatternStreamer.RawLinkPatternStreamer;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -21,11 +20,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URL;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.UpdateDatestamp.NO;
+import static org.junit.Assert.assertTrue;
 
 public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
 
@@ -61,7 +61,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         SchemaPlugin schemaPlugin = schemaManager.getSchema(md.getDataInfo().getSchemaId()).getSchemaPlugin();
         if (schemaPlugin instanceof LinkAwareSchemaPlugin) {
 
-            RawLinkPatternStreamer<Link> patternStreamer = ((LinkAwareSchemaPlugin) schemaPlugin).create(new ILinkBuilder<Link>() {
+            ((LinkAwareSchemaPlugin) schemaPlugin).create(new ILinkBuilder<Link>() {
                 @Override
                 public Link build() {
                     return new Link();
@@ -71,14 +71,20 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
                 public void setUrl(Link link, String url) {
                     link.setUrl(url);
                 }
-            });
 
-            patternStreamer.results(element).forEach(link -> {linkRepository.save(link);});
+                @Override
+                public void persist(Link link) {
+                    linkRepository.save(link);
+                }
+            }).results(element);
 
         }
 
-        List<Link> fromDb = linkRepository.findAll();
-        System.out.println(fromDb);
+        Set<String> urlFromDb = linkRepository.findAll().stream().map(Link::getUrl).collect(Collectors.toSet());
+        assertTrue(urlFromDb.contains("HTTPS://acme.de/"));
+        assertTrue(urlFromDb.contains("ftp://mon-site.mondomaine/mon-repertoire"));
+        assertTrue(urlFromDb.contains("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail_s.gif"));
+        assertTrue(urlFromDb.contains("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail.gif"));
 
     }
     private AbstractMetadata insertMetadataInDb(Element element) throws Exception {
@@ -111,7 +117,4 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
 
         return dbInsertedMetadata;
     }
-
-
-
 }
