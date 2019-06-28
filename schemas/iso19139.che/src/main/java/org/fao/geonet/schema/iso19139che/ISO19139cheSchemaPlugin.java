@@ -7,6 +7,9 @@ import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.ExportablePlugin;
 import org.fao.geonet.kernel.schema.ISOPlugin;
+import org.fao.geonet.kernel.schema.LinkAwareSchemaPlugin;
+import org.fao.geonet.kernel.schema.LinkPatternStreamer.ILinkBuilder;
+import org.fao.geonet.kernel.schema.LinkPatternStreamer.RawLinkPatternStreamer;
 import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
 import org.fao.geonet.kernel.schema.subtemplate.KeywordReplacer;
@@ -48,7 +51,8 @@ public class ISO19139cheSchemaPlugin
     MultilingualSchemaPlugin,
     ExportablePlugin,
     ISOPlugin,
-    SubtemplateAwareSchemaPlugin {
+    SubtemplateAwareSchemaPlugin,
+    LinkAwareSchemaPlugin {
     public static final String IDENTIFIER = "iso19139.che";
 
     public static ImmutableSet<Namespace> allNamespaces;
@@ -563,5 +567,14 @@ public class ISO19139cheSchemaPlugin
     @Override
     public boolean isInitialised() {
         return subtemplatesByLocalXLinksReplacer!=null;
+    }
+
+    @Override
+    public <L, M> RawLinkPatternStreamer<L, M> createLinkStreamer(ILinkBuilder<L, M> linkbuilder) {
+        RawLinkPatternStreamer patternStreamer = new RawLinkPatternStreamer(linkbuilder);
+        patternStreamer.setNamespaces(ISO19139SchemaPlugin.allNamespaces.asList());
+        patternStreamer.setRawTextXPath(".//gco:CharacterString");
+        // TODO: che:URL and multilingual text
+        return patternStreamer;
     }
 }
