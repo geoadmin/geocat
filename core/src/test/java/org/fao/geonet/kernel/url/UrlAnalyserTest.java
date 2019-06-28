@@ -4,6 +4,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Link;
+import org.fao.geonet.domain.LinkStatus;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataLink;
 import org.fao.geonet.domain.MetadataType;
@@ -17,6 +18,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
@@ -34,6 +36,8 @@ import java.util.stream.Stream;
 import static org.fao.geonet.kernel.UpdateDatestamp.NO;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 
 public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
 
@@ -158,6 +162,26 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         assertEquals(3, metadataLinkList.size());
         Set<String> urlFromDb = linkRepository.findAll().stream().map(Link::getUrl).collect(Collectors.toSet());
         assertEquals(5, urlFromDb.size());
+    }
+
+    @Test
+    public void urlCheckerToSetStatus() throws Exception {
+        Element mdAsXml = getMdAsXml();
+        AbstractMetadata md = insertMetadataInDb(mdAsXml);
+        UrlAnalyser toTest = createToTest();
+        UrlChecker mockUrlChecker = mock(UrlChecker.class);
+        toTest.urlChecker = mockUrlChecker;
+        Mockito.when(mockUrlChecker.getUrlStatus(eq("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail_s.gif"))).thenReturn(new LinkStatus().setStatusValue("200").setStatusInfo("OK").setFailing(false));
+        Mockito.when(mockUrlChecker.getUrlStatus(eq("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail.gif"))).thenReturn(new LinkStatus().setStatusValue("200").setStatusInfo("OK").setFailing(false));
+        Mockito.when(mockUrlChecker.getUrlStatus(eq("ftp://mon-site.mondomaine/mon-repertoire"))).thenReturn(new LinkStatus().setStatusValue("406").setStatusInfo("Le serveur HTCPCP ne peut pas infuser du café pour différentes raisons, la réponse devrait indiquer une liste de types de café possibles.").setFailing(true));
+        Mockito.when(mockUrlChecker.getUrlStatus(eq("HTTPS://acme.de/"))).thenReturn(new LinkStatus().setStatusValue("418").setStatusInfo("I am teapot").setFailing(true));
+        toTest.processMetadata(mdAsXml, md);
+        SimpleJpaRepository statusRepository = new SimpleJpaRepository<LinkStatus, Integer>(LinkStatus.class, entityManager);
+        assertEquals(0, statusRepository.findAll().size());
+
+        linkRepository.findAll().stream().forEach(toTest::testLink);
+
+        assertEquals(4, statusRepository.findAll().size());
     }
 
     private UrlAnalyser createToTest() {
