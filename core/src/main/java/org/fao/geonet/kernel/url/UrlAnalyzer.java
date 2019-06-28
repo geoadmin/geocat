@@ -25,7 +25,7 @@ import javax.persistence.criteria.Root;
 
 import static java.util.Objects.isNull;
 
-public class UrlAnalyser {
+public class UrlAnalyzer {
 
     @Autowired
     protected SchemaManager schemaManager;
@@ -113,5 +113,4 @@ public class UrlAnalyser {
     private boolean isReferencingAnUnknownMetadata(MetadataLink metadatalink) {
         return isNull(metadataRepository.findOne(metadatalink.getId().getMetadataId()));
     }
-
 }

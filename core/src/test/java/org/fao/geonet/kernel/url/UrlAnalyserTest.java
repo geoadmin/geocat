@@ -73,7 +73,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
     public void encounteringAnUrlForTheFirstTimeAndPersistingIt() throws Exception {
         Element mdAsXml = getMdAsXml();
         AbstractMetadata md = insertMetadataInDb(mdAsXml);
-        UrlAnalyser toTest = createToTest();
+        UrlAnalyzer toTest = createToTest();
 
         toTest.processMetadata(mdAsXml, md);
 
@@ -99,7 +99,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         Element mdAsXml = getMdAsXml();
         AbstractMetadata mdOne = insertMetadataInDb(mdAsXml);
         AbstractMetadata mdTwo = insertMetadataInDb(mdAsXml);
-        UrlAnalyser toTest = createToTest();
+        UrlAnalyzer toTest = createToTest();
 
         toTest.processMetadata(mdAsXml, mdOne);
         toTest.processMetadata(mdAsXml, mdTwo);
@@ -128,7 +128,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
 
         Element mdAsXml = getMdAsXml();
         AbstractMetadata md = insertMetadataInDb(mdAsXml);
-        UrlAnalyser toTest = createToTest();
+        UrlAnalyzer toTest = createToTest();
         toTest.processMetadata(mdAsXml, md);
         SimpleJpaRepository metadataLinkRepository = new SimpleJpaRepository<MetadataLink, Integer>(MetadataLink.class, entityManager);
         List<MetadataLink> metadataLinkList = metadataLinkRepository.findAll();
@@ -149,7 +149,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
 
         Element mdAsXml = getMdAsXml();
         AbstractMetadata md = insertMetadataInDb(mdAsXml);
-        UrlAnalyser toTest = createToTest();
+        UrlAnalyzer toTest = createToTest();
         toTest.processMetadata(mdAsXml, md);
         SimpleJpaRepository metadataLinkRepository = new SimpleJpaRepository<MetadataLink, Integer>(MetadataLink.class, entityManager);
         List<MetadataLink> metadataLinkList = metadataLinkRepository.findAll();
@@ -168,7 +168,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
     public void urlCheckerToSetStatus() throws Exception {
         Element mdAsXml = getMdAsXml();
         AbstractMetadata md = insertMetadataInDb(mdAsXml);
-        UrlAnalyser toTest = createToTest();
+        UrlAnalyzer toTest = createToTest();
         UrlChecker mockUrlChecker = mock(UrlChecker.class);
         toTest.urlChecker = mockUrlChecker;
         Mockito.when(mockUrlChecker.getUrlStatus(eq("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail_s.gif"))).thenReturn(new LinkStatus().setStatusValue("200").setStatusInfo("OK").setFailing(false));
@@ -184,8 +184,8 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         assertEquals(4, statusRepository.findAll().size());
     }
 
-    private UrlAnalyser createToTest() {
-        UrlAnalyser toTest = new UrlAnalyser();
+    private UrlAnalyzer createToTest() {
+        UrlAnalyzer toTest = new UrlAnalyzer();
         toTest.schemaManager = schemaManager;
         toTest.metadataRepository = metadataRepository;
         toTest.entityManager = entityManager;
