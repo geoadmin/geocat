@@ -28,7 +28,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -37,13 +36,11 @@ import org.fao.geonet.domain.Link;
 import org.fao.geonet.domain.Link_;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.kernel.url.UrlAnalyser;
+import org.fao.geonet.kernel.url.UrlAnalyzer;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.MetadataLinkRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.services.metadata.BatchOpsMetadataReindexer;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -95,7 +92,7 @@ public class LinksApi {
     DataManager dataManager;
 
     @Autowired
-    UrlAnalyser urlAnalyser;
+    UrlAnalyzer urlAnalyser;
 
     @ApiOperation(
         value = "Get record links",
