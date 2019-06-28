@@ -144,7 +144,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$", hasSize(1)))
             .andExpect(jsonPath("$[0].url").value(equalTo("http://services.sandre.eaufrance.fr/geo/ouvrage")))
-            // FIXME: Should return one metadata related to that URL. 
+            // FIXME: Should return one metadata related to that URL.
             .andExpect(jsonPath("$[0].records", hasSize(1)))
             .andExpect(jsonPath("$[0].records[0].id.metadataId").value(equalTo(this.id)));
 

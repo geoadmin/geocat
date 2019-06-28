@@ -33,11 +33,14 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.Link;
+import org.fao.geonet.domain.LinkStatus;
 import org.fao.geonet.domain.Link_;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.url.UrlAnalyzer;
+import org.fao.geonet.kernel.url.UrlChecker;
 import org.fao.geonet.repository.LinkRepository;
+import org.fao.geonet.repository.LinkStatusRepository;
 import org.fao.geonet.repository.MetadataLinkRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SortUtils;
@@ -83,6 +86,9 @@ public class LinksApi {
     LinkRepository linkRepository;
 
     @Autowired
+    LinkStatusRepository linkStatusRepository;
+
+    @Autowired
     MetadataLinkRepository metadataLinkRepository;
 
     @Autowired
@@ -93,6 +99,9 @@ public class LinksApi {
 
     @Autowired
     UrlAnalyzer urlAnalyser;
+
+    @Autowired
+    UrlChecker urlChecker;
 
     @ApiOperation(
         value = "Get record links",
@@ -160,6 +169,10 @@ public class LinksApi {
             required = false,
             defaultValue = "true")
             boolean removeFirst,
+        @RequestParam(
+            required = false,
+            defaultValue = "false")
+            boolean analyze,
         @ApiIgnore
             HttpSession httpSession,
         @ApiIgnore
@@ -204,6 +217,13 @@ public class LinksApi {
             urlAnalyser.processMetadata(metadata.getXmlData(false), metadata);
         }
 
+        if (analyze) {
+            linkRepository.findAll().stream().forEach(l -> {
+                final LinkStatus urlStatus = urlChecker.getUrlStatus(l.getUrl());
+                urlStatus.setLinkId(l.getId());
+                linkStatusRepository.save(urlStatus);
+            });
+        }
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
