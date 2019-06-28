@@ -28,8 +28,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -181,7 +183,25 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
 
         linkRepository.findAll().stream().forEach(toTest::testLink);
 
-        assertEquals(4, statusRepository.findAll().size());
+        List<LinkStatus> allStatus = statusRepository.findAll();
+        assertEquals(4, allStatus.size());
+        assertEquals(Stream.of("200", "406", "418").collect(Collectors.toSet()),
+                allStatus.stream().map(LinkStatus::getStatusValue).collect(Collectors.toSet()));
+
+        toTest.urlChecker = mockUrlChecker;
+        Mockito.when(mockUrlChecker.getUrlStatus(eq("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail_s.gif"))).thenReturn(new LinkStatus().setStatusValue("200").setStatusInfo("OK").setFailing(false));
+        Mockito.when(mockUrlChecker.getUrlStatus(eq("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail.gif"))).thenReturn(new LinkStatus().setStatusValue("200").setStatusInfo("OK").setFailing(false));
+        Mockito.when(mockUrlChecker.getUrlStatus(eq("ftp://mon-site.mondomaine/mon-repertoire"))).thenReturn(new LinkStatus().setStatusValue("200").setStatusInfo("OK").setFailing(true));
+        Mockito.when(mockUrlChecker.getUrlStatus(eq("HTTPS://acme.de/"))).thenReturn(new LinkStatus().setStatusValue("200").setStatusInfo("OK").setFailing(true));
+
+        linkRepository.findAll().stream().forEach(toTest::testLink);
+
+        allStatus = statusRepository.findAll();
+        assertEquals(8, allStatus.size());
+        Map<String, Long> grouped = allStatus.stream().map(LinkStatus::getStatusValue).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        assertEquals(6L, grouped.get("200").longValue());
+        assertEquals(1L,grouped.get("406").longValue());
+        assertEquals(1L, grouped.get("418").longValue());
     }
 
     private UrlAnalyser createToTest() {
