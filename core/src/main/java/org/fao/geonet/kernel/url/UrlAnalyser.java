@@ -71,6 +71,7 @@ public class UrlAnalyser {
                     MetadataLink metadataLink = new MetadataLink();
                     metadataLink.setId(metadataRepository.findOne(metadata.getId()), link);
                     entityManager.persist(metadataLink);
+                    entityManager.flush();
                 }
             }).processAllRawText(element, md);
         }
