@@ -3,6 +3,7 @@ package org.fao.geonet.kernel.url;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Link;
 import org.fao.geonet.domain.LinkStatus;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataLink;
 import org.fao.geonet.domain.MetadataLinkId_;
 import org.fao.geonet.domain.MetadataLink_;
@@ -10,6 +11,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.LinkAwareSchemaPlugin;
 import org.fao.geonet.kernel.schema.LinkPatternStreamer.ILinkBuilder;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
+import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class UrlAnalyzer {
     protected EntityManager entityManager;
 
     protected UrlChecker urlChecker;
+
+    @Autowired
+    LinkRepository linkRepository;
 
     private SimpleJpaRepository metadataLinkRepository;
 
@@ -67,9 +72,14 @@ public class UrlAnalyzer {
 
                 @Override
                 public void persist(Link link, AbstractMetadata metadata) {
-                    entityManager.persist(link);
+                    final Link existingLink = linkRepository.findOneByUrl(link.getUrl());
+                    if (existingLink == null) {
+                        entityManager.persist(link);
+                    }
                     MetadataLink metadataLink = new MetadataLink();
-                    metadataLink.setId(metadataRepository.findOne(metadata.getId()), link);
+                    metadataLink.setId(metadataRepository.findOne(metadata.getId()),
+                        existingLink == null ? link : existingLink
+                    );
                     entityManager.persist(metadataLink);
                     entityManager.flush();
                 }
