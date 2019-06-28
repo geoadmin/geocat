@@ -73,7 +73,7 @@ public class ISO19139SchemaPlugin
     ExportablePlugin,
     ISOPlugin,
     SubtemplateAwareSchemaPlugin,
-        LinkAwareSchemaPlugin {
+    LinkAwareSchemaPlugin {
 
     public static final String IDENTIFIER = "iso19139";
     public static ImmutableSet<Namespace> allNamespaces;
@@ -606,7 +606,7 @@ public class ISO19139SchemaPlugin
     public <L, M> RawLinkPatternStreamer<L, M> createLinkStreamer(ILinkBuilder<L, M> linkbuilder) {
         RawLinkPatternStreamer patternStreamer = new RawLinkPatternStreamer(linkbuilder);
         patternStreamer.setNamespaces(ISO19139SchemaPlugin.allNamespaces.asList());
-        patternStreamer.setRawTextXPath(".//gco:CharacterString");
+        patternStreamer.setRawTextXPath(".//*[name() = 'gco:CharacterString' or name() = 'gmd:URL']");
         return patternStreamer;
     }
 }
