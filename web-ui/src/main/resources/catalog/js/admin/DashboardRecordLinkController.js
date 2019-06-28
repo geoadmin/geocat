@@ -48,6 +48,26 @@
         })
       };
 
+      $scope.analyzeLinks = function() {
+        $scope.loading = true;
+        $http.post('../api/records/links?analyze=true').then(function(r) {
+          $scope.loadLinks();
+          $scope.loading = false;
+        }, function(r) {
+          $scope.loadLinks();
+          $scope.loading = false;
+        })
+      };
+
+      $scope.removeAll = function() {
+        $scope.loading = true;
+        $http.delete('../api/records/links').then($scope.loadLinks, function(r) {
+          $scope.error = r.data;
+          $scope.loadLinks();
+          $scope.loading = false;
+        })
+      };
+
       $scope.loadLinks();
     }]);
 
