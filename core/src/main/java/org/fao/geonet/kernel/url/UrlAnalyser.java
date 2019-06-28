@@ -2,6 +2,7 @@ package org.fao.geonet.kernel.url;
 
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Link;
+import org.fao.geonet.domain.LinkStatus;
 import org.fao.geonet.domain.MetadataLink;
 import org.fao.geonet.domain.MetadataLinkId_;
 import org.fao.geonet.domain.MetadataLink_;
@@ -35,10 +36,13 @@ public class UrlAnalyser {
     @PersistenceContext
     protected EntityManager entityManager;
 
+    protected UrlChecker urlChecker;
+
     private SimpleJpaRepository metadataLinkRepository;
 
     public void init() {
         metadataLinkRepository = new SimpleJpaRepository<MetadataLink, Integer>(MetadataLink.class, entityManager);
+        urlChecker= new UrlChecker();
     }
 
     public void processMetadata(Element element, AbstractMetadata md) throws org.jdom.JDOMException {
@@ -80,7 +84,13 @@ public class UrlAnalyser {
                 .filter(metadatalink -> isReferencingAnUnknownMetadata((MetadataLink)metadatalink))
                 .forEach(entityManager::remove);
     }
-    
+
+    public void testLink(Link link) {
+        LinkStatus linkStatus = urlChecker.getUrlStatus(link.getUrl());
+        linkStatus.setLinkId(link.getId());
+        entityManager.persist(linkStatus);
+    }
+
     private Specification<MetadataLink> metadatalinksTargetting(Link link) {
         return new Specification<MetadataLink>() {
             @Override
@@ -102,4 +112,5 @@ public class UrlAnalyser {
     private boolean isReferencingAnUnknownMetadata(MetadataLink metadatalink) {
         return isNull(metadataRepository.findOne(metadatalink.getId().getMetadataId()));
     }
+
 }
