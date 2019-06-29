@@ -8,6 +8,7 @@ import org.fao.geonet.domain.LinkStatus;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataLink;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.repository.LinkRepository;
@@ -38,6 +39,7 @@ import java.util.stream.Stream;
 import static org.fao.geonet.kernel.UpdateDatestamp.NO;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 
@@ -84,7 +86,9 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         assertTrue(urlFromDb.contains("ftp://mon-site.mondomaine/mon-repertoire"));
         assertTrue(urlFromDb.contains("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail_s.gif"));
         assertTrue(urlFromDb.contains("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail.gif"));
-        assertEquals(4, urlFromDb.size());
+        assertTrue(urlFromDb.contains("http://www.fao.org/ag/AGL/aglw/aquastat/watresafrica/index.stm"));
+        assertTrue(urlFromDb.contains("http://data.fao.org/maps/wms"));
+        assertEquals(6, urlFromDb.size());
         SimpleJpaRepository metadataLinkRepository = new SimpleJpaRepository<MetadataLink, Integer>(MetadataLink.class, entityManager);
         List<MetadataLink> metadataLinkList = metadataLinkRepository.findAll();
         assertEquals(
@@ -107,7 +111,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         toTest.processMetadata(mdAsXml, mdTwo);
 
         Set<String> urlFromDb = linkRepository.findAll().stream().map(Link::getUrl).collect(Collectors.toSet());
-        assertEquals(4, urlFromDb.size());
+        assertEquals(6, urlFromDb.size());
         SimpleJpaRepository metadataLinkRepository = new SimpleJpaRepository<MetadataLink, Integer>(MetadataLink.class, entityManager);
         List<MetadataLink> metadataLinkList = metadataLinkRepository.findAll();
         assertEquals(
@@ -116,7 +120,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         assertEquals(
                 metadataLinkList.stream().map(x -> x.getId().getMetadataId()).collect(Collectors.toSet()),
                 Stream.of(mdOne.getId(), mdTwo.getId()).collect(Collectors.toSet()));
-        assertEquals(8, metadataLinkList.size());
+        assertEquals(12, metadataLinkList.size());
     }
 
     @Test
@@ -134,7 +138,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         toTest.processMetadata(mdAsXml, md);
         SimpleJpaRepository metadataLinkRepository = new SimpleJpaRepository<MetadataLink, Integer>(MetadataLink.class, entityManager);
         List<MetadataLink> metadataLinkList = metadataLinkRepository.findAll();
-        assertEquals(4, metadataLinkList.size());
+        assertEquals(6, metadataLinkList.size());
         dataManager.deleteMetadata(context, md.getId() + "");
 
         linkRepository.findAll().stream().forEach(toTest::purgeMetataLink);
@@ -142,7 +146,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         metadataLinkList = metadataLinkRepository.findAll();
         assertEquals(0, metadataLinkList.size());
         Set<String> urlFromDb = linkRepository.findAll().stream().map(Link::getUrl).collect(Collectors.toSet());
-        assertEquals(4, urlFromDb.size());
+        assertEquals(6, urlFromDb.size());
     }
 
     @Test
@@ -155,15 +159,15 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         toTest.processMetadata(mdAsXml, md);
         SimpleJpaRepository metadataLinkRepository = new SimpleJpaRepository<MetadataLink, Integer>(MetadataLink.class, entityManager);
         List<MetadataLink> metadataLinkList = metadataLinkRepository.findAll();
-        assertEquals(4, metadataLinkList.size());
+        assertEquals(6, metadataLinkList.size());
         Xml.selectElement(mdAsXml, ".//gmd:abstract/gco:CharacterString").setText("http://temporary_ressource_when_network_switch.org");
 
         toTest.processMetadata(mdAsXml, md);
 
         metadataLinkList = metadataLinkRepository.findAll();
-        assertEquals(3, metadataLinkList.size());
+        assertEquals(5, metadataLinkList.size());
         Set<String> urlFromDb = linkRepository.findAll().stream().map(Link::getUrl).collect(Collectors.toSet());
-        assertEquals(5, urlFromDb.size());
+        assertEquals(7, urlFromDb.size());
     }
 
     @Test
@@ -177,6 +181,8 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         Mockito.when(mockUrlChecker.getUrlStatus(eq("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail.gif"))).thenReturn(new LinkStatus().setStatusValue("200").setStatusInfo("OK").setFailing(false));
         Mockito.when(mockUrlChecker.getUrlStatus(eq("ftp://mon-site.mondomaine/mon-repertoire"))).thenReturn(new LinkStatus().setStatusValue("406").setStatusInfo("Le serveur HTCPCP ne peut pas infuser du café pour différentes raisons, la réponse devrait indiquer une liste de types de café possibles.").setFailing(true));
         Mockito.when(mockUrlChecker.getUrlStatus(eq("HTTPS://acme.de/"))).thenReturn(new LinkStatus().setStatusValue("418").setStatusInfo("I am teapot").setFailing(true));
+        Mockito.when(mockUrlChecker.getUrlStatus(contains("aquastat"))).thenReturn(new LinkStatus().setStatusValue("418").setStatusInfo("I am teapot").setFailing(true));
+        Mockito.when(mockUrlChecker.getUrlStatus(contains("data.fao"))).thenReturn(new LinkStatus().setStatusValue("418").setStatusInfo("I am teapot").setFailing(true));
         toTest.processMetadata(mdAsXml, md);
         SimpleJpaRepository statusRepository = new SimpleJpaRepository<LinkStatus, Integer>(LinkStatus.class, entityManager);
         assertEquals(0, statusRepository.findAll().size());
@@ -184,7 +190,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         linkRepository.findAll().stream().forEach(toTest::testLink);
 
         List<LinkStatus> allStatus = statusRepository.findAll();
-        assertEquals(4, allStatus.size());
+        assertEquals(6, allStatus.size());
         assertEquals(Stream.of("200", "406", "418").collect(Collectors.toSet()),
                 allStatus.stream().map(LinkStatus::getStatusValue).collect(Collectors.toSet()));
 
@@ -193,15 +199,16 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         Mockito.when(mockUrlChecker.getUrlStatus(eq("http://apps.titellus.net/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/attachments/thumbnail.gif"))).thenReturn(new LinkStatus().setStatusValue("200").setStatusInfo("OK").setFailing(false));
         Mockito.when(mockUrlChecker.getUrlStatus(eq("ftp://mon-site.mondomaine/mon-repertoire"))).thenReturn(new LinkStatus().setStatusValue("200").setStatusInfo("OK").setFailing(true));
         Mockito.when(mockUrlChecker.getUrlStatus(eq("HTTPS://acme.de/"))).thenReturn(new LinkStatus().setStatusValue("200").setStatusInfo("OK").setFailing(true));
-
+        Mockito.when(mockUrlChecker.getUrlStatus(contains("aquastat"))).thenReturn(new LinkStatus().setStatusValue("418").setStatusInfo("I am teapot").setFailing(true));
+        Mockito.when(mockUrlChecker.getUrlStatus(contains("data.fao"))).thenReturn(new LinkStatus().setStatusValue("418").setStatusInfo("I am teapot").setFailing(true));
         linkRepository.findAll().stream().forEach(toTest::testLink);
 
         allStatus = statusRepository.findAll();
-        assertEquals(8, allStatus.size());
+        assertEquals(12, allStatus.size());
         Map<String, Long> grouped = allStatus.stream().map(LinkStatus::getStatusValue).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         assertEquals(6L, grouped.get("200").longValue());
         assertEquals(1L,grouped.get("406").longValue());
-        assertEquals(1L, grouped.get("418").longValue());
+        assertEquals(5L, grouped.get("418").longValue());
     }
 
     private UrlAnalyzer createToTest() {
@@ -210,6 +217,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         toTest.metadataRepository = metadataRepository;
         toTest.entityManager = entityManager;
         toTest.init();
+        toTest.linkRepository = linkRepository;
         return toTest;
     }
 
