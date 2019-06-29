@@ -25,6 +25,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import java.util.Collections;
+
 import static java.util.Objects.isNull;
 
 public class UrlAnalyzer {
@@ -41,7 +43,7 @@ public class UrlAnalyzer {
     protected UrlChecker urlChecker;
 
     @Autowired
-    LinkRepository linkRepository;
+    protected LinkRepository linkRepository;
 
     private SimpleJpaRepository metadataLinkRepository;
 
