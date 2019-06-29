@@ -12,6 +12,8 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.repository.LinkRepository;
+import org.fao.geonet.repository.LinkStatusRepository;
+import org.fao.geonet.repository.MetadataLinkRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Xml;
@@ -62,6 +64,12 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
 
     @Autowired
     private LinkRepository linkRepository;
+
+    @Autowired
+    protected LinkStatusRepository linkStatusRepository;
+
+    @Autowired
+    protected MetadataLinkRepository metadataLinkRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -215,9 +223,11 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         UrlAnalyzer toTest = new UrlAnalyzer();
         toTest.schemaManager = schemaManager;
         toTest.metadataRepository = metadataRepository;
+        toTest.linkRepository = linkRepository;
+        toTest.linkStatusRepository = linkStatusRepository;
+        toTest.metadataLinkRepository = metadataLinkRepository;
         toTest.entityManager = entityManager;
         toTest.init();
-        toTest.linkRepository = linkRepository;
         return toTest;
     }
 
