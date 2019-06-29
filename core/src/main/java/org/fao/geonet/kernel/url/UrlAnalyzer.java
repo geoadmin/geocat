@@ -12,6 +12,8 @@ import org.fao.geonet.kernel.schema.LinkAwareSchemaPlugin;
 import org.fao.geonet.kernel.schema.LinkPatternStreamer.ILinkBuilder;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.repository.LinkRepository;
+import org.fao.geonet.repository.LinkStatusRepository;
+import org.fao.geonet.repository.MetadataLinkRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import javax.persistence.criteria.Root;
 import java.util.Collections;
 
 import static java.util.Objects.isNull;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 public class UrlAnalyzer {
 
@@ -45,10 +48,13 @@ public class UrlAnalyzer {
     @Autowired
     protected LinkRepository linkRepository;
 
-    private SimpleJpaRepository metadataLinkRepository;
+    @Autowired
+    protected LinkStatusRepository linkStatusRepository;
+
+    @Autowired
+    protected MetadataLinkRepository metadataLinkRepository;
 
     public void init() {
-        metadataLinkRepository = new SimpleJpaRepository<MetadataLink, Integer>(MetadataLink.class, entityManager);
         urlChecker= new UrlChecker();
     }
 
@@ -59,7 +65,8 @@ public class UrlAnalyzer {
             metadataLinkRepository
                     .findAll(metadatalinksTargetting(md))
                     .stream()
-                    .forEach(entityManager::remove);
+                    .forEach(metadataLinkRepository::delete);
+            metadataLinkRepository.flush();
 
             ((LinkAwareSchemaPlugin) schemaPlugin).createLinkStreamer(new ILinkBuilder<Link, AbstractMetadata>() {
                 @Override
@@ -76,14 +83,13 @@ public class UrlAnalyzer {
                 public void persist(Link link, AbstractMetadata metadata) {
                     final Link existingLink = linkRepository.findOneByUrl(link.getUrl());
                     if (existingLink == null) {
-                        entityManager.persist(link);
+                        linkRepository.save(link);
                     }
                     MetadataLink metadataLink = new MetadataLink();
                     metadataLink.setId(metadataRepository.findOne(metadata.getId()),
                         existingLink == null ? link : existingLink
                     );
-                    entityManager.persist(metadataLink);
-                    entityManager.flush();
+                    metadataLinkRepository.save(metadataLink);
                 }
             }).processAllRawText(element, md);
         }
@@ -95,13 +101,13 @@ public class UrlAnalyzer {
                 .findAll(metadatalinksTargetting(link))
                 .stream()
                 .filter(metadatalink -> isReferencingAnUnknownMetadata((MetadataLink)metadatalink))
-                .forEach(entityManager::remove);
+                .forEach(metadataLinkRepository::delete);
     }
 
     public void testLink(Link link) {
         LinkStatus linkStatus = urlChecker.getUrlStatus(link.getUrl());
         linkStatus.setLinkId(link.getId());
-        entityManager.persist(linkStatus);
+        linkStatusRepository.save(linkStatus);
     }
 
     private Specification<MetadataLink> metadatalinksTargetting(Link link) {
