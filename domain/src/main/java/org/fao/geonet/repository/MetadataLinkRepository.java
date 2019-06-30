@@ -23,11 +23,12 @@
 
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.Link;
 import org.fao.geonet.domain.MetadataLink;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
  * Data Access object for the {@link MetadataLink} entities.
  */
-public interface MetadataLinkRepository extends GeonetRepository<MetadataLink, Integer>, MetadataLinkRepositoryCustom, JpaSpecificationExecutor<Link> { }
+public interface MetadataLinkRepository extends GeonetRepository<MetadataLink, Integer>, MetadataLinkRepositoryCustom, JpaSpecificationExecutor<MetadataLink> {
+
+}
