@@ -52,35 +52,43 @@
   <div data-ng-if="!loading && !error && links.length > 0">
     <table class="table table-bordered">
       <thead>
-        <tr>
-          <th data-translate=""></th>
-          <th data-translate="">url</th>
-          <th data-translate="">lastCheck</th>
-          <th data-translate="">associatedRecords</th>
-        </tr>
+      <tr>
+        <th data-translate=""></th>
+        <th data-translate="">url</th>
+        <th data-translate="">lastCheck</th>
+        <th data-translate="">associatedRecords</th>
+      </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="l in links">
-          <td>
-            <i class="fa fa-fw fa-2x"
-               data-ng-class="{'fa-question text-muted': l.linkStatus.length === 0,
+      <tr ng-repeat="l in links">
+        <td>
+          <i class="fa fa-fw fa-2x"
+             data-ng-class="{'fa-question text-muted': l.linkStatus.length === 0,
                                  'fa-exclamation-triangle text-danger': l.linkStatus[0] && l.linkStatus[0].failing,
                                  'fa-check text-success': l.linkStatus[0] && !l.linkStatus[0].failing}">&nbsp;</i>
-          </td>
-          <td>
-            <a data-ng-href="l.url">{{l.url}}</a>
-          </td>
-          <td data-gn-humanize-time="{{l.linkStatus[0].checkDate.dateAndTime}}">
-            {{l.linkStatus[0].checkDate.dateAndTime}}
-          </td>
-          <td>
-            <ul>
-              <li data-ng-repeat="r in l.records">
+        </td>
+        <td>
+          <a data-ng-href="l.url">{{l.url}}</a>
+        </td>
+        <td data-gn-humanize-time="{{l.linkStatus[0].checkDate.dateAndTime}}">
+          {{l.linkStatus[0].checkDate.dateAndTime}}
+        </td>
+        <td>
+          <ul>
+            <li data-ng-repeat="r in l.records">
+              <a data-ng-href="catalog.search#/metadata/{{r.id.metadataId}}">
                 {{r.id.metadataId}}
-              </li>
-            </ul>
-          </td>
-        </tr>
+              </a>
+              <!-- TODO: Title -->
+            </li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="4">
+          <a data-ng-click="more()" data-translate="">moreLinks</a>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>

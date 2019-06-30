@@ -36,16 +36,24 @@
     function($scope, $routeParams, $http, $rootScope, $translate) {
       $scope.links = [];
       $scope.loading = true;
+      $scope.from = 0;
+      $scope.size = 25;
+      $scope.sizeDefault = $scope.size;
 
-      $scope.loadLinks = function() {
+      $scope.loadLinks = function(more) {
+        $scope.size = more ? $scope.size + $scope.sizeDefault : $scope.sizeDefault;
+
         $scope.loading = true;
-        $http.get('../api/records/links').then(function(r) {
+        $http.get('../api/records/links?from=' + $scope.from + '&size=' + $scope.size).then(function(r) {
           $scope.links = r.data;
           $scope.loading = false;
         }, function(r) {
           $scope.error = r.data;
           $scope.loading = false;
         })
+      };
+      $scope.more = function() {
+        $scope.loadLinks(true);
       };
 
       $scope.analyzeLinks = function() {

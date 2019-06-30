@@ -117,11 +117,11 @@ public class LinksApi {
         @ApiParam(value = "From page",
             required = false)
         @RequestParam(required = false, defaultValue = "0")
-            Integer offset,
+            Integer from,
         @ApiParam(value = "Number of records to return",
             required = false)
-        @RequestParam(required = false, defaultValue = "10")
-            Integer limit,
+        @RequestParam(required = false, defaultValue = "25")
+            Integer size,
         @ApiIgnore
             HttpSession httpSession
     ) {
@@ -130,8 +130,8 @@ public class LinksApi {
         Sort sortBy = SortUtils.createSort(Sort.Direction.ASC,
             Link_.url);
 
-        int page = (offset / limit);
-        final PageRequest pageRequest = new PageRequest(page, limit, sortBy);
+        int page = (from / size);
+        final PageRequest pageRequest = new PageRequest(page, size, sortBy);
 
         // TODO: Add filter by URL, UUID, status, failing
         final Page<Link> all = linkRepository.findAll(pageRequest);
