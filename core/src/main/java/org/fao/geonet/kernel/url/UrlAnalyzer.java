@@ -92,6 +92,7 @@ public class UrlAnalyzer {
                     metadataLinkRepository.save(metadataLink);
                 }
             }).processAllRawText(element, md);
+            entityManager.flush();
         }
     }
 

@@ -180,6 +180,7 @@ public class LinksApi {
     ) throws IOException, JDOMException {
         if (removeFirst) {
             linkRepository.deleteAll();
+            linkRepository.flush();
         }
 
         UserSession session = ApiUtils.getUserSession(httpSession);
