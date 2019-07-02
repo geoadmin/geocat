@@ -219,11 +219,7 @@ public class LinksApi {
         }
 
         if (analyze) {
-            linkRepository.findAll().stream().forEach(l -> {
-                final LinkStatus urlStatus = urlChecker.getUrlStatus(l.getUrl());
-                urlStatus.setLinkId(l.getId());
-                linkStatusRepository.save(urlStatus);
-            });
+            linkRepository.findAll().stream().forEach(urlAnalyser::testLink);
         }
         return new ResponseEntity(HttpStatus.CREATED);
     }
@@ -240,10 +236,7 @@ public class LinksApi {
     @PreAuthorize("hasRole('Administrator')")
     @ResponseBody
     public ResponseEntity purgeAll() throws IOException, JDOMException {
-        metadataLinkRepository.deleteAll();
-        metadataLinkRepository.flush();
-        linkRepository.deleteAll();
-        linkRepository.flush();
+        urlAnalyser.deleteAll();
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

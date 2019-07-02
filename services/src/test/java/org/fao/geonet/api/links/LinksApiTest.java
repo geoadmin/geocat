@@ -45,6 +45,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -99,31 +101,6 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         createTestData();
     }
 
-    private void createTestData() throws Exception {
-        loginAsAdmin(context);
-
-        final Element sampleMetadataXml = getSampleMetadataXml();
-        this.uuid = UUID.randomUUID().toString();
-        Xml.selectElement(sampleMetadataXml, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).setText(this.uuid);
-
-        String source = sourceRepository.findAll().get(0).getUuid();
-        String schema = schemaManager.autodetectSchema(sampleMetadataXml);
-        final Metadata metadata = new Metadata();
-        metadata.setDataAndFixCR(sampleMetadataXml).setUuid(uuid);
-        metadata.getDataInfo().setRoot(sampleMetadataXml.getQualifiedName()).setSchemaId(schema).setType(MetadataType.METADATA);
-        metadata.getDataInfo().setPopularity(1000);
-        metadata.getSourceInfo().setOwner(1).setSourceId(source);
-        metadata.getHarvestInfo().setHarvested(false);
-
-
-        this.id = dataManager.insertMetadata(context, metadata, sampleMetadataXml, false, false, false, UpdateDatestamp.NO,
-            false, false).getId();
-
-
-        dataManager.indexMetadata(Lists.newArrayList("" + this.id));
-        this.md = metadataRepository.findOne(this.id);
-    }
-
     @Test
     public void getLinks() throws Exception {
         Long operationsCount = linkRepository.count();
@@ -146,7 +123,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$[0].url").value(equalTo("http://services.sandre.eaufrance.fr/geo/ouvrage")))
             // FIXME: Should return one metadata related to that URL.
             .andExpect(jsonPath("$[0].records", hasSize(1)))
-            .andExpect(jsonPath("$[0].records[0].id.metadataId").value(equalTo(this.id)));
+            .andExpect(jsonPath("$[0].records[0].metadataId").value(equalTo(this.id)));
 
         this.mockMvc.perform(delete("/api/records/links")
             .session(httpSession)
@@ -155,4 +132,30 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
 
         Assert.assertEquals(0, linkRepository.count());
     }
+
+    private void createTestData() throws Exception {
+        loginAsAdmin(context);
+
+        final Element sampleMetadataXml = getSampleMetadataXml();
+        this.uuid = UUID.randomUUID().toString();
+        Xml.selectElement(sampleMetadataXml, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).setText(this.uuid);
+
+        String source = sourceRepository.findAll().get(0).getUuid();
+        String schema = schemaManager.autodetectSchema(sampleMetadataXml);
+        final Metadata metadata = new Metadata();
+        metadata.setDataAndFixCR(sampleMetadataXml).setUuid(uuid);
+        metadata.getDataInfo().setRoot(sampleMetadataXml.getQualifiedName()).setSchemaId(schema).setType(MetadataType.METADATA);
+        metadata.getDataInfo().setPopularity(1000);
+        metadata.getSourceInfo().setOwner(1).setSourceId(source);
+        metadata.getHarvestInfo().setHarvested(false);
+
+
+        this.id = dataManager.insertMetadata(context, metadata, sampleMetadataXml, false, false, false, UpdateDatestamp.NO,
+                false, false).getId();
+
+
+        dataManager.indexMetadata(Lists.newArrayList("" + this.id));
+        this.md = metadataRepository.findOne(this.id);
+    }
+
 }

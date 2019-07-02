@@ -3,8 +3,8 @@ package org.fao.geonet.kernel.url;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Link;
 import org.fao.geonet.domain.LinkStatus;
+import org.fao.geonet.domain.Link_;
 import org.fao.geonet.domain.MetadataLink;
-import org.fao.geonet.domain.MetadataLinkId_;
 import org.fao.geonet.domain.MetadataLink_;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.LinkAwareSchemaPlugin;
@@ -60,43 +60,48 @@ public class UrlAnalyzer {
             metadataLinkRepository
                     .findAll(metadatalinksTargetting(md))
                     .stream()
-                    .forEach(metadataLinkRepository::delete);
-            metadataLinkRepository.flush();
+                    .forEach(mdl -> {mdl.getLink().getRecords().remove(mdl); entityManager.persist(mdl);});
 
             ((LinkAwareSchemaPlugin) schemaPlugin).createLinkStreamer(new ILinkBuilder<Link, AbstractMetadata>() {
-                @Override
-                public Link build() {
-                    return new Link();
-                }
 
                 @Override
-                public void setUrl(Link link, String url) {
-                    link.setUrl(url);
+                public Link found(String url) {
+                    Link link = linkRepository.findOneByUrl(url);
+                    if (link != null) {
+                        return link;
+                    } else {
+                        link = new Link();
+                        link.setUrl(url);
+                        linkRepository.save(link);
+                        return link;
+                    }
                 }
 
                 @Override
                 public void persist(Link link, AbstractMetadata metadata) {
-                    final Link existingLink = linkRepository.findOneByUrl(link.getUrl());
-                    if (existingLink == null) {
-                        linkRepository.save(link);
-                    }
                     MetadataLink metadataLink = new MetadataLink();
-                    metadataLink.setId(metadataRepository.findOne(metadata.getId()),
-                        existingLink == null ? link : existingLink
-                    );
-                    metadataLinkRepository.save(metadataLink);
+                    metadataLink.setMetadataId(new Integer(metadata.getId()));
+                    metadataLink.setLink(link);
+                    link.getRecords().add(metadataLink);
+                    linkRepository.save(link);
                 }
             }).processAllRawText(element, md);
+            entityManager.flush();
         }
     }
 
     public void purgeMetataLink(Link link) {
-        entityManager.detach(link);
         metadataLinkRepository
                 .findAll(metadatalinksTargetting(link))
                 .stream()
                 .filter(metadatalink -> isReferencingAnUnknownMetadata((MetadataLink)metadatalink))
                 .forEach(metadataLinkRepository::delete);
+        entityManager.flush();
+    }
+
+    public void deleteAll() {
+        linkRepository.deleteAll();
+        entityManager.flush();
     }
 
     public void testLink(Link link) {
@@ -109,7 +114,7 @@ public class UrlAnalyzer {
         return new Specification<MetadataLink>() {
             @Override
             public Predicate toPredicate(Root<MetadataLink> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.equal(root.get(MetadataLink_.id).get(MetadataLinkId_.linkId), link.getId());
+                return criteriaBuilder.equal(root.get(MetadataLink_.link).get(Link_.id), link.getId());
             }
         };
     }
@@ -118,19 +123,14 @@ public class UrlAnalyzer {
         return new Specification<MetadataLink>() {
             @Override
             public Predicate toPredicate(Root<MetadataLink> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.equal(root.get(MetadataLink_.id).get(MetadataLinkId_.metadataId), md.getId());
+                return criteriaBuilder.equal(root.get(MetadataLink_.metadataId), md.getId());
             }
         };
     }
 
     private boolean isReferencingAnUnknownMetadata(MetadataLink metadatalink) {
-        return isNull(metadataRepository.findOne(metadatalink.getId().getMetadataId()));
+        return isNull(metadataRepository.findOne(metadatalink.getMetadataId()));
     }
 
-    public void deleteAll() {
-        metadataLinkRepository.deleteAll();
-        entityManager.flush();
-        linkRepository.deleteAll();
-        entityManager.flush();
-    }
+
 }

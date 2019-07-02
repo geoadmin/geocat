@@ -35,14 +35,11 @@ public class ExtractLinksTest extends XslProcessTest {
         String ref = "metadata_reference";
         Map<String, String> persisted = new HashMap();
         RawLinkPatternStreamer<TestLink, String> toTest = new RawLinkPatternStreamer(new ILinkBuilder<TestLink, String>() {
-            @Override
-            public TestLink build() {
-                return new TestLink();
-            }
 
             @Override
-            public void setUrl(TestLink link, String url) {
-                link.setUrl(url);
+            public TestLink found(String url) {
+                TestLink link = new TestLink();
+                return link.setUrl(url);
             }
 
             @Override

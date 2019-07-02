@@ -8,7 +8,6 @@ import org.fao.geonet.domain.LinkStatus;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataLink;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.repository.LinkRepository;
@@ -45,7 +44,7 @@ import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 
-public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
+public class UrlAnalyzerTest extends AbstractCoreIntegrationTest {
 
 
     private static final int TEST_OWNER = 42;
@@ -100,10 +99,10 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         SimpleJpaRepository metadataLinkRepository = new SimpleJpaRepository<MetadataLink, Integer>(MetadataLink.class, entityManager);
         List<MetadataLink> metadataLinkList = metadataLinkRepository.findAll();
         assertEquals(
-                metadataLinkList.stream().map(x -> x.getId().getLinkId()).collect(Collectors.toSet()),
+                metadataLinkList.stream().map(x -> x.getLink().getId()).collect(Collectors.toSet()),
                 linkRepository.findAll().stream().map(Link::getId).collect(Collectors.toSet()));
         assertEquals(
-                metadataLinkList.stream().map(x -> x.getId().getMetadataId()).collect(Collectors.toSet()),
+                metadataLinkList.stream().map(x -> x.getMetadataId()).collect(Collectors.toSet()),
                 Collections.singleton(md.getId()));
     }
 
@@ -123,12 +122,29 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
         SimpleJpaRepository metadataLinkRepository = new SimpleJpaRepository<MetadataLink, Integer>(MetadataLink.class, entityManager);
         List<MetadataLink> metadataLinkList = metadataLinkRepository.findAll();
         assertEquals(
-                metadataLinkList.stream().map(x -> x.getId().getLinkId()).collect(Collectors.toSet()),
+                metadataLinkList.stream().map(x -> x.getLink().getId()).collect(Collectors.toSet()),
                 linkRepository.findAll().stream().map(Link::getId).collect(Collectors.toSet()));
         assertEquals(
-                metadataLinkList.stream().map(x -> x.getId().getMetadataId()).collect(Collectors.toSet()),
+                metadataLinkList.stream().map(x -> x.getMetadataId()).collect(Collectors.toSet()),
                 Stream.of(mdOne.getId(), mdTwo.getId()).collect(Collectors.toSet()));
         assertEquals(12, metadataLinkList.size());
+    }
+
+    @Test
+    public void doNotInsertSameLinkOrUrlTwice() throws Exception {
+        Element mdAsXml = getMdAsXml();
+        AbstractMetadata md = insertMetadataInDb(mdAsXml);
+        Xml.selectElement(mdAsXml, ".//gmd:abstract/gco:CharacterString")
+                .setText("http://temporary_ressource_when_network_switch.org je répète http://temporary_ressource_when_network_switch.org");
+        UrlAnalyzer toTest = createToTest();
+
+        toTest.processMetadata(mdAsXml, md);
+
+        List<Link> urlFromDb = linkRepository.findAll();
+        assertEquals(5, urlFromDb.size());
+        List<MetadataLink> metadataLinkList = metadataLinkRepository.findAll();
+        assertEquals(5, metadataLinkList.size());
+
     }
 
     @Test
@@ -263,7 +279,7 @@ public class UrlAnalyserTest extends AbstractCoreIntegrationTest {
     }
 
     private Element getMdAsXml() throws IOException, JDOMException {
-        URL mdResourceUrl = UrlAnalyserTest.class.getResource("input_with_url.xml");
+        URL mdResourceUrl = UrlAnalyzerTest.class.getResource("input_with_url.xml");
         return Xml.loadStream(mdResourceUrl.openStream());
     }
 }

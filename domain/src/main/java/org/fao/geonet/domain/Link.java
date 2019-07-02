@@ -40,7 +40,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -48,7 +47,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * An entity representing link. A link can be a URL in a metadata record.
@@ -66,6 +67,7 @@ public class Link implements Serializable {
     private String _url;
     private String _protocol;
     private LinkType _linkType = LinkType.HTTP;
+    private Set<MetadataLink> records = new HashSet<>();
 
     /**
      * Get the id of the link.
@@ -142,23 +144,18 @@ public class Link implements Serializable {
     }
 
 
-    private List<MetadataLink> records = new ArrayList<>();
 
-    /**
-     * Get all status information for a link
-     *
-     * @return
-     */
-    @OneToMany(cascade = CascadeType.ALL,
-        fetch = FetchType.EAGER,
-//        mappedBy = "id.linkId",
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+        mappedBy = "link",
         orphanRemoval = true)
-    @JoinColumn(name="linkId")
-    public List<MetadataLink> getRecords() {
+    public Set<MetadataLink> getRecords() {
         return records;
     }
 
-    public Link setRecords(List<MetadataLink> records) {
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+            mappedBy = "link",
+            orphanRemoval = true)
+    public Link setRecords(Set<MetadataLink> records) {
         this.records = records;
         return this;
     }

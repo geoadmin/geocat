@@ -34,15 +34,12 @@ public class RawLinkPatternStreamer <L, M> {
 
     public void processAllRawText(Element metadata, M ref) throws JDOMException {
         List<Element> encounteredLinks = (List<Element>) Xml.selectNodes(metadata, rawTextXPath, namespaces);
-
         encounteredLinks.stream().forEach(rawTextElem -> processOneRawText(rawTextElem, ref));
-
     }
 
     private void processOneRawText(Element rawTextElem, M ref) {
         for (Matcher m = this.pattern.matcher(rawTextElem.getValue()); m.find(); ) {
-            L link = linkBuilder.build();
-            linkBuilder.setUrl(link, m.toMatchResult().group());
+            L link = linkBuilder.found(m.toMatchResult().group());
             linkBuilder.persist(link, ref);
         }
     }
