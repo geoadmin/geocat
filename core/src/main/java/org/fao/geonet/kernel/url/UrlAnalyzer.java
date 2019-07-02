@@ -3,7 +3,6 @@ package org.fao.geonet.kernel.url;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Link;
 import org.fao.geonet.domain.LinkStatus;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataLink;
 import org.fao.geonet.domain.MetadataLinkId_;
 import org.fao.geonet.domain.MetadataLink_;
@@ -18,7 +17,6 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,10 +25,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import java.util.Collections;
-
 import static java.util.Objects.isNull;
-import static org.springframework.data.jpa.domain.Specifications.where;
 
 public class UrlAnalyzer {
 
@@ -92,7 +87,6 @@ public class UrlAnalyzer {
                     metadataLinkRepository.save(metadataLink);
                 }
             }).processAllRawText(element, md);
-            entityManager.flush();
         }
     }
 
@@ -131,5 +125,12 @@ public class UrlAnalyzer {
 
     private boolean isReferencingAnUnknownMetadata(MetadataLink metadatalink) {
         return isNull(metadataRepository.findOne(metadatalink.getId().getMetadataId()));
+    }
+
+    public void deleteAll() {
+        metadataLinkRepository.deleteAll();
+        entityManager.flush();
+        linkRepository.deleteAll();
+        entityManager.flush();
     }
 }

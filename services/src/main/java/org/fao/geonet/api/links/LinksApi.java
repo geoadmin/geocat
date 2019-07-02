@@ -62,6 +62,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -179,8 +181,7 @@ public class LinksApi {
             HttpServletRequest request
     ) throws IOException, JDOMException {
         if (removeFirst) {
-            linkRepository.deleteAll();
-            linkRepository.flush();
+            urlAnalyser.deleteAll();
         }
 
         UserSession session = ApiUtils.getUserSession(httpSession);
@@ -214,7 +215,6 @@ public class LinksApi {
 
         for (int i : ids) {
             final Metadata metadata = metadataRepository.findOne(i);
-            urlAnalyser.init();
             urlAnalyser.processMetadata(metadata.getXmlData(false), metadata);
         }
 
