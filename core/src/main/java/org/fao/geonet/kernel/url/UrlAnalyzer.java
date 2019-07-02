@@ -38,6 +38,7 @@ public class UrlAnalyzer {
     @PersistenceContext
     protected EntityManager entityManager;
 
+    @Autowired
     protected UrlChecker urlChecker;
 
     @Autowired
@@ -48,10 +49,6 @@ public class UrlAnalyzer {
 
     @Autowired
     protected MetadataLinkRepository metadataLinkRepository;
-
-    public void init() {
-        urlChecker= new UrlChecker();
-    }
 
     public void processMetadata(Element element, AbstractMetadata md) throws org.jdom.JDOMException {
         SchemaPlugin schemaPlugin = schemaManager.getSchema(md.getDataInfo().getSchemaId()).getSchemaPlugin();
