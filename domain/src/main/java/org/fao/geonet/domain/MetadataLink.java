@@ -56,6 +56,8 @@ public class MetadataLink extends GeonetEntity {
 
     private Integer metadataId;
 
+    private String metadataUuid;
+
     public MetadataLink() {
     }
 
@@ -78,6 +80,14 @@ public class MetadataLink extends GeonetEntity {
 
     public void setLink(Link link) {
         this.link = link;
+    }
+
+    public String getMetadataUuid() {
+        return metadataUuid;
+    }
+
+    public void setMetadataUuid(String metadataUuid) {
+        this.metadataUuid = metadataUuid;
     }
 
     @Override

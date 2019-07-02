@@ -81,6 +81,7 @@ public class UrlAnalyzer {
                 public void persist(Link link, AbstractMetadata metadata) {
                     MetadataLink metadataLink = new MetadataLink();
                     metadataLink.setMetadataId(new Integer(metadata.getId()));
+                    metadataLink.setMetadataUuid(metadata.getUuid());
                     metadataLink.setLink(link);
                     link.getRecords().add(metadataLink);
                     linkRepository.save(link);

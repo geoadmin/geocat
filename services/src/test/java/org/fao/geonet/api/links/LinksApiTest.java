@@ -123,7 +123,8 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$[0].url").value(equalTo("http://services.sandre.eaufrance.fr/geo/ouvrage")))
             // FIXME: Should return one metadata related to that URL.
             .andExpect(jsonPath("$[0].records", hasSize(1)))
-            .andExpect(jsonPath("$[0].records[0].metadataId").value(equalTo(this.id)));
+            .andExpect(jsonPath("$[0].records[0].metadataId").value(equalTo(this.id)))
+            .andExpect(jsonPath("$[0].records[0].metadataUuid").value(equalTo(md.getUuid())));;
 
         this.mockMvc.perform(delete("/api/records/links")
             .session(httpSession)
