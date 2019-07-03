@@ -151,7 +151,23 @@ public class UrlAnalyzerTest extends AbstractCoreIntegrationTest {
     }
 
     @Test
-    public void deleteMdCascade() throws Exception {
+    public void cascadeDontFordbidMetadalinkDeletion() throws Exception {
+        Element mdAsXml = getMdAsXml();
+        AbstractMetadata md = insertMetadataInDb(mdAsXml);
+        UrlAnalyzer toTest = createToTest();
+
+        toTest.processMetadata(mdAsXml, md);
+        toTest.processMetadata(mdAsXml, md);
+
+        List<Link> urlFromDb = linkRepository.findAll();
+        assertEquals(6, urlFromDb.size());
+        List<MetadataLink> metadataLinkList = metadataLinkRepository.findAll();
+        assertEquals(6, metadataLinkList.size());
+
+    }
+
+    @Test
+    public void deleteMetadaLinkWhenMdDisappeared() throws Exception {
         // user will have to purge himself orphan link (no metadatalink anymore) using ui:
         //      one can imagine that when network switches for example url have to be kept aside
         // orphan metadatalink (no metadata anymore) purge can be trigered when checking link:

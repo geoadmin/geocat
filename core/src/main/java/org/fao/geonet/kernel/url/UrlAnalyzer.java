@@ -57,8 +57,10 @@ public class UrlAnalyzer {
             metadataLinkRepository
                     .findAll(metadatalinksTargetting(md))
                     .stream()
-                    .forEach(mdl -> {mdl.getLink().getRecords().remove(mdl); entityManager.persist(mdl);});
-
+                    .forEach(metadatalink -> {
+                        metadatalink.getLink().getRecords().remove(metadatalink);
+                    });
+            entityManager.flush();
             ((LinkAwareSchemaPlugin) schemaPlugin).createLinkStreamer(new ILinkBuilder<Link, AbstractMetadata>() {
 
                 @Override
