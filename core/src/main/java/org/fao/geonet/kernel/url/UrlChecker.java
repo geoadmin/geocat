@@ -43,15 +43,17 @@ public class UrlChecker {
         }
 
         try (ClientHttpResponse response = getResponseFromServer(url)) {
-            if (response.getStatusCode().is3xxRedirection() && response.getHeaders().containsKey("Location")) {
+            org.springframework.http.HttpStatus statusCode = buildStatusCode(response);
+            if (statusCode.is3xxRedirection() && response.getHeaders().containsKey("Location")) {
                 // follow the redirects
                 return getUrlStatus(response.getHeaders().getFirst("Location"), tryNumber - 1);
             }
-            return buildStatus(response);
+            return buildStatus(response, !statusCode.is2xxSuccessful());
         } catch (IOException e) {
             return buildIOExceptionStatus(e);
         }
     }
+
 
     private ClientHttpResponse getResponseFromServer(String url) throws IOException {
         HttpHead head = new HttpHead(url);
@@ -85,11 +87,20 @@ public class UrlChecker {
         return linkStatus;
     }
 
-    private LinkStatus buildStatus(ClientHttpResponse response) throws IOException {
+    private LinkStatus buildStatus(ClientHttpResponse response, boolean failed) throws IOException {
         LinkStatus linkStatus = new LinkStatus();
         linkStatus.setStatusValue(response.getRawStatusCode() + "");
         linkStatus.setStatusInfo(response.getStatusText());
-        linkStatus.setFailing(!response.getStatusCode().is2xxSuccessful());
+        linkStatus.setFailing(failed);
         return linkStatus;
+    }
+
+
+    private org.springframework.http.HttpStatus buildStatusCode(ClientHttpResponse response) throws IOException {
+        try {
+            return response.getStatusCode();
+        } catch (Exception e) {
+            return org.springframework.http.HttpStatus.valueOf((response.getRawStatusCode() / 100) * 100);
+        }
     }
 }
