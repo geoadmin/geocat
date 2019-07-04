@@ -26,6 +26,8 @@ import com.google.common.collect.Sets;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
@@ -56,6 +58,8 @@ import org.fao.geonet.kernel.search.DuplicateDocFilter;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.url.UrlAnalyzer;
+import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -77,9 +81,16 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.springframework.transaction.TransactionStatus;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -125,6 +136,14 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
     protected IMetadataValidator metadataValidator;
     @Autowired
     protected IMetadataManager metadataManager;
+    @Autowired
+    private LinkRepository linkRepository;
+
+    @Autowired
+    protected UrlAnalyzer urlAnalyzer;
+
+    @PersistenceContext
+    protected EntityManager entityManager;
 
     private AtomicBoolean running = new AtomicBoolean(false);
 
@@ -312,10 +331,14 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
 
             indexMetadataWithNonEvaluatedOrIncoherentValidationStatus(serviceContext, dataManager);
 
+            checkUrl();
+
         } finally {
             running.set(false);
         }
     }
+
+
 
     protected void indexMetadataWithNonEvaluatedOrIncoherentValidationStatus(ServiceContext serviceContext, DataManager dataManager) throws Exception {
         LOGGER.info("Start indexing metadata with non evaluated or incoherent validation status.");
@@ -368,6 +391,8 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
         String failureRule = failureReport.one();
         String failureReasons = failureReport.two();
 
+        analyzeUrl(metadataRecord, md);
+
         if (failureRule.isEmpty() || !published) {
             return;
         }
@@ -396,6 +421,8 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
         unpublishedRecords.add(metadataRecord);
     }
 
+
+
     protected boolean isPublished(int id) throws SQLException {
         Specifications<OperationAllowed> idAndPublishedSpec =
                 where(isPublic(ReservedOperation.view)).
@@ -409,6 +436,30 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
             return false;
         }
         return true;
+    }
+
+    private void analyzeUrl(Metadata metadataRecord, Element md) throws org.jdom.JDOMException {
+        TransactionManager.runInTransaction("DataManager flush()", ApplicationContextHolder.get(),
+                TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED,
+                TransactionManager.CommitBehavior.ALWAYS_COMMIT, false, new TransactionTask<Object>() {
+                    @Override
+                    public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                        urlAnalyzer.processMetadata(md, metadataRecord);
+                        return null;
+                    }
+                });
+    }
+
+    private void checkUrl() {
+        TransactionManager.runInTransaction("DataManager flush()", ApplicationContextHolder.get(),
+                TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED,
+                TransactionManager.CommitBehavior.ALWAYS_COMMIT, false, new TransactionTask<Object>() {
+                    @Override
+                    public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                        linkRepository.findAll().stream().forEach(urlAnalyzer::testLink);
+                        return null;
+                    }
+                });
     }
 
     /**
