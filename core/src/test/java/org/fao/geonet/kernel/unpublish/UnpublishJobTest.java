@@ -2,16 +2,18 @@ package org.fao.geonet.kernel.unpublish;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
+import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.url.UrlAnalyzer;
+import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.geocat.PublishRecordRepository;
-
 import org.jdom.Element;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,6 +24,7 @@ import org.springframework.data.jpa.domain.Specifications;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
@@ -31,7 +34,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-public class UnpublishJobTest {
+public class UnpublishJobTest extends AbstractCoreIntegrationTest {
     private static final Pair<Element, String> REPORT_WITH_SUCCESS = Pair.read(new Element("test-validation-success"), "test-success");
     private static final Pair<Element, String> REPORT_WITH_FAILURE = Pair.read(new Element("test-validation-error"), "test-error");
 
@@ -44,6 +47,8 @@ public class UnpublishJobTest {
     private XmlSerializer mockXmlSerializer;
     private OperationAllowedRepository mockOperationAllowedRepository;
     private DataManager mockDataManager;
+    private LinkRepository mockLinkRepository;
+    private UrlAnalyzer mockUrlAnalyszer;
 
     @Test
     public void testOwnerNotifiedWhenMetadataUnpublished() throws Exception {
@@ -82,8 +87,11 @@ public class UnpublishJobTest {
         mockXmlSerializer = mock(XmlSerializer.class);
         mockOperationAllowedRepository = mock(OperationAllowedRepository.class);
         mockDataManager = mock(DataManager.class);
+        mockUrlAnalyszer = mock(UrlAnalyzer.class);
+        mockLinkRepository = mock(LinkRepository.class);
         when(mockServiceContext.getBean(MetadataRepository.class)).thenReturn(mockMetadataRepository);
         when(mockSettingManager.getValueAsInt("system/metadata/publish_tracking_duration", 100)).thenReturn(100);
+        when(mockLinkRepository.findAll()).thenReturn(Collections.emptyList());
     }
 
     private UnpublishInvalidMetadataJob createToTest() {
@@ -112,6 +120,9 @@ public class UnpublishJobTest {
         toTest.xmlSerializer = mockXmlSerializer;
         toTest.operationAllowedRepository = mockOperationAllowedRepository;
         toTest.dataManager = mockDataManager;
+        toTest.linkRepository = mockLinkRepository;
+        toTest.urlAnalyzer = mockUrlAnalyszer;
+        toTest.appContext = _applicationContext;
         return toTest;
     }
 

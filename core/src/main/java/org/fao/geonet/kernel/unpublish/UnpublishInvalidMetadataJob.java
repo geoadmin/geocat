@@ -77,6 +77,7 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -137,10 +138,11 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
     @Autowired
     protected IMetadataManager metadataManager;
     @Autowired
-    private LinkRepository linkRepository;
-
+    protected LinkRepository linkRepository;
     @Autowired
     protected UrlAnalyzer urlAnalyzer;
+    @Autowired
+    protected ApplicationContext appContext;
 
     @PersistenceContext
     protected EntityManager entityManager;
@@ -439,7 +441,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
     }
 
     private void analyzeUrl(Metadata metadataRecord, Element md) throws org.jdom.JDOMException {
-        TransactionManager.runInTransaction("DataManager flush()", ApplicationContextHolder.get(),
+        TransactionManager.runInTransaction("analyze url",appContext,
                 TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED,
                 TransactionManager.CommitBehavior.ALWAYS_COMMIT, false, new TransactionTask<Object>() {
                     @Override
@@ -451,7 +453,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
     }
 
     private void checkUrl() {
-        TransactionManager.runInTransaction("DataManager flush()", ApplicationContextHolder.get(),
+        TransactionManager.runInTransaction("check url", appContext,
                 TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED,
                 TransactionManager.CommitBehavior.ALWAYS_COMMIT, false, new TransactionTask<Object>() {
                     @Override
