@@ -573,7 +573,7 @@ public class ISO19139cheSchemaPlugin
     public <L, M> RawLinkPatternStreamer<L, M> createLinkStreamer(ILinkBuilder<L, M> linkbuilder) {
         RawLinkPatternStreamer patternStreamer = new RawLinkPatternStreamer(linkbuilder);
         patternStreamer.setNamespaces(ISO19139SchemaPlugin.allNamespaces.asList());
-        patternStreamer.setRawTextXPath(".//*[name() = 'gco:CharacterString' or name() = 'gmd:URL']");
+        patternStreamer.setRawTextXPath(".//*[name() = 'gco:CharacterString' or name() = 'gmd:URL' or name() = 'gmd:LocalisedCharacterString']");
         // TODO: che:URL and multilingual text
         return patternStreamer;
     }
