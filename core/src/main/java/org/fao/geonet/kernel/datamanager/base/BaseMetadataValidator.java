@@ -498,7 +498,6 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      * @param id the metadata record internal identifier
      * @param validations the validation reports for each type of validation and schematron validation
      */
-    @Transactional
     private void saveValidationStatus(int id, List<MetadataValidation> validations) {
         try {
             validationRepository.deleteAllById_MetadataId(id);
