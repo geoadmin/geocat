@@ -42,14 +42,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * An entity representing link. A link can be a URL in a metadata record.
@@ -68,6 +67,15 @@ public class Link implements Serializable {
     private String _protocol;
     private LinkType _linkType = LinkType.HTTP;
     private Set<MetadataLink> records = new HashSet<>();
+    private Set<LinkStatus> linkStatus = new TreeSet<>(LAST_STATUS_COMPARATOR);
+    private Integer lastState = 0;
+
+    private static final Comparator<? super LinkStatus> LAST_STATUS_COMPARATOR = new Comparator<LinkStatus>() {
+        @Override
+        public int compare(LinkStatus left, LinkStatus right) {
+            return right.getcheckDate().compareTo(left.getcheckDate());
+        }
+    };
 
     /**
      * Get the id of the link.
@@ -122,8 +130,6 @@ public class Link implements Serializable {
         return this;
     }
 
-    private List<LinkStatus> linkStatus = new ArrayList<>();
-
     /**
      * Get all status information for a link.
      *
@@ -133,17 +139,23 @@ public class Link implements Serializable {
         fetch = FetchType.EAGER,
         mappedBy = "linkId",
         orphanRemoval = true)
-    @OrderBy("checkDate DESC")
-    public List<LinkStatus> getLinkStatus() {
+    public Set<LinkStatus> getLinkStatus() {
         return linkStatus;
     }
 
-    public Link setLinkStatus(List<LinkStatus> linkStatus) {
+    public Link setLinkStatus(Set<LinkStatus> linkStatus) {
         this.linkStatus = linkStatus;
         return this;
     }
 
+    public Integer getLastState() {
+        synchronizeLastState();
+        return lastState;
+    }
 
+    public void setLastState(Integer lastState) {
+        synchronizeLastState();
+    }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
         mappedBy = "link",
@@ -152,9 +164,6 @@ public class Link implements Serializable {
         return records;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
-            mappedBy = "link",
-            orphanRemoval = true)
     public Link setRecords(Set<MetadataLink> records) {
         this.records = records;
         return this;
@@ -177,5 +186,21 @@ public class Link implements Serializable {
     public Link setUrl(String url) {
         this._url = url;
         return this;
+    }
+
+    private void synchronizeLastState() {
+        if (linkStatus.size() > 0) {
+            this.lastState = convertStatusToState(linkStatus.stream().findFirst().get());
+        }
+    }
+
+    private Integer convertStatusToState(LinkStatus lastStatus) {
+        if (lastStatus == null) {
+            return 0;
+        }
+        if (lastStatus.isFailing()) {
+            return -1;
+        }
+        return 1;
     }
 }

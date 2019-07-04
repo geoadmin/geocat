@@ -33,7 +33,6 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.Link;
-import org.fao.geonet.domain.LinkStatus;
 import org.fao.geonet.domain.Link_;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.DataManager;
@@ -62,8 +61,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import springfox.documentation.annotations.ApiIgnore;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -129,11 +126,10 @@ public class LinksApi {
     ) {
         UserSession session = ApiUtils.getUserSession(httpSession);
 
-        Sort sortBy = SortUtils.createSort(Sort.Direction.ASC,
-            Link_.url);
+        Sort sortByStateThenUrl = new Sort(Sort.Direction.ASC, SortUtils.createPath(Link_.lastState), SortUtils.createPath(Link_.url));
 
         int page = (from / size);
-        final PageRequest pageRequest = new PageRequest(page, size, sortBy);
+        final PageRequest pageRequest = new PageRequest(page, size, sortByStateThenUrl);
 
         // TODO: Add filter by URL, UUID, status, failing
         final Page<Link> all = linkRepository.findAll(pageRequest);
