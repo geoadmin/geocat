@@ -56,7 +56,7 @@ import javax.persistence.Table;
     indexes = {@Index(name = "idx_linkstatus_isFailing", columnList = "failing")})
 @EntityListeners(LinkStatusEntityListenerManager.class)
 @SequenceGenerator(name = LinkStatus.ID_SEQ_NAME, initialValue = 1, allocationSize = 1)
-public class LinkStatus extends GeonetEntity {
+public class LinkStatus extends GeonetEntity implements Comparable<LinkStatus> {
     static final String ID_SEQ_NAME = "linkstatus_id_seq";
     private int id;
     private int linkId;
@@ -215,4 +215,8 @@ public class LinkStatus extends GeonetEntity {
             '}';
     }
 
+    @Override
+    public int compareTo(LinkStatus linkStatus) {
+        return (linkStatus.checkDate.compareTo(this.checkDate));
+    }
 }

@@ -25,6 +25,7 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.domain.converter.LinkTypeConverter;
 import org.fao.geonet.entitylistener.LinkEntityListenerManager;
+import org.hibernate.annotations.SortNatural;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Access;
@@ -42,10 +43,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -67,15 +68,8 @@ public class Link implements Serializable {
     private String _protocol;
     private LinkType _linkType = LinkType.HTTP;
     private Set<MetadataLink> records = new HashSet<>();
-    private Set<LinkStatus> linkStatus = new TreeSet<>(LAST_STATUS_COMPARATOR);
+    private Set<LinkStatus> linkStatus = new TreeSet<>();
     private Integer lastState = 0;
-
-    private static final Comparator<? super LinkStatus> LAST_STATUS_COMPARATOR = new Comparator<LinkStatus>() {
-        @Override
-        public int compare(LinkStatus left, LinkStatus right) {
-            return right.getcheckDate().compareTo(left.getcheckDate());
-        }
-    };
 
     /**
      * Get the id of the link.
@@ -139,6 +133,8 @@ public class Link implements Serializable {
         fetch = FetchType.EAGER,
         mappedBy = "linkId",
         orphanRemoval = true)
+    @SortNatural
+    @OrderBy("checkDate DESC")
     public Set<LinkStatus> getLinkStatus() {
         return linkStatus;
     }
@@ -195,9 +191,6 @@ public class Link implements Serializable {
     }
 
     private Integer convertStatusToState(LinkStatus lastStatus) {
-        if (lastStatus == null) {
-            return 0;
-        }
         if (lastStatus.isFailing()) {
             return -1;
         }
