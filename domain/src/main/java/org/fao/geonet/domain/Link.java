@@ -49,6 +49,7 @@ import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * An entity representing link. A link can be a URL in a metadata record.
@@ -67,7 +68,7 @@ public class Link implements Serializable {
     private String _protocol;
     private LinkType _linkType = LinkType.HTTP;
     private Set<MetadataLink> records = new HashSet<>();
-    private Set<LinkStatus> linkStatus = new HashSet<>();
+    private Set<LinkStatus> linkStatus = new TreeSet<>();
     private Integer lastState = 0;
 
     /**
