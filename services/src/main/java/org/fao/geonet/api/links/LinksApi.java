@@ -119,7 +119,7 @@ public class LinksApi {
             Integer from,
         @ApiParam(value = "Number of records to return",
             required = false)
-        @RequestParam(required = false, defaultValue = "25")
+        @RequestParam(required = false, defaultValue = "200")
             Integer size,
         @ApiIgnore
             HttpSession httpSession

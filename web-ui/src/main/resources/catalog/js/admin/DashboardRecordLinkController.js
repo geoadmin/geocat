@@ -37,7 +37,7 @@
       $scope.links = [];
       $scope.loading = true;
       $scope.from = 0;
-      $scope.size = 25;
+      $scope.size = 200;
       $scope.sizeDefault = $scope.size;
 
       $scope.loadLinks = function(more) {
