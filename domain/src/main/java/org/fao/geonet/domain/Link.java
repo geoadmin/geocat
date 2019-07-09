@@ -49,7 +49,6 @@ import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * An entity representing link. A link can be a URL in a metadata record.
@@ -68,7 +67,7 @@ public class Link implements Serializable {
     private String _protocol;
     private LinkType _linkType = LinkType.HTTP;
     private Set<MetadataLink> records = new HashSet<>();
-    private Set<LinkStatus> linkStatus = new TreeSet<>();
+    private Set<LinkStatus> linkStatus = new HashSet<>();
     private Integer lastState = 0;
 
     /**
@@ -131,10 +130,10 @@ public class Link implements Serializable {
      */
     @OneToMany(cascade = CascadeType.ALL,
         fetch = FetchType.EAGER,
-        mappedBy = "linkId",
+        mappedBy = "link",
         orphanRemoval = true)
-    @SortNatural
     @OrderBy("checkDate DESC")
+    @SortNatural
     public Set<LinkStatus> getLinkStatus() {
         return linkStatus;
     }
@@ -145,12 +144,11 @@ public class Link implements Serializable {
     }
 
     public Integer getLastState() {
-        synchronizeLastState();
         return lastState;
     }
 
     public void setLastState(Integer lastState) {
-        synchronizeLastState();
+        this.lastState = lastState;
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
@@ -184,10 +182,10 @@ public class Link implements Serializable {
         return this;
     }
 
-    private void synchronizeLastState() {
-        if (linkStatus.size() > 0) {
-            this.lastState = convertStatusToState(linkStatus.stream().findFirst().get());
-        }
+    public void addStatus(LinkStatus linkStatus) {
+        linkStatus.setLink(this);
+        this.linkStatus.add(linkStatus);
+        this.lastState = convertStatusToState(linkStatus);
     }
 
     private Integer convertStatusToState(LinkStatus lastStatus) {

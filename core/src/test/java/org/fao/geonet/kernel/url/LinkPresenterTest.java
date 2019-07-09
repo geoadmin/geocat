@@ -19,7 +19,6 @@ import static org.junit.Assert.assertTrue;
 
 public class LinkPresenterTest extends AbstractCoreIntegrationTest {
 
-
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -29,17 +28,59 @@ public class LinkPresenterTest extends AbstractCoreIntegrationTest {
     @Autowired
     protected LinkStatusRepository linkStatusRepository;
 
+    private LinkStatus okAtTheEnd;
+    private LinkStatus statusKo;
+    private LinkStatus oldStausOk;
+    private LinkStatus koInTheMiddle;
+
     @Test
     public void errorThenUnknownThenOk() {
-
-        Link linkOk = new Link().setUrl("a i am ok, but ko at the very end");
-        linkRepository.save(linkOk);
+        Link linkOk = new Link().setUrl("a i am ok, but ko in the middle");
         Link linkKo = new Link().setUrl("i am ko");
-        linkRepository.save(linkKo);
         Link linkProbable = new Link().setUrl("i am probable");
+        linkRepository.save(linkOk);
+        linkRepository.save(linkKo);
         linkRepository.save(linkProbable);
         entityManager.flush();
 
+        createLinkStatus();
+        linkOk.addStatus(oldStausOk);
+        linkKo.addStatus(statusKo);
+        linkRepository.save(linkOk);
+        linkRepository.save(linkKo);
+        entityManager.flush();
+
+        List<Link> allLink = linkRepository.getLinks();
+        assertEquals(3, allLink.size());
+        assertTrue(allLink.get(0).getLinkStatus().toArray(new LinkStatus[]{})[0].isFailing());
+        assertTrue(allLink.get(1).getLinkStatus().isEmpty());
+        assertFalse(allLink.get(2).getLinkStatus().toArray(new LinkStatus[]{})[0].isFailing());
+
+        linkOk.addStatus(koInTheMiddle);
+        linkRepository.save(linkOk);
+        entityManager.flush();
+
+        allLink = linkRepository.getLinks();
+        assertEquals(3, allLink.size());
+        assertTrue(allLink.get(0).getLinkStatus().toArray(new LinkStatus[]{})[0].isFailing());
+        assertFalse(allLink.get(0).getLinkStatus().toArray(new LinkStatus[]{})[1].isFailing());
+        assertTrue(allLink.get(1).getLinkStatus().toArray(new LinkStatus[]{})[0].isFailing());
+        assertTrue(allLink.get(2).getLinkStatus().isEmpty());
+
+        linkOk.addStatus(okAtTheEnd);
+        linkRepository.save(linkOk);
+        entityManager.flush();
+
+        allLink = linkRepository.getLinks();
+        assertEquals(3, allLink.size());
+        assertTrue(allLink.get(0).getLinkStatus().toArray(new LinkStatus[]{})[0].isFailing());
+        assertTrue(allLink.get(1).getLinkStatus().isEmpty());
+        assertFalse(allLink.get(2).getLinkStatus().toArray(new LinkStatus[]{})[0].isFailing());
+        assertTrue(allLink.get(2).getLinkStatus().toArray(new LinkStatus[]{})[1].isFailing());
+        assertFalse(allLink.get(2).getLinkStatus().toArray(new LinkStatus[]{})[2].isFailing());
+    }
+
+    private void createLinkStatus() {
         ISODate yesterday = new ISODate();
         yesterday.setDateAndTime("1980-06-03T01:02:03");
 
@@ -49,70 +90,30 @@ public class LinkPresenterTest extends AbstractCoreIntegrationTest {
         ISODate tomorrow = new ISODate();
         tomorrow.setDateAndTime("2025-06-03T01:02:03");
 
-        LinkStatus statusOk = new LinkStatus()
+        oldStausOk = new LinkStatus()
                 .setFailing(false)
                 .setStatusValue("200")
                 .setStatusInfo("OK")
-                .setLinkId(linkOk.getId())
+                .setcheckDate(yesterday);
+
+        koInTheMiddle = new LinkStatus()
+                .setFailing(true)
+                .setStatusValue("400")
+                .setStatusInfo("KO")
+                .setcheckDate(today);
+
+        okAtTheEnd = new LinkStatus()
+                .setFailing(false)
+                .setStatusValue("200")
+                .setStatusInfo("OK")
+                .setcheckDate(tomorrow);
+
+        statusKo = new LinkStatus()
+                .setFailing(true)
+                .setStatusValue("400")
+                .setStatusInfo("KO")
                 .setcheckDate(today);
 
 
-        linkOk.getLinkStatus().add(statusOk);
-
-        LinkStatus statusKo = new LinkStatus()
-                .setFailing(true)
-                .setStatusValue("400")
-                .setStatusInfo("KO")
-                .setLinkId(linkKo.getId());
-        linkKo.getLinkStatus().add(statusKo);
-
-        linkStatusRepository.save(statusKo);
-        linkStatusRepository.save(statusOk);
-        entityManager.flush();
-
-        List<Link> allLink = linkRepository.getLinks();
-
-        assertEquals(3, allLink.size());
-        assertTrue(allLink.get(0).getLinkStatus().toArray(new LinkStatus[]{})[0].isFailing());
-        assertTrue(allLink.get(1).getLinkStatus().isEmpty());
-        assertFalse(allLink.get(2).getLinkStatus().toArray(new LinkStatus[]{})[0].isFailing());
-
-        LinkStatus oldStausOk = new LinkStatus()
-                .setFailing(true)
-                .setStatusValue("400")
-                .setStatusInfo("KO")
-                .setLinkId(linkOk.getId())
-                .setcheckDate(yesterday);
-        linkOk.getLinkStatus().add(oldStausOk);
-
-        linkStatusRepository.save(oldStausOk);
-        entityManager.flush();
-        allLink = linkRepository.getLinks();
-
-        assertEquals(3, allLink.size());
-        assertTrue(allLink.get(0).getLinkStatus().toArray(new LinkStatus[]{})[0].isFailing());
-        assertTrue(allLink.get(1).getLinkStatus().isEmpty());
-        assertFalse(allLink.get(2).getLinkStatus().toArray(new LinkStatus[]{})[0].isFailing());
-        assertTrue(allLink.get(2).getLinkStatus().toArray(new LinkStatus[]{})[1].isFailing());
-
-        LinkStatus koAtTheEnd = new LinkStatus()
-                .setFailing(true)
-                .setStatusValue("400")
-                .setStatusInfo("KO")
-                .setLinkId(linkOk.getId())
-                .setcheckDate(tomorrow);
-        linkOk.getLinkStatus().add(koAtTheEnd);
-
-        linkStatusRepository.save(koAtTheEnd);
-        entityManager.flush();
-
-        allLink = linkRepository.getLinks();
-
-        assertEquals(3, allLink.size());
-        assertTrue(allLink.get(0).getLinkStatus().toArray(new LinkStatus[]{})[0].isFailing());
-        assertFalse(allLink.get(0).getLinkStatus().toArray(new LinkStatus[]{})[1].isFailing());
-        assertTrue(allLink.get(0).getLinkStatus().toArray(new LinkStatus[]{})[2].isFailing());
-        assertTrue(allLink.get(1).getLinkStatus().toArray(new LinkStatus[]{})[0].isFailing());
-        assertTrue(allLink.get(2).getLinkStatus().isEmpty());
     }
 }

@@ -106,8 +106,8 @@ public class UrlAnalyzer {
 
     public void testLink(Link link) {
         LinkStatus linkStatus = urlChecker.getUrlStatus(link.getUrl());
-        linkStatus.setLinkId(link.getId());
-        linkStatusRepository.save(linkStatus);
+        link.addStatus(linkStatus);
+        linkRepository.save(link);
     }
 
     private Specification<MetadataLink> metadatalinksTargetting(Link link) {
