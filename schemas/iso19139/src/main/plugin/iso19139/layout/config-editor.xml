@@ -222,10 +222,10 @@
       -->
       <directiveAttributes
         data-allow-free-text-keywords="false"
-        data-include="xpath::string-join(gmd:MD_Metadata/gmd:identificationInfo
+        data-include="xpath::string-join((gmd:MD_Metadata/gmd:identificationInfo
                           //gmd:thesaurusName/*/gmd:identifier/*/
                             gmd:code/gmx:Anchor/
-                              concat('-', substring-after(text()[. != ''], 'geonetwork.thesaurus.')), ',')"/>
+                              concat('-', substring-after(text()[. != ''], 'geonetwork.thesaurus.')), '-external.none.allThesaurus'), ',')"/>
     </for>
   </fields>
 
