@@ -82,6 +82,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Entities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
@@ -576,6 +577,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     private String htmlToXhtml(String html) {
         Document document = Jsoup.parse(html);
         document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
+        document.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
         return document.html();
     }
 
