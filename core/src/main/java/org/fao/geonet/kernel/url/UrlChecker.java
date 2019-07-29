@@ -21,9 +21,9 @@ public class UrlChecker {
         @Override
         public Void apply(@Nullable HttpClientBuilder originalConfig) {
             RequestConfig.Builder config = RequestConfig.custom()
-                    .setConnectTimeout(1000)
-                    .setConnectionRequestTimeout(3000)
-                    .setSocketTimeout(5000);
+                    .setConnectTimeout(10000)
+                    .setConnectionRequestTimeout(10000)
+                    .setSocketTimeout(10000);
             RequestConfig requestConfig = config.build();
             originalConfig.setDefaultRequestConfig(requestConfig);
             originalConfig.setUserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/73.0.3683.86 Chrome/73.0.3683.86 Safari/537.36");
