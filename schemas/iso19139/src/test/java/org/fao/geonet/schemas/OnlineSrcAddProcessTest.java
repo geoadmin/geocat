@@ -39,7 +39,7 @@ public class OnlineSrcAddProcessTest extends XslProcessTest {
 
     public OnlineSrcAddProcessTest() {
         super();
-        this.setXslFilename("process/onlinesrc-add.xsl");
+        this.setXslFilename("iso19139/process/onlinesrc-add.xsl");
         this.setXmlFilename("schemas/xsl/process/input.xml");
         this.setNs(ISO19139SchemaPlugin.allNamespaces);
     }
