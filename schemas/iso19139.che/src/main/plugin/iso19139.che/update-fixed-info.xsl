@@ -272,9 +272,57 @@
     </xsl:copy>
   </xsl:template>
 
-  <xsl:template match="gmd:linkage/che:PT_FreeURL">
+  <xsl:template match="gmd:linkage[che:PT_FreeURL]">
     <xsl:copy>
-      <xsl:call-template name="populate-free-text"/>
+      <xsl:apply-templates select="@*[not(name() = 'gco:nilReason') and not(name() = 'xsi:type')]"/>
+      <xsl:variable name="excluded" select="gn-fn-iso19139:isNotMultilingualField(., $editorConfig)"/>
+      <xsl:variable name="valueInPtFreeURLForMainLanguage" select="normalize-space((che:PT_FreeURL/*/che:LocalisedURL[@locale = concat('#', $mainLanguageId)])[1])"/>
+
+      <xsl:choose>
+        <xsl:when test="not($isMultilingual) and
+                        $valueInPtFreeURLForMainLanguage != '' and
+                        normalize-space(gmd:URL) = ''">
+          <gmd:URL>
+            <xsl:value-of select="$valueInPtFreeURLForMainLanguage"/>
+          </gmd:URL>
+        </xsl:when>
+        <xsl:when test="not($isMultilingual) or $excluded">
+          <xsl:apply-templates select="gmd:URL"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="xsi:type" select="'che:PT_FreeURL_PropertyType'"/>
+
+          <xsl:variable name="isInPTFreeText"
+                        select="count(che:PT_FreeURL/*/che:LocalisedURL[
+                                            @locale = concat('#', $mainLanguageId)]) = 1"/>
+
+
+          <xsl:choose>
+            <xsl:when test="$isInPTFreeText">
+              <gmd:URL>
+                <xsl:value-of select="che:PT_FreeURL/*/che:LocalisedURL[@locale = concat('#', $mainLanguageId)]/text()"/>
+              </gmd:URL>
+
+              <xsl:if test="che:PT_FreeURL[normalize-space(.) != '']">
+                <che:PT_FreeURL>
+                  <xsl:call-template name="populate-free-text"/>
+                </che:PT_FreeURL>
+              </xsl:if>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates select="gmd:URL"/>
+              <che:PT_FreeURL>
+                <che:URLGroup>
+                  <che:LocalisedURL locale="#{$mainLanguageId}">
+                    <xsl:value-of select="gmd:URL"/>
+                  </che:LocalisedURL>
+                </che:URLGroup>
+                <xsl:call-template name="populate-free-text"/>
+              </che:PT_FreeURL>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:copy>
   </xsl:template>
 
@@ -392,7 +440,7 @@
 
   <xsl:template name="populate-free-text">
     <xsl:variable name="freeText"
-                  select="gmd:PT_FreeText/gmd:textGroup|che:URLGroup"/>
+                  select="gmd:PT_FreeText/gmd:textGroup|che:PT_FreeURL/che:URLGroup"/>
 
     <!-- Loop on locales in order to preserve order.
         Keep main language on top.
