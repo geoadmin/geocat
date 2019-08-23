@@ -23,11 +23,14 @@
 
 package org.fao.geonet.schemas;
 
+import com.google.common.collect.ImmutableSet;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,6 +46,7 @@ import org.xmlunit.diff.ElementSelectors;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.eq;
@@ -53,10 +57,14 @@ public class UpdateFixedInfoTest {
 
     static private Path PATH_TO_XSL;
 
-    @BeforeClass
-    public static void setup() throws URISyntaxException {
-        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
-        PATH_TO_XSL = Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("iso19139.che/update-fixed-info.xsl").toURI());
+    static private ImmutableSet<Namespace> ALL_NAMESPACES = ImmutableSet .<Namespace>builder()
+            .add(ISO19139Namespaces.GCO)
+            .add(ISO19139Namespaces.GMD)
+            .add(ISO19139Namespaces.SRV)
+            .add(ISO19139cheNamespaces.CHE)
+            .build();
+
+    public UpdateFixedInfoTest() {
         PowerMockito.mockStatic(XslUtil.class);
         PowerMockito.when(XslUtil.getSettingValue(eq("system/metadata/validation/removeSchemaLocation"))).thenReturn("false");
         PowerMockito.when(XslUtil.twoCharLangCode(eq("ger"))).thenReturn("DE");
@@ -64,33 +72,42 @@ public class UpdateFixedInfoTest {
         PowerMockito.when(XslUtil.twoCharLangCode(eq("fre"))).thenReturn("FR");
     }
 
-    @Test
-    public void dataLetUnchanged() throws Exception {
-        Diff diff = compareOutputwithExpected(
-                "ufi/multilingual_unchanged.xml",
-                new ExpectedFromInput() {
-                    @Override
-                    public Element invoke(Element input) {
-                        return input.getChild("CHE_MD_Metadata", ISO19139cheNamespaces.CHE);
-                    }
-                });
+    @BeforeClass
+    public static void setup() throws URISyntaxException {
+        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
+        PATH_TO_XSL = Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("iso19139.che/update-fixed-info.xsl").toURI());
 
-        assertFalse("Process does not alter the document.", diff.hasDifferences());
     }
 
-    private Diff compareOutputwithExpected(String inputName, ExpectedFromInput expectedFromInput) throws Exception {
-        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource(inputName).toURI()));
+    @Test
+    public void dataLetUnchanged() throws Exception {
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/multilingual_conform.xml").toURI()));
+        String expected = Xml.getString(input.getChild("CHE_MD_Metadata", ISO19139cheNamespaces.CHE));
         String processed = Xml.getString( Xml.transform(input, PATH_TO_XSL));
-        String expected = Xml.getString(expectedFromInput.invoke(input));
-        return DiffBuilder
+        Diff diff = DiffBuilder
                 .compare(Input.fromString(processed))
                 .withTest(Input.fromString(expected))
                 .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
                 .checkForSimilar()
                 .build();
+
+        assertFalse("Process does not alter the document.", diff.hasDifferences());
     }
 
-    interface ExpectedFromInput {
-        Element invoke(Element input);
+    @Test
+    public void defaultLanguageAddedAsLocale() throws Exception {
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/multilingual_conform.xml").toURI()));
+        String expected = Xml.getString(input.getChild("CHE_MD_Metadata", ISO19139cheNamespaces.CHE));
+        List<Element> toRemove = (List<Element>) Xml.selectNodes(input, ".//gmd:locale[gmd:PT_Locale/@id = 'DE']", ALL_NAMESPACES.asList());
+        toRemove.stream().forEach(Element::detach);
+        String processed = Xml.getString( Xml.transform(input, PATH_TO_XSL));
+        Diff diff = DiffBuilder
+                .compare(Input.fromString(processed))
+                .withTest(Input.fromString(expected))
+                .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+                .checkForSimilar()
+                .build();
+
+        assertFalse("Process does not alter the document.", diff.hasDifferences());
     }
 }

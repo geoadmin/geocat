@@ -397,15 +397,10 @@
     <!-- Loop on locales in order to preserve order.
         Keep main language on top.
         Translations having no locale are ignored. eg. when removing a lang. -->
-    <xsl:for-each select="$locales[@id = $mainLanguageId]">
-      <xsl:variable name="localId"
-                    select="@id"/>
 
-      <xsl:variable name="element"
-                    select="$freeText[*/@locale = concat('#', $localId)]"/>
+      <xsl:variable name="element" select="$freeText[*/@locale = concat('#', $mainLanguageId)]"/>
 
-      <xsl:apply-templates select="$element"/>
-    </xsl:for-each>
+    <xsl:apply-templates select="$element"/>
 
     <xsl:for-each select="$locales[@id != $mainLanguageId]">
       <xsl:variable name="localId"
@@ -679,7 +674,7 @@ is defined in record. If not, remove the element. -->
     <xsl:variable name="elementLocalId"
                   select="replace(gmd:LocalisedCharacterString/@locale, '^#', '')"/>
     <xsl:choose>
-      <xsl:when test="count($locales[@id = $elementLocalId]) > 0">
+      <xsl:when test="count($locales[@id = $elementLocalId]) > 0 and not($elementLocalId = $mainLanguageId) ">
         <gmd:textGroup>
           <gmd:LocalisedCharacterString>
             <xsl:variable name="currentLocale"
@@ -699,10 +694,17 @@ is defined in record. If not, remove the element. -->
           </gmd:LocalisedCharacterString>
         </gmd:textGroup>
       </xsl:when>
-      <xsl:otherwise>
-        <!--<xsl:message>Removing <xsl:copy-of select="."/>.
-          This element was removed because not declared in record locales.</xsl:message>-->
-      </xsl:otherwise>
+      <xsl:when test="$elementLocalId = $mainLanguageId">
+        <gmd:textGroup>
+          <gmd:LocalisedCharacterString>
+            <xsl:attribute name="locale">
+              <xsl:value-of select="concat('#',$mainLanguageId)"/>
+            </xsl:attribute>
+            <xsl:apply-templates select="gmd:LocalisedCharacterString/text()"/>
+          </gmd:LocalisedCharacterString>
+        </gmd:textGroup>
+      </xsl:when>
+
     </xsl:choose>
   </xsl:template>
 
