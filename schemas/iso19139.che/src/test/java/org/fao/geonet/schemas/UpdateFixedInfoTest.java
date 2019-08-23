@@ -23,6 +23,7 @@
 
 package org.fao.geonet.schemas;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces;
@@ -57,12 +58,13 @@ public class UpdateFixedInfoTest {
 
     static private Path PATH_TO_XSL;
 
-    static private ImmutableSet<Namespace> ALL_NAMESPACES = ImmutableSet .<Namespace>builder()
+    static private ImmutableList<Namespace> ALL_NAMESPACES = ImmutableSet .<Namespace>builder()
             .add(ISO19139Namespaces.GCO)
             .add(ISO19139Namespaces.GMD)
             .add(ISO19139Namespaces.SRV)
+            .add(ISO19139Namespaces.XSI)
             .add(ISO19139cheNamespaces.CHE)
-            .build();
+            .build().asList();
 
     public UpdateFixedInfoTest() {
         PowerMockito.mockStatic(XslUtil.class);
@@ -81,26 +83,44 @@ public class UpdateFixedInfoTest {
 
     @Test
     public void dataLetUnchanged() throws Exception {
-        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/multilingual_conform.xml").toURI()));
-        String expected = Xml.getString(input.getChild("CHE_MD_Metadata", ISO19139cheNamespaces.CHE));
-        String processed = Xml.getString( Xml.transform(input, PATH_TO_XSL));
-        Diff diff = DiffBuilder
-                .compare(Input.fromString(processed))
-                .withTest(Input.fromString(expected))
-                .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
-                .checkForSimilar()
-                .build();
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeText_for_default.xml").toURI()));
 
-        assertFalse("Process does not alter the document.", diff.hasDifferences());
+        assertProcessedEqualsToExpected(input, input);
     }
 
     @Test
     public void defaultLanguageAddedAsLocale() throws Exception {
-        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/multilingual_conform.xml").toURI()));
-        String expected = Xml.getString(input.getChild("CHE_MD_Metadata", ISO19139cheNamespaces.CHE));
-        List<Element> toRemove = (List<Element>) Xml.selectNodes(input, ".//gmd:locale[gmd:PT_Locale/@id = 'DE']", ALL_NAMESPACES.asList());
-        toRemove.stream().forEach(Element::detach);
-        String processed = Xml.getString( Xml.transform(input, PATH_TO_XSL));
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeText_for_default.xml").toURI()));
+        Element expected = (Element) input.clone();
+        ((List<Element>) Xml.selectNodes(input, ".//gmd:locale[gmd:PT_Locale/@id = 'DE']", ALL_NAMESPACES))
+            .stream().forEach(Element::detach);
+
+        assertProcessedEqualsToExpected(input, expected);
+    }
+
+    @Test
+    public void noLocaleDontDiscardLocalizedBindToDefault() throws Exception {
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeText_for_default.xml").toURI()));
+        ((List<Element>) Xml.selectNodes(input, ".//gmd:locale", ALL_NAMESPACES))
+            .stream().forEach(Element::detach);
+
+        Element expected = (Element) input.clone();
+        ((List<Element>) Xml.selectNodes(expected, ".//gmd:PT_FreeText", ALL_NAMESPACES))
+            .stream().forEach(Element::detach);
+        ((List<Element>)Xml.selectNodes(expected, ".//gmd:title[@xsi:type='gmd:PT_FreeText_PropertyType']", ALL_NAMESPACES))
+                .stream()
+                .forEach(x -> x.removeAttribute("type", ISO19139Namespaces.XSI));
+
+        ((List<Element>) Xml.selectNodes(input, ".//gmd:title/gco:CharacterString", ALL_NAMESPACES))
+                .stream().forEach(Element::detach);
+
+
+        assertProcessedEqualsToExpected(input, expected);
+    }
+
+    private void assertProcessedEqualsToExpected(Element input, Element preparingExpected) throws Exception {
+        String expected = Xml.getString(preparingExpected.getChild("CHE_MD_Metadata", ISO19139cheNamespaces.CHE));
+        String processed = Xml.getString(Xml.transform(input, PATH_TO_XSL));
         Diff diff = DiffBuilder
                 .compare(Input.fromString(processed))
                 .withTest(Input.fromString(expected))
@@ -108,6 +128,6 @@ public class UpdateFixedInfoTest {
                 .checkForSimilar()
                 .build();
 
-        assertFalse("Process does not alter the document.", diff.hasDifferences());
+        assertFalse("Process did not produce the expected result.", diff.hasDifferences());
     }
 }
