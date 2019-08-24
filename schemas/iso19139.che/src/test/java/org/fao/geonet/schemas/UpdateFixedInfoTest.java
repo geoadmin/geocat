@@ -83,14 +83,14 @@ public class UpdateFixedInfoTest {
 
     @Test
     public void dataLetUnchangedText() throws Exception {
-        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeText_for_default.xml").toURI()));
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeText.xml").toURI()));
 
         assertProcessedEqualsToExpected(input, input);
     }
 
     @Test
     public void defaultLanguageAddedAsLocaleText() throws Exception {
-        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeText_for_default.xml").toURI()));
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeText.xml").toURI()));
         Element expected = (Element) input.clone();
         ((List<Element>) Xml.selectNodes(input, ".//gmd:locale[gmd:PT_Locale/@id = 'DE']", ALL_NAMESPACES))
             .stream().forEach(Element::detach);
@@ -100,7 +100,7 @@ public class UpdateFixedInfoTest {
 
     @Test
     public void noLocaleDontDiscardLocalizedBindToDefaultText() throws Exception {
-        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeText_for_default.xml").toURI()));
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeText.xml").toURI()));
         ((List<Element>) Xml.selectNodes(input, ".//gmd:locale", ALL_NAMESPACES))
             .stream().forEach(Element::detach);
 
@@ -120,7 +120,7 @@ public class UpdateFixedInfoTest {
 
     @Test
     public void localeCopiedIfDefault() throws Exception {
-        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeText_for_default.xml").toURI()));
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeText.xml").toURI()));
         Element expected = (Element) input.clone();
         ((List<Element>) Xml.selectNodes(input, ".//gmd:title/gco:CharacterString", ALL_NAMESPACES))
                 .stream().forEach(x -> x.setText("to be overriden"));
@@ -130,7 +130,7 @@ public class UpdateFixedInfoTest {
 
     @Test
     public void localeCopiedIfNoDefault() throws Exception {
-        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeText_for_default.xml").toURI()));
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeText.xml").toURI()));
         Element expected = (Element) input.clone();
         ((List<Element>) Xml.selectNodes(input, ".//gmd:title/gco:CharacterString", ALL_NAMESPACES))
                 .stream().forEach(Element::detach);
@@ -140,14 +140,14 @@ public class UpdateFixedInfoTest {
 
     @Test
     public void dataLetUnchangedUrl() throws Exception {
-        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeUrl_for_default.xml").toURI()));
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeUrl.xml").toURI()));
 
         assertProcessedEqualsToExpected(input, input);
     }
 
     @Test
     public void defaultLanguageAddedAsLocaleUrl() throws Exception {
-        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeUrl_for_default.xml").toURI()));
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeUrl.xml").toURI()));
         Element expected = (Element) input.clone();
         ((List<Element>) Xml.selectNodes(input, ".//gmd:locale[gmd:PT_Locale/@id = 'DE']", ALL_NAMESPACES))
                 .stream().forEach(Element::detach);
@@ -157,7 +157,7 @@ public class UpdateFixedInfoTest {
 
     @Test
     public void localeUrlCopiedIfDefault() throws Exception {
-        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeUrl_for_default.xml").toURI()));
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeUrl.xml").toURI()));
         Element expected = (Element) input.clone();
         ((List<Element>) Xml.selectNodes(input, ".//gmd:URL", ALL_NAMESPACES))
                 .stream().forEach(x -> x.setText("to be overriden"));
@@ -167,7 +167,7 @@ public class UpdateFixedInfoTest {
 
     @Test
     public void localeUrlCopiedIfNoDefault() throws Exception {
-        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeUrl_for_default.xml").toURI()));
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeUrl.xml").toURI()));
         Element expected = (Element) input.clone();
         ((List<Element>) Xml.selectNodes(input, ".//gmd:URL", ALL_NAMESPACES))
                 .stream().forEach(Element::detach);
@@ -177,7 +177,7 @@ public class UpdateFixedInfoTest {
 
     @Test
     public void noLocaleDontDiscardLocalizedBindToDefaultUrl() throws Exception {
-        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeUrl_for_default.xml").toURI()));
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeUrl.xml").toURI()));
         ((List<Element>) Xml.selectNodes(input, ".//gmd:locale", ALL_NAMESPACES))
                 .stream().forEach(Element::detach);
 
@@ -197,14 +197,14 @@ public class UpdateFixedInfoTest {
 
     @Test
     public void noLocaleDataLetUnchangedText() throws Exception {
-        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/charstring_for_default.xml").toURI()));
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/charstring.xml").toURI()));
 
         assertProcessedEqualsToExpected(input, input);
     }
 
     @Test
     public void noLocaleDataLetUnchangedUrl() throws Exception {
-        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/url_for_default.xml").toURI()));
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/url.xml").toURI()));
 
         assertProcessedEqualsToExpected(input, input);
     }
