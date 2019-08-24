@@ -197,20 +197,7 @@ public class UpdateFixedInfoTest {
 
 
 
-    private void assertProcessedEqualsToExpected(Element input, Element preparingExpected) throws Exception {
-        String expected = Xml.getString(preparingExpected.getChild("CHE_MD_Metadata", ISO19139cheNamespaces.CHE));
-        String processed = Xml.getString(Xml.transform(input, PATH_TO_XSL));
-        Diff diff = DiffBuilder
-                .compare(Input.fromString(processed))
-                .withTest(Input.fromString(expected))
-                .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
-                .checkForSimilar()
-                .build();
-
-        assertFalse("Process did not produce the expected result.", diff.hasDifferences());
-    }
-
-    @Test
+       @Test
     public void noLocaleDontDiscardLocalizedBindToDefault() throws Exception {
         Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/multilingual_conform.xml").toURI()));
         List<Element> toRemove = (List<Element>) Xml.selectNodes(input, ".//gmd:locale", ALL_NAMESPACES.asList());
@@ -227,7 +214,6 @@ public class UpdateFixedInfoTest {
         assertFalse("Process does not alter the document.", diff.hasDifferences());
     }
 
-
     @Test
     public void noLocaleDataLetUnchangedText() throws Exception {
         Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/charstring_for_default.xml").toURI()));
@@ -241,4 +227,40 @@ public class UpdateFixedInfoTest {
 
         assertProcessedEqualsToExpected(input, input);
     }
+
+    @Test
+    public void xlinkMulti() throws Exception {
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/xlink.xml").toURI()));
+
+        assertProcessedEqualsToExpected(input, input);
+    }
+
+    @Test
+    public void xlinkMono() throws Exception {
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/xlink.xml").toURI()));
+        List<Element> toRemove = (List<Element>) Xml.selectNodes(input, ".//gmd:locale", ALL_NAMESPACES.asList());
+        toRemove.stream().forEach(Element::detach);
+        Element expected = (Element) input.clone();
+        ((List<Element>) Xml.selectNodes(expected, ".//gmd:contact", ALL_NAMESPACES))
+                .stream().forEach(elem ->
+                elem.getAttribute("href", ISO19139Namespaces.XLINK)
+                        .setValue("local://srv/api/registries/entries/4cb273e2-e26a-4e66-bb55-5dd09e39449b?lang=ger&process=gmd:role/gmd:CI_RoleCode/@codeListValue~partner"));
+
+        assertProcessedEqualsToExpected(input, expected);
+    }
+
+    private void assertProcessedEqualsToExpected(Element input, Element preparingExpected) throws Exception {
+        String expected = Xml.getString(preparingExpected.getChild("CHE_MD_Metadata", ISO19139cheNamespaces.CHE));
+        String processed = Xml.getString(Xml.transform(input, PATH_TO_XSL));
+        Diff diff = DiffBuilder
+                .compare(Input.fromString(processed))
+                .withTest(Input.fromString(expected))
+                .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+                .checkForSimilar()
+                .build();
+
+        assertFalse("Process did not produce the expected result.", diff.hasDifferences());
+    }
+
+
 }

@@ -636,8 +636,7 @@
     <xsl:attribute name="xlink:href"
                    select="concat(
                     $urlBase,
-                    '?lang=', $mainLanguage, ',',
-                    string-join($locales//gmd:LanguageCode/@codeListValue[. != $mainLanguage], ','),
+                    '?lang=', string-join(($mainLanguage, $locales//gmd:LanguageCode/@codeListValue[. != $mainLanguage]), ','),
                     '&amp;',
                     string-join($listOfAllParameters/param/@value, '&amp;'))"/>
   </xsl:template>
