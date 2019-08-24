@@ -119,6 +119,26 @@ public class UpdateFixedInfoTest {
     }
 
     @Test
+    public void localeCopiedIfDefault() throws Exception {
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeText_for_default.xml").toURI()));
+        Element expected = (Element) input.clone();
+        ((List<Element>) Xml.selectNodes(input, ".//gmd:title/gco:CharacterString", ALL_NAMESPACES))
+                .stream().forEach(x -> x.setText("to be overriden"));
+
+        assertProcessedEqualsToExpected(input, expected);
+    }
+
+    @Test
+    public void localeCopiedIfNoDefault() throws Exception {
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeText_for_default.xml").toURI()));
+        Element expected = (Element) input.clone();
+        ((List<Element>) Xml.selectNodes(input, ".//gmd:title/gco:CharacterString", ALL_NAMESPACES))
+                .stream().forEach(Element::detach);
+
+        assertProcessedEqualsToExpected(input, expected);
+    }
+
+    @Test
     public void dataLetUnchangedUrl() throws Exception {
         Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeUrl_for_default.xml").toURI()));
 
@@ -130,6 +150,26 @@ public class UpdateFixedInfoTest {
         Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeUrl_for_default.xml").toURI()));
         Element expected = (Element) input.clone();
         ((List<Element>) Xml.selectNodes(input, ".//gmd:locale[gmd:PT_Locale/@id = 'DE']", ALL_NAMESPACES))
+                .stream().forEach(Element::detach);
+
+        assertProcessedEqualsToExpected(input, expected);
+    }
+
+    @Test
+    public void localeUrlCopiedIfDefault() throws Exception {
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeUrl_for_default.xml").toURI()));
+        Element expected = (Element) input.clone();
+        ((List<Element>) Xml.selectNodes(input, ".//gmd:URL", ALL_NAMESPACES))
+                .stream().forEach(x -> x.setText("to be overriden"));
+
+        assertProcessedEqualsToExpected(input, expected);
+    }
+
+    @Test
+    public void localeUrlCopiedIfNoDefault() throws Exception {
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeUrl_for_default.xml").toURI()));
+        Element expected = (Element) input.clone();
+        ((List<Element>) Xml.selectNodes(input, ".//gmd:URL", ALL_NAMESPACES))
                 .stream().forEach(Element::detach);
 
         assertProcessedEqualsToExpected(input, expected);
@@ -168,5 +208,22 @@ public class UpdateFixedInfoTest {
                 .build();
 
         assertFalse("Process did not produce the expected result.", diff.hasDifferences());
+    }
+
+    @Test
+    public void noLocaleDontDiscardLocalizedBindToDefault() throws Exception {
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/multilingual_conform.xml").toURI()));
+        List<Element> toRemove = (List<Element>) Xml.selectNodes(input, ".//gmd:locale", ALL_NAMESPACES.asList());
+        toRemove.stream().forEach(Element::detach);
+        String expected = Xml.getString(input.getChild("CHE_MD_Metadata", ISO19139cheNamespaces.CHE));
+        String processed = Xml.getString( Xml.transform(input, PATH_TO_XSL));
+        Diff diff = DiffBuilder
+                .compare(Input.fromString(processed))
+                .withTest(Input.fromString(expected))
+                .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+                .checkForSimilar()
+                .build();
+
+        assertFalse("Process does not alter the document.", diff.hasDifferences());
     }
 }
