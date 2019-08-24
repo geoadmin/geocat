@@ -226,4 +226,19 @@ public class UpdateFixedInfoTest {
 
         assertFalse("Process does not alter the document.", diff.hasDifferences());
     }
+
+
+    @Test
+    public void noLocaleDataLetUnchangedText() throws Exception {
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/charstring_for_default.xml").toURI()));
+
+        assertProcessedEqualsToExpected(input, input);
+    }
+
+    @Test
+    public void noLocaleDataLetUnchangedUrl() throws Exception {
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/url_for_default.xml").toURI()));
+
+        assertProcessedEqualsToExpected(input, input);
+    }
 }
