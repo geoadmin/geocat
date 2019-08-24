@@ -195,25 +195,6 @@ public class UpdateFixedInfoTest {
         assertProcessedEqualsToExpected(input, expected);
     }
 
-
-
-       @Test
-    public void noLocaleDontDiscardLocalizedBindToDefault() throws Exception {
-        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/multilingual_conform.xml").toURI()));
-        List<Element> toRemove = (List<Element>) Xml.selectNodes(input, ".//gmd:locale", ALL_NAMESPACES.asList());
-        toRemove.stream().forEach(Element::detach);
-        String expected = Xml.getString(input.getChild("CHE_MD_Metadata", ISO19139cheNamespaces.CHE));
-        String processed = Xml.getString( Xml.transform(input, PATH_TO_XSL));
-        Diff diff = DiffBuilder
-                .compare(Input.fromString(processed))
-                .withTest(Input.fromString(expected))
-                .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
-                .checkForSimilar()
-                .build();
-
-        assertFalse("Process does not alter the document.", diff.hasDifferences());
-    }
-
     @Test
     public void noLocaleDataLetUnchangedText() throws Exception {
         Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/charstring_for_default.xml").toURI()));
