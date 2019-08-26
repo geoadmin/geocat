@@ -14,6 +14,8 @@
   "oerebRegister": "OEREB Register",
   "openGovernmentData": "Open Government Data",
   "openData": "Open Data",
+  "identifier": "Identifier",
+  "basicgeodataid": "Basic geodata identifier",
   "referenceGeodata": "Reference Geodata",
   "catalogPlaceholder": "Catalogs",
   "exportXML": "Export (XML ISO19139)",

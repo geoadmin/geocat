@@ -236,6 +236,16 @@
               </ul>
             </td>
           </tr>
+          <tr data-ng-if="mdView.current.record.basicgeodataid">
+            <th data-translate="">basicgeodataid</th>
+            <td>
+              <ul>
+                <li>
+                  {{mdView.current.record.basicgeodataid}}
+                </li>
+              </ul>
+            </td>
+          </tr>
           <tr data-ng-if="mdView.current.record.classification_text">
             <th data-translate="">classification</th>
             <td>{{mdView.current.record.classification_text}}</td>
