@@ -1122,8 +1122,7 @@
                              $positionName, '|',
                              $address, '|',
                              string-join($phone, ','), '|',
-                             $uuid, '|',
-                             $position)}"
+                             $uuid, '|0')}"
            store="true" index="false"/>
 
     <Field name="creator" string="{$individualName}" store="true" index="true"/>
