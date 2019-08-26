@@ -275,6 +275,7 @@
   <xsl:template match="gmd:linkage[che:PT_FreeURL]">
     <xsl:copy>
       <xsl:apply-templates select="@*[not(name() = 'gco:nilReason') and not(name() = 'xsi:type')]"/>
+      <xsl:variable name="isInPTFreeText" select="count(che:PT_FreeURL/*/che:LocalisedURL[@locale = concat('#', $mainLanguageId)]) = 1"/>
       <xsl:variable name="valueInPtFreeURLForMainLanguage" select="normalize-space((che:PT_FreeURL/*/che:LocalisedURL[@locale = concat('#', $mainLanguageId)])[1])"/>
 
       <xsl:choose>
@@ -290,18 +291,11 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:attribute name="xsi:type" select="'che:PT_FreeURL_PropertyType'"/>
-
-          <xsl:variable name="isInPTFreeText"
-                        select="count(che:PT_FreeURL/*/che:LocalisedURL[
-                                            @locale = concat('#', $mainLanguageId)]) = 1"/>
-
-
           <xsl:choose>
             <xsl:when test="$isInPTFreeText">
               <gmd:URL>
-                <xsl:value-of select="che:PT_FreeURL/*/che:LocalisedURL[@locale = concat('#', $mainLanguageId)]/text()"/>
+                <xsl:value-of select="$valueInPtFreeURLForMainLanguage"/>
               </gmd:URL>
-
               <xsl:if test="che:PT_FreeURL[normalize-space(.) != '']">
                 <che:PT_FreeURL>
                   <xsl:call-template name="populate-free-text"/>
