@@ -406,8 +406,12 @@
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-      <xsl:for-each select="gmd:pointOfContact/gmd:CI_ResponsibleParty|gmd:contact/gmd:CI_ResponsibleParty|ancestor::che:CHE_MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty|ancestor::che:CHE_MD_Metadata/gmd:contact/che:CHE_CI_ResponsibleParty|
-            gmd:pointOfContact/*[@gco:isoType = 'gmd:CI_ResponsibleParty']|gmd:contact/*[@gco:isoType = 'gmd:CI_ResponsibleParty']">
+      <xsl:for-each select="gmd:pointOfContact/gmd:CI_ResponsibleParty|
+                            gmd:pointOfContact/*[@gco:isoType = 'gmd:CI_ResponsibleParty']|
+                            gmd:contact/gmd:CI_ResponsibleParty|
+                            ancestor::che:CHE_MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty|
+                            ancestor::che:CHE_MD_Metadata/gmd:contact/che:CHE_CI_ResponsibleParty|
+                            gmd:contact/*[@gco:isoType = 'gmd:CI_ResponsibleParty']">
 
         <xsl:variable name="orgname" select="if(gmd:organisationName//gmd:LocalisedCharacterString[@locale=$langId]/text() != '' ) then gmd:organisationName//gmd:LocalisedCharacterString[@locale=$langId]/text() else gmd:organisationName/gco:CharacterString/text()"/>
         <xsl:variable name="type" select="if(name(..) = 'gmd:pointOfContact') then 'resource' else 'metadata'"/>
@@ -423,7 +427,7 @@
         </xsl:choose>
 
         <xsl:variable name="role"    select="gmd:role/*/@codeListValue"/>
-        <xsl:variable name="roleTranslation" select="util:getCodelistTranslation('gmd:CI_RoleCode', string($role), string($langId))"/>
+        <xsl:variable name="roleTranslation" select="util:getCodelistTranslation('gmd:CI_RoleCode', string($role), string($docLangId))"/>
         <xsl:variable name="logo"    select="gmx:FileName/@src"/>
         <xsl:variable name="email"   select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString"/>
         <xsl:variable name="phone"   select="gmd:contactInfo/*/gmd:phone/*/gmd:voice[normalize-space(.) != '']/*/text()"/>
@@ -433,10 +437,12 @@
         <xsl:variable name="address" select="string-join(gmd:contactInfo/*/gmd:address/*/(
                                       gmd:deliveryPoint|gmd:postalCode|gmd:city|
                                       gmd:administrativeArea|gmd:country)/gco:CharacterString/text(), ', ')"/>
-
+        <xsl:variable name="uuid" select="@uuid"/>
+        <xsl:variable name="position" select="0"/>
         <Field name="creator" string="{$individualName}" store="true" index="true"/>
         <Field name="responsibleParty"
-               string="{concat($roleTranslation, '|' , $type, '|', $orgname[1], '|', $logo, '|',  string-join($email, ','), '|', $individualName, '|', $positionName, '|', $address, '|', string-join($phone, ','))}"
+               string="{concat($roleTranslation, '|' , $type, '|', $orgname[1], '|', $logo, '|',  string-join($email, ','), '|', $individualName, '|', $positionName, '|', $address, '|', string-join($phone, ','), '|',
+                             $uuid, '|0')}"
                store="true" index="false"/>
 
       </xsl:for-each>
