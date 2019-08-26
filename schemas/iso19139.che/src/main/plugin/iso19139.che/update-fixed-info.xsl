@@ -275,7 +275,6 @@
   <xsl:template match="gmd:linkage[che:PT_FreeURL]">
     <xsl:copy>
       <xsl:apply-templates select="@*[not(name() = 'gco:nilReason') and not(name() = 'xsi:type')]"/>
-      <xsl:variable name="excluded" select="gn-fn-iso19139:isNotMultilingualField(., $editorConfig)"/>
       <xsl:variable name="valueInPtFreeURLForMainLanguage" select="normalize-space((che:PT_FreeURL/*/che:LocalisedURL[@locale = concat('#', $mainLanguageId)])[1])"/>
 
       <xsl:choose>
@@ -286,7 +285,7 @@
             <xsl:value-of select="$valueInPtFreeURLForMainLanguage"/>
           </gmd:URL>
         </xsl:when>
-        <xsl:when test="not($isMultilingual) or $excluded">
+        <xsl:when test="not($isMultilingual)">
           <xsl:apply-templates select="gmd:URL"/>
         </xsl:when>
         <xsl:otherwise>
