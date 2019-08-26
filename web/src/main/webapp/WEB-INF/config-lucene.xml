@@ -184,6 +184,7 @@
       <field name="_groupWebsite" tagName="groupWebsite"/>
       <field name="attributeTable" tagName="attributeTable"/>
       <field name="wms_uri" tagName="wmsuri"/> <!--geocat-->
+      <field name="basicgeodataid" tagName="basicgeodataid"/> <!--geocat-->
     </dumpFields>
   </search>
 
