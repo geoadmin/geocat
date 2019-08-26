@@ -327,6 +327,10 @@
       <xsl:variable name="excluded"
                     select="gn-fn-iso19139:isNotMultilingualField(., $editorConfig)"/>
 
+      <xsl:variable name="isInPTFreeText"
+                    select="count(gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
+                                            @locale = concat('#', $mainLanguageId)]) = 1"/>
+
       <xsl:variable name="valueInPtFreeTextForMainLanguage"
                     select="normalize-space((gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
                                             @locale = concat('#', $mainLanguageId)])[1])"/>
@@ -359,8 +363,6 @@
         </xsl:when>
       </xsl:choose>
 
-
-
       <!-- For multilingual records, for multilingual fields,
        create a gco:CharacterString or gmx:Anchor containing
        the same value as the default language PT_FreeText.
@@ -391,10 +393,6 @@
           <xsl:attribute name="xsi:type" select="'gmd:PT_FreeText_PropertyType'"/>
 
           <!-- Is the default language value set in a PT_FreeText ? -->
-          <xsl:variable name="isInPTFreeText"
-                        select="count(gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
-                                            @locale = concat('#', $mainLanguageId)]) = 1"/>
-
 
           <xsl:choose>
             <xsl:when test="$isInPTFreeText">
@@ -403,8 +401,7 @@
                    PT_FreeText takes priority. -->
               <xsl:element name="{if (gmx:Anchor) then 'gmx:Anchor' else 'gco:CharacterString'}">
                 <xsl:copy-of select="gmx:Anchor/@*"/>
-                <xsl:value-of select="gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
-                                            @locale = concat('#', $mainLanguageId)]/text()"/>
+                <xsl:value-of select="$valueInPtFreeTextForMainLanguage"/>
               </xsl:element>
 
               <xsl:if test="gmd:PT_FreeText[normalize-space(.) != '']">
