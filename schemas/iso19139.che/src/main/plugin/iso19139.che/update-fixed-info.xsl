@@ -528,62 +528,6 @@
     </xsl:copy>
   </xsl:template>
 
-  <!-- ================================================================= -->
-  <!-- online resources: download -->
-  <!-- ================================================================= -->
-
-  <xsl:template
-    match="gmd:CI_OnlineResource[matches(gmd:protocol/gco:CharacterString,'^WWW:DOWNLOAD-.*-http--download.*') and gmd:name]">
-    <xsl:variable name="fname" select="gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType"/>
-    <xsl:variable name="mimeType">
-      <xsl:call-template name="getMimeTypeFile">
-        <xsl:with-param name="datadir" select="/root/env/datadir"/>
-        <xsl:with-param name="fname" select="$fname"/>
-      </xsl:call-template>
-    </xsl:variable>
-
-    <xsl:copy>
-      <xsl:copy-of select="@*"/>
-      <xsl:apply-templates select="gmd:linkage"/>
-      <xsl:apply-templates select="gmd:protocol"/>
-      <xsl:apply-templates select="gmd:applicationProfile"/>
-      <gmd:name>
-        <gmx:MimeFileType type="{$mimeType}">
-          <xsl:value-of select="$fname"/>
-        </gmx:MimeFileType>
-      </gmd:name>
-      <xsl:apply-templates select="gmd:description"/>
-      <xsl:apply-templates select="gmd:function"/>
-    </xsl:copy>
-  </xsl:template>
-
-  <!-- ================================================================= -->
-  <!-- Add mime type for downloadable online resources -->
-  <!-- ================================================================= -->
-
-  <xsl:template
-    match="gmd:CI_OnlineResource[starts-with(gmd:protocol/gco:CharacterString,'WWW:LINK-') and contains(gmd:protocol/gco:CharacterString,'http--download')]">
-    <xsl:variable name="mimeType">
-      <xsl:call-template name="getMimeTypeUrl">
-        <xsl:with-param name="linkage" select="gmd:linkage/gmd:URL"/>
-      </xsl:call-template>
-    </xsl:variable>
-
-    <xsl:copy>
-      <xsl:copy-of select="@*"/>
-      <xsl:apply-templates select="gmd:linkage"/>
-      <xsl:apply-templates select="gmd:protocol"/>
-      <xsl:apply-templates select="gmd:applicationProfile"/>
-      <gmd:name>
-        <gmx:MimeFileType type="{$mimeType}"/>
-      </gmd:name>
-      <xsl:apply-templates select="gmd:description"/>
-      <xsl:apply-templates select="gmd:function"/>
-    </xsl:copy>
-  </xsl:template>
-
-  <!-- ================================================================= -->
-
   <xsl:template match="gmx:FileName[contains(../../@id,'geonetwork.thesaurus.')]" priority="200">
     <xsl:copy>
       <xsl:apply-templates select="node()|@*"/>
