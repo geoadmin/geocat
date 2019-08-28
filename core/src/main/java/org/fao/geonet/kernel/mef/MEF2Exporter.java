@@ -35,9 +35,13 @@ import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.ZipUtil;
+import org.fao.geonet.api.records.attachments.Store;
+import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataRelation;
+import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
@@ -52,7 +56,6 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRelationRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -274,7 +277,7 @@ class MEF2Exporter {
      * is based on an ISO profil, the stylesheet /convert/to19139.xsl is used to map to ISO. Both
      * files are included in MEF file. Export relevant information according to format parameter.
      *
-     * @param uuid  Metadata record to export
+     * @param metadata  Metadata record to export
      * @param zipFs Zip file to add new record
      */
     private static void createMetadataFolder(ServiceContext context,
@@ -297,9 +300,6 @@ class MEF2Exporter {
         if (!"y".equals(isTemp) && !"n".equals(isTemp))
             throw new Exception("Cannot export sub template");
 
-        Path pubDir = Lib.resource.getDir(context, "public", id);
-        Path priDir = Lib.resource.getDir(context, "private", id);
-
         final Path metadataXmlDir = metadataRootDir.resolve(MD_DIR);
         Files.createDirectories(metadataXmlDir);
 
@@ -320,23 +320,28 @@ class MEF2Exporter {
             Files.write(featureMdDir.resolve(FILE_METADATA), ftrecordAndMetadata.two().getBytes(CHARSET));
         }
 
+        final Store store = context.getBean("resourceStore", Store.class);
+        final List<MetadataResource> publicResources = store.getResources(context, metadata.getUuid(),
+                MetadataResourceVisibility.PUBLIC, null, true);
+        final List<MetadataResource> privateResources = store.getResources(context, metadata.getUuid(),
+                MetadataResourceVisibility.PRIVATE, null, true);
 
         // --- save info file
-        byte[] binData = MEFLib.buildInfoFile(context, record, format, pubDir,
-            priDir, skipUUID).getBytes(Constants.ENCODING);
+        byte[] binData = MEFLib.buildInfoFile(context, record, format, publicResources,
+                privateResources, skipUUID).getBytes(Constants.ENCODING);
 
         Files.write(metadataRootDir.resolve(FILE_INFO), binData);
 
         // --- save thumbnails and maps
 
         if (format == Format.PARTIAL || format == Format.FULL) {
-            IO.copyDirectoryOrFile(pubDir, metadataRootDir, true);
+            StoreUtils.extract(context, metadata.getUuid(), publicResources, zipFs.getPath("public"), true);
         }
 
         if (format == Format.FULL) {
             try {
                 Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
-                IO.copyDirectoryOrFile(priDir, metadataRootDir, true);
+                StoreUtils.extract(context, metadata.getUuid(), privateResources, zipFs.getPath("private"), true);
             } catch (Exception e) {
                 // Current user could not download private data
             }
