@@ -579,11 +579,11 @@ public class ISO19139SchemaPlugin
         List<String> languages = new ArrayList<>();
         try {
             // Main language for the record
-            Attribute mainLanguageAttribute = (Attribute) Xml.selectSingle(md, "gmd:language/*/@codeListValue", ISO19139SchemaPlugin.allNamespaces.asList());
+            Element mainLanguageElem = (Element) Xml.selectSingle(md, "gmd:language/*", ISO19139SchemaPlugin.allNamespaces.asList());
 
-            if (mainLanguageAttribute != null &&
-                StringUtils.isNotEmpty(mainLanguageAttribute.getValue())) {
-                languages.add(mainLanguageAttribute.getValue());
+            if (mainLanguageElem != null &&
+                StringUtils.isNotEmpty(mainLanguageElem.getText())) {
+                languages.add(mainLanguageElem.getText());
             }
             final String mainLanguage = languages.size() == 1 ? languages.get(0) : "";
 
