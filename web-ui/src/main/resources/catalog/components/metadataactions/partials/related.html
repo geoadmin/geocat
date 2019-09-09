@@ -33,9 +33,11 @@
                           mainType === 'WFS') &&
                         !isLayerProtocol(r)) &&
                       mainType !== 'WCS' &&
-                      mainType !== 'LINKDOWNLOAD' &&
                       mainType !== 'LINK'">
           {{::(r.title | gnLocalized: lang) || (r.url | gnLocalized: lang)}}
+        </h3>
+        <h3 data-ng-if="mainType === 'LINKDOWNLOAD'">
+        {{::(r.title | gnLocalized: lang) || (r.url | gnLocalized: lang)}}
         </h3>
         <!-- Display description if available -->
         <h4 data-ng-if="(mainType === 'WMS' || mainType === 'WMSSERVICE' ||
