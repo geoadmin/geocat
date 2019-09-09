@@ -98,6 +98,10 @@
     <suggest name="uuidref"/>
   </field>
 
+  <field name="che:attribute">
+    <suggest name="che:description"/>
+  </field>
+
   <field name="gmd:features">
     <suggest name="uuidref"/>
   </field>
