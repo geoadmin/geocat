@@ -795,6 +795,7 @@
           <xsl:variable name="download_check">
             <xsl:text>&amp;fname=&amp;access</xsl:text>
           </xsl:variable>
+          <xsl:variable name="applicationProfile" select="normalize-space(gmd:applicationProfile/gco:CharacterString)"/>
           <!--<xsl:variable name="linkage" select="gmd:linkage/gmd:URL"/>-->
           <xsl:variable name="linkage"
                         select="(gmd:linkage/gmd:URL |
@@ -838,26 +839,26 @@
           <!-- ignore WMS links without protocol (are indexed below with mimetype application/vnd.ogc.wms_xml) -->
           <xsl:if test="not($wmsLinkNoProtocol)">
             <Field name="link"
-                   string="{concat($title, '|', $desc, '|', $linkage, '|', $protocol, '|', $mimetype, '|', $tPosition)}"
+                   string="{concat($title, '|', $desc, '|', $linkage, '|', $protocol, '|', $mimetype, '|', $tPosition, '|', $applicationProfile)}"
                    store="true" index="false"/>
           </xsl:if>
 
           <!-- Try to detect Web Map Context by checking protocol or file extension -->
           <xsl:if test="starts-with($protocol,'OGC:WMC') or contains($linkage,'.wmc')">
             <Field name="link" string="{concat($title, '|', $desc, '|',
-                                                $linkage, '|application/vnd.ogc.wmc|application/vnd.ogc.wmc', '|', $tPosition)}"
+                                                $linkage, '|application/vnd.ogc.wmc|application/vnd.ogc.wmc', '|', $tPosition, '|', $applicationProfile)}"
                    store="true" index="false"/>
           </xsl:if>
           <!-- Try to detect OWS Context by checking protocol or file extension -->
           <xsl:if test="starts-with($protocol,'OGC:OWS-C') or contains($linkage,'.ows')">
             <Field name="link" string="{concat($title, '|', $desc, '|',
-                                                $linkage, '|application/vnd.ogc.ows|application/vnd.ogc.ows', '|', $tPosition)}"
+                                                $linkage, '|application/vnd.ogc.ows|application/vnd.ogc.ows', '|', $tPosition, '|', $applicationProfile)}"
                    store="true" index="false"/>
           </xsl:if>
 
           <xsl:if test="$wmsLinkNoProtocol">
             <Field name="link" string="{concat($title, '|', $desc, '|',
-                                                $linkage, '|OGC:WMS|application/vnd.ogc.wms_xml', '|', $tPosition)}"
+                                                $linkage, '|OGC:WMS|application/vnd.ogc.wms_xml', '|', $tPosition), '|', $applicationProfile}"
                    store="true" index="false"/>
           </xsl:if>
         </xsl:for-each>
