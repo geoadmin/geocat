@@ -212,10 +212,6 @@ public class SearchManager implements ISearchManager {
         return _analyzer;
     }
 
-    public static PerFieldAnalyzerWrapper getSearchAnalyzer() {
-        return _searchAnalyzer;
-    }
-
     /**
      * Retrieve per field analyzer according to language and for searching or indexing time.
      *
