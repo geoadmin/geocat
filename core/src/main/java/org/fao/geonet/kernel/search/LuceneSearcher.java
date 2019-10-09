@@ -68,6 +68,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopFieldCollector;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
@@ -161,6 +162,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
     private long _versionToken = -1;
     private SummaryType _summaryConfig;
     private boolean _logSearch = true;
+    private SettingInfo settingInfo;
 
     /**
      * constructor TODO javadoc.
@@ -173,6 +175,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         _luceneConfig = luceneConfig;
         _boostQueryClass = _luceneConfig.getBoostQueryClass();
         _tokenizedFieldSet = luceneConfig.getTokenizedField();
+
+        settingInfo =  ApplicationContextHolder.get().getBean(SettingInfo.class);
     }
 
     //
@@ -921,9 +925,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         final SearchManager searchmanager;
         ServiceContext context = ServiceContext.get();
         GeonetworkMultiReader reader;
+        SettingInfo si;
         if (context != null) {
             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
             searchmanager = gc.getBean(SearchManager.class);
+            si = gc.getBean(SettingInfo.class);
             indexAndTaxonomy = searchmanager.getNewIndexReader(priorityLang);
             reader = indexAndTaxonomy.indexReader;
         } else {
@@ -935,8 +941,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         try {
             IndexSearcher searcher = new IndexSearcher(reader);
             TermQuery query = new TermQuery(new Term(field, value));
-            SettingInfo settingInfo = searchmanager.getSettingInfo();
-            boolean sortRequestedLanguageOnTop = settingInfo.getRequestedLanguageOnTop();
+            boolean sortRequestedLanguageOnTop = si.getRequestedLanguageOnTop();
             LOGGER.debug("sortRequestedLanguageOnTop: {}", sortRequestedLanguageOnTop);
 
             int numberOfHits = 1;
@@ -1440,7 +1445,6 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             if (LOGGER.isDebugEnabled())
                 LOGGER.debug("CRITERIA: {}\n", Xml.getString(request));
 
-            SettingInfo settingInfo = _sm.getSettingInfo();
             SettingInfo.SearchRequestLanguage requestedLanguageOnly = settingInfo.getRequestedLanguageOnly();
             LOGGER.debug("requestedLanguageOnly: {}", requestedLanguageOnly);
 
@@ -1581,7 +1585,6 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         boolean sortOrder = (Util.getParam(request, Geonet.SearchResult.SORT_ORDER, "").equals(""));
         LOGGER.debug("Sorting by : {}", sortBy);
 
-        SettingInfo settingInfo = _sm.getSettingInfo();
         boolean sortRequestedLanguageOnTop = settingInfo.getRequestedLanguageOnTop();
         LOGGER.debug("sortRequestedLanguageOnTop: {}", sortRequestedLanguageOnTop);
         _sort = LuceneSearcher.makeSort(Collections.singletonList(Pair.read(sortBy, sortOrder)), _language.presentationLanguage, sortRequestedLanguageOnTop);
