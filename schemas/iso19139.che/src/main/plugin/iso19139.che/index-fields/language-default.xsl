@@ -149,7 +149,13 @@
     <!-- the double // here seems needed to index MD_DataIdentification when
            it is nested in a SV_ServiceIdentification class -->
 
-    <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification|
+      <xsl:for-each select="gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue">
+          <Field name="language" string="{string(.)}" store="true" index="true"/>
+          <Field name="mdLanguage" string="{string(.)}" store="true" index="true"/>
+      </xsl:for-each>
+
+
+      <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification|
 								gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
 								gmd:identificationInfo/srv:SV_ServiceIdentification|
 								gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
