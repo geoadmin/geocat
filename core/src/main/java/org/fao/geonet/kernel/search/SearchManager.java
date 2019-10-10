@@ -1092,7 +1092,7 @@ public class SearchManager implements ISearchManager {
      * otherlanguages and merge the fields with those in defaultLang.
      */
     @SuppressWarnings(value = "unchecked")
-    private void mergeDefaultLang(Element defaultLang, List<Element> otherLanguages) {
+    protected void mergeDefaultLang(Element defaultLang, List<Element> otherLanguages) {
         final String langCode;
         if (defaultLang.getAttribute(Geonet.IndexFieldNames.LOCALE) == null) {
             langCode = "";
@@ -1153,19 +1153,21 @@ public class SearchManager implements ISearchManager {
             }
         });
 
+        for (Element element : (List<Element>) defaultLang.getChildren()) {
+            toInclude.add(element);
+        }
+
         if (toMerge != null) {
             toMerge.detach();
             otherLanguages.remove(toMerge);
-            for (Element element : (List<Element>) defaultLang.getChildren()) {
-                toInclude.add(element);
-            }
             for (Element element : (List<Element>) toMerge.getChildren()) {
                 toInclude.add(element);
             }
             toMerge.removeContent();
-            defaultLang.removeContent();
-            defaultLang.addContent(toInclude);
         }
+
+        defaultLang.removeContent();
+        defaultLang.addContent(toInclude);
     }
 
     // utilities
