@@ -471,6 +471,11 @@
 
       <xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
         <Field name="topicCat" string="{string(.)}" store="true" index="true"/>
+        <xsl:variable name="parentCat" select="tokenize(., '_')[1]"/>
+        <xsl:if test="contains(., '_') and
+                      count(../../gmd:topicCategory/gmd:MD_TopicCategoryCode[. = $parentCat]) = 0">
+          <Field name="topicCat" string="{tokenize(., '_')[1]}" store="true" index="true"/>
+        </xsl:if>
         <!-- <Field name="keyword"
                string="{util:getCodelistTranslation('gmd:MD_TopicCategoryCode', string(.), string($langId))}"
                store="true"
