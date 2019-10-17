@@ -27,6 +27,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
+import com.itextpdf.text.pdf.BaseFont;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -565,6 +566,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             renderer.getSharedContext().setReplacedElementFactory(new ImageReplacedElementFactory(siteUrl, renderer.getSharedContext()
                 .getReplacedElementFactory()));
             renderer.getSharedContext().setDotsPerPixel(13);
+            renderer.getFontResolver().addFont(context.getAppPath().resolve("fonts/ARIALUNI.TTF").toString(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             renderer.setDocumentFromString(htmlToXhtml(htmlContent), siteUrl);
             renderer.layout();
             renderer.createPDF(response.getOutputStream());
