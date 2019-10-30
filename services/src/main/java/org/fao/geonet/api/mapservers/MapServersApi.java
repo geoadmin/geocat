@@ -532,7 +532,6 @@ public class MapServersApi {
 
 
         ServiceContext context = ApiUtils.createServiceContext(request);
-        context.setAsThreadLocal();
 
         String baseUrl = settingManager.getSiteURL(context);
         GeoServerRest gs = new GeoServerRest(requestFactory, g.getUrl(),
