@@ -6,9 +6,12 @@ SummaryFactory.summaryHandler({ it.parent() is it.parent() }, isoHandlers)
 isoHandlers.addDefaultHandlers()
 
 handlers.add name: 'gmd:topicCategory', select: 'gmd:topicCategory', group: true, priority: 5, { elems ->
-  def listItems = elems.findAll { !it.text().isEmpty()}.sort{f.codelistValueLabel("MD_TopicCategoryCode", it.text())}.collect {
-    f.codelistValueLabel("MD_TopicCategoryCode", it.text())
-  };
+  def listItems = elems
+          .findAll { !it.text().isEmpty()}
+          .collectMany{[it.text(), it.text().split("_")[0]]}
+          .unique()
+          .sort{f.codelistValueLabel("MD_TopicCategoryCode", it)}
+          .collect {f.codelistValueLabel("MD_TopicCategoryCode", it)};
   handlers.fileResult("html/list-entry.html", [label: f.nodeLabel(elems[0]), listItems: listItems])
 }
 
