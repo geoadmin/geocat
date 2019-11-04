@@ -24,12 +24,12 @@
 (function() {
   goog.provide('gn_cat_controller');
 
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
 goog.require('gn_admin_menu');
 goog.require('gn_external_viewer');
 goog.require('gn_history');
@@ -263,7 +263,7 @@ goog.require('gn_alert');
       requireProxy: [],
       gnCfg: angular.copy(defaultConfig),
       gnUrl: '',
-      docUrl: 'http://geonetwork-opensource.org/manuals/3.6.x/',
+      docUrl: 'https://geonetwork-opensource.org/manuals/3.8.x/',
       //docUrl: '../../doc/',
       modelOptions: {
         updateOn: 'default blur',
