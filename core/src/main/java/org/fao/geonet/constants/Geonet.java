@@ -651,6 +651,7 @@ public final class Geonet {
         public static final String UUID = "_uuid";
         public static final String IS_HARVESTED = "_isHarvested";
         public static final String OWNER = "_owner";
+        public static final String OWNERNAME = "recordOwner";
         public static final String DUMMY = "_dummy";
         public static final String POPULARITY = "_popularity";
         public static final String RATING = "_rating";

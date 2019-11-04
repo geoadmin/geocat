@@ -447,6 +447,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 				if (user != null) {
 					moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.USERINFO, user.getUsername() + "|"
 							+ user.getSurname() + "|" + user.getName() + "|" + user.getProfile(), true, false));
+                    moreFields.add(SearchManager.makeField(
+                        Geonet.IndexFieldNames.OWNERNAME,
+                        user.getName() + " " + user.getSurname(),
+                        true, true));
 				}
 			}
 
