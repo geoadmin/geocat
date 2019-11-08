@@ -566,7 +566,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             renderer.getSharedContext().setReplacedElementFactory(new ImageReplacedElementFactory(siteUrl, renderer.getSharedContext()
                 .getReplacedElementFactory()));
             renderer.getSharedContext().setDotsPerPixel(13);
-            renderer.getFontResolver().addFont(context.getAppPath().resolve("fonts/ARIALUNI.TTF").toString(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            renderer.getFontResolver().addFont(context.getAppPath().resolve("fonts/DejaVuSans.ttf").toString(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             renderer.setDocumentFromString(htmlToXhtml(htmlContent), siteUrl);
             renderer.layout();
             renderer.createPDF(response.getOutputStream());
