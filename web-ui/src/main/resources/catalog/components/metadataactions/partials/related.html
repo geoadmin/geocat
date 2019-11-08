@@ -46,9 +46,15 @@
                        mainType.indexOf('LINK') === 0 ||
                        mainType.indexOf('DEFAULT') === 0 ||
                        r.protocol === 'OGC:WFS') &&
-                       r.locDescription.length > 0">
+                       r.locDescription.length > 0  &&
+                      mainType !== 'LINK'">
           {{::r.locDescription | striptags | characters:150}}
         </h4>
+
+        <h4 data-ng-if="mainType === 'LINK'">
+          {{::(r.title | gnLocalized: lang) || (r.locDescription | striptags | characters:150)}}
+        </h4>
+        
         <div data-ng-switch on="mainType">
           <div data-ng-switch-when="WMS">
             <p class="text-muted">
