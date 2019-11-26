@@ -187,5 +187,7 @@
       $scope.$watch('gnMdViewObj.from', function(v) {
         $scope.fromView = v ? v.substring(1) : v;
       });
+
+      $scope.isArray = angular.isArray;
     }]);
 })();

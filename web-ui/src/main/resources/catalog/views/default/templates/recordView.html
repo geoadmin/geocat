@@ -566,9 +566,17 @@
                                 mdView.current.record.tempExtentEnd">
               <dt data-translate>tempExtentBegin</dt>
               <dd>
-                <span data-gn-humanize-time="{{mdView.current.record.tempExtentBegin}}"/>
-                &nbsp;<i class="fa fa-fw fa-forward"></i>
-                <span data-gn-humanize-time="{{mdView.current.record.tempExtentEnd}}"/>
+                <div data-ng-if="!isArray(mdView.current.record.tempExtentBegin)">
+                  <span data-gn-humanize-time="{{mdView.current.record.tempExtentBegin}}"/>
+                  &nbsp;<i class="fa fa-fw fa-forward"></i>
+                  <span data-gn-humanize-time="{{mdView.current.record.tempExtentEnd}}"/>
+                </div>
+
+                <div data-ng-if="isArray(mdView.current.record.tempExtentBegin)" data-ng-repeat="begin in mdView.current.record.tempExtentBegin track by $index">
+                  <span data-gn-humanize-time="{{begin}}"/>
+                  &nbsp;<i class="fa fa-fw fa-forward"></i>
+                  <span data-gn-humanize-time="{{mdView.current.record.tempExtentEnd[$index]}}"/>
+                </div>
               </dd>
             </dl>
             </p>
