@@ -511,16 +511,20 @@
           </div>
           <div data-gn-md-feedback="mdView.current.record"></div>
 
+          <section class="gn-md-side" data-ng-if="mdView.current.record.geoDesc">
+            <h4> <span data-translate="">spatialOrTempExtent</span> </h4>
+            <p>
+            <ul>
+              <li data-ng-repeat="d in mdView.current.record.geoDesc">{{d}}</li>
+            </ul>
+            </p>
+          </section>
+
           <section class="gn-md-side-extent" data-ng-if="mdView.current.record.geoBox || mdView.current.record.boundingPolygon">
             <h2>
               <i class="fa fa-fw fa-map-marker"></i>
               <span data-translate="">extent</span>
             </h2>
-            <p data-ng-if="mdView.current.record.geoDesc">
-            <ul>
-              <li data-ng-repeat="d in mdView.current.record.geoDesc">{{d}}</li>
-            </ul>
-            </p>
             <!-- TODO: use map config -->
             <p data-ng-if="mdView.current.record.geoBox || mdView.current.record.boundingPolygon">
               <img class="gn-img-thumbnail img-thumbnail gn-img-extent"

@@ -194,6 +194,7 @@
   "metadataContact": "Contact for the metadata",
   "metadataRemoved": "{{title}} removed.",
   "extent": "Spatial extent",
+  "spatialOrTempExtent": "Extent",
   "aboutThisResource": "About this resource",
   "preview": "Preview",
   "metadataInformation": "Metadata information",

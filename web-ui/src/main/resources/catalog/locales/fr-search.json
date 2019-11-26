@@ -194,6 +194,7 @@
     "metadataContact": "Contact pour la fiche",
     "metadataRemoved": "{{title}} supprimé.",
     "extent": "Étendue spatiale",
+    "spatialOrTempExtent": "Emprise",
     "aboutThisResource": "À propos de cette ressource",
     "preview": "Aperçu",
     "metadataInformation": "Informations sur les métadonnées",
