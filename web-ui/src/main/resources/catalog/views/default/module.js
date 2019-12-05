@@ -130,6 +130,7 @@
       $scope.gnWmsQueue = gnWmsQueue;
       $scope.$location = $location;
       $scope.activeTab = '/home';
+      $scope.formatter = gnGlobalSettings.gnCfg.mods.search.formatter;
       $scope.listOfResultTemplate = gnGlobalSettings.gnCfg.mods.search.resultViewTpls;
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
       $scope.advandedSearchTemplate = gnSearchSettings.advancedSearchTemplate;
@@ -137,6 +138,10 @@
       $scope.facetConfig = gnSearchSettings.facetConfig;
       $scope.facetTabField = gnSearchSettings.facetTabField;
       $scope.location = gnSearchLocation;
+      $scope.fluidLayout = gnGlobalSettings.gnCfg.mods.home.fluidLayout;
+      $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
+      $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
+      $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
       $scope.toggleMap = function () {
         $(searchMap.getTargetElement()).toggle();
         $('button.gn-minimap-toggle > i').toggleClass('fa-angle-double-left fa-angle-double-right');
@@ -199,31 +204,14 @@
         }
         return false;
       };
-      $scope.openRecord = function(index, md, records) {
-        gnMdView.feedMd(index, md, records);
-      };
-
       $scope.closeRecord = function() {
         gnMdView.removeLocationUuid();
       };
-      $scope.nextRecord = function() {
-        var nextRecordId = mdView.current.index + 1;
-        if (nextRecordId === mdView.records.length) {
-          // When last record of page reached, go to next page...
-          // Not the most elegant way to do it, but it will
-          // be easier using index search components
-          $scope.$broadcast('nextPage');
-        } else {
-          $scope.openRecord(nextRecordId);
-        }
+      $scope.nextPage = function() {
+        $scope.$broadcast('nextPage');
       };
-      $scope.previousRecord = function() {
-        var prevRecordId = mdView.current.index - 1;
-        if (prevRecordId === -1) {
-          $scope.$broadcast('previousPage');
-        } else {
-          $scope.openRecord(prevRecordId);
-        }
+      $scope.previousPage = function() {
+        $scope.$broadcast('previousPage');
       };
 
       /**
@@ -271,23 +259,27 @@
         addMdLayerToMap: function (link, md) {
           var config = {
             uuid: md ? md.getUuid() : null,
-            type: link.protocol.indexOf('WMTS') > -1 ? 'wmts' : 'wms',
+            type:
+              link.protocol.indexOf('WMTS') > -1 ? 'wmts' :
+              (link.protocol == 'ESRI:REST' ? 'esrirest' : 'wms'),
             url: $filter('gnLocalized')(link.url) || link.url
           };
 
+          var title = link.title;
+          var name = link.name;
           if (angular.isObject(link.title)) {
-            link.title = $filter('gnLocalized')(link.title);
+            title = $filter('gnLocalized')(link.title);
           }
           if (angular.isObject(link.name)) {
-            link.name = $filter('gnLocalized')(link.name);
+            name = $filter('gnLocalized')(link.name);
           }
 
-          if (link.name && link.name !== '') {
-            config.name = link.name;
+          if (name && name !== '') {
+            config.name = name;
             config.group = link.group;
             // Related service return a property title for the name
-          } else if (link.title) {
-            config.name = link.title;
+          } else if (title) {
+            config.name = title;
           }
 
           // if an external viewer is defined, use it here
@@ -299,7 +291,7 @@
               type: config.type,
               url: config.url,
               name: config.name,
-              title: link.title
+              title: title
             });
             return;
           }
@@ -342,6 +334,7 @@
       setActiveTab();
       $scope.$on('$locationChangeSuccess', setActiveTab);
 
+      var sortConfig = gnSearchSettings.sortBy.split('#');
       angular.extend($scope.searchObj, {
         advancedMode: false,
         from: 1,
@@ -357,12 +350,14 @@
         defaultParams: {
           'facet.q': '',
           resultType: gnSearchSettings.facetsSummaryType || 'details',
-          sortBy: gnSearchSettings.sortBy || 'relevance'
+          sortBy: sortConfig[0] || 'relevance',
+          sortOrder: sortConfig[1] || ''
         },
         params: {
           'facet.q': gnSearchSettings.defaultSearchString || '',
           resultType: gnSearchSettings.facetsSummaryType || 'details',
-          sortBy: gnSearchSettings.sortBy || 'relevance'
+          sortBy: sortConfig[0] || 'relevance',
+          sortOrder: sortConfig[1] || ''
         },
         sortbyValues: gnSearchSettings.sortbyValues
       });

@@ -39,8 +39,8 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
@@ -56,6 +56,7 @@ import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -100,7 +101,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         String id = harvesterSettingsManager.add("harvesting", "node", getType());
         storeNode(params, "id:" + id);
 
-        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
+        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), SourceType.harvester);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
 
@@ -138,7 +139,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
             log.debug("Starting to delete locally existing metadata " +
                 "from the same source if they " +
                 " were not in this harvesting result...");
-            List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findAllIdsBy(MetadataSpecs.hasHarvesterUuid(params.getUuid()));
+            List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findAllIdsBy((Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(params.getUuid()));
             for (Integer existingId : existingMetadata) {
 
                 if (cancelMonitor.get()) {
@@ -175,10 +176,10 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
             true);
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-        repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        repository.deleteAllByMetadataId(Integer.parseInt(id));
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        metadata.getMetadataCategories().clear();
+        metadata.getCategories().clear();
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
         metadataManager.flush();
@@ -213,7 +214,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         String id = String.valueOf(metadata.getId());
 
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         metadataManager.flush();
 
@@ -255,7 +256,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         //--- we update a copy first because if there is an exception LocalFilesystemParams
         //--- could be half updated and so it could be in an inconsistent state
 
-        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
+        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), SourceType.harvester);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.getUuid());
 

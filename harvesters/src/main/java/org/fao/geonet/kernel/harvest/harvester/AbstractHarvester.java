@@ -295,17 +295,17 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
                 final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
                 final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
-                
+
                 final Specifications<? extends AbstractMetadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().getUuid()));
                 Set<String> sources = new HashSet<String>();
                 for (Integer id : metadataRepository.findAllIdsBy(ownedByHarvester)) {
                     sources.add(metadataUtils.findOne(id).getSourceInfo().getSourceId());
                     metadataManager.deleteMetadata(context, "" + id);
                 }
-                
+
                 // Remove all sources related to the harvestUuid if they are not linked to any record anymore
                 for (String sourceUuid : sources) {
-                    Long ownedBySource = 
+                    Long ownedBySource =
                             metadataRepository.count(Specifications.where(MetadataSpecs.hasSource(sourceUuid)));
                     if (ownedBySource == 0 && !sourceUuid.equals(params.getUuid()) && sourceRepository.exists(sourceUuid)) {
                         removeIcon(sourceUuid);
@@ -656,8 +656,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                         logger.warning("Raised exception while harvesting from : " + nodeName);
                         logger.warning(" (C) Class   : " + t.getClass().getSimpleName());
                         logger.warning(" (C) Message : " + t.getMessage());
+                        logger.error(t);
                         error = t;
-                        t.printStackTrace();
                         errors.add(new HarvestError(context, t));
                     } finally {
                         List<HarvestError> harvesterErrors = getErrors();
@@ -721,13 +721,13 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
             } catch (Exception e2) {
                 logger.error("Raised exception while attempting to send email");
                 logger.error(" (C) Exc   : " + e2);
-                e2.printStackTrace();
+                logger.error(e2);
             }
 
         } catch (Exception e) {
             logger.warning("Raised exception while attempting to store harvest history from : " + nodeName);
-            e.printStackTrace();
-            logger.warning(" (C) Exc   : " + e);
+            logger.warning(" (C) Exc   : " + e.getMessage());
+            logger.error(e);
         }
     }
 
@@ -818,11 +818,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     protected abstract void doHarvest(Logger l) throws Exception;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Protected storage methods
-    //---
-    //---------------------------------------------------------------------------
 
     /**
      * Invoked from doAdd and doUpdate in sub class implementations.
@@ -859,13 +854,15 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         harvesterSettingsManager.add(ID_PREFIX + optionsId, "every", params.getEvery());
         harvesterSettingsManager.add(ID_PREFIX + optionsId, "oneRunOnly", params.isOneRunOnly());
         harvesterSettingsManager.add(ID_PREFIX + optionsId, "overrideUUID", params.getOverrideUuid());
+        harvesterSettingsManager.add(ID_PREFIX + optionsId, "ifRecordExistAppendPrivileges", params.isIfRecordExistAppendPrivileges());
         harvesterSettingsManager.add(ID_PREFIX + optionsId, "status", status);
 
         //--- setup content node ---------------------------------------
 
         harvesterSettingsManager.add(ID_PREFIX + contentId, "importxslt", params.getImportXslt());
+        harvesterSettingsManager.add(ID_PREFIX + contentId, "batchEdits", params.getBatchEdits());
         harvesterSettingsManager.add(ID_PREFIX + contentId, "validate", params.getValidate());
-        
+
         //--- setup stats node ----------------------------------------
 
         harvesterSettingsManager.add(ID_PREFIX + infoId, "lastRun", "");
@@ -941,7 +938,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
             add(res, "badFormat", result.badFormat);
             add(res, "collectionDatasetRecords", result.collectionDatasetRecords);
             add(res, "datasetUuidExist", result.datasetUuidExist);
+            add(res, "privilegesAppendedOnExistingRecord", result.privilegesAppendedOnExistingRecord);
             add(res, "doesNotValidate", result.doesNotValidate);
+            add(res, "xpathFilterExcluded", result.xpathFilterExcluded);
             add(res, "duplicatedResource", result.duplicatedResource);
             add(res, "fragmentsMatched", result.fragmentsMatched);
             add(res, "fragmentsReturned", result.fragmentsReturned);

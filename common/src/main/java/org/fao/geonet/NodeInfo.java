@@ -23,6 +23,8 @@
 
 package org.fao.geonet;
 
+import com.google.common.collect.ImmutableSet;
+
 import java.io.Serializable;
 
 /**
@@ -31,6 +33,27 @@ import java.io.Serializable;
  * User: Jesse Date: 11/27/13 Time: 2:35 PM
  */
 public class NodeInfo implements Serializable {
+    public static final String DEFAULT_NODE = "srv";
+
+    /**
+     * The webapp based folder can not be used as a portal identifier.
+     */
+    public static ImmutableSet<String> EXCLUDED_NODE_IDS;
+    static {
+        EXCLUDED_NODE_IDS = ImmutableSet.<String>builder()
+            .add("catalog")
+            .add("conversion")
+            .add("doc")
+            .add("htmlCache")
+            .add("images")
+            .add("loc")
+            .add("resources")
+            .add("xml")
+            .add("xsl")
+            .add("xslt")
+            .build();
+    }
+
     private String id = "srv";
     private boolean defaultNode = true;
     private boolean readOnly = false;

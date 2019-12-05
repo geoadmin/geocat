@@ -369,8 +369,7 @@ public class SchemaManager {
                 realDeletePluginSchema(name, doDependencies);
             } catch (Exception e) {
                 String errStr = "Could not update schema " + name + ", remove of outdated schema failed. Exception message if any is " + e.getMessage();
-                Log.error(Geonet.SCHEMA_MANAGER, errStr);
-                e.printStackTrace();
+                Log.error(Geonet.SCHEMA_MANAGER, errStr, e);
                 throw new OperationAbortedEx(errStr, e);
             }
 
@@ -915,7 +914,7 @@ public class SchemaManager {
 
             writeSchemaPluginCatalog(schemaPluginCatRoot);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.SCHEMA_MANAGER, e.getMessage(), e);
             hmSchemas.remove(name);
             IO.deleteFileOrDirectory(schemaDir);
             throw new OperationAbortedEx("Failed to add schema " + name + " : " + e.getMessage(), e);
@@ -1143,7 +1142,7 @@ public class SchemaManager {
         try {
             baseNrInt = Integer.parseInt(baseNr);
         } catch (NumberFormatException nfe) {
-            nfe.printStackTrace();
+            Log.error(Geonet.SCHEMA_MANAGER, "Cannot decode blank number from " + baseBlank, nfe);
             throw new IllegalArgumentException("Cannot decode blank number from " + baseBlank);
         }
         return baseNrInt;
@@ -1314,11 +1313,11 @@ public class SchemaManager {
                 stage = "adding the schema information";
                 addSchema(applicationContext, schemasDir, schemaPluginCatRoot, schemaFile, suggestFile, substitutesFile,
                     idFile, oasisCatFile, conversionsFile);
+                ResolverWrapper.createResolverForSchema(schemasDir.getFileName().toString(), oasisCatFile);
             }
         } catch (Exception e) {
             String errStr = "Failed whilst " + stage + ". Exception message if any is " + e.getMessage();
-            Log.error(Geonet.SCHEMA_MANAGER, errStr);
-            e.printStackTrace();
+            Log.error(Geonet.SCHEMA_MANAGER, errStr, e);
             throw new OperationAbortedEx(errStr, e);
         }
 
@@ -1490,6 +1489,7 @@ public class SchemaManager {
 
         mds.setAppMinorVersionSupported(root.getChildText("appMinorVersionSupported", GEONET_SCHEMA_NS));
         mds.setAppMajorVersionSupported(root.getChildText("appMajorVersionSupported", GEONET_SCHEMA_NS));
+        mds.setDependsOn(root.getChildText("depends", GEONET_SCHEMA_NS));
     }
 
     private Map<String, String> getSchemaIdentMultilingualProperty(Element root, String propName) {

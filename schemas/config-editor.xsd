@@ -327,6 +327,11 @@ Element to match for creating the table.
                 <xs:documentation>Table header label (from strings.xml), if not defined is used the value of attribute 'for' use the related element label from labels.xml</xs:documentation>
               </xs:annotation>
             </xs:attribute>
+            <xs:attribute name="fieldset" type="xs:string" use="optional" fixed="false">
+              <xs:annotation>
+                <xs:documentation>To not to add an extra section around the table. This means that editor can't remove the element targeted by the table.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
             <xs:sequence>
               <xs:element maxOccurs="1" ref="header"/>
               <xs:element maxOccurs="1" ref="row"/>
@@ -684,6 +689,20 @@ A good default config with all directives is:
         <directive data-gn-onlinesrc-list=""
                    types="thumbnail|onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
       </sidePanel>
+
+
+For the online source panel, the list of choices can be overridden with a "config-id" attribute 
+pointing to a JSON configuration file in config/associated-panel. This file allows to customize
+the list of type of link user can set by defining for each type the list of fields to display and
+default values for fields (eg. protocol, function, application profile).
+
+.. code-block:: xml
+
+        <directive data-gn-onlinesrc-list=""
+                   types="thumbnail|onlinesrc|parent|dataset|service|source|sibling|associated|fcats"
+                   config-id="remotesensing"/>
+      </sidePanel>
+
 
 
 To include text block use the following:
@@ -1468,6 +1487,14 @@ Example of a drowdown button with 3 coordinates system to choose from:
           </action>
 
 
+Example of a button to display a suggestion form:
+
+.. code-block:: xml
+
+          <action type="suggest"
+                  process="add-columns-from-csv"/>
+
+
         ]]></xs:documentation>
     </xs:annotation>
     <xs:complexType>
@@ -1524,6 +1551,7 @@ For example, for sibling panel, the association type and initiative type could b
           <xs:restriction base="xs:string">
             <xs:enumeration value="add"/>
             <xs:enumeration value="process"/>
+            <xs:enumeration value="suggest"/>
             <xs:enumeration value="associatedResource"/>
           </xs:restriction>
         </xs:simpleType>
@@ -1708,6 +1736,36 @@ An autocompletion list based on a thesaurus.
                 ]]></xs:documentation>
               </xs:annotation>
             </xs:enumeration>
+            <xs:enumeration value="data-gn-anchor-switcher">
+              <xs:annotation>
+                <xs:documentation>Facilitates easy conversion between Characterstring and Anchor.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-logo-selector">
+              <xs:annotation>
+                <xs:documentation>Users can upload a file into the file storage of a record. The link to the file will be stored as Anchor.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-checkbox-with-nilreason">
+              <xs:annotation>
+                <xs:documentation>Boolean field with explicit true, false and nill options</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-field-upload-div">
+              <xs:annotation>
+                <xs:documentation>Option to upload a document, link and title are stored in an Anchor element.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-codelist-picker">
+              <xs:annotation>
+                <xs:documentation>Select a value from an ISO codelist</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-draw-bbox">
+              <xs:annotation>
+                <xs:documentation>Interactive map facilitating to draw a bounds element</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
           </xs:restriction>
         </xs:simpleType>
       </xs:union>
@@ -1731,8 +1789,23 @@ An autocompletion list based on a thesaurus.
             <xs:enumeration value="data-gn-directory-entry-selector">
               <xs:annotation>
                 <xs:documentation><![CDATA[
-                  A classic add control with a popup to choose from contact directory and an autocompletion list to search in the contact directory and add a contact.
-                  ]]></xs:documentation>
+This field facilitates users in selecting a `subtemplate` (also known as xml-snippet) from the catalogue. Subtemplates are mostly used to store contact details, 
+but can also be used to store snippets of xml having Quality reports, Access constraints, CRS definitions, etc. 
+
+.. code-block:: xml
+
+    <for name="gmd:report" 
+      addDirective="data-gn-directory-entry-selector" 
+      xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result">
+      <directiveAttributes 
+        data-template-add-action="true" 
+        data-search-action="true" 
+        data-popup-action="false" 
+        data-filter='{"_root": "gmd:DQ_DomainConsistency"}' 
+        data-template-type="report" 
+        data-insert-modes="text" />
+    </for>
+                ]]></xs:documentation>
               </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="data-gn-thesaurus-selector">

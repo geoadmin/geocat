@@ -42,6 +42,7 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.services.resources.handlers.IResourceDownloadHandler;
 import org.fao.geonet.util.MailSender;
 import org.fao.geonet.utils.FilePathChecker;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
@@ -69,7 +70,7 @@ public class Download {
     @Autowired
     private ServiceManager serviceManager;
 
-    @RequestMapping(value = "/{lang}/resources.get")
+    @RequestMapping(value = "/{portal}/{lang}/resources.get")
     public HttpEntity<byte[]> exec(@PathVariable String lang,
                                    @RequestParam(value = Params.ID, required = false) String idParam,
                                    @RequestParam(value = Params.UUID, required = false) String uuidParam,
@@ -165,7 +166,7 @@ public class Download {
                                 sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS),
                                 from, fromDescr, email, null, subject, message);
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            Log.error(Geonet.RESOURCES, e.getMessage(), e);
                         }
                     }
                 }

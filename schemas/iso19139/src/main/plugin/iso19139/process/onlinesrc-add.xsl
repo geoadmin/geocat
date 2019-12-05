@@ -335,7 +335,7 @@ Insert is made in first transferOptions found.
                 <xsl:if test="$function != ''">
                   <gmd:function>
                     <gmd:CI_OnLineFunctionCode
-                      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode"
+                      codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode"
                       codeListValue="{$function}"/>
                   </gmd:function>
                 </xsl:if>
@@ -414,7 +414,6 @@ Insert is made in first transferOptions found.
               <xsl:if test="$name != ''">
                 <gmd:name>
                   <xsl:choose>
-
                     <!--Multilingual-->
                     <xsl:when test="contains($name, '#')">
                       <xsl:for-each select="tokenize($name, $separator)">
@@ -422,6 +421,7 @@ Insert is made in first transferOptions found.
                                       select="substring-before(., '#')"></xsl:variable>
                         <xsl:variable name="nameValue"
                                       select="substring-after(., '#')"></xsl:variable>
+
                         <xsl:if
                           test="$useOnlyPTFreeText = 'false' and $nameLang = $mainLang">
                           <gco:CharacterString>
@@ -506,7 +506,7 @@ Insert is made in first transferOptions found.
               <xsl:if test="$function != ''">
                 <gmd:function>
                   <gmd:CI_OnLineFunctionCode
-                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode"
+                    codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode"
                     codeListValue="{$function}"/>
                 </gmd:function>
               </xsl:if>

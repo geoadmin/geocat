@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,6 +33,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.google.common.collect.ImmutableSet;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -58,60 +61,39 @@ import org.fao.geonet.utils.AbstractHttpRequest;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
+import org.jdom.Content;
 import org.jdom.Element;
 
 import jeeves.server.context.ServiceContext;
-
-//=============================================================================
+import org.jdom.Namespace;
 
 class Harvester implements IHarvester<HarvestResult> {
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
     // FIXME : Currently switch from POST to GET for testing mainly.
     public static final String PREFERRED_HTTP_METHOD = AbstractHttpRequest.Method.GET.toString();
-    //--------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //--------------------------------------------------------------------------
+
     private final static String ATTRIB_SEARCHRESULT_MATCHED = "numberOfRecordsMatched";
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
     private final static String ATTRIB_SEARCHRESULT_RETURNED = "numberOfRecordsReturned";
 
-    //---------------------------------------------------------------------------
     private final static String ATTRIB_SEARCHRESULT_NEXT = "nextRecord";
 
-    //---------------------------------------------------------------------------
     private static int GETRECORDS_REQUEST_MAXRECORDS = 20;
 
-    //---------------------------------------------------------------------------
     private static String CONSTRAINT_LANGUAGE_VERSION = "1.1.0";
 
-    //---------------------------------------------------------------------------
     //FIXME version should be parametrized
     private static String GETCAPABILITIES_PARAMETERS = "SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2";
     private final AtomicBoolean cancelMonitor;
 
-    //---------------------------------------------------------------------------
     private Logger log;
     private CswParams params;
     private ServiceContext context;
 
-    //---------------------------------------------------------------------------
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */
     private List<HarvestError> errors = new LinkedList<HarvestError>();
 
-    //---------------------------------------------------------------------------
 
     public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, CswParams params) {
         this.cancelMonitor = cancelMonitor;
@@ -122,7 +104,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
     public HarvestResult harvest(Logger log) throws Exception {
         this.log = log;
-        log.info("Retrieving capabilities file for : " + params.getName());
+        log.debug("Retrieving capabilities file for : " + params.getName());
 
         CswServer server = retrieveCapabilities(log);
         if (cancelMonitor.get()) {
@@ -130,8 +112,6 @@ class Harvester implements IHarvester<HarvestResult> {
         }
 
         //--- perform all searches
-
-        Set<RecordInfo> records = new HashSet<RecordInfo>();
 
         Search s = new Search();
 
@@ -149,14 +129,13 @@ class Harvester implements IHarvester<HarvestResult> {
             }
         }
 
-        HarvestResult result = new HarvestResult();
         boolean error = false;
+        HarvestResult result = null;
+    	Set<String> uuids = new HashSet<String>();
         try {
-            records.addAll(search(server, s));
-
-            //--- align local node
             Aligner aligner = new Aligner(cancelMonitor, context, server, params, log);
-            result = aligner.align(records, errors);
+            searchAndAlign(server, s, uuids, aligner, errors);
+            result = aligner.cleanupRemovedRecords(uuids);
         } catch (Exception t) {
             error = true;
             log.error("Unknown error trying to harvest");
@@ -170,14 +149,13 @@ class Harvester implements IHarvester<HarvestResult> {
             errors.add(new HarvestError(context, t));
         }
 
-        log.info("Total records processed in all searches :" + records.size());
+        log.info("Total records processed in all searches :" + uuids.size());
         if (error) {
             log.warning("Due to previous errors the align process has not been called");
         }
 
         return result;
     }
-    //---------------------------------------------------------------------------
 
     /**
      * Does CSW GetCapabilities request and check that operations needed for harvesting (ie.
@@ -226,8 +204,6 @@ class Harvester implements IHarvester<HarvestResult> {
         return server;
     }
 
-    //---------------------------------------------------------------------------
-
     private boolean checkOperation(Logger log, CswServer server, String name) {
         CswOperation oper = server.getOperation(name);
 
@@ -246,8 +222,11 @@ class Harvester implements IHarvester<HarvestResult> {
 
     /**
      * Does CSW GetRecordsRequest.
+     * @param aligner
+     * @param errors2
      */
-    private Set<RecordInfo> search(CswServer server, Search s) throws Exception {
+    private void searchAndAlign(CswServer server, Search s, Set<String> uuids,
+        Aligner aligner, List<HarvestError> harvesterErrors) throws Exception {
         int start = 1;
 
         GetRecordsRequest request = new GetRecordsRequest(context);
@@ -256,7 +235,7 @@ class Harvester implements IHarvester<HarvestResult> {
         //request.setOutputSchema(OutputSchema.OGC_CORE);	// Use default value
         request.setElementSetName(ElementSetName.SUMMARY);
         request.setMaxRecords(GETRECORDS_REQUEST_MAXRECORDS);
-        request.setDistribSearch(params.queryScope.equalsIgnoreCase("true"));
+        request.setDistribSearch(params.queryScope.equalsIgnoreCase("distributed"));
         request.setHopCount(params.hopCount);
 
         CswOperation oper = server.getOperation(CswServer.GET_RECORDS);
@@ -270,7 +249,7 @@ class Harvester implements IHarvester<HarvestResult> {
         }
         // Simple fallback mechanism. Try search with PREFERRED_HTTP_METHOD method, if fails change it
         try {
-            log.info(String.format("Trying the search with HTTP %s method.", PREFERRED_HTTP_METHOD));
+            log.debug(String.format("Trying the search with HTTP %s method.", PREFERRED_HTTP_METHOD));
             request.setStartPosition(start);
             doSearch(request, start, 1);
         } catch (Exception ex) {
@@ -283,13 +262,12 @@ class Harvester implements IHarvester<HarvestResult> {
             configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD.equals("GET") ? "POST" : "GET");
         }
 
-        Set<RecordInfo> records = new HashSet<RecordInfo>();
 
         while (true) {
             if(this.cancelMonitor.get()) {
               log.error("Harvester stopped in the middle of running!");
               //Returning whatever, we have to move on and finish!
-              return records;
+              return;
             }
             request.setStartPosition(start);
             Element response = doSearch(request, start, GETRECORDS_REQUEST_MAXRECORDS);
@@ -312,20 +290,21 @@ class Harvester implements IHarvester<HarvestResult> {
             if(this.cancelMonitor.get()) {
               log.error("Harvester stopped in the middle of running!");
               //Returning whatever, we have to move on and finish!
-              return records;
+              return;
             }
             @SuppressWarnings("unchecked")
             List<Element> list = results.getChildren();
             int foundCnt = 0;
 
             log.debug("Extracting all elements in the csw harvesting response");
+            Set<RecordInfo> records = new HashSet<RecordInfo>();
             for (Element record : list) {
-                foundCnt++;
                 try {
                     RecordInfo recInfo = getRecordInfo((Element) record.clone());
 
                     if (recInfo != null) {
                         records.add(recInfo);
+                        uuids.add(recInfo.uuid);
                     }
 
                 } catch (Exception ex) {
@@ -336,6 +315,10 @@ class Harvester implements IHarvester<HarvestResult> {
                 }
 
             }
+
+            foundCnt += records.size();
+            //Align here to keep memory clean
+            aligner.align(records, harvesterErrors);
 
             //--- check to see if we have to perform other searches
             int matchedCount = getSearchResultAttribute(results, ATTRIB_SEARCHRESULT_MATCHED);
@@ -397,16 +380,11 @@ class Harvester implements IHarvester<HarvestResult> {
             start += returnedCount;
         }
 
-        log.info("Records added to result list : " + records.size());
+        log.debug("Records added to result list : " + uuids.size());
 
-        return records;
+        return;
     }
 
-    //---------------------------------------------------------------------------
-
-    /**
-     * TODO Javadoc.
-     */
     private void setUpRequest(GetRecordsRequest request, CswOperation oper, CswServer server, Search s, URL url,
                               ConstraintLanguage constraintLanguage, String constraint, AbstractHttpRequest.Method method) {
 
@@ -472,22 +450,35 @@ class Harvester implements IHarvester<HarvestResult> {
         }
     }
 
+    public static ImmutableSet<String> bboxParameters;
+    static {
+        bboxParameters = ImmutableSet.<String>builder()
+            .add("bbox-xmin")
+            .add("bbox-ymin")
+            .add("bbox-xmax")
+            .add("bbox-ymax")
+            .build();
+    }
     private String getFilterConstraint(final Search s) {
         //--- collect queriables
-
         ArrayList<Element> queriables = new ArrayList<Element>();
+        Map<String, Double> bboxCoordinates = new HashMap<String, Double>();
 
         if (!s.attributesMap.isEmpty()) {
             for (Map.Entry<String, String> entry : s.attributesMap.entrySet()) {
                 if (entry.getValue() != null) {
                     // If the queriable has the namespace, use it
                     String queryableName = entry.getKey();
-                    if (queryableName.contains("__")) {
+                    if (bboxParameters.contains(queryableName)
+                        && StringUtils.isNotEmpty(entry.getValue())) {
+                        bboxCoordinates.put(queryableName, Double.valueOf(entry.getValue()));
+                    } else if (queryableName.contains("__")) {
                         queryableName = queryableName.replace("__", ":");
+                        buildFilterQueryable(queriables, queryableName, entry.getValue());
                     } else if (!queryableName.contains(":")) {
                         queryableName = "csw:" + queryableName;
+                        buildFilterQueryable(queriables, queryableName, entry.getValue());
                     }
-                    buildFilterQueryable(queriables, queryableName, entry.getValue());
                 }
             }
         } else {
@@ -503,7 +494,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
         Element filter = new Element("Filter", Csw.NAMESPACE_OGC);
 
-        if (queriables.size() == 1)
+        if (queriables.size() == 1 && bboxCoordinates.size() == 0)
             filter.addContent(queriables.get(0));
         else {
             Element and = new Element("And", Csw.NAMESPACE_OGC);
@@ -511,13 +502,50 @@ class Harvester implements IHarvester<HarvestResult> {
             for (Element prop : queriables)
                 and.addContent(prop);
 
+            if (bboxCoordinates.size() > 0) {
+                and.addContent(buildBboxFilter(bboxCoordinates));
+            }
             filter.addContent(and);
         }
 
         return Xml.getString(filter);
     }
 
-    //---------------------------------------------------------------------------
+
+    /*
+    Build an ogc:BBOX element from bbox coordinates.
+
+    <ogc:Filter>
+        <ogc:And>
+          <ogc:PropertyIsEqualTo>
+            <ogc:PropertyName>csw:AnyText</ogc:PropertyName>
+            <ogc:Literal>roads</ogc:Literal>
+          </ogc:PropertyIsEqualTo>
+          <ogc:BBOX>
+            <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+            <gml:Envelope>
+              <gml:lowerCorner>47 -5</gml:lowerCorner>
+              <gml:upperCorner>55 20</gml:upperCorner>
+            </gml:Envelope>
+          </ogc:BBOX>*/
+    private Content buildBboxFilter(Map<String, Double> bboxCoordinates) {
+        Namespace gml = Namespace.getNamespace("http://www.opengis.net/gml");
+
+        Element bbox = new Element("BBOX", Csw.NAMESPACE_OGC);
+        Element bboxProperty = new Element("PropertyName", Csw.NAMESPACE_OGC);
+        bboxProperty.setText("ows:BoundingBox");
+        bbox.addContent(bboxProperty);
+        Element envelope = new Element("Envelope", gml);
+        Element lowerCorner = new Element("lowerCorner", gml);
+        lowerCorner.setText(bboxCoordinates.get("bbox-xmin") + " " + bboxCoordinates.get("bbox-ymin"));
+        Element upperCorner = new Element("upperCorner", gml);
+        upperCorner.setText(bboxCoordinates.get("bbox-xmax") + " " + bboxCoordinates.get("bbox-ymax"));
+        envelope.addContent(lowerCorner);
+        envelope.addContent(upperCorner);
+        bbox.addContent(envelope);
+        return bbox;
+    }
+
     private void buildFilterQueryable(List<Element> queryables, String name, String value) {
         if (value.contains("%")) {
             buildFilterQueryable(queryables, name, value, "PropertyIsLike");
@@ -555,41 +583,44 @@ class Harvester implements IHarvester<HarvestResult> {
     }
 
     private String getCqlConstraint(Search s) {
-        //--- collect queriables
-
         ArrayList<String> queryables = new ArrayList<String>();
+        Map<String, Double> bboxCoordinates = new HashMap<String, Double>();
 
         if (!s.attributesMap.isEmpty()) {
             for (Map.Entry<String, String> entry : s.attributesMap.entrySet()) {
-                if (entry.getValue() != null) {
+                if (bboxParameters.contains(entry.getKey())
+                    && StringUtils.isNotEmpty(entry.getValue())) {
+                    bboxCoordinates.put(entry.getKey(), Double.valueOf(entry.getValue()));
+                } else if (entry.getValue() != null) {
                     buildCqlQueryable(queryables, "csw:" + entry.getKey(), entry.getValue());
                 }
             }
         } else {
             log.debug("no search criterion specified, harvesting all ... ");
         }
-
-		/*
-        buildCqlQueryable(queryables, "csw:AnyText", s.freeText);
-		buildCqlQueryable(queryables, "dc:title", s.title);
-		buildCqlQueryable(queryables, "dct:abstract", s.abstrac);
-		buildCqlQueryable(queryables, "dc:subject", s.subject);
-		buildCqlQueryable(queryables, "dct:denominator", s.minscale, ">=");
-		buildCqlQueryable(queryables, "dct:denominator", s.maxscale, "<=");
-		*/
-
         //--- build CQL query
-
         StringBuffer sb = new StringBuffer();
 
         for (int i = 0; i < queryables.size(); i++) {
             sb.append(queryables.get(i));
 
-            if (i < queryables.size() - 1)
+            if (i < queryables.size() - 1) {
                 sb.append(" AND ");
+            }
         }
 
-        return (queryables.size() == 0) ? null : sb.toString();
+        if (bboxCoordinates.size() > 0) {
+            if (queryables.size() > 0) {
+                sb.append(" AND ");
+            }
+            //BBOX(the_geom, -90, 40, -60, 45)
+            sb.append(String.format("BBOX(the_geom, %s, %s, %s, %s)",
+                bboxCoordinates.get("bbox-xmin"), bboxCoordinates.get("bbox-ymin"),
+                bboxCoordinates.get("bbox-xmax"), bboxCoordinates.get("bbox-ymax")
+                ));
+        }
+
+        return (queryables.size() == 0 && bboxCoordinates.size() == 0) ? null : sb.toString();
     }
 
     /**
@@ -613,7 +644,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
     private Element doSearch(CatalogRequest request, int start, int max) throws Exception {
         try {
-            log.info("Searching on : " + params.getName() + " (" + start + ".." + (start + max) + ")");
+            log.debug("Searching on : " + params.getName() + " (" + start + ".." + (start + max) + ")");
             Element response = request.execute();
             if (log.isDebugEnabled()) {
                 log.debug("Sent request " + request.getSentData());
@@ -687,7 +718,6 @@ class Harvester implements IHarvester<HarvestResult> {
             return new RecordInfo(identif, modified);
         } catch (Exception e) {
             log.warning("Skipped record not in supported format : " + name);
-            e.printStackTrace();
         }
 
         // we get here if we didn't recognize the schema and/or couldn't get the
@@ -700,7 +730,3 @@ class Harvester implements IHarvester<HarvestResult> {
         return errors;
     }
 }
-
-//=============================================================================
-
-

@@ -48,7 +48,7 @@
         'gnOwsCapabilities',
         'gnSearchSettings',
         'gnViewerSettings',
-        'ngeoDecorateLayer',
+        'olDecorateLayer',
         'gnSearchLocation',
         'gnOwsContextService',
         'gnWfsService',
@@ -56,7 +56,7 @@
         '$filter',
         'gnExternalViewer',
         function(gnMap, gnOwsCapabilities, gnSearchSettings, gnViewerSettings,
-            ngeoDecorateLayer, gnSearchLocation, gnOwsContextService,
+            olDecorateLayer, gnSearchLocation, gnOwsContextService,
             gnWfsService, gnAlertService, $filter, gnExternalViewer) {
 
           this.configure = function(options) {
@@ -80,7 +80,7 @@
           };
 
           var addWMSToMap = gnViewerSettings.resultviewFns.addMdLayerToMap;
-
+          var addEsriRestToMap = gnViewerSettings.resultviewFns.addMdLayerToMap;
 
           var addWFSToMap = function(link, md) {
             var url = $filter('gnLocalized')(link.url) || link.url;
@@ -144,6 +144,13 @@
             gnSearchLocation.setMap();
           };
 
+          function addGeoJSONToMap(record, md) {
+            var url = $filter('gnLocalized')(record.url) || record.url;
+            gnMap.addGeoJSONToMap(record.name, url,
+               gnSearchSettings.viewerMap);
+            gnSearchLocation.setMap();
+          };
+
           function addMapToMap(record, md) {
             var url = $filter('gnLocalized')(record.url) || record.url;
             gnOwsContextService.loadContextFromUrl(url,
@@ -202,6 +209,11 @@
               label: 'addToMap',
               action: addWFSToMap
             },
+            'ESRI:REST' : {
+              iconClass: 'fa-globe',
+              label: 'addToMap',
+              action: addEsriRestToMap
+            },
             'ATOM' : {
               iconClass: 'fa-globe',
               label: 'download'
@@ -235,6 +247,11 @@
               iconClass: 'fa-globe',
               label: 'addToMap',
               action: gnExternalViewer.isEnabled() ? null : addKMLToMap
+            },
+            'GEOJSON' : {
+              iconClass: 'fa-globe',
+              label: 'addToMap',
+              action: gnExternalViewer.isEnabled() ? null : addGeoJSONToMap
             },
             'MDFCATS' : {
               iconClass: 'fa-table',
@@ -338,6 +355,8 @@
                 } else {
                   return 'WMSSERVICE';
                 }
+              } else if (protocolOrType.match(/esri/i)) {
+                return 'ESRI:REST';
               } else if (protocolOrType.match(/wmts/i)) {
                 return 'WMTS';
               } else if (protocolOrType.match(/tms/i)) {
@@ -358,6 +377,8 @@
                 return 'FILE';
               } else if (protocolOrType.match(/kml/i)) {
                 return 'KML';
+              } else if (protocolOrType.match(/geojson/i)) {
+                return 'GEOJSON';
               } else if (protocolOrType.match(/download/i)) {
                 var url = $filter('gnLocalized')(resource.url) || resource.url;
                 if (url.match(/zip/i)) {

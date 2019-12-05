@@ -24,6 +24,7 @@
 (function() {
   goog.provide('gn_share_directive');
 
+
   goog.require('gn_popup');
   goog.require('gn_share_service');
 
@@ -155,7 +156,6 @@
                 scope.privileges,
                 scope.user,
                 replace).then(
-
                 function(response) {
                   if (response.data !== '') {
                     scope.processReport = response.data;
@@ -212,7 +212,7 @@
 
           scope.sortGroups = function(g) {
             if (scope.sorter.predicate == 'g') {
-              return $translate.instant(g.group);
+              return $translate.instant('group-' + g.group);
             }
             else if (scope.sorter.predicate == 'p') {
               return g.userProfile;

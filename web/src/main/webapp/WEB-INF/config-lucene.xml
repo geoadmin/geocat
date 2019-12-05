@@ -185,6 +185,8 @@
       <field name="attributeTable" tagName="attributeTable"/>
       <field name="wms_uri" tagName="wmsuri"/> <!--geocat-->
       <field name="basicgeodataid" tagName="basicgeodataid"/> <!--geocat-->
+      <field name="versionIdentifier" tagName="versionIdentifier"/>
+      <field name="_draft" tagName="draft"/>
     </dumpFields>
   </search>
 

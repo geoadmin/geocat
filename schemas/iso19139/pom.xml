@@ -5,7 +5,7 @@
   <parent>
     <artifactId>schemas</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.5</version>
+    <version>3.7</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -43,7 +43,7 @@
         <directory>src/test/resources/org/fao/geonet</directory>
       </testResource>
       <testResource>
-        <directory>src/main/plugin</directory>
+        <directory>src/main/plugin/iso19139</directory>
       </testResource>
     </testResources>
   </build>

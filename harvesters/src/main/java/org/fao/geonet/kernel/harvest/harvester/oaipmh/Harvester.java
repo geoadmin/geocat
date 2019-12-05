@@ -44,7 +44,6 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
@@ -154,13 +153,13 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
                 error = true;
                 log.error("Unknown error trying to harvest");
                 log.error(e.getMessage());
-                e.printStackTrace();
+                log.error(e);
                 errors.add(new HarvestError(context, e));
             } catch (Throwable e) {
                 error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(e.getMessage());
-                e.printStackTrace();
+                log.error(e);
                 errors.add(new HarvestError(context, e));
             }
         }
@@ -173,13 +172,13 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
                 error = true;
                 log.error("Unknown error trying to harvest");
                 log.error(e.getMessage());
-                e.printStackTrace();
+                log.error(e);
                 errors.add(new HarvestError(context, e));
             } catch(Throwable e) {
                 error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(e.getMessage());
-                e.printStackTrace();
+                log.error(e);
                 errors.add(new HarvestError(context, e));
             }
         }
@@ -367,7 +366,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
 
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         metadataManager.flush();
 
@@ -497,10 +496,10 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
             //--- web interface so we have to re-set both
 
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-            repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+            repository.deleteAllByMetadataId(Integer.parseInt(id));
+            addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-            metadata.getMetadataCategories().clear();
+            metadata.getCategories().clear();
             addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
             metadataManager.flush();

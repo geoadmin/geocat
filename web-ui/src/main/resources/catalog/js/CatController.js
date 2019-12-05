@@ -67,6 +67,13 @@ goog.require('gn_alert');
         'default': '/geonetwork'
       },
       'mods': {
+        'global': {
+          'humanizeDates': true
+        },
+        'footer':{
+          'enabled': true,
+          'showSocialBarInFooter': true
+        },
         'header': {
           'enabled': true,
           'languages': {
@@ -80,21 +87,25 @@ goog.require('gn_alert');
             'cat': 'ca',
             'fin': 'fi',
             'ice': 'is',
-            'ita' : 'it',
+            'ita': 'it',
+            'por': 'pt',
             'rus': 'ru',
             'chi': 'zh',
             'slo': 'sk'
           },
           'isLogoInHeader': false,
-          'logoInHeaderPosition': 'left'
+          'logoInHeaderPosition': 'left',
+          'fluidHeaderLayout': true,
+          'showGNName': true
         },
         'home': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.search#/home'
+          'appUrl': '../../{{node}}/{{lang}}/catalog.search#/home',
+          'fluidLayout': true
         },
         'search': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.search#/search',
+          'appUrl': '../../{{node}}/{{lang}}/catalog.search#/search',
           'hitsperpageValues': [10, 50, 100],
           'paginationInfo': {
             'hitsPerPage': 20
@@ -139,15 +150,23 @@ goog.require('gn_alert');
                 'search/resultsview/partials/viewtemplates/grid.html',
             'tooltip': 'Grid',
             'icon': 'fa-th'
+          },{
+            'tplUrl': '../../catalog/components/' +
+              'search/resultsview/partials/viewtemplates/list.html',
+            'tooltip': 'List',
+            'icon': 'fa-bars'
           }],
           'resultTemplate': '../../catalog/components/' +
               'search/resultsview/partials/viewtemplates/grid.html',
           'formatter': {
             'list': [{
+              'label': 'defaultView',
+              'url' : ''
+            }, {
               'label': 'full',
-              'url' : '../api/records/{{uuid}}/' +
-                  'formatters/xsl-view?root=div&view=advanced'
-            }]
+              'url' : '/formatters/xsl-view?root=div&view=advanced'
+            }],
+            defaultUrl: ''
           },
           'grid': {
             'related': ['parent', 'children', 'services', 'datasets']
@@ -155,14 +174,21 @@ goog.require('gn_alert');
           'linkTypes': {
             'links': ['LINK', 'kml'],
             'downloads': ['DOWNLOAD'],
-            'layers': ['OGC'],
+            'layers': ['OGC', 'ESRI:REST'],
             'maps': ['ows']
           },
-          'isFilterTagsDisplayedInSearch': false
+          'isFilterTagsDisplayedInSearch': false,
+          'usersearches': {
+            'enabled': false,
+            'displayFeaturedSearchesPanel': false
+          },
+          'savedSelection': {
+            'enabled': true
+          }
         },
         'map': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.search#/map',
+          'appUrl': '../../{{node}}/{{lang}}/catalog.search#/map',
           'externalViewer': {
             'enabled': false,
             'baseUrl': 'http://www.example.com/viewer',
@@ -174,6 +200,7 @@ goog.require('gn_alert');
           'isSaveMapInCatalogAllowed': true,
           'isExportMapAsImageEnabled': false,
           'storage': 'sessionStorage',
+          'bingKey': '',
           'listOfServices': {
             'wms': [],
             'wmts': []
@@ -231,27 +258,28 @@ goog.require('gn_alert');
         },
         'editor': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.edit',
+          'appUrl': '../../{{node}}/{{lang}}/catalog.edit',
           'isUserRecordsOnly': false,
           'isFilterTagsDisplayed': false,
+          'fluidEditorLayout': true,
           'createPageTpl':
               '../../catalog/templates/editor/new-metadata-horizontal.html',
           'editorIndentType': ''
         },
         'admin': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/admin.console'
+          'appUrl': '../../{{node}}/{{lang}}/admin.console'
         },
         'signin': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.signin'
+          'appUrl': '../../{{node}}/{{lang}}/catalog.signin'
         },
         'signout': {
           'appUrl': '../../signout'
         },
         'page': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.search#/page'
+          'appUrl': '../../{{node}}/{{lang}}/catalog.search#/page'
         }
       }
     };
@@ -427,21 +455,24 @@ goog.require('gn_alert');
              gnViewerSettings, gnSearchSettings, $cookies,
              gnExternalViewer, gnAlertService) {
       $scope.version = '0.0.1';
+      var defaultNode = 'srv';
 
-
-      //Update Links for social media
+      // Links for social media
       $scope.socialMediaLink = $location.absUrl();
-      $scope.$on('$locationChangeSuccess', function(event) {
-        $scope.socialMediaLink = $location.absUrl();
-        $scope.showSocialMediaLink =
-            ($scope.socialMediaLink.indexOf('/metadata/') != -1);
-      });
       $scope.getPermalink = gnUtilityService.getPermalink;
+      $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
+      $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
+      $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
 
       // If gnLangs current already set by config, do not use URL
       $scope.langs = gnGlobalSettings.gnCfg.mods.header.languages;
       $scope.lang = gnLangs.detectLang(null, gnGlobalSettings);
       $scope.iso2lang = gnLangs.getIso2Lang($scope.lang);
+
+      $scope.getSocialLinksVisible = function() {
+        var onMdView =  $location.absUrl().indexOf('/metadata/') > -1;
+        return !onMdView && gnGlobalSettings.gnCfg.mods.footer.showSocialBarInFooter;
+      };
 
       function detectNode(detector) {
         if (detector.regexp) {
@@ -450,7 +481,7 @@ goog.require('gn_alert');
             return res[1];
           }
         }
-        return detector.default || 'srv';
+        return detector.default || defaultNode;
       }
 
 
@@ -474,7 +505,10 @@ goog.require('gn_alert');
         return detector.default || 'geonetwork';
       }
       $scope.nodeId = detectNode(gnGlobalSettings.gnCfg.nodeDetector);
+      $scope.isDefaultNode = $scope.nodeId === defaultNode;
       $scope.service = detectService(gnGlobalSettings.gnCfg.serviceDetector);
+      $scope.redirectUrlAfterSign = window.location.href;
+
       gnGlobalSettings.nodeId = $scope.nodeId;
       gnConfig.env = gnConfig.env ||  {};
       gnConfig.env.node = $scope.nodeId;
@@ -483,7 +517,7 @@ goog.require('gn_alert');
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
-        'spa': 'Español', 'cat': 'Català', 'cze': 'Czech',
+        'spa': 'Español', 'por': 'Portuguesa', 'cat': 'Català', 'cze': 'Czech',
         'ita': 'Italiano', 'fin': 'Suomeksi', 'ice': 'Íslenska',
         'rus': 'русский', 'chi': '中文', 'slo': 'Slovenčina'};
       $scope.url = '';
@@ -551,6 +585,7 @@ goog.require('gn_alert');
           angular.forEach(gnConfig['map.proj4js'], function(item) {
             proj4.defs(item.code, item.value);
           });
+          ol.proj.proj4.register(proj4);
         }
       });
 
@@ -655,6 +690,7 @@ goog.require('gn_alert');
           }
         };
         // Build is<ProfileName> and is<ProfileName>OrMore functions
+        // This are not group specific, so not usable on metadata
         angular.forEach($scope.profiles, function(profile) {
           userFn['is' + profile] = function() {
             return profile === this.profile;
@@ -674,19 +710,36 @@ goog.require('gn_alert');
         // append a random number to avoid caching in IE11
         var userLogin = catInfo.then(function(value) {
           return $http.get('../api/me?_random=' +
-              Math.floor(Math.random() * 10000)).
-              then(function(response) {
-                var me = response.data;
-                if (angular.isObject(me)) {
-                  angular.extend($scope.user, me);
-                  angular.extend($scope.user, userFn);
-                  $scope.authenticated = true;
-                } else {
-                  $scope.authenticated = false;
-                  $scope.user = undefined;
+            Math.floor(Math.random() * 10000)).
+            success(function(me, status) {
+              if (angular.isObject(me)) {
+
+                me['isAdmin'] = function(groupId) {
+                  return me.admin;
                 }
-                return $scope.user;
-              });
+
+                angular.forEach($scope.profiles, function(profile) {
+                  // Builds is<ProfileName>ForGroup methods
+                  // to check the profile in the group
+                  me['is' + profile + 'ForGroup'] = function(groupId) {
+                    if('Administrator' == profile) {
+                      return me.admin;
+                    }
+                    if(me['groupsWith' + profile] &&
+                       me['groupsWith' + profile].indexOf(Number(groupId)) !== -1) {
+                      return true;
+                    }
+                    return false;
+                  };
+                });
+                angular.extend($scope.user, me);
+                angular.extend($scope.user, userFn);
+                $scope.authenticated = true;
+              } else {
+                $scope.authenticated = false;
+                $scope.user = undefined;
+              }
+           });
         });
         $scope.loadProfilePromise = userLogin;
 

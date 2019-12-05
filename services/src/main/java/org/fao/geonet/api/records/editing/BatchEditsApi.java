@@ -22,20 +22,23 @@
  */
 package org.fao.geonet.api.records.editing;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.google.common.collect.Sets;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.IProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
-import org.fao.geonet.api.records.model.BatchEditParameter;
+import org.fao.geonet.kernel.BatchEditParameter;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.events.history.RecordUpdatedEvent;
 import org.fao.geonet.kernel.AccessManager;
@@ -48,6 +51,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,20 +69,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.google.common.collect.Sets;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 @RequestMapping(value = {
-    "/api/records",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/records",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
 @Api(value = "records",
@@ -99,7 +98,8 @@ public class BatchEditsApi implements ApplicationContextAware {
     /**
      * The service edits to the current selection or a set of uuids.
      */
-    @ApiOperation(value = "Edit a set of records by XPath expressions",
+    @ApiOperation(value = "Edit a set of records by XPath expressions. This operations applies the update-fixed-info.xsl "
+        + "transformation for the metadata schema and updates the change date if the parameter updateDateStamp is set to true.",
         nickname = "batchEdit")
     @RequestMapping(value = "/batchediting",
         method = RequestMethod.PUT,
@@ -113,8 +113,7 @@ public class BatchEditsApi implements ApplicationContextAware {
     @PreAuthorize("hasRole('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public
-    IProcessingReport batchEdit(
+    public IProcessingReport batchEdit(
         @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "iso19139")
@@ -126,6 +125,16 @@ public class BatchEditsApi implements ApplicationContextAware {
             required = false
         )
             String bucket,
+        @ApiParam(
+            value = ApiParams.API_PARAM_UPDATE_DATESTAMP,
+            required = false,
+            defaultValue = "false"
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = "false"
+        )
+            boolean updateDateStamp,
         @RequestBody BatchEditParameter[] edits,
         HttpServletRequest request)
         throws Exception {
@@ -192,25 +201,33 @@ public class BatchEditsApi implements ApplicationContextAware {
                         AddElemValue propertyValue =
                             new AddElemValue(batchEditParameter.getValue());
 
-                        metadataChanged = editLib.addElementOrFragmentFromXpath(
-                            metadata,
-                            metadataSchema,
-                            batchEditParameter.getXpath(),
-                            propertyValue,
-                            createXpathNodeIfNotExists
-                        );
+                        boolean applyEdit = true;
+                        if (StringUtils.isNotEmpty(batchEditParameter.getCondition())) {
+                            final Object node = Xml.selectSingle(metadata, batchEditParameter.getCondition(), metadataSchema.getNamespaces());
+                            applyEdit = (node != null) || (node instanceof Boolean && (Boolean)node != false);
+                        }
+                        if (applyEdit) {
+                            metadataChanged = editLib.addElementOrFragmentFromXpath(
+                                metadata,
+                                metadataSchema,
+                                batchEditParameter.getXpath(),
+                                propertyValue,
+                                createXpathNodeIfNotExists
+                            ) || metadataChanged;
+                        }
                     }
                     if (metadataChanged) {
                         boolean validate = false;
-                        boolean ufo = false;
+                        boolean ufo = true;
                         boolean index = true;
+                        boolean uds = updateDateStamp;
                         Element beforeMetadata = dataMan.getMetadata(serviceContext, String.valueOf(record.getId()), false, false, false);
 
                         dataMan.updateMetadata(
                             serviceContext, record.getId() + "", metadata,
                             validate, ufo, index,
                             "eng", // Not used when validate is false
-                            changeDate, false);
+                            changeDate, uds);
                         report.addMetadataInfos(record.getId(), "Metadata updated.");
 
                         Element afterMetadata = dataMan.getMetadata(serviceContext, String.valueOf(record.getId()), false, false, false);

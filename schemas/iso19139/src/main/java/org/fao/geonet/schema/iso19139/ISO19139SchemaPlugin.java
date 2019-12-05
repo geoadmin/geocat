@@ -34,6 +34,7 @@ import org.fao.geonet.kernel.schema.LinkAwareSchemaPlugin;
 import org.fao.geonet.kernel.schema.LinkPatternStreamer.ILinkBuilder;
 import org.fao.geonet.kernel.schema.LinkPatternStreamer.RawLinkPatternStreamer;
 import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
+import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
 import org.fao.geonet.kernel.schema.subtemplate.KeywordReplacer;
 import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
@@ -57,17 +58,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMX;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.SRV;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.XLINK;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.*;
+
 
 /**
  * Created by francois on 6/15/14.
  */
 public class ISO19139SchemaPlugin
-    extends org.fao.geonet.kernel.schema.SchemaPlugin
+    extends SchemaPlugin
     implements
     AssociatedResourcesSchemaPlugin,
     MultilingualSchemaPlugin,
@@ -75,7 +73,6 @@ public class ISO19139SchemaPlugin
     ISOPlugin,
     SubtemplateAwareSchemaPlugin,
     LinkAwareSchemaPlugin {
-
     public static final String IDENTIFIER = "iso19139";
     public static ImmutableSet<Namespace> allNamespaces;
     private static Map<String, Namespace> allTypenames;
@@ -85,13 +82,13 @@ public class ISO19139SchemaPlugin
 
     static {
         allNamespaces = ImmutableSet.<Namespace>builder()
-            .add(ISO19139Namespaces.GCO)
-            .add(ISO19139Namespaces.GMD)
+            .add(GCO)
+            .add(GMD)
             .add(SRV)
             .build();
         allTypenames = ImmutableMap.<String, Namespace>builder()
             .put("csw:Record", Namespace.getNamespace("csw", "http://www.opengis.net/cat/csw/2.0.2"))
-            .put("gmd:MD_Metadata", ISO19139Namespaces.GMD)
+            .put("gmd:MD_Metadata", GMD)
             .put("dcat", Namespace.getNamespace("dcat", "http://www.w3.org/ns/dcat#"))
             .build();
 
@@ -130,17 +127,17 @@ public class ISO19139SchemaPlugin
                 try {
                     if (o instanceof Element) {
                         Element sib = (Element) o;
-                        Element agId = (Element) sib.getChild("aggregateDataSetIdentifier", ISO19139Namespaces.GMD)
+                        Element agId = (Element) sib.getChild("aggregateDataSetIdentifier", GMD)
                             .getChildren().get(0);
-                        String sibUuid = getChild(agId, "code", ISO19139Namespaces.GMD)
-                            .getChildText("CharacterString", ISO19139Namespaces.GCO);
-                        final Element associationTypeEl = getChild(sib, "associationType", ISO19139Namespaces.GMD);
-                        String associationType = getChild(associationTypeEl, "DS_AssociationTypeCode", ISO19139Namespaces.GMD)
+                        String sibUuid = getChild(agId, "code", GMD)
+                            .getChildText("CharacterString", GCO);
+                        final Element associationTypeEl = getChild(sib, "associationType", GMD);
+                        String associationType = getChild(associationTypeEl, "DS_AssociationTypeCode", GMD)
                             .getAttributeValue("codeListValue");
-                        final Element initiativeTypeEl = getChild(sib, "initiativeType", ISO19139Namespaces.GMD);
+                        final Element initiativeTypeEl = getChild(sib, "initiativeType", GMD);
                         String initiativeType = "";
                         if (initiativeTypeEl != null) {
-                            initiativeType = getChild(initiativeTypeEl, "DS_InitiativeTypeCode", ISO19139Namespaces.GMD)
+                            initiativeType = getChild(initiativeTypeEl, "DS_InitiativeTypeCode", GMD)
                                 .getAttributeValue("codeListValue");
                         }
                         AssociatedResource resource = new AssociatedResource(sibUuid, initiativeType, associationType);
@@ -166,11 +163,11 @@ public class ISO19139SchemaPlugin
 
     @Override
     public Set<String> getAssociatedParentUUIDs(Element metadata) {
-        ElementFilter elementFilter = new ElementFilter("parentIdentifier", ISO19139Namespaces.GMD);
+        ElementFilter elementFilter = new ElementFilter("parentIdentifier", GMD);
         return Xml.filterElementValues(
             metadata,
             elementFilter,
-            "CharacterString", ISO19139Namespaces.GCO,
+            "CharacterString", GCO,
             null);
     }
 
@@ -179,11 +176,11 @@ public class ISO19139SchemaPlugin
     }
 
     public Set<String> getAssociatedFeatureCatalogueUUIDs(Element metadata) {
-        return getAttributeUuidrefValues(metadata, "featureCatalogueCitation", ISO19139Namespaces.GMD);
+        return getAttributeUuidrefValues(metadata, "featureCatalogueCitation", GMD);
     }
 
     public Set<String> getAssociatedSourceUUIDs(Element metadata) {
-        return getAttributeUuidrefValues(metadata, "source", ISO19139Namespaces.GMD);
+        return getAttributeUuidrefValues(metadata, "source", GMD);
     }
 
     private Set<String> getAttributeUuidrefValues(Element metadata, String tagName, Namespace namespace) {
@@ -234,16 +231,16 @@ public class ISO19139SchemaPlugin
             Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
 
         // Create a new translation for the language
-        Element langElem = new Element("LocalisedCharacterString", ISO19139Namespaces.GMD);
+        Element langElem = new Element("LocalisedCharacterString", GMD);
         langElem.setAttribute("locale", "#" + languageIdentifier);
         langElem.setText(value);
-        Element textGroupElement = new Element("textGroup", ISO19139Namespaces.GMD);
+        Element textGroupElement = new Element("textGroup", GMD);
         textGroupElement.addContent(langElem);
 
         // Get the PT_FreeText node where to insert the translation into
-        Element freeTextElement = element.getChild("PT_FreeText", ISO19139Namespaces.GMD);
+        Element freeTextElement = element.getChild("PT_FreeText", GMD);
         if (freeTextElement == null) {
-            freeTextElement = new Element("PT_FreeText", ISO19139Namespaces.GMD);
+            freeTextElement = new Element("PT_FreeText", GMD);
             element.addContent(freeTextElement);
         }
         freeTextElement.addContent(textGroupElement);
@@ -266,10 +263,10 @@ public class ISO19139SchemaPlugin
 
         for(Element e : nodesWithStrings) {
             // Retrieve or create the main language element
-            Element mainCharacterString = ((Element)e.getParent()).getChild("CharacterString", ISO19139Namespaces.GCO);
+            Element mainCharacterString = ((Element)e.getParent()).getChild("CharacterString", GCO);
             if (mainCharacterString == null) {
                 // create it if it does not exist
-                mainCharacterString = new Element("CharacterString", ISO19139Namespaces.GCO);
+                mainCharacterString = new Element("CharacterString", GCO);
                 ((Element)e.getParent()).addContent(0, mainCharacterString);
             }
 
@@ -277,7 +274,7 @@ public class ISO19139SchemaPlugin
             List<Element> mainLangElement = (List<Element>) Xml.selectNodes(
                 e,
                 "*//gmd:LocalisedCharacterString[@locale='" + mainLanguage + "']",
-                Arrays.asList(ISO19139Namespaces.GMD));
+                Arrays.asList(GMD));
 
             // Set the main language value
             if (mainLangElement.size() == 1) {
@@ -285,11 +282,11 @@ public class ISO19139SchemaPlugin
 
                 if (StringUtils.isNotEmpty(mainLangString)) {
                     mainCharacterString.setText(mainLangString);
-                } else if (mainCharacterString.getAttribute("nilReason", ISO19139Namespaces.GCO) == null){
-                    ((Element)mainCharacterString.getParent()).setAttribute("nilReason", "missing", ISO19139Namespaces.GCO);
+                } else if (mainCharacterString.getAttribute("nilReason", GCO) == null){
+                    ((Element)mainCharacterString.getParent()).setAttribute("nilReason", "missing", GCO);
                 }
             } else if (StringUtils.isEmpty(mainCharacterString.getText())) {
-                ((Element)mainCharacterString.getParent()).setAttribute("nilReason", "missing", ISO19139Namespaces.GCO);
+                ((Element)mainCharacterString.getParent()).setAttribute("nilReason", "missing", GCO);
             }
         }
 
@@ -321,12 +318,12 @@ public class ISO19139SchemaPlugin
         if (langs.size() > 1) {
             List<Element> elementList = (List<Element>)Xml.selectNodes(element,
                                         ".//*[gmd:PT_FreeText]",
-                                               Arrays.asList(ISO19139Namespaces.GMD));
+                                              Arrays.asList(GMD));
             for(Element el : elementList) {
                 final Element ptFreeText = el.getChild("PT_FreeText", GMD);
                 List<Element> orderedTextGroup = new ArrayList<>();
                 for (String l : langs) {
-                    List<Element> node = (List<Element>) Xml.selectNodes(ptFreeText, "gmd:textGroup[*/@locale='" + l + "']", Arrays.asList(ISO19139Namespaces.GMD));
+                    List<Element> node = (List<Element>) Xml.selectNodes(ptFreeText, "gmd:textGroup[*/@locale='" + l + "']", Arrays.asList(GMD));
                     if (node != null && node.size() == 1) {
                         orderedTextGroup.add((Element) node.get(0).clone());
                     }
@@ -348,7 +345,7 @@ public class ISO19139SchemaPlugin
 
     @Override
     public Element createBasicTypeCharacterString() {
-        return new Element("CharacterString", ISO19139Namespaces.GCO);
+        return new Element("CharacterString", GCO);
     }
 
     @Override
@@ -375,7 +372,7 @@ public class ISO19139SchemaPlugin
                 // in service metadata. This information could be used to add
                 // interactive map button when viewing service metadata.
                 Element coupledResource = new Element("coupledResource", SRV);
-                coupledResource.setAttribute("nilReason", "synchronizedFromOGC", ISO19139Namespaces.GCO);
+                coupledResource.setAttribute("nilReason", "synchronizedFromOGC", GCO);
                 Element scr = new Element("SV_CoupledResource", SRV);
 
 
@@ -563,7 +560,6 @@ public class ISO19139SchemaPlugin
 
         return elementsToProcess.contains(el.getQualifiedName());
     }
-
 
     /**
      * Return an ordered list of record languages.

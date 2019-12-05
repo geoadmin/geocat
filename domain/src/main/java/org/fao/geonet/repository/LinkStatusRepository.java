@@ -23,12 +23,8 @@
 
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.Link;
 import org.fao.geonet.domain.LinkStatus;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Data Access object for the {@link LinkStatus} entities.

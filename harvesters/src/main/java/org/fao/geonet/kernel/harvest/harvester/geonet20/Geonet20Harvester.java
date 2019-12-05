@@ -28,6 +28,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
@@ -43,6 +44,7 @@ import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
 import java.io.File;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -78,7 +80,7 @@ public class Geonet20Harvester extends AbstractHarvester {
         String id = harvesterSettingsManager.add("harvesting", "node", getType());
 
         storeNode(params, "id:" + id);
-        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
+        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), SourceType.harvester);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + "gn20.gif", params.getUuid());
 
@@ -100,7 +102,7 @@ public class Geonet20Harvester extends AbstractHarvester {
         //--- we update a copy first because if there is an exception GeonetParams
         //--- could be half updated and so it could be in an inconsistent state
 
-        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
+        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), SourceType.harvester);
         context.getBean(SourceRepository.class).save(source);
 
         params = copy;
@@ -172,9 +174,12 @@ public class Geonet20Harvester extends AbstractHarvester {
     public void doHarvest(Logger log) throws Exception {
         CategoryMapper localCateg = new CategoryMapper(context);
 
-        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(params.host);
+        final URL url = new URL(params.host);
 
-        servletName = req.getAddress();
+        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class)
+            .createXmlRequest(url.getHost(), url.getPort());
+
+        servletName = url.getPath();
 
         Lib.net.setupProxy(context, req);
 

@@ -18,12 +18,16 @@ var gnHarvestercsw = {
           "password" : []
         },
         "capabilitiesUrl" : "http://",
+        "xpathFilter" : "",
         "rejectDuplicateResource" : false,
         "xslfilter": [],
-        "outputSchema": ""
+        "outputSchema": "http://www.isotc211.org/2005/gmd",
+        "queryScope": "local",
+        "hopCount": 2
       },
       "content" : {
-        "validate" : "NOVALIDATION"
+        "validate" : "NOVALIDATION",
+        "batchEdits" : ""
       },
       "options" : {
         "every" : "0 0 0 ? * *",
@@ -31,6 +35,7 @@ var gnHarvestercsw = {
         "overrideUuid": "SKIP",
         "status" : "active"
       },
+      "ifRecordExistAppendPrivileges": false,
       "privileges" : [ {
         "@id" : "1",
         "operation" : [ {
@@ -58,7 +63,7 @@ var gnHarvestercsw = {
           // happen and then search criteria name which is the tag name
           // will be lost.
           //                if (value) {
-          body += '<' + tag + '>' + value + '</' + tag + '>';
+          body += '<' + tag + '>' + (isNaN(value) || value === null ? '' : value) + '</' + tag + '>';
           //            }
         }
       }
@@ -69,7 +74,7 @@ var gnHarvestercsw = {
     var body = '<node id="' + h['@id'] + '" '
       + '    type="' + h['@type'] + '">'
       + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
-      + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>' 
+      + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>'
       + '  <site>'
       + '    <name>' + h.site.name + '</name>'
       + '    <rejectDuplicateResource>' + h.site.rejectDuplicateResource + '</rejectDuplicateResource>'
@@ -80,8 +85,11 @@ var gnHarvestercsw = {
       + '      <username>' + h.site.account.username + '</username>'
       + '      <password>' + h.site.account.password + '</password>'
       + '    </account>'
+      + '    <xpathFilter>' + h.site.xpathFilter + '</xpathFilter>'
       + '    <xslfilter>' + h.site.xslfilter + '</xslfilter>'
       + '    <outputSchema>' + h.site.outputSchema + '</outputSchema>'
+      + '    <queryScope>' + h.site.queryScope + '</queryScope>'
+      + '    <hopCount>' + h.site.hopCount + '</hopCount>'
       + '  </site>'
       + gnHarvestercsw.buildResponseCSWSearch($scope)
       + '  <options>'
@@ -92,6 +100,7 @@ var gnHarvestercsw = {
       + '  </options>'
       + '  <content>'
       + '    <validate>' + h.content.validate + '</validate>'
+      + '    <batchEdits><![CDATA[' + h.content.batchEdits + ']]></batchEdits>'
       + '  </content>'
       + $scope.buildResponseGroup(h)
       + $scope.buildResponseCategory(h) + '</node>';

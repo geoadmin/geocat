@@ -69,6 +69,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.util.XslUtil;
@@ -85,7 +86,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Entities;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Lazy;
@@ -130,6 +130,7 @@ import static com.google.common.io.Files.getNameWithoutExtension;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 import static org.fao.geonet.api.records.formatters.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
 import static org.springframework.data.jpa.domain.Specifications.where;
+
 /**
  * Allows a user to display a metadata with a particular formatters
  *
@@ -201,8 +202,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     }
 
     @RequestMapping(value = {
-        "/api/records/{metadataUuid}/formatters/{formatterId}",
-        "/api/" + API.VERSION_0_1 +
+        "/{portal}/api/records/{metadataUuid}/formatters/{formatterId}",
+        "/{portal}/api/" + API.VERSION_0_1 +
             "/records/{metadataUuid}/formatters/{formatterId}"
     },
         method = RequestMethod.GET,
@@ -253,10 +254,13 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             value = "output",
             required = false)
             FormatType formatType,
+        @ApiParam(value = "Download the approved version",
+            required = false, defaultValue = "true")
+        @RequestParam(required = false, defaultValue = "true")
+            boolean approved,
         @ApiIgnore final NativeWebRequest request,
         final HttpServletRequest servletRequest) throws Exception {
 
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
         Locale locale = languageUtils.parseAcceptLanguage(servletRequest.getLocales());
 
         // TODO :
@@ -286,6 +290,10 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             formatType,
             request.getNativeRequest(HttpServletRequest.class));
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
+
+        if(approved) {
+        	metadata = context.getBean(MetadataRepository.class).findOneByUuid(metadataUuid);
+        }
 
 
         Boolean hideWithheld = true;
@@ -349,7 +357,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      * @param mdPath   (optional) the xpath to the metadata node if it's not the root node of the
      *                 XML
      */
-    @RequestMapping(value = "/{lang}/xml.format.{type}")
+    @RequestMapping(value = "/{portal}/{lang}/xml.format.{type}")
     @ResponseBody
     @Deprecated
     public void execXml(
@@ -401,7 +409,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      * This is a service to use if there is process to keep the cache at least periodically
      * up-to-date and if maximum performance is required.
      */
-    @RequestMapping(value = "/{lang}/md.format.public.{type}")
+    @RequestMapping(value = "/{portal}/{lang}/md.format.public.{type}")
     public HttpEntity<byte[]> getCachedPublicMetadata(
         @PathVariable final String lang,
         @PathVariable final String type,
@@ -437,7 +445,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      *                       enum values: {@link org.fao.geonet.api.records.formatters.FormatterWidth}
      *                       The default is _100 (100% of the screen)
      */
-    @RequestMapping(value = "/{lang}/md.format.{type}")
+    @RequestMapping(value = "/{portal}/{lang}/md.format.{type}")
     @ResponseBody
     public void exec(
         @PathVariable final String lang,
@@ -676,7 +684,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         boolean doXLinks = serializer.resolveXLinks();
 
 
-        Element metadata = serializer.removeHiddenElements(false, md, false);
+        Element metadata = serializer.removeHiddenElements(false, md, true);
         if (doXLinks) Processor.processXLink(metadata, context);
 
         boolean withholdWithheldElements = hide_withheld != null && hide_withheld;
@@ -800,7 +808,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         return context.getApplicationContext().getBean(SystemInfo.class).isDevMode();
     }
 
-    private class FormatMetadata implements Callable<StoreInfoAndDataLoadResult> {
+    public class FormatMetadata implements Callable<StoreInfoAndDataLoadResult> {
         private final Key key;
         private final NativeWebRequest request;
         private final ServiceContext serviceContext;

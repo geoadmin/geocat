@@ -33,8 +33,8 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.UpdateDatestamp;
@@ -54,6 +54,7 @@ import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -123,7 +124,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         String id = harvesterSettingsManager.add("harvesting", "node", getType());
         storeNode(params, "id:" + id);
 
-        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
+        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), SourceType.harvester);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
 
@@ -323,10 +324,10 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                         idsForHarvestingResult.add(Integer.valueOf(id));
                     }
                 }
-            } catch(Throwable t) {
-                t.printStackTrace();
+            }catch(Throwable t) {
                 log.error("Unable to process record from arcsde (" + this.params.getName() + ")");
                 log.error("   Record failed. Error is: " + t.getMessage());
+                log.error(t);
             } finally {
                 result.originalMetadata++;
             }
@@ -337,7 +338,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         // not in this harvesting result
         //
         Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
-        List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findAllIdsBy(MetadataSpecs.hasHarvesterUuid(params.getUuid()));
+        List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findAllIdsBy((Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(params.getUuid()));
         for (Integer existingId : existingMetadata) {
 
             if (cancelMonitor.get()) {
@@ -376,10 +377,10 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
             true);
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-        operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        operationAllowedRepository.deleteAllByMetadataId(Integer.parseInt(id));
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        metadata.getMetadataCategories().clear();
+        metadata.getCategories().clear();
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
         metadataManager.flush();
@@ -432,7 +433,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         String id = String.valueOf(metadata.getId());
 
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         dataMan.indexMetadata(id, true, null);
 
@@ -463,7 +464,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         //--- we update a copy first because if there is an exception ArcSDEParams
         //--- could be half updated and so it could be in an inconsistent state
 
-        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
+        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), SourceType.harvester);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
 
@@ -517,7 +518,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         } catch (Exception e) {
             log.warning("  - Failed to set thumbnail for metadata: " + e.getMessage());
-            e.printStackTrace();
+            log.error(e);
             result.thumbnailsFailed++;
         }
     }

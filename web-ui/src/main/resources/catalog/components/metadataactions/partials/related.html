@@ -1,11 +1,11 @@
 <div class="gn-related-resources"
-     data-ng-if="relationFound">
+           data-ng-if="relationFound">
   <h2>{{::title}}</h2>
 
   <div class=""
        data-ng-repeat="(type, items) in relations track by $index"
        data-ng-if="type && type !== 'thumbnails'">
-    <div class="row list-group-item gn-related-item"
+    <div class="row list-group-item gn-related-item gn-related-{{type}}"
          data-ng-repeat="r in items track by $index"
          data-ng-init="mainType = config.getType(r, type);">
       <div class="col-xs-1 col-sm-1">
@@ -22,11 +22,11 @@
         <strong data-ng-if="(mainType !== 'WMS') && (mainType !== 'WMSSERVICE') && (mainType !== 'WMTS') &&
                             (mainType !== 'WMTSSERVICE') && (mainType !== 'WFS') && (mainType !== 'WCS')">
           <i class="fa"
-               data-ng-class="config.getClassIcon(mainType)"/>&nbsp;
+             data-ng-class="config.getClassIcon(mainType)"/>&nbsp;
         </strong>
-      </strong>
+        </strong>
       </div>
-      <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-8 col-sm-8'" >
+      <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-8 col-sm-8'">
         <!-- WMS & WFS contains layer name in title -->
         <h3 data-ng-if="((mainType === 'WMS' || mainType === 'WMSSERVICE' ||
                           mainType === 'WMTS' || mainType === 'WMTSSERVICE' ||
@@ -54,7 +54,7 @@
         <h4 data-ng-if="mainType === 'LINK'">
           {{::(r.title | gnLocalized: lang) || (r.locDescription | striptags | characters:150)}}
         </h4>
-        
+
         <div data-ng-switch on="mainType">
           <div data-ng-switch-when="WMS">
             <p class="text-muted">
@@ -122,6 +122,12 @@
                   sosLinkDetails</span>
           </div>
 
+          <div data-ng-switch-when="ESRI:REST">
+            <span data-translate=""
+                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                  esriRestLinkDetails</span>
+          </div>
+
           <div data-ng-switch-when="WCS">
             <p class="text-muted">
             <span data-translate=""
@@ -132,8 +138,8 @@
 
           <div data-ng-switch-when="ATOM">
             <p class="text-muted" data-translate=""
-                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
-                  atomLinkDetails
+               data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
+              atomLinkDetails
             </p>
             <div
               data-gn-atom-download="r.title"
@@ -173,10 +179,15 @@
           <div data-ng-switch-default>
             <p class="text-muted"
                data-ng-if="mainType.indexOf('MD') == 0 && r.id">
-              <a href="#/metadata/{{r.id}}">
-                {{(r.title | gnLocalized: lang) }}
-              </a> ({{(config.getLabel(mainType, type)) | translate}})<br/>
-              {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a href="#/metadata/{{r.id}}">{{'more' | translate}}...</a>
+              <span class="gn-related-title">
+                <a href="#/metadata/{{r.id}}">
+                  {{(r.title | gnLocalized: lang) }}
+                </a> ({{(config.getLabel(mainType, type)) | translate}})
+              </span>
+              <span class="gn-related-description">
+                {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a href="#/metadata/{{r.id}}">{{'more' |
+                translate}}...</a>
+              </span>
             </p>
 
             <p class="text-muted"
@@ -196,7 +207,7 @@
 
       <div class="col-xs-12 col-sm-3">
         <button type="button"
-                class="btn btn-default btn-sm btn-block"
+                class="btn btn-default btn-sm btn-block text-wrap"
                 data-ng-show="hasAction(mainType)"
                 data-ng-click="config.doAction(mainType, r, md)">
 
@@ -212,5 +223,6 @@
         </button>
       </div>
 
+    </div>
   </div>
 </div>

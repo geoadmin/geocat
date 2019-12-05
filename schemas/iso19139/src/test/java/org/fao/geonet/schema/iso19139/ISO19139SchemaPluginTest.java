@@ -36,7 +36,6 @@ import org.junit.Test;
 import javax.xml.transform.TransformerConfigurationException;
 import java.net.URISyntaxException;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -47,6 +46,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertThat;
 import static org.xmlunit.matchers.EvaluateXPathMatcher.hasXPath;
+
 
 /**
  * Created by fgravin on 7/31/17.

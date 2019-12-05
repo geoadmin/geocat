@@ -25,11 +25,17 @@ package org.fao.geonet.api.groups;
 
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -39,9 +45,22 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.attachments.AttachmentsApi;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Group_;
+import org.fao.geonet.domain.Language;
+import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.LanguageRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -58,7 +77,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -71,13 +96,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 @RequestMapping(value = {
-    "/api/groups",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/groups",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/groups"
 })
 @Api(value = "groups",
@@ -130,6 +160,14 @@ public class GroupsApi {
     @Autowired
     private LanguageUtils languageUtils;
 
+    @Autowired
+    private LanguageRepository langRepository;
+
+    @Autowired
+    private GroupRepository groupRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * Writes the group logo image to the response. If no image is found it
@@ -161,9 +199,6 @@ public class GroupsApi {
         if (context == null) {
             throw new RuntimeException("ServiceContext not available");
         }
-
-        GroupRepository groupRepository = context.getBean(GroupRepository.class);
-
 
         Group group = groupRepository.findOne(groupId);
         if (group == null) {
@@ -293,9 +328,6 @@ public class GroupsApi {
         @RequestBody
             Group group
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        GroupRepository groupRepository = appContext.getBean(GroupRepository.class);
-
         final Group existingId = groupRepository
             .findOne(group.getId());
 
@@ -316,7 +348,6 @@ public class GroupsApi {
         }
 
         // Populate languages if not already set
-        LanguageRepository langRepository = appContext.getBean(LanguageRepository.class);
         java.util.List<Language> allLanguages = langRepository.findAll();
         Map<String, String> labelTranslations = group.getLabelTranslations();
         for (Language l : allLanguages) {
@@ -324,7 +355,13 @@ public class GroupsApi {
             group.getLabelTranslations().put(l.getId(),
                 label == null ? group.getName() : label);
         }
-        group = groupRepository.save(group);
+
+        try {
+            group = groupRepository.saveAndFlush(group);
+        } catch (Exception ex) {
+            Log.error(API.LOG_MODULE_NAME, ExceptionUtils.getStackTrace(ex));
+            throw new RuntimeException(ex.getMessage());
+        }
 
         return new ResponseEntity<>(group.getId(), HttpStatus.CREATED);
     }
@@ -350,7 +387,6 @@ public class GroupsApi {
         @PathVariable
             Integer groupIdentifier
     ) throws Exception {
-        final GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
         final Group group = groupRepository.findOne(groupIdentifier);
 
         if (group == null) {
@@ -388,8 +424,6 @@ public class GroupsApi {
         @PathVariable
             Integer groupIdentifier
     ) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        GroupRepository groupRepository = applicationContext.getBean(GroupRepository.class);
         final Group group = groupRepository.findOne(groupIdentifier);
 
         if (group == null) {
@@ -397,7 +431,6 @@ public class GroupsApi {
                 MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
             ));
         }
-        UserRepository userRepository = applicationContext.getBean(UserRepository.class);
         return userRepository.findAllUsersInUserGroups(
             UserGroupSpecs.hasGroupId(groupIdentifier));
     }
@@ -435,18 +468,29 @@ public class GroupsApi {
         @RequestBody
             Group group
     ) throws Exception {
-        GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
-
         final Group existing = groupRepository.findOne(groupIdentifier);
         if (existing == null) {
             throw new ResourceNotFoundException(String.format(
                 MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
             ));
         } else {
-            groupRepository.save(group);
+            try {
+                groupRepository.saveAndFlush(group);
+            } catch (Exception ex) {
+                Log.error(API.LOG_MODULE_NAME, ExceptionUtils.getStackTrace(ex));
+                throw new RuntimeException(ex.getMessage());
+            }
         }
     }
 
+    @Autowired
+    private OperationAllowedRepository operationAllowedRepo;
+
+    @Autowired
+    private UserGroupRepository userGroupRepository;
+
+    @Autowired
+    private DataManager dm;
 
     @ApiOperation(
         value = "Remove a group",
@@ -481,22 +525,16 @@ public class GroupsApi {
         @ApiIgnore
             ServletRequest request
     ) throws Exception {
-        GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
-
         Group group = groupRepository.findOne(groupIdentifier);
 
         if (group != null) {
-            OperationAllowedRepository operationAllowedRepo = ApplicationContextHolder.get().getBean(OperationAllowedRepository.class);
-            UserGroupRepository userGroupRepo = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
-
             List<Integer> reindex = operationAllowedRepo.findAllIds(OperationAllowedSpecs.hasGroupId(groupIdentifier),
                 OperationAllowedId_.metadataId);
 
             if (reindex.size() > 0 && force) {
-                operationAllowedRepo.deleteAllByIdAttribute(OperationAllowedId_.groupId, groupIdentifier);
+                operationAllowedRepo.deleteAllByGroupId(groupIdentifier);
 
                 //--- reindex affected metadata
-                DataManager dm = ApplicationContextHolder.get().getBean(DataManager.class);
                 dm.indexMetadata(Lists.transform(reindex, Functions.toStringFunction()));
             } else if (reindex.size() > 0 && !force) {
                 throw new NotAllowedException(String.format(
@@ -505,9 +543,9 @@ public class GroupsApi {
                 ));
             }
 
-            final List<Integer> users = userGroupRepo.findUserIds(where(UserGroupSpecs.hasGroupId(group.getId())));
+            final List<Integer> users = userGroupRepository.findUserIds(where(UserGroupSpecs.hasGroupId(group.getId())));
             if (users.size() > 0 && force) {
-                userGroupRepo.deleteAllByIdAttribute(UserGroupId_.groupId, Arrays.asList(groupIdentifier));
+                userGroupRepository.deleteAllByIdAttribute(UserGroupId_.groupId, Arrays.asList(groupIdentifier));
             } else if (users.size() > 0 && !force) {
                 throw new NotAllowedException(String.format(
                     "Group %s is associated with %d user(s). Add 'force' parameter to remove it or remove users associated with that group first.",
@@ -538,9 +576,6 @@ public class GroupsApi {
         boolean includingSystemGroups,
         boolean all)
         throws SQLException {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        final GroupRepository groupRepository = applicationContext.getBean(GroupRepository.class);
-        final UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
         final Sort sort = SortUtils.createSort(Group_.id);
 
         if (all || !session.isAuthenticated() || Profile.Administrator == session.getProfile()) {

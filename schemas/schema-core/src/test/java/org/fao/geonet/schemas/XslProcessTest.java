@@ -30,7 +30,6 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.xmlunit.builder.DiffBuilder;

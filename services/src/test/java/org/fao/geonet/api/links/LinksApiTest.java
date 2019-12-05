@@ -25,7 +25,6 @@ package org.fao.geonet.api.links;
 import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Link;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
@@ -45,8 +44,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -61,6 +58,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 public class LinksApiTest extends AbstractServiceIntegrationTest {
 
@@ -107,14 +105,14 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         final MockHttpSession httpSession = this.loginAsAdmin();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(post("/api/records/links?uuid=" + this.uuid)
+        this.mockMvc.perform(post("/srv/api/records/links?uuid=" + this.uuid)
             .session(httpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isCreated());
 
         Assert.assertEquals(1, linkRepository.count());
 
-        this.mockMvc.perform(get("/api/records/links")
+        this.mockMvc.perform(get("/srv/api/records/links")
             .session(httpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
@@ -126,7 +124,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$[0].records[0].metadataId").value(equalTo(this.id)))
             .andExpect(jsonPath("$[0].records[0].metadataUuid").value(equalTo(md.getUuid())));;
 
-        this.mockMvc.perform(delete("/api/records/links")
+        this.mockMvc.perform(delete("/srv/api/records/links")
             .session(httpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isNoContent());

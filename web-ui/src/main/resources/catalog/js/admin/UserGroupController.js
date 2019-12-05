@@ -126,6 +126,7 @@
           var profile = (user.profile) ?
             '?profile=' + user.profile : '';
 
+
         $http.get('../api/groups' + profile).
             success(function(data) {
               $scope.groups = data;
@@ -378,6 +379,10 @@
       $scope.$watch('userGroups', function(groups) {
         updateGroupsByProfile(groups);
       });
+
+      $scope.sortByLabel = function(group) {
+        return group.label[$scope.lang];
+      };
 
       /**
        * Compute user profile based on group/profile select
@@ -711,8 +716,15 @@
         $scope.groupUpdated = true;
       };
 
-      loadGroups();
-      loadUsers();
+      var userAndGroupInitialized = false;
+      var unregister = $scope.$watch('user', function(n, o) {
+        if (!userAndGroupInitialized && n && n.profile) {
+          userAndGroupInitialized = true;
+          unregister();
+          loadGroups();
+          loadUsers();
+        }
+      }, true);
     }]);
 
   module.filter('loggedUserIsUseradminOrMore', function() {

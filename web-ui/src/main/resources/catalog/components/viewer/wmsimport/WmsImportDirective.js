@@ -173,7 +173,6 @@
             scope.loading = false;
             scope.capability = null;
             scope.serviceDesc = null;
-            scope.servicesList = [];
             scope.url = '';
           };
 
@@ -200,10 +199,10 @@
    */
 
   module.directive('gnKmlImport', [
-    'ngeoDecorateLayer',
+    'olDecorateLayer',
     'gnAlertService',
     '$translate',
-    function(ngeoDecorateLayer, gnAlertService, $translate) {
+    function(olDecorateLayer, gnAlertService, $translate) {
       return {
         restrict: 'A',
         replace: true,
@@ -255,7 +254,7 @@
             };
 
             $scope.addToMap = function(layer, map) {
-              ngeoDecorateLayer(layer);
+              olDecorateLayer(layer);
               layer.displayInLayerManager = true;
               map.getLayers().push(layer);
               map.getView().fit(layer.getSource().getExtent(),
@@ -368,7 +367,7 @@
               var listenerKey = vector.getSource().on('change',
                   function(evt) {
                     if (vector.getSource().getState() == 'ready') {
-                      vector.getSource().unByKey(listenerKey);
+                      ol.Observable.unByKey(listenerKey);
                       scope.addToMap(vector, scope.map);
                       entry.loading = false;
                     }
@@ -414,9 +413,9 @@
           collection: '='
         },
         template: "<ul class='list-group'><li data-ng-show='collection.length > 10' >" +
-            "<input class='form-control' data-ng-model-options='{debounce: 200}' data-ng-model='layerSearchText'/>" +
+            "<input class='form-control input-sm' data-ng-model-options='{debounce: 200}' data-ng-model='layerSearchText'/>" +
             "</li>" +
-            "<gn-cap-tree-elt ng-repeat='member in collection | filter:layerSearchText' member='member'>" +
+            '<gn-cap-tree-elt ng-repeat="member in collection | filter:layerSearchText | orderBy: \'Title\'" member="member">' +
             '</gn-cap-tree-elt></ul>'
       };
     }]);

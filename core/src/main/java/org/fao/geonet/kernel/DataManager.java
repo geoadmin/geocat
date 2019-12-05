@@ -115,25 +115,9 @@ public class DataManager {
      * @param force Force reindexing all from scratch
      **/
     public void init(ServiceContext context, Boolean force) throws Exception {
-        // FIXME remove all the inits when/if ever autowiring works fine
-        this.metadataManager = context.getBean(IMetadataManager.class);
-        this.metadataManager.init(context, force);
-        this.metadataUtils = context.getBean(IMetadataUtils.class);
-        this.metadataUtils.init(context, force);
-        this.metadataIndexer = context.getBean(IMetadataIndexer.class);
         this.metadataIndexer.init(context, force);
-        this.metadataValidator = context.getBean(IMetadataValidator.class);
-        this.metadataValidator.init(context, force);
-        this.metadataOperations = context.getBean(IMetadataOperations.class);
-        this.metadataOperations.init(context, force);
-        this.metadataStatus = context.getBean(IMetadataStatus.class);
-        this.metadataStatus.init(context, force);
-        this.metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
-        this.metadataSchemaUtils.init(context, force);
-        this.metadataCategory = context.getBean(IMetadataCategory.class);
-        this.metadataCategory.init(context, force);
-        this.accessManager = context.getBean(AccessManager.class);
-        // remove all the inits when/if ever autowiring works fine
+        this.metadataManager.init(context, force);
+        this.metadataUtils.init(context, force);
 
         // FIXME this shouldn't login automatically ever!
         if (context.getUserSession() == null) {
@@ -275,6 +259,11 @@ public class DataManager {
     }
 
     @Deprecated
+    public String extractDefaultLanguage(String schema, Element md) throws Exception {
+        return metadataUtils.extractDefaultLanguage(schema, md);
+    }
+
+    @Deprecated
     public String extractDateModified(String schema, Element md) throws Exception {
         return metadataUtils.extractDateModified(schema, md);
     }
@@ -407,7 +396,7 @@ public class DataManager {
     @Deprecated
     public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors,
             boolean keepXlinkAttributes) throws Exception {
-        return metadataManager.getMetadata(srvContext, id, forEditing, withEditorValidationErrors, keepXlinkAttributes);
+        return metadataManager.getMetadata(srvContext, id, forEditing, !forEditing, withEditorValidationErrors, keepXlinkAttributes);
     }
 
     @Deprecated

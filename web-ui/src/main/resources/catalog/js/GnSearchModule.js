@@ -43,15 +43,14 @@
     'gn_mdview',
     'gn_mdactions',
     'ui.bootstrap.buttons',
-    'ui.bootstrap.tabs',
-    'ngeo'
+    'ui.bootstrap.tabs'
   ]);
 
 
   module.config(['$LOCALES', function($LOCALES) {
     $LOCALES.push('search');
     $LOCALES.push('/../api/0.1/tools/i18n/db?' +
-        'type=MetadataCategory&type=Operation&type=Group');
+        'type=MetadataCategory&type=Operation&type=Group&type=StatusValue');
     $LOCALES.push('/../api/0.1/standards/iso19139/' +
         'codelists/gmd%3AMD_TopicCategoryCode');
     $LOCALES.push('/../api/0.1/standards/iso19139/' +

@@ -253,7 +253,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
             log.debug("    - Setting categories : " + categories);
         }
 
-        metadata.getMetadataCategories().addAll(categories);
+        metadata.getCategories().addAll(categories);
     }
 
     private void addPrivileges(String id) throws Exception {
@@ -314,7 +314,6 @@ public class Aligner extends AbstractAligner<GeonetParams> {
 
         //--- remove old categories
 
-        @SuppressWarnings("unchecked")
         Collection<MetadataCategory> locCateg = dataMan.getCategories(id);
 
         for (MetadataCategory el : locCateg) {

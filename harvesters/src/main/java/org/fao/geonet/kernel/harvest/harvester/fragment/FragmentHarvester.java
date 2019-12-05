@@ -42,7 +42,6 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
@@ -203,7 +202,7 @@ public class FragmentHarvester extends BaseAligner {
 
         } catch (Exception e) {
             log.error("Thrown Exception " + e + " opening template with id: " + params.templateId);
-            e.printStackTrace();
+            log.error(e);
         }
     }
 
@@ -407,9 +406,10 @@ public class FragmentHarvester extends BaseAligner {
 
         String id = String.valueOf(metadata.getId());
 
-        // Note: we use fragmentAllPrivs here because subtemplates need to be 
+        // Note: we use fragmentAllPrivs here because subtemplates need to be
         // visible/accessible to all
-        addPrivileges(id, fragmentAllPrivs, localGroups, dataMan, context);
+
+        addPrivileges(id, fragmentAllPrivs, localGroups, context);
         dataMan.indexMetadata(id, true, null);
 
         metadataManager.flush();
@@ -579,20 +579,20 @@ public class FragmentHarvester extends BaseAligner {
         final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         AbstractMetadata metadata = metadataRepository.findOne(iId);
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-        repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, iId);
+        repository.deleteAllByMetadataId(iId);
 
         if (isSubtemplate) {
-          // Note: we use fragmentAllPrivs here because subtemplates need to be 
+          // Note: we use fragmentAllPrivs here because subtemplates need to be
           // visible/accessible to all
-          addPrivileges(id, fragmentAllPrivs, localGroups, dataMan, context);
+          addPrivileges(id, fragmentAllPrivs, localGroups, context);
         } else {
-          addPrivileges(id, params.privileges, localGroups, dataMan, context);
+          addPrivileges(id, params.privileges, localGroups, context);
         }
 
-        metadata.getMetadataCategories().clear();
+        metadata.getCategories().clear();
         addCategories(metadata, params.categories, localCateg, context, null, true);
 
-        if (isSubtemplate) { 
+        if (isSubtemplate) {
             dataMan.setSubtemplateTypeAndTitleExt(iId, title);
         }
         dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
@@ -635,7 +635,7 @@ public class FragmentHarvester extends BaseAligner {
             if (metadataCategory == null) {
                 throw new IllegalArgumentException("No category found with name: " + params.isoCategory);
             }
-            metadata.getMetadataCategories().add(metadataCategory);
+            metadata.getCategories().add(metadataCategory);
         }
         metadata = metadataManager.insertMetadata(context, metadata, template, true, false, false, UpdateDatestamp.NO, false, false);
 
@@ -644,7 +644,7 @@ public class FragmentHarvester extends BaseAligner {
         if (log.isDebugEnabled()) {
             log.debug("	- Set privileges, category, template and harvested");
         }
-        addPrivileges(id, params.privileges, localGroups, dataMan, context);
+        addPrivileges(id, params.privileges, localGroups, context);
 
         dataMan.indexMetadata(id, true, null);
 

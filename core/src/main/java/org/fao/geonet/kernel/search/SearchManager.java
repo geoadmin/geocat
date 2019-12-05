@@ -90,6 +90,7 @@ import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.search.spatial.TouchesFilter;
 import org.fao.geonet.kernel.search.spatial.WithinBBoxFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.util.GMLParsers;
 import org.fao.geonet.utils.Xml;
 import org.geotools.data.DataStore;
 import org.geotools.data.DefaultTransaction;
@@ -1547,7 +1548,7 @@ public class SearchManager implements ISearchManager {
         private final Map<String, Constructor<? extends SpatialFilter>> _types;
         private final Transaction _transaction;
         private final int _maxWritesInTransaction;
-        private final Parser _gmlParser;
+        private final Parser[] _gmlParsers;
         private final Lock _lock;
         private SpatialIndexWriter _writer;
         private volatile Committer _committerTask;
@@ -1571,6 +1572,7 @@ public class SearchManager implements ISearchManager {
                 throw new RuntimeException("Unable to create types mapping", e);
             }
             _types = Collections.unmodifiableMap(types);
+            _gmlParsers = GMLParsers.create();
         }
 
         /**
@@ -1589,7 +1591,6 @@ public class SearchManager implements ISearchManager {
                 _transaction = Transaction.AUTO_COMMIT;
             }
             _maxWritesInTransaction = maxWritesInTransaction;
-            _gmlParser = new Parser(new GMLConfiguration());
             boolean rebuildIndex;
 
             rebuildIndex = createWriter(_datastore);
@@ -1606,7 +1607,7 @@ public class SearchManager implements ISearchManager {
         private boolean createWriter(DataStore datastore) throws IOException {
             boolean rebuildIndex;
             try {
-                _writer = new SpatialIndexWriter(datastore, _gmlParser, _transaction, _maxWritesInTransaction, _lock);
+                _writer = new SpatialIndexWriter(datastore, _gmlParsers, _transaction, _maxWritesInTransaction, _lock);
                 rebuildIndex = _writer.getFeatureSource().getSchema() == null;
             } catch (Throwable e) {
 
@@ -1702,7 +1703,7 @@ public class SearchManager implements ISearchManager {
 
         private SpatialIndexWriter writerNoLocking() throws Exception {
             if (_writer == null) {
-                _writer = new SpatialIndexWriter(_datastore, _gmlParser, _transaction, _maxWritesInTransaction, _lock);
+                _writer = new SpatialIndexWriter(_datastore, _gmlParsers, _transaction, _maxWritesInTransaction, _lock);
             }
             return _writer;
         }

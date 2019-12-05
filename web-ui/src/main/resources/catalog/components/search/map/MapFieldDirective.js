@@ -91,12 +91,12 @@
       ])
 
       .directive('gnDrawBboxBtn', [
-        'ngeoDecorateInteraction',
+        'olDecorateInteraction',
         '$parse',
         '$translate',
         'gnSearchSettings',
         'gnMap',
-        function(ngeoDecorateInteraction, $parse, $translate,
+        function(olDecorateInteraction, $parse, $translate,
                  gnSearchSettings) {
           return {
             restrict: 'A',
@@ -105,7 +105,7 @@
               var dragbox = new ol.interaction.DragBox({
                 style: gnSearchSettings.olStyles.drawBbox
               });
-              ngeoDecorateInteraction(dragbox, $scope.map);
+              olDecorateInteraction(dragbox, $scope.map);
               dragbox.active = false;
               $scope.map.addInteraction(dragbox);
               $scope.interaction = dragbox;
@@ -181,9 +181,11 @@
               });
 
               // When search form is reset, remove the geom
-              scope.$on('beforeSearchReset', function() {
-                resetSpatialFilter();
-                scope.interaction.active = false;
+              scope.$on('beforeSearchReset', function(event, preserveGeometrySearch) {
+                if (!preserveGeometrySearch) {
+                  resetSpatialFilter();
+                  scope.interaction.active = false;
+                }
               });
             }
           };

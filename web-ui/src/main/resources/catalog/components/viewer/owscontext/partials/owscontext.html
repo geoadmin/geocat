@@ -1,6 +1,7 @@
 <div class="context">
+  <a href="" class="hidden download-element"></a>
   <form class="form-horizontal clearfix"
-        role="grid"
+        role="form"
         data-ng-controller="gnsMapSearchController"
         data-ng-search-form=""
         data-runSearch="true">
@@ -42,15 +43,13 @@
   <div class="btn-group" role="group">
     <a class="btn btn-default"
         data-ng-click="save($event)"
-        title="{{'downloadContext'|translate}}"
-        download="{{mapFileName}}.xml">
+        title="{{'downloadContext'|translate}}">
       <i class="fa fa-file-code-o"></i>&nbsp;
       <span data-translate="">saveMapAsContext</span>
     </a>
     <a class="btn btn-default"
         data-ng-if="isExportMapAsImageEnabled"
-        data-ng-click="saveMapAsImage($event)"
-        download="{{mapFileName}}.png">
+        data-ng-click="saveMapAsImage($event)">
       <i class="fa fa-file-image-o"></i>&nbsp;
       <span data-translate="">saveMapAsImage</span>
     </a>
@@ -78,12 +77,48 @@
                 data-ng-model="mapProps.recordAbstract"
                 id="mapAbstract"></textarea>
     </div>
-    <a class="btn btn-default btn-block"
-        data-gn-click-and-spin="saveInCatalog($event)"
-        title="{{'saveInCatalog'|translate}}">
-      <i class="fa fa-save"></i>&nbsp;
-      <span data-translate="">saveMapInCatalogAction</span>
-    </a>
+
+    <div class="form-group"
+         data-ng-show="groups && groups.length > 1">
+      <label data-translate="">group</label>
+      <div data-groups-combo=""
+           data-optional="{{user.isAdministrator()}}"
+           data-owner-group="mapProps.group"
+           lang="lang"
+           data-groups="groups"
+           data-profile="Editor"
+           data-exclude-special-groups="true"/>
+    </div>
+
+    <input type="hidden"
+           name="publishedToAll"
+           data-ng-model="mapProps.publishToAll"/>
+
+    <div class="btn-group dropup">
+      <button type="button" class="btn btn-default"
+              data-gn-click-and-spin="saveInCatalog($event)"
+              title="{{'saveInCatalog'|translate}}">
+        <i class="fa fa-save"/>
+        <span data-translate="">saveMapInCatalogAction</span>
+      </button>
+      <button type="button"
+              class="btn btn-default dropdown-toggle"
+              data-toggle="dropdown">
+        <span class="caret"></span>&nbsp;
+      </button>
+      <ul class="dropdown-menu pull-right" role="menu">
+        <li><a
+          title="{{'saveInCatalogAndPublish-help' | translate}}"
+          data-gn-click-and-spin="saveInCatalog($event, true)"
+          href="">
+          <i class="fa fa-unlock"/>
+          <span data-translate="">saveMapInCatalogActionAndPublish</span>
+        </a></li>
+      </ul>
+    </div>
+
+
+
 
     <p data-ng-if="mapUuid != null"
         data-translate=""

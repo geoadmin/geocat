@@ -45,6 +45,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.exceptions.BadFormatEx;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.UnAuthorizedException;
@@ -56,7 +57,6 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRelationRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.Updater;
@@ -437,7 +437,7 @@ public class Importer {
                 final String finalRating = rating;
                 final Element finalCategs = categs;
                 final String finalGroupId = groupId;
-                context.getBean(MetadataRepository.class).update(iMetadataId, new Updater<Metadata>() {
+                context.getBean(IMetadataManager.class).update(iMetadataId, new Updater<Metadata>() {
                     @Override
                     public void apply(@Nonnull final Metadata metadata) {
                         final MetadataDataInfo dataInfo = metadata.getDataInfo();
@@ -524,7 +524,7 @@ public class Importer {
                     if (Log.isDebugEnabled(Geonet.MEF)) {
                         Log.debug(Geonet.MEF, " - Setting category : " + catName);
                     }
-                    metadata.getMetadataCategories().add(oneByName);
+                    metadata.getCategories().add(oneByName);
                 }
             }
         }
@@ -560,7 +560,7 @@ public class Importer {
 
             // --- only update sources table if source is not current site
             if (!source.equals(gc.getBean(SettingManager.class).getSiteId())) {
-                Source source1 = new Source(source, sourceName, sourceTranslations, true);
+                Source source1 = new Source(source, sourceName, sourceTranslations, SourceType.externalportal);
                 context.getBean(SourceRepository.class).save(source1);
             }
         }

@@ -166,10 +166,10 @@
                   timeout: 2,
                   type: 'success'});
               }
-            }, function(response) {
+            }, function(r) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate.instant('virtualCswUpdateError'),
-                error: response.data,
+                error: r.data,
                 timeout: 0,
                 type: 'danger'});
             });

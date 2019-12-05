@@ -476,9 +476,9 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
      * @throws SQLException
      */
     private List<Metadata> lookUpMetadataIds(MetadataRepository repo) throws SQLException {
-        final Specification<Metadata> notHarvested = MetadataSpecs.isHarvested(false);
-        Specification<Metadata> isMetadata = MetadataSpecs.isType(MetadataType.METADATA);
-        Specification<Metadata> isCHEMetadata = MetadataSpecs.hasSchemaId("iso19139.che");
+        final Specification<Metadata> notHarvested = (Specification<Metadata>) MetadataSpecs.isHarvested(false);
+        Specification<Metadata> isMetadata = (Specification<Metadata>) MetadataSpecs.isType(MetadataType.METADATA);
+        Specification<Metadata> isCHEMetadata = (Specification<Metadata>) MetadataSpecs.hasSchemaId("iso19139.che");
         return repo.findAll(where(notHarvested).and(isMetadata).and(isCHEMetadata));
     }
 

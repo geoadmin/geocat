@@ -36,7 +36,6 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -193,7 +192,8 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
 
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+
+        addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         dataMan.indexMetadata(id, Math.random() < 0.01, null);
         result.addedMetadata++;
@@ -233,10 +233,11 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
                 final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-                repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-                addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
-                metadata.getMetadataCategories().clear();
+                repository.deleteAllByMetadataId(Integer.parseInt(id));
+                addPrivileges(id, params.getPrivileges(), localGroups, context);
+
+                metadata.getCategories().clear();
                 addCategories(metadata, params.getCategories(), localCateg, context, null, true);
                 metadataManager.flush();
 
@@ -277,9 +278,9 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
             try {
                 response = request.execute();
             } catch (Exception e) {
-                e.printStackTrace();
                 log.error("Getting record from GeoPortal REST raised exception: " + e.getMessage());
                 log.error("Sent request " + request.getSentData());
+                log.error(e);
                 throw new Exception(e);
             }
 
@@ -310,7 +311,7 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
             return response;
         } catch (Exception e) {
             log.warning("Raised exception while getting record : " + e);
-            e.printStackTrace();
+            log.error(e);
             result.unretrievable++;
 
             //--- we don't raise any exception here. Just try to go on
