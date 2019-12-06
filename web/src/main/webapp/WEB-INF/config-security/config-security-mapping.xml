@@ -49,8 +49,8 @@
                            access="permitAll"/>
         <sec:intercept-url pattern="/monitor/.*" access="hasRole('Monitor')"/>
         <sec:intercept-url pattern="/monitor" access="hasRole('Monitor')"/>
-        <sec:intercept-url pattern="/\w*healthcheck"
-                           access="hasRole('Monitor')"/>
+        <sec:intercept-url pattern="/\w*healthcheck!?.*"
+                           access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/service-not-allowed!?.*"
                            access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/.+\?casLogin.*"

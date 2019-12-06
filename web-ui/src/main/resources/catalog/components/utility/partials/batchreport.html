@@ -38,7 +38,7 @@
           </div>
         </td>
       </tr>
-      <tr>
+      <tr data-ng-if="processReport.noProcessFoundCount">
         <td>{{('processReportNoProcessFound') | translate}}</td>
         <td class="text-right">{{processReport.noProcessFoundCount}}</td>
       </tr>

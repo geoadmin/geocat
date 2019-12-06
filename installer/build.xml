@@ -72,8 +72,8 @@
   <target name="thesaurusDownload">
     <mkdir dir="../web/target/thesauri"/>
 
-    <get src="${thesaurusUrl}/gemet.rdf"
-         dest="../web/target/thesauri/gemet.rdf" usetimestamp="true"/>
+    <!--<get src="${thesaurusUrl}/gemet.rdf"
+         dest="../web/target/thesauri/gemet.rdf" usetimestamp="true"/>-->
   </target>
 
   <target name="inspireDbSettings">

@@ -197,6 +197,7 @@ Insert is made in first transferOptions found.
       In that case on one online element is added per
       layer/featureType.
       -->
+
       <xsl:choose>
         <xsl:when test="starts-with($protocol, 'OGC:') and $name != ''">
           <xsl:for-each select="tokenize($name, ',')">
@@ -446,6 +447,7 @@ Insert is made in first transferOptions found.
 
               <xsl:if test="$name != ''">
                 <gmd:name>
+
                   <xsl:choose>
 
                     <!--Multilingual-->

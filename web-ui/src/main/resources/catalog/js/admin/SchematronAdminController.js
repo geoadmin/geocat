@@ -60,7 +60,7 @@
         gnSchematronAdminService.group.list(
             $scope.selection.schematron.id, function(data) {
               $scope.schematronGroups = data;
-              $scope.selection.group = data.length > 0 ? data[0] : null;
+              $scope.selection.group = data && data.length > 0 ? data[0] : null;
             });
       };
 

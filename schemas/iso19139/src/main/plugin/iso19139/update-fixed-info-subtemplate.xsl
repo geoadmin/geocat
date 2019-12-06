@@ -176,7 +176,6 @@
   </xsl:template>
 
 
-
   <xsl:template name="correct_ns_prefix">
     <xsl:param name="element"/>
     <xsl:param name="prefix"/>
