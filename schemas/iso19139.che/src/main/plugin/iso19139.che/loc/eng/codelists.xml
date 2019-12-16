@@ -190,39 +190,39 @@
     </entry>
     <entry>
       <code>intelligenceMilitary_R1</code>
-      <label>Fgg1Personelles</label>
+      <label>J1 Staff</label>
     </entry>
     <entry>
       <code>intelligenceMilitary_R2</code>
-      <label>Fgg2Nachrichtendienst</label>
+      <label>J2 Federal Intelligence Service</label>
     </entry>
     <entry>
       <code>intelligenceMilitary_R3</code>
-      <label>Fgg3Operationen</label>
+      <label>J3 Operations</label>
     </entry>
     <entry>
       <code>intelligenceMilitary_R4</code>
-      <label>Fgg4LogistikUndSan</label>
+      <label>J4 Logistic, Health</label>
     </entry>
     <entry>
       <code>intelligenceMilitary_R5</code>
-      <label>Fgg5Planung</label>
+      <label>J5 Planning</label>
     </entry>
     <entry>
       <code>intelligenceMilitary_R6</code>
-      <label>Fgg6Fuehrungsunterstuetzung</label>
+      <label>J6 Command support</label>
     </entry>
     <entry>
       <code>intelligenceMilitary_R7</code>
-      <label>Fgg7Ausbildung</label>
+      <label>J7 Training</label>
     </entry>
     <entry>
       <code>intelligenceMilitary_R8</code>
-      <label>Fgg8Finanzen</label>
+      <label>J8 Finance</label>
     </entry>
     <entry>
       <code>intelligenceMilitary_R9</code>
-      <label>Fgg9ZivMilKooperation</label>
+      <label>J9 Cooperation Civ-Mil</label>
     </entry>
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->

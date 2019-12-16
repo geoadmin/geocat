@@ -227,39 +227,39 @@
     </entry>
     <entry>
       <code>intelligenceMilitary_R1</code>
-      <label>Fgg1Personelles</label>
+      <label>AFC1 Personale</label>
     </entry>
     <entry>
       <code>intelligenceMilitary_R2</code>
-      <label>Fgg2Nachrichtendienst</label>
+      <label>AFC2 Servizio delle attività informative</label>
     </entry>
     <entry>
       <code>intelligenceMilitary_R3</code>
-      <label>Fgg3Operationen</label>
+      <label>AFC3 Operazioni</label>
     </entry>
     <entry>
       <code>intelligenceMilitary_R4</code>
-      <label>Fgg4LogistikUndSan</label>
+      <label>AFC4 Logistica, Sanitario</label>
     </entry>
     <entry>
       <code>intelligenceMilitary_R5</code>
-      <label>Fgg5Planung</label>
+      <label>AFC5 Pianificazione</label>
     </entry>
     <entry>
       <code>intelligenceMilitary_R6</code>
-      <label>Fgg6Fuehrungsunterstuetzung</label>
+      <label>AFC6 Aiuto alla condotta</label>
     </entry>
     <entry>
       <code>intelligenceMilitary_R7</code>
-      <label>Fgg7Ausbildung</label>
+      <label>AFC7 Formazione</label>
     </entry>
     <entry>
       <code>intelligenceMilitary_R8</code>
-      <label>Fgg8Finanzen</label>
+      <label>AFC8 Finanze</label>
     </entry>
     <entry>
       <code>intelligenceMilitary_R9</code>
-      <label>Fgg9ZivMilKooperation</label>
+      <label>AFC9 Cooperazione Civ-Mil</label>
     </entry>
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
