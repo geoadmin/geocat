@@ -164,7 +164,8 @@ goog.require('gn_alert');
               'url' : ''
             }, {
               'label': 'full',
-              'url' : '/formatters/xsl-view?root=div&view=advanced'
+              'url': '/formatters/full_view?output=xml'
+              // 'url' : '/formatters/xsl-view?root=div&view=advanced'
             }],
             defaultUrl: ''
           },
