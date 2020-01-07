@@ -34,7 +34,11 @@
       </div>
       <div class="flex-spacer"></div>
 
-      <a href="md.viewer#/full_view/{{md.getUuid()}}" data-ng-click="$event.preventDefault();openRecord($index, md, searchResults.records)"
+      <a href=""
+         gn-metadata-open="md"
+         gn-index="$index"
+         gn-records="searchResults.records"
+         gn-formatter="formatter.defaultUrl"
          title="{{md.title || md.defaultTitle}}">{{md.title || md.defaultTitle}}</a>
       <div class="flex-spacer flex-grow"></div>
 
@@ -59,8 +63,9 @@
         </a>
       </div>
       <div class="flex-spacer"></div>
-      <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350"
-        dd-text-collapse-text="{{(md.abstract || md.defaultAbstract) | stripTags}}"></p>
+      <p class="text-justify"
+         dd-text-collapse dd-text-collapse-max-length="350"
+         dd-text-collapse-text="{{(md.abstract || md.defaultAbstract) | stripTags}}"></p>
     </div>
 
     <div class="flex-spacer"></div>
