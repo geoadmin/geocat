@@ -2,6 +2,11 @@
 -- INSERT INTO Settings_ui (id, configuration) (SELECT 'srv', value FROM Settings WHERE name = 'ui/config');
 DELETE FROM Settings WHERE name = 'ui/config';
 
+
+UPDATE schematron SET filename = 'schematron-rules-inspire.xsl' WHERE filename = 'schematron-rules-inspire.report_only.xsl';
+UPDATE schematron SET filename = 'schematron-rules-inspire.xsl' WHERE filename = 'schematron-rules-inspire.disabled.xsl';
+
+
 ALTER TABLE Sources DROP COLUMN islocal;
 
 
@@ -39,3 +44,6 @@ UPDATE Sources SET type = 'portal' WHERE type IS null AND uuid = (SELECT value F
 UPDATE Sources SET type = 'harvester' WHERE type IS null AND uuid != (SELECT value FROM settings WHERE name = 'system/site/siteId');
 
 UPDATE Settings SET internal = 'y' WHERE name = 'system/publication/doi/doipassword';
+
+UPDATE Settings SET value='3.10.0' WHERE name='system/platform/version';
+UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
