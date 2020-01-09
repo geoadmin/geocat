@@ -20,7 +20,7 @@
         <dependency>
             <groupId>org.geonetwork-opensource</groupId>
             <artifactId>schema-iso19139.che</artifactId>
-            <version>3.5</version>
+            <version>3.7</version>
         </dependency>
     </dependencies>
 </project>
