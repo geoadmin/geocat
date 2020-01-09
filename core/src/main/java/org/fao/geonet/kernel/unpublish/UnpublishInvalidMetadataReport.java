@@ -26,6 +26,7 @@ import com.google.common.collect.Maps;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.geocat.PublishRecord;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -33,6 +34,8 @@ import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -45,9 +48,12 @@ public class UnpublishInvalidMetadataReport implements Service {
     private static final String ALL = "all";
     private static final Set<String> INCLUDE_OPTIONS = new HashSet<String>(Arrays.asList(ALL,AUTO,MANUAL));
 
+    @Autowired
+    private Resources resources;
+
     @Override
     public void init(Path appPath, ServiceConfig params) throws Exception {
-        
+
     }
 
     @SuppressWarnings("rawtypes")
@@ -62,7 +68,7 @@ public class UnpublishInvalidMetadataReport implements Service {
             includeSet.add(text);
             if(!INCLUDE_OPTIONS.contains(text)) {
                 throw new IllegalArgumentException("The legal values for the includes parameter are: "+INCLUDE_OPTIONS);
-            } 
+            }
         }
         Integer keepDuration = context.getBean(SettingManager.class).getValueAsInt("system/metadata/publish_tracking_duration");
         if (keepDuration == null) {
@@ -104,7 +110,7 @@ public class UnpublishInvalidMetadataReport implements Service {
                 autoUnpublishedToday.addContent(todayRecord.asXml());
             } else {
                 manualUnpublishedToday.addContent(todayRecord.asXml());
-            }  
+            }
         }
 
         Map<String, String> sourceAndGroupToLogo = Maps.newHashMap();
@@ -144,7 +150,7 @@ public class UnpublishInvalidMetadataReport implements Service {
             }
 
             if (logoUrl == null && logoUUID != null) {
-                final Path logosDir = Resources.locateHarvesterLogosDir(context);
+                final Path logosDir = resources.locateHarvesterLogosDir(context);
                 final Path logoPath = logosDir.resolve(logoUUID);
                 if (Files.exists(logoPath)) {
                     logoUrl = "/images/harvesting/" + logoUUID;
