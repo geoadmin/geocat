@@ -19,22 +19,23 @@
 
   <cookiewarning></cookiewarning>
 
-  <div class="container">
-    <div class="row gcat-header">
-      <div class="gcat-logo">
-        <div>
-          <img src="../../catalog/views/geocat/images/geocat_logo.png">
-        </div>
-        <div class="hidden-xs">
-          <img src="../../catalog/views/geocat/images/cat-logo.png">
-        </div>
-      </div>
-      <gc-instance-label/>
-    </div>
-  </div>
-
   <div class="gcat-view-container" data-ng-controller="gnsGeocat">
     <gn-extend-mainctrl></gn-extend-mainctrl>
+
+    <div class="container"
+         data-ng-show="activeTab != '/map'">
+      <div class="row gcat-header">
+        <div class="gcat-logo">
+          <div>
+            <img src="../../catalog/views/geocat/images/geocat_logo.png">
+          </div>
+          <div class="hidden-xs">
+            <img src="../../catalog/views/geocat/images/cat-logo.png">
+          </div>
+        </div>
+        <gc-instance-label/>
+      </div>
+    </div>
 
     <div class="container gcat-body-container"
       data-ng-search-form=""
@@ -47,9 +48,9 @@
            data-ng-show="activeTab == '/home'"/>
       <div data-ng-include="'../../catalog/views/geocat/templates/results.html'"
            data-ng-show="activeTab == '/search'"/>
-      <!-- <div data-ng-if="isMapViewerEnabled"
+      <div data-ng-if="isMapViewerEnabled"
            data-ng-include="'../../catalog/views/default/templates/map.html'"
-           data-ng-show="activeTab == '/map'"/> -->
+           data-ng-show="activeTab == '/map'"/>
       <div data-ng-include="'../../catalog/views/default/templates/recordViewGeocat.html'"
            data-ng-show="activeTab == '/metadata'"/>
     </div>

@@ -78,20 +78,9 @@ goog.require('gn_alert');
           'enabled': true,
           'languages': {
             'eng': 'en',
-            'dut': 'nl',
             'fre': 'fr',
             'ger': 'de',
-            'kor': 'ko',
-            'spa': 'es',
-            'cze': 'cs',
-            'cat': 'ca',
-            'fin': 'fi',
-            'ice': 'is',
-            'ita': 'it',
-            'por': 'pt',
-            'rus': 'ru',
-            'chi': 'zh',
-            'slo': 'sk'
+            'ita': 'it'
           },
           'isLogoInHeader': false,
           'logoInHeaderPosition': 'left',
