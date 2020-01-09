@@ -28,6 +28,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -64,6 +65,7 @@ public class Delete extends BackupFileService {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         IMetadataManager metadataManager = gc.getBean(IMetadataManager.class);
         AccessManager accessMan = gc.getBean(AccessManager.class);
+        Store store = context.getBean("resourceStore", Store.class);
 
         boolean backupFile = Util.getParam(params, Params.BACKUP_FILE, true);
         String id = Utils.getIdentifierFromParameters(params, context);
@@ -91,7 +93,7 @@ public class Delete extends BackupFileService {
 
         //-----------------------------------------------------------------------
         //--- remove the metadata directory including the public and private directories.
-        IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class), id));
+        store.delResources(context, metadata.getUuid());
 
         //-----------------------------------------------------------------------
         //--- delete metadata and return status

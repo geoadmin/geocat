@@ -30,6 +30,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -68,6 +69,7 @@ public class BatchDelete extends BackupFileService {
         IMetadataManager metadataManager = gc.getBean(IMetadataManager.class);
         AccessManager accessMan = gc.getBean(AccessManager.class);
         UserSession session = context.getUserSession();
+        Store store = context.getBean("resourceStore", Store.class);
 
         Set<String> metadata = new HashSet<>();
         Set<String> notFound = new HashSet<>();
@@ -111,8 +113,7 @@ public class BatchDelete extends BackupFileService {
 	                }
 
 	                //--- remove the metadata directory
-	                Path pb = Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class), idString);
-	                IO.deleteFileOrDirectory(pb);
+                    store.delResources(context, uuid);
 
 	                //--- delete metadata and return status
                   metadataManager.deleteMetadata(context, idString);

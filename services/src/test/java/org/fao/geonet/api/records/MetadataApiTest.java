@@ -116,7 +116,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
     private EntityManager _entityManager;
 
     @Autowired private MetadataRepository metadataRepository;
-    
+
     private String uuid;
     private int id;
     private AbstractMetadata md;
@@ -604,6 +604,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             if (type == RelatedItemType.hassources ||
                 type == RelatedItemType.related ||
                 type == RelatedItemType.hasfeaturecats ||
+                type == RelatedItemType.brothersAndSisters ||
                 type == RelatedItemType.thumbnails) {
                 // TODO modify mef2-related.zip test metadata to contain a valid hassources value
                 continue;
