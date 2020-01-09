@@ -221,13 +221,13 @@
           <span data-translate="">exportMEF</span>
         </a>
       </li>
-      <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/full_view?output=pdf&language={{lang}}&approved={{mdView.current.record.draft != 'y'"
+      <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/full_view?output=pdf&language={{lang}}&approved={{mdView.current.record.draft != 'y'}}"
              target="_blank">
         <i class="fa fa-fw fa-file-pdf-o"></i>&nbsp;
         <span data-translate="">exportPDF</span>
       </a></li>
       <!-- custom Geocat options -->
-      <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xml?attachment=true&approved={{mdView.current.record.draft != 'y'}}"
+      <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xml?approved={{mdView.current.record.draft != 'y'}}"
              download="{{md.getUuid()}}.xml">
         <i class="fa fa-fw fa-file-code-o"></i>&nbsp;
         <span data-translate="">exportcheXML</span>
