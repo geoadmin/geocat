@@ -44,6 +44,7 @@
       </testResource>
       <testResource>
         <directory>src/main/plugin/iso19139</directory>
+        <targetPath>iso19139</targetPath>
       </testResource>
     </testResources>
   </build>
