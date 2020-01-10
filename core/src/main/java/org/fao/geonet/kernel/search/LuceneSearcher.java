@@ -1518,6 +1518,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 LOGGER.debug("Lucene query: {}", _query);
 
                 _query = appendPortalFilter(_query, _luceneConfig);
+
                 try (IndexAndTaxonomy indexReader = _sm.getIndexReader(_language.presentationLanguage, _versionToken)) {
                     // Rewrite the drilldown query to a query that can be used by the search logger
                     _loggerQuery = _query.rewrite(indexReader.indexReader);
