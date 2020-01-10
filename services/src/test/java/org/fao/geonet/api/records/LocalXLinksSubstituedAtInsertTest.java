@@ -515,7 +515,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         HttpSession session = loginAs(user);
 
         MockHttpServletRequest request = new MockHttpServletRequest(session.getServletContext());
-        request.setRequestURI("/api/0.1/records");
+        request.setRequestURI("/_portal_/api/0.1/records");
         request.setContent(Xml.getString(vicinityMapElement).getBytes());
         request.setMethod("PUT");
         request.setContentType("application/xml");
