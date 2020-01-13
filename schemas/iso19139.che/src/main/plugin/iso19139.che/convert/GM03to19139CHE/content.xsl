@@ -5,7 +5,8 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:gml="http://www.opengis.net/gml">
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml">
 
     <xsl:template mode="Content"
                   match="GM03Comprehensive.Comprehensive.MD_CoverageDescription">
@@ -88,7 +89,7 @@
     <xsl:template mode="Content" match="units">
         <xsl:variable name="unit" select="text()"/>
         <gmd:units>
-            <xsl:copy-of select="document('units.xml')//gml:dictionaryEntry/*[@gml:id=$unit]"/>
+          <xsl:copy-of select="document('../units.xml')//(gml:dictionaryEntry|gml320:dictionaryEntry)/*[@gml:id=$unit or @gml320:id=$unit]"/>
         </gmd:units>
     </xsl:template>
 

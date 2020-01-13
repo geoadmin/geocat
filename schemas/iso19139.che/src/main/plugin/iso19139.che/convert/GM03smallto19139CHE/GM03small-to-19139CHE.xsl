@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:gml="http://www.opengis.net/gml" xmlns:GML="http://www.geocat.ch/2003/05/gateway/GML" xmlns:ch="http://www.geocat.ch/2003/05/gateway/GM03Small" exclude-result-prefixes="ch GML">
-    
+<xsl:stylesheet version="2.0" xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml" xmlns:GML="http://www.geocat.ch/2003/05/gateway/GML" xmlns:ch="http://www.geocat.ch/2003/05/gateway/GM03Small" exclude-result-prefixes="ch GML">
+
     <xsl:variable name="defaultLanguage">
         <xsl:apply-templates mode="language" select="/ch:MD_Metadata/ch:identificationInfo/ch:language"/>
     </xsl:variable>
-    
+
     <xsl:template match="ch:MD_Metadata">
         <che:CHE_MD_Metadata gco:isoType="gmd:MD_Metadata">
             <gmd:fileIdentifier>
@@ -89,16 +90,16 @@
                     </gmd:characterEncoding>
                 </gmd:PT_Locale>
             </gmd:locale>
-            
+
             <!-- Add identification section -->
             <xsl:call-template name="identification"/>
-            
+
             <!-- Map metadata URL to an onlineSrc section -->
             <xsl:call-template name="distribution"/>
-            
+
         </che:CHE_MD_Metadata>
     </xsl:template>
-    
+
     <xsl:template name="distribution">
         <gmd:distributionInfo>
             <gmd:MD_Distribution>
@@ -108,7 +109,7 @@
                             <gmd:CI_OnlineResource>
                                 <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
                                     <che:LocalisedURL>
-                                        <xsl:value-of select="ch:metadataSetURI"/>                                    
+                                        <xsl:value-of select="ch:metadataSetURI"/>
                                     </che:LocalisedURL>
                                 </gmd:linkage>
                                 <gmd:protocol>
@@ -124,17 +125,17 @@
                                     <gmd:CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode" codeListValue="information" />
                                 </gmd:function>
                             </gmd:CI_OnlineResource>
-                        </gmd:onLine>                        
+                        </gmd:onLine>
                     </gmd:MD_DigitalTransferOptions>
                 </gmd:transferOptions>
             </gmd:MD_Distribution>
         </gmd:distributionInfo>
-        
+
     </xsl:template>
-    
-    
+
+
     <xsl:template name="identification">
-        
+
         <gmd:identificationInfo>
             <che:CHE_MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
                 <gmd:citation>
@@ -163,8 +164,8 @@
                         <xsl:with-param name="node" select="ch:identificationInfo/ch:abstract"/>
                     </xsl:call-template>
                 </gmd:abstract>
-                
-                
+
+
                 <!-- contact -->
                 <xsl:for-each select="ch:identificationInfo/ch:pointOfContact">
                     <xsl:if test="ch:organisationName!='' or ch:individualName!=''">
@@ -189,8 +190,8 @@
                     </gmd:pointOfContact>
                     </xsl:if>
                 </xsl:for-each>
-                
-                
+
+
                 <xsl:for-each select="ch:identificationInfo/ch:descriptiveKeywords">
                     <gmd:descriptiveKeywords>
                         <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#">
@@ -205,7 +206,7 @@
                         </gmd:MD_Keywords>
                     </gmd:descriptiveKeywords>
                 </xsl:for-each>
-                
+
                 <gmd:language>
                     <gco:CharacterString>
                         <xsl:choose>
@@ -216,15 +217,15 @@
                             <xsl:otherwise>eng</xsl:otherwise>
                         </xsl:choose>
                     </gco:CharacterString>
-                </gmd:language>                
-                
+                </gmd:language>
+
                 <xsl:for-each select="ch:identificationInfo/ch:topicCategory">
                     <gmd:topicCategory>
                         <gmd:MD_TopicCategoryCode><xsl:value-of select="."/></gmd:MD_TopicCategoryCode>
                     </gmd:topicCategory>
-                </xsl:for-each>                
-                
-                
+                </xsl:for-each>
+
+
                 <xsl:for-each select="ch:identificationInfo/ch:extent">
                     <gmd:extent>
                         <gmd:EX_Extent>
@@ -265,10 +266,10 @@
             </che:CHE_MD_DataIdentification>
         </gmd:identificationInfo>
     </xsl:template>
-    
+
     <xsl:template name="localised">
         <xsl:param name="node"/>
-        
+
         <xsl:for-each select="$node/ch:textGroup[ch:language=$defaultLanguage]">
             <gco:CharacterString><xsl:value-of select="ch:plainText"/></gco:CharacterString>
         </xsl:for-each>
@@ -290,5 +291,5 @@
             </gmd:PT_FreeText>
         </xsl:for-each>
     </xsl:template>
-    
+
 </xsl:stylesheet>

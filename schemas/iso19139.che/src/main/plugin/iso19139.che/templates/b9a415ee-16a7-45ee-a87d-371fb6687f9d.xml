@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:geonet="http://www.fao.org/geonetwork" gco:isoType="gmd:MD_Metadata">
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:geonet="http://www.fao.org/geonetwork" gco:isoType="gmd:MD_Metadata">
   <gmd:fileIdentifier xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <gco:CharacterString>b9a415ee-16a7-45ee-a87d-371fb6687f9d</gco:CharacterString>
   </gmd:fileIdentifier>
@@ -80,13 +81,13 @@
         </gmd:CI_Citation>
       </gmd:citation>
       <gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
-        <gco:CharacterString>Mit dem Bebauungsplan wird bezweckt, massgebliche Elemente einer Überbauung, die weitere Unterteilung der Bauzonen sowie die Freihaltung der Erschliessungsflächen und des nicht zu überbauenden Gebietes festzulegen. 
- 
+        <gco:CharacterString>Mit dem Bebauungsplan wird bezweckt, massgebliche Elemente einer Überbauung, die weitere Unterteilung der Bauzonen sowie die Freihaltung der Erschliessungsflächen und des nicht zu überbauenden Gebietes festzulegen.
+
 Siehe "Richtlinien zur Erstellung digitaler Bebauungspläne", Modell "Bebauungsplan_LU_103."</gco:CharacterString>
         <gmd:PT_FreeText>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#DE">Mit dem Bebauungsplan wird bezweckt, massgebliche Elemente einer Überbauung, die weitere Unterteilung der Bauzonen sowie die Freihaltung der Erschliessungsflächen und des nicht zu überbauenden Gebietes festzulegen. 
- 
+            <gmd:LocalisedCharacterString locale="#DE">Mit dem Bebauungsplan wird bezweckt, massgebliche Elemente einer Überbauung, die weitere Unterteilung der Bauzonen sowie die Freihaltung der Erschliessungsflächen und des nicht zu überbauenden Gebietes festzulegen.
+
 Siehe "Richtlinien zur Erstellung digitaler Bebauungspläne", Modell "Bebauungsplan_LU_103."</gmd:LocalisedCharacterString>
           </gmd:textGroup>
         </gmd:PT_FreeText>

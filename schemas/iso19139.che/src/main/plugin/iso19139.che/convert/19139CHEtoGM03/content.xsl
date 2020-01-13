@@ -5,7 +5,8 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="che gco gmd gml util">
 
@@ -70,7 +71,7 @@
         </GM03_2_1Comprehensive.Comprehensive.MD_FeatureCatalogueDescription>
     </xsl:template>
 
- 
+
     <xsl:template mode="Content" match="gmd:dimension">
         <GM03_2_1Comprehensive.Comprehensive.dimensionMD_CoverageDescription TID="x{util:randomId()}">
             <dimension REF="?">
@@ -79,7 +80,7 @@
             <BACK_REF name="MD_CoverageDescription"/>
         </GM03_2_1Comprehensive.Comprehensive.dimensionMD_CoverageDescription>
     </xsl:template>
- 
+
 
     <xsl:template mode="Content" match="che:class">
         <GM03_2_1Comprehensive.Comprehensive.classMD_FeatureCatalogueDescription TID="x{util:randomId()}">
@@ -104,18 +105,18 @@
             <xsl:apply-templates mode="text" select="gmd:offset"/>
         </GM03_2_1Comprehensive.Comprehensive.MD_Band>
     </xsl:template>
-    
+
     <xsl:template mode="Content" match="gmd:MD_RangeDimension">
         <GM03_2_1Comprehensive.Comprehensive.MD_RangeDimension TID="x{util:randomId()}">
             <xsl:apply-templates mode="Content" select="gmd:sequenceIdentifier/gco:MemberName/gco:aName"/>
             <xsl:apply-templates mode="text" select="gmd:descriptor"/>
         </GM03_2_1Comprehensive.Comprehensive.MD_RangeDimension>
     </xsl:template>
-    
+
     <xsl:template mode="Content" match="gco:aName">
         <sequenceIdentifier><xsl:value-of select="."/></sequenceIdentifier>
     </xsl:template>
-    
+
     <xsl:template mode="Content" match="che:CHE_MD_Class">
         <GM03_2_1Comprehensive.Comprehensive.MD_Class TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="che:name"/>
@@ -130,7 +131,7 @@
         <GM03_2_1Comprehensive.Comprehensive.MD_Attribute TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="che:name"/>
             <xsl:apply-templates mode="forceGroupText" select="che:description"/>
-            <xsl:apply-templates mode="Content" select="che:namedType"/> 
+            <xsl:apply-templates mode="Content" select="che:namedType"/>
             <BACK_REF name="MD_AbstractClass"/>
             <xsl:apply-templates mode="Content" select="che:anonymousType"/>
         </GM03_2_1Comprehensive.Comprehensive.MD_Attribute>
@@ -177,7 +178,7 @@
         </type>
       </xsl:if>
     </xsl:template>
-    
+
     <xsl:template mode="Content" match="che:anonymousType">
         <anonymousType REF="?">
             <xsl:apply-templates mode="Content" select="che:CHE_MD_Type"/>
@@ -190,7 +191,7 @@
 			<xsl:apply-templates mode="Content" select="che:value/che:CHE_MD_CodeValue" />
 		</GM03_2_1Comprehensive.Comprehensive.MD_Type>
 	</xsl:template>
-    
+
     <xsl:template mode="Content" match="che:CHE_MD_CodeValue">
         <GM03_2_1Comprehensive.Comprehensive.MD_CodeValue TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="che:name"/>
@@ -237,9 +238,9 @@
     <xsl:template mode="Content" match="gmd:featureCatalogueCitation">
         <xsl:apply-templates mode="Content"/>
     </xsl:template>
-    
+
     <xsl:template mode="Content" match="gmd:units">
-        <units><xsl:value-of select=".//gml:catalogSymbol"/></units>
+        <units><xsl:value-of select=".//(gml:catalogSymbol|gml320:catalogSymbol)"/></units>
     </xsl:template>
     <xsl:template mode="Content" match="che:dataModel">
         <xsl:choose>
@@ -289,7 +290,7 @@
         <xsl:apply-templates mode="DataIdentification" select="gmd:identifier"/>
         <xsl:apply-templates mode="RefSystem" select="gmd:citedResponsibleParty"/>
         </GM03_2_1Comprehensive.Comprehensive.CI_Citation>
-            
+
     </xsl:template>
 
 

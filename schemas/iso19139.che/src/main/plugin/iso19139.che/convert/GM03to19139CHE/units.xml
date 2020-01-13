@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gml:Dictionary xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/gml http://schemas.opengis.net/gml/3.2.1/gml.xsd"
+<gml:Dictionary xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/gml http://schemas.opengis.net/gml/3.2.1/gml.xsd"
                 gml:id="unitsDictionary">
     <gml:description>A dictionary of units of measure, including the set of units given in tables 1,2,3,5,6 in ISO 31-0</gml:description>
     <gml:identifier codeSpace="http://urn.opengis.net/">urn:ogc:def:uom:OGC::m</gml:identifier>

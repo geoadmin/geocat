@@ -23,7 +23,8 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
@@ -44,6 +45,31 @@
 
   <xsl:variable name="serviceUrl" select="/root/env/siteURL"/>
   <xsl:variable name="node" select="/root/env/node"/>
+
+  <xsl:variable name="schemaLocationFor2007"
+                select="'http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd'"/>
+
+  <!-- Try to determine if using the 2005 or 2007 version
+  of ISO19139. Based on this GML 3.2.0 or 3.2.1 is used.
+  Default is 2007 with GML 3.2.1.
+  You can force usage of a schema by setting:
+  * ISO19139:2007
+  <xsl:variable name="isUsing2005Schema" select="false()"/>
+  * ISO19139:2005 (not recommended)
+  <xsl:variable name="isUsing2005Schema" select="true()"/>
+  -->
+  <xsl:variable name="isUsing2005Schema"
+                select="(/root/che:CHE_MD_Metadata/@xsi:schemaLocation
+                          and /root/che:CHE_MD_Metadata/@xsi:schemaLocation != $schemaLocationFor2007)
+                        or
+                        count(//gml320:*) > 0"/>
+
+  <!-- This variable is used to migrate from 2005 to 2007 version.
+  By setting the schema location in a record, on next save, the record
+  will use GML3.2.1.-->
+  <xsl:variable name="isUsing2007Schema"
+                select="/root/che:CHE_MD_Metadata/@xsi:schemaLocation
+                          and /root/che:CHE_MD_Metadata/@xsi:schemaLocation = $schemaLocationFor2007"/>
 
   <!-- The default language is also added as gmd:locale
   for multilingual metadata records. -->
@@ -77,9 +103,30 @@
   </xsl:template>
 
 
+  <xsl:template name="add-namespaces">
+    <xsl:namespace name="xsi" select="'http://www.w3.org/2001/XMLSchema-instance'"/>
+    <xsl:namespace name="che" select="'http://www.geocat.ch/2008/che'"/>
+    <xsl:namespace name="gco" select="'http://www.isotc211.org/2005/gco'"/>
+    <xsl:namespace name="gmd" select="'http://www.isotc211.org/2005/gmd'"/>
+    <xsl:namespace name="srv" select="'http://www.isotc211.org/2005/srv'"/>
+    <xsl:namespace name="gmx" select="'http://www.isotc211.org/2005/gmx'"/>
+    <xsl:namespace name="gts" select="'http://www.isotc211.org/2005/gts'"/>
+    <xsl:namespace name="gsr" select="'http://www.isotc211.org/2005/gsr'"/>
+    <xsl:namespace name="gmi" select="'http://www.isotc211.org/2005/gmi'"/>
+    <xsl:choose>
+      <xsl:when test="$isUsing2005Schema and not($isUsing2007Schema)">
+        <xsl:namespace name="gml" select="'http://www.opengis.net/gml'"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:namespace name="gml" select="'http://www.opengis.net/gml/3.2'"/>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:namespace name="xlink" select="'http://www.w3.org/1999/xlink'"/>
+  </xsl:template>
+
   <xsl:template match="che:CHE_MD_Metadata">
-    <xsl:copy>
-      <xsl:namespace name="xsi" select="'http://www.w3.org/2001/XMLSchema-instance'"/>
+    <xsl:copy copy-namespaces="no">
+      <xsl:call-template name="add-namespaces"/>
       <xsl:apply-templates select="@*"/>
 
       <gmd:fileIdentifier>
@@ -195,19 +242,30 @@
 
   <!-- ================================================================= -->
   <!-- Add gmd:id attribute to all gml elements which required one. -->
-  <xsl:template match="gml:MultiSurface[not(@gml:id)]|gml:Polygon[not(@gml:id)]">
-    <xsl:copy>
-      <xsl:attribute name="gml:id">
+  <xsl:template match="gml:MultiSurface[not(@gml:id)]|gml:Polygon[not(@gml:id)]|
+                        gml320:MultiSurface[not(@gml320:id)]|gml320:Polygon[not(@gml320:id)]">
+    <xsl:copy copy-namespaces="no">
+      <xsl:choose>
+        <xsl:when test="$isUsing2005Schema and not($isUsing2007Schema)">
+          <xsl:namespace name="gml320" select="'http://www.opengis.net/gml'"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:namespace name="gml" select="'http://www.opengis.net/gml/3.2'"/>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:attribute name="{if ($isUsing2005Schema and not($isUsing2007Schema))
+                            then 'gml320' else 'gml'}:id">
         <xsl:value-of select="generate-id(.)"/>
       </xsl:attribute>
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
 
-  <xsl:template match="@gml:id">
+  <xsl:template match="@gml:id|@gml320:id">
     <xsl:choose>
       <xsl:when test="normalize-space(.)=''">
-        <xsl:attribute name="gml:id">
+        <xsl:attribute name="{if ($isUsing2005Schema and not($isUsing2007Schema))
+                              then 'gml320' else 'gml'}:id">
           <xsl:value-of select="generate-id(.)"/>
         </xsl:attribute>
       </xsl:when>
@@ -235,16 +293,28 @@
   </xsl:template>
 
   <!-- Add required gml attributes if missing -->
-  <xsl:template match="gml:Polygon[not(@gml:id) and not(@srsName)]">
-    <xsl:copy>
-      <xsl:attribute name="gml:id">
+  <xsl:template match="gml:Polygon[not(@gml:id) and not(@srsName)]|
+                       gml:MultiSurface[not(@gml:id) and not(@srsName)]|
+                       gml:LineString[not(@gml:id) and not(@srsName)]|
+                       gml320:Polygon[not(@gml320:id) and not(@srsName)]">
+    <xsl:copy copy-namespaces="no">
+      <xsl:choose>
+        <xsl:when test="$isUsing2005Schema and not($isUsing2007Schema)">
+          <xsl:namespace name="gml320" select="'http://www.opengis.net/gml'"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:namespace name="gml" select="'http://www.opengis.net/gml/3.2'"/>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:attribute name="{if ($isUsing2005Schema and not($isUsing2007Schema))
+                            then 'gml320' else 'gml'}:id">
         <xsl:value-of select="generate-id(.)"/>
       </xsl:attribute>
       <xsl:attribute name="srsName">
         <xsl:text>urn:x-ogc:def:crs:EPSG:6.6:4326</xsl:text>
       </xsl:attribute>
       <xsl:copy-of select="@*"/>
-      <xsl:copy-of select="*"/>
+      <xsl:apply-templates select="*"/>
     </xsl:copy>
   </xsl:template>
 
@@ -734,10 +804,21 @@ is defined in record. If not, remove the element. -->
     </xsl:call-template>
   </xsl:template>
 
-  <xsl:template match="gml:*">
+  <!-- Move to GML 3.2.1 when using 2007 version. -->
+  <xsl:template match="gml320:*[$isUsing2007Schema]">
+    <xsl:element name="gml:{local-name()}">
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:element>
+  </xsl:template>
+  <xsl:template match="@gml320:*[$isUsing2007Schema]">
+    <xsl:attribute name="gml:{local-name()}" select="."/>
+  </xsl:template>
+
+  <xsl:template match="gml:*|gml320:*">
     <xsl:call-template name="correct_ns_prefix">
       <xsl:with-param name="element" select="."/>
-      <xsl:with-param name="prefix" select="'gml'"/>
+      <xsl:with-param name="prefix" select="if ($isUsing2005Schema and not($isUsing2007Schema))
+                                            then 'gml320' else 'gml'"/>
     </xsl:call-template>
   </xsl:template>
 

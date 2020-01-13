@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:che="http://www.geocat.ch/2008/che"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
@@ -7,7 +7,8 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:int="http://www.interlis.ch/INTERLIS2.3"
                 exclude-result-prefixes="int"
-                xmlns:gml="http://www.opengis.net/gml">
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml">
 
     <xsl:template mode="Content"
                   match="int:GM03_2Comprehensive.Comprehensive.MD_CoverageDescription">
@@ -90,7 +91,7 @@
     <xsl:template mode="Content" match="int:units">
         <xsl:variable name="unit" select="text()"/>
         <gmd:units>
-            <xsl:copy-of select="document('../units.xml')//gml:dictionaryEntry/*[@gml:id=$unit]"/>
+            <xsl:copy-of select="document('../units.xml')//(gml:dictionaryEntry|gml320:dictionaryEntry)/*[@gml:id=$unit or @gml320:id=$unit]"/>
         </gmd:units>
     </xsl:template>
 

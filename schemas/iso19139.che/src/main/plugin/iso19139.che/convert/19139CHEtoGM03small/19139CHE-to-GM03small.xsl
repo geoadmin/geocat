@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
                 xmlns:che="http://www.geocat.ch/2008/che"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:GML="http://www.geocat.ch/2003/05/gateway/GML"
                 xmlns:ch="http://www.geocat.ch/2003/05/gateway/GM03Small"
                 exclude-result-prefixes="che gco gmd xsi gml">
@@ -41,10 +42,10 @@
         </ch:identificationInfo>
     </xsl:template>
 
-    <xsl:template mode="extent" match="gmd:extent">        
+    <xsl:template mode="extent" match="gmd:extent">
         <xsl:apply-templates mode="extent"/>
     </xsl:template>
-    
+
     <xsl:template mode="extent" match="gmd:EX_Extent">
         <ch:extent>
             <xsl:apply-templates mode="text" select="gmd:description"/>
@@ -72,23 +73,23 @@
     </xsl:template>
 
     <xsl:template mode="extent" match="gmd:EX_BoundingPolygon">
-        <xsl:for-each select="gmd:polygon/gml:Polygon">
+        <xsl:for-each select="gmd:polygon/(gml:Polygon|gml320:Polygon)">
             <GML:Polygon srsName="EPSG:4326">
-                <xsl:for-each select="gml:exterior">
+                <xsl:for-each select="gml:exterior|gml320:exterior">
                     <GML:exteriorRing>
-                        <xsl:apply-templates mode="extent" select="gml:Ring/gml:curveMember/gml:LineString/gml:coordinates"/>
+                        <xsl:apply-templates mode="extent" select="gml:Ring/gml:curveMember/gml:LineString/gml:coordinates|gml320:Ring/gml320:curveMember/gml320:LineString/gml320:coordinates"/>
                     </GML:exteriorRing>
                 </xsl:for-each>
-                <xsl:for-each select="gml:interior">
+                <xsl:for-each select="gml:interior|gml320:interior">
                     <GML:interiorRing>
-                        <xsl:apply-templates mode="extent" select="gml:Ring/gml:curveMember/gml:LineString/gml:coordinates"/>
+                        <xsl:apply-templates mode="extent" select="gml:Ring/gml:curveMember/gml:LineString/gml:coordinates|gml320:Ring/gml320:curveMember/gml320:LineString/gml320:coordinates"/>
                     </GML:interiorRing>
                 </xsl:for-each>
             </GML:Polygon>
         </xsl:for-each>
     </xsl:template>
 
-    <xsl:template mode="extent" match="gml:coordinates">
+    <xsl:template mode="extent" match="gml:coordinates|gml320:coordinates">
         <GML_COORDINATES decimal="{@decimal}" cs="{@cs}" ts="{@ts}">
             <xsl:value-of select="."/>  <!-- TODO: must be translated -->
         </GML_COORDINATES>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:geonet="http://www.fao.org/geonetwork" gco:isoType="gmd:MD_Metadata">
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:geonet="http://www.fao.org/geonetwork" gco:isoType="gmd:MD_Metadata">
   <gmd:fileIdentifier xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <gco:CharacterString>14fa2f9e-f963-45b5-a55c-3f8f2e043b9b</gco:CharacterString>
   </gmd:fileIdentifier>
@@ -80,11 +81,11 @@
         </gmd:CI_Citation>
       </gmd:citation>
       <gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
-        <gco:CharacterString>Leitungskataster Wasser: 
+        <gco:CharacterString>Leitungskataster Wasser:
 Modell "SIA405_Was_2004_LK_LU01_minimal"</gco:CharacterString>
         <gmd:PT_FreeText>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#DE">Leitungskataster Wasser: 
+            <gmd:LocalisedCharacterString locale="#DE">Leitungskataster Wasser:
 Modell "SIA405_Was_2004_LK_LU01_minimal"</gmd:LocalisedCharacterString>
           </gmd:textGroup>
         </gmd:PT_FreeText>

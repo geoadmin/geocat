@@ -2,7 +2,8 @@
 <xsl:stylesheet xmlns:gn="http://geonetwork-opensource.org"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:wfs="http://www.opengis.net/wfs"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
