@@ -26,13 +26,15 @@
   goog.provide('gn_search_geocat');
 
   goog.require('gn_search_default');
+  goog.require('gn_saved_selections');
+  goog.require('gn_search_geocat_mdactionmenu');
   goog.require('gc_searchform');
   goog.require('gc_instance_label');
-  goog.require('gn_search_geocat_mdactionmenu');
 
   var module = angular.module('gn_search_geocat',[
     'gn_search_default',
     'gn_search_geocat_mdactionmenu',
+    'gn_saved_selections',
     'gc_instance_label',
     'gc_searchform'
   ]);

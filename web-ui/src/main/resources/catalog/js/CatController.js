@@ -169,15 +169,15 @@ goog.require('gn_alert');
           },
           'isFilterTagsDisplayedInSearch': false,
           'usersearches': {
-            'enabled': false,
+            'enabled': true,
             'displayFeaturedSearchesPanel': false
           },
           'savedSelection': {
-            'enabled': true
+            'enabled': false
           }
         },
         'map': {
-          'enabled': true,
+          'enabled': false,
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/map',
           'externalViewer': {
             'enabled': false,
