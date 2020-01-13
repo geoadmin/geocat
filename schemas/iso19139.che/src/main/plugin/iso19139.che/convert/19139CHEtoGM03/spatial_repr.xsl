@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
                 xmlns="http://www.interlis.ch/INTERLIS2.3"
                 xmlns:che="http://www.geocat.ch/2008/che"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="che gco gmd gml util">
 
     <!-- ================================================================================== -->
-    
+
     <xsl:template mode="SpatialRepr" match="gmd:MD_VectorSpatialRepresentation">
         <GM03_2_1Comprehensive.Comprehensive.MD_VectorSpatialRepresentation TID="x{util:randomId()}">
             <BACK_REF name="MD_Metadata"/>
@@ -22,7 +23,7 @@
     <xsl:template mode="SpatialRepr" match="gmd:geometricObjects">
         <xsl:apply-templates mode="SpatialRepr"/>
     </xsl:template>
-    
+
     <xsl:template mode="SpatialRepr" match="gmd:MD_GeometricObjects">
         <GM03_2_1Comprehensive.Comprehensive.MD_GeometricObjects TID="x{util:randomId()}">
             <xsl:apply-templates mode="text" select="gmd:geometricObjectType"/>
@@ -57,7 +58,7 @@
     </xsl:template>
 
     <!-- ================================================================================== -->
-    
+
     <xsl:template mode="SpatialRepr" match="gmd:MD_Georectified">
         <GM03_2_1Comprehensive.Comprehensive.MD_Georectified TID="x{util:randomId()}">
             <BACK_REF name="MD_Metadata"/>
@@ -81,31 +82,31 @@
             <xsl:apply-templates mode="text_" select="gmd:transformationDimensionMapping"/>
         </GM03_2_1Comprehensive.Comprehensive.MD_Georectified>
     </xsl:template>
-    
+
     <xsl:template match="gmd:cornerPoints" mode="SpatialRepr">
                 <GM03_2_1Core.Core.GM_Point_>
                     <value>
                         <xsl:call-template name="explode" >
-                            <xsl:with-param name="string" select="gml:Point/gml:coordinates"/>
+                            <xsl:with-param name="string" select="Point/gml:coordinates|gml320:Point/gml320:coordinates"/>
                         </xsl:call-template>
                     </value>
                 </GM03_2_1Core.Core.GM_Point_>
     </xsl:template>
-    
+
     <xsl:template match="gmd:centerPoint" mode="SpatialRepr">
         <centerPoint>
                 <xsl:call-template name="explode" >
-                    <xsl:with-param name="string" select="gml:Point/gml:coordinates"/>
+                    <xsl:with-param name="string" select="gml:Point/gml:coordinates|gml320:Point/gml320:coordinates"/>
                 </xsl:call-template>
         </centerPoint>
     </xsl:template>
-    
+
     <xsl:template match="gmd:pointInPixel" mode="SpatialRepr">
         <pointInPixel><xsl:value-of select="gmd:MD_PixelOrientationCode"/></pointInPixel>
     </xsl:template>
-    
+
     <!-- ================================================================================== -->
-        
+
     <xsl:template mode="SpatialRepr" match="gmd:MD_Georeferenceable">
         <GM03_2_1Comprehensive.Comprehensive.MD_Georeferenceable TID="x{util:randomId()}">
             <BACK_REF name="MD_Metadata"/>
@@ -130,7 +131,7 @@
     </xsl:template>
 
     <!-- ================================================================================== -->
-    
+
     <xsl:template mode="SpatialRepr" match="*" priority="-100">
         <ERROR>Unknown SpatialRepr element <xsl:value-of select="local-name(.)"/></ERROR>
     </xsl:template>

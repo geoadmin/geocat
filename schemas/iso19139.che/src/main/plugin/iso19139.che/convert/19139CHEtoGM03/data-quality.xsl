@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
                 xmlns="http://www.interlis.ch/INTERLIS2.3"
                 xmlns:che="http://www.geocat.ch/2008/che"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:gmi="http://www.isotc211.org/2005/gmi"
                 xmlns:xalan="http://xml.apache.org/xalan"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
@@ -21,7 +22,7 @@
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:scope|gmd:lineage">
-        <xsl:apply-templates mode="DataQuality"/>        
+        <xsl:apply-templates mode="DataQuality"/>
     </xsl:template>
 
     <xsl:template mode="DataQuality" match="gmd:LI_Source">
@@ -32,8 +33,8 @@
                  <xsl:apply-templates mode="DataQuality" select="gmd:scaleDenominator" />
                  <xsl:apply-templates mode="DataQuality" select="gmd:sourceCitation" />
                  <xsl:apply-templates mode="DataQuality" select="gmd:sourceReferenceSystem" />
-                 
-                 
+
+
 <!--             Doesn't seem to be part of the gm03 schema    -->
 <!--                 <xsl:apply-templates mode="DataQuality" select="gmd:sourceExtent" />-->
                  <xsl:apply-templates mode="DataQuality" select="gmd:sourceStep" />
@@ -42,20 +43,20 @@
             <BACK_REF name="LI_Lineage" />
         </GM03_2_1Comprehensive.Comprehensive.sourceLI_Lineage>
     </xsl:template>
-    
+
     <xsl:template mode="DataQuality" match="gmd:scaleDenominator">
         <scaleDenominator REF="?">
             <xsl:apply-templates mode="DataIdentification" />
         </scaleDenominator>
     </xsl:template>
-    
+
     <xsl:template mode="DataQuality" match="gmd:sourceReferenceSystem">
         <sourceReferenceSystem REF="?">
             <xsl:apply-templates mode="RefSystem" />
         </sourceReferenceSystem>
     </xsl:template>
-    
-    
+
+
     <xsl:template mode="DataQuality" match="gmd:sourceCitation">
         <sourceCitation REF="?">
             <xsl:apply-templates mode="DataIdentification" />
@@ -86,11 +87,11 @@
         </xsl:if>
     </xsl:template>
 
-    
+
     <xsl:template mode="DataQuality" match="gmd:extent">
         <GM03_2_1Comprehensive.Comprehensive.DQ_Scopeextent TID="x{util:randomId()}">
 	        <extent REF="?">
-	            <xsl:apply-templates mode="DataQuality" /> 
+	            <xsl:apply-templates mode="DataQuality" />
 	        </extent>
             <BACK_REF name="DQ_Scope"/>
         </GM03_2_1Comprehensive.Comprehensive.DQ_Scopeextent>
@@ -246,7 +247,7 @@
             </xsl:apply-templates>
         </GM03_2_1Comprehensive.Comprehensive.DQ_CompletenessCommission>
     </xsl:template>
-    
+
     <xsl:template mode="DataQuality" match="gmi:QE_Usability">
         <!-- XXX do nothing for now gm03 does not support this report -->
     </xsl:template>
@@ -275,16 +276,16 @@
 
     <xsl:template mode="DataQuality" match="gmd:result">
         <xsl:param name="backRef"/>
-        
+
         <xsl:apply-templates mode="DataQualityResult">
             <xsl:with-param name="backRef" select="$backRef"/>
         </xsl:apply-templates>
     </xsl:template>
-        
+
     <xsl:template mode="DataQualityResult" match="gmi:QE_CoverageResult">
         <!-- XXX Ignore for now -->
     </xsl:template>
-    
+
     <xsl:template mode="DataQualityResult" match="gmd:DQ_ConformanceResult">
         <xsl:param name="backRef"/>
           <GM03_2_1Comprehensive.Comprehensive.DQ_ConformanceResult TID="x{util:randomId()}">
@@ -300,7 +301,7 @@
                 </xsl:if>
           </GM03_2_1Comprehensive.Comprehensive.DQ_ConformanceResult>
     </xsl:template>
-    
+
     <xsl:template mode="DataQualityResult" match="gmd:DQ_QuantitativeResult">
         <xsl:param name="backRef"/>
           <GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeResult TID="x{util:randomId()}">
@@ -317,11 +318,11 @@
                 </xsl:apply-templates>
           </GM03_2_1Comprehensive.Comprehensive.DQ_QuantitativeResult>
     </xsl:template>
-    
+
     <xsl:template mode="DataQualityResult" match="gmd:valueUnit">
           <valueUnit>m</valueUnit>
     </xsl:template>
-    
+
     <xsl:template mode="DataQualityResult" match="gmd:value">
         <xsl:choose>
             <xsl:when test="gco:Record/text()">
@@ -347,7 +348,7 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+
     <xsl:template mode="DataQuality" match="gmd:nameOfMeasure">
           <nameOfMeasure>
              <GM03_2_1Core.Core.CharacterString_>
@@ -374,7 +375,7 @@
             <xsl:apply-templates mode="DataQuality" select="gmd:source/gmd:LI_Source"/>
         </GM03_2_1Core.Core.LI_Lineage>
     </xsl:template>
-    
+
      <xsl:template mode="DataQuality" match="gmd:processStep">
          <xsl:param name="backref" select="false()" />
             <xsl:apply-templates mode="DataQuality" select="gmd:LI_ProcessStep">
@@ -412,15 +413,15 @@
           </xsl:if>
         </GM03_2_1Comprehensive.Comprehensive.LI_ProcessStep>
     </xsl:template>
-    
+
     <xsl:template mode="DQ_Element" match="*" priority="-100">
         <ERROR>Unknown DataQualityResult element <xsl:value-of select="local-name(.)"/></ERROR>
     </xsl:template>
-    
+
     <xsl:template mode="DataQualityResult" match="*" priority="-100">
         <ERROR>Unknown DataQualityResult element <xsl:value-of select="local-name(.)"/></ERROR>
     </xsl:template>
-        
+
     <xsl:template mode="DataQuality" match="*" priority="-100">
         <ERROR>Unknown DataQuality element <xsl:value-of select="local-name(.)"/></ERROR>
     </xsl:template>

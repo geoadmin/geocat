@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gml="http://www.opengis.net/gml"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:java="java:org.fao.geonet.util.XslUtil"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:che="http://www.geocat.ch/2008/che"
-                version="1.0"
-                exclude-result-prefixes="java">
+                version="2.0"
+                exclude-result-prefixes="#all">
 
   <!-- ================================================================= -->
 
@@ -18,7 +19,8 @@
   <!-- ================================================================= -->
 
   <xsl:template match="che:CHE_MD_Metadata">
-    <che:CHE_MD_Metadata xmlns:gml="http://www.opengis.net/gml"
+    <che:CHE_MD_Metadata xmlns:gml="http://www.opengis.net/gml/3.2"
+                         xmlns:gml320="http://www.opengis.net/gml"
                          xmlns:srv="http://www.isotc211.org/2005/srv"
                          xmlns:gco="http://www.isotc211.org/2005/gco"
                          xmlns:gmd="http://www.isotc211.org/2005/gmd"

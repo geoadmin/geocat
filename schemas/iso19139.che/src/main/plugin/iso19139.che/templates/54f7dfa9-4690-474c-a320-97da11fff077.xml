@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:geonet="http://www.fao.org/geonetwork" gco:isoType="gmd:MD_Metadata">
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:geonet="http://www.fao.org/geonetwork" gco:isoType="gmd:MD_Metadata">
   <gmd:fileIdentifier xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <gco:CharacterString>54f7dfa9-4690-474c-a320-97da11fff077</gco:CharacterString>
   </gmd:fileIdentifier>
@@ -80,12 +81,12 @@
         </gmd:CI_Citation>
       </gmd:citation>
       <gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
-        <gco:CharacterString>Leitungskataster Fernwärme: 
+        <gco:CharacterString>Leitungskataster Fernwärme:
 Modell "SIA405_mit_Erweiterungen_LU01_minimal"
 TOPIC SIA405_Fernwaerme</gco:CharacterString>
         <gmd:PT_FreeText>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#DE">Leitungskataster Fernwärme: 
+            <gmd:LocalisedCharacterString locale="#DE">Leitungskataster Fernwärme:
 Modell "SIA405_mit_Erweiterungen_LU01_minimal"
 TOPIC SIA405_Fernwaerme</gmd:LocalisedCharacterString>
           </gmd:textGroup>
