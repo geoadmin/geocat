@@ -7,13 +7,15 @@
       <div class="col-md-12">
         <div class="row">
           <div class="col-md-offset-3 col-md-6 relative">
-            <div class="input-group gn-form-any">
+            <div class="gn-form-any"
+                 data-ng-class="{'input-group': isUserSearchesEnabled == true}">
               <button data-gn-user-searches-list=""
+                      data-ng-if="isUserSearchesEnabled"
                       data-ng-cloak=""
                       data-mode="button"/>
 
               <input type="text"
-                    class="form-control input-lg"
+                    class="form-control flex-grow input-lg"
                     id="gn-any-field"
                     data-ng-model="searchObj.params.any"
                     placeholder="{{'anyPlaceHolder' | translate}}"
