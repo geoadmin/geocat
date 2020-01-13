@@ -255,25 +255,48 @@
 			<xs:documentation>High-level geospatial data thematic classification to assist in the grouping and search of available geospatial datasets</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="farming"/>
-			<xs:enumeration value="biota"/>
-			<xs:enumeration value="boundaries"/>
-			<xs:enumeration value="climatologyMeteorologyAtmosphere"/>
-			<xs:enumeration value="economy"/>
-			<xs:enumeration value="elevation"/>
-			<xs:enumeration value="environment"/>
-			<xs:enumeration value="geoscientificInformation"/>
-			<xs:enumeration value="health"/>
-			<xs:enumeration value="imageryBaseMapsEarthCover"/>
-			<xs:enumeration value="intelligenceMilitary"/>
-			<xs:enumeration value="inlandWaters"/>
-			<xs:enumeration value="location"/>
-			<xs:enumeration value="oceans"/>
-			<xs:enumeration value="planningCadastre"/>
-			<xs:enumeration value="society"/>
-			<xs:enumeration value="structure"/>
-			<xs:enumeration value="transportation"/>
-			<xs:enumeration value="utilitiesCommunication"/>
+
+      <xs:enumeration value="farming"/>
+      <xs:enumeration value="biota"/>
+      <xs:enumeration value="boundaries"/>
+      <xs:enumeration value="climatologyMeteorologyAtmosphere"/>
+      <xs:enumeration value="economy"/>
+      <xs:enumeration value="elevation"/>
+      <xs:enumeration value="environment"/>
+      <xs:enumeration value="environment_EnvironmentalProtection"/>
+      <xs:enumeration value="environment_NatureProtection"/>
+      <xs:enumeration value="geoscientificInformation"/>
+      <xs:enumeration value="geoscientificInformation_Geology"/>
+      <xs:enumeration value="geoscientificInformation_Soils"/>
+      <xs:enumeration value="geoscientificInformation_NaturalHazards"/>
+      <xs:enumeration value="health"/>
+      <xs:enumeration value="imageryBaseMapsEarthCover"/>
+      <xs:enumeration value="imageryBaseMapsEarthCover_BaseMaps"/>
+      <xs:enumeration value="imageryBaseMapsEarthCover_EarthCover"/>
+      <xs:enumeration value="imageryBaseMapsEarthCover_Imagery"/>
+      <xs:enumeration value="intelligenceMilitary"/>
+      <xs:enumeration value="intelligenceMilitary_R1"/>
+      <xs:enumeration value="intelligenceMilitary_R2"/>
+      <xs:enumeration value="intelligenceMilitary_R3"/>
+      <xs:enumeration value="intelligenceMilitary_R4"/>
+      <xs:enumeration value="intelligenceMilitary_R5"/>
+      <xs:enumeration value="intelligenceMilitary_R6"/>
+      <xs:enumeration value="intelligenceMilitary_R7"/>
+      <xs:enumeration value="intelligenceMilitary_R8"/>
+      <xs:enumeration value="intelligenceMilitary_R9"/>
+      <xs:enumeration value="inlandWaters"/>
+      <xs:enumeration value="location"/>
+      <xs:enumeration value="oceans"/>
+      <xs:enumeration value="planningCadastre"/>
+      <xs:enumeration value="planningCadastre_Planning"/>
+      <xs:enumeration value="planningCadastre_Cadastre"/>
+      <xs:enumeration value="society"/>
+      <xs:enumeration value="structure"/>
+      <xs:enumeration value="transportation"/>
+      <xs:enumeration value="utilitiesCommunication"/>
+      <xs:enumeration value="utilitiesCommunication_Energy"/>
+      <xs:enumeration value="utilitiesCommunication_Utilities"/>
+      <xs:enumeration value="utilitiesCommunication_Communication"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<!-- ........................................................................ -->
