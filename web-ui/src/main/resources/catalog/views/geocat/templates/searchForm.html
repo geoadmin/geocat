@@ -4,14 +4,15 @@
 
   <div class="row">
     <div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">
-      <div data-ng-class="{'input-group': isUserSearchesEnabled == true}"
+      <div class="flex-row flex-align-center"
            style="margin-bottom: 20px;">
-        <button class=""
-                data-ng-if="isUserSearchesEnabled"
-                data-gn-user-searches-list=""
-                data-ng-cloak=""
-                data-mode="button"/>
-        <div class="gcat-search-any flex-row flex-align-center">
+        <div data-ng-if="isUserSearchesEnabled">
+          <button class=""
+                  data-gn-user-searches-list=""
+                  data-ng-cloak=""
+                  data-mode="button"/>
+        </div>
+        <div class="gcat-search-any flex-grow">
           <input type="search" autocomplete="off"
                 class="input-lg flex-col flex-grow"
                 id="gn-any-field"
@@ -25,6 +26,8 @@
                 data-typeahead-wait-ms="300">
           <span class="input-clear-button" ng-show="searchObj.params.any"
             ng-click="searchObj.params.any = ''">×</span>
+        </div>
+        <div>
           <button class="btn btn-info" ng-click="triggerSearch()">
             <i class="fa fa-2x fa-search"/>
           </button>
