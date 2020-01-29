@@ -6,11 +6,31 @@
 }
 
 .gn-top-bar, .gn-bottom-bar {
-  display: none;
+  display: block;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  li {
+    display: block;
+    list-style: none;
+    text-align: center;
+    font-size: 24px;
+  }
+  a {
+    text-decoration: none;
+    color: #000000;
+  }
+  button {
+    display: none;
+  }
 }
 
 .gn-metadata-view {
   font-family: "DejaVu Sans", DejaVuSans, sans-serif;
+  /*Mailto links are not created by flying saucer */
+  a[href^="mailto:"] {
+    text-decoration: none;
+    color: #000000;
+  }
+
   font-size: 13px;
   h1, h2, h3, h4, h5 {
     font-weight: 500;

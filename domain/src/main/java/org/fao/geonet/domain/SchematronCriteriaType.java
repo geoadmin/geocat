@@ -78,6 +78,21 @@ public enum SchematronCriteriaType {
             return applicationContext.getBean(MetadataRepository.class).count(finalSpec)
                     + applicationContext.getBean(MetadataDraftRepository.class).count(finalSpecDraft) > 0;
         }
+
+        @Override
+        public boolean accepts(ApplicationContext applicationContext, String value, Element metadata,
+                               List<Namespace> metadataNamespaces, Integer metadataGroupOwner) {
+
+            String[] values = value.split(",");
+            Integer[] ids = new Integer[values.length];
+            for (int i = 0; i < values.length; i++) {
+                ids[i] = Integer.valueOf(values[i]);
+            }
+
+            // used to evaluate an external metadata to import, metadataGroupOwner should be provided
+            // with the destination metadata group owner
+            return Arrays.asList(ids).contains(metadataGroupOwner);
+        }
     }),
 
     /**
@@ -107,6 +122,13 @@ public enum SchematronCriteriaType {
             }
             return false;
         }
+        @Override
+        public boolean accepts(ApplicationContext applicationContext, String value, Element metadata,
+                               List<Namespace> metadataNamespaces, Integer metadataGroupOwner) {
+
+            // Use dummy value for metadataId, not used in the accepts method
+           return accepts(applicationContext, value, -1, metadata, metadataNamespaces);
+        }
     }),
 
     /**
@@ -116,6 +138,12 @@ public enum SchematronCriteriaType {
         @Override
         public boolean accepts(ApplicationContext applicationContext, String value, int metadataId, Element metadata,
                                List<Namespace> metadataNamespaces) {
+            return true;
+        }
+
+        @Override
+        public boolean accepts(ApplicationContext applicationContext, String value, Element metadata,
+                               List<Namespace> metadataNamespaces, Integer metadataGroupOwner) {
             return true;
         }
     }),
@@ -133,5 +161,10 @@ public enum SchematronCriteriaType {
     public boolean accepts(ApplicationContext applicationContext, String value, int metadataId, Element metadata,
                            List<Namespace> metadataNamespaces) {
         return evaluator.accepts(applicationContext, value, metadataId, metadata, metadataNamespaces);
+    }
+
+    public boolean accepts(ApplicationContext applicationContext, String value, Element metadata,
+                           List<Namespace> metadataNamespaces, Integer groupOwnerId ) {
+        return evaluator.accepts(applicationContext, value, metadata, metadataNamespaces, groupOwnerId);
     }
 }
