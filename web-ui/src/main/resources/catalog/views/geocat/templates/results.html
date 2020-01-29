@@ -4,6 +4,12 @@
 
     <div data-gn-user-searches-panel="user"></div>
 
+    <div data-search-filter-tags
+         data-dimensions="searchResults.dimension"
+         data-use-location-parameters="true"
+         ng-if="isFilterTagsDisplayedInSearch && searchResults.dimension">
+    </div>
+
     <!-- Hierachical facet mode -->
     <div class="panel panel-default"
           data-ng-show="searchResults.records.length > 0">
