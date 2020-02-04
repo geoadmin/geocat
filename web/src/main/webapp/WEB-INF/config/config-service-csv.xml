@@ -43,7 +43,7 @@
         Service taking care of rendering results as CSV from csv.search service
         ]]></documentation>
       <class name=".services.main.Result">
-        <param name="range" value="all"/>
+        <param name="range" value="100"/>
       </class>
       <output sheet="../xslt/services/csv/csv-search.xsl" contentType="text/plain; charset=UTF-8"/>
       <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
