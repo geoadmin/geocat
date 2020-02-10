@@ -453,15 +453,19 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
     }
 
     private void checkUrl() {
-        TransactionManager.runInTransaction("check url", appContext,
+        linkRepository.findAll().stream().forEach(link -> {
+            TransactionManager.runInTransaction("check url", appContext,
                 TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED,
                 TransactionManager.CommitBehavior.ALWAYS_COMMIT, false, new TransactionTask<Object>() {
                     @Override
                     public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                        linkRepository.findAll().stream().forEach(urlAnalyzer::testLink);
+                        urlAnalyzer.testLink(link);
                         return null;
                     }
                 });
+        });
+
+
     }
 
     /**
