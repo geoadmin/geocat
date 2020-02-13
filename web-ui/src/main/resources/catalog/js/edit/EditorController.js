@@ -635,6 +635,7 @@
                 error: error,
                 timeout: 0,
                 type: 'danger'});
+              closeEditor();
             });
         $scope.savedStatus = gnCurrentEdit.savedStatus;
         return promise;
