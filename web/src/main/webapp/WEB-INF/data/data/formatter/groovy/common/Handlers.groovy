@@ -11,6 +11,8 @@ import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils
 import org.fao.geonet.utils.Xml
 import org.jdom.Element
 
+import java.nio.file.Files
+
 public class Handlers {
     private org.fao.geonet.api.records.formatters.groovy.Handlers handlers;
     private org.fao.geonet.api.records.formatters.groovy.Functions f
@@ -95,8 +97,12 @@ public class Handlers {
 
 
     def htmlOrXmlStart = {
-        def jsonLDXsl = this.env.getBean(IMetadataSchemaUtils).getSchemaDir( this.env.getSchema()).resolve("formatter/jsonld/view.xsl");
-        def jsonLD = Xml.transform(this.env.getMetadataElement(), jsonLDXsl).getTextTrim();
+        def jsonLDXsl = this.env.getBean(IMetadataSchemaUtils).getSchemaDir( this.env.getSchema()).resolve("formatter/jsonld/view.xsl")
+        def jsonLDXslExist = Files.exists(jsonLDXsl)
+        def jsonLD = ''
+        if (jsonLDXslExist) {
+            jsonLD = Xml.transform(this.env.getMetadataElement(), jsonLDXsl).getTextTrim()
+        }
         if (func.isHtmlOutput()) {
             def minimize = ''
             def baseUrl = func.f.fparams.url;
@@ -110,12 +116,20 @@ public class Handlers {
             if (func.isPDFOutput()) {
                 cssLinks = """<link rel="stylesheet" href="$baseUrl../../static/gn_metadata_pdf.css$minimize"/>"""
             }
-            return """
+            def head = """
 <!DOCTYPE html>
-<html>
- <script type="application/ld+json">
-     $jsonLD
-</script>
+    <html>
+"""
+            if (jsonLDXslExist) {
+                head = """
+<!DOCTYPE html>
+    <html>
+    <script type="application/ld+json">
+    $jsonLD
+    </script>
+"""
+            }
+                return head + """
 <head lang="en">
     <meta charset="UTF-8"/>
     $cssLinks
