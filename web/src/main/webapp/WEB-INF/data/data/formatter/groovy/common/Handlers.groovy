@@ -7,6 +7,7 @@ import org.fao.geonet.api.records.formatters.groovy.util.*
 import org.fao.geonet.api.records.model.related.RelatedItemType
 import org.fao.geonet.constants.Geonet
 import org.fao.geonet.kernel.GeonetworkDataDirectory
+import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils
 import org.fao.geonet.utils.Xml
 import org.jdom.Element
 
@@ -94,6 +95,8 @@ public class Handlers {
 
 
     def htmlOrXmlStart = {
+        def jsonLDXsl = this.env.getBean(IMetadataSchemaUtils).getSchemaDir( this.env.getSchema()).resolve("formatter/jsonld/view.xsl");
+        def jsonLD = Xml.transform(this.env.getMetadataElement(), jsonLDXsl).getTextTrim();
         if (func.isHtmlOutput()) {
             def minimize = ''
             def baseUrl = func.f.fparams.url;
@@ -110,6 +113,9 @@ public class Handlers {
             return """
 <!DOCTYPE html>
 <html>
+ <script type="application/ld+json">
+     $jsonLD
+</script>
 <head lang="en">
     <meta charset="UTF-8"/>
     $cssLinks

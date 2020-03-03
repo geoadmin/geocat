@@ -169,4 +169,9 @@ public class EnvironmentProxy implements Environment {
     public boolean canEdit() throws Exception {
         return get().canEdit();
     }
+
+    @Override
+    public String getSchema() {
+        return get().getSchema();
+    }
 }

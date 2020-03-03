@@ -161,4 +161,6 @@ public interface Environment extends CurrentLanguageHolder {
      * Return true is the current user has edit permissions for the current metadata
      */
     public boolean canEdit() throws Exception;
+
+    public String getSchema();
 }

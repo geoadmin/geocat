@@ -256,6 +256,11 @@ public class EnvironmentImpl implements Environment {
     }
 
     @Override
+    public String getSchema() {
+        return metadataInfo.getDataInfo().getSchemaId();
+    }
+
+    @Override
     public Optional<String> getHeader(String name) {
         return Optional.fromNullable(webRequest.getHeader(name));
     }

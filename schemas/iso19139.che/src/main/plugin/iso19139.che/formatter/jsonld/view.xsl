@@ -13,7 +13,7 @@
   <xsl:template match="/">
     <textResponse>
       <xsl:apply-templates mode="getJsonLD"
-                           select="*/che:CHE_MD_Metadata"/>
+                           select="che:CHE_MD_Metadata"/>
     </textResponse>
   </xsl:template>
 </xsl:stylesheet>
