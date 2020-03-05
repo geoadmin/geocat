@@ -102,9 +102,9 @@ public final class Processor {
      *
      * @return All set of all the xlinks that failed to resolve.
      */
-    public static Set<String> processXLink(Element xml, ServiceContext srvContext) {
+    public static Set<String> processXLink(Element xml) {
         Set<String> errors = Sets.newHashSet();
-        errors.addAll(searchXLink(xml, ACTION_RESOLVE, srvContext));
+        errors.addAll(searchXLink(xml, ACTION_RESOLVE));
         errors.addAll(searchLocalXLink(xml, ACTION_RESOLVE));
         return errors;
     }
@@ -115,7 +115,7 @@ public final class Processor {
      * Remove all XLinks child of the input XML document.
      */
     public static Element removeXLink(Element xml) {
-        searchXLink(xml, ACTION_REMOVE, null);
+        searchXLink(xml, ACTION_REMOVE);
         searchLocalXLink(xml, ACTION_REMOVE);
         return xml;
     }
@@ -125,8 +125,8 @@ public final class Processor {
     /**
      * Resolve XLinks in document and remove the xlink attributes.
      */
-    public static Element detachXLink(Element xml, ServiceContext context) {
-        searchXLink(xml, ACTION_DETACH, context);
+    public static Element detachXLink(Element xml) {
+        searchXLink(xml, ACTION_DETACH);
         searchLocalXLink(xml, ACTION_DETACH);
         return xml;
     }
@@ -167,7 +167,7 @@ public final class Processor {
     /**
      * Resolves an xlink
      */
-    private static Element resolveXLink(String uri, String idSearch, ServiceContext srvContext) throws IOException, JDOMException, CacheException {
+    private static Element resolveXLink(String uri, String idSearch) {
 
         Element remoteFragment = null;
         try {
@@ -306,7 +306,7 @@ public final class Processor {
      *               #ACTION_RESOLVE}).
      * @return All set of all the xlinks that failed to resolve.
      */
-    private static Set<String> searchXLink(Element md, String action, ServiceContext srvContext) {
+    private static Set<String> searchXLink(Element md, String action) {
         List<Attribute> xlinks = getXLinksWithXPath(md, "*//@xlink:href");
 
         if (Log.isDebugEnabled(Log.XLINK_PROCESSOR))
@@ -320,7 +320,7 @@ public final class Processor {
                 Log.debug(Log.XLINK_PROCESSOR, "will resolve href '" + hrefUri + "'");
             String idSearch = null;
 
-            String error = doXLink(hrefUri, idSearch, xlink, action, srvContext);
+            String error = doXLink(hrefUri, idSearch, xlink, action);
             if (error != null) {
                 errors.add(error);
             }
@@ -403,7 +403,7 @@ public final class Processor {
      * Returns null if the XLINK was correctly resolved, or if there was a failure, returns the
      * xlink that was not resolved.
      */
-    private static String doXLink(String hrefUri, String idSearch, Attribute xlink, String action, ServiceContext srvContext) {
+    private static String doXLink(String hrefUri, String idSearch, Attribute xlink, String action) {
         Element element = xlink.getParent();
 
         // Don't process XLink for configured elements
@@ -434,13 +434,13 @@ public final class Processor {
                     }
                 } else {
                     try {
-                        Element remoteFragment = resolveXLink(hrefUri, idSearch, srvContext);
+                        Element remoteFragment = resolveXLink(hrefUri, idSearch);
 
                         // Not resolved in cache or using href
                         if (remoteFragment == null)
                             return hrefUri;
 
-                        searchXLink(remoteFragment, action, srvContext);
+                        searchXLink(remoteFragment, action);
 
                         if (show.equalsIgnoreCase(XLink.SHOW_REPLACE)) {
                             // replace this element with the fragment

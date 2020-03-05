@@ -678,7 +678,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
         if (forEditing) { // copy in xlink'd fragments but leave xlink atts to editor
             if (doXLinks)
-                Processor.processXLink(metadataXml, srvContext);
+                Processor.processXLink(metadataXml);
             String schema = metadataSchemaUtils.getMetadataSchema(id);
 
             // Inflate metadata
@@ -713,9 +713,9 @@ public class BaseMetadataManager implements IMetadataManager {
         } else {
             if (doXLinks) {
                 if (keepXlinkAttributes) {
-                    Processor.processXLink(metadataXml, srvContext);
+                    Processor.processXLink(metadataXml);
                 } else {
-                    Processor.detachXLink(metadataXml, srvContext);
+                    Processor.detachXLink(metadataXml);
                 }
             }
         }
