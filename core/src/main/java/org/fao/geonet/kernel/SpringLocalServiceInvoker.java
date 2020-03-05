@@ -22,6 +22,7 @@
  */
 package org.fao.geonet.kernel;
 
+import jeeves.xlink.Processor;
 import org.fao.geonet.NodeInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -38,6 +39,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
@@ -53,6 +55,11 @@ public class SpringLocalServiceInvoker {
     private HandlerMethodArgumentResolverComposite argumentResolvers;
     private HandlerMethodReturnValueHandlerComposite returnValueHandlers;
     private DefaultDataBinderFactory webDataBinderFactory;
+
+    @PostConstruct
+    public void registerToProcessor() {
+        Processor.setLocalServiceInvoker(this);
+    }
 
     public void init() {
         argumentResolvers = new HandlerMethodArgumentResolverComposite().addResolvers(requestMappingHandlerAdapter.getArgumentResolvers());
