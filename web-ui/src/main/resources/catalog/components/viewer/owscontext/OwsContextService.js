@@ -424,6 +424,9 @@
 
           if (source instanceof ol.source.OSM) {
             name = '{type=osm}';
+          } else if (source instanceof ol.source.WMTS
+                    && source.getLayer() == 'ch.swisstopo.pixelkarte-farbe') {
+            name = '{type=map.geo.admin.ch}';
           } else if (source instanceof ol.source.BingMaps) {
             name = '{type=bing_aerial}';
           } else if (source instanceof ol.source.Stamen) {
