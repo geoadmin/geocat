@@ -22,14 +22,13 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<beans xmlns:context="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
        default-lazy-init="true"
-       xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="
-		http://www.springframework.org/schema/beans
+       xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-3.2.xsd
-    ">
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
   <context:property-placeholder location="${app.properties}"
                                 file-encoding="UTF-8"
@@ -48,13 +47,40 @@
     <constructor-arg index="1" ref="defaultLanguage"/>
   </bean>
 
-  <bean id="RegionsDAO" class="org.fao.geonet.services.region.ThesaurusBasedRegionsDAO">
+  <!--
+   Configure here what the publish/unpublish action does.
+   By default, it set view, download and dynamic operation
+   to Internet and Intranet group.
+   -->
+  <util:map id="publicationConfig"
+            key-type="java.lang.String"
+            value-type="java.lang.String[]">
+    <!-- INTERNET GROUP -->
+    <entry key="1">
+      <array>
+        <!-- View, download, dynamic -->
+        <value>view</value>
+        <value>download</value>
+        <value>dynamic</value>
+      </array>
+    </entry>
+    <!-- INTRANET GROUP -->
+    <entry key="0">
+      <array>
+        <value>view</value>
+        <value>download</value>
+        <value>dynamic</value>
+      </array>
+    </entry>
+  </util:map>
+
+  <bean id="RegionsDAO" class="org.fao.geonet.api.regions.ThesaurusBasedRegionsDAO">
     <constructor-arg ref="languages"/>
     <property name="cacheAllRegionsInMemory" value="true"/>
     <property name="thesaurusName" value="external.place.regions"/>
   </bean>
 
-  <bean id="MetadataRegionsDAO" class="org.fao.geonet.services.region.MetadataRegionDAO">
+  <bean id="MetadataRegionsDAO" class="org.fao.geonet.api.regions.MetadataRegionDAO">
     <property name="cacheAllRegionsInMemory" value="false"/>
   </bean>
 

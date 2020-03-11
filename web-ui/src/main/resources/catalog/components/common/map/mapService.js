@@ -128,6 +128,42 @@
           return Math.min(1.5, Math.max(1, ratio));
         };
 
+        function buildMapGeoAdminBaseLayer() {
+          var resolutions = [
+            4000, 3750, 3500, 3250, 3000, 2750, 2500, 2250, 2000, 1750, 1500, 1250,
+            1000, 750, 650, 500, 250, 100, 50, 20, 10, 5, 2.5, 2, 1.5, 1, 0.5
+          ];
+
+          var matrixIds = [];
+          for (var i = 0; i < resolutions.length; i++) {
+            matrixIds.push(i);
+          }
+
+          var tileGrid = new ol.tilegrid.WMTS({
+            origin: [420000, 350000],
+            resolutions: resolutions,
+            matrixIds: matrixIds
+          });
+
+          var defaultUrl = '//wmts{5-9}.geo.admin.ch/1.0.0/{Layer}/default/' +
+            '20140520/21781/' +
+            '{TileMatrix}/{TileRow}/{TileCol}.jpeg';
+
+          return new ol.layer.Tile({
+            source: new ol.source.WMTS(({
+              crossOrigin: 'anonymous',
+              url: defaultUrl,
+              tileGrid: tileGrid,
+              layer: 'ch.swisstopo.pixelkarte-farbe',
+              requestEncoding: 'REST',
+              projection: 'EPSG:21781'
+            })),
+            title: 'map.geo.admin.ch',
+            extent: [434250, 37801.909073720046, 894750, 337801.90907372005],
+            useInterimTilesOnError: false
+          });
+        }
+
         return {
           /**
            * @ngdoc method
@@ -189,7 +225,9 @@
                   title: layerInfo.title || 'OpenStreetMap'
                 }));
                 break;
-
+              case 'map.geo.admin.ch':
+                defer.resolve(buildMapGeoAdminBaseLayer());
+                break;
               case 'tms':
                 var prop = {
                   // Settings are usually encoded
@@ -314,6 +352,7 @@
             proj4.defs('EPSG:2154', '+proj=lcc +lat_1=49 +lat_2=44 +lat_0' +
                 '=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +' +
                 'towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
+
             if (proj4 && angular.isArray(gnConfig['map.proj4js'])) {
               angular.forEach(gnConfig['map.proj4js'], function(item) {
                 proj4.defs(item.code, item.value);
@@ -449,6 +488,7 @@
                     ol.extent.getIntersection(projectedExtent, projExtent)
                   );
                   geometry.appendPolygon(new ol.geom.Polygon(coords));
+
                 }
               }
               // no valid bbox was found: clear geometry
@@ -1867,6 +1907,9 @@
                   source: new ol.source.OSM(),
                   title: title ||  'OpenStreetMap'
                 });
+              case 'map.geo.admin.ch':
+                return buildMapGeoAdminBaseLayer();
+                break;
               //ALEJO: tms support
               case 'tms':
                 return new ol.layer.Tile({

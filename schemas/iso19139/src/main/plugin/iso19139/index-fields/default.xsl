@@ -315,6 +315,12 @@
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+      <xsl:if test="*/gmd:EX_Extent/*/gmd:EX_BoundingPolygon">
+        <Field name="boundingPolygon" string="y" store="true" index="false"/>
+      </xsl:if>
+
+      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
       <xsl:for-each select="//gmd:MD_Keywords">
         <!-- Index all keywords as text or anchor -->
         <xsl:variable name="listOfKeywords"
@@ -556,6 +562,16 @@
         <xsl:for-each select="gmd:otherConstraints/gco:CharacterString">
           <Field name="{$fieldPrefix}OtherConstraints"
                  string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+
+        <xsl:for-each select="gmd:otherConstraints/gmx:Anchor[not(string(@xlink:href))]">
+          <Field name="{$fieldPrefix}OtherConstraints"
+                 string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+
+        <xsl:for-each select="gmd:otherConstraints/gmx:Anchor[string(@xlink:href)]">
+          <Field name="{$fieldPrefix}OtherConstraints"
+                 string="{concat('link|',string(@xlink:href), '|', string(.))}" store="true" index="true"/>
         </xsl:for-each>
 
         <xsl:for-each select="gmd:useLimitation/gco:CharacterString">

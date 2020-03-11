@@ -224,36 +224,32 @@
 
     <xsl:if test="$angularApp = 'gn_search'">
 <!-- geocat doesn't need viewer tools
-            <script src="{$uiResourcesPath}lib/d3_timeseries/d3.min.js"></script>
-            <script src="{$uiResourcesPath}lib/timeline/timeline-zoomable.js"></script>
-            <link rel="stylesheet" href="{$uiResourcesPath}lib/timeline/timeline.css"/>
-            <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>
+      <script src="{$uiResourcesPath}lib/d3_timeseries/d3.min.js"></script>
+      <script src="{$uiResourcesPath}lib/timeline/timeline-zoomable.js"></script>
+      <link rel="stylesheet" href="{$uiResourcesPath}lib/timeline/timeline.css"/>
+      <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>
 -->
-            <script type="text/javascript">
-              // GEOCAT specific
-              var gnStores = {
-              'topicCat': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/schemas/iso19139.che/codelists/codelist[@name='gmd:MD_TopicCategoryCode']/entry" mode="js-translations-topicCat"/>],
-              'formats': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/formats/record" mode="js-translations-formats"/>]
-              };
+      <script type="text/javascript">
+        // GEOCAT specific
+        var gnStores = {
+        'topicCat': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/schemas/iso19139.che/codelists/codelist[@name='gmd:MD_TopicCategoryCode']/entry" mode="js-translations-topicCat"/>],
+        'formats': [['', '<xsl:value-of select="/root/gui/strings/any"/>']<xsl:apply-templates select="/root/gui/formats/record" mode="js-translations-formats"/>]
+        };
 
-              module.config(['gnGlobalSettings', 'gnSearchSettings',
-              function(gnGlobalSettings, gnSearchSettings) {
-                gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
-              }]);
-            </script>
-          </xsl:if>
+      </script>
+    </xsl:if>
 
-          <xsl:if test="$angularApp = 'gn_login'">
-            <script type="text/javascript">
-              var module = angular.module('gn_login');
-              module.config(['gnGlobalSettings',
-              function(gnGlobalSettings) {
-              gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
-              }]);
-            </script>
-          </xsl:if>
+    <xsl:if test="$angularApp = 'gn_login'">
+      <script type="text/javascript">
+        var module = angular.module('gn_login');
+        module.config(['gnGlobalSettings',
+        function(gnGlobalSettings) {
+        gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
+        }]);
+      </script>
+    </xsl:if>
 
-          <!-- XML highlighter JS dependency. -->
+    <!-- XML highlighter JS dependency. -->
 
     <xsl:if test="$angularApp = 'gn_editor' or $angularApp = 'gn_admin'">
       <script type="text/javascript" src="{$uiResourcesPath}lib/ace/ace.js?v={$buildNumber}"></script>
@@ -263,6 +259,12 @@
 
     <script type="text/javascript">
       var module = angular.module('<xsl:value-of select="$angularApp"/>');
+
+      proj4.defs("EPSG:21781","+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.4,15.1,405.3,0,0,0,0 +units=m +no_defs");
+      ol.proj.proj4.register(proj4);
+      var proj = ol.proj.get('EPSG:21781');
+      proj.setExtent([485071.54, 75346.36, 828515.78, 299941.84]);
+      proj.setWorldExtent([5.96, 45.82, 10.49, 47.81]);
 
       // Init GN config which is a dependency of gn
       // in order to be initialized quite early
