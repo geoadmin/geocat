@@ -89,6 +89,7 @@
     "addToMap": "Der Karte hinzufügen",
     "addToMaponlinesrc": "der Karte hinzufügen",
     "addServiceLayersToMaponlinesrc": "Dienst-Datensatz zur Karte hinzufügen",
+    "viewLayerInExternalViewer": "View layer in map.geo.admin.ch",
     "mapLinkonlinesrc": "Karte laden",
     "openRecord": "Datensatz ansehen",
     "openRecordhasfeaturecat": "Verlinkter Datensatz",
