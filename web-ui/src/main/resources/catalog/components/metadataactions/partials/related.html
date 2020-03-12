@@ -190,8 +190,14 @@
                 data-ng-if="mainType == 'MDSIBLING' && r.associationType != ''">
             ({{::r.associationType | translate}}{{::(r.initiativeType != '' ? ' / ' + (r.initiativeType | translate) : '')}})
           </span>
-
         </button>
+
+        <button type="button"
+                class="btn btn-default btn-sm btn-block text-wrap"
+                data-ng-if="externalViewerActionEnabled
+                          && (mainType === 'WMS' || mainType === 'WMSSERVICE')"
+                data-ng-click="externalViewerAction(mainType, r, md)"
+                data-translate="">viewLayerInExternalViewer</button>
       </div>
 
     </div>
