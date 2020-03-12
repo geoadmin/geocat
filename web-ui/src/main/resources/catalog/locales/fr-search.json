@@ -89,6 +89,7 @@
     "addToMap": "Visualiser",
     "addToMaponlinesrc": "Visualiser",
     "addServiceLayersToMaponlinesrc": "Ajouter la couche à la carte",
+    "viewLayerInExternalViewer": "Visualiser avec map.geo.admin.ch",
     "mapLinkonlinesrc": "Charger la carte",
     "openRecord": "Consulter",
     "openRecordhasfeaturecat": "Catalogue d'attributs",
