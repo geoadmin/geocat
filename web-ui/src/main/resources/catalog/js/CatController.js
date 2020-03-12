@@ -195,9 +195,10 @@ goog.require('gn_alert');
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/map',
           'externalViewer': {
             'enabled': false,
-            'baseUrl': 'http://www.example.com/viewer',
-            'urlTemplate': 'http://www.example.com/viewer?url=${service.url}&type=${service.type}&layer=${service.name}',
-            'openNewWindow': false,
+            'enabledViewAction': true,
+            'baseUrl': '',
+            'urlTemplate': ' https://map.geo.admin.ch/?layers=WMS%7C%7C${md.defaultTitle}%7C%7C${service.url}%7C%7C${service.title}&bgLayer=ch.swisstopo.pixelkarte-farbe&lang=${iso2lang}',
+            'openNewWindow': true,
             'valuesSeparator': ','
           },
           'is3DModeAllowed': false,
