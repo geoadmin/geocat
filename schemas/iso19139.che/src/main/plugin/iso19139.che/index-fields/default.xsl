@@ -287,6 +287,10 @@
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+      <xsl:if test="*/gmd:EX_Extent/*/gmd:EX_BoundingPolygon">
+        <Field name="boundingPolygon" string="y" store="true" index="false"/>
+      </xsl:if>
+      
       <xsl:for-each select="*/gmd:EX_Extent">
         <xsl:apply-templates select="gmd:geographicElement/gmd:EX_GeographicBoundingBox" mode="northBLn"/>
 
