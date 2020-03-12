@@ -559,16 +559,17 @@
               <i class="fa fa-fw fa-map-marker"></i>
               <span data-translate="">extent</span>
             </h2>
-            <!-- SPECIFIC GEOCAT: handle 4326 case -->
-            <p data-ng-repeat="bbox in mdView.current.record.geoBox">
-              <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
-                   ng-if="!mdView.current.record.isWorldExtentUsed($index)"
-                   data-ng-src="{{gnUrl}}{{lang}}/region.getmap.png?mapsrs=EPSG:21781&width=250&background=settings&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon($index)}}"/>
-              <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
-                   ng-if="mdView.current.record.isWorldExtentUsed($index)"
-                   data-ng-src="{{gnUrl}}{{lang}}/region.getmap.png?mapsrs=EPSG:4326&width=250&background=osm&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon($index)}}"/>
+            <p data-ng-if="mdView.current.record.geoDesc">
+            <ul>
+              <li data-ng-repeat="d in mdView.current.record.geoDesc">{{d}}</li>
+            </ul>
             </p>
-
+            <p data-ng-if="mdView.current.record.geoBox || mdView.current.record.boundingPolygon">
+              <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
+                   alt="{{'extent' | translate}}"
+                   aria-label="{{'extent' | translate}}"
+                   data-ng-src="../api/records/{{mdView.current.record.getUuid()}}/extents.png"/>
+            </p>
           </section>
 
           <section class="gn-md-side-dates"
