@@ -53,3 +53,8 @@ UPDATE metadata SET data = replace(data, '<gmd:version gco:nilReason="missing">'
 
 UPDATE metadata SET data = replace(data, 'xlink:title=""', '') WHERE  data LIKE '%xlink:title=""%';
 UPDATE metadata SET data = replace(data, 'xlink:role=""', '') WHERE  data LIKE '%xlink:role=""%';
+
+DELETE FROM cswservercapabilitiesinfo;
+DELETE FROM Settings WHERE name = 'system/csw/contactId';
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/capabilityRecordUuid', '-1', 0, 1220, 'y');
+
