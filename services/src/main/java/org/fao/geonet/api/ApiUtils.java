@@ -130,8 +130,7 @@ public class ApiUtils {
                 "Record with UUID '%s' not found in this catalog",
                 uuidOrInternalId));
         }
-
-        throw new ResourceNotFoundException(String.format("Record with UUID '%s' not found in this catalog", uuidOrInternalId));
+        return id;
     }
 
 
