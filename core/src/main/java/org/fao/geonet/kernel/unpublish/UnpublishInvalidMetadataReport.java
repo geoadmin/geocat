@@ -48,9 +48,6 @@ public class UnpublishInvalidMetadataReport implements Service {
     private static final String ALL = "all";
     private static final Set<String> INCLUDE_OPTIONS = new HashSet<String>(Arrays.asList(ALL,AUTO,MANUAL));
 
-    @Autowired
-    private Resources resources;
-
     @Override
     public void init(Path appPath, ServiceConfig params) throws Exception {
 
@@ -119,6 +116,7 @@ public class UnpublishInvalidMetadataReport implements Service {
         List groupsAndSources = Xml.selectNodes(all, "*//record|record");
 
         Map<String, String> nameMap = Maps.newHashMap();
+        Resources resources = context.getBean(Resources.class);
 
         for (Object obj : groupsAndSources) {
             Element el = (Element) obj;
