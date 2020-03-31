@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+  <skos:ConceptScheme rdf:about="http://metawal.wallonie.be/thesaurus/conditions">
+    <dc:title>Conditions d'utilisation et d'accès, version 1.0</dc:title>
+    <dc:description>Conditions d'utilisation et d'accès</dc:description>
+    <dc:creator>
+      <foaf:Organization>
+        <foaf:name>geocat.ch</foaf:name>
+      </foaf:Organization>
+    </dc:creator>
+    <dcterms:issued>2019-09-24</dcterms:issued>
+    <dcterms:modified>2019-09-24</dcterms:modified>
+  </skos:ConceptScheme>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/ConditionsApplyingToAccessAndUse/conditionsUnknown">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <skos:prefLabel xml:lang="fr">Conditions d'accès et d'utilisation inconnues</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Les conditions d'accès et d'utilisation sont inconnues</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/ConditionsApplyingToAccessAndUse/noConditionsApply">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <skos:prefLabel xml:lang="fr">Aucune condition d'accès et d'utilisation</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Il n'y a aucune condition d'accès et d'utilisation</skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://registry.geocat.ch/conditions#open-use">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <skos:prefLabel xml:lang="fr">Utilisation libre</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr"></skos:scopeNote>
+    <skos:prefLabel xml:lang="en">Open use</skos:prefLabel>
+    <skos:scopeNote xml:lang="en"></skos:scopeNote>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://registry.geocat.ch/conditions#open-use-with-source">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <skos:prefLabel xml:lang="fr">Utilisation libre. Doit mentionner la source.</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr"></skos:scopeNote>
+    <skos:prefLabel xml:lang="en">Open use. Must provide the source.</skos:prefLabel>
+    <skos:scopeNote xml:lang="en"></skos:scopeNote>
+  </rdf:Description>
+</rdf:RDF>
+

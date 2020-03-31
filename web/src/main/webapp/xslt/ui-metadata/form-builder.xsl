@@ -1478,8 +1478,8 @@
   to a node (only for gn:attribute, see next template).
   -->
   <xsl:template mode="render-for-field-for-attribute"
-                match="@gn:addedObj|@xsi:type|
-          @min|@max|@name|@del|@add|@id|@uuid|@ref|@parent|@up|@down" priority="2"/>
+                match="@gn:addedObj|@xsi:type|@action|@prefix|@namespace|
+                       @min|@max|@name|@del|@add|@id|@uuid|@ref|@parent|@up|@down" priority="2"/>
 
   <!--
     Add attribute control

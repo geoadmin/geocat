@@ -13,5 +13,12 @@
         <value>gmd:identificationInfo/*/gmd:citation/*/gmd:title/*/gmd:textGroup/gmd:LocalisedCharacterString</value>
       </util:list>
     </property>
+    <property name="elementsToProcess">
+      <util:list value-type="java.lang.String">
+        <value>gco:CharacterString</value>
+        <value>gmx:Anchor</value>
+        <value>gmd:featureTypes</value>
+      </util:list>
+    </property>
   </bean>
 </beans>
