@@ -523,6 +523,62 @@
                store="true" index="false"/>
       </xsl:for-each>
 
+
+
+        <xsl:for-each select="gmd:resourceConstraints/*">
+          <xsl:variable name="fieldPrefix"
+                        select="if (@gco:isoType)
+                              then substring-after(@gco:isoType, ':')
+                              else local-name()"/>
+
+          <xsl:for-each
+            select="gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue[string(.) != 'otherRestrictions']">
+            <Field name="{$fieldPrefix}AccessConstraints"
+                   string="{string(.)}" store="true" index="true"/>
+          </xsl:for-each>
+
+          <xsl:for-each select="gmd:otherConstraints[gco:CharacterString]//gmd:LocalisedCharacterString[@locale=$langId]">
+            <Field name="{$fieldPrefix}OtherConstraints"
+                   string="{string(.)}" store="true" index="true"/>
+          </xsl:for-each>
+
+          <xsl:for-each select="gmd:otherConstraints/gmx:Anchor[not(string(@xlink:href))]">
+            <Field name="{$fieldPrefix}OtherConstraints"
+                   string="{string(..//gmd:LocalisedCharacterString[@locale=$langId])}" store="true" index="true"/>
+          </xsl:for-each>
+
+          <xsl:for-each select="gmd:otherConstraints/gmx:Anchor[string(@xlink:href)]">
+            <Field name="{$fieldPrefix}OtherConstraints"
+                   string="{concat('link|',string(@xlink:href), '|', string(..//gmd:LocalisedCharacterString[@locale=$langId]))}" store="true" index="true"/>
+          </xsl:for-each>
+
+          <xsl:for-each select="gmd:useLimitation[gco:CharacterString]//gmd:LocalisedCharacterString[@locale=$langId]">
+            <Field name="{$fieldPrefix}UseLimitation"
+                   string="{string(.)}" store="true" index="true"/>
+          </xsl:for-each>
+
+          <xsl:for-each select="gmd:useLimitation/gmx:Anchor[not(string(@xlink:href))]">
+            <Field name="{$fieldPrefix}UseLimitation"
+                   string="{string(..//gmd:LocalisedCharacterString[@locale=$langId])}" store="true" index="true"/>
+          </xsl:for-each>
+
+          <xsl:for-each select="gmd:useLimitation/gmx:Anchor[string(@xlink:href)]">
+            <Field name="{$fieldPrefix}UseLimitation"
+                   string="{concat('link|',string(@xlink:href), '|', string(..//gmd:LocalisedCharacterString[@locale=$langId]))}" store="true" index="true"/>
+          </xsl:for-each>
+
+          <xsl:for-each select="gmd:useLimitation/gmx:Anchor[not(string(@xlink:href))]">
+            <Field name="{$fieldPrefix}UseLimitation"
+                   string="{string(..//gmd:LocalisedCharacterString[@locale=$langId])}" store="true" index="true"/>
+          </xsl:for-each>
+
+          <xsl:for-each select="gmd:useLimitation/gmx:Anchor[string(@xlink:href)]">
+            <Field name="{$fieldPrefix}UseLimitation"
+                   string="{concat('link|',string(@xlink:href), '|', string(..//gmd:LocalisedCharacterString[@locale=$langId]))}" store="true" index="true"/>
+          </xsl:for-each>
+        </xsl:for-each>
+
+
       <!-- Index aggregation info and provides option to query by type of association
         and type of initiative
 

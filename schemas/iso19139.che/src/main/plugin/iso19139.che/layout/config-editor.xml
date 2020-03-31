@@ -25,7 +25,12 @@
     <for name="gmd:measureDescription" use="textarea"/>
     <for name="gmd:purpose" use="textarea"/>
     <for name="gmd:orderingInstructions" use="textarea"/>
-    <for name="gmd:otherConstraints" use="textarea"/>
+<!--    <for name="gmd:otherConstraints" use="textarea"/>-->
+    <for name="gmd:otherConstraints" use="data-gn-keyword-picker">
+      <directiveAttributes data-thesaurus-key="external.theme.access_use_conditions"
+                           data-thesaurus-concept-id-attribute="xlinkCOLONhref"/>
+    </for>
+
     <for name="gmd:statement" use="textarea"/>
     <for name="gmd:supplementalInformation" use="textarea"/>
     <for name="gmd:specificUsage" use="textarea"/>
