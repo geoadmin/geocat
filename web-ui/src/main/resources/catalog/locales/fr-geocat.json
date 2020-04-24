@@ -1,4 +1,9 @@
 {
+  "directoryValidationRecommendations": "Règles de validation",
+  "directory-gmd:EX_Extent-rules": "<ul><li>(Obligatoire) La description est requise</li><li>(Obligatoire) Renseigner au moins une emprise ou un polygone ou une description géographique</li></ul>",
+  "directory-gmd:MD_Format-rules": "<ul><li>(Obligatoire) Le nom du format est requis</li><li>(Obligatoire) La version est requise</li></ul>",
+  "directory-che:CHE_CI_ResponsibleParty-rules": "<ul><li>(Obligatoire) Un nom d'organisation ou un nom/prénom de personne est requis</li><li>(Obligatoire) Une adresse email est requise</li><li>(Optionel) Les autres champs (téléphone, site web, adresse postale, ...) sont optionels</li></ul>Le rôle du contact sera à renseigner lors de l'ajout du contact dans une fiche.",
+  "directoryValidationRecommendationsCheck": "Merci de vérifier ces règles avant validation !",
   "basicgeodata": "Géodonnée de base",
   "basicgeodata-federal": "+ Géodonnée de base - Fédéral",
   "basicgeodata-cantonal": "+ Géodonnée de base - Cantonal",

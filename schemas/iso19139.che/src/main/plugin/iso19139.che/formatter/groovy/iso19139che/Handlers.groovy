@@ -93,8 +93,7 @@ public class Handlers extends iso19139.Handlers {
           }
 
           if (xpath != null) {
-              def encoded = java.net.URLEncoder.encode(xpath, "UTF-8");
-              def source = "region.getmap.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;id=metadata:@id$mdId:@xpath$encoded";
+              def source = "../api/records/$mdId/extents.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background";
               def image = "<img src=\"$source\" style=\"min-width:${width/4}px; min-height:${width/4}px;\" />"
 
               def inclusion = el.'gmd:extentTypeCode'.text() == '0' ? 'exclusive' : 'inclusive';
