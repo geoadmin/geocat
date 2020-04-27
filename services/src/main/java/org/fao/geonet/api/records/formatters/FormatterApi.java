@@ -591,7 +591,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     }
 
     private String htmlToXhtml(String html) {
-        Document document = Jsoup.parse(html);
+        Document document = Jsoup.parse(html.replaceAll("<script\\b[^<]*(?:(?!<\\/script>)<[^<]*)*<\\/script>", ""));
         document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
         document.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
         return document.html();
