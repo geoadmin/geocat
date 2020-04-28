@@ -844,6 +844,7 @@ public class ServiceManager {
                         baos.close();
                     }
 
+
                     @Override
                     public byte[] getByteToWrite() {
                         return baos.toByteArray();

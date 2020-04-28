@@ -22,24 +22,14 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       default-lazy-init="true"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-	">
-  <import resource="defaultJdbcDataSource.xml"/>
-
-  <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
-    <constructor-arg value="POSTGRESQL"/>
-  </bean>
-
-  <bean id="jdbcDriverClassName" class="java.lang.String">
-    <constructor-arg value="org.postgresql.Driver"/>
-  </bean>
-
-  <bean id="jdbcURL" class="java.lang.String">
-    <constructor-arg value="jdbc:postgresql://${jdbc.host}:${jdbc.port:5432}/${jdbc.database}?${jdbc.connectionProperties}"/>
-  </bean>
-
-</beans>
+<!-- See the README.md file for instructions to configure/use this file -->
+<Context>
+  <Environment name="gnDatabaseDialect" value="ORACLE" type="java.lang.String" override="false"/>
+  <Resource name="jdbc/geonetwork" auth="Container"
+            factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+            type="javax.sql.DataSource" driverClassName="oracle.jdbc.OracleDriver"
+            url="jdbc:oracle:thin:@//localhost:49161/xe"
+            username="system" password="oracle"
+            maxActive="20" maxIdle="10"
+            defaultAutoCommit="false" maxWait="-1"/>
+</Context>

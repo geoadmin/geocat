@@ -53,6 +53,7 @@ public class Settings {
     public static final String SYSTEM_XLINK_ALLOW_REFERENCED_DELETION = "system/xlinkResolver/referencedDeletionAllowed";
     public static final String SYSTEM_XLINK_TEMPLATES_TO_OPERATE_ON_AT_INSERT = "system/xlinkResolver/templatesToOperateOnAtInsert";
     public static final String SYSTEM_SERVER_LOG = "system/server/log";
+    public static final String SYSTEM_SERVER_TIMEZONE = "system/server/timeZone";
     public static final String SYSTEM_INSPIRE_ENABLE = "system/inspire/enable";
     public static final String SYSTEM_INSPIRE_ATOM = "system/inspire/atom";
     public static final String SYSTEM_INSPIRE_ATOM_SCHEDULE = "system/inspire/atomSchedule";
