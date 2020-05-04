@@ -89,7 +89,7 @@
     "addToMap": "Der Karte hinzufügen",
     "addToMaponlinesrc": "der Karte hinzufügen",
     "addServiceLayersToMaponlinesrc": "Dienst-Datensatz zur Karte hinzufügen",
-    "viewLayerInExternalViewer": "View layer in map.geo.admin.ch",
+    "viewLayerInExternalViewer": "Öffne layer in map.geo.admin.ch",
     "mapLinkonlinesrc": "Karte laden",
     "openRecord": "Datensatz ansehen",
     "openRecordhasfeaturecat": "Verlinkter Datensatz",
@@ -164,7 +164,7 @@
     "browseBy": "Filtern nach",
     "browseTopics": "Filtern nach Themen",
     "browseTypes": "Filtern nach Ressourcen",
-    "versionDetails": "Powered by GeoNetwork <span class='gn-version'>{{platform}} {{version}}.{{subversion}}</span>",
+    "versionDetails": "Bereitgestellt von GeoNetwork <span class='gn-version'>{{platform}} {{version}}.{{subversion}}</span>",
     "lastRecords": "Letzte Nachrichten",
     "preferredRecords": "Am meisten angesehen",
     "about": "Über",
@@ -520,6 +520,6 @@
     "changeDateTo": "Resources changed before",
     "dateFrom": "Records updated after",
     "dateTo": "Records updated before",
-    "activeFilters": "Active filters",
+    "activeFilters": "Filter",
     "geometryFilter": "Bounding Box"
 }
