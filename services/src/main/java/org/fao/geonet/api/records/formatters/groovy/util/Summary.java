@@ -70,6 +70,7 @@ public class Summary {
     private String keywords = "";
     private String extent = "";
     private String formats = "";
+    private String logos = "";
 
     public Summary(Handlers handlers, Environment env, Functions functions) throws Exception {
         this.handlers = handlers;
@@ -99,6 +100,7 @@ public class Summary {
         params.put("content", content);
         params.put("extents", extent != null ? extent : "");
         params.put("formats", formats != null ? formats : "");
+        params.put("logos", logos != null ? logos : "");
         params.put("keywords", keywords != null ? keywords : "");
         params.put("isHTML", env.getFormatType() == FormatType.html);
         params.put("isPDF", env.getFormatType() == FormatType.pdf || env.getFormatType() == FormatType.testpdf);

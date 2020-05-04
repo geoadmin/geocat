@@ -222,11 +222,10 @@ gnFormatter.loadAssociated(undefined, '.${LinkBlock.CSS_CLASS_PREFIX + associate
         return linkBlock;
     }
 
-    private static void configureThumbnails(metadata, header) {
-        def logos = metadata.'gmd:identificationInfo'.'*'.'gmd:graphicOverview'.'gmd:MD_BrowseGraphic'.'gmd:fileName'.'gco:CharacterString'
-
-        logos.each { logo ->
-            header.addThumbnail(logo.text())
-        }
+    def configureThumbnails(metadata, summary) {
+      def logos = metadata."**".findAll{it.name() == 'gmd:graphicOverview'}
+      if (!logos.isEmpty()) {
+        summary.logos = this.isoHandlers.graphicOverviewEl(logos).toString()
+      }
     }
 }

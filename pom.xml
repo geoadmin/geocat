@@ -724,7 +724,7 @@
         <version>${geotools.version}</version>
         <exclusions>
           <exclusion>
-					<!-- org.apache.xml:xml-commons-resolver:jar:1.2 -->
+            <!-- org.apache.xml:xml-commons-resolver:jar:1.2 -->
             <groupId>org.apache.xml</groupId>
             <artifactId>xml-commons-resolver</artifactId>
           </exclusion>
@@ -1344,15 +1344,16 @@
     <!--<app.properties>file:/${geonetwork.dir}/config.properties</app.properties>-->
 
     <!-- Configure database config file to use. Could be
-     h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi-postgres-postgis
+     h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi
      -->
     <db.type>h2</db.type>
     <db.config.file>../config-db/${db.type}.xml</db.config.file>
     <db.host>localhost</db.host>
-    <db.port>5432</db.port>
+    <db.port></db.port>
     <db.name>gn</db.name>
     <db.username>www-data</db.username>
     <db.password>www-data</db.password>
+    <db.connectionProperties></db.connectionProperties>
     <db.pool.maxActive>30</db.pool.maxActive>
     <db.pool.maxIdle>10</db.pool.maxIdle>
     <db.pool.initialSize>10</db.pool.initialSize>

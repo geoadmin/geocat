@@ -55,7 +55,7 @@
     </h3>
 
     <div id="{{'' | lastUUID}}" class="entry target">
-      <img fmt-if="thumbnail" class="thumbnail" src="{{thumbnail | escapeXmlAttrs}}"></img>
+      {{logos}}
       <div fmt-if="abstract" class="entry abstract">
         <h3>
           <button type="button" class="btn btn-default toggler" target="{{'' | generateUUID}}">
