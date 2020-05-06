@@ -102,6 +102,18 @@
     <xsl:apply-templates select="che:CHE_MD_Metadata"/>
   </xsl:template>
 
+  <!-- Encode language following INSPIRE rules -->
+  <xsl:template match="gmd:language[gco:CharacterString != '']" priority="99">
+    <xsl:element name="{name()}">
+      <xsl:apply-templates select="@*"/>
+      <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/"
+                        codeListValue="{gco:CharacterString}"/>
+    </xsl:element>
+  </xsl:template>
+
+  <!-- Remove empty language which will break on schematron rule
+  checking non empty values in codelist -->
+  <xsl:template match="gmd:language[gco:CharacterString = '']" priority="99"/>
 
   <xsl:template name="add-namespaces">
     <xsl:namespace name="xsi" select="'http://www.w3.org/2001/XMLSchema-instance'"/>
