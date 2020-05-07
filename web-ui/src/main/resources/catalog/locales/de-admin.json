@@ -429,7 +429,7 @@
     "chooseOrDropResource": "Wähle oder hinterlege hier eine Ressource",
     "harvestedRecordPrivileges": "Privilegien-Vergabe für geharvestete Datensätze",
     "harvester": "Harvester",
-    "harvesterSetting": "Einstellung",
+    "harvesterSetting": "Einstellungen",
     "harvesterReport": "Bericht",
     "harvester-arcsde": "ArcSDE",
     "harvester-arcsdeHelp": "Metadatensätze harvesten von einer ArcSDE-Datenbank.",
