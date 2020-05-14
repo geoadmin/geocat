@@ -210,7 +210,7 @@ public abstract class XmlSerializer {
                     }
                 }
             }
-            if (filterEditOperationElements || (getThreadLocal(false) != null && getThreadLocal(false).forceFilterEditOperation)) {
+            if (filterEditOperationElements || (getThreadLocal(false) != null && getThreadLocal(false).isForceFilterEditOperation())) {
                 removeFilteredElement(metadataXml, editXpathFilter, namespaces);
             }
         }
