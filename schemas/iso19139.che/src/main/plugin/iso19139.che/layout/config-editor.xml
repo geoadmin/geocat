@@ -438,8 +438,14 @@
         <for name="gmd:volumes"/>
         <for name="gmd:mediumFormat"/>
         <for name="gmd:mediumNote"/>
-
+        <for name="gmd:contact"/>
+        <for name="gmd:language"/>
+        <for name="gmd:parentIdentifier" />
+        <for name="gmd:hierarchyLevelName" />
         <for name="gmd:date"/>
+        <for name="gmd:dataSetURI"/>
+        <for name="gmd:locale"/>
+        <for name="gmd:hierarchyLevel"/>
         <!--<for name="che:appraisal"/>
         <for name="che:commentOnDurationOfConservation"/>
         <for name="che:commentOnArchivalValue"/>-->
