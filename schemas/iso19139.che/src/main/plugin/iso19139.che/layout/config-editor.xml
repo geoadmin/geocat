@@ -438,11 +438,12 @@
         <for name="gmd:volumes"/>
         <for name="gmd:mediumFormat"/>
         <for name="gmd:mediumNote"/>
-        <for name="gmd:contact"/>
-        <for name="gmd:language"/>
-        <for name="gmd:parentIdentifier" />
-        <for name="gmd:hierarchyLevelName" />
         <for name="gmd:date"/>
+
+        <for name="gmd:contact" excludeFrom="che:CHE_MD_DataIdentification,che:CHE_MD_MaintenanceInformation"/>
+        <for name="gmd:language" excludeFrom="che:CHE_MD_FeatureCatalogueDescription,che:CHE_MD_DataIdentification"/>
+        <for name="gmd:parentIdentifier"/>
+        <for name="gmd:hierarchyLevelName"/>
         <for name="gmd:dataSetURI"/>
         <for name="gmd:locale"/>
         <for name="gmd:hierarchyLevel"/>
