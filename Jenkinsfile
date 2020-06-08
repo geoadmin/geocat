@@ -63,72 +63,24 @@ dockerBuild {
 //        sourceEncoding: 'UTF_8',
 //        zoomCoverageChart: true])
 //  }
-  stage('configure georchestra c2c docker-hub account') {
-    withCredentials([file(credentialsId: 'docker-maven-c2cgeorchestra', variable: 'FILE')]) {
-      sh "docker cp ${FILE} ${buildContainerName}:/settings.xml"
-    }
-  }
   def shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
   def dockerTag = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}-${shortCommit}"
   stage('Build/publish a docker image') {
     def dockerImageName = "camptocamp/geocat:${dockerTag}"
     // one-liner to setup docker
     executeInContainer(buildContainerName, "curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-17.05.0-ce.tgz && tar --strip-components=1 -xvzf docker-17.05.0-ce.tgz -C /usr/local/bin")
-    executeInContainer(buildContainerName, "mvn -s /settings.xml ${mavenOpts} -pl web -Pdocker -DdockerImageName=${dockerImageName} docker:build docker:push")
+    executeInContainer(buildContainerName, "mvn ${mavenOpts} -pl web -Pdocker -DdockerImageName=${dockerImageName} docker:build")
+    withCredentials([[$class          : 'UsernamePasswordMultiBinding',
+                      credentialsId   : 'dockerhub',
+                      usernameVariable: 'USERNAME',
+                      passwordVariable: 'PASSWORD']]) {
+      executeInContainer(buildContainerName, "docker login -u $USERNAME -p $PASSWORD")
+      executeInContainer(buildContainerName, "docker push ${dockerImageName}")
+    }
   }
   // at this time, the first container used to build is no longer necessary
   stage('Destroys the builder container') {
     destroyContainer(buildContainerName)
   }
   // Using another container, deploys the previously published image onto the dev env
-  stage('Deploy newly created images on the dev env') {
-    stage('spawning a image for deploying') {
-      destroyContainer(deployContainerName)
-      spawnContainer(deployContainerName, deployContainerImage)
-    }
-    stage('Install / configure needed tools') {
-      executeInContainer(deployContainerName, 'apt-get update')
-      executeInContainer(deployContainerName, 'apt-get -y install make ssh git wget unzip')
-      executeInContainer(deployContainerName, 'mkdir -p /root/bin /root/.rancher /root/.aws')
-    } // stage
-
-    stage("Prepare caas-dev access") {
-      withCredentials([file(credentialsId: 'jenkins-caas-dev-bgdi.ch.json', variable: 'FILE')]) {
-        sh "docker cp ${FILE} ${deployContainerName}:/root/.rancher/cli-caas.dev.bgdi.ch.json"
-      } // withCredentials
-    } // stage
-
-    stage("Configuring AWS / S3") {
-      withCredentials([file(credentialsId: 'terraform-georchestra-aws-credentials-file', variable: 'FILE')]) {
-        sh "docker cp ${FILE} ${deployContainerName}:/root/.aws/credentials"
-      } //  withCredentials
-    } // stage
-
-    stage('Checking out the terraform-geocat repository') {
-      sshagent(["terraform-geocat-deploy-key"]) {
-        sh "rm -rf terraform-geocat"
-        sh "ssh -oStrictHostKeyChecking=no git@github.com || true"
-        sh "git clone git@github.com:camptocamp/terraform-geocat.git"
-        sh "docker cp terraform-geocat ${deployContainerName}:/"
-        sh "rm -rf terraform-geocat"
-      }
-    } // stage
-
-    stage('Terraforming') {
-        if (env.BRANCH_NAME.endsWith("auto-deploy") || env.BRANCH_NAME == "geocat_3.4.x") {
-          executeInContainer(deployContainerName, """cd /terraform-geocat &&
-            ln -s /root/bin/terraform /usr/bin             &&
-            make install                                   &&
-            make init                                      &&
-            cd rancher-environments/geocat-dev             &&
-            terraform apply -auto-approve -var geocat_tag=${dockerTag}""")
-        } else {
-          println "Not onto the 'geocat_3.4.x' branch, skipping redeploy"
-        }// if
-    } // stage
-
-    stage ('Destroy deployer container') {
-       destroyContainer(deployContainerName)
-    }
-  } // stage
 } // dockerBuild
