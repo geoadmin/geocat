@@ -197,11 +197,11 @@ goog.require('gn_alert');
           }
         },
         'map': {
-          'enabled': true,
+          'enabled': false,
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/map',
           'externalViewer': {
             'enabled': false,
-            'enabledViewAction': true,
+            'enabledViewAction': false,
             'baseUrl': '',
             'urlTemplate': ' https://map.geo.admin.ch/?layers=WMS%7C%7C${md.defaultTitle}%7C%7C${service.url}%7C%7C${service.title}&bgLayer=ch.swisstopo.pixelkarte-farbe&lang=${iso2lang}',
             'openNewWindow': true,
@@ -265,9 +265,8 @@ goog.require('gn_alert');
             'layers': []
           },
           'map-editor': {
-            'context': '',
-            'extent': [0, 0, 0, 0],
-            'layers': [{'type': 'osm'}]
+            'context': '../../map/config-viewer.xml',
+            'extent': [0, 0, 0, 0]
           },
           'autoFitOnLayer': false
         },
