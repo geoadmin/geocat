@@ -44,7 +44,7 @@
       <class name=".services.main.XmlSearch">
         <!-- Note: this parameter will affect the server's response,
              the parameter client-side is not related to this one. -->
-        <param name="maxRecords" value="100" />
+        <param name="maxRecords" value="1500" />
       </class>
     </service>
 
