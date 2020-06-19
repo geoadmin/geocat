@@ -949,4 +949,7 @@ is defined in record. If not, remove the element. -->
       <xsl:copy-of select="."/>
     </xsl:if>
   </xsl:template>
+
+  <xsl:template match="gml:LinearRing/@srsName"/>
+
 </xsl:stylesheet>
