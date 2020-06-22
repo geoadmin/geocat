@@ -227,4 +227,6 @@
     </xsl:copy>
   </xsl:template>
 
+  <xsl:template match="gml:LinearRing/@srsName"/>
+
 </xsl:stylesheet>
