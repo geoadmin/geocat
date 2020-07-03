@@ -49,36 +49,13 @@ public class DashboardAppHealthCheck implements HealthCheckFactory {
             protected Result check() throws Exception {
                 final GeonetHttpRequestFactory httpRequestFactory = context.getBean(GeonetHttpRequestFactory.class);
                 final SettingManager settingManager = context.getBean(SettingManager.class);
-                final EsSearchManager searchMan = context.getBean(EsSearchManager.class);
-                final String dashboardAppUrl = searchMan.getClient().getDashboardAppUrl();
+                //final EsSearchManager searchMan = context.getBean(EsSearchManager.class);
+                //final String dashboardAppUrl = searchMan.getClient().getDashboardAppUrl();
 
-                if (StringUtils.isNotEmpty(dashboardAppUrl)) {
-                    ClientHttpResponse httpResponse = null;
-                    try {
-                        String url = settingManager.getBaseURL() + "dashboards/api/status";
-                        httpResponse = httpRequestFactory.execute(new HttpGet(url));
+                return Result.unhealthy(
+                        "Dashboard application is not available currently. " +
+                                "This component is only required if you use dashboards.");
 
-                        if (httpResponse.getRawStatusCode() == 200) {
-                            return Result.healthy(String.format(
-                                "Dashboard application is running."
-                            ));
-                        } else {
-                            return Result.unhealthy(
-                                "Dashboard application is not available currently. " +
-                                    "This component is only required if you use dashboards.");
-                        }
-                    } catch (Throwable e) {
-                        return Result.unhealthy(e);
-                    } finally {
-                        if (httpResponse != null) {
-                            httpResponse.close();
-                        }
-                    }
-                } else {
-                    return Result.unhealthy(
-                        "Dashboard application is not configured. " +
-                            "Update config.properties to setup Kibana to use this feature.");
-                }
             }
         };
     }
