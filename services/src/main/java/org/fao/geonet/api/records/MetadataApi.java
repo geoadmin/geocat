@@ -327,7 +327,7 @@ public class MetadataApi {
             metadata.getUuid(),
             isJson ? "json" : "xml"
         ));
-        return isJson ? Xml.getJSON(xml) : Xml.getString(xml);
+        return isJson ? Xml.getJSON(xml) : xml;
     }
 
     @ApiOperation(
