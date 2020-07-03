@@ -41,38 +41,9 @@ public class IndexHealthCheck implements HealthCheckFactory {
         return new HealthCheck(this.getClass().getSimpleName()) {
             @Override
             protected Result check() throws Exception {
-                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
-                try {
-                    EsSearchManager searchMan = gc.getBean(EsSearchManager.class);
-
-                    try {
-                        Search search = new Search.Builder("")
-                            .addIndex(searchMan.getIndex())
-                            .addType(searchMan.getIndexType())
-                            .build();
-                        final SearchResult result = searchMan.getClient().getClient().execute(search);
-
-                        if (result.isSucceeded()) {
-                            return Result.healthy(String.format(
-                                "%s records indexed in remote index currently.",
-                                result.getHits(Object.class).size()
-                            ));
-                        } else {
-                            return Result.unhealthy(
-                                "Index storing records is not available currently. " +
-                                    "This component is only required if you use WFS features indexing " +
-                                    "and dashboards.");
-                        }
-                    } catch (Throwable e) {
-                        return Result.unhealthy(e);
-                    }
-
-                } catch (BeanCreationException e) {
-                    return Result.unhealthy("Remote index module is not installed in your catalogue " +
+                return Result.unhealthy("Remote index module is not installed in your catalogue " +
                         "installation. Add 'es' to the spring.profiles.active in WEB-INF/web.xml to " +
                         "activate it.");
-                }
             }
         };
     }
