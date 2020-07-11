@@ -17,7 +17,7 @@
     </gmd:fileIdentifier>
 
     <gmd:language>
-      <gco:CharacterString>ger</gco:CharacterString>
+      <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger" />
     </gmd:language>
 
 
