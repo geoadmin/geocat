@@ -80,6 +80,12 @@
             </div>
           </xsl:when>
           <xsl:otherwise>
+            <script type="text/javascript">
+              //detect ie11 browser; display warning
+              if (/*@cc_on!@*/false || !!document.documentMode) {
+                document.body.innerHTML += '<div class="alert alert-warning">geocat.ch is not available in this browser. We recommend to use Edge, Firefox or Chrome instead, as the application is regularly tested with those browsers. Or alternatively use the limited <a href="../search">no-javascript interface</a></div>';
+              }
+          </script>
             <xsl:if test="$isJsEnabled">
               <xsl:call-template name="no-js-alert"/>
             </xsl:if>
