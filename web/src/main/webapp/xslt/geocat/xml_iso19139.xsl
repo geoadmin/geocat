@@ -87,7 +87,9 @@
           <xsl:value-of select=".//che:LocalisedURL[1]"/>
         </gmd:URL>
       </xsl:when>
-      <xsl:otherwise><!--if character string then don't use url--></xsl:otherwise>
+      <xsl:otherwise>
+        <xsl:copy-of select="./gmd:URL"/>
+      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
