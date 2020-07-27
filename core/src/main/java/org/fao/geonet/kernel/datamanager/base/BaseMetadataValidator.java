@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.datamanager.base;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -375,6 +376,8 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         } catch (IOException | JDOMException e) {
             return false;
         }
+
+        Processor.processXLink(md, ServiceContext.get());
 
         List<MetadataValidation> validations = new ArrayList<>();
         boolean valid = true;
