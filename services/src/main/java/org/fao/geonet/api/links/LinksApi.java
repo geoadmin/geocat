@@ -164,53 +164,6 @@ public class LinksApi {
         return getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession);
     }
 
-    private Page<Link> getLinks(
-        JSONObject filter,
-        Integer[] groupIdFilter,
-        Integer[] groupOwnerIdFilter,
-        Pageable pageRequest,
-        UserSession userSession) throws SQLException, JSONException {
-        Integer[] editingGroups = null;
-        if (userSession.getProfile() != Profile.Administrator) {
-            final List<Integer> editingGroupList = AccessManager.getGroups(userSession, Profile.Editor);
-            if (editingGroupList.size() == 0) {
-                return new PageImpl<Link>(Collections.emptyList());
-            }
-            editingGroups = editingGroupList.toArray(new Integer[editingGroupList.size()]);
-        }
-
-        if (filter == null && (groupIdFilter != null || groupOwnerIdFilter != null || editingGroups != null)) {
-            return linkRepository.findAll(LinkSpecs.filter(null, null, null, groupIdFilter, groupOwnerIdFilter, editingGroups), pageRequest);
-        }
-
-        if (filter != null) {
-            Integer stateToMatch = null;
-            String url = null;
-            String associatedRecord = null;
-            if (filter.has("lastState")) {
-                stateToMatch = 0;
-                if (filter.getString("lastState").equalsIgnoreCase("ok")) {
-                    stateToMatch = 1;
-                } else if (filter.getString("lastState").equalsIgnoreCase("ko")) {
-                    stateToMatch = -1;
-                }
-            }
-
-            if (filter.has("url")) {
-                url = filter.getString("url");
-            }
-
-            if (filter.has("records")) {
-                associatedRecord = filter.getString("records");
-            }
-
-            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecord, groupIdFilter, groupOwnerIdFilter, editingGroups), pageRequest);
-        } else {
-            return linkRepository.findAll(pageRequest);
-        }
-    }
-
-
     @ApiOperation(
         value = "Get record links as CSV",
         notes = "",
@@ -350,7 +303,6 @@ public class LinksApi {
         return report;
     }
 
-
     @ApiOperation(
         value = "Remove all links and status history",
         notes = "",
@@ -376,5 +328,51 @@ public class LinksApi {
         }
         mAnalyseProcesses.addFirst(mAnalyseProcess);
         return mAnalyseProcess;
+    }
+
+    private Page<Link> getLinks(
+            JSONObject filter,
+            Integer[] groupIdFilter,
+            Integer[] groupOwnerIdFilter,
+            Pageable pageRequest,
+            UserSession userSession) throws SQLException, JSONException {
+
+        Integer[] editingGroups = null;
+        Integer stateToMatch = null;
+        String url = null;
+        String associatedRecord = null;
+
+        if (userSession.getProfile() != Profile.Administrator) {
+            final List<Integer> editingGroupList = AccessManager.getGroups(userSession, Profile.Editor);
+            if (editingGroupList.size() == 0) {
+                return new PageImpl<Link>(Collections.emptyList());
+            }
+            editingGroups = editingGroupList.toArray(new Integer[editingGroupList.size()]);
+        }
+
+        if (filter != null) {
+            if (filter.has("lastState")) {
+                stateToMatch = 0;
+                if (filter.getString("lastState").equalsIgnoreCase("ok")) {
+                    stateToMatch = 1;
+                } else if (filter.getString("lastState").equalsIgnoreCase("ko")) {
+                    stateToMatch = -1;
+                }
+            }
+
+            if (filter.has("url")) {
+                url = filter.getString("url");
+            }
+
+            if (filter.has("records")) {
+                associatedRecord = filter.getString("records");
+            }
+        }
+
+        if (groupIdFilter != null || groupOwnerIdFilter != null || editingGroups != null || url != null || associatedRecord != null || stateToMatch != null) {
+            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecord, groupIdFilter, groupOwnerIdFilter, editingGroups), pageRequest);
+        } else {
+            return linkRepository.findAll(pageRequest);
+        }
     }
 }
