@@ -54,6 +54,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -80,6 +81,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -171,9 +173,10 @@ public class LinksApi {
         Integer[] editingGroups = null;
         if (userSession.getProfile() != Profile.Administrator) {
             final List<Integer> editingGroupList = AccessManager.getGroups(userSession, Profile.Editor);
-            if (editingGroupList.size() > 0) {
-                editingGroups = editingGroupList.toArray(new Integer[editingGroupList.size()]);
+            if (editingGroupList.size() == 0) {
+                return new PageImpl<Link>(Collections.emptyList());
             }
+            editingGroups = editingGroupList.toArray(new Integer[editingGroupList.size()]);
         }
 
         if (filter == null && (groupIdFilter != null || groupOwnerIdFilter != null || editingGroups != null)) {

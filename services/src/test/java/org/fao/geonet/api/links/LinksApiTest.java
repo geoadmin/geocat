@@ -107,8 +107,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getLinksAsAdmin() throws Exception {
-        User reviewer = createEditor();
-        Group group = createGroupWithOneEditor(reviewer);
+        Group group = createGroupWithOneEditor(createEditor());
         AbstractMetadata md = createMd(group.getId());
 
         MockHttpSession httpSession = this.loginAsAdmin();
@@ -140,8 +139,8 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getLinksAsEditor() throws Exception {
-        User reviewer = createEditor();
-        Group group = createGroupWithOneEditor(reviewer);
+        User editor = createEditor();
+        Group group = createGroupWithOneEditor(editor);
         AbstractMetadata md = createMd(group.getId());
 
         MockHttpSession httpSession = this.loginAsAdmin();
@@ -152,7 +151,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
                 .andExpect(status().isCreated());
         Assert.assertEquals(1, linkRepository.count());
 
-        httpSession = this.loginAs(reviewer);
+        httpSession = this.loginAs(editor);
         this.mockMvc.perform(get("/srv/api/records/links")
                 .session(httpSession)
                 .accept(MediaType.parseMediaType("application/json")))
@@ -175,8 +174,8 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getLinksAsEditorFromAnotherGroup() throws Exception {
-        User reviewer = createEditor();
-        createGroupWithOneEditor(reviewer);
+        User editor = createEditor();
+        createGroupWithOneEditor(editor);
         AbstractMetadata md = createMd(createGroupWithOneEditor(createEditor()).getId());
 
         MockHttpSession httpSession = this.loginAsAdmin();
@@ -187,7 +186,36 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
                 .andExpect(status().isCreated());
         Assert.assertEquals(1, linkRepository.count());
 
-        httpSession = this.loginAs(reviewer);
+        httpSession = this.loginAs(editor);
+        this.mockMvc.perform(get("/srv/api/records/links")
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+                .andExpect(jsonPath("$.content", hasSize(0)));
+
+        httpSession = this.loginAsAdmin();
+        this.mockMvc.perform(delete("/srv/api/records/links")
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isNoContent());
+        Assert.assertEquals(0, linkRepository.count());
+    }
+
+    @Test
+    public void getLinksAsEditorFromNoGroup() throws Exception {
+        User editor = createEditor();
+        AbstractMetadata md = createMd(createGroupWithOneEditor(createEditor()).getId());
+
+        MockHttpSession httpSession = this.loginAsAdmin();
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc.perform(post("/srv/api/records/links?uuid=" + md.getUuid())
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isCreated());
+        Assert.assertEquals(1, linkRepository.count());
+
+        httpSession = this.loginAs(editor);
         this.mockMvc.perform(get("/srv/api/records/links")
                 .session(httpSession)
                 .accept(MediaType.parseMediaType("application/json")))
