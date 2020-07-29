@@ -32,7 +32,6 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.LinkRepository;
-import org.fao.geonet.repository.MetadataLinkRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
@@ -41,15 +40,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -74,9 +70,6 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
     private LinkRepository linkRepository;
 
     @Autowired
-    private MetadataLinkRepository metadataLinkRepository;
-
-    @Autowired
     private SchemaManager schemaManager;
 
     @Autowired
@@ -84,9 +77,6 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
 
     @Autowired
     private SourceRepository sourceRepository;
-
-    @PersistenceContext
-    private EntityManager _entityManager;
 
     @Autowired
     private IMetadataUtils metadataRepository;
@@ -106,7 +96,6 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getLinks() throws Exception {
-        Long operationsCount = linkRepository.count();
         final MockHttpSession httpSession = this.loginAsAdmin();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -153,11 +142,9 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         metadata.getHarvestInfo().setHarvested(false);
 
 
-        this.id = dataManager.insertMetadata(context, metadata, sampleMetadataXml, false, false, false, UpdateDatestamp.NO,
+        this.id = dataManager.insertMetadata(context, metadata, sampleMetadataXml, false, true, false, UpdateDatestamp.NO,
                 false, false).getId();
 
-
-        dataManager.indexMetadata(Lists.newArrayList("" + this.id));
         this.md = metadataRepository.findOne(this.id);
     }
 
