@@ -231,6 +231,46 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         Assert.assertEquals(0, linkRepository.count());
     }
 
+    @Test
+    public void getLinksAsAdminWithATwiceUsedLink() throws Exception {
+        Group group = createGroupWithOneEditor(createEditor());
+        AbstractMetadata md = createMd(group.getId());
+        Group group1 = createGroupWithOneEditor(createEditor());
+        AbstractMetadata md1 = createMd(group1.getId());
+
+        MockHttpSession httpSession = this.loginAsAdmin();
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc.perform(post("/srv/api/records/links?uuid=" + md.getUuid())
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isCreated());
+        this.mockMvc.perform(post("/srv/api/records/links?uuid=" + md1.getUuid())
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isCreated());
+        Assert.assertEquals(1, linkRepository.count());
+
+        this.mockMvc.perform(get("/srv/api/records/links")
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].url").value(equalTo("http://services.sandre.eaufrance.fr/geo/ouvrage")))
+                .andExpect(jsonPath("$.content[0].records", hasSize(2)))
+                .andExpect(jsonPath("$.content[0].records[0].metadataId").value(equalTo(md.getId())))
+                .andExpect(jsonPath("$.content[0].records[0].metadataUuid").value(equalTo(md.getUuid())))
+                .andExpect(jsonPath("$.content[0].records[1].metadataId").value(equalTo(md1.getId())))
+                .andExpect(jsonPath("$.content[0].records[1].metadataUuid").value(equalTo(md1.getUuid())));
+
+        this.mockMvc.perform(delete("/srv/api/records/links")
+                .session(httpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+                .andExpect(status().isNoContent());
+        Assert.assertEquals(0, linkRepository.count());
+    }
+
     private AbstractMetadata createMd(Integer groupOwner) throws Exception {
         loginAsAdmin(context);
 
