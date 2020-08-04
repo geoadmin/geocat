@@ -1216,34 +1216,6 @@
       <url>https://repo.osgeo.org/repository/release/</url>
     </repository>
 
-    <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>k-int</id>
-      <name>Developer k-int repository</name>
-      <url>http://maven.k-int.com/content/repositories/releases/</url>
-    </repository>
-
-    <repository>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <id>core-maven-repo</id>
-      <name>GeoNetwork remote repository</name>
-      <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
-    </repository>
-
-    <!-- seasar repo, has jsonic - used by langdetect -->
-    <repository>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Repository</name>
-      <url>http://maven.seasar.org/maven2</url>
-    </repository>
-
 <!--
     <repository>
       <id>georchestra-mfprint</id>
