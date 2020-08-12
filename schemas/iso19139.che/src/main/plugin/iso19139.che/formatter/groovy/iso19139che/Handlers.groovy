@@ -83,7 +83,7 @@ public class Handlers extends iso19139.Handlers {
           def mapproj = mapConfig.mapproj
           def background = mapConfig.background
           def width = thumbnail? mapConfig.thumbnailWidth : mapConfig.width
-          def mdId = env.getMetadataId();
+          def mdId = env.getMetadataUUID();
           def xpath = f.getXPathFrom(el);
 
           // Geocat specific: use 4326 projection when bbox bounds are too wide
@@ -116,7 +116,7 @@ public class Handlers extends iso19139.Handlers {
             def mapproj = mapConfig.mapproj
             def background = mapConfig.background
             def width = thumbnail? mapConfig.thumbnailWidth : mapConfig.width
-            def mdId = env.getMetadataId();
+            def mdId = env.getMetadataUUID();
             def xpath = f.getXPathFrom(el);
 
             // Geocat specific: use 4326 projection when bbox bounds are too wide

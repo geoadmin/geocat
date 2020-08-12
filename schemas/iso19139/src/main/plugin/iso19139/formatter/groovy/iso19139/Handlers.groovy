@@ -400,7 +400,7 @@ public class Handlers {
             def mapproj = mapConfig.mapproj
             def background = mapConfig.background
             def width = thumbnail? mapConfig.thumbnailWidth : mapConfig.width
-            def mdId = env.getMetadataId();
+            def mdId = env.getMetadataUUID();
             def xpath = f.getXPathFrom(el);
 
             if (xpath != null) {
@@ -427,7 +427,7 @@ public class Handlers {
             def mapproj = mapConfig.mapproj
             def background = mapConfig.background
             def width = thumbnail? mapConfig.thumbnailWidth : mapConfig.width
-            def mdId = env.getMetadataId();
+            def mdId = env.getMetadataUUID();
             def xpath = f.getXPathFrom(el);
 
             if (xpath != null) {
