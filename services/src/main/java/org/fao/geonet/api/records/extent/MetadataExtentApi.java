@@ -118,6 +118,9 @@ public class MetadataExtentApi {
         @RequestParam(value = HEIGHT_PARAM, required = false) Integer height,
         @ApiParam(value = "(optional) URL for loading a background image for regions or a key that references the namedBackgrounds (configured in config-spring-geonetwork.xml). A WMS Getmap request is the typical example. The URL must be parameterized with the following parameters: minx, maxx, miny, maxy, width, height")
         @RequestParam(value = BACKGROUND_PARAM, required = false, defaultValue = "settings") String background,
+        @ApiParam(value = "(optional) restrict display to one extent given its order of appearence")
+        @RequestParam(value = "", required = false)
+        Integer extentOrderOfAppearence,
         @ApiIgnore
             NativeWebRequest nativeWebRequest,
         @ApiIgnore
@@ -134,7 +137,12 @@ public class MetadataExtentApi {
             throw new BadParameterEx(WIDTH_PARAM, WIDTH_AND_HEIGHT_BOTH_MISSING_MESSAGE);
         }
 
-        String regionId = "metadata:@id" + metadata.getId();
+        String regionId;
+        if (extentOrderOfAppearence == null) {
+            regionId = String.format("metadata:@id%s", metadata.getId());
+        } else {
+            regionId = String.format("metadata:@id%s:@xpath*//gmd:extent[%d]//*/gmd:EX_BoundingPolygon", metadata.getId(), extentOrderOfAppearence);
+        }
 
         Request searchRequest = metadataRegionDAO.createSearchRequest(context).id(regionId);
         if (searchRequest.getLastModified().isPresent() && nativeWebRequest.checkNotModified(searchRequest.getLastModified().get())) {
