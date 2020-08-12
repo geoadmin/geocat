@@ -103,7 +103,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andReturn().getResponse().getContentAsByteArray();
 
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
-        assertEquals("b02baec6d92832ecd5653db78093a427", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertEquals("3f1e3f864b518d2867cf3f0fd52ff7e4", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
     @Test
@@ -133,7 +133,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
             .andReturn().getResponse().getContentAsByteArray();
 
-        assertEquals("b02baec6d92832ecd5653db78093a427", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertEquals("3f1e3f864b518d2867cf3f0fd52ff7e4", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
     @Test
@@ -150,7 +150,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andReturn().getResponse().getContentAsByteArray();
 
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
-        assertEquals("6918277f1b32eb69ff81da6ef434c27f", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertEquals("bb0ac3d21bbf9a62ca8aa981e6370cba", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
     @Test
@@ -168,7 +168,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andReturn().getResponse().getContentAsByteArray();
 
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
-        assertEquals("3f40d26c831050e3bf75b90ba803b4e6", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertEquals("795ff6ab8cf9d91adb50c8f796d66d24", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
     @Test
@@ -186,7 +186,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andReturn().getResponse().getContentAsByteArray();
 
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
-        assertEquals("eb15c89eddb74808c169edfd15f54285", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertEquals("95cf01b2a2970f659c5fb7580c24a981", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
     @Test
@@ -204,7 +204,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andReturn().getResponse().getContentAsByteArray();
 
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
-        assertEquals("3db77b177b47f9dfbd52265b15a77443", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertEquals("ce09d41b742616156d320594fe603838", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
     private String createTestData() throws Exception {
