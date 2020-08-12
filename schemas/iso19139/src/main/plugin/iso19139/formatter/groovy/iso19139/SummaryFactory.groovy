@@ -139,7 +139,7 @@ class SummaryFactory {
 
         def extent = ""
         if (!polygons.isEmpty()) {
-            extent = this.isoHandlers.polygonEl(true)(polygons[0]).toString()
+            extent = this.isoHandlers.aggPolygonEl(true)(polygons[0]).toString()
         } else if (!bboxes.isEmpty()) {
             extent = this.isoHandlers.bboxEl(true)(bboxes[0]).toString()
         }

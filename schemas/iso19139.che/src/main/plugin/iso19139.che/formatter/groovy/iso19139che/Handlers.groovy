@@ -93,7 +93,13 @@ public class Handlers extends iso19139.Handlers {
           }
 
           if (xpath != null) {
-              def source = "../api/records/$mdId/extents.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background";
+              def count = 1
+              if (xpath.contains("gmd:extent[")) {
+                  count = xpath.split("\\[")[1].split("\\]")[0];
+              }
+              def locUrl= env.localizedUrl.substring(0, env.localizedUrl.lastIndexOf("/"))
+              locUrl= locUrl.substring(0, locUrl.lastIndexOf("/"))
+              def source = "$locUrl/api/records/$mdId/extents.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;extentOrderOfAppearence=$count";
               def image = "<img src=\"$source\" style=\"min-width:${width/4}px; min-height:${width/4}px;\" />"
 
               def inclusion = el.'gmd:extentTypeCode'.text() == '0' ? 'exclusive' : 'inclusive';
@@ -103,6 +109,35 @@ public class Handlers extends iso19139.Handlers {
           }
       }
   }
+
+    def aggPolygonEl(thumbnail) {
+        return { el ->
+            MapConfig mapConfig = env.mapConfiguration
+            def mapproj = mapConfig.mapproj
+            def background = mapConfig.background
+            def width = thumbnail? mapConfig.thumbnailWidth : mapConfig.width
+            def mdId = env.getMetadataId();
+            def xpath = f.getXPathFrom(el);
+
+            // Geocat specific: use 4326 projection when bbox bounds are too wide
+            if (isWorldExtentUsed(el.parent().parent())) {
+                mapproj = 'EPSG:4326'
+                background = 'osm'
+            }
+
+            if (xpath != null) {
+                def locUrl= env.localizedUrl.substring(0, env.localizedUrl.lastIndexOf("/"))
+                locUrl= locUrl.substring(0, locUrl.lastIndexOf("/"))
+                def source = "$locUrl/api/records/$mdId/extents.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background";
+                def image = "<img src=\"$source\" style=\"min-width:${width/4}px; min-height:${width/4}px;\" />"
+
+                def inclusion = el.'gmd:extentTypeCode'.text() == '0' ? 'exclusive' : 'inclusive';
+
+                def label = f.nodeLabel(el) + " (" + f.translate(inclusion) + ")"
+                handlers.fileResult('html/2-level-entry.html', [label: label, childData: image])
+            }
+        }
+    }
 
   def bboxEl(thumbnail) {
       return { el ->
