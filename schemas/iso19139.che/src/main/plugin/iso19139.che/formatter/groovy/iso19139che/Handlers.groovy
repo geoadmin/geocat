@@ -77,6 +77,8 @@ public class Handlers extends iso19139.Handlers {
       return false
   }
 
+  def geomOrBbox = { node -> node.parent().name() in ["gmd:geographicElement"] }
+
   def polygonEl(thumbnail) {
       return { el ->
           MapConfig mapConfig = env.mapConfiguration
@@ -93,13 +95,11 @@ public class Handlers extends iso19139.Handlers {
           }
 
           if (xpath != null) {
-              def count = 1
-              if (xpath.contains("gmd:extent[")) {
-                  count = xpath.split("\\[")[1].split("\\]")[0];
-              }
+              def count = el.parent().parent().parent().parent().depthFirst().findAll(geomOrBbox).indexOf(el) + 1
+
               def locUrl= env.localizedUrl.substring(0, env.localizedUrl.lastIndexOf("/"))
               locUrl= locUrl.substring(0, locUrl.lastIndexOf("/"))
-              def source = "$locUrl/api/records/$mdId/extents.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background&amp;extentOrderOfAppearence=$count";
+              def source = "$locUrl/api/records/$mdId/extents/${count}.png?mapsrs=$mapproj&amp;width=$width&amp;background=$background";
               def image = "<img src=\"$source\" style=\"min-width:${width/4}px; min-height:${width/4}px;\" />"
 
               def inclusion = el.'gmd:extentTypeCode'.text() == '0' ? 'exclusive' : 'inclusive';

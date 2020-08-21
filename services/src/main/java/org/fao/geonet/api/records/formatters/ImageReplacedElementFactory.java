@@ -122,7 +122,7 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
             float factor = layoutContext.getDotsPerPixel();
             return loadImage(layoutContext, box, userAgentCallback, cssWidth, cssHeight, new BufferedImageLoader(image), factor);
         } else if ("img".equals(nodeName)
-            && (src.startsWith(baseURL + "region.getmap.png") || src.split("\\?")[0].endsWith("/extents.png") || src.split("\\?")[0].endsWith("/geom.png"))) {
+                && (src.startsWith(baseURL + "region.getmap.png") || src.endsWith("/extents.png") || src.endsWith("/geom.png"))) {
             StringBuilder builder = new StringBuilder(baseURL);
             try {
                 if (StringUtils.startsWith(src, "http")) {
