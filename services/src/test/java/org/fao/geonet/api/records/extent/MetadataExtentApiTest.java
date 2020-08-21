@@ -53,7 +53,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -63,7 +62,9 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ContextConfiguration(inheritLocations = true, locations = "classpath:extents-test-context.xml")
 public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
@@ -186,7 +187,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andReturn().getResponse().getContentAsByteArray();
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName() + "-2");
 
-        assertEquals("b1e730b01f6efd164a736a09935976fc", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertEquals("9fd132b40b62fae6da7df4c7e7e318c1", DigestUtils.md5DigestAsHex(reponseBuffer));
 
         reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents/3.png", uuid))
             .session(mockHttpSession)
@@ -196,7 +197,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andReturn().getResponse().getContentAsByteArray();
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName() + "-3");
 
-        assertEquals("eb15c89eddb74808c169edfd15f54285", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertEquals("95cf01b2a2970f659c5fb7580c24a981", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
 
@@ -218,23 +219,6 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
-    public void threeExtentThirdOne115_3() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-        MockHttpSession mockHttpSession = loginAsAdmin();
-        String uuid = createTestDataIso191153ThreeExtent();
-
-        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents/3.png", uuid))
-            .session(mockHttpSession)
-            .accept(MediaType.IMAGE_PNG_VALUE))
-            .andExpect(status().is2xxSuccessful())
-            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
-            .andReturn().getResponse().getContentAsByteArray();
-
-        saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
-        assertEquals("95cf01b2a2970f659c5fb7580c24a981", DigestUtils.md5DigestAsHex(reponseBuffer));
-    }
-
-    @Test
     public void threeExtentThirdOneIsABoundingBox() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
@@ -248,7 +232,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andReturn().getResponse().getContentAsByteArray();
 
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
-        assertEquals("ce09d41b742616156d320594fe603838", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertEquals("95cf01b2a2970f659c5fb7580c24a981", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
     private String createTestData() throws Exception {
@@ -264,13 +248,6 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
 
     private String createTestDataThreeExtent() throws Exception {
         URL resource = MetadataExtentApiTest.class.getResource("valid-metadata.iso19139_with_three_extent.xml");
-        Element sampleMetadataXml = Xml.loadStream(resource.openStream());
-
-        return createMdFromXmlRessources(sampleMetadataXml);
-    }
-
-    private String createTestDataIso191153ThreeExtent() throws Exception {
-        URL resource = MetadataExtentApiTest.class.getResource("metadata.iso19115-3_with_three_extent.xml");
         Element sampleMetadataXml = Xml.loadStream(resource.openStream());
 
         return createMdFromXmlRessources(sampleMetadataXml);
