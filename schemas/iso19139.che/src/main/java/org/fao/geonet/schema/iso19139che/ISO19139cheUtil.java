@@ -11,7 +11,6 @@ import net.sf.saxon.type.Type;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.extent.ExtentHelper;
-import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.geotools.gml3.GMLConfiguration;
 import org.geotools.xml.Encoder;
@@ -330,7 +329,15 @@ public class ISO19139cheUtil {
             HashMap map = (HashMap) value;
             List<Polygon> geoms = new ArrayList<Polygon>();
             for (Object entry : map.values()) {
-                SpatialIndexWriter.addToList(geoms, entry);
+                // all I can think about is throwing up, from SpatialIndexWriter, addToList, historic
+                if (entry instanceof Polygon) {
+                    geoms.add((Polygon) entry);
+                } else if (entry instanceof Collection) {
+                    Collection collection = (Collection) entry;
+                    for (Object object : collection) {
+                        geoms.add((Polygon) object);
+                    }
+                }
             }
             if (geoms.isEmpty()) {
                 return null;
@@ -346,9 +353,6 @@ public class ISO19139cheUtil {
             return (Polygon) value;
         }
     }
-
-    static Pattern LINK_PATTERN = Pattern.compile("(mailto:|https://|http://|ftp://|ftps://)[^\\s<>]*\\w");
-    static Pattern NODE_PATTERN = Pattern.compile("<.+?>");
 
     static
     @Nullable

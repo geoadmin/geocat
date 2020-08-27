@@ -179,7 +179,25 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
         MockHttpSession mockHttpSession = loginAsAdmin();
         String uuid = createTestDataTwoExtent();
 
-        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents/2.png", uuid))
+        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents.png", uuid))
+            .session(mockHttpSession)
+            .accept(MediaType.IMAGE_PNG_VALUE))
+            .andExpect(status().is2xxSuccessful())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
+            .andReturn().getResponse().getContentAsByteArray();
+        saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName() + "-overview");
+
+        reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents/1.png", uuid))
+            .session(mockHttpSession)
+            .accept(MediaType.IMAGE_PNG_VALUE))
+            .andExpect(status().is2xxSuccessful())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
+            .andReturn().getResponse().getContentAsByteArray();
+        saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName() + "-1");
+
+        assertEquals("33c90e91aca992a74bbe76eb9219d3bb", DigestUtils.md5DigestAsHex(reponseBuffer));
+
+        reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents/2.png", uuid))
             .session(mockHttpSession)
             .accept(MediaType.IMAGE_PNG_VALUE))
             .andExpect(status().is2xxSuccessful())
@@ -207,7 +225,15 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
         MockHttpSession mockHttpSession = loginAsAdmin();
         String uuid = createTestDataThreeExtent();
 
-        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents/4.png", uuid))
+        byte[] reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents.png", uuid))
+            .session(mockHttpSession)
+            .accept(MediaType.IMAGE_PNG_VALUE))
+            .andExpect(status().is2xxSuccessful())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
+            .andReturn().getResponse().getContentAsByteArray();
+        saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName() + "-overview");
+
+        reponseBuffer = mockMvc.perform(get(String.format("/srv/api/records/%s/extents/4.png", uuid))
             .session(mockHttpSession)
             .accept(MediaType.IMAGE_PNG_VALUE))
             .andExpect(status().is2xxSuccessful())
@@ -215,7 +241,7 @@ public class MetadataExtentApiTest extends AbstractServiceIntegrationTest {
             .andReturn().getResponse().getContentAsByteArray();
 
         saveImageToDiskIfConfiguredToDoSo(reponseBuffer, name.getMethodName());
-        assertEquals("795ff6ab8cf9d91adb50c8f796d66d24", DigestUtils.md5DigestAsHex(reponseBuffer));
+        assertEquals("5191659f92d24fd12d77efc665d5f732", DigestUtils.md5DigestAsHex(reponseBuffer));
     }
 
     @Test
