@@ -41,5 +41,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @TestPropertySource("classpath:config.properties")
 public abstract class AbstractServiceIntegrationTest extends AbstractCoreIntegrationTest {
     public static final String API_JSON_EXPECTED_ENCODING = "application/json";
+    public static final String API_XML_EXPECTED_ENCODING = "application/xml";
     public static final String API_PNG_EXPECTED_ENCODING = "image/png";
 }
