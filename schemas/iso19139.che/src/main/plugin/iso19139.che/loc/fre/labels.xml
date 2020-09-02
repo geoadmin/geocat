@@ -852,6 +852,7 @@ element name="che:language">
       <option value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuration File (*.AXL)</option>
       <option value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</option>
       <option value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</option>
+      <option value="ESRI:REST">ArcGIS REST Services</option>
     </helper>
   </element>
 
