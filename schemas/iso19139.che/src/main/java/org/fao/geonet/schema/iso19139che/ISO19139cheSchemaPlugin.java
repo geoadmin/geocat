@@ -237,6 +237,7 @@ public class ISO19139cheSchemaPlugin
     @Override
     public void addTranslationToElement(Element element, String languageIdentifier, String value) {
         if (element.getChild("PT_FreeText", ISO19139Namespaces.GMD) != null ||
+            element.getChild("Anchor", GMX) != null ||
             element.getChild("CharacterString", ISO19139Namespaces.GCO) != null) {
 //            super.addTranslationToElement(element, languageIdentifier, value);
             // An ISO19139 element containing translation has an xsi:type attribute
