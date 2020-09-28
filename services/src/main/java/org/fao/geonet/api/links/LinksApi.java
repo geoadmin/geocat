@@ -398,7 +398,7 @@ public class LinksApi {
                 Set<MetadataLink> mdl = l.getRecords().stream().filter(ml -> {
                     AbstractMetadata md = metadataRepository.findOne(ml.getMetadataId());
                     if (md != null) {
-                        int groupOwner = md.getSourceInfo().getGroupOwner() != null ? md.getSourceInfo().getGroupOwner() : -42;
+                        int groupOwner = md.getSourceInfo().getGroupOwner();
                         for (int groupId : editingGroups) {
                             if (groupId == groupOwner) {
                                 return true;
@@ -444,7 +444,7 @@ public class LinksApi {
                     if (md == null) {
                         return false;
                     }
-                    int groupOwner = md.getSourceInfo().getGroupOwner() != null ? md.getSourceInfo().getGroupOwner() : -42;
+                    int groupOwner = md.getSourceInfo().getGroupOwner();
                     for (int groupId : groupOwnerIdFilter) {
                         if (groupId == groupOwner) {
                             return true;
