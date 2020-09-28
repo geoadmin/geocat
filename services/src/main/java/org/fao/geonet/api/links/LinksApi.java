@@ -78,8 +78,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.PostConstruct;
 import javax.management.MalformedObjectNameException;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -127,9 +125,6 @@ public class LinksApi {
     AccessManager accessManager;
     @Autowired
     OperationAllowedRepository operationAllowedRepository;
-    @PersistenceContext
-    EntityManager em;
-
     private ArrayDeque<SelfNaming> mAnalyseProcesses = new ArrayDeque<>(NUMBER_OF_SUBSEQUENT_PROCESS_MBEAN_TO_KEEP);
 
     @PostConstruct
@@ -413,9 +408,7 @@ public class LinksApi {
                     }
                     return false;
                 }).collect(Collectors.toSet());
-                em.detach(l);
-                l.getRecords().clear();
-                l.getRecords().addAll(mdl);
+                l.setRecords(mdl);
             });
         }
 
@@ -430,9 +423,7 @@ public class LinksApi {
                     }
                     return false;
                 }).collect(Collectors.toSet());
-                em.detach(l);
-                l.getRecords().clear();
-                l.getRecords().addAll(mdl);
+                l.setRecords(mdl);
             });
         }
 
@@ -452,9 +443,7 @@ public class LinksApi {
                     }
                     return false;
                 }).collect(Collectors.toSet());
-                em.detach(l);
-                l.getRecords().clear();
-                l.getRecords().addAll(mdl);
+                l.setRecords(mdl);
             });
         }
 
