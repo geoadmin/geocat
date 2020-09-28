@@ -39,9 +39,7 @@ import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Link;
 import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataLink;
 import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -49,7 +47,6 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.url.UrlAnalyzer;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.LinkSpecs;
 import org.jdom.JDOMException;
 import org.json.JSONException;
@@ -87,13 +84,9 @@ import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
-import static org.springframework.data.jpa.domain.Specifications.where;
+
 @EnableWebMvc
 @Service
 @RestController
@@ -123,8 +116,6 @@ public class LinksApi {
     MBeanExporter mBeanExporter;
     @Autowired
     AccessManager accessManager;
-    @Autowired
-    OperationAllowedRepository operationAllowedRepository;
     private ArrayDeque<SelfNaming> mAnalyseProcesses = new ArrayDeque<>(NUMBER_OF_SUBSEQUENT_PROCESS_MBEAN_TO_KEEP);
 
     @PostConstruct
@@ -346,7 +337,7 @@ public class LinksApi {
             Pageable pageRequest,
             UserSession userSession) throws SQLException, JSONException {
 
-        final Integer[] editingGroups;
+        Integer[] editingGroups = null;
         Integer stateToMatch = null;
         String url = null;
         String associatedRecord = null;
@@ -357,8 +348,6 @@ public class LinksApi {
                 return new PageImpl<Link>(Collections.emptyList());
             }
             editingGroups = editingGroupList.toArray(new Integer[editingGroupList.size()]);
-        } else {
-            editingGroups = null;
         }
 
         if (filter != null) {
@@ -380,73 +369,10 @@ public class LinksApi {
             }
         }
 
-        Page<Link> all;
         if (groupIdFilter != null || groupOwnerIdFilter != null || editingGroups != null || url != null || associatedRecord != null || stateToMatch != null) {
-            all = linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecord, groupIdFilter, groupOwnerIdFilter, editingGroups), pageRequest);
+            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecord, groupIdFilter, groupOwnerIdFilter, editingGroups), pageRequest);
         } else {
-             all = linkRepository.findAll(pageRequest);
+            return linkRepository.findAll(pageRequest);
         }
-
-        boolean groupEditingFilter = editingGroups != null && editingGroups.length > 0;
-        if (groupEditingFilter) {
-            all.getContent().stream().forEach(l -> {
-                Set<MetadataLink> mdl = l.getRecords().stream().filter(ml -> {
-                    AbstractMetadata md = metadataRepository.findOne(ml.getMetadataId());
-                    if (md != null) {
-                        int groupOwner = md.getSourceInfo().getGroupOwner();
-                        for (int groupId : editingGroups) {
-                            if (groupId == groupOwner) {
-                                return true;
-                            }
-                        }
-                    }
-
-                    for (int groupId : editingGroups) {
-                        if (operationAllowedRepository.findAll(where(hasMetadataId(ml.getMetadataId())).and(hasOperation(ReservedOperation.editing)).and(hasGroupId(groupId))).size() > 0) {
-                            return true;
-                        }
-                    }
-                    return false;
-                }).collect(Collectors.toSet());
-                l.setRecords(mdl);
-            });
-        }
-
-        boolean groupPublishedFilter = groupIdFilter != null && groupIdFilter.length > 0;
-        if (groupPublishedFilter) {
-            all.getContent().stream().forEach(l -> {
-                Set<MetadataLink> mdl = l.getRecords().stream().filter(ml -> {
-                    for (int groupId : groupIdFilter) {
-                        if (operationAllowedRepository.findAll(where(hasMetadataId(ml.getMetadataId())).and(hasOperation(ReservedOperation.view)).and(hasGroupId(groupId))).size() > 0) {
-                            return true;
-                        }
-                    }
-                    return false;
-                }).collect(Collectors.toSet());
-                l.setRecords(mdl);
-            });
-        }
-
-        boolean groupOwnerFilter = groupOwnerIdFilter != null && groupOwnerIdFilter.length > 0;
-        if (groupOwnerFilter) {
-            all.getContent().stream().forEach(l -> {
-                Set<MetadataLink> mdl = l.getRecords().stream().filter(ml -> {
-                    AbstractMetadata md = metadataRepository.findOne(ml.getMetadataId());
-                    if (md == null) {
-                        return false;
-                    }
-                    int groupOwner = md.getSourceInfo().getGroupOwner();
-                    for (int groupId : groupOwnerIdFilter) {
-                        if (groupId == groupOwner) {
-                            return true;
-                        }
-                    }
-                    return false;
-                }).collect(Collectors.toSet());
-                l.setRecords(mdl);
-            });
-        }
-
-        return all;
     }
 }
