@@ -866,6 +866,7 @@ element name="che:language">
       sont du type EX_Extent et sont gérées dans la classe du même nom.
     </help>
     <condition>Condition</condition>
+    <class>gn-required</class>
   </element>
 
   <element name="gco:Date">

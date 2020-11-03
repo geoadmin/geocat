@@ -752,6 +752,7 @@
       Begrenzungspolygons sowie der vertikalen und zeitlichen Ausdehnung des
       Datenbestands
     </description>
+    <class>gn-required</class>
   </element>
   <element name="gco:Date">
     <label>Datum</label>

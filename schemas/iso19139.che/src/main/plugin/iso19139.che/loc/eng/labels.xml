@@ -638,7 +638,7 @@
       <option value="ESRI:REST">ArcGIS REST Services</option>
     </helper>
   </element>
-  
+
   <element name="gmd:extent">
     <label>Extent</label>
     <description>Extent information including the bounding polygon, vertical, and temporal
@@ -648,6 +648,7 @@
       extent.geographicElement.EX_GeographicBoundingBox or
       extent.geographicElement.EX_GeographicDescription is required
     </_condition>
+    <class>gn-required</class>
   </element>
 
   <element name="gco:Date">

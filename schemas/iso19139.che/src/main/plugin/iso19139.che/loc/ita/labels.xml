@@ -754,6 +754,7 @@
       extent.geographicElement.EX_GeographicBoundingBox or
       extent.geographicElement.EX_GeographicDescription is required
     </_condition>
+    <class>gn-required</class>
   </element>
   <element name="gco:Date">
     <label>data</label>
