@@ -57,6 +57,7 @@
     <property name="defaultReadOnly" value="${jdbc.basic.defaultReadOnly}"/>
     <property name="defaultAutoCommit" value="${jdbc.basic.defaultAutoCommit}"/>
     <property name="initialSize" value="${jdbc.basic.initialSize}"/>
+    <property name="connectionProperties" value="connectTimeout=2;socketTimeout=10"/>
   </bean>
 
 </beans>
