@@ -120,11 +120,8 @@
       function loadGroups() {
         $scope.isLoadingGroups = true;
         // If not send profile, all groups are returned
-
-        $scope.loadProfilePromise.then(function(user) {
-
-          var profile = (user.profile) ?
-            '?profile=' + user.profile : '';
+        var profile = ($scope.user.profile) ?
+            '?profile=' + $scope.user.profile : '';
 
 
         $http.get('../api/groups' + profile).
@@ -151,7 +148,6 @@
                 });
               }
             });
-         })   ;
       }
 
       function loadUsers() {
