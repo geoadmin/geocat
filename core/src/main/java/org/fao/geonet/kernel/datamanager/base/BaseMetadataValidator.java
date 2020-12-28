@@ -377,7 +377,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
             return false;
         }
 
-        Processor.processXLink(md, ServiceContext.get());
+        Processor.processXLink(md);
 
         List<MetadataValidation> validations = new ArrayList<>();
         boolean valid = true;
