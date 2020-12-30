@@ -53,6 +53,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -150,10 +151,13 @@ public class LinksApi {
         @ApiIgnore Pageable pageRequest,
         @ApiParam(hidden = true)
         @ApiIgnore
-            HttpSession session) throws Exception {
+            HttpSession session,
+        @ApiParam(hidden = true)
+        @ApiIgnore
+            HttpServletRequest request) throws Exception {
 
         final UserSession userSession = ApiUtils.getUserSession(session);
-        return getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession);
+        return getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession, request.getRemoteAddr());
     }
 
     @ApiOperation(
@@ -189,10 +193,13 @@ public class LinksApi {
             HttpSession session,
         @ApiParam(hidden = true)
         @ApiIgnore
-            HttpServletResponse response) throws Exception {
+            HttpServletResponse response,
+        @ApiParam(hidden = true)
+        @ApiIgnore
+            HttpServletRequest request) throws Exception {
         final UserSession userSession = ApiUtils.getUserSession(session);
 
-        final Page<Link> links = getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession);
+        final Page<Link> links = getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession, request.getRemoteAddr());
         response.setHeader("Content-disposition", "attachment; filename=links.csv");
         LinkAnalysisReport.create(links, response.getWriter());
     }
@@ -327,7 +334,8 @@ public class LinksApi {
             Integer[] groupIdFilter,
             Integer[] groupOwnerIdFilter,
             Pageable pageRequest,
-            UserSession userSession) throws JSONException {
+            UserSession userSession,
+            String remoteAdress) throws JSONException {
 
         Integer stateToMatch = null;
         String url = null;
@@ -341,7 +349,7 @@ public class LinksApi {
         if (userSession.getProfile() == Profile.Administrator) {
             linkFromMdWhoseGroupOwnerInFilter = groupOwnerIdFilterSet ? groupOwnerIdFilter : null;
         } else {
-            Set<Integer> userGroups = getUserGroup(userSession);
+            Set<Integer> userGroups = getUserGroup(userSession, remoteAdress);
             if (groupOwnerIdFilterSet) {
                 userGroups.retainAll(Arrays.asList(groupOwnerIdFilter));
             }
@@ -351,7 +359,7 @@ public class LinksApi {
         if (userSession.getProfile() == Profile.Administrator) {
             linkFromMdPublishedInGroupFilter = groupIdFilterSet ? groupIdFilter : null;
         } else {
-            Set<Integer> userGroups = getUserGroup(userSession);
+            Set<Integer> userGroups = getUserGroup(userSession, remoteAdress);
             if (groupIdFilterSet) {
                 userGroups.retainAll(Arrays.asList(groupIdFilter));
             }
@@ -363,6 +371,14 @@ public class LinksApi {
         }
         if (groupIdFilterSet && !groupOwnerIdFilterSet) {
             linkFromMdWhoseGroupOwnerInFilter = null;
+        }
+
+        if (linkFromMdPublishedInGroupFilter != null && linkFromMdPublishedInGroupFilter.length ==0) {
+            return new PageImpl<>(Collections.emptyList(), null, 0);
+        }
+
+        if (linkFromMdWhoseGroupOwnerInFilter != null && linkFromMdWhoseGroupOwnerInFilter.length ==0) {
+            return new PageImpl<>(Collections.emptyList(), null, 0);
         }
 
         if (filter != null) {
@@ -391,9 +407,9 @@ public class LinksApi {
         }
    }
 
-    private Set<Integer> getUserGroup(UserSession userSession) {
+    private Set<Integer> getUserGroup(UserSession userSession, String remoteAdress) {
         try {
-            return accessManager.getUserGroups(userSession, null, false);
+            return accessManager.getUserGroups(userSession, remoteAdress, false);
         } catch (Exception e) {
             return Collections.emptySet();
         }
