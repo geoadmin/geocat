@@ -297,6 +297,22 @@
             optional: '@?',
             excludeSpecialGroups: '='
           },
+          controller: ['$scope', function($scope) {
+            $scope.sortByLabel = function(lang) {
+              return function(object) {
+                if (object.id == 'undefined') {
+                  return "____0";
+                }
+                if (object.id < 2) {
+                  return "____" + (object.id + 2);
+                }
+                if (object.label[lang]) {
+                  return object.label[lang];
+                }
+                return object.name;
+              }
+            }
+          }],
 
           link: function(scope, element, attrs) {
             var url = '../api/groups?withReservedGroup=true';
@@ -319,7 +335,10 @@
                       }
                     });
                   } else {
-                    scope.groups = data;
+                    scope.groups = [];
+                    angular.forEach(data, function(g) {
+                        scope.groups.push(g);
+                    });
                   }
 
                   // Select by default the first group.
