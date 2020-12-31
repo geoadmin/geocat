@@ -7,6 +7,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.url.UrlAnalyzer;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.specification.LinkSpecs;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.context.ApplicationContext;
@@ -139,20 +140,21 @@ public class MAnalyseProcess implements SelfNaming {
                 e.printStackTrace();
             }
         }
-
-
-        if (testLink) {
-            runInNewTransaction("manalyseprocess-testlink", new TransactionTask<Object>() {
-                @Override
-                public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                    testLinkDate = System.currentTimeMillis();
-                    List<Link> all = linkRepository.findAll();
-                    urlToCheckCount = all.size();
-                    all.parallelStream().peek(urlAnalyser::testLink).forEach(x -> urlChecked.getAndIncrement());
-                    return null;
-                }
-            });
+        if (!testLink) {
+            return;
         }
+
+        List<Link> links = linkRepository.findAll(LinkSpecs.filterOnRecords(ids.stream().toArray(Integer[]::new)));
+
+        runInNewTransaction("manalyseprocess-testlink", new TransactionTask<Object>() {
+            @Override
+            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                testLinkDate = System.currentTimeMillis();
+                urlToCheckCount = links.size();
+                links.parallelStream().peek(urlAnalyser::testLink).forEach(x -> urlChecked.getAndIncrement());
+                return null;
+            }
+        });
     }
 
     private final void runInNewTransaction(String name, TransactionTask<Object> transactionTask) {
