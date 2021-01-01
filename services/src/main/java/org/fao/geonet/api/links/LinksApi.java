@@ -23,14 +23,20 @@
 
 package org.fao.geonet.api.links;
 
-import com.google.common.collect.Sets;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
+
+import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import javax.annotation.PostConstruct;
+import javax.management.MalformedObjectNameException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -70,21 +76,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import com.google.common.collect.Sets;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import springfox.documentation.annotations.ApiIgnore;
-
-import javax.annotation.PostConstruct;
-import javax.management.MalformedObjectNameException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 @EnableWebMvc
 @Service
 @RestController
@@ -232,10 +233,6 @@ public class LinksApi {
         )
         @RequestParam(
             required = false,
-            defaultValue = "true")
-            boolean removeFirst,
-        @RequestParam(
-            required = false,
             defaultValue = "false")
             boolean analyze,
         @ApiIgnore
@@ -249,9 +246,6 @@ public class LinksApi {
         UserSession session = ApiUtils.getUserSession(httpSession);
 
         boolean isAdministrator = session.getProfile() == Profile.Administrator;
-        if (isAdministrator && removeFirst) {
-            registredMAnalyseProcess.deleteAll();
-        }
 
         SimpleMetadataProcessingReport report =
             new SimpleMetadataProcessingReport();
@@ -313,7 +307,7 @@ public class LinksApi {
     @PreAuthorize("hasRole('Administrator')")
     @ResponseBody
     public ResponseEntity purgeAll() {
-        urlAnalyser.deleteAll();
+        new MAnalyseProcess(linkRepository, metadataRepository, urlAnalyser, appContext).deleteAll();
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

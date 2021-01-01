@@ -22,7 +22,20 @@
  */
 package org.fao.geonet.api.links;
 
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.kernel.UpdateDatestamp.NO;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.UUID;
+
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Metadata;
@@ -43,7 +56,6 @@ import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,18 +64,9 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import com.jayway.jsonpath.JsonPath;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.UUID;
-
-import static org.fao.geonet.kernel.UpdateDatestamp.NO;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import jeeves.server.context.ServiceContext;
 
 
 public class LinksApiTest extends AbstractServiceIntegrationTest {
@@ -112,7 +115,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         AbstractMetadata md = createMd(createGroupWithOneEditor(createEditor()).getId());
 
         analyzeMdAsAdmin(md);
-        Assert.assertEquals(1, linkRepository.count());
+        assertEquals(1, linkRepository.count());
 
         assertLinkForOneMdFound(md, this.loginAsAdmin(), "", "");
 
@@ -166,10 +169,11 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
 
         analyzeMdAsAdmin(md);
         analyzeMdAsAdmin(md1);
-        Assert.assertEquals(1, linkRepository.count());
+        assertEquals(1, linkRepository.count());
 
         MockHttpSession httpSession = this.loginAsAdmin();
-        this.mockMvc.perform(get("/srv/api/records/links")
+
+        String result = this.mockMvc.perform(get("/srv/api/records/links")
                 .session(httpSession)
                 .accept(MediaType.parseMediaType("application/json")))
                 .andExpect(status().isOk())
@@ -177,10 +181,14 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
                 .andExpect(jsonPath("$.content", hasSize(1)))
                 .andExpect(jsonPath("$.content[0].url").value(equalTo("http://services.sandre.eaufrance.fr/geo/ouvrage")))
                 .andExpect(jsonPath("$.content[0].records", hasSize(2)))
-                .andExpect(jsonPath("$.content[0].records[0].metadataId").value(equalTo(md.getId())))
-                .andExpect(jsonPath("$.content[0].records[0].metadataUuid").value(equalTo(md.getUuid())))
-                .andExpect(jsonPath("$.content[0].records[1].metadataId").value(equalTo(md1.getId())))
-                .andExpect(jsonPath("$.content[0].records[1].metadataUuid").value(equalTo(md1.getUuid())));
+                .andReturn().getResponse().getContentAsString();
+
+        Integer id = JsonPath.read(result, "$.content[0].records[0].metadataId");
+        String uuid = JsonPath.read(result, "$.content[0].records[0].metadataUuid");
+        Integer id1 = JsonPath.read(result, "$.content[0].records[1].metadataId");
+        String uuid1 = JsonPath.read(result, "$.content[0].records[1].metadataUuid");
+        assertEquals(new HashSet<>(Arrays.asList(md.getId(), md1.getId())), new HashSet<>(Arrays.asList(id, id1)));
+        assertEquals(new HashSet<>(Arrays.asList(md.getUuid(), md1.getUuid())), new HashSet<>(Arrays.asList(uuid, uuid1)));
 
         purgeLinkAsAdmin();
     }
@@ -301,7 +309,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
             .session(httpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isNoContent());
-        Assert.assertEquals(0, linkRepository.count());
+        assertEquals(0, linkRepository.count());
     }
 
     private void assertLinkForOneMdFound(AbstractMetadata md, MockHttpSession httpSession, String groupOwnerIdFilter, String groupIdFilter) throws Exception {
