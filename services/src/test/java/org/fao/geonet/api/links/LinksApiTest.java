@@ -22,6 +22,8 @@
  */
 package org.fao.geonet.api.links;
 
+import static jeeves.transaction.TransactionManager.CommitBehavior.ALWAYS_COMMIT;
+import static jeeves.transaction.TransactionManager.TransactionRequirement.CREATE_NEW;
 import static org.fao.geonet.kernel.UpdateDatestamp.NO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
@@ -48,6 +50,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.url.UrlAnalyzer;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -59,14 +62,18 @@ import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.web.context.WebApplicationContext;
 import com.jayway.jsonpath.JsonPath;
 
 import jeeves.server.context.ServiceContext;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
 
 
 public class LinksApiTest extends AbstractServiceIntegrationTest {
@@ -101,6 +108,11 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
     @Autowired
     private IMetadataOperations metadataOperations;
 
+    @Autowired
+    private UrlAnalyzer urlAnalyzer;
+
+    @Autowired
+    protected ApplicationContext appContext;
 
     private MockMvc mockMvc;
     private ServiceContext context;
@@ -119,7 +131,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
 
         assertLinkForOneMdFound(md, this.loginAsAdmin(), "", "");
 
-        purgeLinkAsAdmin();
+        purgeLink();
     }
 
     @Test
@@ -130,7 +142,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
 
         assertLinkForOneMdFound(md, this.loginAs(editor), "", "");
 
-        purgeLinkAsAdmin();
+        purgeLink();
     }
 
     @Test
@@ -145,7 +157,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         assertNoLinksReturned(this.loginAs(editor), String.format("%d,666", groupId), "");
         assertNoLinksReturned(this.loginAs(editor), "", String.format("%d,666", groupId));
 
-        purgeLinkAsAdmin();
+        purgeLink();
     }
 
     @Test
@@ -159,7 +171,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         assertNoLinksReturned(this.loginAs(editor), String.format("%d,666", groupId), "");
         assertNoLinksReturned(this.loginAs(editor), "", String.format("%d,666", groupId));
 
-        purgeLinkAsAdmin();
+        purgeLink();
     }
 
     @Test
@@ -190,7 +202,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         assertEquals(new HashSet<>(Arrays.asList(md.getId(), md1.getId())), new HashSet<>(Arrays.asList(id, id1)));
         assertEquals(new HashSet<>(Arrays.asList(md.getUuid(), md1.getUuid())), new HashSet<>(Arrays.asList(uuid, uuid1)));
 
-        purgeLinkAsAdmin();
+        purgeLink();
     }
 
     @Test
@@ -207,7 +219,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         assertLinkForOneMdFound(md, this.loginAs(editor), String.format("%d,666", groupId), "");
                 assertNoLinksReturned(this.loginAs(editor), "666", "");
 
-        purgeLinkAsAdmin();
+        purgeLink();
     }
 
     @Test
@@ -225,7 +237,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         assertLinkForOneMdFound(md, this.loginAs(editor), "", String.format("%d,666", groupId));
         assertNoLinksReturned(this.loginAs(editor), "", "666");
 
-        purgeLinkAsAdmin();
+        purgeLink();
     }
 
     @Test
@@ -244,7 +256,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         assertNoLinksReturned(this.loginAs(editor), "666", String.format("%d,666", groupId));
         assertNoLinksReturned(this.loginAs(editor), String.format("%d,666", mdGroupOwner), "666");
 
-        purgeLinkAsAdmin();
+        purgeLink();
     }
 
 
@@ -297,18 +309,20 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
     private void analyzeMdAsAdmin(AbstractMetadata md) throws Exception {
         MockHttpSession httpSession = this.loginAsAdmin();
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(post("/srv/api/records/links?uuid=" + md.getUuid())
+        this.mockMvc.perform(post("/srv/api/records/links?uuids=" + md.getUuid())
             .session(httpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isCreated());
     }
 
-    private void purgeLinkAsAdmin() throws Exception {
-        MockHttpSession httpSession = this.loginAsAdmin();
-        this.mockMvc.perform(delete("/srv/api/records/links")
-            .session(httpSession)
-            .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(status().isNoContent());
+    private void purgeLink() throws Exception {
+        TransactionManager.runInTransaction("deleteall", appContext, CREATE_NEW, ALWAYS_COMMIT, false, new TransactionTask<Object>() {
+        @Override
+            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                urlAnalyzer.deleteAll();
+                return null;
+            }
+        });
         assertEquals(0, linkRepository.count());
     }
 

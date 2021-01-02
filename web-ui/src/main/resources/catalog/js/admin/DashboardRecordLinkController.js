@@ -34,35 +34,44 @@
     '$scope', '$routeParams', '$http', '$rootScope', '$translate', 'gnLangs', '$compile', 'gnHumanizeTimeService', '$window', 'getBsTableLang',
     function($scope, $routeParams, $http, $rootScope, $translate, gnLangs, $compile, gnHumanizeTimeService, $window, getBsTableLang) {
 
+      var $table = $('#bstable');
+
       $scope.filter = {};
       $scope.groupLinkFilter = null;
       $scope.groupOwnerIdFilter = null;
+      $scope.orphanLink = false;
 
       $scope.triggerSearch = function () {
-        $('#bstable').bootstrapTable('refresh')
+        $table.bootstrapTable('refresh')
       }
 
       $scope.analyzeLinks = function() {
-        $http.post('../api/records/links?analyze=true');
+        var uuids = _.union($table.bootstrapTable('getSelections').map(function (x) {return  x.records;}).flat().map(function(x) {return x.metadataUuid;})).join('&uuids=');
+        $http.post('../api/records/links?analyze=true&uuids='+uuids).then($scope.triggerSearch);
       };
+
+      $scope.removeAll = function() {
+        var ids = $table.bootstrapTable('getSelections').map(function(x) {return (x.id);}).join('&ids=');
+        $http.delete('../api/records/links/del?ids='+ids).then($scope.triggerSearch);
+      };
+
 
       $scope.downloadAsCsv = function() {
         var maxPageSize = 20000;
         window.open('../api/records/links/csv?'
           + (!!$scope.groupIdFilter && $scope.groupIdFilter != 'undefined'  ? 'groupIdFilter=' + $scope.groupIdFilter : '')
           + (!!$scope.groupOwnerIdFilter && $scope.groupOwnerIdFilter != 'undefined'  ?   '&groupOwnerIdFilter='+ $scope.groupOwnerIdFilter : '')
+          + (!!$scope.orphanLink && $scope.orphanLink ? '&orphanLink=true' : '')
           + (!!$scope.filter.filter && $scope.filter.filter != 'undefined'  ? '&filter=' + encodeURIComponent($scope.filter.filter) : '')
           + '&page=0&size=' + maxPageSize + '&sort=lastState%2Cdesc');
       };
 
-      $scope.removeAll = function() {
-        $http.delete('../api/records/links').then($scope.triggerSearch);
-      };
 
       $window.lastState = {ok: 'OK', ko: 'KO', unknown: '?'};
 
       $scope.$watch('groupIdFilter', $scope.triggerSearch);
       $scope.$watch('groupOwnerIdFilter', $scope.triggerSearch);
+      $scope.$watch('orphanLink', $scope.triggerSearch);
 
       $scope.bsTableControl = {
             options: {
@@ -84,6 +93,7 @@
                 height: '800',
                 sortName: 'lastState',
                 sortOrder: 'desc',
+                clickToSelect: 'true',
 
                 responseHandler: function(res) {
                   return {
@@ -98,6 +108,7 @@
                   $scope.filter = {
                     groupIdFilter: $scope.groupIdFilter == 'undefined'  ? '' : $scope.groupIdFilter,
                     groupOwnerIdFilter: $scope.groupOwnerIdFilter == 'undefined'  ? '' : $scope.groupOwnerIdFilter,
+                    orphanLink: $scope.orphanLink,
                     filter: params.filter,
                     page: params.pageNumber - 1,
                     size: params.pageSize,
@@ -107,6 +118,8 @@
                 },
 
                 columns: [{
+                  field: 'state',
+                  checkbox: 'true'}, {
                   field: 'lastState',
                   title: '',
                   titleTooltip: '',

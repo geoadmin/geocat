@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.management.MalformedObjectNameException;
@@ -44,9 +43,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Link;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
-import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.url.UrlAnalyzer;
@@ -144,11 +141,14 @@ public class LinksApi {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     public Page<Link> getRecordLinks(
-        @ApiParam(value = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421', groupId: 12}\", lastState being 'ok'/'ko'/'unknown'", required = false) @RequestParam(required = false) JSONObject filter,
+        @ApiParam(value = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421', groupId: 12}\", lastState being 'ok'/'ko'/'unknown'", required = false)
+        @RequestParam(required = false) JSONObject filter,
         @ApiParam(value = "Optional, filter links to records published in that group.", required = false)
         @RequestParam(required = false) Integer[] groupIdFilter,
         @ApiParam(value = "Optional, filter links to records created in that group.", required = false)
         @RequestParam(required = false) Integer[] groupOwnerIdFilter,
+        @ApiParam(value = "Optional, only links from no md.", required = false)
+        @RequestParam(required = false, defaultValue = "false") Boolean orphanLink,
         @ApiIgnore Pageable pageRequest,
         @ApiParam(hidden = true)
         @ApiIgnore
@@ -158,7 +158,7 @@ public class LinksApi {
             HttpServletRequest request) throws Exception {
 
         final UserSession userSession = ApiUtils.getUserSession(session);
-        return getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession, request.getRemoteAddr());
+        return getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession, request.getRemoteAddr(), orphanLink);
     }
 
     @ApiOperation(
@@ -187,6 +187,8 @@ public class LinksApi {
         @RequestParam(required = false) Integer[] groupIdFilter,
         @ApiParam(value = "Optional, filter links to records created in that group.", required = false)
         @RequestParam(required = false) Integer[] groupOwnerIdFilter,
+        @ApiParam(value = "Optional, only links from no md.", required = false)
+        @RequestParam(required = false, defaultValue = "false") Boolean orphanLink,
         @ApiIgnore
             Pageable pageRequest,
         @ApiParam(hidden = true)
@@ -200,7 +202,7 @@ public class LinksApi {
             HttpServletRequest request) throws Exception {
         final UserSession userSession = ApiUtils.getUserSession(session);
 
-        final Page<Link> links = getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession, request.getRemoteAddr());
+        final Page<Link> links = getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession, request.getRemoteAddr(), orphanLink);
         response.setHeader("Content-disposition", "attachment; filename=links.csv");
         LinkAnalysisReport.create(links, response.getWriter());
     }
@@ -242,14 +244,9 @@ public class LinksApi {
     ) throws IOException, JDOMException {
         MAnalyseProcess registredMAnalyseProcess = getRegistredMAnalyseProcess();
 
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         UserSession session = ApiUtils.getUserSession(httpSession);
 
-        boolean isAdministrator = session.getProfile() == Profile.Administrator;
-
-        SimpleMetadataProcessingReport report =
-            new SimpleMetadataProcessingReport();
-
+        SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         Set<Integer> ids = Sets.newHashSet();
 
         if (uuids != null || StringUtils.isNotEmpty(bucket)) {
@@ -258,14 +255,16 @@ public class LinksApi {
                 for (String uuid : records) {
                     if (!metadataUtils.existsMetadataUuid(uuid)) {
                         report.incrementNullRecords();
-                    }
-                    for (AbstractMetadata record : metadataRepository.findAllByUuid(uuid)) {
-                        if (!accessManager.canEdit(serviceContext, String.valueOf(record.getId()))) {
-                            report.addNotEditableMetadataId(record.getId());
-                        } else {
+                    } else {
+                        try {
+                            AbstractMetadata record = ApiUtils.canViewRecord(uuid, request);
                             ids.add(record.getId());
                             report.addMetadataId(record.getId());
                             report.incrementProcessedRecords();
+                        }
+                        catch (SecurityException e) {
+                            AbstractMetadata record = metadataRepository.findOneByUuid(uuid);
+                            report.addNotFoundMetadataId(record.getId());
                         }
                     }
                 }
@@ -274,40 +273,32 @@ public class LinksApi {
             } finally {
                 report.close();
             }
-        } else {
-            if (isAdministrator) {
-                // Process all
-                final List<Metadata> metadataList = metadataRepository.findAll();
-                for (Metadata m : metadataList) {
-                    ids.add(m.getId());
-                    report.addMetadataId(m.getId());
-                    report.incrementProcessedRecords();
-                }
-            } else {
-                throw new OperationNotAllowedEx(String.format(
-                    "Only administrator can trigger link analysis on the entire catalogue. This is not allowed for %s.",
-                    session.getProfile()
-                ));
-            }
-            report.close();
+            registredMAnalyseProcess.processMetadataAndTestLink(analyze, ids);
         }
 
-        registredMAnalyseProcess.processMetadataAndTestLink(analyze, ids);
         return report;
     }
 
     @ApiOperation(
-        value = "Remove all links and status history",
+        value = "Remove selected links and status history (if link from no md)",
         notes = "",
         nickname = "purgeAll")
     @RequestMapping(
+        path = "/del",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasRole('Administrator')")
     @ResponseBody
-    public ResponseEntity purgeAll() {
-        new MAnalyseProcess(linkRepository, metadataRepository, urlAnalyser, appContext).deleteAll();
+    public ResponseEntity purgeSelected(
+            @ApiParam(value = "One or more link ids",
+                    required = true,
+                    example = "")
+            @RequestParam(required = false)
+            Integer[] ids) {
+            for (Integer id : ids) {
+                urlAnalyser.deleteLink(id);
+            }
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
@@ -329,7 +320,8 @@ public class LinksApi {
             Integer[] groupOwnerIdFilter,
             Pageable pageRequest,
             UserSession userSession,
-            String remoteAdress) throws JSONException {
+            String remoteAdress,
+            boolean orphanLink) throws JSONException {
 
         Integer stateToMatch = null;
         String url = null;
@@ -394,8 +386,8 @@ public class LinksApi {
             }
         }
 
-        if (linkFromMdPublishedInGroupFilter != null || linkFromMdWhoseGroupOwnerInFilter != null || url != null || associatedRecord != null || stateToMatch != null) {
-            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecord, linkFromMdPublishedInGroupFilter, linkFromMdWhoseGroupOwnerInFilter, publishedOrOwnerFilter), pageRequest);
+        if (linkFromMdPublishedInGroupFilter != null || linkFromMdWhoseGroupOwnerInFilter != null || url != null || associatedRecord != null || stateToMatch != null || orphanLink) {
+            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecord, linkFromMdPublishedInGroupFilter, linkFromMdWhoseGroupOwnerInFilter, publishedOrOwnerFilter, orphanLink), pageRequest);
         } else {
             return linkRepository.findAll(pageRequest);
         }

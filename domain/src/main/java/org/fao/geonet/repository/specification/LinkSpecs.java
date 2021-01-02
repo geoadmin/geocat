@@ -56,7 +56,8 @@ public class LinkSpecs {
                                              String associatedRecord,
                                              Integer[] groupPublishedIds,
                                              Integer[] groupOwnerIds,
-                                             boolean publishedOrOwnerFilter) {
+                                             boolean publishedOrOwnerFilter,
+                                             boolean orphanLink) {
 
         return new Specification<Link>() {
             @Override
@@ -92,6 +93,11 @@ public class LinkSpecs {
                         cb.like(
                             metadataJoin.get(MetadataLink_.metadataUuid),
                             cb.literal(String.format("%%%s%%", associatedRecord))));
+                }
+
+                if (orphanLink) {
+                    predicates.add(
+                            metadataJoin.get(MetadataLink_.metadataId).isNull());
                 }
 
                 if (groupPublishedIds != null) {
@@ -148,4 +154,17 @@ public class LinkSpecs {
             }
         };
     }
+
+    public static Specification<Link> filterOnNoRecords() {
+
+        return new Specification<Link>() {
+            @Override
+            public Predicate toPredicate(Root<Link> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                query.distinct(true);
+                Join<Link, MetadataLink> metadataJoin = (Join<Link, MetadataLink>) root.fetch(Link_.records, JoinType.LEFT);
+                return cb.and(metadataJoin.get(MetadataLink_.metadataId).isNull());
+            }
+        };
+    }
+
 }

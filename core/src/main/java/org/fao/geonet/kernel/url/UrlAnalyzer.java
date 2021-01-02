@@ -121,6 +121,15 @@ public class UrlAnalyzer {
         entityManager.flush();
     }
 
+    public void deleteLink(Integer id) {
+        Link link = linkRepository.findOne(id);
+        if (metadataLinkRepository.findAll(metadatalinksTargetting(link)).size() > 0) {
+            return;
+        }
+        linkRepository.delete(link);
+        entityManager.flush();
+    }
+
     private void clearLink(MetadataLink metadataLink) {
         metadataLink.getLink().getRecords().remove(metadataLink);
         metadataLinkRepository.delete(metadataLink);

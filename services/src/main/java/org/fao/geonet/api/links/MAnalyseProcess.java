@@ -104,17 +104,6 @@ public class MAnalyseProcess implements SelfNaming {
         }
     }
 
-    public void deleteAll() {
-        runInNewTransaction("manalyseprocess-deleteall", new TransactionTask<Object>() {
-            @Override
-            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                deleteAllDate = System.currentTimeMillis();
-                urlAnalyser.deleteAll();
-                return null;
-            }
-        });
-    }
-
     public void processMetadataAndTestLink(boolean testLink, Set<Integer> ids) throws JDOMException, IOException {
         metadataToAnalyseCount = ids.size();
         analyseMdDate = System.currentTimeMillis();

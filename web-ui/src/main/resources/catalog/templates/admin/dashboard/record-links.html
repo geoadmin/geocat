@@ -11,22 +11,6 @@
   </div>
 
   <div class="pull-right btn-toolbar">
-    <button type="button" class="btn btn-primary"
-            title="{{'analyzeLinks-help' | translate}}"
-            data-ng-disabled="!user.isAdministrator()"
-            data-gn-click-and-spin="analyzeLinks()">
-      <i class="fa fa-fw fa-cogs"/>&nbsp;
-      <span data-translate="">analyzeLinks</span>
-    </button>
-
-    <button type="button" class="btn btn-danger"
-            data-ng-click="removeAll()"
-            data-ng-disabled="!user.isAdministrator()"
-            data-gn-confirm-click="{{'removeAllLinksAndStatusConfirm' | translate}}">
-      <i class="fa fa-fw fa-times"/>&nbsp;
-      <span data-translate="">removeAllLinksAndStatus</span>
-    </button>
-
     <button type="button" class="btn btn-default"
             title="{{'downloadAsCsv-help' | translate}}"
             data-ng-click="downloadAsCsv()">
@@ -72,9 +56,32 @@
            data-exclude-special-groups="false">&nbsp;
       </div>
     </div>
+    <div class="form-group col-lg-3">
+      <label data-ng-hide="!user.isAdministrator()">
+        <span data-translate="">_orphanLink</span>
+        <div>
+        <input type="checkbox" data-ng-model="orphanLink">
+        </div>
+      </label>
+    </div>
   </div>
-  <table id="bstable" bs-table-control="bsTableControl" ng-model="tc">
-  </table>
+  <button type="button" class="btn btn-danger"
+          data-ng-click="removeAll()"
+          data-gn-confirm-click="{{'removeAllLinksAndStatusConfirm' | translate}}"
+          data-ng-hide="!user.isAdministrator()">
+    <i class="fa fa-fw fa-times"/>&nbsp;
+    <span data-translate="">removeAllLinksAndStatus</span>
+  </button>
+
+  <button id="analyse"
+          type="button" class="btn btn-primary"
+          title="{{'analyzeLinks-help' | translate}}"
+          data-gn-click-and-spin="analyzeLinks()">
+    <i class="fa fa-fw fa-cogs"/>&nbsp;
+    <span data-translate="">analyzeLinks</span>
+  </button>
+
+  <table id="bstable" bs-table-control="bsTableControl" ng-model="tc"/>
 
   <br>
 
