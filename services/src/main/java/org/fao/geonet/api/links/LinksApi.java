@@ -139,7 +139,7 @@ public class LinksApi {
                 "Default sort order is ascending. ")
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('UserAdmin')")
     public Page<Link> getRecordLinks(
         @ApiParam(value = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421', groupId: 12}\", lastState being 'ok'/'ko'/'unknown'", required = false)
         @RequestParam(required = false) JSONObject filter,
@@ -179,7 +179,7 @@ public class LinksApi {
         method = RequestMethod.GET,
         produces = MediaType.TEXT_PLAIN_VALUE
     )
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('UserAdmin')")
     @ResponseBody
     public void getRecordLinksAsCsv(
         @ApiParam(value = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421', groupId: 12}\", lastState being 'ok'/'ko'/'unknown'", required = false) @RequestParam(required = false) JSONObject filter,
@@ -214,7 +214,7 @@ public class LinksApi {
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.POST)
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasRole('UserAdmin')")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public SimpleMetadataProcessingReport analyzeRecordLinks(
