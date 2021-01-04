@@ -100,7 +100,7 @@
           <i class="fa fa-check"></i>&nbsp;<span translate>validate</span>
         </a>
       </li>
-      <li  data-ng-show="!excludePattern.test('validate')"
+      <li  data-ng-show="false"
            data-ng-if="user.isEditorOrMore()">
         <a href="" data-ng-click="mdService.validateMdLinks(searchResults.selectionBucket)"
            data-gn-confirm-click="{{'validateLinksSelectedRecordConfirm' | translate:searchResults}}">
