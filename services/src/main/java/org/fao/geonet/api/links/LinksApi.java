@@ -330,7 +330,6 @@ public class LinksApi {
         Integer[] linkFromMdPublishedInGroupFilter;
         boolean groupOwnerIdFilterSet = groupOwnerIdFilter != null && groupOwnerIdFilter.length != 0;
         boolean groupIdFilterSet = groupIdFilter != null && groupIdFilter.length != 0;
-        boolean publishedOrOwnerFilter = !groupIdFilterSet && !groupOwnerIdFilterSet;
 
         if (userSession.getProfile() == Profile.Administrator) {
             linkFromMdWhoseGroupOwnerInFilter = groupOwnerIdFilterSet ? groupOwnerIdFilter : null;
@@ -350,13 +349,6 @@ public class LinksApi {
                 userGroups.retainAll(Arrays.asList(groupIdFilter));
             }
             linkFromMdPublishedInGroupFilter = userGroups.stream().toArray(Integer[]::new);
-        }
-
-        if (!groupIdFilterSet && groupOwnerIdFilterSet) {
-            linkFromMdPublishedInGroupFilter = null;
-        }
-        if (groupIdFilterSet && !groupOwnerIdFilterSet) {
-            linkFromMdWhoseGroupOwnerInFilter = null;
         }
 
         if (linkFromMdPublishedInGroupFilter != null && linkFromMdPublishedInGroupFilter.length ==0) {
@@ -387,7 +379,7 @@ public class LinksApi {
         }
 
         if (linkFromMdPublishedInGroupFilter != null || linkFromMdWhoseGroupOwnerInFilter != null || url != null || associatedRecord != null || stateToMatch != null || orphanLink) {
-            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecord, linkFromMdPublishedInGroupFilter, linkFromMdWhoseGroupOwnerInFilter, publishedOrOwnerFilter, orphanLink), pageRequest);
+            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecord, linkFromMdPublishedInGroupFilter, linkFromMdWhoseGroupOwnerInFilter, orphanLink), pageRequest);
         } else {
             return linkRepository.findAll(pageRequest);
         }

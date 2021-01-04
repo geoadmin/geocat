@@ -56,7 +56,6 @@ public class LinkSpecs {
                                              String associatedRecord,
                                              Integer[] groupPublishedIds,
                                              Integer[] groupOwnerIds,
-                                             boolean publishedOrOwnerFilter,
                                              boolean orphanLink) {
 
         return new Specification<Link>() {
@@ -64,8 +63,6 @@ public class LinkSpecs {
             public Predicate toPredicate(Root<Link> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 query.distinct(true);
                 List<Predicate> predicates = new ArrayList<>();
-                Predicate groupOwnerPredicate = null;
-                Predicate groupPublishedPredicate = null;
 
                 Join<Link, MetadataLink> metadataJoin;
                 if (query.getResultType() != Long.class && query.getResultType() != long.class) {
@@ -113,7 +110,7 @@ public class LinkSpecs {
                     Path<Integer> opAllowedMetadataId = fromOperationAllowed.get(OperationAllowed_.id).get(OperationAllowedId_.metadataId);
                     subquery.select(opAllowedMetadataId);
 
-                    groupPublishedPredicate = metadataJoin.get(MetadataLink_.metadataId).in(subquery);
+                    predicates.add(metadataJoin.get(MetadataLink_.metadataId).in(subquery));
                 }
 
                  if (groupOwnerIds != null) {
@@ -123,20 +120,8 @@ public class LinkSpecs {
                     Path<Integer> metadataOwner = fromMetadata.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.groupOwner);
                     subquery.where(metadataOwner.in(groupOwnerIds));
 
-                    groupOwnerPredicate = metadataJoin.get(MetadataLink_.metadataId).in(subquery);
+                     predicates.add(metadataJoin.get(MetadataLink_.metadataId).in(subquery));
                 }
-
-                 if (publishedOrOwnerFilter && groupOwnerPredicate != null && groupPublishedPredicate != null) {
-                     Predicate ownerOrPublished = cb.or(groupPublishedPredicate, groupOwnerPredicate);
-                     predicates.add(ownerOrPublished);
-                 } else {
-                     if (groupOwnerPredicate != null) {
-                         predicates.add(groupOwnerPredicate);
-                     }
-                     if (groupPublishedPredicate != null) {
-                         predicates.add(groupPublishedPredicate);
-                     }
-                 }
 
                 return cb.and(predicates.toArray(new Predicate[]{}));
             }

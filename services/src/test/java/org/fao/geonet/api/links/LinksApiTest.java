@@ -226,7 +226,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
     public void filteringOnPublishedInGroup() throws Exception {
         User editor = createEditor();
         int groupId = createGroupWithOneEditor(editor).getId();
-        AbstractMetadata md = createMd(createGroupWithOneEditor(createEditor()).getId());
+        AbstractMetadata md = createMd(groupId);
         metadataOperations.setOperation(context, md.getId(), groupId, ReservedOperation.view.getId());
         analyzeMdAsAdmin(md);
 
