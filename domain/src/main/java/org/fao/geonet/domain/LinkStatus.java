@@ -26,6 +26,7 @@ package org.fao.geonet.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.fao.geonet.domain.converter.BooleanToYNConverter;
 import org.fao.geonet.entitylistener.LinkStatusEntityListenerManager;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Access;
@@ -86,12 +87,12 @@ public class LinkStatus extends GeonetEntity implements Comparable<LinkStatus> {
     }
 
     @ManyToOne(
-            cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.MERGE},
             fetch = FetchType.EAGER)
     @JoinColumn(name = "link",
             referencedColumnName = "id",
             nullable = false)
     @JsonIgnore
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
     public Link getLink() {
         return link;
     }

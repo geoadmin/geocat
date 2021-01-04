@@ -46,8 +46,8 @@
       }
 
       $scope.analyzeLinks = function() {
-        var uuids = _.union($table.bootstrapTable('getSelections').map(function (x) {return  x.records;}).flat().map(function(x) {return x.metadataUuid;})).join('&uuids=');
-        $http.post('../api/records/links?analyze=true&uuids='+uuids).then($scope.triggerSearch);
+        var uuids = _.union($table.bootstrapTable('getSelections').map(function (x) {return  x.records;}).flat().map(function(x) {return x.metadataUuid;}));
+        $http.post('../api/records/links?analyze=true', uuids).then($scope.triggerSearch);
       };
 
       $scope.removeAll = function() {

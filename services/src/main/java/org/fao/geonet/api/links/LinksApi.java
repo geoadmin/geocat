@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.management.MalformedObjectNameException;
@@ -66,6 +67,7 @@ import org.springframework.jmx.export.naming.SelfNaming;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -212,6 +214,7 @@ public class LinksApi {
         notes = "One of uuids or bucket parameter is required if not an Administrator. Only records that you can edit will be validated.",
         nickname = "analyzeRecordLinks")
     @RequestMapping(
+        consumes =  MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.POST)
     @PreAuthorize("hasRole('UserAdmin')")
@@ -221,8 +224,8 @@ public class LinksApi {
         @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
-        @RequestParam(required = false)
-            String[] uuids,
+        @RequestBody(required = false)
+            List<String> uuids,
         @ApiParam(
             value = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
@@ -231,7 +234,7 @@ public class LinksApi {
         )
             String bucket,
         @ApiParam(
-            value = "Only allowed if Administrator."
+            value = "Only allowed if Administrator or User Admin."
         )
         @RequestParam(
             required = false,
@@ -241,23 +244,21 @@ public class LinksApi {
             HttpSession httpSession,
         @ApiIgnore
             HttpServletRequest request
-    ) throws IOException, JDOMException {
-        MAnalyseProcess registredMAnalyseProcess = getRegistredMAnalyseProcess();
-
+    ) {
         UserSession session = ApiUtils.getUserSession(httpSession);
 
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         Set<Integer> ids = Sets.newHashSet();
 
-        if (uuids != null || StringUtils.isNotEmpty(bucket)) {
+        if ((uuids != null && uuids.size() > 0)  || StringUtils.isNotEmpty(bucket)) {
             try {
-                Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
+                Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids.size() > 0 ? uuids.toArray(new String[uuids.size()]):null, bucket, session);
                 for (String uuid : records) {
                     if (!metadataUtils.existsMetadataUuid(uuid)) {
                         report.incrementNullRecords();
                     } else {
                         try {
-                            AbstractMetadata record = ApiUtils.canViewRecord(uuid, request);
+                            AbstractMetadata record = ApiUtils.canEditRecord(uuid, request);
                             ids.add(record.getId());
                             report.addMetadataId(record.getId());
                             report.incrementProcessedRecords();
@@ -273,7 +274,18 @@ public class LinksApi {
             } finally {
                 report.close();
             }
-            registredMAnalyseProcess.processMetadataAndTestLink(analyze, ids);
+
+            new Thread(){
+                public void run(){
+                    try {
+                        getRegistredMAnalyseProcess().processMetadataAndTestLink(analyze, ids);
+                    } catch (JDOMException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
         }
 
         return report;

@@ -22,15 +22,18 @@
  */
 package org.fao.geonet.api.links;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static jeeves.transaction.TransactionManager.CommitBehavior.ALWAYS_COMMIT;
 import static jeeves.transaction.TransactionManager.TransactionRequirement.CREATE_NEW;
+import static org.awaitility.Awaitility.await;
 import static org.fao.geonet.kernel.UpdateDatestamp.NO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.io.IOException;
@@ -53,7 +56,6 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.url.UrlAnalyzer;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.LinkRepository;
-import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
@@ -69,6 +71,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.web.context.WebApplicationContext;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
 import jeeves.server.context.ServiceContext;
@@ -86,9 +89,6 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
 
     @Autowired
     private SchemaManager schemaManager;
-
-    @Autowired
-    private SourceRepository sourceRepository;
 
     @Autowired
     private IMetadataUtils metadataRepository;
@@ -261,27 +261,32 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
 
 
     private AbstractMetadata createMd(Integer groupOwner) throws Exception {
-        loginAsAdmin(context);
+        String uuid=UUID.randomUUID().toString();
+        TransactionlessTesting.get().run(new TestTask() {
+            @Override
+            public void run() throws Exception{
+                loginAsAdmin(context);
 
-        Element sampleMetadataXml = getSampleMetadataXml();
-        String uuid = UUID.randomUUID().toString();
-        Xml.selectElement(sampleMetadataXml, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).setText(uuid);
+                Element sampleMetadataXml=getSampleMetadataXml();
+                Xml.selectElement(sampleMetadataXml,"gmd:fileIdentifier/gco:CharacterString",Arrays.asList(GMD,GCO)).setText(uuid);
 
-        Metadata metadata = new Metadata();
-        metadata.setDataAndFixCR(sampleMetadataXml)
-                .setUuid(uuid);
-        metadata.getDataInfo()
-                .setRoot(sampleMetadataXml.getQualifiedName())
-                .setSchemaId(schemaManager.autodetectSchema(sampleMetadataXml))
-                .setType(MetadataType.METADATA)
-                .setPopularity(1000);
-        metadata.getSourceInfo()
-                .setOwner(1)
-                .setSourceId(sourceRepository.findAll().get(0).getUuid())
-                .setGroupOwner(groupOwner);
-        metadata.getHarvestInfo().setHarvested(false);
-
-        return metadataManager.insertMetadata(context, metadata, sampleMetadataXml, false, true, false, NO,false, false);
+                Metadata metadata=new Metadata();
+                metadata.setDataAndFixCR(sampleMetadataXml)
+                    .setUuid(uuid);
+                metadata.getDataInfo()
+                    .setRoot(sampleMetadataXml.getQualifiedName())
+                    .setSchemaId(schemaManager.autodetectSchema(sampleMetadataXml))
+                    .setType(MetadataType.METADATA)
+                    .setPopularity(1000);
+                metadata.getSourceInfo()
+                    .setOwner(1)
+                    .setSourceId("source")
+                    .setGroupOwner(groupOwner);
+                metadata.getHarvestInfo().setHarvested(false);
+                metadataManager.insertMetadata(context, metadata, sampleMetadataXml, false, true, false, NO,false, false);
+            }
+        });
+        return metadataRepository.findOneByUuid(uuid);
     }
 
     private Group createGroupWithOneEditor(User editor) throws IOException {
@@ -309,11 +314,15 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
     private void analyzeMdAsAdmin(AbstractMetadata md) throws Exception {
         MockHttpSession httpSession = this.loginAsAdmin();
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(post("/srv/api/records/links?uuids=" + md.getUuid())
+        this.mockMvc.perform(post("/srv/api/records/links")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(new ObjectMapper().writeValueAsString(new String[] {md.getUuid()}))
             .session(httpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isCreated());
+        await().atMost(10, SECONDS).until(() -> linkRepository.count() == 1L);
     }
+
 
     private void purgeLink() throws Exception {
         TransactionManager.runInTransaction("deleteall", appContext, CREATE_NEW, ALWAYS_COMMIT, false, new TransactionTask<Object>() {

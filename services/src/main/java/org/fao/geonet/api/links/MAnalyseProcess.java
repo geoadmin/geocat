@@ -109,12 +109,12 @@ public class MAnalyseProcess implements SelfNaming {
         analyseMdDate = System.currentTimeMillis();
         for (int i : ids) {
             try {
-                Metadata metadata = metadataRepository.findOne(i);
-                Element xmlData = metadata.getXmlData(false);
                 runInNewTransaction("manalyseprocess-process-metadata", new TransactionTask<Object>() {
                     @Override
                     public Object doInTransaction(TransactionStatus transaction) throws Throwable {
                         try {
+                            Metadata metadata = metadataRepository.findOne(i);
+                            Element xmlData = metadata.getXmlData(false);
                             urlAnalyser.processMetadata(xmlData, metadata);
                             metadataAnalysed++;
                         } catch (Exception e) {
@@ -129,7 +129,7 @@ public class MAnalyseProcess implements SelfNaming {
                 e.printStackTrace();
             }
         }
-        if (!testLink) {
+        if (!testLink || ids.size() == 0) {
             return;
         }
 
