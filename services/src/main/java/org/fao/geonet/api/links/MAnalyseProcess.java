@@ -104,7 +104,7 @@ public class MAnalyseProcess implements SelfNaming {
         }
     }
 
-    public void processMetadataAndTestLink(boolean testLink, Set<Integer> ids) throws JDOMException, IOException {
+    public void processMetadataAndTestLink(boolean testLink, List<Integer> ids) throws JDOMException, IOException {
         metadataToAnalyseCount = ids.size();
         analyseMdDate = System.currentTimeMillis();
         for (int i : ids) {
@@ -133,7 +133,7 @@ public class MAnalyseProcess implements SelfNaming {
             return;
         }
 
-        List<Link> links = linkRepository.findAll(LinkSpecs.filterOnRecords(ids.stream().toArray(Integer[]::new)));
+        List<Link> links = linkRepository.findAll(LinkSpecs.filterOnRecords(ids.toArray(new Integer[0])));
 
         runInNewTransaction("manalyseprocess-testlink", new TransactionTask<Object>() {
             @Override

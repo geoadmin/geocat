@@ -27,10 +27,12 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.management.MalformedObjectNameException;
 import javax.servlet.http.HttpServletRequest;
@@ -44,6 +46,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Link;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -51,6 +54,7 @@ import org.fao.geonet.kernel.url.UrlAnalyzer;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.LinkSpecs;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.jdom.JDOMException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,6 +63,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -240,6 +245,13 @@ public class LinksApi {
             required = false,
             defaultValue = "false")
             boolean analyze,
+        @ApiParam(
+                value = "Analyse all."
+        )
+        @RequestParam(
+                required = false,
+                defaultValue = "false")
+                boolean all,
         @ApiIgnore
             HttpSession httpSession,
         @ApiIgnore
@@ -248,46 +260,53 @@ public class LinksApi {
         UserSession session = ApiUtils.getUserSession(httpSession);
 
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
-        Set<Integer> ids = Sets.newHashSet();
 
-        if ((uuids != null && uuids.size() > 0)  || StringUtils.isNotEmpty(bucket)) {
+        if ((uuids != null && uuids.size() > 0)  || StringUtils.isNotEmpty(bucket) || all) {
+            List<Integer> recordsList;
             try {
-                Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids.size() > 0 ? uuids.toArray(new String[uuids.size()]):null, bucket, session);
-                for (String uuid : records) {
-                    if (!metadataUtils.existsMetadataUuid(uuid)) {
-                        report.incrementNullRecords();
+
+                if (all) {
+                    if (session.getProfile() == Profile.Administrator) {
+                        recordsList = metadataRepository.findAll().stream().map(Metadata::getId).collect(Collectors.toList());
                     } else {
-                        try {
-                            AbstractMetadata record = ApiUtils.canEditRecord(uuid, request);
-                            ids.add(record.getId());
-                            report.addMetadataId(record.getId());
-                            report.incrementProcessedRecords();
-                        }
-                        catch (SecurityException e) {
-                            AbstractMetadata record = metadataRepository.findOneByUuid(uuid);
-                            report.addNotFoundMetadataId(record.getId());
+                        recordsList = metadataRepository.findAll((Specification<Metadata>)MetadataSpecs.isOwnedByOneOfFollowingGroups(new ArrayList<>(getUserGroup(session, null)))).stream().map(Metadata::getId).collect(Collectors.toList());
+                    }
+                } else {
+                    Set<String> recordSet = ApiUtils.getUuidsParameterOrSelection(uuids.size() > 0 ? uuids.toArray(new String[uuids.size()]) : null, bucket, session);
+                    recordsList = new ArrayList<>();
+                    for (String uuid : recordSet){
+                        if (!metadataUtils.existsMetadataUuid(uuid)) {
+                            report.incrementNullRecords();
+                        } else {
+                            try {
+                                AbstractMetadata record = ApiUtils.canViewRecord(uuid, request);
+                                recordsList.add(record.getId());
+                                report.addMetadataId(record.getId());
+                                report.incrementProcessedRecords();
+                            } catch (SecurityException e) {
+                                AbstractMetadata record = metadataRepository.findOneByUuid(uuid);
+                                report.addNotFoundMetadataId(record.getId());
+                            }
                         }
                     }
                 }
+                new Thread() {
+                    public void run() {
+                        try {
+                            getRegistredMAnalyseProcess().processMetadataAndTestLink(analyze, recordsList);
+                        } catch (JDOMException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }.start();
             } catch (Exception e) {
                 report.addError(e);
-            } finally {
-                report.close();
+            } finally{
+            report.close();
             }
-
-            new Thread(){
-                public void run(){
-                    try {
-                        getRegistredMAnalyseProcess().processMetadataAndTestLink(analyze, ids);
-                    } catch (JDOMException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }.start();
         }
-
         return report;
     }
 

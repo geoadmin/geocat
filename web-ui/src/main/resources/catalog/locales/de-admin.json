@@ -1437,6 +1437,8 @@
     "styleVariable-gnSearchButtonColor": "Textfarbe für den Suche-Button",
     "analyzeLinks": "Analyze selected links",
     "analyzeLinks-help": "Analyse associated md and test link",
+    "analyzeAllLinks": "Analyze all links",
+    "analyzeAllLinks-help": "Analyse md given current user groups and md group owner and test link",
     "_orphanLink": "Link from no md",
     "refreshLinks": "Aktualisieren",
     "removeAllLinksAndStatus": "Remove selected (if link from no md)",

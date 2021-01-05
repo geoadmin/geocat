@@ -50,6 +50,11 @@
         $http.post('../api/records/links?analyze=true', uuids).then($scope.triggerSearch);
       };
 
+      $scope.analyzeAllLinks = function() {
+        $http.post('../api/records/links?analyze=true&all=true', []).then($scope.triggerSearch);
+      };
+
+
       $scope.removeAll = function() {
         var ids = $table.bootstrapTable('getSelections').map(function(x) {return (x.id);}).join('&ids=');
         $http.delete('../api/records/links/del?ids='+ids).then($scope.triggerSearch);
