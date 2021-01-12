@@ -1436,6 +1436,7 @@
     "analyzeLinks-help": "Analyse associated md and test link",
     "analyzeAllLinks": "Analyze all links",
     "analyzeAllLinks-help": "Analyse md given current user groups and md group owner and test link",
+    "linksNoGroupSelection-comment": "If no group selection when many groups appear in the list, then all theses groups count.",
     "_orphanLink": "Link from no md",
     "refreshLinks": "Refrescar",
     "removeAllLinksAndStatus": "Remove selected (if link from no md)",

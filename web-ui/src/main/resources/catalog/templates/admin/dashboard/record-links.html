@@ -1,33 +1,29 @@
 <div data-ng-controller="GnDashboardRecordLinksController">
+
   <div>
-    <div class="row">
-      <div class="col-md-12">
-        <h1 data-translate="">recordLinksDashboard</h1>
-        <p class="text-muted" data-translate="">
-          recordLinksDashboardSubtitle
-        </p>
+    <div class="row" >
+      <div class=" col-lg-3 ">
+        <h1 data-translate="" style = "margin-top: 0;">recordLinksDashboard</h1>
+      </div>
+      <div class="pull-right btn-toolbar ">
+        <button type="button" class="btn btn-primary"
+                title="{{'analyzeAllLinks-help' | translate}}"
+                data-gn-click-and-spin="analyzeAllLinks()">
+          <i class="fa fa-fw fa-cogs"/>&nbsp;
+          <span data-translate="">analyzeAllLinks</span>
+        </button>
       </div>
     </div>
-  </div>
+    <p class="text-muted" data-translate="">
+      recordLinksDashboardSubtitle
+    </p>
 
-  <div class="pull-right btn-toolbar">
-    <button type="button" class="btn btn-primary"
-            title="{{'analyzeAllLinks-help' | translate}}"
-            data-gn-click-and-spin="analyzeAllLinks()">
-      <i class="fa fa-fw fa-cogs"/>&nbsp;
-      <span data-translate="">analyzeAllLinks</span>
-    </button>
-
-    <button type="button" class="btn btn-default"
-            title="{{'downloadAsCsv-help' | translate}}"
-            data-ng-click="downloadAsCsv()">
-      <i class="fa fa-fw fa-download"/>&nbsp;
-      <span data-translate="">downloadAsCsv</span>
-    </button>
   </div>
 
   <br/>
   <br/>
+
+  <div style="background-color:white">
 
   <div data-ng-if="error" class="row">
     <div class="alert alert-danger" role="alert">
@@ -71,6 +67,20 @@
         </div>
       </label>
     </div>
+    <div class="btn-toolbar pull-right">
+      <button type="button" class="btn btn-default"
+              title="{{'downloadAsCsv-help' | translate}}"
+              data-ng-click="downloadAsCsv()">
+        <i class="fa fa-fw fa-download"/>&nbsp;
+        <span data-translate="">downloadAsCsv</span>
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-lg-6
+      <p class="text-muted data-translate="">
+      linksNoGroupSelection-comment</p>
+    </div>
   </div>
   <button type="button" class="btn btn-danger"
           data-ng-click="removeAll()"
@@ -91,6 +101,8 @@
   <table id="bstable" bs-table-control="bsTableControl" ng-model="tc"/>
 
   <br>
+
+  </div>
 
 </div>
 <div>
