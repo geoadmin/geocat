@@ -187,7 +187,7 @@
         data-include="xpath::string-join((che:CHE_MD_Metadata/gmd:identificationInfo
                           //gmd:thesaurusName/*/gmd:identifier/*/
                             gmd:code/gmx:Anchor/
-                              concat('-', substring-after(text()[. != ''], 'geonetwork.thesaurus.')), '-external.none.allThesaurus'), ',')"/>
+                              concat('-', substring-after(text()[. != ''], 'geonetwork.thesaurus.')), '-external.none.allThesaurus,-external.theme.access_use_conditions'), ',')"/>
     </for>
   </fields>
 
