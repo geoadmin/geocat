@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -290,9 +291,18 @@ public class KeywordsApi {
 
         String thesauriDomainName = null;
 
+        List<String> thesaurusList;
+        if (thesaurus.length == 1 && thesaurus[0].equals("external.none.allThesaurus")) {
+            thesaurusList = thesaurusManager.getThesauriMap().keySet().stream()
+                .filter(t ->
+                    !t.equals("external.none.allThesaurus") && !t.equals("external.theme.access_use_conditions"))
+                .collect(Collectors.toList());
+        } else {
+            thesaurusList = Arrays.asList(thesaurus);
+        }
         KeywordSearchParamsBuilder builder = parseBuilder(
             lang, q, rows, start,
-            targetLangs, Arrays.asList(thesaurus),
+            targetLangs, thesaurusList,
             thesauriDomainName, type, uri, languagesMapper);
 
 //            if (checkModified(webRequest, thesaurusMan, builder)) {
