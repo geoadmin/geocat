@@ -30,10 +30,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -69,6 +66,8 @@ import com.google.common.collect.Maps;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
+import org.openrdf.sesame.sailimpl.memory.RdfSchemaRepositoryConfig;
+import org.springframework.beans.factory.config.ListFactoryBean;
 
 
 public class ThesaurusManager implements ThesaurusFinder {
@@ -79,6 +78,15 @@ public class ThesaurusManager implements ThesaurusFinder {
     private Path thesauriDirectory = null;
     private boolean initialized = false;
     private AllThesaurus allThesaurus;
+    private List<String> allThesaurusExclude = new ArrayList<>();
+
+    public void setAllThesaurusExclude(List<String> allThesaurusExclude) {
+        this.allThesaurusExclude = allThesaurusExclude;
+    }
+
+    public List<String> getAllThesaurusExclude() {
+        return allThesaurusExclude;
+    }
 
     /**
      * Initialize ThesaurusManager.
@@ -95,7 +103,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         this.settingManager = context.getBean(SettingManager.class);
 
         final String siteURL = this.settingManager.getSiteURL(context);
-        this.allThesaurus = new AllThesaurus(this, getIsoLanguagesMapper(context), siteURL);
+        this.allThesaurus = new AllThesaurus(this, getIsoLanguagesMapper(context), siteURL, allThesaurusExclude);
 
         // Get Sesame interface
         service = Sesame.getService();
@@ -289,7 +297,7 @@ public class ThesaurusManager implements ThesaurusFinder {
             RepositoryConfig repConfig = new RepositoryConfig(gst.getKey());
 
             SailConfig syncSail = new SailConfig("org.openrdf.sesame.sailimpl.sync.SyncRdfSchemaRepository");
-            SailConfig memSail = new org.openrdf.sesame.sailimpl.memory.RdfSchemaRepositoryConfig(
+            SailConfig memSail = new RdfSchemaRepositoryConfig(
                 gst.getFile().toAbsolutePath().toString(), RDFFormat.RDFXML);
             repConfig.addSail(syncSail);
             repConfig.addSail(memSail);
@@ -399,7 +407,7 @@ public class ThesaurusManager implements ThesaurusFinder {
     }
 
     /**
-     * @return {@link org.jdom.Element}
+     * @return {@link Element}
      */
     public Element buildResultfromThTable(ServiceContext context) throws SQLException, JDOMException, IOException {
 
