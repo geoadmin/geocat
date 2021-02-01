@@ -28,7 +28,6 @@ import com.google.common.collect.Maps;
 import org.fao.geonet.exceptions.TermNotFoundException;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
-import org.fao.geonet.utils.IO;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -41,6 +40,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,7 +105,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
             }
         };
 
-        this.allThesaurus = new AllThesaurus(thesaurusFinder, isoLangMapper, "http://test.com");
+        this.allThesaurus = new AllThesaurus(thesaurusFinder, isoLangMapper, "http://test.com", new ArrayList<>());
     }
 
     @Test
@@ -288,7 +288,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
         Mockito.when(thesaurusFinder.getThesaurusByName(regionsThesaurus.getKey())).thenReturn(regionsThesaurus);
         Mockito.when(thesaurusFinder.existsThesaurus(regionsThesaurus.getKey())).thenReturn(true);
 
-        this.allThesaurus = new AllThesaurus(thesaurusFinder, isoLangMapper, "http://blah.com");
+        this.allThesaurus = new AllThesaurus(thesaurusFinder, isoLangMapper, "http://blah.com", new ArrayList<>());
         thesauri.put(AllThesaurus.ALL_THESAURUS_KEY, this.allThesaurus);
 
         final KeywordBean country = regionsThesaurus.getKeyword("http://geonetwork-opensource.org/regions#country", "eng");
