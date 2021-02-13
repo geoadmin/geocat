@@ -49,6 +49,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.io.IOException;
@@ -65,6 +66,7 @@ import static org.junit.Assert.*;
  * @author delawen María Arias de Reyna
  */
 @ContextConfiguration(inheritLocations = true, locations = {"classpath:draft-test-context.xml"})
+@ActiveProfiles(profiles = "draft")
 public class DraftMetadataUtilsTest extends AbstractCoreIntegrationTest {
 
     private static final String UUID = "test-md" + Math.random();

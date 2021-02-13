@@ -27,8 +27,11 @@
   xmlns="http://www.springframework.org/schema/beans"
   xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-    ">
+    " profile="!draft">
   <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer"/>
   <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils"/>
   <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataManager"/>
+
+  <!-- DataManager need ThesaurusManager need SettingManager need a ServletContext-->
+  <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext"/>
 </beans>
