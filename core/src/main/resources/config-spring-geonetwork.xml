@@ -25,10 +25,11 @@
 <beans
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://www.springframework.org/schema/beans"
-  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util"
   xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
     ">
 
   <context:property-placeholder location="${app.properties}"
@@ -54,6 +55,17 @@
     <constructor-arg ref="facets"/>
     <constructor-arg ref="summaryTypes"/>
   </bean>
+
+  <bean id="ThesaurusManager" class="org.fao.geonet.kernel.ThesaurusManager" lazy-init="true"/>
+
+  <util:list id="allThesaurusExclude">
+    <value>external.theme.access_use_conditions</value>
+  </util:list>
+
+  <bean id="allThesaurus" class="org.fao.geonet.kernel.AllThesaurus" lazy-init="true">
+    <property name="allThesaurusExclude" ref="allThesaurusExclude"/>
+  </bean>
+
 
   <bean id="translatorFactory" class="org.fao.geonet.kernel.search.TranslatorFactory"/>
 
