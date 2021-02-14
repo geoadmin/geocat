@@ -135,6 +135,7 @@
         select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']"
         mode="metadata">
         <xsl:with-param name="langId" select="$poundLangId"/>
+        <xsl:with-param name="langId3char" select="util:threeCharLangCode($langId)"/>
         <xsl:with-param name="docLangId" select="$isoLangId"/>
       </xsl:apply-templates>
 
@@ -144,6 +145,7 @@
 
   <xsl:template match="*" mode="metadata">
     <xsl:param name="langId"/>
+    <xsl:param name="langId3char"/>
     <xsl:param name="docLangId"/>
     <!-- === Data or Service Identification === -->
 
@@ -910,7 +912,7 @@
              string="{*/@codeListValue}"
              store="true" index="true"/>
       <Field name="cl_{concat(local-name(), '_text')}"
-             string="{util:getCodelistTranslation(name(.), string(*/@codeListValue), string($docLangId))}"
+             string="{util:getCodelistTranslation(name(*[@codeListValue]), string(*/@codeListValue), string($langId3char))}"
              store="true" index="true"/>
     </xsl:for-each>
   </xsl:template>
