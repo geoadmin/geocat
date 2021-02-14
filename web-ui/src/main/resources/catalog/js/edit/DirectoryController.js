@@ -414,7 +414,13 @@
         gnMetadataManager.copy(e['geonet:info'].id, $scope.ownerGroup,
             fullPrivileges,
             e.isTemplate === 't' ? 'TEMPLATE_OF_SUB_TEMPLATE' : 'SUB_TEMPLATE'
-        ).then(refreshEntriesInfo);
+        ).then(function(response) {
+          refreshEntriesInfo();
+          return gnMetadataManager.getMdObjById(response.data, 's or t');
+        })
+        .then(function(md) {
+          $scope.startEditing(md);
+        });
       };
 
       // this is not used for now
