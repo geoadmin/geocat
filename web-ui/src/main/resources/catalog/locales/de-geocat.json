@@ -38,5 +38,8 @@
   "contribute": "Editieren",
   "editorHome": "Metadatenliste",
   "allAdmins": "Administrators",
-  "termsAndConditions": "Rechtliches"
+  "termsAndConditions": "Rechtliches",
+  "recordFormats": "Verteilungsformate:",
+  "recordFormatDownload": "Herunterladen als ",
+  "commonProtocols": "Allgemeine Protokolle:"
 }

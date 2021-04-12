@@ -29,5 +29,8 @@
   "resolutions": "Resolutions",
   "documentation": "Documentation",
   "contribute": "Edit",
-  "termsAndConditions": "Legal framework"
+  "termsAndConditions": "Legal framework",
+  "recordFormats": "Distribution formats:",
+  "recordFormatDownload": "Download as ",
+  "commonProtocols": "General protocols:"
 }

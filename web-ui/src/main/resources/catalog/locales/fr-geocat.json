@@ -33,5 +33,8 @@
   "adminHome": "Vue d'ensemble",
   "contribute": "Editer",
   "allAdmins": "Administrateurs",
-  "termsAndConditions": "Informations juridiques"
+  "termsAndConditions": "Informations juridiques",
+  "recordFormats": "Formats de distribution :",
+  "recordFormatDownload": "Télécharger au format ",
+  "commonProtocols": "Protocoles :"
 }
