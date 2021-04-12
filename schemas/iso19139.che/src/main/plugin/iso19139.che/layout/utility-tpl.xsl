@@ -4,9 +4,11 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 version="2.0"
                 exclude-result-prefixes="#all">
 
+  <xsl:import href="common/index-utils.xsl"/>
   <xsl:include href="utility-tpl-multilingual.xsl"/>
 
   <xsl:template name="get-iso19139.che-is-service">
@@ -29,5 +31,16 @@
     <xsl:call-template name="get-iso19139-online-source-config">
       <xsl:with-param name="pattern" select="$pattern"/>
     </xsl:call-template>
+  </xsl:template>
+
+
+  <xsl:template mode="get-formats-as-json" match="che:CHE_MD_Metadata">
+    [
+    <xsl:for-each select="gmd:distributionInfo/*/gmd:distributionFormat/*/gmd:name/*/text()">{
+      "value": "WWW:DOWNLOAD:<xsl:value-of select="gn-fn-index:json-escape(.)"/>",
+      "label": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"}
+      <xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>
+    ]
   </xsl:template>
 </xsl:stylesheet>

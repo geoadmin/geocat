@@ -34,5 +34,8 @@
   "directoryManager": "Gestisci rubriche",
   "batchEditing": "Modifiche batch",
   "allAdmins": "Administrators",
-  "termsAndConditions": "Basi legali"
+  "termsAndConditions": "Basi legali",
+  "recordFormats": "Formati di distribuzione:",
+  "recordFormatDownload": "Scarica come ",
+  "commonProtocols": "Protocolli generali:"
 }

@@ -615,9 +615,9 @@
    * the gnCurrentEdit object or 'iso19139' if not defined.
    */
       .directive('schemaInfoCombo', ['$http', 'gnSchemaManagerService',
-        'gnCurrentEdit',
+        'gnCurrentEdit', '$translate',
         function($http, gnSchemaManagerService,
-                 gnCurrentEdit) {
+                 gnCurrentEdit, $translate) {
           return {
             restrict: 'A',
             replace: true,
@@ -626,26 +626,40 @@
             scope: {
               selectedInfo: '=',
               lang: '=',
+              extraOptions: '=',
               allowBlank: '@',
               infos: '=?schemaInfoComboValues'
             },
             link: function(scope, element, attrs) {
               var initialized = false;
+              var baseList = null;
               var defaultValue;
               var allowBlank = attrs['allowBlank'] == true;
 
               var addBlankValueAndSetDefault = function() {
-                var blank = {label: '', code: ''};
+                var blank = {label: '', code: ''},
+                    isCurrentValueInList = false;
                 if (scope.infos != null && scope.infos.length &&
                     allowBlank) {
                   scope.infos.unshift(blank);
                 }
+
                 // Search default value
                 angular.forEach(scope.infos, function(h) {
+                  var id = h.code || h.value; // codelist or helper
                   if (h.isDefault === true) {
-                    defaultValue = h.code;
+                    defaultValue = id;
+                  }
+                  if (scope.selectedInfo != ''
+                    && id === scope.selectedInfo) {
+                    isCurrentValueInList = true;
                   }
                 });
+
+                // Add an option if the current value is not in the list
+                if(scope.infos && !isCurrentValueInList) {
+                  scope.infos.push({label: scope.selectedInfo, code: scope.selectedInfo});
+                }
 
                 // If no blank value allowed select default or first
                 // If no value defined, select default or blank one
@@ -673,6 +687,32 @@
                     init();
                   }
                 });
+
+              scope.$watch('extraOptions',
+                function(n, o) {
+                  appendExtraOptions();
+                });
+              scope.$watch('selectedInfo',
+                function(n, o) {
+                  scope.infos = angular.copy(baseList);
+                  appendExtraOptions();
+                  addBlankValueAndSetDefault();
+                });
+
+              var isLabelSet = false;
+              function appendExtraOptions() {
+                if(baseList && angular.isArray(scope.extraOptions)) {
+                  if (!isLabelSet) {
+                    scope.extraOptions.unshift({
+                      value: '', label: $translate.instant('recordFormats'), disabled: true});
+                    scope.extraOptions.push({
+                      value: '', label: $translate.instant('commonProtocols'), disabled: true});
+                    isLabelSet = true;
+                  }
+                  scope.infos = scope.extraOptions.concat(baseList);
+                }
+              }
+
               var init = function() {
                 var schema = attrs['schema'] ||
                     gnCurrentEdit.schema || 'iso19139';
@@ -683,6 +723,8 @@
                   gnSchemaManagerService.getCodelist(config, scope.codelistFilter).then(
                       function(data) {
                         scope.infos = angular.copy(data.entry);
+                        baseList = angular.copy(scope.infos);
+                        appendExtraOptions();
                         addBlankValueAndSetDefault();
                       });
                 }
@@ -690,6 +732,8 @@
                   gnSchemaManagerService.getElementInfo(config, scope.codelistFilter).then(
                       function(data) {
                         scope.infos = data.helper ? data.helper.option : null;
+                        baseList = angular.copy(scope.infos);
+                        appendExtraOptions();
                         addBlankValueAndSetDefault();
                       });
                 }

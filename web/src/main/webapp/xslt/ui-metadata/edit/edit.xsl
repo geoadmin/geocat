@@ -108,7 +108,12 @@
           <xsl:variable name="metadataExtents">
             <saxon:call-template name="{concat('get-', $schema, '-extents-as-json')}"/>
           </xsl:variable>
-          <input type="hidden" id="extent" value="{$metadataExtents}"/>
+          <input type="hidden" id="extent" value="{normalize-space($metadataExtents)}"/>
+
+          <xsl:variable name="metadataFormats">
+            <xsl:apply-templates mode="get-formats-as-json" select="$metadata"/>
+          </xsl:variable>
+          <input type="hidden" id="dataformats" value="{normalize-space($metadataFormats)}"/>
 
           <xsl:call-template name="get-online-source-config">
             <xsl:with-param name="pattern" select="$geopublishMatchingPattern"/>
@@ -160,6 +165,7 @@
     </div>
   </xsl:template>
 
+  <xsl:template mode="get-formats-as-json" match="*"/>
 
   <!-- Check if current record has resources which could be
   published in OGC services (eg. onLine resources in ISO19139)
