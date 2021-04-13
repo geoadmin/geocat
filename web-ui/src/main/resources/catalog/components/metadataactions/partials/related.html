@@ -21,6 +21,13 @@
                 data-ng-class="{
                   'label-primary': icon === 'fa-download' || icon === 'fa-file-pdf-o',
                   'label-success': icon === 'fa-globe'}">{{badge}}</span>
+
+          <div data-ng-if="mainType === 'CH:GEOSHOP'"
+                data-ng-repeat="f in md.format"
+               class="clearfix">
+            <span class="label label-default label-primary">{{f}}</span>
+          </div>
+
         </strong>
       </div>
       <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-7 col-sm-7'">
