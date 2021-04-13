@@ -278,6 +278,11 @@
               label: 'openRecord',
               action: openMd
             },
+            'CH:GEOSHOP' : {
+              iconClass: 'fa-download',
+              label: 'download',
+              action: openLink
+            },
             'LINKDOWNLOAD' : {
               iconClass: 'fa-download',
               label: 'download',
@@ -347,6 +352,11 @@
             resource.locUrl = $filter('gnLocalized')(resource.url);
             var protocolOrType = resource.protocol + resource.serviceType;
             // Cas for links
+
+            if (resource.locUrl.indexOf('geoshop') !== -1) {
+              return 'CH:GEOSHOP';
+            }
+
             if (angular.isString(protocolOrType) &&
                 angular.isUndefined(resource['geonet:info'])) {
               if (protocolOrType.match(/wms/i)) {

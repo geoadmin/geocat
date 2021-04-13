@@ -290,7 +290,7 @@
       <xsl:if test="*/gmd:EX_Extent/*/gmd:EX_BoundingPolygon">
         <Field name="boundingPolygon" string="y" store="true" index="false"/>
       </xsl:if>
-      
+
       <xsl:for-each select="*/gmd:EX_Extent">
         <xsl:apply-templates select="gmd:geographicElement/gmd:EX_GeographicBoundingBox" mode="northBLn"/>
 
@@ -801,12 +801,16 @@
 
     <xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
       <xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
-        <Field name="format" string="{if (../../gmd:version/gco:CharacterString != '')
+        <Field name="format" string="{
+            if (../../gmd:version/gco:CharacterString != ''
+                and ../../gmd:version/gco:CharacterString != '-')
             then concat(normalize-space(.) , ' (', normalize-space(../../gmd:version/*), ')')
             else normalize-space(.)}" store="true" index="true"/>
       </xsl:for-each>
       <xsl:for-each select="gmd:distributor/gmd:MD_Distributor/gmd:distributorFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
-        <Field name="format" string="{if (../../gmd:version/gco:CharacterString != '')
+        <Field name="format" string="{
+            if (../../gmd:version/gco:CharacterString != ''
+                and ../../gmd:version/gco:CharacterString != '-')
             then concat(normalize-space(.) , ' (', normalize-space(../../gmd:version/*), ')')
             else normalize-space(.)}" store="true" index="true"/>
       </xsl:for-each>
