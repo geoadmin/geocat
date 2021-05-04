@@ -353,7 +353,7 @@
             var protocolOrType = resource.protocol + resource.serviceType;
             // Cas for links
 
-            if (resource.locUrl.indexOf('geoshop') !== -1) {
+            if (resource.locUrl.indexOf('shop') !== -1) {
               return 'CH:GEOSHOP';
             }
 
