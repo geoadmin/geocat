@@ -834,6 +834,7 @@ element name="che:language">
     <helper sort="true">
       <option value="WWW:LINK">Adresse Internet (URL)</option>
       <option value="WWW:DOWNLOAD-URL">Fichier à télécharger (URL)</option>
+      <option value="WWW:DOWNLOAD-APP">Download application (eg. geoshop)</option>
       <option value="OGC:WMS">OGC-WMS Web Map Service</option>
       <option value="OGC:WFS">OGC-WFS Web Feature Service</option>
       <option value="OGC:WCS">OGC-WCS Web Coverage Service</option>
