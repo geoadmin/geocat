@@ -278,7 +278,7 @@
               label: 'openRecord',
               action: openMd
             },
-            'CH:GEOSHOP' : {
+            'WWW:DOWNLOAD-APP' : {
               iconClass: 'fa-download',
               label: 'download',
               action: openLink
@@ -353,8 +353,9 @@
             var protocolOrType = resource.protocol + resource.serviceType;
             // Cas for links
 
-            if (resource.locUrl.indexOf('shop') !== -1) {
-              return 'CH:GEOSHOP';
+            if (resource.locUrl.indexOf('shop') !== -1 ||
+              protocolOrType.match(/download-app/i)) {
+              return 'WWW:DOWNLOAD-APP';
             }
 
             if (angular.isString(protocolOrType) &&
