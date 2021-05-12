@@ -606,7 +606,7 @@
   <element name="che:CHE_ReasonForArchivingValueCode">
     <label>Reason for archiving value</label>
     <description>Reason for archiving value</description>
-  </element>gnEd
+  </element>
   <element name="che:commentOnArchivalValue">
     <label>Comment on archival value</label>
     <description>Comment on archival value</description>
