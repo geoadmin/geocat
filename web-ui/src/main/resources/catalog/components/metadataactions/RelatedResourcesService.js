@@ -354,7 +354,7 @@
             // Cas for links
 
             if (resource.locUrl.indexOf('shop') !== -1 ||
-              protocolOrType.match(/download-app/i)) {
+              (protocolOrType && protocolOrType.match(/download-app/i))) {
               return 'WWW:DOWNLOAD-APP';
             }
 
