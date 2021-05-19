@@ -1,0 +1,1305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gco:isoType="gmd:MD_Metadata" xsi:schemaLocation="http://www.geocat.ch/2008/che https://www.geocat.ch/geonetwork/xml/schemas/iso19139.che/schema/che/che.xsd">
+  <gmd:fileIdentifier>
+    <gco:CharacterString>415a014c-b3f6-40bd-8b38-c955e9e214e6</gco:CharacterString>
+  </gmd:fileIdentifier>
+  <gmd:language>
+    <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger" />
+  </gmd:language>
+  <gmd:characterSet>
+    <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+  </gmd:characterSet>
+  <gmd:hierarchyLevel>
+    <gmd:MD_ScopeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" />
+  </gmd:hierarchyLevel>
+  <gmd:contact xlink:show="embed">
+    <che:CHE_CI_ResponsibleParty xmlns:geonet="http://www.fao.org/geonetwork" gco:isoType="gmd:CI_ResponsibleParty">
+      <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+        <gco:CharacterString>Bundesamt für Kommunikation</gco:CharacterString>
+        <gmd:PT_FreeText>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#DE">Bundesamt für Kommunikation</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#FR">Office fédéral de la communication</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#IT">Ufficio federale delle communicazioni</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#EN">Federal Office of Communications</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#RM">Bundesamt für Kommunikation</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+        </gmd:PT_FreeText>
+      </gmd:organisationName>
+      <gmd:contactInfo>
+        <gmd:CI_Contact>
+          <gmd:phone>
+            <che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+              <gmd:voice>
+                <gco:CharacterString>+41 58 460 55 11</gco:CharacterString>
+              </gmd:voice>
+              <che:directNumber>
+                <gco:CharacterString>+41 58 460 58 91</gco:CharacterString>
+              </che:directNumber>
+            </che:CHE_CI_Telephone>
+          </gmd:phone>
+          <gmd:address>
+            <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+              <gmd:city>
+                <gco:CharacterString>Biel</gco:CharacterString>
+              </gmd:city>
+              <gmd:postalCode>
+                <gco:CharacterString>2503</gco:CharacterString>
+              </gmd:postalCode>
+              <gmd:country>
+                <gco:CharacterString>CH</gco:CharacterString>
+              </gmd:country>
+              <gmd:electronicMailAddress>
+                <gco:CharacterString>christian.meier@bakom.admin.ch</gco:CharacterString>
+              </gmd:electronicMailAddress>
+              <che:streetName>
+                <gco:CharacterString>Zukunftstrasse</gco:CharacterString>
+              </che:streetName>
+              <che:streetNumber>
+                <gco:CharacterString>44</gco:CharacterString>
+              </che:streetNumber>
+            </che:CHE_CI_Address>
+          </gmd:address>
+          <gmd:onlineResource>
+            <gmd:CI_OnlineResource>
+              <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                <che:PT_FreeURL>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#EN">http://www.bakom.admin.ch</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#DE">http://www.bakom.admin.ch</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#FR">http://www.bakom.admin.ch</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#IT">http://www.bakom.admin.ch</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#RM">http://www.bakom.admin.ch</che:LocalisedURL>
+                  </che:URLGroup>
+                </che:PT_FreeURL>
+              </gmd:linkage>
+              <gmd:protocol>
+                <gco:CharacterString>text/html</gco:CharacterString>
+              </gmd:protocol>
+            </gmd:CI_OnlineResource>
+          </gmd:onlineResource>
+        </gmd:CI_Contact>
+      </gmd:contactInfo>
+      <gmd:role>
+        <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="pointOfContact" />
+      </gmd:role>
+      <che:individualFirstName>
+        <gco:CharacterString>Christian</gco:CharacterString>
+      </che:individualFirstName>
+      <che:individualLastName>
+        <gco:CharacterString>Meier</gco:CharacterString>
+      </che:individualLastName>
+      <che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType">
+        <gco:CharacterString>BAKOM</gco:CharacterString>
+        <gmd:PT_FreeText>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#DE">BAKOM</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#FR">OFCOM</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#IT">UFCOM</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#EN">OFCOM</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#RM">BAKOM</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+        </gmd:PT_FreeText>
+      </che:organisationAcronym>
+    </che:CHE_CI_ResponsibleParty>
+  </gmd:contact>
+  <gmd:dateStamp>
+    <gco:DateTime>2019-08-13T16:45:48</gco:DateTime>
+  </gmd:dateStamp>
+  <gmd:metadataStandardName>
+    <gco:CharacterString>GM03 2+</gco:CharacterString>
+  </gmd:metadataStandardName>
+  <gmd:locale>
+    <gmd:PT_Locale id="FR">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre" />
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:locale>
+    <gmd:PT_Locale id="IT">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ita" />
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:locale>
+    <gmd:PT_Locale id="EN">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" />
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:locale>
+    <gmd:PT_Locale id="RM">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="roh" />
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:locale>
+    <gmd:PT_Locale id="DE">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger" />
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:spatialRepresentationInfo>
+    <gmd:MD_VectorSpatialRepresentation>
+      <gmd:geometricObjects>
+        <gmd:MD_GeometricObjects>
+          <gmd:geometricObjectType>
+            <gmd:MD_GeometricObjectTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_GeometricObjectTypeCode" codeListValue="point" />
+          </gmd:geometricObjectType>
+        </gmd:MD_GeometricObjects>
+      </gmd:geometricObjects>
+    </gmd:MD_VectorSpatialRepresentation>
+  </gmd:spatialRepresentationInfo>
+  <gmd:referenceSystemInfo>
+    <gmd:MD_ReferenceSystem>
+      <gmd:referenceSystemIdentifier>
+        <gmd:RS_Identifier>
+          <gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>CH1903</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">CH1903</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">CH1903</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">CH1903</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">CH1903</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:code>
+        </gmd:RS_Identifier>
+      </gmd:referenceSystemIdentifier>
+    </gmd:MD_ReferenceSystem>
+  </gmd:referenceSystemInfo>
+  <gmd:identificationInfo>
+    <che:CHE_MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
+      <gmd:citation>
+        <gmd:CI_Citation>
+          <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Einzugsgebiete für die Notrufnummer 112 im Festnetz</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Einzugsgebiete für die Notrufnummer 112 im Festnetz</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Zones desservies par le numéro d’appel d’urgence 112 sur réseau fixe</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">Zone d’intervento servite dal numero per le chiamate d’emergenza 112 su rete fissa</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">Intervention regions for emergency call number 112 on fixed network</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM">Ils territoris cumpigliats pel numer d’urgenza 112 aint illa rait fixa</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:title>
+          <gmd:alternateTitle xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>112 Festnetz</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">112 Festnetz</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">112 Réseau fixe</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">112 Rete fissa</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">112 Fixed network</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM">112 Rait fixa</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:alternateTitle>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:DateTime>2014-01-01T00:00:00</gco:DateTime>
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation" />
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+          <gmd:collectiveTitle gco:nilReason="missing" xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString />
+          </gmd:collectiveTitle>
+        </gmd:CI_Citation>
+      </gmd:citation>
+      <gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
+        <gco:CharacterString>Ein Notruf ist ein Anruf auf eine dreistellige Kurznummer des Notrufdienstes, die von den Anrufenden gewählt wird: Europäische Notrufnummer 112; Polizeinotruf 117; Feuerwehrnotruf 118; Dargebotene Hand 143; Sanitätsnotruf 144; Telefonhilfe für Kinder und Jugendliche 147. Ein Notruf kann über ein Festnetz, Mobilnetz oder Satellitennetz erfolgen. 
+
+Der Notruf muss zur Alarmzentrale des für den Fall sachlich und örtlich zuständigen Notrufdienstes geleitet werden. Eine Region, aus der die Notrufe auf eine bestimmte Alarmzentrale geleitet werden ist ein Einzugsgebiet. Jedem Einzugsgebiet wird eine Routing-Nummer zugeordnet. Die Karte stellt die Einzugsgebiete der Schweiz für ausgeführte Notrufe 112 im Festnetz dar. Für jedes Einzugsgebiet sieht man die Alarmzentrale und die Routing-Nummer, wenn man dieses Einzugsgebiet auswählt.</gco:CharacterString>
+        <gmd:PT_FreeText>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#DE">Ein Notruf ist ein Anruf auf eine dreistellige Kurznummer des Notrufdienstes, die von den Anrufenden gewählt wird: Europäische Notrufnummer 112; Polizeinotruf 117; Feuerwehrnotruf 118; Dargebotene Hand 143; Sanitätsnotruf 144; Telefonhilfe für Kinder und Jugendliche 147. Ein Notruf kann über ein Festnetz, Mobilnetz oder Satellitennetz erfolgen. 
+
+Der Notruf muss zur Alarmzentrale des für den Fall sachlich und örtlich zuständigen Notrufdienstes geleitet werden. Eine Region, aus der die Notrufe auf eine bestimmte Alarmzentrale geleitet werden ist ein Einzugsgebiet. Jedem Einzugsgebiet wird eine Routing-Nummer zugeordnet. Die Karte stellt die Einzugsgebiete der Schweiz für ausgeführte Notrufe 112 im Festnetz dar. Für jedes Einzugsgebiet sieht man die Alarmzentrale und die Routing-Nummer, wenn man dieses Einzugsgebiet auswählt.</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#FR">Un appel d’urgence est un appel sur un numéro court à trois chiffres du service d’appel d'urgence composé par l'appelant : service d'urgence européen 112 ; police, appel d'urgence 117 ; feu, centrale d'alarme 118 ; main tendue 143 ; ambulances, appel d'urgence 144 ; secours téléphonique pour les enfants et les jeunes 147. Un appel d’urgence peut être effectué depuis un réseau fixe, un réseau mobile ou un réseau par satellite.  
+
+L’appel d’urgence doit être acheminé vers la centrale d’alarme du service compétent selon le lieu et la nature du cas. Une région d’où les appels d’urgence sont acheminés vers une centrale d’alarme précise constitue une zone desservie. Un numéro d’acheminement est attribué à chaque zone desservie. La carte permet de visualiser les zones desservies en Suisse pour les appels d’urgence 112 effectués depuis un réseau fixe. Pour chaque zone desservie on peut identifier la centrale d’alarme et le numéro d’acheminement en sélectionnant la zone souhaitée.</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#IT">Una chiamata d’emergenza è una chiamata su un numero breve di 3 cifre del servizio d'emergenza selezionato dal chiamante: servizio d'emergenza europeo 112; polizia, chiamata di soccorso 117; pompieri 118; telefono amico 143; pronto soccorso autoambulanze 144; assistenza telefonica per bambini e giovani 147. Una chiamata d’emergenza può essere effettuata da una rete fissa, una rete mobile o una rete via satellite. 
+
+La chiamata d'emergenza deve essere istradata verso la centrale d'allarme del servizio locale competente per il caso specifico. Una regione in cui le chiamate d'emergenza vengono istradate verso una determinata centrale d'allarme costituisce una zona d'intervento. A ogni zona d'intervento viene attribuito un numero di routing. La carta consente di visualizzare le zone d’intervento in Svizzera per le chiamate d’emergenza 112 effettuate dalla rete fissa. Per ciascuna zona d’intervento si può identificare la centrale d’allarme e il numero di routing selezionando la zona desiderata.</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#EN">An emergency call is a call with a three digit short number of the emergency service selected by the caller: European emergency service 112; police, emergency call 117; fire, alarm center 118; Friendly Hand 143; ambulance, emergency call 144; telephone help for children and young 147. An emergency call can be done from a fixed, mobile or satellite network. 
+
+The emergency call must be routed to the alarm center of the competent service according to the location and nature of the case. A region from which the emergency calls are routed to a precise alarm center is an intervention region. Each intervention region has a routing number. The map shows the intervention regions of Switzerland for the emergency calls 112 originated from a fixed network. The alarm center and routing number of any intervention region are identified when selecting the targeted intervention region.</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#RM">Dad in clom d’urgenza sa tracti, sch’ina persuna cumpona in numer curt da trais cifras dal servetsch da clom d’urgenza: numer d’urgenza europeic 112; polizia 117; pumpiers 118; maun offert 143; alarm sanitar 144; agid al telefon per uffants e giuvenils 147. In clom d’urgenza po succeder sur ina rait fixa, sur ina rait per telefonia mobila u sur ina rait da satellit.
+
+Il clom d’urgenza sto vegnir transmess a la centrala d’alarm dal servetsch da clom d’urgenza ch’è cumpetent materialmain e localmain per il cas correspundent. Ina regiun, da la quala ils cloms d’urgenza vegnan transmess ad ina tscherta centrala d’alarm, è in territori cumpiglià. A mintga territori cumpiglià vegn attribuì in numer da routing. La carta preschenta ils territoris cumpigliats da la Svizra per cloms d’urgenza 112 effectuads en la rait fixa. Per mintga territori cumpiglià pon ins vesair la centrala d’alarm ed il numer da routing, sch’ins tscherna quest territori cumpiglià.</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+        </gmd:PT_FreeText>
+      </gmd:abstract>
+      <gmd:purpose xsi:type="gmd:PT_FreeText_PropertyType">
+        <gco:CharacterString>Information für die Bevölkerung.</gco:CharacterString>
+        <gmd:PT_FreeText>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#DE">Information für die Bevölkerung.</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#FR">Information à la population.</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#IT">Informazione al pubblico</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#EN">Information for the population</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#RM">Informaziun pella populaziun</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+        </gmd:PT_FreeText>
+      </gmd:purpose>
+      <gmd:status>
+        <gmd:MD_ProgressCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ProgressCode" codeListValue="onGoing" />
+      </gmd:status>
+      <gmd:pointOfContact xlink:show="embed">
+        <che:CHE_CI_ResponsibleParty xmlns:geonet="http://www.fao.org/geonetwork" gco:isoType="gmd:CI_ResponsibleParty">
+          <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Bundesamt für Kommunikation</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Bundesamt für Kommunikation</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Office fédéral de la communication</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">Ufficio federale delle comunicazioni</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">Federal Office of Communications</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM">Bundesamt für Kommunikation</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:organisationName>
+          <gmd:contactInfo>
+            <gmd:CI_Contact>
+              <gmd:address>
+                <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+                  <gmd:city>
+                    <gco:CharacterString>Biel</gco:CharacterString>
+                  </gmd:city>
+                  <gmd:postalCode>
+                    <gco:CharacterString>2501</gco:CharacterString>
+                  </gmd:postalCode>
+                  <gmd:country>
+                    <gco:CharacterString>CH</gco:CharacterString>
+                  </gmd:country>
+                  <gmd:electronicMailAddress>
+                    <gco:CharacterString>transmitter@bakom.admin.ch</gco:CharacterString>
+                  </gmd:electronicMailAddress>
+                  <che:streetName>
+                    <gco:CharacterString>Zukunftstrasse</gco:CharacterString>
+                  </che:streetName>
+                  <che:streetNumber>
+                    <gco:CharacterString>44</gco:CharacterString>
+                  </che:streetNumber>
+                </che:CHE_CI_Address>
+              </gmd:address>
+            </gmd:CI_Contact>
+          </gmd:contactInfo>
+          <gmd:role>
+            <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="pointOfContact" />
+          </gmd:role>
+          <che:individualLastName>
+            <gco:CharacterString>Transmitter-bakom</gco:CharacterString>
+          </che:individualLastName>
+          <che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>BAKOM</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">BAKOM</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">OFCOM</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">UFCOM</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">OFCOM</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM">BAKOM</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </che:organisationAcronym>
+        </che:CHE_CI_ResponsibleParty>
+      </gmd:pointOfContact>
+      <gmd:pointOfContact xlink:show="embed">
+        <che:CHE_CI_ResponsibleParty xmlns:geonet="http://www.fao.org/geonetwork" gco:isoType="gmd:CI_ResponsibleParty">
+          <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Bundesamt für Kommunikation</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Bundesamt für Kommunikation</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Office Fédéral de la Communication</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">Ufficio federale delle comunicaioni</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">Federal Office of Communications</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM">Bundesamt für Kommunikation</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:organisationName>
+          <gmd:contactInfo>
+            <gmd:CI_Contact>
+              <gmd:phone>
+                <che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+                  <gmd:voice>
+                    <gco:CharacterString>+41 58 460 55 11</gco:CharacterString>
+                  </gmd:voice>
+                </che:CHE_CI_Telephone>
+              </gmd:phone>
+              <gmd:address>
+                <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+                  <gmd:city>
+                    <gco:CharacterString>Biel</gco:CharacterString>
+                  </gmd:city>
+                  <gmd:postalCode>
+                    <gco:CharacterString>2501</gco:CharacterString>
+                  </gmd:postalCode>
+                  <gmd:electronicMailAddress>
+                    <gco:CharacterString>info@bakom.admin.ch</gco:CharacterString>
+                  </gmd:electronicMailAddress>
+                  <che:streetName>
+                    <gco:CharacterString>Zukunftstrasse</gco:CharacterString>
+                  </che:streetName>
+                  <che:streetNumber>
+                    <gco:CharacterString>44</gco:CharacterString>
+                  </che:streetNumber>
+                </che:CHE_CI_Address>
+              </gmd:address>
+            </gmd:CI_Contact>
+          </gmd:contactInfo>
+          <gmd:role>
+            <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="owner" />
+          </gmd:role>
+          <che:individualFirstName>
+            <gco:CharacterString />
+          </che:individualFirstName>
+          <che:individualLastName>
+            <gco:CharacterString />
+          </che:individualLastName>
+          <che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>BAKOM</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">BAKOM</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">OFCOM</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">UFCOM</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">OFCOM</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM">BAKOM</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </che:organisationAcronym>
+        </che:CHE_CI_ResponsibleParty>
+      </gmd:pointOfContact>
+      <gmd:resourceMaintenance>
+        <che:CHE_MD_MaintenanceInformation gco:isoType="gmd:MD_MaintenanceInformation">
+          <gmd:maintenanceAndUpdateFrequency>
+            <gmd:MD_MaintenanceFrequencyCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="annually" />
+          </gmd:maintenanceAndUpdateFrequency>
+          <che:appraisal>
+            <che:CHE_MD_Appraisal_AAP>
+              <che:durationOfConservation>
+                <gco:Integer>10</gco:Integer>
+              </che:durationOfConservation>
+              <che:appraisalOfArchivalValue>
+                <che:CHE_AppraisalOfArchivalValueCode codeList="#CHE_AppraisalOfArchivalValueCode" codeListValue="A" />
+              </che:appraisalOfArchivalValue>
+              <che:reasonForArchivingValue>
+                <che:CHE_ReasonForArchivingValueCode codeList="#CHE_ReasonForArchivingValueCode" codeListValue="evidenceOfBusinessPractice" />
+              </che:reasonForArchivingValue>
+              <che:commentOnArchivalValue xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>Grundlage für den Datensatz ist eine Datenbank, in welcher Daten seit 2012 enthalten sind.</gco:CharacterString>
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#DE">Grundlage für den Datensatz ist eine Datenbank, in welcher Daten seit 2012 enthalten sind.</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                </gmd:PT_FreeText>
+              </che:commentOnArchivalValue>
+            </che:CHE_MD_Appraisal_AAP>
+          </che:appraisal>
+        </che:CHE_MD_MaintenanceInformation>
+      </gmd:resourceMaintenance>
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+          <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Versorgungswirtschaft und staatliche Dienste</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Versorgungswirtschaft und staatliche Dienste</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Services d'utilité publique et services publics</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">Servizi di pubblica utilità e servizi amministrativi</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">Utility and governmental services</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM" />
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:keyword>
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="theme" />
+          </gmd:type>
+          <gmd:thesaurusName>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>GEMET - INSPIRE themes, version 1.0</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:Date>2008-06-01</gco:Date>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+              <gmd:identifier>
+                <gmd:MD_Identifier>
+                  <gmd:code>
+                    <gmx:Anchor xlink:href="http://127.0.0.1:8080/geonetwork/srv/api/registries/vocabularies/external.theme.inspire-theme">geonetwork.thesaurus.external.theme.inspire-theme</gmx:Anchor>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:identifier>
+            </gmd:CI_Citation>
+          </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+          <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Antenne</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Antenne</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">antenne</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">antenna</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">antenna</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM" />
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:keyword>
+          <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Aufbewahrungs- und Archivierungsplanung AAP - Bund</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Aufbewahrungs- und Archivierungsplanung AAP - Bund</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Planification de la conservation et de l'archivage AAP - Conféderation</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">Pianificazione della conservazione e dell’archiviazione AAP - Confederazione</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">Conservation and archiving planning AAP - Confederation</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM" />
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:keyword>
+          <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Mobiltelefonie</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Mobiltelefonie</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">téléphonie mobile</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">telefonia mobile</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">mobile telephony</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM" />
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:keyword>
+          <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>opendata.swiss</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">opendata.swiss</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">opendata.swiss</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">opendata.swiss</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">opendata.swiss</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM">opendata.swiss</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:keyword>
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="theme" />
+          </gmd:type>
+          <gmd:thesaurusName>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>geocat.ch</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:Date>2022-04-30</gco:Date>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+              <gmd:identifier>
+                <gmd:MD_Identifier>
+                  <gmd:code>
+                    <gmx:Anchor xlink:href="http://127.0.0.1:8080/geonetwork/srv/api/registries/vocabularies/local.theme.geocat.ch">geonetwork.thesaurus.local.theme.geocat.ch</gmx:Anchor>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:identifier>
+            </gmd:CI_Citation>
+          </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      <gmd:resourceConstraints>
+        <che:CHE_MD_LegalConstraints gco:isoType="gmd:MD_LegalConstraints">
+          <gmd:useConstraints>
+            <gmd:MD_RestrictionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions" />
+          </gmd:useConstraints>
+          <gmd:otherConstraints xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>keine Einschränkungen</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">keine Einschränkungen</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">aucune restriction</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">Nessuna restrizione</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">No restrictions</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:otherConstraints>
+        </che:CHE_MD_LegalConstraints>
+      </gmd:resourceConstraints>
+      <gmd:aggregationInfo>
+        <gmd:MD_AggregateInformation>
+          <gmd:aggregateDataSetIdentifier>
+            <gmd:MD_Identifier>
+              <gmd:code>
+                <gco:CharacterString>7f3287d8-6ae7-491c-b8e1-1d9f81b194b4</gco:CharacterString>
+              </gmd:code>
+            </gmd:MD_Identifier>
+          </gmd:aggregateDataSetIdentifier>
+          <gmd:associationType>
+            <gmd:DS_AssociationTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#DS_AssociationTypeCode" codeListValue="largerWorkCitation" />
+          </gmd:associationType>
+        </gmd:MD_AggregateInformation>
+      </gmd:aggregationInfo>
+      <gmd:spatialRepresentationType>
+        <gmd:MD_SpatialRepresentationTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_SpatialRepresentationTypeCode" codeListValue="vector" />
+      </gmd:spatialRepresentationType>
+      <gmd:spatialResolution>
+        <gmd:MD_Resolution>
+          <gmd:equivalentScale>
+            <gmd:MD_RepresentativeFraction>
+              <gmd:denominator>
+                <gco:Integer>25000</gco:Integer>
+              </gmd:denominator>
+            </gmd:MD_RepresentativeFraction>
+          </gmd:equivalentScale>
+        </gmd:MD_Resolution>
+      </gmd:spatialResolution>
+      <gmd:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger" />
+      </gmd:language>
+      <gmd:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre" />
+      </gmd:language>
+      <gmd:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" />
+      </gmd:language>
+      <gmd:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ita" />
+      </gmd:language>
+      <gmd:characterSet>
+        <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+      </gmd:characterSet>
+      <gmd:topicCategory>
+        <gmd:MD_TopicCategoryCode>utilitiesCommunication</gmd:MD_TopicCategoryCode>
+      </gmd:topicCategory>
+      <gmd:topicCategory>
+        <gmd:MD_TopicCategoryCode>utilitiesCommunication_Communication</gmd:MD_TopicCategoryCode>
+      </gmd:topicCategory>
+      <gmd:extent xlink:show="embed">
+        <gmd:EX_Extent xmlns:geonet="http://www.fao.org/geonetwork">
+          <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Schweiz</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Schweiz</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Schweiz</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">Schweiz</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">Schweiz</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM">Schweiz</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:description>
+          <gmd:geographicElement>
+            <gmd:EX_GeographicBoundingBox>
+              <gmd:westBoundLongitude>
+                <gco:Decimal>5.956069</gco:Decimal>
+              </gmd:westBoundLongitude>
+              <gmd:eastBoundLongitude>
+                <gco:Decimal>10.492047</gco:Decimal>
+              </gmd:eastBoundLongitude>
+              <gmd:southBoundLatitude>
+                <gco:Decimal>45.820823</gco:Decimal>
+              </gmd:southBoundLatitude>
+              <gmd:northBoundLatitude>
+                <gco:Decimal>47.808490</gco:Decimal>
+              </gmd:northBoundLatitude>
+            </gmd:EX_GeographicBoundingBox>
+          </gmd:geographicElement>
+          <gmd:geographicElement>
+            <gmd:EX_BoundingPolygon>
+              <gmd:polygon>
+                <MultiSurface xmlns="http://www.opengis.net/gml/3.2" gml:id="d2674352e57">
+                  <gml:surfaceMember>
+                    <Polygon gml:id="d2674352e59">
+                      <gml:exterior>
+                        <gml:LinearRing>
+                          <gml:posList>8.618636136351077 47.79832819365082 8.567870448543298 47.808490469284976 8.57709380273077 47.78154261359985 8.472338473119196 47.76355812771139 8.455065486460464 47.722311966804064 8.404435958651684 47.698066045625296 8.420677913922562 47.683867397358846 8.40604122811449 47.673266397626534 8.46564241908907 47.65704654804725 8.473516759765994 47.63830890307318 8.473773405333338 47.64982696964279 8.531537191849733 47.64579020300428 8.527019805925725 47.66039680386717 8.561162090063934 47.670305715451505 8.577721599772577 47.661610092323606 8.606660377320425 47.67213102679454 8.628814793255096 47.64965480659201 8.595525027523687 47.642875404865116 8.604965308124523 47.61401470584857 8.58236501345689 47.59613569715748 8.56285093485213 47.59943380743463 8.574418119968236 47.61193232814655 8.557348139852412 47.624563472373715 8.515542993402867 47.63392170677763 8.508261296277164 47.617509140762884 8.45660884864395 47.60235728196186 8.466946742523898 47.58420412795566 8.49454988493339 47.58120284779842 8.464723615752714 47.57229706907956 8.32991983143931 47.570920142881675 8.291058476721894 47.609403537950456 8.226316055008265 47.605065789924815 8.206107085594347 47.621003461422106 8.165554102163046 47.59431149136439 8.10947016506889 47.58237616187295 8.089351818288971 47.557729610042905 7.959434577099721 47.55822966700068 7.943285362695794 47.54397816101678 7.910869245967949 47.55170583632464 7.892564465423711 47.587277623800595 7.8227545765902216 47.58794443052924 7.795677625858666 47.55744986812447 7.69043228883719 47.53234267214194 7.634101239322111 47.561118578322876 7.685975080579112 47.56562238127743 7.671759199559159 47.58736506512138 7.693584944105702 47.600537548734444 7.645820635929973 47.59697373785718 7.6190692884908895 47.576835232343356 7.589043241650123 47.58988343146769 7.584832079087992 47.57566236759771 7.499242258661455 47.53983852746983 7.53147833231941 47.52772282900157 7.522117147642116 47.51423778605593 7.497820066941228 47.521238436751965 7.502002812637003 47.490445737003085 7.476013055736952 47.480015790217514 7.431955455234861 47.49613756552103 7.421238248474653 47.48018802773652 7.456060375164786 47.47193683654364 7.402984733559647 47.43551785334147 7.329826365074102 47.441438696470115 7.245589670595315 47.42030543334231 7.231950768778646 47.43905109800215 7.170422458315754 47.44346087849513 7.2010840916137395 47.49388753927646 7.128017766453965 47.50359640137855 7.074878314707122 47.48817404225255 7.024406165027827 47.504230341157 6.982913835320305 47.49427796372315 7.001549568115628 47.45375065742888 6.939185022202498 47.4337118067886 6.938598266462774 47.40648615604183 6.913615608908469 47.40466674509534 6.8798039232719725 47.352447097616825 7.017906912117407 47.37288962765417 7.048924004601611 47.36184943000829 7.0566297995039005 47.33439874303921 7.009737424706251 47.32437388627323 6.996570085269273 47.296133785018434 6.9407396894015 47.28651295628086 6.955475887668876 47.24298084083645 6.84132406077806 47.17140422367351 6.858829113522642 47.16568210746016 6.849970979695795 47.156466103699884 6.703572462897413 47.08217480445635 6.691786243355083 47.066416265751286 6.7184612617620125 47.0507985599015 6.61814315032795 46.991896151601495 6.505956270013948 46.96614697404134 6.4966912751696855 46.974185177279836 6.432741500338627 46.928462066164066 6.464449361117308 46.89042122185409 6.430987471206794 46.812334415337766 6.45843290758429 46.788316669568054 6.452218255002143 46.77414862048399 6.269427389697237 46.682725865080926 6.110947532749334 46.576662420641334 6.156466935099919 46.545257494904405 6.072812859663235 46.46575695481556 6.086229234416428 46.44315127290448 6.064010780224935 46.41622909861854 6.1701415833310245 46.36643668925036 6.102350950861168 46.28485930922851 6.124297781301943 46.251133021642346 5.974396617021806 46.21475644762518 5.963682400338812 46.196972622694204 5.995204452056706 46.18289967852278 5.956069404703701 46.13209270071965 5.993965121444234 46.14443247279984 6.035707273230779 46.134768740991404 6.051904514583171 46.15127176155346 6.135524899825851 46.14116235766195 6.2223154004928 46.200793828457456 6.294448523265556 46.22493316999831 6.310265888058619 46.256183283384125 6.294862870557195 46.26460239438279 6.266492572740759 46.24770291381515 6.2377316539230305 46.27662270037572 6.248826940129985 46.30155579233637 6.219531854363853 46.311881975069376 6.252942459339907 46.36042410952974 6.3351758167376735 46.403721008517266 6.425605946160257 46.4158096948427 6.51909182382572 46.45637103912149 6.681846747139384 46.454337336428964 6.8210532854194295 46.42715660280175 6.806121292227788 46.379781900998196 6.770430367735351 46.35520740743068 6.864796256503964 46.280595085862075 6.803551226537243 46.20313740758567 6.7978756172355475 46.136799559267615 6.899460990764513 46.12405515790284 6.875624773376842 46.04769473246365 6.936958778155464 46.064754070686504 6.984739523068636 46.00512603471887 7.010517600601531 45.99727537767575 7.023317519245356 45.97923522115884 7.0090363453718965 45.9693897225668 7.037586371539799 45.95427152161369 7.101160910174281 45.85926821223587 7.153529878093876 45.8792471064575 7.196574955339536 45.86027182397742 7.216426306963483 45.88877689889702 7.256864529252637 45.88821522190219 7.294499791838083 45.921793175989066 7.386325331325373 45.89715221683328 7.471632617686372 45.93405606952617 7.499175024649624 45.96241510226094 7.5427532195005345 45.956938892938 7.550123519887039 45.98655303149748 7.578597181437923 45.98600890485457 7.5887805918359525 45.970512767173524 7.66418356308967 45.9756719822007 7.720470414585857 45.92378544216926 7.747741722503109 45.94100392720936 7.799492172807655 45.91738594080374 7.820380991424194 45.92695503224771 7.863566985094913 45.91669427529572 7.877416218564115 45.97385505436996 7.9086811730702 45.99696237737935 7.989086544643885 45.99592820407111 8.012405318406186 46.0119646889509 8.03540722659576 46.04403977526807 8.021654877782867 46.06936097121922 8.034340770224748 46.100835702823005 8.108226720853473 46.11162333781869 8.15533880164872 46.147625844067896 8.165504168067587 46.182222489229794 8.085922985036714 46.26661331118816 8.13755908433752 46.301762781007184 8.19874643551442 46.30224602115219 8.223991867033432 46.33444359566967 8.262880186124782 46.345962000511406 8.263769339538365 46.36401859650552 8.312896739081765 46.37706145420537 8.31572994901555 46.39896106120078 8.288931379290378 46.40810523040728 8.307489148323144 46.42584675952567 8.438527229877641 46.46429090011371 8.465943694730612 46.4443606719283 8.47117029206281 46.39591787750886 8.465354692707269 46.33375704866368 8.427736672329232 46.29829500937413 8.455877515860513 46.263749702067564 8.444523315980126 46.248871667517605 8.532440027035484 46.218276113991315 8.573603769008809 46.1644996328951 8.603003844268125 46.155361946580285 8.592893677695532 46.142962926915104 8.611855092974578 46.121662216912014 8.648027806428908 46.123319073470796 8.713932932612385 46.09726414547174 8.74232781009239 46.12221466053261 8.760224734532233 46.101409459042095 8.806033471839337 46.10127526487161 8.852111507547454 46.075632917247745 8.78590336090694 45.98906671898338 8.831635599981935 45.98795101410068 8.859926179945093 45.96622321722963 8.893751675670298 45.95900558344516 8.89272844621989 45.93300493851487 8.94529764884134 45.8669683411745 8.912142641064255 45.830434774384344 8.955769478513462 45.84289866242385 8.997483642439107 45.834933931566894 8.993910505203983 45.82195987379029 9.031385691767204 45.82082270055751 9.054803794195532 45.8735548973298 9.089023202367658 45.900651571990466 9.019192277994492 45.92843192394339 9.01396134617441 45.960538061300106 8.988989807391164 45.970332731938534 9.028458722868129 45.99361618940008 9.009523017850109 46.037278517927774 9.077124134763213 46.06408586684166 9.089614398828493 46.087006448047866 9.072516594392987 46.118093692536746 9.183814172175918 46.17036450446762 9.220907397753546 46.228884178137534 9.248532592967504 46.233758581428596 9.252118932735604 46.267382756331145 9.300143725310116 46.32644737516684 9.27607496505189 46.367802220394616 9.280478918320929 46.413052955385474 9.24700553563768 46.44678629008629 9.277900335129248 46.4609972362161 9.282743190033248 46.49668691075942 9.311052920161332 46.50412982907094 9.364262255139575 46.509060124709094 9.410792620775082 46.46678218586712 9.463563794547087 46.50886319193597 9.449100486581969 46.48436811799762 9.465406443525946 46.469638455442805 9.46081705753102 46.37596095232518 9.496427646833705 46.36409322963251 9.549532779238891 46.30236873747053 9.634972179165292 46.286113181628146 9.676516573342482 46.30303759281408 9.710150152014611 46.2917238767644 9.735843316991106 46.35030210000985 9.776940405024504 46.33500483142678 9.906846030734986 46.38095351117939 9.924794496668543 46.36589984590846 9.953197774845936 46.37914430395437 9.996770246061756 46.35092244704502 9.980225396876882 46.323134368534966 10.00020141315535 46.31306171368799 9.996020634815187 46.28475307637468 10.05544277432549 46.26578271133778 10.04367538411971 46.22973155098841 10.07059891557281 46.21710536072105 10.145954941731528 46.23046910180092 10.176530862333946 46.25826312942714 10.104280164048433 46.333654869126136 10.16668919828666 46.407635508733456 10.143206262388938 46.42826523868633 10.080479345537253 46.42102397547931 10.04198019685086 46.442606727071215 10.043961762215927 46.54034730512903 10.10022395890523 46.5828362932327 10.102362995361121 46.61070892330901 10.12846932018745 46.60549580367593 10.19277536772931 46.62592263546484 10.215329905856741 46.61692848052752 10.23921321330628 46.63531897710511 10.258900588062122 46.6104307444733 10.243607699567525 46.5777896363919 10.286651354386946 46.57024090075558 10.295446715138768 46.5498812492705 10.41814189390452 46.551307205135366 10.452811387960804 46.530669931001434 10.471533598860512 46.542843424888474 10.492046845483868 46.615328742235555 10.446086883460806 46.64125908747921 10.402299105758665 46.636799759484624 10.3818334443813 46.68429462839202 10.416018855755073 46.708991614115185 10.401044019264246 46.734195823960164 10.442641423468602 46.75399925821359 10.422732151558447 46.788231541825354 10.46654583356466 46.835883596501716 10.489364916747137 46.937779574705246 10.428654765496486 46.95614295260784 10.426603434990888 46.97567607166608 10.384716948987938 46.999981891933515 10.346536636421757 46.989582005262804 10.309380552791563 46.95019594339695 10.316082356692426 46.92517377682388 10.24059249826526 46.93124764600155 10.232701350168945 46.866295315221 10.105182394788041 46.84089943527933 10.087363002351601 46.8611804253125 10.051228825205019 46.86394010804752 10.017849995884458 46.901612974174085 9.876159523027676 46.93462728324064 9.892336639699428 46.99035752084757 9.876279339181906 47.021225267050085 9.836152549813445 47.012529394117934 9.681874652173317 47.06209486626728 9.559793846808345 47.04856432025364 9.539761897799236 47.06513850313927 9.476057414379977 47.0517917034334 9.52035461114094 47.10014428188927 9.485699683826178 47.1811818899626 9.529824274362179 47.26937670425505 9.605093964044881 47.351286341569995 9.67387766856986 47.38387022329432 9.644468982673684 47.43383213166406 9.65900873470368 47.452198676125384 9.609315626191078 47.470493004035504 9.594831989682868 47.46361801951153 9.561810118456332 47.49678235356159 9.558735413949584 47.54188982681282 9.49561849681098 47.551452066891386 9.394728731742223 47.620323903807126 9.256575321820979 47.65870629415067 9.175820442343289 47.6539369459781 9.02179588954285 47.68662079952784 8.895139288367336 47.64791313448272 8.850104353691716 47.68148552384267 8.872763195152617 47.70406405179639 8.818866975262067 47.71287283315007 8.806451647056239 47.738308038806 8.7699162408904 47.71794957715866 8.809945242411615 47.69326526083817 8.789650454642219 47.67524024774308 8.727984034762098 47.69267821152754 8.736306538757061 47.716152708709444 8.711282020521656 47.73007290822551 8.741488373716273 47.74807586931608 8.726117426406805 47.7627045225729 8.6926376597856 47.75615812854563 8.657026890838951 47.80036753577804 8.653043108378546 47.773366896798876 8.627690825682254 47.75926093130148 8.618636136351077 47.79832819365082</gml:posList>
+                        </gml:LinearRing>
+                      </gml:exterior>
+                      <gml:interior>
+                        <gml:LinearRing>
+                          <gml:posList>8.664335102879155 47.71331850918347 8.701562334865327 47.715179855463155 8.717719277468042 47.690740958763705 8.7015888059384 47.69193385096221 8.663349309285692 47.68590335372086 8.664335102879155 47.71331850918347</gml:posList>
+                        </gml:LinearRing>
+                      </gml:interior>
+                      <gml:interior>
+                        <gml:LinearRing>
+                          <gml:posList>8.958591082132997 45.96478432796426 8.97701744389083 45.98296449048458 8.975665152654043 45.96168024008871 8.958591082132997 45.96478432796426</gml:posList>
+                        </gml:LinearRing>
+                      </gml:interior>
+                    </Polygon>
+                  </gml:surfaceMember>
+                </MultiSurface>
+              </gmd:polygon>
+            </gmd:EX_BoundingPolygon>
+          </gmd:geographicElement>
+        </gmd:EX_Extent>
+      </gmd:extent>
+    </che:CHE_MD_DataIdentification>
+  </gmd:identificationInfo>
+  <gmd:distributionInfo>
+    <gmd:MD_Distribution>
+      <gmd:distributionFormat xlink:show="embed">
+        <gmd:MD_Format>
+          <gmd:name>
+            <gco:CharacterString>Online DB</gco:CharacterString>
+          </gmd:name>
+          <gmd:version>
+            <gco:CharacterString>-</gco:CharacterString>
+          </gmd:version>
+        </gmd:MD_Format>
+      </gmd:distributionFormat>
+      <gmd:transferOptions>
+        <gmd:MD_DigitalTransferOptions />
+      </gmd:transferOptions>
+      <gmd:transferOptions>
+        <gmd:MD_DigitalTransferOptions>
+          <gmd:onLine>
+            <gmd:CI_OnlineResource>
+              <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                <gmd:URL />
+                <che:PT_FreeURL>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#DE">https://www.bakom.admin.ch/bakom/de/home/das-bakom/organisation/rechtliche-grundlagen/vollzugspraxis/technische-und-administrative-vorschriften/sr-784-101-113-1-3.html</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#FR">https://www.bakom.admin.ch/bakom/de/home/das-bakom/organisation/rechtliche-grundlagen/vollzugspraxis/technische-und-administrative-vorschriften/sr-784-101-113-1-3.html</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#IT">https://www.bakom.admin.ch/bakom/de/home/das-bakom/organisation/rechtliche-grundlagen/vollzugspraxis/technische-und-administrative-vorschriften/sr-784-101-113-1-3.html</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#EN">https://www.bakom.admin.ch/bakom/de/home/das-bakom/organisation/rechtliche-grundlagen/vollzugspraxis/technische-und-administrative-vorschriften/sr-784-101-113-1-3.html</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#RM">https://www.bakom.admin.ch/bakom/de/home/das-bakom/organisation/rechtliche-grundlagen/vollzugspraxis/technische-und-administrative-vorschriften/sr-784-101-113-1-3.html</che:LocalisedURL>
+                  </che:URLGroup>
+                </che:PT_FreeURL>
+              </gmd:linkage>
+              <gmd:protocol>
+                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+              </gmd:protocol>
+              <gmd:name gco:nilReason="missing" xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString />
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#DE" />
+                  </gmd:textGroup>
+                </gmd:PT_FreeText>
+              </gmd:name>
+              <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>Link zu Detailbeschreibung</gco:CharacterString>
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#DE">Link zu Detailbeschreibung</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#FR">Lien vers la description détaillée des données</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#IT">Link per la descrizione dei dettagli</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#EN">Link to detailed description</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#RM">Link zu Detailbeschreibung</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                </gmd:PT_FreeText>
+              </gmd:description>
+            </gmd:CI_OnlineResource>
+          </gmd:onLine>
+          <gmd:onLine>
+            <gmd:CI_OnlineResource>
+              <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                <gmd:URL />
+                <che:PT_FreeURL>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#DE">https://data.geo.admin.ch/ch.bakom.notruf-112_festnetz</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#FR">https://data.geo.admin.ch/ch.bakom.notruf-112_festnetz</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#IT">https://data.geo.admin.ch/ch.bakom.notruf-112_festnetz</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#EN">https://data.geo.admin.ch/ch.bakom.notruf-112_festnetz</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#RM">https://data.geo.admin.ch/ch.bakom.notruf-112_festnetz</che:LocalisedURL>
+                  </che:URLGroup>
+                </che:PT_FreeURL>
+              </gmd:linkage>
+              <gmd:protocol>
+                <gco:CharacterString>WWW:DOWNLOAD-URL</gco:CharacterString>
+              </gmd:protocol>
+              <gmd:name gco:nilReason="missing" xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString />
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#DE" />
+                  </gmd:textGroup>
+                </gmd:PT_FreeText>
+              </gmd:name>
+              <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>Download von data.geo.admin.ch</gco:CharacterString>
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#DE">Download von data.geo.admin.ch</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#FR">Serveur de téléchargement de geo.admin.ch</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#IT">Server di download di geo.admin.ch</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#EN">Download server from geo.admin.ch</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#RM">Download von data.geo.admin.ch</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                </gmd:PT_FreeText>
+              </gmd:description>
+            </gmd:CI_OnlineResource>
+          </gmd:onLine>
+          <gmd:onLine>
+            <gmd:CI_OnlineResource>
+              <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                <gmd:URL />
+                <che:PT_FreeURL>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#DE">https://map.geo.admin.ch/?topic=notruf</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#FR">https://map.geo.admin.ch/?topic=notruf</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#IT">https://map.geo.admin.ch/?topic=notruf</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#EN">https://map.geo.admin.ch/?topic=notruf</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#RM">https://map.geo.admin.ch/?topic=notruf</che:LocalisedURL>
+                  </che:URLGroup>
+                </che:PT_FreeURL>
+              </gmd:linkage>
+              <gmd:protocol>
+                <gco:CharacterString>CHTOPO:specialised-geoportal</gco:CharacterString>
+              </gmd:protocol>
+              <gmd:name gco:nilReason="missing" xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString />
+              </gmd:name>
+              <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>Link zum Fachportal</gco:CharacterString>
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#DE">Link zum Fachportal</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#FR">Lien vers le portail</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#IT">Link al portale</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#EN">Link to portal</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#RM">Link zum Fachportal</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                </gmd:PT_FreeText>
+              </gmd:description>
+            </gmd:CI_OnlineResource>
+          </gmd:onLine>
+          <gmd:onLine />
+        </gmd:MD_DigitalTransferOptions>
+      </gmd:transferOptions>
+      <gmd:transferOptions>
+        <gmd:MD_DigitalTransferOptions />
+      </gmd:transferOptions>
+      <gmd:transferOptions>
+        <gmd:MD_DigitalTransferOptions />
+      </gmd:transferOptions>
+      <gmd:transferOptions>
+        <gmd:MD_DigitalTransferOptions>
+          <gmd:onLine>
+            <gmd:CI_OnlineResource>
+              <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                <gmd:URL>https://api3.geo.admin.ch</gmd:URL>
+                <che:PT_FreeURL>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#DE">https://api3.geo.admin.ch</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#FR">https://api3.geo.admin.ch</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#IT">https://api3.geo.admin.ch</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#EN">https://api3.geo.admin.ch</che:LocalisedURL>
+                  </che:URLGroup>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#RM">https://api3.geo.admin.ch</che:LocalisedURL>
+                  </che:URLGroup>
+                </che:PT_FreeURL>
+              </gmd:linkage>
+              <gmd:protocol>
+                <gco:CharacterString>ESRI:REST</gco:CharacterString>
+              </gmd:protocol>
+              <gmd:name xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>RESTful API</gco:CharacterString>
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#DE">RESTful API von geo.admin.ch</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#FR">RESTful API de geo.admin.ch</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#IT">RESTful API de geo.admin.ch</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#EN">RESTful API geo.admin.ch</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#RM">RESTful API geo.admin.ch</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                </gmd:PT_FreeText>
+              </gmd:name>
+              <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>RESTful API von geo.admin.ch</gco:CharacterString>
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#DE">RESTful API von geo.admin.ch</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#FR">RESTful API de geo.admin.ch</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#IT">RESTful API de geo.admin.ch</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#EN">RESTful API geo.admin.ch</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#RM">RESTful API geo.admin.ch</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                </gmd:PT_FreeText>
+              </gmd:description>
+            </gmd:CI_OnlineResource>
+          </gmd:onLine>
+        </gmd:MD_DigitalTransferOptions>
+      </gmd:transferOptions>
+    </gmd:MD_Distribution>
+  </gmd:distributionInfo>
+  <gmd:dataQualityInfo>
+    <gmd:DQ_DataQuality>
+      <gmd:scope>
+        <gmd:DQ_Scope>
+          <gmd:level>
+            <gmd:MD_ScopeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" />
+          </gmd:level>
+        </gmd:DQ_Scope>
+      </gmd:scope>
+      <gmd:lineage>
+        <gmd:LI_Lineage>
+          <gmd:statement xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Diese Angaben stammen von verschiedenen Telecom-Anbietern. Das BAKOM kann keine Gewähr bezüglich Korrektheit dieser Daten übernehmen.</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Diese Angaben stammen von verschiedenen Telecom-Anbietern. Das BAKOM kann keine Gewähr bezüglich Korrektheit dieser Daten übernehmen.</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Ces données proviennent des différents opérateurs de télécommunication. L'OFCOM ne peut fournir aucune garantie sur l'exactitude des données.</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">Questi dati sono stati messi a disposizione da diversi fornitori di servizi di telecomunicazione. L'UFCOM non può garantire in alcun modo l'esattezza dei dati.</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">This information originates from the various telecom providers. OFCOM can give no guarantee of the accuracy of this data.</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:statement>
+        </gmd:LI_Lineage>
+      </gmd:lineage>
+    </gmd:DQ_DataQuality>
+  </gmd:dataQualityInfo>
+  <che:legislationInformation>
+    <che:CHE_MD_Legislation gco:isoType="gmd:MD_Legislation">
+      <che:country>
+        <gmd:Country codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#Country" codeListValue="CH" />
+      </che:country>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger" />
+      </che:language>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre" />
+      </che:language>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ita" />
+      </che:language>
+      <che:legislationType>
+        <che:CHE_CI_LegislationCode codeList="#CHE_CI_LegislationCode" codeListValue="nationalLaw" />
+      </che:legislationType>
+      <che:title>
+        <gmd:CI_Citation>
+          <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Fernmeldegesetz</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Fernmeldegesetz</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Loi sur les télécommunications</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">Legge sulle telecomunicazioni</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:title>
+          <gmd:alternateTitle xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>FMG</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">FMG</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">LTC</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">LTC</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:alternateTitle>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:Date>1997-04-30</gco:Date>
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation" />
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:Date>1997-10-20</gco:Date>
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+          <gmd:series>
+            <gmd:CI_Series>
+              <gmd:name xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>SR 784.10</gco:CharacterString>
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#DE">SR 784.10</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#FR">RS 784.10</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#IT">RS 784.10</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                </gmd:PT_FreeText>
+              </gmd:name>
+            </gmd:CI_Series>
+          </gmd:series>
+        </gmd:CI_Citation>
+      </che:title>
+    </che:CHE_MD_Legislation>
+  </che:legislationInformation>
+  <che:legislationInformation>
+    <che:CHE_MD_Legislation gco:isoType="gmd:MD_Legislation">
+      <che:country>
+        <gmd:Country codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#Country" codeListValue="CH" />
+      </che:country>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger" />
+      </che:language>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre" />
+      </che:language>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ita" />
+      </che:language>
+      <che:legislationType>
+        <che:CHE_CI_LegislationCode codeList="#CHE_CI_LegislationCode" codeListValue="nationalDecree" />
+      </che:legislationType>
+      <che:internalReference xsi:type="gmd:PT_FreeText_PropertyType">
+        <gco:CharacterString>Anhang 1</gco:CharacterString>
+        <gmd:PT_FreeText>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#DE">Anhang 1</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+        </gmd:PT_FreeText>
+      </che:internalReference>
+      <che:title>
+        <gmd:CI_Citation>
+          <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Verordnung über Geoinformation</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Verordnung über Geoinformation</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Ordonnance sur la géoinformation</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">Ordinanza sulla geoinformazione</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:title>
+          <gmd:alternateTitle xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Geoinformationsverordnung GeoIV</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Geoinformationsverordnung GeoIV</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">OGéo</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">OGI</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:alternateTitle>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:Date>2008-05-21</gco:Date>
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation" />
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:Date>2008-07-01</gco:Date>
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+          <gmd:series>
+            <gmd:CI_Series>
+              <gmd:name xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>SR 510.620</gco:CharacterString>
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#DE">SR 510.620</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#FR">RS 510.620</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#IT">RS 510.620</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                </gmd:PT_FreeText>
+              </gmd:name>
+            </gmd:CI_Series>
+          </gmd:series>
+        </gmd:CI_Citation>
+      </che:title>
+    </che:CHE_MD_Legislation>
+  </che:legislationInformation>
+</che:CHE_MD_Metadata>
+
