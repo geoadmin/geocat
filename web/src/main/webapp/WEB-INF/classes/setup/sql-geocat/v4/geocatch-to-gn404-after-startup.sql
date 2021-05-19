@@ -35,9 +35,6 @@ UPDATE Settings SET  position = position + 1 WHERE name = 'metadata/workflow/for
 -- geocat in INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/workflow/allowPublishNonApprovedMd', 'true', 2, 100005, 'n');
 
 
-DROP TABLE ServiceParameters;
-DROP TABLE Services;
-
 
 UPDATE Settings SET value='3.7.0' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
@@ -180,6 +177,38 @@ UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
 
 -- SELECT * FROM settings WHERE name LIKE '%ui%';
 UPDATE Settings SET value='default' WHERE name='system/ui/defaultView';
+
+-- Virtual CSW migration
+DELETE FROM sourcesdes
+WHERE iddes not in (SELECT distinct(source) FROM metadata);
+
+DELETE FROM sources
+WHERE uuid not in (SELECT distinct(source) FROM metadata);
+
+
+INSERT INTO sources (uuid, name, creationdate, filter, groupowner, logo, servicerecord, type, uiconfig)
+SELECT replace(s.name, 'csw-', ''), replace(s.name, 'csw-', ''),
+       '20210619', '+groupOwner:' || p.value,
+       null, null, null, 'subportal', null
+FROM services s LEFT JOIN serviceparameters p
+                          ON s.id = p.service WHERE p.name = '_groupOwner';
+
+INSERT INTO sources (uuid, name, creationdate, filter, groupowner, logo, servicerecord, type, uiconfig)
+SELECT replace(s.name, 'csw-', ''), replace(s.name, 'csw-', ''),
+       '20210619', '+source:' || p.value,
+       null, null, null, 'subportal', null
+FROM services s LEFT JOIN serviceparameters p
+                          ON s.id = p.service WHERE p.name = '_source';
+
+
+INSERT INTO sourcesdes (iddes, label, langid)
+SELECT replace(s.name, 'csw-', ''), replace(s.name, 'csw-', ''), l.id
+FROM services s, languages l;
+
+
+
+DROP TABLE ServiceParameters;
+DROP TABLE Services;
 
 
 -- ## 4.0.0 - After startup
