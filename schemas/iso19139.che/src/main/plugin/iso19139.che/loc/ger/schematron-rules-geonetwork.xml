@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <schematron.title>Empfehlungen GeoNetwork</schematron.title>
+  <M500>[Sprache] - Die Grundsprache des Metadateneintrags ist nicht definiert, gleichzeitig wurden andere Sprachen
+    deklariert. Die Grundsprache des Metadatensatzes DARF jedoch NICHT in anderen Sprachfeldern definiert werden
+  </M500>
+  <alert.M500>
+    <div>Definieren Sie eine Grundsprache und überprüfen Sie, dass weitere Sprachen im Bereich Sprachraum definiert
+      sind.(ie.
+      gmd:locale)(s. erweiterte Ansicht / Metadaten).
+      <br/>
+      <span class="validationReportSuggestion">Vorschlag: Definieren Sie eine Grundsprache oder löschen Sie das
+        entsprechende Sprachraum-Feld.
+      </span>
+    </div>
+  </alert.M500>
+  <report.M500>Die Grundsprache des Metadatensatzes ist:</report.M500>
+  <alert.M501>
+    <div>Geben Sie die Grundsprache des Metadatensatzes nur einmal an (s. erweiterte Ansicht / Metadaten).
+      <br/>
+      <span class="validationReportSuggestion">Vorschlag: Löschen Sie die Sprache im Sprachraum-Feld.</span>
+    </div>
+  </alert.M501>
+  <report.M501>Es wurde keine Mehrfachvergabe des Sprachenfeldes im Metadatensatz gefunden.</report.M501>
+</strings>
