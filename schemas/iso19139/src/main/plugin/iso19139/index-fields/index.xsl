@@ -141,7 +141,6 @@
 
     <!-- Create a first document representing the main record. -->
     <doc>
-
       <xsl:copy-of select="gn-fn-index:add-field('docType', 'metadata')"/>
 
       <!-- Index the metadata document as XML -->
