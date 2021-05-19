@@ -595,6 +595,11 @@
     </dependency>
     <dependency>
       <groupId>org.geonetwork-opensource.schemas</groupId>
+      <artifactId>gn-schema-iso19139.che</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>gn-schema-csw-record</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -1082,6 +1087,13 @@
                     <artifactItem>
                       <groupId>org.geonetwork-opensource.schemas</groupId>
                       <artifactId>gn-schema-iso19139</artifactId>
+                      <type>zip</type>
+                      <overWrite>false</overWrite>
+                      <outputDirectory>${schema-plugins.dir}</outputDirectory>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>org.geonetwork-opensource.schemas</groupId>
+                      <artifactId>gn-schema-iso19139.che</artifactId>
                       <type>zip</type>
                       <overWrite>false</overWrite>
                       <outputDirectory>${schema-plugins.dir}</outputDirectory>

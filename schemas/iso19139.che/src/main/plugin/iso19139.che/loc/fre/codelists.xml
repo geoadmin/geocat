@@ -1,0 +1,846 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<codelists xmlns:gmd="http://www.isotc211.org/2005/gmd">
+  <!--
+        <codelist name="gmd:CI_DateTypeCode">
+        <entry><code></code><label></label><description></description></entry>
+        </codelist>-->
+  <codelist name="gmd:MD_TopicCategoryCode" alias="topicCategory">
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>imageryBaseMapsEarthCover</code>
+      <label>A Cartes de référence, couverture du sol, images aériennes</label>
+      <description>Carte de référence. Exemples : occupation des terres, imagerie aérienne et satellite, cartes thématiques, cartes topographiques</description>
+    </entry>
+    <entry>
+      <code>imageryBaseMapsEarthCover_BaseMaps</code>
+      <label>A1 Cartes de référence, modèles du territoire</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>imageryBaseMapsEarthCover_EarthCover</code>
+      <label>A2 Couverture et utilisation du sol</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>imageryBaseMapsEarthCover_Imagery</code>
+      <label>A3 Images aériennes et satellitaires</label>
+      <description/>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>location</code>
+      <label>B Localisation, systèmes de référence</label>
+      <description>Exemples : zones postales, adresses, points de contrôle, réseau géodésique</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>elevation</code>
+      <label>C Altimétrie</label>
+      <description>Hauteurs au dessous et dessus du niveau de la mer. Exemples : altitude, bathymétrie, MNT, pentes et calculs dérivés de l’altitude</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>boundaries</code>
+      <label>D Limites politiques et administratives</label>
+      <description>Exemples : limites de pays, de provinces, de départements, de communes</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>planningCadastre</code>
+      <label>E Développement territorial, cadastre foncier</label>
+      <description>Exemples : carte d’utilisation des terres, plan d’occupation des sols, planification pour la prévention des risques</description>
+    </entry>
+    <entry>
+      <code>planningCadastre_Planning</code>
+      <label>E1 Développement territorial</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>planningCadastre_Cadastre</code>
+      <label>E2 Cadastre foncier</label>
+      <description/>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>geoscientificInformation</code>
+      <label>F Géologie, sols, dangers naturels</label>
+      <description>Informations relatives aux sciences de la terre. Exemples : composants et processus géophysiques, géologie, minéralogie, tectonique, risque sismique</description>
+    </entry>
+    <entry>
+      <code>geoscientificInformation_Geology</code>
+      <label>F1 Géologie</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>geoscientificInformation_Soils</code>
+      <label>F2 Sols</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>geoscientificInformation_NaturalHazards</code>
+      <label>F3 Dangers naturels</label>
+      <description/>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>biota</code>
+      <label>G Forêt, flore, faune</label>
+      <description>Flore et faune dans un écosystème naturel. Exemples : habitat, écologie, faune sauvage, faune aquatique, sciences biologiques, zones humides, végétation, biodiversité</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>oceans</code>
+      <label>H Océans</label>
+      <description>Composants et caractéristiques du milieu maritime. Exemples : littoral, récifs, marée, etc.</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>inlandWaters</code>
+      <label>I Hydrographie</label>
+      <description>Exemples : fleuves, rivières, glaciers, lacs salés, systèmes hydrographiques, barrages, débits, qualité de l’eau</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>climatologyMeteorologyAtmosphere</code>
+      <label>K Atmosphère, climatologie</label>
+      <description>Processus et phénomènes atmosphériques. Exemples : climat, météorologie, conditions atmosphériques, changements climatiques, couverture nuageuse</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>environment</code>
+      <label>L Protection de l'environnement et de la nature</label>
+      <description>Ressources naturelles, protection, conservation des ressources naturelles. Exemples : pollution, traitement et stockage des déchets, suivi de l’environnement, gestion du risque, réserves naturelles, paysage</description>
+    </entry>
+    <entry>
+      <code>environment_EnvironmentalProtection</code>
+      <label>L1 Protection de l'environnement, bruit</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>environment_NatureProtection</code>
+      <label>L2 Protection de la nature et du paysage</label>
+      <description>Protection de la nature et du paysage</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>society</code>
+      <label>M Population, Société, culture</label>
+      <description>Caractéristiques des sociétés et des cultures. Exemples :lois, anthropologie, éducation, données démographiques, archéologie, suivi des systèmes	sociaux, croyances, us et coutumes, crimes et justices</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>health</code>
+      <label>N Santé</label>
+      <description>Santé, services de santé, épidémiologie. Exemples : maladies et épidémie, facteurs affectant la santé, santé mentale et physique, services de santé</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>structure</code>
+      <label>O Edifices, infrastructures, ouvrages</label>
+      <description>Aménagements urbains. Exemples : musée, église, usines, maisons, monuments, boutiques, immeubles</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>transportation</code>
+      <label>P Transport</label>
+      <description>Moyens de transports des personnes et des biens. Exemples :  routes, aéroports, tunnels, viaducs, ponts, chemin de fer</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>utilitiesCommunication</code>
+      <label>Q Approvisionnement, élimination, communication</label>
+      <description>Systèmes de distribution de gestion ou de stockage de l’énergie, de l’eau, des déchets. Infrastructures et services de communication. Exemples : source d’énergie solaire, hydroélectrique, nucléaire, épuration et distribution des eaux, réseau de distribution électrique, de gaz, réseau de télécommunication, radio.</description>
+    </entry>
+    <entry>
+      <code>utilitiesCommunication_Energy</code>
+      <label>Q1 Energie</label>
+      <description>Energie</description>
+    </entry>
+    <entry>
+      <code>utilitiesCommunication_Utilities</code>
+      <label>Q2 Systèmes des eaux et des déchets</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>utilitiesCommunication_Communication</code>
+      <label>Q3 Communication</label>
+      <description></description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>intelligenceMilitary</code>
+      <label>R Armée, sécurité</label>
+      <description>Bases militaires et infrastructures de sécurité</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>farming</code>
+      <label>S Agriculture</label>
+      <description>Elevage et/ou cultures. Exemples : agriculture, irrigation, aquaculture, plantations</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>economy</code>
+      <label>T Activités économiques</label>
+      <description>Activités économiques. Exemples : production, travail, revenu, commerce, industrie, tourisme et éco-tourisme, foresterie, pêche, chasse, exploration et exploitation des ressources minières, pétrole, gaz naturel</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <codelist name="gmd:Country" alias="country">
+    <entry>
+      <code>CH</code>
+      <label>Suisse</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>LI</code>
+      <label>Liechtenstein</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>DE</code>
+      <label>Allemagne</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>FR</code>
+      <label>France</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>IT</code>
+      <label>Italie</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>AT</code>
+      <label>Autriche</label>
+      <description/>
+    </entry>
+  </codelist>
+  <codelist name="gmd:LanguageCode" alias="language">
+    <entry>
+      <code>ger</code>
+      <label>allemand</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>fre</code>
+      <label>français</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>ita</code>
+      <label>italien</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>eng</code>
+      <label>anglais</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>roh</code>
+      <label>romanche</label>
+      <description/>
+    </entry>
+  </codelist>
+  <codelist name="che:CHE_CI_LegislationCode" alias="legislation">
+    <entry>
+      <code>cantonalLaw</code>
+      <label>Loi cantonale</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>nationalLaw</code>
+      <label>Loi nationale</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>nationalDecree</code>
+      <label>Ordonnance nationale</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>internationalObligation</code>
+      <label>Obligation internationale</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>otherLegalText</code>
+      <label>Autre texte législatif</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>bylawsPrivatLaw</code>
+      <label>Statuts de droit privé</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>bylawsPublicLaw</code>
+      <label>Statuts de droit public</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>communalLaw</code>
+      <label>Loi communale</label>
+      <description/>
+    </entry>
+  </codelist>
+  <codelist name="che:CI_NumberTypeCode" alias="numberType">
+    <entry>
+      <code>mainNumber</code>
+      <label>Numéro principal</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>directNumber</code>
+      <label>Numéro direct</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>mobile</code>
+      <label>Numéro portable</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>facsimile</code>
+      <label>Numéro Fax</label>
+      <description/>
+    </entry>
+  </codelist>
+  <codelist name="che:CHE_MD_FilmTypeCode" alias="filmType">
+    <entry>
+      <code>BW</code>
+      <label>Noir et blanc</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>C</code>
+      <label>Couleur</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>CIR</code>
+      <label>Infrarouge couleur</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>IR</code>
+      <label>Infrarouge</label>
+      <description/>
+    </entry>
+  </codelist>
+  <codelist name="che:CHE_CI_projectTypeCode" alias="projectType">
+    <entry>
+      <code>research</code>
+      <label>Recherche</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>monitoringProgram</code>
+      <label>Programme de surveillance</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>workProgram</code>
+      <label>Programme de travail</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>inventory</code>
+      <label>Inventaire</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>planning</code>
+      <label>Planification</label>
+      <description/>
+    </entry>
+  </codelist>
+  <codelist name="che:basicGeodataIDTypeCode" alias="basicGeodataIDType">
+    <entry>
+      <code>communal</code>
+      <label>Communal</label>
+    </entry>
+    <entry>
+      <code>cantonal</code>
+      <label>Cantonal</label>
+    </entry>
+    <entry>
+      <code>federal</code>
+      <label>Fédéral</label>
+      <description>Identifiant du jeu de géodonnées de base au niveau fédéral (cf. Recueil des jeux de géodonnées de
+        base de droit fédéral)
+      </description>
+    </entry>
+    <entry>
+      <code>other</code>
+      <label>Autre</label>
+    </entry>
+  </codelist>
+  <codelist name="che:CHE_MD_modelTypeCode" alias="modelType">
+    <entry>
+      <code>FeatureDescription</code>
+      <label>Description des objets</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>UMLdiagram</code>
+      <label>Diagramme UML</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>EntityRelationshipModel</code>
+      <label>Diagramme ER</label>
+      <description>Diagramme Entité-Relation</description>
+    </entry>
+    <entry>
+      <code>INTERLIS1</code>
+      <label>INTERLIS 1</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>INTERLIS2</code>
+      <label>INTERLIS 2</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>GML</code>
+      <label>GML</label>
+      <description/>
+    </entry>
+    <entry>
+      <code>Other</code>
+      <label>Autre</label>
+      <description/>
+    </entry>
+  </codelist>
+  <codelist name="che:CHE_SV_inspireServiceTypeCode">
+    <entry>
+      <code>DiscoveryService</code>
+      <label>Service de recherche</label>
+      <description>Services permettant de rechercher des séries et services de données géographiques sur la base du
+        contenu des
+        métadonnées correspondantes et d’afficher le contenu des métadonnées.
+      </description>
+    </entry>
+    <entry>
+      <code>ViewService</code>
+      <label>Service de consultation</label>
+      <description>Service permettant au moins de visualiser, de naviguer, de zoomer en avant et en arrière, de déplacer
+        à l’écran, ou
+        de superposer des séries de données géographiques qui peuvent être consultées et d’afficher les légendes ainsi
+        que
+        tout contenu pertinent de métadonnées.
+      </description>
+    </entry>
+    <entry>
+      <code>DownloadService</code>
+      <label>Service de téléchargement</label>
+      <description>Service permettant de télécharger des copies de séries de données géographiques, ou de parties de ces
+        séries, et
+        lorsque cela est réalisable, d’y avoir accès directement.
+      </description>
+    </entry>
+    <entry>
+      <code>TransformationService</code>
+      <label>Service de transformation</label>
+      <description>Service permettant de transformer des séries de données géographiques en vue d’assurer
+        l’interopérabilité.
+      </description>
+    </entry>
+    <entry>
+      <code>InvokeSpatialDataService</code>
+      <label>Service d’appel de services de données géographiques</label>
+      <description>Service permettant de définir à la fois les données d’entrée et de sortie demandées par le service de
+        données
+        géographiques et un processus ou une chaîne de services combinant plusieurs services. Il permet aussi de définir
+        une interface externe du service internet pour le processus ou la chaîne de services.
+      </description>
+    </entry>
+    <entry>
+      <code>OtherServices</code>
+      <label>Autre services</label>
+    </entry>
+  </codelist>
+  <codelist name="gmd:DS_InitiativeTypeCode" alias="initiativeType"/>
+  <codelist name="gmd:DS_AssociationTypeCode" alias="associationType">
+    <entry>
+      <code>largerWorkCitation</code>
+      <label>Larger work citation</label>
+      <description>Référence à un jeu de données maitre dont celui-ci est une partie.</description>
+    </entry>
+    <entry>
+      <code>isTemporalStatOf</code>
+      <label>Temporal state</label>
+      <description>Référence provenant d’un jeu de données dans une série chronologique à un autre jeu dans la même
+        série chronologique.
+      </description>
+    </entry>
+    <entry>
+      <code>isDescriptionOf</code>
+      <label>Description</label>
+      <description>Référence provenant d’un jeu de données décrivant les données référencées.</description>
+    </entry>
+  </codelist>
+
+  <codelist name="che:MD_geodataTypeCode">
+    <entry>
+      <code>basicGeodata</code>
+      <label>Géodonnées de base</label>
+    </entry>
+    <entry>
+      <code>oereb</code>
+      <label>OEREB</label>
+    </entry>
+    <entry>
+      <code>oerebRegister</code>
+      <label>Registre OEREB</label>
+    </entry>
+    <entry>
+      <code>openGovernmentData</code>
+      <label>Données gouvernementales ouvertes</label>
+    </entry>
+    <entry>
+      <code>openData</code>
+      <label>Données ouvertes</label>
+    </entry>
+    <entry>
+      <code>referenceGeodata</code>
+      <label>Géodonnées de référence</label>
+    </entry>
+  </codelist>
+  <codelist name="gmd:MD_ScopeCode">
+    <entry>
+      <code>attribute</code>
+      <label>Attribut</label>
+      <description>Informations appliquées aux caractéristiques de l’attribut</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>attributeType</code>
+      <label>Type d'attribut</label>
+      <description>Informations appliquées aux caractéristiques de l’entité</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>collectionHardware</code>
+      <label>Collection matérielle</label>
+      <description>Informations appliquées aux caractéristiques d’une collection matérielle</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>collectionSession</code>
+      <label>Collection de session</label>
+      <description>Informations appliquées aux caractéristiques d’une collection de session</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>dataset</code>
+      <label>Jeu de données</label>
+      <description>Informations appliquées aux caractéristiques de jeu de données</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>series</code>
+      <label>Collection de données</label>
+      <description>Informations appliquées aux caractéristiques de la collection de données</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>nonGeographicDataset</code>
+      <label>Jeux de données non géographiques</label>
+      <description>Informations appliquées aux caractéristiques de jeux de données non géographiques</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>dimensionGroup</code>
+      <label>Dimension d'un groupe</label>
+      <description>Informations appliquées à un groupe</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>feature</code>
+      <label>Entité</label>
+      <description>Informations appliquées à une entité</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>featureType</code>
+      <label>Type d’entité</label>
+      <description>Informations appliquées à un type d’entité</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>propertyType</code>
+      <label>Type de propriété</label>
+      <description>Informations appliquées à un type de propriété</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>fieldSession</code>
+      <label>Champ de session</label>
+      <description>Informations appliquées aux caractéristiques d’un champ de session</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>software</code>
+      <label>Logiciel</label>
+      <description>Informations appliquées à programme ou à une routine</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>service</code>
+      <label>Service</label>
+      <description>Informations appliquées à un service Internet</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>model</code>
+      <label>Modèle</label>
+      <description>Informations appliquées à modèle décrivant les objets ou un ensemble d'objets</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>tile</code>
+      <label>Tuile</label>
+      <description>Tuile</description>
+    </entry>
+    <entry>
+      <code>project</code>
+      <label>Projet</label>
+      <description>Le projet décrit le cadre organisationnel défini pour l'accomplissement d'une tâche: il intègre la
+        description des tenants et des aboutissants du problème, les objectifs, les activités prévues, les étapes de
+        réalisation, les délais, les ressources...
+      </description>
+    </entry>
+    <entry>
+      <code>stationSite</code>
+      <label>Station</label>
+      <description>Cet élément décrit les activités d'acquisition de données des stations de mesure ; il ne décrit pas
+        les données mais la manière dont elles ont été saisies (paramètres de saisie, méthodes, instruments)
+      </description>
+    </entry>
+    <entry>
+      <code>publication</code>
+      <label>Publication</label>
+      <description>Ce sont des produits finis tels que les ouvrages, brochures, articles, rapports, matériel
+        audiovisuel...
+      </description>
+    </entry>
+
+
+    <!-- Used for facet translation only and not displayed in editor -->
+    <entry>
+      <code>map</code>
+      <label>Carte</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>staticMap</code>
+      <label>Carte statique</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>interactiveMap</code>
+      <label>Carte interactive</label>
+      <description></description>
+    </entry>
+    <entry hideInEditMode="true">
+      <code>featureCatalog</code>
+      <label>Catalogue d'attributs</label>
+      <description></description>
+    </entry>
+    <!--GEOCAT-->
+    <entry>
+      <code>basicgeodata</code>
+      <label>Géodonnée de base</label>
+      <description></description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>basicgeodata-federal</code>
+      <label>Géodonnée de base - Fédéral</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>basicgeodata-cantonal</code>
+      <label>Géodonnée de base - Cantonal</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>basicgeodata-communal</code>
+      <label>Géodonnée de base - Communal</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>service-OGC:WFS</code>
+      <label>Services WFS</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>service-OGC:WMS</code>
+      <label>Services WMS</label>
+      <description></description>
+    </entry>
+  </codelist>
+
+  <!-- Geocat override: asked on behalf of SB-422 -->
+  <codelist name="gmd:CI_RoleCode">
+    <entry>
+      <code>resourceProvider</code>
+      <label>Fournisseur</label>
+      <description>Organisme qui fournit la ressource. Acteur qui délivre physiquement la ressource, soit de manière
+        directe au destinataire, soit par l’intermédiaire d’un diffuseur
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>custodian</code>
+      <label>Gestionnaire</label>
+      <description>Acteur responsable de la gestion et de la mise à jour de la ressource</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>owner</code>
+      <label>Propriétaire</label>
+      <description>Organisme qui est propriétaire de la ressource / Acteur qui détient les droits patrimoniaux de la
+        ressource
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>user</code>
+      <label>Utilisateur</label>
+      <description>Organisme qui utilise ou a utilisé la ressource</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>distributor</code>
+      <label>Distributeur</label>
+      <description>Organisme qui distribue la ressource. Diffuseur de second niveau de la ressource</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>originator</code>
+      <label>A l’origine de</label>
+      <description>Organisme qui a commandé la ressource. Acteur qui a été habilité à créer la ressource et qui a mis en
+        place les moyens pour la constituer
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>pointOfContact</code>
+      <label>Point de contact</label>
+      <description>Organisme que l’on peut contacter pour avoir des renseignements détaillés sur la ressource. Acteur à
+        contacter en premier lieu pour obtenir des informations relatives à la ressource
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>principalInvestigator</code>
+      <label>Point de recherche</label>
+      <description>Personne clé pour obtenir des informations sur la ressource et les recherches conduites autour de la
+        ressource&#xA;Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant appel à des
+        co-traitants ou des sous traitants
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>processor</code>
+      <label>Exécutant</label>
+      <description>Organisme qui a réalisé des traitements sur la ressource. Acteur qui est intervenu lors de la
+        réalisation de la ressource
+      </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>publisher</code>
+      <label>Editeur (publication)</label>
+      <description>Organisme qui assure la publication de la ressource.</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>author</code>
+      <label>Auteur</label>
+      <description>Organisme ou personne qui est auteur. Acteur qui dispose des droits moraux relatifs à la ressource
+      </description>
+    </entry>
+    <entry>
+      <code>editor</code>
+      <label>Editeur</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>partner</code>
+      <label>Partenaire</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>specialistAuthority</code>
+      <label>Service spécialisé de la Confédération</label>
+      <description>Service spécialisé de la Confédération</description>
+    </entry>
+  </codelist>
+  <codelist name="che:CHE_AppraisalOfArchivalValueCode">
+    <entry>
+      <code>A</code>
+      <label>(de) valeur archivistique</label>
+      <description>(de) valeur archivistique</description>
+    </entry>
+    <entry>
+      <code>N</code>
+      <label>pas de valeur archivistique</label>
+      <description>pas de valeur archivistique</description>
+    </entry>
+    <entry>
+      <code>S</code>
+      <label>sampling / sélection</label>
+      <description>sampling / sélection</description>
+    </entry>
+  </codelist>
+  <codelist name="che:CHE_ReasonForArchivingValueCode">
+    <entry>
+      <code>legalRelevance</code>
+      <label>Pertinence juridique</label>
+      <description>Pertinence juridique</description>
+    </entry>
+    <entry>
+      <code>guaranteeOfLegalCertainty</code>
+      <label>Garantie de la sécurité juridique</label>
+      <description>Garantie de la sécurité juridique</description>
+    </entry>
+    <entry>
+      <code>evidenceOfBusinessPractice</code>
+      <label>Preuve de la pratique courante</label>
+      <description>Preuve de la pratique courante</description>
+    </entry>
+    <entry>
+      <code>benefitsForResearch</code>
+      <label>Utilité pour la recherche</label>
+      <description>Utilité pour la recherche</description>
+    </entry>
+    <entry>
+      <code>contemporaryInterest</code>
+      <label>Valeur d'actualité</label>
+      <description>Valeur d'actualité</description>
+    </entry>
+    <entry>
+      <code>sensitivity</code>
+      <label>Sujets explosifs</label>
+      <description>Sujets explosifs</description>
+    </entry>
+    <entry>
+      <code>developmentsProgression</code>
+      <label>Evolution / déroulement</label>
+      <description>Evolution / déroulement</description>
+    </entry>
+    <entry>
+      <code>definingPowers</code>
+      <label>Pouvoir d'influence</label>
+      <description>Pouvoir d'influence</description>
+    </entry>
+  </codelist>
+</codelists>
+
