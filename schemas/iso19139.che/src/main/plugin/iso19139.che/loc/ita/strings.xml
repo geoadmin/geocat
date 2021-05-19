@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <understandResource>Informazione sul dataset</understandResource>
+  <relatedResources>Servizi e dati raggiunti</relatedResources>
+  <techInfo>Informazione tecnica</techInfo>
+  <contactInfo>Informazione di contatto</contactInfo>
+  <temporalRef>Informatione temporale</temporalRef>
+  <constraintInfo>Vincoli legali</constraintInfo>
+
+  <!-- New strings added for the AngularJS editor -->
+  <!-- View and tabs -->
+  <advanced>Full</advanced>
+  <default>Simple</default>
+  <simple>Simple</simple>
+  <inspire>INSPIRE</inspire>
+  <resource>Resource</resource>
+  <xml>XML</xml>
+  <metadata>Metadata</metadata>
+  <identificationInfo>Identificazione</identificationInfo>
+  <distributionInfo>Distribuzione</distributionInfo>
+  <dataQualityInfo>Qualità dei dati</dataQualityInfo>
+  <spatialRepresentationInfo>Sis. di riferimento</spatialRepresentationInfo>
+  <referenceSystemInfo>Rapp. Spaziale</referenceSystemInfo>
+  <contentInfo>Info. sul contenuto</contentInfo>
+  <portrayalCatalogueInfo>Rapp. del catalogo</portrayalCatalogueInfo>
+  <metadataConstraints>Vincoli</metadataConstraints>
+  <metadataMaintenance>Manutenzione</metadataMaintenance>
+  <applicationSchemaInfo>Schema dell'app.</applicationSchemaInfo>
+  <metadataExtensionInfo>Info sull'estensione</metadataExtensionInfo>
+  <legislationInformation>Base giuridica</legislationInformation>
+  <rsIdentifier>Codice della proiezione</rsIdentifier>
+  <spatialResolution>Scala (min o max)</spatialResolution>
+  <geometricObjectType>Tipo di geometria</geometricObjectType>
+
+  <!-- XSD error translation -->
+  <invalidElement>Invalid element. Invalid content was found starting with element:</invalidElement>
+  <onElementOf>One of the following elements</onElementOf>
+  <isExpected>is expected.</isExpected>
+  <isNotComplete>is not complete.</isNotComplete>
+  <elementLocated>Parent element is</elementLocated>
+  <missingElement>Missing element. The content of element:</missingElement>
+  <invalidValue>Invalid or missing value.</invalidValue>
+  <notValidFor>is not a valid value for </notValidFor>
+  <xsdErrorIs>XSD error is:</xsdErrorIs>
+  <inElement>in element</inElement>
+  <enum1>Value</enum1>
+  <enum2>is not valid for the field</enum2>
+  <enum3>List of values is :</enum3>
+
+</strings>

@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:geonet="http://www.fao.org/geonetwork" gco:isoType="gmd:MD_Metadata">
+  <gmd:fileIdentifier xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://toignore">
+    <gco:CharacterString>5bf0e5e4-775e-4b7a-a2d2-b5e8cb137ffc</gco:CharacterString>
+  </gmd:fileIdentifier>
+  <gmd:language xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://toignore">
+    <gco:CharacterString>ger</gco:CharacterString>
+  </gmd:language>
+  <gmd:characterSet xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://toignore">
+    <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode" codeListValue="utf8" />
+  </gmd:characterSet>
+  <gmd:hierarchyLevel xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://toignore">
+    <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode" codeListValue="dataset" />
+  </gmd:hierarchyLevel>
+  <gmd:dateStamp xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://toignore">
+    <gco:DateTime>2014-06-10T16:16:00</gco:DateTime>
+  </gmd:dateStamp>
+  <gmd:metadataStandardName xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://toignore">
+    <gco:CharacterString>GM03_2</gco:CharacterString>
+  </gmd:metadataStandardName>
+  <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://toignore">
+    <gmd:PT_Locale id="DE">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="#LanguageCode" codeListValue="ger" />
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://toignore">
+    <gmd:PT_Locale id="FR">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="#LanguageCode" codeListValue="fre" />
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://toignore">
+    <gmd:PT_Locale id="IT">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="#LanguageCode" codeListValue="ita" />
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://toignore">
+    <gmd:PT_Locale id="EN">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="#LanguageCode" codeListValue="eng" />
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeList="#MD_CharacterSetCode" codeListValue="utf8">UTF8</gmd:MD_CharacterSetCode>
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://toignore">
+    <gmd:PT_Locale id="RM">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="#LanguageCode" codeListValue="roh" />
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:spatialRepresentationInfo xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://toignore">
+    <gmd:MD_VectorSpatialRepresentation>
+      <gmd:geometricObjects>
+        <gmd:MD_GeometricObjects>
+          <gmd:geometricObjectType>
+            <gmd:MD_GeometricObjectTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_GeometricObjectTypeCode" codeListValue="" />
+          </gmd:geometricObjectType>
+        </gmd:MD_GeometricObjects>
+      </gmd:geometricObjects>
+    </gmd:MD_VectorSpatialRepresentation>
+  </gmd:spatialRepresentationInfo>
+  <gmd:referenceSystemInfo xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://toignore">
+    <gmd:MD_ReferenceSystem>
+      <gmd:referenceSystemIdentifier>
+        <gmd:RS_Identifier>
+          <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>EPSG:21781</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">EPSG:21781</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:code>
+        </gmd:RS_Identifier>
+      </gmd:referenceSystemIdentifier>
+    </gmd:MD_ReferenceSystem>
+  </gmd:referenceSystemInfo>
+  <gmd:identificationInfo xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://toignore">
+    <che:CHE_MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
+      <gmd:citation>
+        <gmd:CI_Citation>
+          <gmd:title xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>SZ Datensatz Vorlage</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">SZ Datensatz Vorlage</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:title>
+          <gmd:alternateTitle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>-- Kurztitel obligatorisch für BGDI max. 30 Zeichen --</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">-- Kurztitel obligatorisch für BGDI max. 30 Zeichen --</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:alternateTitle>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:Date />
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="creation" />
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:Date />
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="revision" />
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+          <gmd:collectiveTitle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>-- Für Geobasisdaten: Titel nach GeoIV Anhang 1 --</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">-- Für Geobasisdaten: Titel nach GeoIV Anhang 1 --</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:collectiveTitle>
+        </gmd:CI_Citation>
+      </gmd:citation>
+      <gmd:abstract xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+        <gco:CharacterString>-- Zusammenfassung --</gco:CharacterString>
+        <gmd:PT_FreeText>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#DE">-- Zusammenfassung --</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+        </gmd:PT_FreeText>
+      </gmd:abstract>
+      <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gmd:MD_Keywords>
+          <gmd:keyword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>GEWISS</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">GEWISS</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">GEWISS</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">GEWISS</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">GEWISS</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM" />
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:keyword>
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="_none_" />
+          </gmd:type>
+          <gmd:thesaurusName>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>geocat.ch Thesaurus</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:Date>2017-05-18</gco:Date>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+              <gmd:identifier>
+                <gmd:MD_Identifier>
+                  <gmd:code>
+                    <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx" xlink:href="https://www.geocat.ch:443/geonetwork/srv/eng/thesaurus.download?ref=local._none_.geocat.ch">geonetwork.thesaurus.local._none_.geocat.ch</gmx:Anchor>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:identifier>
+            </gmd:CI_Citation>
+          </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      <gmd:language>
+        <gco:CharacterString>ger</gco:CharacterString>
+      </gmd:language>
+      <gmd:characterSet>
+        <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode" codeListValue="utf8" />
+      </gmd:characterSet>
+      <gmd:topicCategory>
+        <gmd:MD_TopicCategoryCode />
+      </gmd:topicCategory>
+      <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed">
+        <gmd:EX_Extent>
+          <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Schwyz</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">Schwyz</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Schwyz</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Schwyz</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">Schwyz</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM">Schwyz</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:description>
+          <gmd:geographicElement>
+            <gmd:EX_GeographicDescription>
+              <gmd:geographicIdentifier>
+                <gmd:MD_Identifier>
+                  <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                    <gco:CharacterString>SZ</gco:CharacterString>
+                    <gmd:PT_FreeText>
+                      <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#EN">SZ</gmd:LocalisedCharacterString>
+                      </gmd:textGroup>
+                      <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#DE">SZ</gmd:LocalisedCharacterString>
+                      </gmd:textGroup>
+                      <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#FR">SZ</gmd:LocalisedCharacterString>
+                      </gmd:textGroup>
+                      <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#IT">SZ</gmd:LocalisedCharacterString>
+                      </gmd:textGroup>
+                      <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#RM">SZ</gmd:LocalisedCharacterString>
+                      </gmd:textGroup>
+                    </gmd:PT_FreeText>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:geographicIdentifier>
+            </gmd:EX_GeographicDescription>
+          </gmd:geographicElement>
+          <gmd:geographicElement>
+            <gmd:EX_BoundingPolygon>
+              <gmd:extentTypeCode>
+                <gco:Boolean>1</gco:Boolean>
+              </gmd:extentTypeCode>
+              <gmd:polygon>
+                <gml:MultiSurface gml:id="Nf6109c1aa91f4e45a5e91ef0b5db9471">
+                  <gml:surfaceMember>
+                    <gml:Polygon gml:id="Nf6109c1aa91f4e45a5e91ef0b5db9471.1">
+                      <gml:exterior>
+                        <gml:LinearRing>
+                          <gml:posList>8.493 47.1 8.522 47.09 8.547 47.094 8.563 47.093 8.564 47.082 8.587 47.086 8.608 47.092 8.612 47.095 8.637 47.093 8.645 47.096 8.649 47.103 8.681 47.125 8.687 47.136 8.684 47.141 8.688 47.146 8.701 47.151 8.696 47.163 8.692 47.163 8.692 47.167 8.682 47.174 8.681 47.184 8.694 47.196 8.713 47.203 8.793 47.223 8.808 47.22 8.809 47.22 8.823 47.211 8.841 47.208 8.941 47.218 8.966 47.217 8.974 47.213 8.969 47.212 8.965 47.198 8.958 47.199 8.962 47.184 8.97 47.179 8.981 47.183 9.005 47.173 8.967 47.137 8.969 47.134 8.965 47.122 8.972 47.118 8.974 47.115 8.971 47.104 8.96 47.1 8.954 47.094 8.955 47.09 8.973 47.085 8.962 47.076 8.961 47.072 8.951 47.061 8.948 47.049 8.921 47.038 8.902 47.038 8.895 47.021 8.91 47.017 8.912 47.009 8.928 46.998 8.938 46.987 8.932 46.982 8.946 46.967 8.95 46.969 8.956 46.963 8.972 46.96 8.963 46.955 8.955 46.939 8.961 46.932 8.963 46.927 8.935 46.92 8.853 46.885 8.848 46.891 8.849 46.913 8.836 46.908 8.828 46.922 8.83 46.931 8.827 46.936 8.811 46.941 8.798 46.937 8.792 46.931 8.779 46.932 8.774 46.938 8.766 46.939 8.729 46.928 8.718 46.918 8.708 46.917 8.699 46.924 8.697 46.929 8.7 46.933 8.693 46.947 8.67 46.944 8.637 46.95 8.621 46.953 8.604 46.952 8.603 46.987 8.582 46.993 8.571 46.99 8.543 46.98 8.519 46.98 8.497 46.976 8.465 46.984 8.468 46.997 8.474 46.996 8.508 47.004 8.514 47.013 8.513 47.022 8.495 47.029 8.475 47.043 8.465 47.049 8.462 47.05 8.441 47.063 8.43 47.065 8.4 47.06 8.391 47.061 8.389 47.068 8.389 47.071 8.407 47.079 8.409 47.093 8.421 47.102 8.45 47.114 8.464 47.111 8.474 47.112 8.476 47.106 8.493 47.1</gml:posList>
+                        </gml:LinearRing>
+                      </gml:exterior>
+                    </gml:Polygon>
+                  </gml:surfaceMember>
+                </gml:MultiSurface>
+              </gmd:polygon>
+            </gmd:EX_BoundingPolygon>
+          </gmd:geographicElement>
+          <gmd:geographicElement>
+            <gmd:EX_GeographicBoundingBox>
+              <gmd:extentTypeCode>
+                <gco:Boolean>1</gco:Boolean>
+              </gmd:extentTypeCode>
+              <!--native coords: 672198.0,193670.0,718724.0,231067.0-->
+              <gmd:westBoundLongitude>
+                <gco:Decimal>8.389</gco:Decimal>
+              </gmd:westBoundLongitude>
+              <gmd:eastBoundLongitude>
+                <gco:Decimal>9.005</gco:Decimal>
+              </gmd:eastBoundLongitude>
+              <gmd:southBoundLatitude>
+                <gco:Decimal>46.885</gco:Decimal>
+              </gmd:southBoundLatitude>
+              <gmd:northBoundLatitude>
+                <gco:Decimal>47.223</gco:Decimal>
+              </gmd:northBoundLatitude>
+            </gmd:EX_GeographicBoundingBox>
+          </gmd:geographicElement>
+        </gmd:EX_Extent>
+      </gmd:extent>
+      <che:basicGeodataID>
+        <gco:CharacterString>-- z.B. 123.4 -- (siehe Sammlung Geobasisdatensätze)</gco:CharacterString>
+      </che:basicGeodataID>
+      <che:basicGeodataIDType>
+        <che:basicGeodataIDTypeCode codeListValue="federal" codeList="#basicGeodataIDTypeCode" />
+      </che:basicGeodataIDType>
+    </che:CHE_MD_DataIdentification>
+  </gmd:identificationInfo>
+  <gmd:distributionInfo xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://toignore">
+    <gmd:MD_Distribution>
+      <gmd:distributionFormat xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed">
+        <gmd:MD_Format>
+          <gmd:name>
+            <gco:CharacterString>ESRI Shapefile</gco:CharacterString>
+          </gmd:name>
+          <gmd:version>
+            <gco:CharacterString>-</gco:CharacterString>
+          </gmd:version>
+        </gmd:MD_Format>
+      </gmd:distributionFormat>
+      <gmd:distributionFormat xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed">
+        <gmd:MD_Format>
+          <gmd:name>
+            <gco:CharacterString>MDB Geomedia</gco:CharacterString>
+          </gmd:name>
+          <gmd:version>
+            <gco:CharacterString>-</gco:CharacterString>
+          </gmd:version>
+        </gmd:MD_Format>
+      </gmd:distributionFormat>
+      <gmd:transferOptions>
+        <gmd:MD_DigitalTransferOptions>
+          <gmd:onLine>
+            <gmd:CI_OnlineResource>
+              <gmd:linkage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="che:PT_FreeURL_PropertyType">
+                <che:PT_FreeURL>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#DE" />
+                  </che:URLGroup>
+                </che:PT_FreeURL>
+              </gmd:linkage>
+              <gmd:protocol>
+                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+              </gmd:protocol>
+              <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>-- zusätzliche Infos z.B. Amts Webseite, "-" in URL und Beschreibung einfügen, falls nicht vorhanden --</gco:CharacterString>
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#DE">-- zusätzliche Infos z.B. Amts Webseite, "-" in URL und Beschreibung einfügen, falls nicht vorhanden --</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                </gmd:PT_FreeText>
+              </gmd:description>
+              <gmd:function>
+                <gmd:CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode" codeListValue="information" />
+              </gmd:function>
+            </gmd:CI_OnlineResource>
+          </gmd:onLine>
+        </gmd:MD_DigitalTransferOptions>
+      </gmd:transferOptions>
+      <gmd:transferOptions>
+        <gmd:MD_DigitalTransferOptions>
+          <gmd:onLine>
+            <gmd:CI_OnlineResource>
+              <gmd:linkage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="che:PT_FreeURL_PropertyType">
+                <che:PT_FreeURL>
+                  <che:URLGroup>
+                    <che:LocalisedURL locale="#DE">https://map.geo.sz.ch/</che:LocalisedURL>
+                  </che:URLGroup>
+                </che:PT_FreeURL>
+              </gmd:linkage>
+              <gmd:protocol>
+                <gco:CharacterString>CHTOPO:specialised-geoportal</gco:CharacterString>
+              </gmd:protocol>
+              <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>WebGIS des Kanton Schwyz</gco:CharacterString>
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#DE">WebGIS des Kanton Schwyz</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                </gmd:PT_FreeText>
+              </gmd:description>
+              <gmd:function>
+                <gmd:CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode" codeListValue="information" />
+              </gmd:function>
+            </gmd:CI_OnlineResource>
+          </gmd:onLine>
+        </gmd:MD_DigitalTransferOptions>
+      </gmd:transferOptions>
+    </gmd:MD_Distribution>
+  </gmd:distributionInfo>
+  <gmd:dataQualityInfo>
+    <gmd:DQ_DataQuality>
+      <gmd:scope>
+        <gmd:DQ_Scope>
+          <gmd:level>
+            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode" codeListValue="dataset" />
+          </gmd:level>
+        </gmd:DQ_Scope>
+      </gmd:scope>
+      <gmd:lineage>
+        <gmd:LI_Lineage>
+          <gmd:statement xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString />
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE" />
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:statement>
+        </gmd:LI_Lineage>
+      </gmd:lineage>
+    </gmd:DQ_DataQuality>
+  </gmd:dataQualityInfo>
+  <che:legislationInformation xmlns:xalan="http://xml.apache.org/xalan" xmlns:comp="http://toignore">
+    <che:CHE_MD_Legislation gco:isoType="gmd:MD_Legislation">
+      <che:country>
+        <gmd:Country codeList="http://www.isotc211.org/2005/resources/codeList.xml#Country" codeListValue="CH" />
+      </che:country>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="ger" />
+      </che:language>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="fre" />
+      </che:language>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="ita" />
+      </che:language>
+      <che:legislationType>
+        <che:CHE_CI_LegislationCode codeList="#CHE_CI_LegislationCode" codeListValue="nationalDecree" />
+      </che:legislationType>
+      <che:title>
+        <gmd:CI_Citation>
+          <gmd:title xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString />
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE" />
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Ordonnance sur la géoinformation : Annexe 1, Catalogue des géodonnées de base relevant du droit fédéral</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">Ordinanza sulla geoinformazione : Allegato 1, Catalogo dei geodati di base del diritto federale</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:title>
+          <gmd:alternateTitle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString />
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE" />
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:alternateTitle>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:Date />
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="publication" />
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+          <gmd:series>
+            <gmd:CI_Series>
+              <gmd:name xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString>--SR/SRSZ--</gco:CharacterString>
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#DE">--SR/SRSZ--</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                </gmd:PT_FreeText>
+              </gmd:name>
+            </gmd:CI_Series>
+          </gmd:series>
+        </gmd:CI_Citation>
+      </che:title>
+    </che:CHE_MD_Legislation>
+  </che:legislationInformation>
+  <che:legislationInformation>
+    <che:CHE_MD_Legislation gco:isoType="gmd:MD_Legislation">
+      <che:country>
+        <gmd:Country codeList="http://www.isotc211.org/2005/resources/codeList.xml#Country" codeListValue="CH" />
+      </che:country>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="ger" />
+      </che:language>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="fre" />
+      </che:language>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="ita" />
+      </che:language>
+      <che:legislationType>
+        <che:CHE_CI_LegislationCode codeList="#CHE_CI_LegislationCode" codeListValue="" />
+      </che:legislationType>
+      <che:title>
+        <gmd:CI_Citation>
+          <gmd:title xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString />
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE" />
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:title>
+          <gmd:alternateTitle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString />
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE" />
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:alternateTitle>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:Date />
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="publication" />
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+          <gmd:series>
+            <gmd:CI_Series>
+              <gmd:name xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString />
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#DE" />
+                  </gmd:textGroup>
+                </gmd:PT_FreeText>
+              </gmd:name>
+            </gmd:CI_Series>
+          </gmd:series>
+        </gmd:CI_Citation>
+      </che:title>
+    </che:CHE_MD_Legislation>
+  </che:legislationInformation>
+  <che:legislationInformation>
+    <che:CHE_MD_Legislation gco:isoType="gmd:MD_Legislation">
+      <che:country>
+        <gmd:Country codeList="http://www.isotc211.org/2005/resources/codeList.xml#Country" codeListValue="CH" />
+      </che:country>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="ger" />
+      </che:language>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="fre" />
+      </che:language>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="ita" />
+      </che:language>
+      <che:legislationType>
+        <che:CHE_CI_LegislationCode codeList="#CHE_CI_LegislationCode" codeListValue="" />
+      </che:legislationType>
+      <che:title>
+        <gmd:CI_Citation>
+          <gmd:title xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString />
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE" />
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:title>
+          <gmd:alternateTitle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString />
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE" />
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:alternateTitle>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:Date />
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="publication" />
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+          <gmd:series>
+            <gmd:CI_Series>
+              <gmd:name xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString />
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#DE" />
+                  </gmd:textGroup>
+                </gmd:PT_FreeText>
+              </gmd:name>
+            </gmd:CI_Series>
+          </gmd:series>
+        </gmd:CI_Citation>
+      </che:title>
+    </che:CHE_MD_Legislation>
+  </che:legislationInformation>
+  <che:legislationInformation>
+    <che:CHE_MD_Legislation gco:isoType="gmd:MD_Legislation">
+      <che:country>
+        <gmd:Country codeList="http://www.isotc211.org/2005/resources/codeList.xml#Country" codeListValue="CH" />
+      </che:country>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="ger" />
+      </che:language>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="fre" />
+      </che:language>
+      <che:language>
+        <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="ita" />
+      </che:language>
+      <che:legislationType>
+        <che:CHE_CI_LegislationCode codeList="#CHE_CI_LegislationCode" codeListValue="" />
+      </che:legislationType>
+      <che:title>
+        <gmd:CI_Citation>
+          <gmd:title xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString />
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE" />
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:title>
+          <gmd:alternateTitle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString />
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE" />
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:alternateTitle>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:Date />
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="publication" />
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+          <gmd:series>
+            <gmd:CI_Series>
+              <gmd:name xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                <gco:CharacterString />
+                <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="#DE" />
+                  </gmd:textGroup>
+                </gmd:PT_FreeText>
+              </gmd:name>
+            </gmd:CI_Series>
+          </gmd:series>
+        </gmd:CI_Citation>
+      </che:title>
+    </che:CHE_MD_Legislation>
+  </che:legislationInformation>
+</che:CHE_MD_Metadata>

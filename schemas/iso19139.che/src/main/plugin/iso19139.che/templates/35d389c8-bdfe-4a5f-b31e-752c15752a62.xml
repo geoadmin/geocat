@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:geonet="http://www.fao.org/geonetwork" gco:isoType="gmd:MD_Metadata">
+  <gmd:fileIdentifier>
+    <gco:CharacterString>35d389c8-bdfe-4a5f-b31e-752c15752a62</gco:CharacterString>
+  </gmd:fileIdentifier>
+  <gmd:language xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gco:CharacterString>fre</gco:CharacterString>
+  </gmd:language>
+  <gmd:characterSet xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode" />
+  </gmd:characterSet>
+  <gmd:hierarchyLevel>
+    <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode" codeListValue="staticMap" />
+  </gmd:hierarchyLevel>
+  <gmd:hierarchyLevelName>
+    <gco:CharacterString>Confédération Suisse</gco:CharacterString>
+  </gmd:hierarchyLevelName>
+  <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed">
+    <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
+      <gmd:organisationName xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType" gco:nilReason="missing">
+        <gco:CharacterString />
+        <gmd:PT_FreeText>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#DE">Master HES-SO</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+        </gmd:PT_FreeText>
+      </gmd:organisationName>
+      <gmd:contactInfo>
+        <gmd:CI_Contact>
+          <gmd:address>
+            <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+              <gmd:city>
+                <gco:CharacterString>Lausanne, Provence</gco:CharacterString>
+              </gmd:city>
+              <gmd:electronicMailAddress>
+                <gco:CharacterString>stephane.cretegn@master.hes-so.ch</gco:CharacterString>
+              </gmd:electronicMailAddress>
+              <gmd:electronicMailAddress>
+                <gco:CharacterString>stephane.cretegn@master.hes-so.ch</gco:CharacterString>
+              </gmd:electronicMailAddress>
+            </che:CHE_CI_Address>
+          </gmd:address>
+        </gmd:CI_Contact>
+      </gmd:contactInfo>
+      <gmd:role>
+        <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="originator" />
+      </gmd:role>
+      <che:individualFirstName>
+        <gco:CharacterString>Stéphane</gco:CharacterString>
+      </che:individualFirstName>
+      <che:individualLastName>
+        <gco:CharacterString>Cretegny</gco:CharacterString>
+      </che:individualLastName>
+    </che:CHE_CI_ResponsibleParty>
+  </gmd:contact>
+  <gmd:dateStamp xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gco:DateTime>2017-04-25T11:37:44</gco:DateTime>
+  </gmd:dateStamp>
+  <gmd:metadataStandardName xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gco:CharacterString>GM03Core</gco:CharacterString>
+  </gmd:metadataStandardName>
+  <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gmd:PT_Locale id="FR">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre" />
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" />
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gmd:PT_Locale id="DE">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger" />
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" />
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gmd:PT_Locale id="IT">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ita" />
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" />
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:locale xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gmd:PT_Locale id="EN">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" />
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" />
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:identificationInfo xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <che:CHE_MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
+      <gmd:citation>
+        <gmd:CI_Citation>
+          <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Lausanne_Stephane_Cretegny</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Lausanne_Stephane_Cretegny</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:title>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:DateTime>2015-01-01T00:00:00</gco:DateTime>
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="creation" />
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                <gco:DateTime>2017-01-01T00:00:00</gco:DateTime>
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeListValue="publication" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" />
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+        </gmd:CI_Citation>
+      </gmd:citation>
+      <gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
+        <gco:CharacterString>Carte nationale de la Suisse: Feuille 1243</gco:CharacterString>
+        <gmd:PT_FreeText>
+          <gmd:textGroup>
+            <gmd:LocalisedCharacterString locale="#FR">Carte nationale de la Suisse: Feuille 1243</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+        </gmd:PT_FreeText>
+      </gmd:abstract>
+      <gmd:pointOfContact xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed">
+        <che:CHE_CI_ResponsibleParty gco:isoType="gmd:CI_ResponsibleParty">
+          <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Office fédéral de topographie</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">Office fédéral de topographie</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Bundesamt für Landestopographie</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Office fédéral de topographie</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">Office fédéral de topographie</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM">Office fédéral de topographie</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:organisationName>
+          <gmd:contactInfo>
+            <gmd:CI_Contact>
+              <gmd:phone>
+                <che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+                  <gmd:voice>
+                    <gco:CharacterString>058 469 01 11</gco:CharacterString>
+                  </gmd:voice>
+                  <che:directNumber>
+                    <gco:CharacterString>058 469 04 02</gco:CharacterString>
+                  </che:directNumber>
+                </che:CHE_CI_Telephone>
+              </gmd:phone>
+              <gmd:address>
+                <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+                  <gmd:city>
+                    <gco:CharacterString>Wabern</gco:CharacterString>
+                  </gmd:city>
+                  <gmd:postalCode>
+                    <gco:CharacterString>3084</gco:CharacterString>
+                  </gmd:postalCode>
+                  <gmd:country>
+                    <gco:CharacterString>CH</gco:CharacterString>
+                  </gmd:country>
+                  <gmd:electronicMailAddress>
+                    <gco:CharacterString>andre.schneider@swisstopo.ch</gco:CharacterString>
+                  </gmd:electronicMailAddress>
+                  <che:streetName>
+                    <gco:CharacterString>Seftigenstrasse</gco:CharacterString>
+                  </che:streetName>
+                  <che:streetNumber>
+                    <gco:CharacterString>264</gco:CharacterString>
+                  </che:streetNumber>
+                </che:CHE_CI_Address>
+              </gmd:address>
+              <gmd:onlineResource>
+                <gmd:CI_OnlineResource>
+                  <gmd:linkage xsi:type="che:PT_FreeURL_PropertyType">
+                    <che:PT_FreeURL>
+                      <che:URLGroup>
+                        <che:LocalisedURL locale="#EN">http://www.swisstopo.ch</che:LocalisedURL>
+                      </che:URLGroup>
+                      <che:URLGroup>
+                        <che:LocalisedURL locale="#DE">http://www.swisstopo.ch</che:LocalisedURL>
+                      </che:URLGroup>
+                      <che:URLGroup>
+                        <che:LocalisedURL locale="#FR">http://www.swisstopo.ch</che:LocalisedURL>
+                      </che:URLGroup>
+                      <che:URLGroup>
+                        <che:LocalisedURL locale="#IT">http://www.swisstopo.ch</che:LocalisedURL>
+                      </che:URLGroup>
+                      <che:URLGroup>
+                        <che:LocalisedURL locale="#RM">http://www.swisstopo.ch</che:LocalisedURL>
+                      </che:URLGroup>
+                    </che:PT_FreeURL>
+                  </gmd:linkage>
+                  <gmd:protocol>
+                    <gco:CharacterString>text/html</gco:CharacterString>
+                  </gmd:protocol>
+                </gmd:CI_OnlineResource>
+              </gmd:onlineResource>
+            </gmd:CI_Contact>
+          </gmd:contactInfo>
+          <gmd:role>
+            <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="resourceProvider" />
+          </gmd:role>
+          <che:individualFirstName>
+            <gco:CharacterString>André</gco:CharacterString>
+          </che:individualFirstName>
+          <che:individualLastName>
+            <gco:CharacterString>Schneider</gco:CharacterString>
+          </che:individualLastName>
+          <che:organisationAcronym xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>swisstopo</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">swisstopo</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">swisstopo</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">swisstopo</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">swisstopo</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM">swisstopo</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </che:organisationAcronym>
+        </che:CHE_CI_ResponsibleParty>
+      </gmd:pointOfContact>
+      <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink">
+        <gmd:MD_Keywords>
+          <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Carte nationale</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">National Map</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Landeskarte</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">carta nazionale</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Carte nationale</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM" />
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:keyword>
+          <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Carte topographique</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">Topographic map</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Topografische Karte</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">carta topografica</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Carte topographique</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM" />
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:keyword>
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="_none_" />
+          </gmd:type>
+          <gmd:thesaurusName>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>geocat.ch Thesaurus</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:Date>2017-05-18</gco:Date>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+              <gmd:identifier>
+                <gmd:MD_Identifier>
+                  <gmd:code>
+                    <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx" xlink:href="https://www.geocat.ch:443/geonetwork/srv/eng/thesaurus.download?ref=local._none_.geocat.ch">geonetwork.thesaurus.local._none_.geocat.ch</gmx:Anchor>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:identifier>
+            </gmd:CI_Citation>
+          </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      <gmd:language>
+        <gco:CharacterString>ger</gco:CharacterString>
+      </gmd:language>
+      <gmd:characterSet>
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode" />
+      </gmd:characterSet>
+      <gmd:topicCategory>
+        <gmd:MD_TopicCategoryCode>imageryBaseMapsEarthCover</gmd:MD_TopicCategoryCode>
+      </gmd:topicCategory>
+      <gmd:topicCategory>
+        <gmd:MD_TopicCategoryCode>imageryBaseMapsEarthCover_BaseMaps</gmd:MD_TopicCategoryCode>
+      </gmd:topicCategory>
+      <gmd:topicCategory>
+        <gmd:MD_TopicCategoryCode>imageryBaseMapsEarthCover_BaseMaps</gmd:MD_TopicCategoryCode>
+      </gmd:topicCategory>
+      <gmd:extent xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed">
+        <gmd:EX_Extent>
+          <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Lausanne</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#EN">Lausanne</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#DE">Lausanne</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">Lausanne</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#IT">Lausanne</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#RM">Lausanne</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:description>
+          <gmd:geographicElement>
+            <gmd:EX_GeographicDescription>
+              <gmd:geographicIdentifier>
+                <gmd:MD_Identifier>
+                  <gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+                    <gco:CharacterString>Lausanne</gco:CharacterString>
+                    <gmd:PT_FreeText>
+                      <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#EN">Lausanne</gmd:LocalisedCharacterString>
+                      </gmd:textGroup>
+                      <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#DE">Lausanne</gmd:LocalisedCharacterString>
+                      </gmd:textGroup>
+                      <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#FR">Lausanne</gmd:LocalisedCharacterString>
+                      </gmd:textGroup>
+                      <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#IT">Lausanne</gmd:LocalisedCharacterString>
+                      </gmd:textGroup>
+                      <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#RM">Lausanne</gmd:LocalisedCharacterString>
+                      </gmd:textGroup>
+                    </gmd:PT_FreeText>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:geographicIdentifier>
+            </gmd:EX_GeographicDescription>
+          </gmd:geographicElement>
+          <gmd:geographicElement>
+            <gmd:EX_BoundingPolygon>
+              <gmd:extentTypeCode>
+                <gco:Boolean>1</gco:Boolean>
+              </gmd:extentTypeCode>
+              <gmd:polygon>
+                <gml:MultiSurface gml:id="Nc5559bbde68c417c99e15c99e733fb9a">
+                  <gml:surfaceMember>
+                    <gml:Polygon gml:id="Nc5559bbde68c417c99e15c99e733fb9a.1">
+                      <gml:exterior>
+                        <gml:LinearRing>
+                          <gml:posList>6.657 46.562 6.66 46.567 6.657 46.576 6.653 46.586 6.647 46.59 6.653 46.594 6.657 46.599 6.666 46.601 6.68 46.596 6.7 46.581 6.706 46.581 6.721 46.58 6.718 46.573 6.698 46.543 6.694 46.544 6.671 46.533 6.654 46.513 6.639 46.51 6.642 46.505 6.621 46.508 6.591 46.518 6.587 46.518 6.584 46.521 6.589 46.528 6.595 46.524 6.602 46.525 6.613 46.535 6.612 46.55 6.62 46.551 6.629 46.54 6.647 46.547 6.674 46.538 6.685 46.549 6.686 46.556 6.673 46.558 6.669 46.562 6.674 46.565 6.67 46.567 6.661 46.56 6.657 46.562</gml:posList>
+                        </gml:LinearRing>
+                      </gml:exterior>
+                    </gml:Polygon>
+                  </gml:surfaceMember>
+                  <gml:surfaceMember>
+                    <gml:Polygon gml:id="Nc5559bbde68c417c99e15c99e733fb9a.2">
+                      <gml:exterior>
+                        <gml:LinearRing>
+                          <gml:posList>6.586 46.552 6.585 46.561 6.592 46.572 6.603 46.582 6.617 46.582 6.629 46.579 6.63 46.579 6.627 46.572 6.618 46.566 6.611 46.569 6.601 46.57 6.595 46.566 6.597 46.563 6.586 46.552</gml:posList>
+                        </gml:LinearRing>
+                      </gml:exterior>
+                    </gml:Polygon>
+                  </gml:surfaceMember>
+                </gml:MultiSurface>
+              </gmd:polygon>
+            </gmd:EX_BoundingPolygon>
+          </gmd:geographicElement>
+          <gmd:geographicElement>
+            <gmd:EX_GeographicBoundingBox>
+              <gmd:extentTypeCode>
+                <gco:Boolean>1</gco:Boolean>
+              </gmd:extentTypeCode>
+              <!--native coords: 534438.0,150752.0,544986.0,161355.0-->
+              <gmd:westBoundLongitude>
+                <gco:Decimal>6.584</gco:Decimal>
+              </gmd:westBoundLongitude>
+              <gmd:eastBoundLongitude>
+                <gco:Decimal>6.721</gco:Decimal>
+              </gmd:eastBoundLongitude>
+              <gmd:southBoundLatitude>
+                <gco:Decimal>46.505</gco:Decimal>
+              </gmd:southBoundLatitude>
+              <gmd:northBoundLatitude>
+                <gco:Decimal>46.601</gco:Decimal>
+              </gmd:northBoundLatitude>
+            </gmd:EX_GeographicBoundingBox>
+          </gmd:geographicElement>
+        </gmd:EX_Extent>
+      </gmd:extent>
+    </che:CHE_MD_DataIdentification>
+  </gmd:identificationInfo>
+</che:CHE_MD_Metadata>
