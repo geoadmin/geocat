@@ -1461,7 +1461,7 @@
 
     <!-- Define the default analyzer for full text search. -->
     <es.index.analyzer.default>standard</es.index.analyzer.default>
-    <!--    <es.default.analyzer>french_light</es.default.analyzer>-->
+<!--    <es.default.analyzer>french_light</es.default.analyzer>-->
 
     <!-- Define the number of records allowed to be retrieved during search.
     Increase the value for large catalogue.
