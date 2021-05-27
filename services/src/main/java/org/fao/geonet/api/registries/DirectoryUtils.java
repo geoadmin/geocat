@@ -103,7 +103,7 @@ public class DirectoryUtils {
                         context, "" + dbSubTemplate.getId(),
                         (Element) entry.clone(),
                         validate, ufo, index, context.getLanguage(),
-                        new ISODate().toString(), false);
+                        new ISODate().toString(), true);
                     collectResults.getEntryIdentifiers().put(
                         uuid, dbSubTemplate.getId());
                 } catch (Exception e) {
