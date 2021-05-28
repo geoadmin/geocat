@@ -74,6 +74,7 @@ import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DataUtilities;
 import org.geotools.data.Query;
 import org.geotools.data.collection.ListFeatureCollection;
+import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.factory.Hints;
@@ -605,6 +606,15 @@ public class DirectoryApi {
         )
             boolean lenient,
         @ApiParam(
+            value = "Attribute table charset (only applies to Shapefile)",
+            defaultValue = "",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            String charset,
+        @ApiParam(
             value = "Create only bounding box for each spatial objects.",
             required = false)
         @RequestParam(
@@ -665,7 +675,7 @@ public class DirectoryApi {
 
         for (File shapeFile : shapeFiles) {
 
-            SimpleFeatureCollection collection = shapeFileToFeatureCollection(shapeFile);
+            SimpleFeatureCollection collection = shapeFileToFeatureCollection(shapeFile, charset);
 
             try (FeatureIterator<SimpleFeature> features = collection.features()) {
 
@@ -824,14 +834,17 @@ public class DirectoryApi {
         return StringUtils.isNotEmpty(featureDescriptionValue) ? featureDescriptionValue : "";
     }
 
-    private SimpleFeatureCollection shapeFileToFeatureCollection(File shapefile) throws IOException {
+    private SimpleFeatureCollection shapeFileToFeatureCollection(File shapefile, String charset) throws IOException {
         Map<String, Object> map = new HashMap<>();
         map.put("url", shapefile.toURI().toURL());
         DataStore dataStore = DataStoreFinder.getDataStore(map);
+        if (dataStore instanceof ShapefileDataStore && StringUtils.isNotEmpty(charset)) {
+            ((ShapefileDataStore)dataStore).setCharset(Charset.forName(charset));
+        }
         String typeName = dataStore.getTypeNames()[0];
         SimpleFeatureSource source = dataStore.getFeatureSource(typeName);
         Query query = new Query(typeName, Filter.INCLUDE);
-        query.setHints( new Hints(Hints.FEATURE_2D, true));
+        query.setHints(new Hints(Hints.FEATURE_2D, true));
         return source.getFeatures(query);
     }
 
