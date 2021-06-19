@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [ -n "$S3_ACCESS_KEY_FILE" -a -r "$S3_ACCESS_KEY_FILE" -a -s "$S3_ACCESS_KEY_FILE" ]; then
+  S3_ACCESS_KEY=`cat $S3_ACCESS_KEY_FILE`
+
+  if [ -n "$S3_SECRET_KEY_FILE" -a -r "$S3_SECRET_KEY_FILE" -a -s "$S3_SECRET_KEY_FILE" ]; then
+    S3_SECRET_KEY=`cat $S3_SECRET_KEY_FILE`
+  else
+    exit 1
+  fi
+else
+  exit 1
+fi
+S3_CONFIG_FILE=~/.aws/credentials
+S3_TEMPLATE_FILE=/docker-entrypoint.d/credentials
+mkdir -p `dirname $S3_CONFIG_FILE`
+cp $S3_TEMPLATE_FILE $S3_CONFIG_FILE
+chmod -R go-rx `dirname $S3_CONFIG_FILE`
+sed -i "s/<ACCESS_KEY>/$S3_ACCESS_KEY/" $S3_CONFIG_FILE && \
+sed -i "s/<SECRET_KEY>/$S3_SECRET_KEY/" $S3_CONFIG_FILE && \
+echo "Successful installation of S3 credentials"
