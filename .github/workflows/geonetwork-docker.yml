@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - geocat_v4.2.3_report_custom*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+
+    - name: "Checking out"
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: "Setting up JDK 1.8"
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+
+    - name: "Cache Maven packages"
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: "Update maven dependencies"
+      run: mvn -Pdocker de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
+
+    - name: Increase system limits
+      run: sudo sysctl -w vm.max_map_count=262144
+
+    - name: run tests
+      run: |
+        mvn resources:resources@copy-index-schema-to-source -f web
+        mvn clean verify -Pit
+    - name: "Installing"
+      run: mvn -B clean -DskipTests install -Ddb.username=db_username -Ddb.name=db_name -Ddb.type=postgres-postgis -Ddb.host=db_host -Ddb.password=db_password -Ddb.pool.maxActive=50 -Ddb.port=5432
+
+    - name: "Setting image tag"
+      id: version
+      run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+
+    - name: "Building docker image"
+      run: mvn -pl web -Pdocker docker:build -DdockerImageName=docker.pkg.github.com/geoadmin/geocat/geocat:${{ steps.version.outputs.VERSION }}-${{ github.run_number }}
+
+    - name: "Login to docker.pkg.github.com"
+      run: docker login -u $GITHUB_ACTOR -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
+
+    - name: "Push to GitHub Packages"
+      run: docker push docker.pkg.github.com/geoadmin/geocat/geocat:${{ steps.version.outputs.VERSION }}-${{ github.run_number }}
