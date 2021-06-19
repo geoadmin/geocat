@@ -1392,6 +1392,51 @@
         </dependency>
       </dependencies>
     </profile>
+
+    <profile>
+      <id>docker</id>
+      <properties>
+        <dockerImageName>camptocamp/geocat:latest</dockerImageName>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.spotify</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <version>0.4.14</version>
+            <configuration>
+              <imageName>${dockerImageName}</imageName>
+              <dockerDirectory>web/src/docker</dockerDirectory>
+              <resources>
+                <resource>
+                  <targetPath>/usr/local/tomcat/webapps</targetPath>
+                  <directory>${project.build.directory}</directory>
+                  <include>geonetwork.war</include>
+                </resource>
+                <resource>
+                  <targetPath>/usr/local/bin/</targetPath>
+                  <directory>${project.basedir}/../</directory>
+                  <include>s3sync-geocat-folders.sh</include>
+                </resource>
+                <resource>
+                  <targetPath>/</targetPath>
+                  <directory>${project.basedir}/src/docker/</directory>
+                  <include>docker-entrypoint.sh</include>
+                </resource>
+                <resource>
+                  <targetPath>/</targetPath>
+                  <directory>${project.basedir}/src/docker/</directory>
+                  <include>docker-entrypoint.d</include>
+                </resource>
+              </resources>
+              <!-- This will require a settings.xml file for maven -->
+              <serverId>docker-hub</serverId>
+              <registryUrl>https://index.docker.io/v1/</registryUrl>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
   <properties>
