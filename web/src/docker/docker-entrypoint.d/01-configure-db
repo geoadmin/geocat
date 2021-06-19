@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Configure Database access based on following var:
+# * DB_USERNAME
+# * DB_NAME
+# * DB_HOST
+# * DB_PASSWORD
+
+sed -i "s/db_username/${DB_USERNAME}/" /usr/local/tomcat/webapps/geonetwork/WEB-INF/config-db/jdbc.properties
+sed -i "s/db_name/${DB_NAME}/" /usr/local/tomcat/webapps/geonetwork/WEB-INF/config-db/jdbc.properties
+sed -i "s/db_host/${DB_HOST}/" /usr/local/tomcat/webapps/geonetwork/WEB-INF/config-db/jdbc.properties
+sed -i "s/db_password/${DB_PASSWORD}/" /usr/local/tomcat/webapps/geonetwork/WEB-INF/config-db/jdbc.properties
+
+
