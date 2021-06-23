@@ -150,13 +150,13 @@
     -->
     <init-param>
       <param-name>mode</param-name>
-      <param-value>DENY</param-value>
+      <param-value>ALLOW-FROM</param-value>
     </init-param>
     <!-- Allowed url. Used in ALLOW-FROM mode only -->
-    <!--<init-param>
+    <init-param>
       <param-name>url</param-name>
-      <param-value>http://localhost:8888/</param-value>
-    </init-param>-->
+      <param-value>https://map.cartoriviera.ch/</param-value>
+    </init-param>
   </filter>
   <filter-mapping>
     <filter-name>XFrameOptionsFilter</filter-name>
