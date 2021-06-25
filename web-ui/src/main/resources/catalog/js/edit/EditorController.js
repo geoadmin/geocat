@@ -233,7 +233,7 @@
                 $scope.layout.hideTopToolBar = true;
 
                 angular.extend(gnCurrentEdit, {
-                  id: $routeParams.id,
+                  id: '00000000000000000000' + $routeParams.id,
                   formId: '#gn-editor-' + $routeParams.id,
                   containerId: '#gn-editor-container-' + $routeParams.id,
                   associatedPanelConfigId: 'default',
