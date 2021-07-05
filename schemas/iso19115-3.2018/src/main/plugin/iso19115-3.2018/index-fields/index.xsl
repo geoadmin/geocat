@@ -854,26 +854,32 @@
             <xsl:variable name="zuluEndDate"
                           select="date-util:convertToISOZuluDateTime($end)"/>
 
-            <xsl:if test="$zuluStartDate != '' and $zuluEndDate != ''">
-              <resourceTemporalDateRange type="object">{
-                "gte": "<xsl:value-of select="$zuluStartDate"/>"
-                <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
-                  ,"lte": "<xsl:value-of select="$zuluEndDate"/>"
-                </xsl:if>
-                }</resourceTemporalDateRange>
-              <resourceTemporalExtentDateRange type="object">{
-                "gte": "<xsl:value-of select="$zuluStartDate"/>"
-                <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
-                  ,"lte": "<xsl:value-of select="$zuluEndDate"/>"
-                </xsl:if>
-                }</resourceTemporalExtentDateRange>
-            </xsl:if>
+            <xsl:choose>
+              <xsl:when test="$zuluStartDate != ''
+                                and ($zuluEndDate != '' or $end/@indeterminatePosition = 'now')">
+                <resourceTemporalDateRange type="object">{
+                  "gte": "<xsl:value-of select="$zuluStartDate"/>"
+                  <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
+                    ,"lte": "<xsl:value-of select="$zuluEndDate"/>"
+                  </xsl:if>
+                  }</resourceTemporalDateRange>
+                <resourceTemporalExtentDateRange type="object">{
+                  "gte": "<xsl:value-of select="$zuluStartDate"/>"
+                  <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
+                    ,"lte": "<xsl:value-of select="$zuluEndDate"/>"
+                  </xsl:if>
+                  }</resourceTemporalExtentDateRange>
+              </xsl:when>
+              <xsl:otherwise>
+                <indexingErrorMsg>Warning / Field resourceTemporalDateRange / Lower and upper bounds empty. Date range not indexed.</indexingErrorMsg>
+              </xsl:otherwise>
+            </xsl:choose>
 
-            <xsl:if test="$start &gt; $end">
-              <indexingErrorMsg>Warning / Field resourceTemporalDateRange /
-                Lower range bound '<xsl:value-of select="."/>' can not be
-                greater than upper bound '<xsl:value-of select="$end"/>'.
-                Date range not indexed.</indexingErrorMsg>
+
+            <xsl:if test="$zuluStartDate != ''
+                          and $zuluEndDate != ''
+                          and $start &gt; $end">
+              <indexingErrorMsg>Warning / Field resourceTemporalDateRange / Lower range bound '<xsl:value-of select="$start"/>' can not be greater than upper bound '<xsl:value-of select="$end"/>'.</indexingErrorMsg>
             </xsl:if>
           </xsl:for-each>
 
@@ -1045,7 +1051,7 @@
 
 
       <xsl:for-each select="mdb:resourceLineage/*">
-        <xsl:copy-of select="gn-fn-index:add-multilingual-field('lineage', 
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field('lineage',
                                 mrl:statement, $allLanguages)"/>
 
         <xsl:for-each select=".//mrl:source[@uuidref != '']">
@@ -1080,6 +1086,14 @@
           <format>
             <xsl:value-of select="."/>
           </format>
+        </xsl:for-each>
+
+        <xsl:for-each select="mrd:distributor/mrd:MD_Distributor[mrd:distributorContact]">
+          <!-- Indexing resource contact -->
+          <xsl:apply-templates mode="index-contact"
+                               select="mrd:distributorContact">
+            <xsl:with-param name="fieldSuffix" select="'ForDistribution'"/>
+          </xsl:apply-templates>
         </xsl:for-each>
 
         <xsl:for-each select="mrd:transferOptions/*/

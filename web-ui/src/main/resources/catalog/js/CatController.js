@@ -100,7 +100,8 @@ goog.require('gn_alert');
           'logoInHeaderPosition': 'left',
           'fluidHeaderLayout': true,
           'showGNName': true,
-          'isHeaderFixed': false
+          'isHeaderFixed': false,
+          'isMenubarAccessible': true
         },
         'cookieWarning': {
           'enabled': true,
@@ -145,7 +146,7 @@ goog.require('gn_alert');
           // Full text on all fields
           // 'queryBase': '${any}',
           // Full text but more boost on title match
-          'queryBase': 'any:(${any}) resourceTitleObject.default:(${any})^2',
+          'queryBase': 'any:(${any}) resourceTitleObject.\\*:(${any})^2',
           'exactMatchToggle': true,
           // Score query may depend on where we are in the app?
           'scoreConfig': {
@@ -342,9 +343,9 @@ goog.require('gn_alert');
             //     'treeKeySeparator': '/'
             //   }
             // },
-            'th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree.default': {
+            'th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset_tree.default': {
               'terms': {
-                'field': 'th_httpinspireeceuropaeumetadatacodelistPriorityDatasetPriorityDataset_tree.default',
+                'field': 'th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset_tree.default',
                 'size': 100,
                 "order" : { "_key" : "asc" }
               }
@@ -556,6 +557,7 @@ goog.require('gn_alert');
             'maps': ['ows']
           },
           'isFilterTagsDisplayedInSearch': true,
+          'showStatusFooterFor': 'historicalArchive,obsolete,superseded',
           'usersearches': {
             'enabled': false,
             'includePortals': true,
@@ -636,7 +638,9 @@ goog.require('gn_alert');
         },
         'recordview': {
           'enabled': true,
-          'isSocialbarEnabled': true
+          'isSocialbarEnabled': true,
+          'showStatusWatermarkFor': 'historicalArchive,obsolete,superseded',
+          'showStatusTopBarFor': ''
         },
         'editor': {
           'enabled': true,
@@ -970,6 +974,7 @@ goog.require('gn_alert');
       $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
       $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
       $scope.isHeaderFixed = gnGlobalSettings.gnCfg.mods.header.isHeaderFixed;
+      $scope.isMenubarAccessible = gnGlobalSettings.gnCfg.mods.header.isMenubarAccessible;
       $scope.isLogoInHeader = gnGlobalSettings.gnCfg.mods.header.isLogoInHeader;
       $scope.isFooterEnabled = gnGlobalSettings.gnCfg.mods.footer.enabled;
 
@@ -1048,6 +1053,13 @@ goog.require('gn_alert');
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
 
+      $scope.isSelfRegisterPossible = function() {
+        return gnConfig['system.userSelfRegistration.enable'];
+      };
+
+      $scope.isHostDefined = function () {
+        return gnConfig['system.feedback.mailServer.hostIsDefined'];
+      };
 
       $scope.layout = {
         hideTopToolBar: false

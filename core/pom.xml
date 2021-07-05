@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.0.5-SNAPSHOT</version>
+    <version>4.0.6-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -341,6 +341,12 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>gn-events</artifactId>
       <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.jclouds</groupId>
+      <artifactId>jclouds-all</artifactId>
+      <version>2.2.1</version>
     </dependency>
 
     <dependency>
