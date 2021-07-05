@@ -49,7 +49,7 @@
   <xsl:variable name="maxFieldLength" select="32000" as="xs:integer"/>
 
 
-  <xsl:variable name="isStoringOverviewInIndex" select="true()"/>
+  <xsl:variable name="isStoringOverviewInIndex" select="false()"/>
 
 
   <!-- A date, dateTime, Year or Year and Month
@@ -456,7 +456,7 @@
           <indexingError>true</indexingError>
         </xsl:if>
       </xsl:for-each>
-      
+
 
       <xsl:variable name="thesaurusTree" as="node()">
         <values>
