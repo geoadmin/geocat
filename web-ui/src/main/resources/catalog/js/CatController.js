@@ -102,17 +102,21 @@ goog.require('gn_alert');
           'showSocialBarInFooter': true,
           'fluidLayout': true,
           'facetConfig': {
-            'inspireThemeUri': {
+            'groupOwner': {
               'terms': {
-                'field': 'inspireThemeUri',
-                'size': 34
-                // "order" : { "_key" : "asc" }
+                'field': 'groupOwner',
+                'size': 80,
+                "order" : { "_key" : "asc" }
+              },
+              'meta': {
+                'orderByTranslation': true
               }
             },
             'cl_topic.key': {
               'terms': {
                 'field': 'cl_topic.key',
-                'size': 20
+                'size': 20,
+                'exclude': '.*\\_.*'
               }
             },
             'cl_hierarchyLevel.key': {
@@ -250,9 +254,24 @@ goog.require('gn_alert');
           // See https://github.com/geonetwork/core-geonetwork/pull/5349
           'isVegaEnabled': true,
           'facetConfig': {
+            'groupOwner': {
+              'terms': {
+                'field': 'groupOwner',
+                'size': 80,
+                'include': '.*',
+                "order" : { "_key" : "asc" }
+              },
+              'meta': {
+                'orderByTranslation': true,
+                'displayFilter': true,
+                'filterByTranslation': true,
+                'collapsed': true
+              }
+            },
             'cl_hierarchyLevel.key': {
               'terms': {
-                'field': 'cl_hierarchyLevel.key'
+                'field': 'cl_hierarchyLevel.key',
+                'exclude': '+.*'
               },
               'aggs': {
                 'format': {
