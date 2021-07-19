@@ -80,21 +80,9 @@ goog.require('gn_alert');
           'enabled': true,
           'languages': {
             'eng': 'en',
-            'dut': 'nl',
             'fre': 'fr',
             'ger': 'de',
-            'kor': 'ko',
-            'spa': 'es',
-            'cze': 'cs',
-            'cat': 'ca',
-            'fin': 'fi',
-            'ice': 'is',
-            'ita': 'it',
-            'por': 'pt',
-            'rus': 'ru',
-            'chi': 'zh',
-            'slo': 'sk',
-            'swe': 'sv'
+            'ita': 'it'
           },
           'isLogoInHeader': false,
           'logoInHeaderPosition': 'left',
@@ -568,16 +556,12 @@ goog.require('gn_alert');
                 'search/resultsview/partials/viewtemplates/grid.html',
             'tooltip': 'Grid',
             'icon': 'fa-th'
-          },{
-            'tplUrl': '../../catalog/components/' +
-              'search/resultsview/partials/viewtemplates/list.html',
-            'tooltip': 'List',
-            'icon': 'fa-bars'
-          },{
-            'tplUrl': '../../catalog/components/' +
-              'search/resultsview/partials/viewtemplates/table.html',
-            'tooltip': 'Table',
-            'icon': 'fa-table'
+          // geocat.ch : Only grid mode view for search results
+          // },{
+          //   'tplUrl': '../../catalog/components/' +
+          //     'search/resultsview/partials/viewtemplates/list.html',
+          //   'tooltip': 'List',
+          //   'icon': 'fa-bars'
           }],
           'resultTemplate': '../../catalog/components/' +
               'search/resultsview/partials/viewtemplates/grid.html',
