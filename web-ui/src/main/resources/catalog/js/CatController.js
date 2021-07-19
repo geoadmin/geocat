@@ -116,24 +116,21 @@
             showMosaic: true,
             showMaps: true,
             facetConfig: {
-              "th_httpinspireeceuropaeutheme-theme_tree.key": {
+              "groupOwner": {
                 terms: {
-                  field: "th_httpinspireeceuropaeutheme-theme_tree.key",
-                  size: 34
-                  // "order" : { "_key" : "asc" }
+                  field: "groupOwner",
+                  size: 80,
+                  order : { "_key" : "asc" }
                 },
                 meta: {
-                  decorator: {
-                    type: "icon",
-                    prefix: "fa fa-2x pull-left gn-icon iti-",
-                    expression: "http://inspire.ec.europa.eu/theme/(.*)"
-                  }
+                  orderByTranslation: true
                 }
               },
               "cl_topic.key": {
                 terms: {
                   field: "cl_topic.key",
-                  size: 20
+                  size: 20,
+                  exclude: ".*\\_.*"
                 },
                 meta: {
                   decorator: {
@@ -345,6 +342,35 @@
                   }
                 }
               },
+              groupOwner: {
+                terms: {
+                  field: "groupOwner",
+                  size: 80,
+                  include: ".*",
+                  order : { "_key" : "asc" }
+                },
+                meta: {
+                  orderByTranslation: true,
+                  displayFilter: true,
+                  filterByTranslation: true,
+                  collapsed: true
+                }
+              },
+              "cl_hierarchyLevel.key": {
+                terms: {
+                  field: "cl_hierarchyLevel.key",
+                  exclude: "+.*"
+                },
+                aggs: {
+                  format: {
+                    terms: {
+                      field: "format"
+                    }
+                  }
+                }
+              },
+
+
               // Use .default for not multilingual catalogue with one language only UI.
               // 'cl_spatialRepresentationType.default': {
               //   'terms': {
@@ -360,14 +386,15 @@
                   size: 10
                 }
               },
-              format: {
-                terms: {
-                  field: "format"
-                },
-                meta: {
-                  collapsed: true
-                }
-              },
+              // 02/23, geocat going to 4.2.3
+              // format: {
+              //   terms: {
+              //     field: "format"
+              //   },
+              //   meta: {
+              //     collapsed: true
+              //   }
+              // },
               availableInServices: {
                 filters: {
                   //"other_bucket_key": "others",
