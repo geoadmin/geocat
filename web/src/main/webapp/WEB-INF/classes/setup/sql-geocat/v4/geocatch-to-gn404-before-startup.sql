@@ -210,6 +210,8 @@ FROM services s, languages l;
 DROP TABLE ServiceParameters;
 DROP TABLE Services;
 
+
+UPDATE settings SET internal = 'n' WHERE name = 'system/metadata/prefergrouplogo';
 -- ## 4.0.0 - After startup
 
 -- Utility script to update sequence to current value on Postgres
