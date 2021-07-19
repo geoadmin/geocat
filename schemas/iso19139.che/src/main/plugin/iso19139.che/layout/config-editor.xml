@@ -354,6 +354,7 @@
     <!--Turn off INSPIRE view by default -->
     <view name="default">
       <sidePanel>
+        <directive data-gn-overview-manager=""/>
         <directive data-gn-onlinesrc-list=""/>
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
