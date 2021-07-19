@@ -86,6 +86,10 @@
         <div data-gn-status-badge="md" /> -->
       <div class="gn-toolbar">
         <div data-gn-record-origin-logo="md"/>
+        <i data-ng-if="md.isHarvested == 'true'"
+           style="position: relative; top: -10px; left: -10px;"
+           title="{{'harvestedRecord' | translate}}"
+           class="fa fa-fw fa-cloud-download text-muted"></i>
 
         <gn-links-btn class="pull-right"></gn-links-btn>
 
