@@ -3,17 +3,24 @@
                         version="0.3.1" id="ows-context-ex-1-v3">
   <ows-context:General>
     <ows:BoundingBox crs="EPSG:3857">
-      <ows:LowerCorner>-8604130.477526832 -320097.07393612247</ows:LowerCorner>
-      <ows:UpperCorner>8948257.201654762 8720263.135408245</ows:UpperCorner>
+      <ows:LowerCorner>484928.0680780873 39423.98404625524</ows:LowerCorner>
+      <ows:UpperCorner>819378.4969549329 329281.02240618813</ows:UpperCorner>
     </ows:BoundingBox>
   </ows-context:General>
   <ows-context:ResourceList>
-    <ows-context:Layer name="{type=osm}"
+
+    <ows-context:Layer name="{type=map.geo.admin.ch,name=ch.swisstopo.pixelkarte-farbe}"
                        group="Background layers"
                        hidden="false"
                        opacity="1">
-      <ows:Title>OpenStreetMap
-      </ows:Title>
+      <ows:Title>map.geo.admin.ch</ows:Title>
+    </ows-context:Layer>
+
+    <ows-context:Layer name="{type=osm}"
+                       group="Background layers"
+                       hidden="true"
+                       opacity="1">
+      <ows:Title>OpenStreetMap</ows:Title>
     </ows-context:Layer>
     <!--Uncomment the code bellow to add support to MS bing maps; don't forget to add a valid bingKey on the
     settings!-->
