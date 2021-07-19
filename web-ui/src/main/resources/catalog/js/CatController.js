@@ -147,7 +147,8 @@ goog.require('gn_alert');
           // 'queryBase': '${any}',
           // Full text but more boost on title match
           'queryBase': 'any:(${any}) resourceTitleObject.\\*:(${any})^2',
-          'exactMatchToggle': true,
+          'queryTitle': '${any}',
+          'searchOptions': true,
           // Score query may depend on where we are in the app?
           'scoreConfig': {
             // Score experiments:
@@ -637,7 +638,6 @@ goog.require('gn_alert');
             'appUrl': 'https://secure.geonames.org/searchJSON'
         },
         'recordview': {
-          'enabled': true,
           'isSocialbarEnabled': true,
           'showStatusWatermarkFor': 'historicalArchive,obsolete,superseded',
           'showStatusTopBarFor': ''
@@ -769,12 +769,10 @@ goog.require('gn_alert');
             }
           }
         },
-        'signin': {
+        'authentication': {
           'enabled': true,
-          'appUrl': '../../{{node}}/{{lang}}/catalog.signin'
-        },
-        'signout': {
-          'appUrl': '../../signout'
+          'signinUrl': '../../{{node}}/{{lang}}/catalog.signin',
+          'signoutUrl': '../../signout'
         },
         'page': {
           'enabled': true,
@@ -802,6 +800,8 @@ goog.require('gn_alert');
       current: null,
       isDisableLoginForm: false,
       isShowLoginAsLink: false,
+      isUserProfileUpdateEnabled: true,
+      isUserGroupUpdateEnabled: true,
       init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
         // start from the default config to make sure every field is present
         // and override with config arg if required
@@ -1029,7 +1029,7 @@ goog.require('gn_alert');
       gnConfig.env.defaultNode = defaultNode;
       gnConfig.env.baseURL = detectBaseURL(gnGlobalSettings.gnCfg.baseURLDetector);
 
-      $scope.signoutUrl = gnGlobalSettings.gnCfg.mods.signout.appUrl
+      $scope.signoutUrl = gnGlobalSettings.gnCfg.mods.authentication.signoutUrl
         + '?redirectUrl='
         + window.location.href.slice(
             0,
@@ -1050,6 +1050,8 @@ goog.require('gn_alert');
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
       $scope.isDisableLoginForm = gnGlobalSettings.isDisableLoginForm;
       $scope.isShowLoginAsLink = gnGlobalSettings.isShowLoginAsLink;
+      $scope.isUserProfileUpdateEnabled = gnGlobalSettings.isUserProfileUpdateEnabled;
+      $scope.isUserGroupUpdateEnabled = gnGlobalSettings.isUserGroupUpdateEnabled;
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
 

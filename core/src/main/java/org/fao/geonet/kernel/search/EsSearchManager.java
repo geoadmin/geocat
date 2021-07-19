@@ -359,14 +359,12 @@ public class EsSearchManager implements ISearchManager {
     public UpdateResponse updateField(String id, String field, Object value) throws Exception {
         Map<String, Object> updates = new HashMap<>(2);
         updates.put(getPropertyName(field), value);
-        updates.put("indexingDate", new Date());
         return updateFields(id, updates);
     }
 
     public void updateFieldAsynch(String id, String field, Object value) throws Exception {
         Map<String, Object> updates = new HashMap<>(2);
         updates.put(getPropertyName(field), value);
-        updates.put("indexingDate", new Date());
         updateFieldsAsynch(id, updates);
     }
 
@@ -531,6 +529,7 @@ public class EsSearchManager implements ISearchManager {
             .add("contactForResource")
             .add("contactForDistribution")
             .add("OrgForResource")
+            .add("specificationConformance")
             .add("resourceProviderOrgForResource")
             .add("resourceVerticalRange")
             .add("resourceTemporalDateRange")
