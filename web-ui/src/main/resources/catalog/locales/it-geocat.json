@@ -30,5 +30,6 @@
   "batchEditing": "Modifiche batch",
   "allAdmins": "Administrators",
   "termsAndConditions": "Basi legali",
-  "harvestedRecord": "Harvested record"
+  "harvestedRecord": "Harvested record",
+  "facet-groupOwner": "Catalogue"
 }
