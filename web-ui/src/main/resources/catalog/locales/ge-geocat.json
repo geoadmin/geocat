@@ -34,5 +34,6 @@
   "editorHome": "Metadatenliste",
   "allAdmins": "Administrators",
   "termsAndConditions": "Rechtliches",
-  "harvestedRecord": "Harvested record"
+  "harvestedRecord": "Harvested record",
+  "facet-groupOwner": "Catalogue"
 }

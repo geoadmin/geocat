@@ -29,5 +29,6 @@
   "contribute": "Editer",
   "allAdmins": "Administrateurs",
   "termsAndConditions": "Informations juridiques",
-  "harvestedRecord": "Fiche moissonnée"
+  "harvestedRecord": "Fiche moissonnée",
+  "facet-groupOwner": "Catalogue"
 }
