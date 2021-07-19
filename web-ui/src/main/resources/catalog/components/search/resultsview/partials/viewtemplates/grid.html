@@ -76,15 +76,17 @@
     </div>
     <!-- /.gn-card-body -->
 
-    <div
-      class="panel-footer gn-card-footer clearfix"
-      data-ng-class="[{
-            'gn-status-bg': showStatusFooterFor && showStatusFooterFor.length > 0
-          },
-          showStatusFooterFor.indexOf(md.cl_status[0].key) !== -1 ? 'gn-status-' + md.cl_status[0].key + '-bg' : '']"
-    >
-      <div data-gn-status-badge="md" />
+    <div class="panel-footer gn-card-footer clearfix">
+      <!-- geocat.ch: No status in search results
+        data-ng-class="[{
+              'gn-status-bg': showStatusFooterFor && showStatusFooterFor.length > 0
+            },
+            showStatusFooterFor.indexOf(md.cl_status[0].key) !== -1 ? 'gn-status-' + md.cl_status[0].key + '-bg' : '']"
+      >
+        <div data-gn-status-badge="md" /> -->
       <div class="gn-toolbar">
+        <div data-gn-record-origin-logo="md"/>
+
         <gn-links-btn class="pull-right"></gn-links-btn>
 
         <!--<div data-gn-related-dropdown="md"
