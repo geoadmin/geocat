@@ -116,17 +116,21 @@ goog.require('gn_alert');
           'showMosaic': true,
           'showMaps': true,
           'facetConfig': {
-            'th_httpinspireeceuropaeutheme-theme_tree.key': {
+            'groupOwner': {
               'terms': {
-                'field': 'th_httpinspireeceuropaeutheme-theme_tree.key',
-                'size': 34
-                // "order" : { "_key" : "asc" }
+                'field': 'groupOwner',
+                'size': 80,
+                "order" : { "_key" : "asc" }
+              },
+              'meta': {
+                'orderByTranslation': true
               }
             },
             'cl_topic.key': {
               'terms': {
                 'field': 'cl_topic.key',
-                'size': 20
+                'size': 20,
+                'exclude': '.*\\_.*'
               }
             },
             // 'OrgForResource': {
@@ -309,6 +313,26 @@ goog.require('gn_alert');
             'resourceType': {
               'terms': {
                 'field': 'resourceType'
+                }
+            },
+            'groupOwner': {
+              'terms': {
+                'field': 'groupOwner',
+                'size': 80,
+                'include': '.*',
+                "order" : { "_key" : "asc" }
+              },
+              'meta': {
+                'orderByTranslation': true,
+                'displayFilter': true,
+                'filterByTranslation': true,
+                'collapsed': true
+              }
+            },
+            'cl_hierarchyLevel.key': {
+              'terms': {
+                'field': 'cl_hierarchyLevel.key',
+                'exclude': '+.*'
               },
               'aggs': {
                 'format': {
