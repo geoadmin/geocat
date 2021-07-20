@@ -303,6 +303,11 @@
               label: 'openRecord',
               action: openMd
             },
+            'CH:GEOSHOP' : {
+              iconClass: 'fa-download',
+              label: 'download',
+              action: openLink
+            },
             'LINKDOWNLOAD' : {
               iconClass: 'fa-download',
               label: 'download',
@@ -380,6 +385,11 @@
             resource.locUrl = $filter('gnLocalized')(resource.url);
             var protocolOrType = resource.protocol + (resource.serviceType || '');
             // Cas for links
+
+            if (resource.locUrl.indexOf('shop') !== -1) {
+              return 'CH:GEOSHOP';
+            }
+
             if (angular.isString(protocolOrType)) {
               if (protocolOrType.match(/wms/i)) {
                 if (this.isLayerProtocol(resource)) {
