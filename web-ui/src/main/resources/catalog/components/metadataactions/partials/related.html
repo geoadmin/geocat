@@ -24,7 +24,15 @@
       <div
         class="gn-related-icon-col col-xs-2 col-sm-2 text-center"
         data-gn-link-icon="r"
-      ></div>
+      >
+        <strong>
+          <div data-ng-if="mainType === 'CH:GEOSHOP'"
+               data-ng-repeat="f in md.format"
+               class="clearfix">
+            <span class="label label-default label-primary">{{f}}</span>
+          </div>
+        </strong>
+      </div>
       <div
         data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-10 col-sm-7'"
         gn-popover-anchor=""
