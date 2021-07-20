@@ -41,5 +41,18 @@
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
-  <xsl:import href="../../iso19139/formatter/xsl-view/view.xsl"/>
+  <xsl:import href="../../../iso19139/formatter/xsl-view/view.xsl"/>
+
+  <!-- Load the editor configuration to be able
+  to render the different views -->
+  <xsl:variable name="configuration"
+                select="document('../../layout/config-editor.xml')"/>
+
+  <!-- Required for utility-fn.xsl -->
+  <xsl:variable name="editorConfig"
+                select="document('../../layout/config-editor.xml')"/>
+
+  <xsl:include href="../../layout/evaluate.xsl"/>
+  <xsl:include href="../../layout/utility-tpl-multilingual.xsl"/>
+
 </xsl:stylesheet>
