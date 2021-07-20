@@ -338,6 +338,11 @@
               label: 'openRecord',
               action: openMd
             },
+            'CH:GEOSHOP' : {
+              iconClass: 'fa-download',
+              label: 'download',
+              action: openLink
+            },
             'LINKDOWNLOAD' : {
               iconClass: 'fa-download',
               label: 'download',
@@ -434,6 +439,9 @@
               : '';
 
             // Case for links
+            if (resource.locUrl.indexOf('shop') !== -1) {
+              return 'CH:GEOSHOP';
+            }
             if (angular.isString(protocolOrType)) {
               if (resource && resource.function === 'legend') {
                 return 'LEGEND';
