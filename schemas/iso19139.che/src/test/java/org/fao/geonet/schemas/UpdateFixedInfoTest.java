@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableSet;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.schema.iso19139che.ISO19139cheNamespaces;
 import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.ResolverWrapper;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -78,7 +79,6 @@ public class UpdateFixedInfoTest {
     public static void setup() throws URISyntaxException {
         TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
         PATH_TO_XSL = Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("iso19139.che/update-fixed-info.xsl").toURI());
-
     }
 
     @Test

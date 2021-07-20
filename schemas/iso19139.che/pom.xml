@@ -107,7 +107,7 @@
           </execution>
         </executions>
       </plugin>
-     <!-- <plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>3.1.0</version>
@@ -120,10 +120,11 @@
               <type>test-jar</type>
               <classifier>tests</classifier>
               <outputDirectory>
-                ${project.build.directory}/test-classes
+                ${project.build.directory}/test-classes/iso19139
               </outputDirectory>
             </artifactItem>
           </artifactItems>
+          <excludes>org/**</excludes>
         </configuration>
         <executions>
           <execution>
@@ -134,7 +135,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>-->
+      </plugin>
     </plugins>
   </build>
 
