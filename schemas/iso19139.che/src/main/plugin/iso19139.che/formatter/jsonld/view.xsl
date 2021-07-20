@@ -5,17 +5,7 @@
   xmlns:che="http://www.geocat.ch/2008/che"
 	exclude-result-prefixes="#all"
 	version="2.0">
-
-	<xsl:output method="text"/>
-
-  <xsl:include href="iso19139-to-jsonld.xsl"/>
-
-  <xsl:template match="/">
-    <textResponse>
-      <xsl:apply-templates mode="getJsonLD"
-                           select="che:CHE_MD_Metadata"/>
-    </textResponse>
-  </xsl:template>
+  <xsl:import href="../../../iso19139/formatter/jsonld/view.xsl"/>
 </xsl:stylesheet>
 
 
