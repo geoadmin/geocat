@@ -74,7 +74,7 @@ public class Gm03Api  {
     DataManager _dataManager;
 
     @Operation(summary = "Get a metadata record as full GM03")
-    @RequestMapping(value = "/api/records/{metadataUuid}/formatters/gm03",
+    @RequestMapping(value = "/{portal}/api/records/{metadataUuid}/formatters/gm03",
             method = RequestMethod.GET,
             produces = {
                     MediaType.APPLICATION_XML_VALUE
