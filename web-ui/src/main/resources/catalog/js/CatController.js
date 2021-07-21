@@ -320,14 +320,37 @@ goog.require('gn_alert');
             'cl_hierarchyLevel.key': {
               'terms': {
                 'field': 'cl_hierarchyLevel.key',
-                'exclude': '+.*'
+                'include': 'dataset|service.*|basic.*',
+                "order" : { "_key" : "asc" }
+              // },
+              // 'aggs': {
+              //   'format': {
+              //     'terms': {
+              //       'field': 'format'
+              //     }
+              //   }
+              }
+            },
+            'cl_geodataType.key': {
+              'terms': {
+                'field': 'cl_geodataType.key'
+              }
+            },
+            'cl_topic.key': {
+              'terms': {
+                'field': 'cl_topic.key',
+                "order" : { "_key" : "asc" }
+              }
+            },
+            'tag.default': {
+              'terms': {
+                'field': 'tag.default',
+                'include': '.*',
+                'size': 10
               },
-              'aggs': {
-                'format': {
-                  'terms': {
-                    'field': 'format'
-                  }
-                }
+              'meta': {
+                'caseInsensitiveInclude': true,
+                'collapsed': true
               }
             },
             // Use .default for not multilingual catalogue with one language only UI.
@@ -343,42 +366,41 @@ goog.require('gn_alert');
               'terms': {
                 'field': 'cl_spatialRepresentationType.key',
                 'size': 10
+              },
+              'meta': {
+                'collapsed': true
               }
             },
-            'availableInServices': {
-              'filters': {
-                //"other_bucket_key": "others",
-                // But does not support to click on it
-                'filters': {
-                  'availableInViewService': {
-                    'query_string': {
-                      'query': '+linkProtocol:/OGC:WMS.*/'
-                    }
-                  },
-                  'availableInDownloadService': {
-                    'query_string': {
-                      'query': '+linkProtocol:/OGC:WFS.*/'
-                    }
-                  }
-                }
-              }
-            },
-            // GEMET configuration for non multilingual catalog
-            'th_gemet_tree.default': {
+            'format': {
               'terms': {
-                'field': 'th_gemet_tree.default',
-                'size': 100,
-                "order" : { "_key" : "asc" },
-                "include": "[^\^]+^?[^\^]+"
-                // Limit to 2 levels
+                'field': 'format'
+              },
+              'meta': {
+                'collapsed': true
               }
             },
-            // GEMET configuration for multilingual catalog
-            // The key is translated on client side by loading
-            // required concepts
-            // 'th_gemet_tree.key': {
+            // 'availableInServices': {
+            //   'filters': {
+            //     //"other_bucket_key": "others",
+            //     // But does not support to click on it
+            //     'filters': {
+            //       'availableInViewService': {
+            //         'query_string': {
+            //           'query': '+linkProtocol:/OGC:WMS.*/'
+            //         }
+            //       },
+            //       'availableInDownloadService': {
+            //         'query_string': {
+            //           'query': '+linkProtocol:/OGC:WFS.*/'
+            //         }
+            //       }
+            //     }
+            //   }
+            // },
+            // GEMET configuration for non multilingual catalog
+            // 'th_gemet_tree.default': {
             //   'terms': {
-            //     'field': 'th_gemet_tree.key',
+            //     'field': 'th_gemet_tree.default',
             //     'size': 100,
             //     "order" : { "_key" : "asc" },
             //     "include": "[^\^]+^?[^\^]+"
@@ -401,38 +423,38 @@ goog.require('gn_alert');
             //   }
             // },
 
-            'th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset_tree.default': {
-              'terms': {
-                'field': 'th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset_tree.default',
-                'size': 100,
-                "order" : { "_key" : "asc" }
-              }
-            },
-            'th_httpinspireeceuropaeutheme-theme_tree.key': {
-              'terms': {
-                'field': 'th_httpinspireeceuropaeutheme-theme_tree.key',
-                'size': 34
-                // "order" : { "_key" : "asc" }
-              }
-            },
-            'tag.default': {
-              'terms': {
-                'field': 'tag.default',
-                'include': '.*',
-                'size': 10
-              },
-              'meta': {
-                'caseInsensitiveInclude': true
-              }
-            },
-            'th_regions_tree.default': {
-              'terms': {
-                'field': 'th_regions_tree.default',
-                'size': 100,
-                "order" : { "_key" : "asc" }
-                //"include": "EEA.*"
-              }
-            },
+//            'th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset_tree.default': {
+//              'terms': {
+//                'field': 'th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset_tree.default',
+//                'size': 100,
+//                "order" : { "_key" : "asc" }
+//              }
+//            },
+//            'th_httpinspireeceuropaeutheme-theme_tree.key': {
+//              'terms': {
+//                'field': 'th_httpinspireeceuropaeutheme-theme_tree.key',
+//                'size': 34
+//                // "order" : { "_key" : "asc" }
+//              }
+//            },
+//            'tag.default': {
+//              'terms': {
+//                'field': 'tag.default',
+//                'include': '.*',
+//                'size': 10
+//              },
+//              'meta': {
+//                'caseInsensitiveInclude': true
+//              }
+//            },
+//            'th_regions_tree.default': {
+//              'terms': {
+//                'field': 'th_regions_tree.default',
+//                'size': 100,
+//                "order" : { "_key" : "asc" }
+//                //"include": "EEA.*"
+//              }
+//            },
             // "resolutionScaleDenominator": {
             //   "terms": {
             //     "field": "resolutionScaleDenominator",
@@ -448,6 +470,15 @@ goog.require('gn_alert');
                 "interval": 10000,
                 "keyed" : true,
                 'min_doc_count': 1
+              },
+              'meta': {
+                'collapsed': true
+              }
+            },
+            "resolutionDistance": {
+              "terms": {
+                "field": "resolutionDistance",
+                "include": ".* (m|km)"
               },
               'meta': {
                 'collapsed': true
