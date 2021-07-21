@@ -10,6 +10,7 @@
   "index": "Indexer",
   "geodataType": "Géodonnée",
   "facet-cl_geodataType": "Géodonnée",
+  "facet-resolutionDistance": "Résolution",
   "basicGeodata": "Géodonnée de base",
   "oereb": "RDPPF",
   "oerebRegister": "Registre RDPPF",
