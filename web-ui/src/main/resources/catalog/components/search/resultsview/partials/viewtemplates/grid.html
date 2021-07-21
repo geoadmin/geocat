@@ -92,6 +92,7 @@
                title="{{'harvestedRecord' | translate}}"
                class="fa fa-fw fa-cloud-download text-primary"></i>
             <i class="fa fa-fw"
+               data-ng-if="md.edit == true"
                data-ng-class="::md.isPublishedToAll ?
               'fa-unlock text-success' : 'fa-lock text-warning'"></i>
           </strong>
