@@ -52,14 +52,14 @@
       <version>3.1.0</version>
       <scope>test</scope>
     </dependency>
-<!--    <dependency>
+    <dependency>
       <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>gn-schema-iso19139</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
       <classifier>tests</classifier>
       <scope>test</scope>
-    </dependency>-->
+    </dependency>
     <dependency>
       <groupId>org.powermock</groupId>
       <artifactId>powermock-module-junit4</artifactId>
