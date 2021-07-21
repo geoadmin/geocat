@@ -122,7 +122,8 @@ goog.require('gn_alert');
             'cl_hierarchyLevel.key': {
               'terms': {
                 'field': 'cl_hierarchyLevel.key',
-                'size': 10
+                'size': 10,
+                'exclude': '+.*'
               }
             }
           },
