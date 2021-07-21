@@ -282,6 +282,11 @@ goog.require('gn_alert');
                 }
               }
             },
+            'cl_geodataType.key': {
+              'terms': {
+                'field': 'cl_geodataType.key'
+              }
+            },
             // Use .default for not multilingual catalogue with one language only UI.
             // 'cl_spatialRepresentationType.default': {
             //   'terms': {
@@ -316,21 +321,9 @@ goog.require('gn_alert');
               }
             },
             // GEMET configuration for non multilingual catalog
-            'th_gemet_tree.default': {
-              'terms': {
-                'field': 'th_gemet_tree.default',
-                'size': 100,
-                "order" : { "_key" : "asc" },
-                "include": "[^\^]+^?[^\^]+"
-                // Limit to 2 levels
-              }
-            },
-            // GEMET configuration for multilingual catalog
-            // The key is translated on client side by loading
-            // required concepts
-            // 'th_gemet_tree.key': {
+            // 'th_gemet_tree.default': {
             //   'terms': {
-            //     'field': 'th_gemet_tree.key',
+            //     'field': 'th_gemet_tree.default',
             //     'size': 100,
             //     "order" : { "_key" : "asc" },
             //     "include": "[^\^]+^?[^\^]+"
@@ -392,6 +385,15 @@ goog.require('gn_alert');
                 "interval": 10000,
                 "keyed" : true,
                 'min_doc_count': 1
+              },
+              'meta': {
+                'collapsed': true
+              }
+            },
+            "resolutionDistance": {
+              "terms": {
+                "field": "resolutionDistance",
+                "include": ".* (m|km)"
               },
               'meta': {
                 'collapsed': true
