@@ -26,7 +26,12 @@
   <portrayalCatalogueInfo>Représentation</portrayalCatalogueInfo>
   <metadataConstraints>Md. contraintes</metadataConstraints>
   <metadataMaintenance>Md. maintenance</metadataMaintenance>
-  <applicationSchemaInfo>Schéma d'app.</applicationSchemaInfo>
+  <applicationSchemaInfo>Extension</applicationSchemaInfo>
+  <noThesaurusName>Mots clés</noThesaurusName>
+  <bboxesSection>Zone géographique</bboxesSection>
+  <citationProposal>Proposition de citation</citationProposal>
+  <citationProposal-help>Cette proposition de citation a été générée automatiquement selon le format suggéré par DataCite. Nous vous invitons à vérifier dans les métadonnées si les auteurs n'ont pas imposé un format de citation spécifique.</citationProposal-help>
+  <associatedResources>Ressources associées</associatedResources>
   <metadataExtensionInfo>Extension</metadataExtensionInfo>
   <legislationInformation>Info sur la législation</legislationInformation>
   <rsIdentifier>Référentiel de coordonnées</rsIdentifier>
@@ -34,18 +39,18 @@
   <geometricObjectType>Type de géométrie</geometricObjectType>
 
   <!-- XSD error translation -->
-  <invalidElement>Élément invalide. Contenu invalide pour l'élément :</invalidElement>
-  <onElementOf>Un des éléments suivants</onElementOf>
-  <isExpected>est attendu.</isExpected>
-  <isNotComplete>est incomplet.</isNotComplete>
-  <elementLocated>L'élément parent est</elementLocated>
-  <missingElement>Élément manquant. Le contenu de l'élément</missingElement>
-  <invalidValue>Valeur manquante ou invalide.</invalidValue>
-  <notValidFor>n'est pas une valeur valide pour </notValidFor>
-  <xsdErrorIs>L'erreur est :</xsdErrorIs>
-  <inElement>dont le parent est</inElement>
-  <enum1>La valeur</enum1>
-  <enum2>n'est pas valide pour le champ</enum2>
-  <enum3>Les valeurs possibles sont :</enum3>
+  <invalidElement>Contenu invalide à l'élément </invalidElement>
+  <onElementOf>Un des éléments suivants : </onElementOf>
+  <isExpected> est attendu.</isExpected>
+  <isNotComplete>.</isNotComplete>
+  <elementLocated> L'élément parent est </elementLocated>
+  <missingElement>Élément manquant dans </missingElement>
+  <invalidValue>Valeur manquante ou invalide. </invalidValue>
+  <notValidFor> n'est pas une valeur valide pour </notValidFor>
+  <xsdErrorIs>L'erreur est : </xsdErrorIs>
+  <inElement> contenu dans </inElement>
+  <enum1>La valeur </enum1>
+  <enum2> n'est pas valide pour le champ </enum2>
+  <enum3>Les valeurs possibles sont : </enum3>
 
 </strings>

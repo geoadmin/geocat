@@ -15,7 +15,12 @@
   <inspire>INSPIRE</inspire>
   <resource>Resource</resource>
   <xml>XML</xml>
-  <metadata>Metadata</metadata>
+  <overviews>Overviews</overviews>
+  <metadataInXML>XML</metadataInXML>
+  <providedBy>Provided by</providedBy>
+  <shareOnSocialSite>Share on social sites</shareOnSocialSite>
+  <viewMode>Views</viewMode>
+  <metadata>Metadato</metadata>
   <identificationInfo>Identificazione</identificationInfo>
   <distributionInfo>Distribuzione</distributionInfo>
   <dataQualityInfo>Qualità dei dati</dataQualityInfo>
@@ -33,18 +38,21 @@
   <geometricObjectType>Tipo di geometria</geometricObjectType>
 
   <!-- XSD error translation -->
-  <invalidElement>Invalid element. Invalid content was found starting with element:</invalidElement>
-  <onElementOf>One of the following elements</onElementOf>
-  <isExpected>is expected.</isExpected>
-  <isNotComplete>is not complete.</isNotComplete>
-  <elementLocated>Parent element is</elementLocated>
-  <missingElement>Missing element. The content of element:</missingElement>
-  <invalidValue>Invalid or missing value.</invalidValue>
-  <notValidFor>is not a valid value for </notValidFor>
-  <xsdErrorIs>XSD error is:</xsdErrorIs>
-  <inElement>in element</inElement>
-  <enum1>Value</enum1>
-  <enum2>is not valid for the field</enum2>
-  <enum3>List of values is :</enum3>
+  <invalidElement>Elemento non valido. È stato trovato del contenuto non valido a partire
+    dall'elemento:
+  </invalidElement>
+  <onElementOf>Uno tra gli elementi seguenti</onElementOf>
+  <isExpected>è richiesto.</isExpected>
+  <isNotComplete>non è completo.</isNotComplete>
+  <elementLocated>L'elemento superiore è</elementLocated>
+  <missingElement>Elemento mancante. Il contenuto dell'elemento:</missingElement>
+  <invalidValue>Valore non valido o assente.</invalidValue>
+  <notValidFor>non è un valore valido per</notValidFor>
+  <xsdErrorIs>Errore XSD:</xsdErrorIs>
+  <inElement>nell'elemento</inElement>
+  <enum1>Valore</enum1>
+  <enum2>non valido per il campo</enum2>
+  <enum3>La lista di valori è:</enum3>
+
 
 </strings>
