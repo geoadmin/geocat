@@ -1044,13 +1044,9 @@
               groupPublishedId: {
                 terms: {
                   field: "groupPublishedId",
-                  size: 200,
-                  include: ".*"
+                  size: 10,
                 },
                 meta: {
-                  orderByTranslation: true,
-                  filterByTranslation: true,
-                  displayFilter: true,
                   collapsed: true
                 }
               },
@@ -1086,7 +1082,6 @@
                   size: 5
                 },
                 meta: {
-                  collapsed: true,
                   decorator: {
                     type: "icon",
                     prefix: "fa fa-fw ",
