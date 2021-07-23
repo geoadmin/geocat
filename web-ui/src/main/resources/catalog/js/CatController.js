@@ -692,21 +692,38 @@ goog.require('gn_alert');
           'editorIndentType': '',
           'allowRemoteRecordLink': true,
           'facetConfig': {
-            'resourceType': {
+
+            'groupOwner': {
               'terms': {
-                'field': 'resourceType',
-                'size': 20
+                'field': 'groupOwner',
+                'size': 80,
+                'include': '.*',
+                "order" : { "_key" : "asc" }
+              },
+              'meta': {
+                'orderByTranslation': true,
+                'displayFilter': true,
+                'filterByTranslation': true,
+                'collapsed': true
+              }
+            },
+            'cl_hierarchyLevel.key': {
+              'terms': {
+                'field': 'cl_hierarchyLevel.key',
+                'include': 'dataset|service.*|basic.*',
+                "order" : { "_key" : "asc" }
+                // },
+                // 'aggs': {
+                //   'format': {
+                //     'terms': {
+                //       'field': 'format'
+                //     }
+                //   }
               }
             },
             'cl_status.key': {
               'terms': {
                 'field': 'cl_status.key',
-                'size': 15
-              }
-            },
-            'sourceCatalogue': {
-              'terms': {
-                'field': 'sourceCatalogue',
                 'size': 15
               }
             },
@@ -719,12 +736,6 @@ goog.require('gn_alert');
             'isValidInspire': {
               'terms': {
                 'field': 'isValidInspire',
-                'size': 10
-              }
-            },
-            'groupOwner': {
-              'terms': {
-                'field': 'groupOwner',
                 'size': 10
               }
             },
@@ -762,6 +773,15 @@ goog.require('gn_alert');
               'terms': {
                 'field': 'isPublishedToAll',
                 'size': 2
+              }
+            },
+            'sourceCatalogue': {
+              'terms': {
+                'field': 'sourceCatalogue',
+                'size': 15
+              },
+              'meta': {
+                'collapsed': true
               }
             }
           }
