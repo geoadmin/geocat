@@ -210,6 +210,7 @@ FROM services s, languages l;
 DROP TABLE ServiceParameters;
 DROP TABLE Services;
 
+UPDATE settings SET value = 'true' WHERE name = 'system/inspire/enable';
 UPDATE settings SET value = 'https://inspire.ec.europa.eu/validator/' WHERE name = 'system/inspire/remotevalidation/url';
 UPDATE settings SET internal = 'n' WHERE name = 'system/metadata/prefergrouplogo';
 -- ## 4.0.0 - After startup
