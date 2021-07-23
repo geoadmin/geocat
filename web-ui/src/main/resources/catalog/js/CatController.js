@@ -883,16 +883,18 @@ goog.require('gn_alert');
                 'size': 2
               }
             },
+            'isPublishedToAll': {
+              'terms': {
+                'field': 'isPublishedToAll',
+                'size': 2
+              }
+            },
             'groupPublishedId': {
               'terms': {
                 'field': 'groupPublishedId',
-                'size': 200,
-                'include': '.*'
+                'size': 10
               },
               'meta': {
-                'orderByTranslation': true,
-                'filterByTranslation': true,
-                'displayFilter': true,
                 'collapsed': true
               }
             },
@@ -918,9 +920,6 @@ goog.require('gn_alert');
               'terms': {
                 'field': 'isTemplate',
                 'size': 5
-              },
-              'meta': {
-                'collapsed': true
               }
             },
             'sourceCatalogue': {
