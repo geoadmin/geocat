@@ -14,8 +14,16 @@
   <simple>Simple</simple>
   <inspire>INSPIRE</inspire>
   <bgdi>BGDI</bgdi>
+  <inspire_sds>SDS</inspire_sds>
+  <overviews>Overviews</overviews>
+  <metadataInXML>XML</metadataInXML>
+  <providedBy>Provided by</providedBy>
+  <shareOnSocialSite>Share on social sites</shareOnSocialSite>
+  <viewMode>Views</viewMode>
   <resource>Resource</resource>
   <xml>XML</xml>
+
+
   <metadata>Metadaten</metadata>
   <identificationInfo>Basisinfo</identificationInfo>
   <distributionInfo>Vertriebsinfo</distributionInfo>
@@ -32,6 +40,8 @@
   <rsIdentifier>Projektions-Code</rsIdentifier>
   <spatialResolution>Maßstab (min. oder max.)</spatialResolution>
   <geometricObjectType>Geometrie-Typ</geometricObjectType>
+  <noThesaurusName>Keywords</noThesaurusName>
+  <bboxesSection>Geographic coverage</bboxesSection>
 
   <!-- XSD error translation -->
   <invalidElement>Ungültiger Inhalt im Element</invalidElement>
