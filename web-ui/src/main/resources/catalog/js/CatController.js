@@ -727,15 +727,15 @@ goog.require('gn_alert');
                 'size': 15
               }
             },
-            'isValid': {
+            'valid': {
               'terms': {
-                'field': 'isValid',
+                'field': 'valid',
                 'size': 10
               }
             },
-            'isValidInspire': {
+            'valid_inspire': {
               'terms': {
-                'field': 'isValidInspire',
+                'field': 'valid_inspire',
                 'size': 10
               }
             },
@@ -745,16 +745,28 @@ goog.require('gn_alert');
                 'size': 10
               }
             },
+            'isPublishedToAll': {
+              'terms': {
+                'field': 'isPublishedToAll',
+                'size': 2
+              }
+            },
             'groupPublished': {
               'terms': {
                 'field': 'groupPublished',
                 'size': 10
+              },
+              'meta': {
+                'collapsed': true
               }
             },
             'documentStandard': {
               'terms': {
                 'field': 'documentStandard',
                 'size': 10
+              },
+              'meta': {
+                'collapsed': true
               }
             },
             'isHarvested': {
@@ -767,12 +779,6 @@ goog.require('gn_alert');
               'terms': {
                 'field': 'isTemplate',
                 'size': 5
-              }
-            },
-            'isPublishedToAll': {
-              'terms': {
-                'field': 'isPublishedToAll',
-                'size': 2
               }
             },
             'sourceCatalogue': {
