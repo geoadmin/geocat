@@ -28,5 +28,7 @@
   "contribute": "Edit",
   "termsAndConditions": "Legal framework",
   "harvestedRecord": "Harvested record",
-  "facet-groupOwner": "Catalogue"
+  "facet-groupOwner": "Catalogue",
+  "che:CHE_CI_ResponsibleParty": "Contact",
+  "geocatAdminTools": "geocat.ch admin tools"
 }

@@ -32,5 +32,7 @@
   "allAdmins": "Administrateurs",
   "termsAndConditions": "Informations juridiques",
   "harvestedRecord": "Fiche moissonnée",
-  "facet-groupOwner": "Catalogue"
+  "facet-groupOwner": "Catalogue",
+  "che:CHE_CI_ResponsibleParty": "Contact",
+  "geocatAdminTools": "geocat.ch admin tools"
 }
