@@ -58,7 +58,9 @@
         {name: 'settings', route: '#settings',
           classes: 'btn-warning', icon: 'fa-gear'},
         {name: 'tools', route: '#tools',
-          classes: 'btn-warning', icon: 'fa-medkit'}]
+          classes: 'btn-warning', icon: 'fa-medkit'},
+        {name: 'geocat', route: '#geocat/home',
+          classes: 'btn-danger', icon: 'fa-plus'}]
       // TODO : add other role menu
     };
 

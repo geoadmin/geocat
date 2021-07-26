@@ -303,10 +303,33 @@
               }
             }
           }).
+          when('/geocat/home', {
+            templateUrl: tplFolder + 'page-layout.html',
+            controller: 'GeocatController',
+            resolve: {
+              permission: function() {
+                authorizationService.$get[0]().check('Administrator');
+              }
+            }
+          }).
           otherwise({
             redirectTo: '/home'
           });
     }]);
+
+  module.controller('GeocatController', ['$scope', function($scope){
+    $scope.pageMenu = {
+      folder: './',
+      defaultTab: 'geocat',
+      tabs:
+        [{
+          type: 'index',
+          label: 'geocatAdminTools',
+          icon: 'fa-search',
+          href: '#/geocat/home'
+        }]
+    };
+  }]);
 
   /**
    * The admin console controller.
