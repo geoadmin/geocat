@@ -597,6 +597,11 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.geonetwork-opensource</groupId>
+      <artifactId>gn-geocat-extension</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.geonetwork-opensource.schemas</groupId>
       <artifactId>gn-schema-csw-record</artifactId>
       <version>${project.version}</version>

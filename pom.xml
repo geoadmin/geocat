@@ -1264,6 +1264,7 @@
     <module>messaging</module>
     <module>estest</module>
     <module>index</module>
+    <module>geocat</module>
   </modules>
 
   <profiles>
