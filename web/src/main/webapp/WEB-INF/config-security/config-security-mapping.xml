@@ -272,7 +272,7 @@
                            access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/getSLD/.*" access="permitAll"/>
 
-        <!--Geocat-->
+        <!-- geocat.ch / START -->
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/unpublish.invalid.metadata!?.*"
                            access="hasAuthority('Administrator')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/unpublish.report.xml!?.*"
@@ -283,6 +283,11 @@
                            access="hasAuthority('Administrator')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/aap.report.csv!?.*"
                            access="hasAuthority('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/gm03.xml?.*"
+                           access="permitAll"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/gm03small.xml?.*"
+                           access="permitAll"/>
+        <!-- geocat.ch / END -->
 
         <sec:intercept-url pattern="/.*" access="denyAll"/>
       </sec:filter-security-metadata-source>

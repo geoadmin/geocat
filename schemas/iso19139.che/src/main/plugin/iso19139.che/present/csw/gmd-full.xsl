@@ -6,6 +6,6 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 version="2.0">
 
-  <xsl:import href="../../../../../../../xslt/geocat/xml_iso19139.xsl"/>
+  <xsl:import href="../../convert/to19139.xsl"/>
 
 </xsl:stylesheet>
