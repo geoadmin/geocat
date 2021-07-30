@@ -102,6 +102,13 @@ goog.require('gn_alert');
           'showSocialBarInFooter': true,
           'fluidLayout': true,
           'facetConfig': {
+            'cl_topic.key': {
+              'terms': {
+                'field': 'cl_topic.key',
+                'size': 25,
+                'include': '[A-Za-z_]+'
+              }
+            },
             'groupOwner': {
               'terms': {
                 'field': 'groupOwner',
@@ -112,18 +119,16 @@ goog.require('gn_alert');
                 'orderByTranslation': true
               }
             },
-            'cl_topic.key': {
-              'terms': {
-                'field': 'cl_topic.key',
-                'size': 20,
-                'exclude': '.*\\_.*'
-              }
-            },
             'cl_hierarchyLevel.key': {
               'terms': {
                 'field': 'cl_hierarchyLevel.key',
                 'size': 10,
                 'exclude': '+.*'
+              }
+            },
+            'cl_hierarchyLevel.dummy': {
+              'terms': {
+                'field': 'cl_hierarchyLevel.dummy'
               }
             }
           },
@@ -570,7 +575,7 @@ goog.require('gn_alert');
             'class': 'fa-file-zip-o'
           }, {
             'label': 'exportPDF',
-            'url' : '/formatters/xsl-view?output=pdf&language=${lang}',
+            'url' : '/formatters/xsl-view?output=pdf&language=${lang}&view=advanced',
             'class': 'fa-file-pdf-o'
           }, {
             'label': 'exportXMLISO19139.che',
