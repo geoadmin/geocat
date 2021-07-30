@@ -43,7 +43,9 @@ public class UnpublishNotifierTest {
 
         ArgumentCaptor<User> ownerCaptor = ArgumentCaptor.forClass(User.class);
         ArgumentCaptor<List> uuidCaptor = ArgumentCaptor.forClass(List.class);
-        Mockito.verify(unpublishNotifierDelegateMock, Mockito.times(3)).notifyOwner(ownerCaptor.capture(), uuidCaptor.capture());
+        Mockito.verify(unpublishNotifierDelegateMock,
+            Mockito.times(3))
+            .notifyOwner(ownerCaptor.capture(), uuidCaptor.capture());
         Assert.assertEquals("user-one@test.org", ownerCaptor.getAllValues().get(0).getEmail());
         Assert.assertEquals("user-two@test.org", ownerCaptor.getAllValues().get(1).getEmail());
         Assert.assertEquals("user-three@test.org", ownerCaptor.getAllValues().get(2).getEmail());
@@ -73,10 +75,10 @@ public class UnpublishNotifierTest {
                 "because they were found to be invalid.<br>" +
                 "<br>" +
                 "The following records were affected:<br>" +
-                "- <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0001\">uuid-invalid-0001</a><br>" +
-                "- <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0002\">uuid-invalid-0002</a><br>" +
-                "- <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0003\">uuid-invalid-0003</a><br>" +
-                "- <a href=\"https://www.geocat.ch/geonetwork/metadata/uuid-invalid-0004\">uuid-invalid-0004</a><br>",
+                "- <a href=\"https://www.geocat.ch/geonetwork/api/records/uuid-invalid-0001\">uuid-invalid-0001</a><br>" +
+                "- <a href=\"https://www.geocat.ch/geonetwork/api/records/uuid-invalid-0002\">uuid-invalid-0002</a><br>" +
+                "- <a href=\"https://www.geocat.ch/geonetwork/api/records/uuid-invalid-0003\">uuid-invalid-0003</a><br>" +
+                "- <a href=\"https://www.geocat.ch/geonetwork/api/records/uuid-invalid-0004\">uuid-invalid-0004</a><br>",
                 emailBodyToTest);
     }
 
@@ -86,7 +88,7 @@ public class UnpublishNotifierTest {
         Mockito.when(mockUser.getName()).thenReturn(firstName);
         Mockito.when(mockUser.getSurname()).thenReturn(lastName);
         Mockito.when(mockUser.getUsername()).thenReturn(String.format("%s-%s", firstName, lastName).toLowerCase());
-        Mockito.when(mockUserRepository.findById(id)).thenReturn(java.util.Optional.of(mockUser));
+        Mockito.when(mockUserRepository.findOne(id + "")).thenReturn(mockUser);
         return mockUser;
     }
 
