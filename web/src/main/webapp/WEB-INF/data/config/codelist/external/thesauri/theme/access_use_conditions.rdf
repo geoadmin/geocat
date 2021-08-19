@@ -25,7 +25,7 @@
     <skos:prefLabel xml:lang="en">Opendata BY: Open use. Must provide the source.</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">Opendata BY: Utilisation libre. Obligation d’indiquer la source.</skos:prefLabel>
     <skos:prefLabel xml:lang="de">Opendata BY: Freie Nutzung. Quellenangabe ist Pflicht.</skos:prefLabel>
-    <skos:prefLabel xml:lang="it">Opendata BY: Libero utilizzo. Indicazione della fonte obbligatoria. Utilizzo a fini commerciali ammesso soltanto previo consenso del titolare dei dati</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Opendata BY: Libero utilizzo. Indicazione della fonte obbligatoria.</skos:prefLabel>
     <skos:prefLabel xml:lang="ro">Opendata BY: Freie Nutzung. Quellenangabe ist Pflicht.</skos:prefLabel>
     </skos:Concept>
   <skos:Concept rdf:about="https://opendata.swiss/en/terms-of-use/#terms_ask">
