@@ -1,5 +1,7 @@
 FROM tomcat:8.0-jre8
 
+ADD ./server.xml /usr/local/tomcat/conf/
+
 # Install aws cli tool for S3 sync of MD
 RUN apt update && \
     apt install -y python-pip augeas-tools augeas-lenses && \
