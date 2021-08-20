@@ -134,7 +134,7 @@
              Note: The pattern used is equivalent to using pattern="common" -->
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="/proc/self/fd"
                prefix="1" suffix="" rotatable="false"
-               pattern="XXXXXXXXXXXXXXX %h %l %u %S %t &quot;%r&quot; %s %b" />
+               pattern="%h %l %u %S %t &quot;%r&quot; %s %b XXXXXXXXXXXXXXX" />
 
       </Host>
     </Engine>
