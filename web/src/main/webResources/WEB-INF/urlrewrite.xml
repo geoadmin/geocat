@@ -28,6 +28,23 @@
     Configuration file for UrlRewriteFilter http://tuckey.org/urlrewrite/
 -->
 <urlrewrite use-query-string="true" use-context="false">
+  <!-- geocat.ch rules / START -->
+  <rule>
+    <note>
+      Redirect old GM03 service
+    </note>
+    <from>^/srv/([a-z]{3})/gm03.xml\?uuid=(.*)</from>
+    <to type="permanent-redirect">%{context-path}/srv/api/records/$2/formatters/gm03?output=xml</to>
+  </rule>
+  <rule>
+    <note>
+      Redirect old GM03 small service
+    </note>
+    <from>^/srv/([a-z]{3})/gm03small.xml\?uuid=(.*)</from>
+    <to type="permanent-redirect">%{context-path}/srv/api/records/$2/formatters/gm03small?output=xml</to>
+  </rule>
+  <!-- geocat.ch rules / END -->
+
 
   <rule>
     <note>API Documentation redirection as Spring does not redirect to index.html.</note>

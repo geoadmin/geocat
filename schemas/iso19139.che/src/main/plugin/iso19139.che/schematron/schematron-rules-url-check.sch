@@ -35,7 +35,7 @@
         <sch:rule context="//gco:CharacterString[matches(., 'http|ftp')] |
                            //gmd:LocalisedCharacterString[matches(., 'http|ftp')]">
 
-            <sch:let name="isValidUrl" value="xslutil:findAndValidateURLs(text())" />
+            <sch:let name="isValidUrl" value="xslutil:validateURL(text())" />
 
             <sch:assert test="$isValidUrl = true()" see="(./ancestor::*[@xsi:type])[1]/geonet:element/@ref">
                 <sch:value-of select="$loc/strings/alert.invalidURL/div" />

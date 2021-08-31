@@ -4,7 +4,7 @@
         <codelist name="gmd:CI_DateTypeCode">
         <entry><code></code><label></label><description></description></entry>
         </codelist>-->
-  <codelist name="gmd:MD_TopicCategoryCode">
+  <codelist name="gmd:MD_TopicCategoryCode" alias="topicCategory">
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>imageryBaseMapsEarthCover</code>

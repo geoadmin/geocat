@@ -2,7 +2,7 @@
 <codelists xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:noNamespaceSchemaLocation="../../../../../../../schema-labels.xsd"
  xmlns:gmd="http://www.isotc211.org/2005/gmd">
-  <codelist name="gmd:MD_TopicCategoryCode">
+  <codelist name="gmd:MD_TopicCategoryCode" alias="topicCategory">
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>imageryBaseMapsEarthCover</code>

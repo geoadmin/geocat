@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<beans
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="geocatBackgroundJobScheduler"
+        class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    <property name="schedulerName" value="geocatBackgroundJobScheduler"/>
+    <property name="jobFactory">
+      <bean class="org.fao.geonet.util.spring.AutowiringSpringBeanJobFactory"/>
+    </property>
+    <property name="triggers">
+      <list>
+        <ref bean="unpublishMetadataCronTrigger"/>
+      </list>
+    </property>
+    <property name="quartzProperties">
+      <props>
+        <prop key="org.quartz.scheduler.instanceName">default.geonetwork.geocattask</prop>
+        <prop key="org.quartz.scheduler.instanceId">AUTO</prop>
+        <prop key="org.quartz.jobStore.class">org.quartz.simpl.RAMJobStore</prop>
+        <prop key="org.quartz.threadPool.threadCount">1</prop>
+      </props>
+    </property>
+  </bean>
+
+  <bean id="unpublishInvalidMetadataJob"
+        class="org.fao.geonet.geocat.services.unpublish.UnpublishInvalidMetadataJob"/>
+  <bean id="unpublishNotifier"
+        class="org.fao.geonet.geocat.services.unpublish.UnpublishNotifier"/>
+
+  <bean id="unpublishMetadataCronTrigger"
+        class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <property name="jobDetail">
+      <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="org.fao.geonet.geocat.services.unpublish.UnpublishInvalidMetadataJob"/>
+        <property name="name" value="unpublishInvalidMetadata"/>
+        <property name="group" value="geocatBackgroundJobScheduler"/>
+      </bean>
+    </property>
+    <property name="cronExpression" value="0 30 21 ? * *"/>
+  </bean>
+</beans>

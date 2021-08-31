@@ -213,6 +213,172 @@ DROP TABLE Services;
 UPDATE settings SET value = 'true' WHERE name = 'system/inspire/enable';
 UPDATE settings SET value = 'https://inspire.ec.europa.eu/validator/' WHERE name = 'system/inspire/remotevalidation/url';
 UPDATE settings SET internal = 'n' WHERE name = 'system/metadata/prefergrouplogo';
+
+-- INSPIRE validation has been removed. Clean up current validation.
+-- It will be refresh on nightly check.
+DELETE FROM validation;
+
+
+CREATE TABLE metadatabackup20210726 AS SELECT * FROM metadata;
+
+
+-- Fix thesaurus not found local._none_.geocat
+-- SELECT groupOwner, isHarvested, count(*) FROM metadata WHERE data LIKE '%local._none_.geocat%' GROUP BY 1, 2;
+-- SELECT * FROM groups WHERE id = 50000005;
+UPDATE metadata SET data = replace(data, 'local._none_.geocat', 'local.theme.geocat')
+    WHERE isharvested = 'n' AND data LIKE '%local._none_.geocat%';
+-- There are still usages in Kanton Zurich harvested records.
+
+
+UPDATE metadata SET data = replace(data,
+    'external.theme.inspire-theme',
+    'external.theme.httpinspireeceuropaeutheme-theme')
+  WHERE isharvested = 'n' AND data LIKE '%external.theme.inspire-theme%';
+
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F1',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Frs')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F1%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F2',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fgg')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F2%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F3',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fgn')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F3%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F4',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fau')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F4%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F5',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fad')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F5%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F6',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fcp')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F6%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F7',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Ftn')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F7%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F8',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fhy')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F8%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F9',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fps')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F9%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F10',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fel')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F10%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F11',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Flc')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F11%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F12',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Foi')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F12%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F13',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fge')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F13%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F14',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fsu')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F14%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F15',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fbu')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F15%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F16',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fso')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F16%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F17',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Flu')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F17%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F18',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fhh')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F18%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F19',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fus')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F19%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F20',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fef')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F20%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F21',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fpf')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F21%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F22',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Faf')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F22%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F23',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fpd')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F23%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F24',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fam')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F24%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F25',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fnz')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F25%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F26',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fac')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F26%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F27',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fmf')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F27%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F28',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fof')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F28%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F29',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fsr')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F29%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F30',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fbr')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F30%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F31',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fhb')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F31%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F32',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fsd')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F32%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F33',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fer')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F33%';
+UPDATE metadata SET data = replace(data,
+                                   'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F34',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fmr')
+WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F34%';
+
+-- external.theme.inspire-theme
+-- external.theme.gemet-theme
+-- 2021-07-26 13:46:39,631 ERROR [jeeves.xlinkprocessor] - Failed on local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&thesaurus=external.theme.inspire-theme&id=http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F8%2Chttp%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F11%2Chttp%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F3&lang=ger,fre,ita,eng,roh
+
+-- DELETE FROM validation;
+-- SELECT * FROM settings WHERE name LIKE '%password%';
+
 -- ## 4.0.0 - After startup
 
 -- Utility script to update sequence to current value on Postgres

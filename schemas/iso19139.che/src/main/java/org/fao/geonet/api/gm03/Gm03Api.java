@@ -62,10 +62,12 @@ import static org.fao.geonet.api.ApiParams.*;
     description = API_CLASS_RECORD_OPS)
 @Controller("recordsGm03")
 @ReadWriteController
-public class Gm03Api  {
+public class Gm03Api {
 
-    private final String GM03_XSL_CONVERSION_FILE= "convert/ISO19139CHE-to-GM03.xsl";
+    private final String GM03_XSL_CONVERSION_FILE = "convert/ISO19139CHE-to-GM03.xsl";
     private final String GM03_XSD_FILE = "GM03_2_1.xsd";
+    private final String GM03SMALL_XSL_CONVERSION_FILE = "convert/ISO19139CHE-to-GM03small.xsl";
+    private final String GM03SMALL_XSD_FILE = "gm03small.xsd";
 
     @Autowired
     SchemaManager _schemaManager;
@@ -75,32 +77,66 @@ public class Gm03Api  {
 
     @Operation(summary = "Get a metadata record as full GM03")
     @RequestMapping(value = "/{portal}/api/records/{metadataUuid}/formatters/gm03",
-            method = RequestMethod.GET,
-            produces = {
-                    MediaType.APPLICATION_XML_VALUE
-            })
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_XML_VALUE
+        })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Return the record in GM03 format."),
-            @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+        @ApiResponse(responseCode = "200", description = "Return the record in GM03 format."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     public
     @ResponseBody
     Element getRecordAsGM03(
-            @Parameter(
-                    description = API_PARAM_RECORD_UUID,
-                    required = true)
-            @PathVariable
-                    String metadataUuid,
-            @RequestHeader(
-                    value = HttpHeaders.ACCEPT,
-                    defaultValue = MediaType.APPLICATION_XML_VALUE
-            )
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @RequestHeader(
+            value = HttpHeaders.ACCEPT,
+            defaultValue = MediaType.APPLICATION_XML_VALUE
+        )
             String acceptHeader,
-            HttpServletResponse response,
-            HttpServletRequest request
+        HttpServletResponse response,
+        HttpServletRequest request
     )
-            throws Exception {
+        throws Exception {
 
+        return buildGM03Output(metadataUuid, request, false);
+    }
+
+    @Operation(summary = "Get a metadata record as full GM03")
+    @RequestMapping(value = "/{portal}/api/records/{metadataUuid}/formatters/gm03small",
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_XML_VALUE
+        })
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Return the record in GM03 format."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
+    public
+    @ResponseBody
+    Element getRecordAsGM03small(
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @RequestHeader(
+            value = HttpHeaders.ACCEPT,
+            defaultValue = MediaType.APPLICATION_XML_VALUE
+        )
+            String acceptHeader,
+        HttpServletResponse response,
+        HttpServletRequest request
+    )
+        throws Exception {
+        return buildGM03Output(metadataUuid, request, true);
+    }
+
+    private Element buildGM03Output(String metadataUuid, HttpServletRequest request, Boolean isSmall) throws Exception {
         AbstractMetadata metadata;
 
         try {
@@ -108,41 +144,46 @@ public class Gm03Api  {
         } catch (ResourceNotFoundException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
         ServiceContext context = ApiUtils.createServiceContext(request);
         try {
             Lib.resource.checkPrivilege(context,
-                    String.valueOf(metadata.getId()),
-                    ReservedOperation.view);
+                String.valueOf(metadata.getId()),
+                ReservedOperation.view);
         } catch (Exception e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 
-        Element xml  = _dataManager.getMetadataNoInfo(context, metadata.getId() + "");
+        Element xml = _dataManager.getMetadataNoInfo(context, metadata.getId() + "");
 
         final String schema = metadata.getDataInfo().getSchemaId();
         Path schemaDir = null;
-        if (schema != null) {
-            schemaDir = _schemaManager.getSchemaDir(schema);
+        if (schema != null && schema.startsWith("iso19139")) {
+            schemaDir = _schemaManager.getSchemaDir("iso19139.che");
+        } else {
+            throw new UnsupportedOperationException(String.format(
+                "Record %s is not in ISO19139 or ISO19139.che and can't be converted to GM03.",
+                metadataUuid
+            ));
         }
 
         DOMOutputter outputter = new DOMOutputter();
         Document domIn = outputter.output(new org.jdom.Document(xml));
 
-        Path xsdFile = schemaDir.resolve(GM03_XSD_FILE);
-        Path xsl = schemaDir.resolve(GM03_XSL_CONVERSION_FILE);
+        Path xsdFile = schemaDir.resolve(isSmall ? GM03SMALL_XSD_FILE : GM03_XSD_FILE);
+        Path xsl = schemaDir.resolve(isSmall ? GM03SMALL_XSL_CONVERSION_FILE : GM03_XSL_CONVERSION_FILE);
 
-        ISO19139CHEtoGM03Base toGm03 = new ISO19139CHEtoGM03(xsdFile, xsl);
+        ISO19139CHEtoGM03Base toGm03 =
+            isSmall
+                ? new ISO19139CHEtoGM03small(xsdFile, xsl)
+                : new ISO19139CHEtoGM03(xsdFile, xsl);
         Document domOut = toGm03.convert(domIn);
 
         DOMBuilder builder = new DOMBuilder();
         return builder.build(domOut).getRootElement();
     }
-
-
 }

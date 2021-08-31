@@ -12,4 +12,20 @@ SELECT uuid, data from metadata where data LIKE '%resources.get%' AND isharveste
 
 * Map / Update `/datadir/data/resources/map/config-viewer.xml` with [this map configuration file](https://raw.githubusercontent.com/geoadmin/geocat/geocat-4.0.x/web/src/main/webapp/WEB-INF/data/data/resources/map/config-viewer.xml).
 
+* Thesaurus / Copy from prod
 
+* Datadir / Copy metadata data and logo from prod
+
+* [Extent update](../jira-MGEO_SB-650/README.md)
+
+
+# Misc.
+
+
+When setting up a new instance:
+* Update in admin > Settings > host name
+* Update in db URL
+```sql
+UPDATE metadata SET data = replace(data, 'https://www.geocat.ch/', 'https://geocat-dev.dev.bgdi.ch/') WHERE data LIKE '%https://www.geocat.ch/%';
+```
+* Reindex catalogue
