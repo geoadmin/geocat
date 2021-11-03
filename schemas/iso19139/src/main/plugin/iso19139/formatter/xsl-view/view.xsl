@@ -983,7 +983,7 @@
 
   <!-- Link to other metadata records -->
   <xsl:template mode="render-field"
-                match="*[@uuidref]"
+                match="*[@uuidref and not(@xlink:show)]"
                 priority="100">
     <xsl:variable name="nodeName" select="name()"/>
 
