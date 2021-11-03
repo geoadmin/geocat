@@ -239,10 +239,18 @@ CREATE TABLE metadatabackup20210726 AS SELECT * FROM metadata;
 -- Fix thesaurus not found local._none_.geocat
 -- SELECT groupOwner, isHarvested, count(*) FROM metadata WHERE data LIKE '%local._none_.geocat%' GROUP BY 1, 2;
 -- SELECT * FROM groups WHERE id = 50000005;
-UPDATE metadata SET data = replace(data, 'local._none_.geocat', 'local.theme.geocat')
-    WHERE isharvested = 'n' AND data LIKE '%local._none_.geocat%';
+UPDATE metadata SET data = replace(data,
+                                   'local._none_.geocat.ch',
+                                   'local.theme.geocat.ch')
+    WHERE isharvested = 'n' AND data LIKE '%local._none_.geocat.ch%';
 -- There are still usages in Kanton Zurich harvested records.
 
+
+
+UPDATE metadata SET data = replace(data,
+                                   'external._none_.gemet',
+                                   'external.theme.gemet')
+    WHERE isharvested = 'n' AND data LIKE '%external._none_.gemet%';
 
 UPDATE metadata SET data = replace(data,
     'external.theme.inspire-theme',
@@ -392,6 +400,29 @@ WHERE isharvested = 'n' AND data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2F
 
 -- DELETE FROM validation;
 -- SELECT * FROM settings WHERE name LIKE '%password%';
+
+
+-- 2021-11-03 14:42:45,421 ERROR [jeeves.xlinkprocessor] - Failed on local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&thesaurus=external.theme.inspire-service-taxonomy&id=urn%3Ainspire%3Aservice%3Ataxonomy%3AinfoFeatureAccessService%2Curn%3Ainspire%3Aservice%3Ataxonomy%3AinfoFeatureTypeService&lang=ger,fre,ita,eng,roh
+
+
+UPDATE metadata SET data = replace(data,
+                                   'external.theme.inspire-service-taxonomy',
+                                   'external.theme.httpinspireeceuropaeumetadatacodelistSpatialDataServiceCategory-SpatialDataServiceCategory')
+WHERE isharvested = 'n' AND data LIKE '%external.theme.inspire-service-taxonomy%';
+
+-- urn:inspire:service:taxonomy:chainDefinitionService
+-- is now http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/chainDefinitionService
+
+UPDATE metadata SET data = replace(data,
+                                   'urn:inspire:service:taxonomy:',
+                                   'http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/')
+WHERE isharvested = 'n' AND data LIKE '%urn:inspire:service:taxonomy:%';
+
+UPDATE metadata SET data = replace(data,
+                                   'urn%3Ainspire%3Aservice%3Ataxonomy%3A',
+                                   'http%3A%2F%2Finspire.ec.europa.eu%2Fmetadata-codelist%2FSpatialDataServiceCategory%2F')
+WHERE isharvested = 'n' AND data LIKE '%urn%3Ainspire%3Aservice%3Ataxonomy%3A%';
+
 
 -- ## 4.0.0 - After startup
 
