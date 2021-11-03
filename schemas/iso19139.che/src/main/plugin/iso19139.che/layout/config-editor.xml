@@ -70,7 +70,7 @@
               data-search-action="true"
               data-popup-action="false"
               data-template-type="contact"
-              data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
+              data-filter='{"root": "che:CHE_CI_ResponsibleParty"}'
               data-insert-modes="xlink"
               data-show-valid-only="true"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
@@ -81,7 +81,7 @@
               data-search-action="true"
               data-popup-action="false"
               data-template-type="contact"
-              data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
+              data-filter='{"root": "che:CHE_CI_ResponsibleParty"}'
               data-insert-modes="xlink"
               data-show-valid-only="true"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
@@ -92,7 +92,7 @@
               data-search-action="true"
               data-popup-action="false"
               data-template-type="contact"
-              data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
+              data-filter='{"root": "che:CHE_CI_ResponsibleParty"}'
               data-insert-modes="xlink"
               data-show-valid-only="true"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
@@ -103,7 +103,7 @@
               data-search-action="true"
               data-popup-action="false"
               data-template-type="contact"
-              data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
+              data-filter='{"root": "che:CHE_CI_ResponsibleParty"}'
               data-insert-modes="xlink"
               data-show-valid-only="true"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
@@ -114,7 +114,7 @@
               data-search-action="true"
               data-popup-action="false"
               data-template-type="contact"
-              data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
+              data-filter='{"root": "che:CHE_CI_ResponsibleParty"}'
               data-insert-modes="xlink"
               data-show-valid-only="true"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
@@ -125,7 +125,7 @@
               data-search-action="true"
               data-popup-action="false"
               data-template-type="contact"
-              data-filter='{"_root": "che:CHE_CI_ResponsibleParty"}'
+              data-filter='{"root": "che:CHE_CI_ResponsibleParty"}'
               data-insert-modes="xlink"
               data-show-valid-only="true"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
@@ -138,7 +138,7 @@
               data-search-action="true"
               data-popup-action="false"
               data-template-type="format"
-              data-filter='{"_root": "gmd:MD_Format"}'
+              data-filter='{"root": "gmd:MD_Format"}'
               data-show-valid-only="true"
               data-insert-modes="xlink"/>
     </for>
@@ -148,7 +148,7 @@
               data-search-action="true"
               data-popup-action="false"
               data-template-type="format"
-              data-filter='{"_root": "gmd:MD_Format"}'
+              data-filter='{"root": "gmd:MD_Format"}'
               data-show-valid-only="true"
               data-insert-modes="xlink"/>
     </for>
@@ -159,7 +159,7 @@
         data-search-action="true"
         data-popup-action="false"
         data-template-type="extent"
-        data-filter='{"_root": "gmd:EX_Extent"}'
+        data-filter='{"root": "gmd:EX_Extent"}'
         data-show-valid-only="true"
         data-insert-modes="xlink"/>
     </for>
