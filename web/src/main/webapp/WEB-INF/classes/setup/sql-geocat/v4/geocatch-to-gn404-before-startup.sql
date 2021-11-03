@@ -188,7 +188,7 @@ WHERE uuid not in (SELECT distinct(source) FROM metadata);
 
 INSERT INTO sources (uuid, name, creationdate, filter, groupowner, logo, servicerecord, type, uiconfig)
 SELECT replace(s.name, 'csw-', ''), replace(s.name, 'csw-', ''),
-       '20210619', '+groupOwner:' || p.value,
+       '20210619', '+groupOwner:(' || replace(p.value, ',', ' OR ') || ')',
        null, null, null, 'subportal', null
 FROM services s LEFT JOIN serviceparameters p
                           ON s.id = p.service WHERE p.name = '_groupOwner';
@@ -199,6 +199,20 @@ SELECT replace(s.name, 'csw-', ''), replace(s.name, 'csw-', ''),
        null, null, null, 'subportal', null
 FROM services s LEFT JOIN serviceparameters p
                           ON s.id = p.service WHERE p.name = '_source';
+
+UPDATE sources
+    SET filter = filter || ' +tag.default:INSPIRE'
+    WHERE name = 'liechtenstein-inspire' AND filter not like '%+tag.default:INSPIRE%';
+
+-- INSPIRE validation is not made in the catalogue for the time being.
+-- Service filter is the same as liechtenstein-inspire.
+UPDATE sources
+    SET filter = filter || ' +tag.default:INSPIRE'
+    WHERE name = 'liechtenstein-inspire-strict-valid' AND filter not like '%+tag.default:INSPIRE%';
+
+UPDATE sources
+    SET filter = filter || ' +tag.default:Geobasisdaten'
+    WHERE name = 'geobasisdaten' AND filter not like '%+tag.default:Geobasisdaten%';
 
 
 INSERT INTO sourcesdes (iddes, label, langid)
