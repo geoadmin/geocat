@@ -480,6 +480,17 @@
           </div>
         </div>
         <div class="panel-body">
+          <div class="alert alert-warning">
+            <div class="h4"
+                 data-translate="">directoryValidationRecommendations</div>
+
+            <div data-ng-if="(('directory-' + activeType + '-rules') | translate) != 'directory-' + activeType + '-rules'" data-translate="">
+                 {{'directory-' + activeType + '-rules'}}
+            </div>
+            <br/>
+            <strong data-translate="">directoryValidationRecommendationsCheck</strong>
+          </div>
+
           <fieldset ng-if="activeEntry"
                     ng-disabled="activeEntry.edit !== true">
             <div id="gn-editor-container-{{activeEntry.id}}"></div>
