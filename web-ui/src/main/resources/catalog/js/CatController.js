@@ -106,7 +106,7 @@ goog.require('gn_alert');
               'terms': {
                 'field': 'cl_topic.key',
                 'size': 25,
-                'include': '[A-Za-z_]+'
+                'include': '[a-z]{1}[a-zA-Z]+'
               }
             },
             'groupOwner': {
