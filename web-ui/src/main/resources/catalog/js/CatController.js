@@ -646,8 +646,24 @@ goog.require('gn_alert');
             'wms': [],
             'wmts': []
           },
-          'projection': 'EPSG:3857',
+          'projection': 'EPSG:21781',
           'projectionList': [{
+            "code": "EPSG:21781",
+            "label": "CH1903 / LV03",
+            "def": "+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.4,15.1,405.3,0,0,0,0 +units=m +no_defs",
+            "extent": [
+              485071.53520664177,
+              74284.86743091715,
+              837119.7640215555,
+              299941.8406759073
+            ],
+            "worldExtent": [
+              5.96,
+              45.82,
+              10.49,
+              47.81
+            ]
+          }, {
             'code': 'urn:ogc:def:crs:EPSG:6.6:4326',
             'label': 'WGS84 (EPSG:4326)'
           }, {
@@ -655,13 +671,29 @@ goog.require('gn_alert');
             'label': 'Google mercator (EPSG:3857)'
           }],
           'switcherProjectionList': [{
+            "code": "EPSG:21781",
+            "label": "CH1903 / LV03",
+            "def": "+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.4,15.1,405.3,0,0,0,0 +units=m +no_defs",
+            "extent": [
+              485071.53520664177,
+              74284.86743091715,
+              837119.7640215555,
+              299941.8406759073
+            ],
+            "worldExtent": [
+              5.96,
+              45.82,
+              10.49,
+              47.81
+            ]
+          }, {
             'code': 'EPSG:3857',
             'label': 'Google mercator (EPSG:3857)'
           }],
           'disabledTools': {
             'processes': false,
             'addLayers': false,
-            'projectionSwitcher': false,
+            'projectionSwitcher': true,
             'layers': false,
             'legend': false,
             'filter': false,
@@ -670,7 +702,7 @@ goog.require('gn_alert');
             'mInteraction': false,
             'graticule': false,
             'mousePosition': true,
-            'syncAllLayers': false,
+            'syncAllLayers': true,
             'drawVector': false
           },
           'graticuleOgcService': {},

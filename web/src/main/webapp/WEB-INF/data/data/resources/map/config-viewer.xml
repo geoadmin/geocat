@@ -2,101 +2,17 @@
                         xmlns:ows="http://www.opengis.net/ows"
                         version="0.3.1" id="ows-context-ex-1-v3">
   <ows-context:General>
-    <ows:BoundingBox crs="EPSG:3857">
-      <ows:LowerCorner>484928.0680780873 39423.98404625524</ows:LowerCorner>
-      <ows:UpperCorner>819378.4969549329 329281.02240618813</ows:UpperCorner>
+    <ows:BoundingBox crs="EPSG:21781">
+      <ows:LowerCorner>434250 37801.909073720046</ows:LowerCorner>
+      <ows:UpperCorner>894750 337801.90907372005</ows:UpperCorner>
     </ows:BoundingBox>
   </ows-context:General>
   <ows-context:ResourceList>
-
     <ows-context:Layer name="{type=map.geo.admin.ch,name=ch.swisstopo.pixelkarte-farbe}"
                        group="Background layers"
                        hidden="false"
                        opacity="1">
       <ows:Title>map.geo.admin.ch</ows:Title>
     </ows-context:Layer>
-
-    <ows-context:Layer name="{type=osm}"
-                       group="Background layers"
-                       hidden="true"
-                       opacity="1">
-      <ows:Title>OpenStreetMap</ows:Title>
-    </ows-context:Layer>
-    <!--Uncomment the code bellow to add support to MS bing maps; don't forget to add a valid bingKey on the
-    settings!-->
-    <!--
-    <ows-context:Layer name="{type=bing_aerial}"
-                       group="Background layers"
-                       hidden="false"
-                       opacity="1">
-      <ows:Title>Bing Aerial</ows:Title>
-    </ows-context:Layer> -->
-    <ows-context:Layer name="{type=stamen,name=watercolor}"
-                       group="Background layers"
-                       hidden="true"
-                       opacity="1">
-      <ows:Title>Stamen Watercolor</ows:Title>
-    </ows-context:Layer>
-    <ows-context:Layer name="{type=stamen,name=toner}"
-                       group="Background layers"
-                       hidden="true"
-                       opacity="1">
-      <ows:Title>Stamen Toner</ows:Title>
-    </ows-context:Layer>
-    <ows-context:Layer name="{type=stamen,name=terrain}"
-                       group="Background layers"
-                       hidden="true"
-                       opacity="1">
-      <ows:Title>Stamen Terrain</ows:Title>
-    </ows-context:Layer>
-
-    <!--
-    Example for TMS:
-
-    <ows-context:Layer name="type=tms,name=capabaseargenmap"
-                       group="Background layers"
-                       hidden="false"
-                       opacity="1">
-      <ows:Title>IGN</ows:Title>
-      <ows-context:Server service="urn:ogc:serviceType:WMTS">
-        <ows-context:OnlineResource xlink:href="http://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG:3857@png/{z}/{x}/{-y}.png" xmlns:xlink="http://www.w3.org/1999/xlink"/>
-      </ows-context:Server>
-    </ows-context:Layer>
-
-
-    Example for WMTS:
-
-    <ows-context:Layer queryable="false"
-                       name="{type=wmts,name=web_mercator_etopo1_hillshade}"
-                       hidden="true" opacity="1" group="Background layers">
-      <ows:Title xmlns:ows="http://www.opengis.net/ows">Etopo1</ows:Title>
-      <ows-context:Server service="urn:ogc:serviceType:WMS">
-        <ows-context:OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
-                                    xlink:href="http://maps.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml"/>
-      </ows-context:Server>
-      <ows-context:StyleList/>
-    </ows-context:Layer>
-
-    Example for WMS:
-     <ows-context:Layer queryable="false" name="TEMP"
-                        hidden="true" opacity="1"
-                        group="Background layers">
-            <ows:Title xmlns:ows="http://www.opengis.net/ows">Coriolis ncWMS</ows:Title>
-            <ows-context:Server service="urn:ogc:serviceType:WMS">
-                <ows-context:OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://tds0.ifremer.fr/thredds/wms/CORIOLIS-GLOBAL-CORA04.0-OBS_FULL_TIME_SERIE?"/>
-            </ows-context:Server>
-            <ows-context:StyleList/>
-     </ows-context:Layer>
-	     
-    Example for map.geo.admin.ch
-    <ows-context:Layer name="{type=map.geo.admin.ch,name=ch.swisstopo.pixelkarte-farbe}"
-                       group="Background layers"
-                       hidden="false"
-                       opacity="1">
-      <ows:Title>map.geo.admin.ch</ows:Title>
-    </ows-context:Layer>
-
-
-    -->
   </ows-context:ResourceList>
 </ows-context:OWSContext>
