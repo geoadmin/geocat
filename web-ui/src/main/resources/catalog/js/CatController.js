@@ -619,7 +619,7 @@ goog.require('gn_alert');
           'showStatusFooterFor': 'historicalArchive,obsolete,superseded',
           'usersearches': {
             'enabled': false,
-            'includePortals': true,
+            'includePortals': false,
             'displayFeaturedSearchesPanel': false
           },
           'savedSelection': {
