@@ -82,7 +82,7 @@
     "advancedBatchEditMode": "Mode avancé (XPath)",
     "cancel": "Annuler",
     "cancelChangesFromNow": "Annuler les modifications faites depuis le début, {{timeAgo}}.",
-    "cancelling": "Cancelling ...",
+    "cancelling": "Annulation en cours ...",
     "chooseZeroOrMoreLayer": "Vous pouvez également choisir une ou plusieurs couches diffusées par le service :",
     "chooseZeroOrMoreLayerFromService": "Choisir la couche dans le service correspondant à la fiche sélectionnée :",
     "serviceContainsManyUrl": "Choisir <strong>une</strong> URL parmi <strong>{{count}}</strong> fournie(s)",
