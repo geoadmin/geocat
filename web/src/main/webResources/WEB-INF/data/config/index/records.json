@@ -39,6 +39,7 @@
               "lowercase",
               "english_synonym",
               "english_stop",
+              "asciifolding",
               "english_keywords",
               "english_stemmer"
             ]
