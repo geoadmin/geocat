@@ -20,6 +20,13 @@
               "reverse"
             ]
           },
+          "rebuilt_keyword": {
+            "tokenizer": "keyword",
+            "filter": [
+              "lowercase",
+              "asciifolding"
+            ]
+          },
           "french_rebuilt": {
             "tokenizer":  "standard",
             "filter": [
@@ -40,6 +47,7 @@
               "asciifolding",
               "english_synonym",
               "english_stop",
+              "asciifolding",
               "english_keywords",
               "english_stemmer"
             ]
@@ -1043,6 +1051,74 @@
           "match": "*Number",
           "mapping": {
             "type": "short"
+          }
+        }
+      },
+      {
+        "orgAna": {
+          "match": "*OrgAna*",
+          "mapping": {
+          "type": "object",
+          "properties": {
+            "default": {
+              "type": "text",
+              "analyzer": "rebuilt_keyword",
+              "search_analyzer": "rebuilt_keyword"
+            },
+            "langger": {
+              "type": "text",
+              "analyzer": "rebuilt_keyword",
+              "search_analyzer": "rebuilt_keyword"
+            },
+            "langfre": {
+              "type": "text",
+              "analyzer": "rebuilt_keyword",
+              "search_analyzer": "rebuilt_keyword"
+            },
+            "langeng": {
+              "type": "text",
+              "analyzer": "rebuilt_keyword",
+              "search_analyzer": "rebuilt_keyword"
+            },
+            "langroh": {
+              "type": "text",
+              "analyzer": "rebuilt_keyword",
+              "search_analyzer": "rebuilt_keyword"
+            },
+            "langita": {
+              "type": "text",
+              "analyzer": "rebuilt_keyword",
+              "search_analyzer": "rebuilt_keyword"
+            }
+          }
+        }
+        }
+      },
+      {
+        "org": {
+          "match": "*Org*",
+          "mapping": {
+            "type": "object",
+            "properties": {
+              "default": {
+                "type": "keyword"
+              },
+              "langger": {
+                "type": "keyword"
+              },
+              "langfre": {
+                "type": "keyword"
+              },
+              "langeng": {
+                "type": "keyword"
+              },
+              "langroh": {
+                "type": "keyword"
+              },
+              "langita": {
+                "type": "keyword"
+              }
+            }
           }
         }
       },

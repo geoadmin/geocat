@@ -1534,5 +1534,7 @@
     "ui-searchResultContact-help": "Sélectionner le type de contact à afficher dans les résultats de la recherche. Si aucun contact de ce type n'est défini, l'organisation contact pour la ressource est affichée (si définie).",
     "Org": "L'organisation contact pour la fiche",
     "OrgForResource": "L'organisation contact pour la ressource",
-    "OrgForDistribution": "L'organisation contact pour la distribution de la ressource"
+    "OrgForDistribution": "L'organisation contact pour la distribution de la ressource",
+    "system/xlinkResolver/templatesToOperateOnAtInsert": "Liste des templates à substituer à l'import.",
+    "system/xlinkResolver/templatesToOperateOnAtInsert-help": "A l'import d'une metadonnée, pour chaque template d'un de ces types contenu, le template sera substitué par un xlink vers le template correspondant, déjà existant en base. Si le template n'existe pas encore, l'insertion de la métadonnée échoue."
 }

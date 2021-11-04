@@ -1536,6 +1536,8 @@
     "ui-searchResultContact-help": "Select the default type of contacts to display in the search results. If the metadata doesn't have contacts of the selected type, the contact organisation for the resource is displayed (if available).",
     "Org": "Contact organisation for the metadata",
     "OrgForResource": "Contact organisation for the resource",
-    "OrgForDistribution": "Contact organisation for distribution"
+    "OrgForDistribution": "Contact organisation for distribution",
+    "system/xlinkResolver/templatesToOperateOnAtInsert": "Templates to substitute at import time.",
+    "system/xlinkResolver/templatesToOperateOnAtInsert-help": "When importing a metadata, for each contained template of one of theses types, a xlink targeting the corresponding template in database will be set in place. If the template don't already exist, the insertion fails."
 }
 
