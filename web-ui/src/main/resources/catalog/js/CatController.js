@@ -106,7 +106,7 @@ goog.require('gn_alert');
               'terms': {
                 'field': 'cl_topic.key',
                 'size': 25,
-                'include': '[A-Za-z_]+'
+                "include": "[a-z]{1}[a-zA-Z]+"
               }
             },
             'groupOwner': {
@@ -296,7 +296,8 @@ goog.require('gn_alert');
             'cl_topic.key': {
               'terms': {
                 'field': 'cl_topic.key',
-                "order" : { "_key" : "asc" }
+                'size': 25,
+                "include": "[a-z]{1}[a-zA-Z_]+"
               }
             },
             'tag.default': {
