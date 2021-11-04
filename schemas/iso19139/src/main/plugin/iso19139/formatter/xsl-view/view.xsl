@@ -981,13 +981,9 @@
                 priority="100"/>
 
 
-  <!-- Link to other metadata records
-  and not elements using internal xlink which have a xlink:show attribute
-  <gmd:extent xlink:show="embed"
-              uuidref="geocatch-subtpl-extent-kantonsgebiet-13">
-  -->
+  <!-- Link to other metadata records -->
   <xsl:template mode="render-field"
-                match="*[@uuidref and not(@xlink:show)]"
+                match="srv:operatesOn[@uuidref]|gmd:featureCatalogueCitation[@uuidref]|gmd:source[@uuidref]|gmd:aggregateDataSetIdentifier/*/gmd:code[@uuidref]"
                 priority="100">
     <xsl:variable name="nodeName" select="name()"/>
 
