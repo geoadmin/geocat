@@ -93,13 +93,8 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="@xlink:*[name(..)!='srv:operatesOn']">
-    <!--
-        do not copy xlinks because they should be filled out and are not always viable when importing
-        into other systems
-        Note: exception for xlinks in srv:operatesOn (these are kept)
-     -->
-  </xsl:template>
+  <!-- Remove local XLinks. Others are preserved eg. Anchor, operatesOn, source, ...-->
+  <xsl:template match="@xlink:href[starts-with(., 'local')]"/>
 
 
   <!-- Remove all ISO profil specific elements
@@ -116,7 +111,6 @@
   </xsl:template>
 
   <!-- Remove all extended categories -->
-  <xsl:template match="gmd:topicCategory[contains(gmd:MD_TopicCategoryCode,'_')]">
-  </xsl:template>
+  <xsl:template match="gmd:topicCategory[contains(gmd:MD_TopicCategoryCode,'_')]"/>
 
 </xsl:stylesheet>
