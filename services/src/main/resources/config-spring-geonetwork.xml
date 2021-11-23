@@ -101,6 +101,7 @@
             <value>Common Requirements for ISO/TC 19139:2007 based INSPIRE metadata records.</value>
             <value>Conformance Class 1: INSPIRE data sets and data set series baseline metadata.</value>
             <value>Conformance Class 2: INSPIRE data sets and data set series interoperability metadata.</value>
+            <value>Conformance Class 2b: INSPIRE data sets and data set series metadata for Monitoring</value>
           </array>
         </entry>
         <entry key="TG version 2.0 - Network services">
@@ -127,7 +128,9 @@
     -->
     <property name="testsuitesConditions">
       <map>
+        <entry key="iso19139.che::TG version 2.0 - Data sets and series" value="gmd:hierarchyLevel[*/@codeListValue = 'dataset' or */@codeListValue = 'series']" />
         <entry key="iso19139::TG version 2.0 - Data sets and series" value="gmd:hierarchyLevel[*/@codeListValue = 'dataset' or */@codeListValue = 'series']" />
+        <entry key="iso19139.che::TG version 2.0 - Network services" value=".//srv:SV_ServiceIdentification" />
         <entry key="iso19139::TG version 2.0 - Network services" value=".//srv:SV_ServiceIdentification" />
         <entry key="iso19115-3.2018::TG version 2.0 - Data sets and series" value="mdb:metadataScope[*/mdb:resourceScope/*/@codeListValue = 'dataset' or */mdb:resourceScope/*/@codeListValue = 'series']" />
         <entry key="iso19115-3.2018::TG version 2.0 - Network services" value=".//srv:SV_ServiceIdentification" />
