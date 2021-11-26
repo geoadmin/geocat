@@ -62,7 +62,9 @@
       </che:CHE_MD_LegalConstraints>
     </gmd:resourceConstraints>
 
-    <xsl:if test="*/gmd:useLimitation">
+    <!-- transfer use limitation in a specific resource constraint block
+    eg. System der Landesvermessung LV03 - Liechtenstein-->
+    <xsl:for-each select="*/gmd:useLimitation|../gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation">
       <gmd:resourceConstraints>
         <gmd:MD_LegalConstraints>
           <gmd:useLimitation>
@@ -79,12 +81,15 @@
               codeListValue="otherRestrictions"/>
           </gmd:useConstraints>
           <gmd:otherConstraints>
-            <xsl:copy-of select="*/gmd:useLimitation/*"/>
+            <xsl:copy-of select="*"/>
           </gmd:otherConstraints>
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>
-    </xsl:if>
+    </xsl:for-each>
   </xsl:template>
+
+
+  <xsl:template match="gmd:resourceConstraints[gmd:MD_Constraints/gmd:useLimitation]"/>
 
 
   <!--
