@@ -119,5 +119,12 @@
     <skos:prefLabel xml:lang="it">No conditions to access and use</skos:prefLabel>
     <skos:prefLabel xml:lang="ro">No conditions to access and use</skos:prefLabel>
   </skos:Concept>
+  <skos:Concept rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations">
+    <skos:prefLabel xml:lang="en">No limitations to public access</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">No limitations to public access</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">No limitations to public access</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">No limitations to public access</skos:prefLabel>
+    <skos:prefLabel xml:lang="ro">No limitations to public access</skos:prefLabel>
+  </skos:Concept>
 </rdf:RDF>
 

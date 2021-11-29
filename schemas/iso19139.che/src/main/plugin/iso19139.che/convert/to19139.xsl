@@ -3,6 +3,8 @@
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 version="1.0"
@@ -21,6 +23,20 @@
       <gco:CharacterString/>
     </gmd:metadataStandardVersion>
   </xsl:template>
+
+  <xsl:template match="gmd:topicCategory[contains(*/text(), '_')]"/>
+
+  <xsl:template match="gml320:*" priority="99">
+    <xsl:element name="gml:{local-name()}">
+      <xsl:apply-templates select="@*|*"/>
+    </xsl:element>
+  </xsl:template>
+  <xsl:template match="@gml320:*" priority="99">
+    <xsl:attribute name="gml:{local-name()}">
+      <xsl:value-of select="."/>
+    </xsl:attribute>
+  </xsl:template>
+
 
   <!-- All profil specific elements should be bypassed -->
   <xsl:template match="che:*[not(@gco:isoType)]" priority="2"/>
