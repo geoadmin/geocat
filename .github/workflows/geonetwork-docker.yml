@@ -32,7 +32,7 @@ jobs:
       run: mvn -Pdocker de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
 
     - name: "Installing"
-      run: mvn -B clean install -Ddb.username=db_username -Ddb.name=db_name -Ddb.type=postgres-postgis -Ddb.host=db_host -Ddb.password=db_password -Ddb.pool.maxActive=50 -Ddb.port=5432
+      run: mvn -B clean install -DskipTests -Ddb.username=db_username -Ddb.name=db_name -Ddb.type=postgres-postgis -Ddb.host=db_host -Ddb.password=db_password -Ddb.pool.maxActive=50 -Ddb.port=5432
 
     - name: "Setting image tag"
       id: version

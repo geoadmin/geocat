@@ -68,7 +68,8 @@
     -->
     <Connector port="8080" protocol="HTTP/1.1"
                connectionTimeout="20000"
-               redirectPort="8443" compression="on" compressibleMimeType="text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json" />
+               redirectPort="8443" compression="on" compressibleMimeType="text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json"
+               relaxedQueryChars="[]|{}^&#x5c;&#x60;&quot;&lt;&gt;"/>
     <!-- A "Connector" using the shared thread pool-->
     <!--
     <Connector executor="tomcatThreadPool"
