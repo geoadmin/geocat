@@ -75,27 +75,4 @@
 
     </sch:rule>
   </sch:pattern>
-
-  <sch:pattern>
-    <sch:title>$loc/strings/officalAndAAP</sch:title>
-    <sch:rule context="//gmd:identificationInfo/che:CHE_MD_DataIdentification">
-        <sch:let name="AAPKeyworkSet" value="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[contains(., 'AAP')]"/>
-        <sch:let name="debase" value="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[contains(., 'géodonnée de base')]"/>
-        <sch:let name="basis" value="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[contains(., 'Geobasisdaten')]"/>
-        <sch:let name="dibase" value="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[contains(., 'geodati di base')]"/>
-        <sch:let name="official" value="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString[contains(., 'official geodata')]"/>
-        <sch:let name="officialKeyworkSet" value="$debase or $basis or $dibase or $official"/>
-        <sch:let name="manyTopicSet" value="count(//gmd:MD_TopicCategoryCode) > 1"/>
-
-        <sch:let name="failure" value="$manyTopicSet and $AAPKeyworkSet and $officialKeyworkSet" />
-
-        <sch:assert test="not($failure)">
-            <sch:value-of select="$loc/strings/cantSetManyTopicsWhenOfficalAndAAP"/>
-        </sch:assert>
-        <sch:report test="not($failure)">
-            <sch:value-of select="$loc/strings/notCantSetManyTopicsWhenOfficalAndAAP"/>
-        </sch:report>
-    </sch:rule>
-  </sch:pattern>
-
 </sch:schema>
