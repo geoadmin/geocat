@@ -150,13 +150,17 @@
          *
          * @return {ol.Map} map created with the correct parameters
          */
-        createMap: function(type) {
+
+        createMap: function(type, projection) {
+          if (projection == null) {
+                    projection = gnMap.getMapConfig().projection;
+          }
           var config = gnMap.getMapConfig()['map-' + type];
           var map = new ol.Map({
             layers: [],
             view: new ol.View({
               center: [0, 0],
-              projection: gnMap.getMapConfig().projection,
+              projection: projection,
               zoom: 2
             }),
             // show zoom control in editor maps only

@@ -78,7 +78,12 @@
             ctrl.readOnly = $scope.$eval($attrs['readOnly']);
 
             // init map
-            ctrl.map = gnMapsManager.createMap(gnMapsManager.EDITOR_MAP);
+            var srsName = '';
+            if (ctrl.polygonXml) {
+                srsName = ctrl.polygonXml.match(new RegExp('srsName=\"([^"]*)\"'));
+            }
+            var polyCrs = srsName && srsName.length === 2 ? srsName[1] : 'EPSG:4326';
+            ctrl.map = gnMapsManager.createMap(gnMapsManager.EDITOR_MAP, polyCrs);
             ctrl.map.get('sizePromise').then(function() {
               ctrl.initValue();
             });
