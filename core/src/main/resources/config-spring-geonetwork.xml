@@ -143,7 +143,6 @@
       <list>
         <ref bean="indexingTaskTrigger"/>
         <ref bean="watchListNotificationTaskTrigger"/>
-        <ref bean="backupMetadataCronTrigger" />
         <ref bean="unpublishMetadataCronTrigger" /> <!--geocat-->
       </list>
     </property>
@@ -169,19 +168,6 @@
   <bean id="MetadataNotifierClient"
         class="org.fao.geonet.notifier.MetadataNotifierClient"
         lazy-init="true" scope="prototype"/>
-
-  <bean id="backupMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-    <property name="jobDetail">
-      <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-        <property name="jobClass" value="org.fao.geonet.kernel.backup.ArchiveAllMetadataJob"/>
-        <property name="name" value="archiveAllMetadata" />
-        <property name="group" value="gnBackgroundTasks" />
-      </bean>
-    </property>
-    <property name="cronExpression" value="0 0 4 ? * *" />
-  </bean>
-
-
 
   <!-- Specific Geocat for unpublish metadata task -->
   <bean id="unpublishMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
