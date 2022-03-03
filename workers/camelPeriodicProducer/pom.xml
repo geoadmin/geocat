@@ -69,4 +69,23 @@
       <artifactId>quartz</artifactId>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <excludedGroups>org.fao.geonet.repository.AbstractSpringDataTest</excludedGroups>
+          <argLine>-Dfile.encoding=UTF-8 -Xmx1G -Djava.awt.headless=true</argLine>
+          <!--<rerunFailingTestsCount>5</rerunFailingTestsCount>-->
+          <runOrder>alphabetical</runOrder>
+          <forkCount>1</forkCount>
+          <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          <excludes>
+            <exclude>**/*PerformanceTest.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
