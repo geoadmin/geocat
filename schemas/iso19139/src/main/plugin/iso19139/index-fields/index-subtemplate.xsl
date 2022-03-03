@@ -130,8 +130,6 @@
       "default": "<xsl:value-of select="gn-fn-index:json-escape($title)"/>"
       }</resourceTitleObject>
 
-    <any><xsl:value-of select="$title"/></any>
-
     <xsl:call-template name="subtemplate-common-fields"/>
   </xsl:template>
 
