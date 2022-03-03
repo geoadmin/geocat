@@ -31,6 +31,7 @@ import org.fao.geonet.kernel.harvest.AbstractHarvesterServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -44,6 +45,7 @@ import static org.junit.Assert.assertNull;
  *
  * User: Jesse Date: 10/22/13 Time: 4:04 PM
  */
+@Ignore
 public class GetIntegrationTest extends AbstractHarvesterServiceIntegrationTest {
     @Test(expected = ObjectNotFoundEx.class)
     public void testExecNoSuchHarvester() throws Exception {

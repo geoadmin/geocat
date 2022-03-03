@@ -35,6 +35,7 @@ import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -77,6 +78,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void getUsers() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 

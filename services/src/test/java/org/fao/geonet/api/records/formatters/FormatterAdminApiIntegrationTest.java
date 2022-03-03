@@ -28,6 +28,7 @@ import com.google.common.collect.Lists;
 
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -50,7 +51,9 @@ public class FormatterAdminApiIntegrationTest extends AbstractServiceIntegration
     @Autowired
     private FormatterAdminApi listService;
 
+
     @Test
+    @Ignore
     public void testExec() throws Exception {
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
