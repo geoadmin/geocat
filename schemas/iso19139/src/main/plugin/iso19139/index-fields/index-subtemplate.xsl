@@ -150,8 +150,6 @@
                         else concat(gmd:name/gco:CharacterString, ' ', gmd:version/gco:CharacterString)"/>
     <resourceTitle><xsl:value-of select="$title"/></resourceTitle>
 
-    <any><xsl:value-of select="$title"/></any>
-
     <xsl:call-template name="subtemplate-common-fields"/>
   </xsl:template>
 
