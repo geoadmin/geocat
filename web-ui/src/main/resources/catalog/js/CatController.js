@@ -716,7 +716,7 @@ goog.require('gn_alert');
             'layers': []
           },
           'map-editor': {
-            'context': '',
+            'context': '../../map/config-viewer.xml',
             'extent': [0, 0, 0, 0],
             'layers': [{'type': 'osm'}]
           },
