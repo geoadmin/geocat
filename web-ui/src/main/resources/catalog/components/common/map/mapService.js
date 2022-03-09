@@ -1831,8 +1831,8 @@
               matrixIds: matrixIds
             });
 
-            var defaultUrl = '//wmts{5-9}.geo.admin.ch/1.0.0/{Layer}/default/' +
-              '20140520/21781/' +
+            var defaultUrl = 'https://wmts{5-9}.geo.admin.ch/1.0.0/{Layer}/default/' +
+              'current/21781/' +
               '{TileMatrix}/{TileRow}/{TileCol}.jpeg';
 
             return new ol.layer.Tile({
