@@ -654,7 +654,7 @@ goog.require('gn_alert');
           }
         },
         'map': {
-          'enabled': true,
+          'enabled': false,
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/map',
           'externalViewer': {
             'enabled': false,
@@ -673,17 +673,21 @@ goog.require('gn_alert');
             'wms': [],
             'wmts': []
           },
-          'projection': 'EPSG:3857',
+          'projection': 'EPSG:21781',
           'projectionList': [{
             'code': 'urn:ogc:def:crs:EPSG:6.6:4326',
             'label': 'WGS84 (EPSG:4326)'
           }, {
             'code': 'EPSG:3857',
             'label': 'Google mercator (EPSG:3857)'
+          }, {
+            'code': 'EPSG:21781',
+            'label': 'Swiss LV03(EPSG:21781)'
           }],
           'switcherProjectionList': [{
-            'code': 'EPSG:3857',
-            'label': 'Google mercator (EPSG:3857)'
+            'code': 'EPSG:21781',
+            'def': '+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.4,15.1,405.3,0,0,0,0 +units=m +no_defs',
+            'label': 'Swiss LV03(EPSG:21781)'
           }],
           'disabledTools': {
             'processes': false,
