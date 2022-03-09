@@ -1696,7 +1696,7 @@
               matrixIds: matrixIds
             });
 
-            var defaultUrl = '//wmts{5-9}.geo.admin.ch/1.0.0/{Layer}/default/' +
+            var defaultUrl = 'https://wmts{5-9}.geo.admin.ch/1.0.0/{Layer}/default/' +
               '20140520/21781/' +
               '{TileMatrix}/{TileRow}/{TileCol}.jpeg';
 
