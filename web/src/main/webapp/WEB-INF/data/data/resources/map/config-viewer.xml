@@ -2,9 +2,9 @@
                         xmlns:ows="http://www.opengis.net/ows"
                         version="0.3.1" id="ows-context-ex-1-v3">
   <ows-context:General>
-    <ows:BoundingBox crs="EPSG:3857">
-      <ows:LowerCorner>484928.0680780873 39423.98404625524</ows:LowerCorner>
-      <ows:UpperCorner>819378.4969549329 329281.02240618813</ows:UpperCorner>
+    <ows:BoundingBox crs="EPSG:21781">
+      <ows:LowerCorner>426340.7642533947 -31175.881660288083</ows:LowerCorner>
+      <ows:UpperCorner>897081.2598204871 439564.6139068043</ows:UpperCorner>
     </ows:BoundingBox>
   </ows-context:General>
   <ows-context:ResourceList>
