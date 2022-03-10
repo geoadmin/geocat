@@ -83,6 +83,7 @@
                   scope.languagesStats[i.key] = i.doc_count;
                 });
                 scope.languagesAvailable = Object.keys(scope.languagesStats);
+                scope.languagesAvailable=scope.languagesAvailable.filter(function(x) {return x != 'deu'}).filter(function(x) {return x != 'fra'});
                 controller.setLanguageWhiteList(scope.languagesAvailable);
               });
             }
