@@ -1711,7 +1711,8 @@
               })),
               title: layer + ' (map.geo.admin.ch)',
               extent: [434250, 37801.909073720046, 894750, 337801.90907372005],
-              useInterimTilesOnError: false
+              useInterimTilesOnError: false,
+              url: defaultUrl
             });
           },
 
