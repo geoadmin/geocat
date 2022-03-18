@@ -654,7 +654,7 @@ goog.require('gn_alert');
           }
         },
         'map': {
-          'enabled': false,
+          'enabled': true,
           'appUrl': '../../{{node}}/{{lang}}/catalog.search#/map',
           'externalViewer': {
             'enabled': false,
