@@ -694,7 +694,7 @@
             if (isCodelist) {
               o.default = getCodelistTranslation(o);
             } else {
-              var translation = o['lang' + gnLangs.current] || o.default;
+              var translation = o['lang' + gnLangs.current] || o.default || o['lang' + this.mainLanguage];
               translatedValues.push(translation);
               o.default = translation;
             }
@@ -707,7 +707,7 @@
             o.default = getCodelistTranslation(fieldValues)
           } else {
             this[fieldName.slice(0, -6)] =
-              fieldValues['lang' + gnLangs.current] || fieldValues.default;
+              fieldValues['lang' + gnLangs.current] || fieldValues.default || fieldValues['lang' + this.mainLanguage];
           }
         } else {
           console.warn(fieldName + ' is not defined in this record.');

@@ -62,7 +62,8 @@
       'standardNameObject.default',
       'cl_status*',
       'mdStatus*',
-      'recordLink'
+      'recordLink',
+      'mainLanguage'
     ]};
     this.configs = {
       search: {
