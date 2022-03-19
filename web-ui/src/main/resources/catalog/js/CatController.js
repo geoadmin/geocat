@@ -905,7 +905,7 @@
                 {
                   types: "onlines",
                   filter:
-                    "-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport",
+                    "-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*",
                   title: "links"
                 }
               ]
