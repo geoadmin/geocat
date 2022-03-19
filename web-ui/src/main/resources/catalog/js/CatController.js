@@ -752,7 +752,7 @@ goog.require('gn_alert');
               {'types': 'onlines', 'filter': 'function:legend', 'title': 'mapLegend'},
               {'types': 'onlines', 'filter': 'function:featureCatalogue', 'title': 'featureCatalog'},
               {'types': 'onlines', 'filter': 'function:dataQualityReport', 'title': 'quality'},
-              {'types': 'onlines', 'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport', 'title': 'links'}]
+              {'types': 'onlines', 'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'links'}]
           },
           'relatedFacetConfig':  {
             'cl_status': {
