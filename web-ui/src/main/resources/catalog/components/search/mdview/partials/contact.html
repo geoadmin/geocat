@@ -77,8 +77,7 @@
       </div>
 
       <div gn-popover-content>
-        <!--     Removing for now, because if you close open popup
-   the title disappear. <h3 class="popover-title">{{cnts[0].role | translate}}</h3>-->
+        <h3 class="popover-title">{{cnts[0].role | translate}}</h3>
         <div data-ng-repeat="c in cnts | orderBy:'organisation'">
           <div data-gn-metadata-individual="c" />
 
