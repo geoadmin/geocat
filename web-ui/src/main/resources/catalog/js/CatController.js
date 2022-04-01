@@ -624,9 +624,17 @@ goog.require('gn_alert');
             'url' : '/formatters/xsl-view?output=pdf&language=${lang}',
             'class': 'fa-file-pdf-o'
           }, {
-            'label': 'exportXML',
+            'label': 'exportXMLISO19139.che',
             // 'url' : '/formatters/xml?attachment=false',
             'url' : '/formatters/xml',
+            'class': 'fa-file-code-o'
+          }, {
+            'label': 'exportXMLISO19139',
+            'url' : '/formatters/iso19139?output=xml',
+            'class': 'fa-file-code-o'
+          }, {
+            'label': 'exportGM03',
+            'url' : '/formatters/gm03',
             'class': 'fa-file-code-o'
           }],
           'grid': {
