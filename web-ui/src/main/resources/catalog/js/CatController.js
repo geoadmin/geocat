@@ -317,20 +317,6 @@ goog.require('gn_alert');
                 'collapsed': true
               }
             },
-            'cl_hierarchyLevel.key': {
-              'terms': {
-                'field': 'cl_hierarchyLevel.key',
-                'include': 'dataset|service.*|basic.*',
-                "order" : { "_key" : "asc" }
-              // },
-              // 'aggs': {
-              //   'format': {
-              //     'terms': {
-              //       'field': 'format'
-              //     }
-              //   }
-              }
-            },
             'cl_geodataType.key': {
               'terms': {
                 'field': 'cl_geodataType.key'
@@ -840,11 +826,6 @@ goog.require('gn_alert');
           'editorIndentType': '',
           'allowRemoteRecordLink': true,
           'facetConfig': {
-            'resourceType': {
-              'terms': {
-                'field': 'resourceType'
-              }
-            },
             'groupOwner': {
               'terms': {
                 'field': 'groupOwner',
