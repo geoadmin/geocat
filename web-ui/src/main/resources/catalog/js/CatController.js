@@ -340,6 +340,12 @@ goog.require('gn_alert');
               'terms': {
                 'field': 'cl_topic.key',
                 "order" : { "_key" : "asc" }
+              },
+              'meta': {
+                'orderByTranslation': true,
+                'displayFilter': true,
+                'filterByTranslation': true,
+                'collapsed': true
               }
             },
             'tag.default': {
