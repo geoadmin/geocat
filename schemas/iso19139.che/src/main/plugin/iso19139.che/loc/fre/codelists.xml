@@ -4,7 +4,7 @@
         <codelist name="gmd:CI_DateTypeCode">
         <entry><code></code><label></label><description></description></entry>
         </codelist>-->
-  <codelist name="gmd:MD_TopicCategoryCode">
+  <codelist name="gmd:MD_TopicCategoryCode" alias="topicCategory">
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry>
       <code>imageryBaseMapsEarthCover</code>
@@ -186,7 +186,7 @@
     </entry>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
   </codelist>
-  <codelist name="gmd:Country">
+  <codelist name="gmd:Country" alias="country">
     <entry>
       <code>CH</code>
       <label>Suisse</label>
@@ -218,7 +218,7 @@
       <description/>
     </entry>
   </codelist>
-  <codelist name="gmd:LanguageCode">
+  <codelist name="gmd:LanguageCode" alias="language">
     <entry>
       <code>ger</code>
       <label>allemand</label>
@@ -245,7 +245,7 @@
       <description/>
     </entry>
   </codelist>
-  <codelist name="che:CHE_CI_LegislationCode">
+  <codelist name="che:CHE_CI_LegislationCode" alias="legislation">
     <entry>
       <code>cantonalLaw</code>
       <label>Loi cantonale</label>
@@ -287,7 +287,7 @@
       <description/>
     </entry>
   </codelist>
-  <codelist name="che:CI_NumberTypeCode">
+  <codelist name="che:CI_NumberTypeCode" alias="numberType">
     <entry>
       <code>mainNumber</code>
       <label>Numéro principal</label>
@@ -309,7 +309,7 @@
       <description/>
     </entry>
   </codelist>
-  <codelist name="che:CHE_MD_FilmTypeCode">
+  <codelist name="che:CHE_MD_FilmTypeCode" alias="filmType">
     <entry>
       <code>BW</code>
       <label>Noir et blanc</label>
@@ -331,7 +331,7 @@
       <description/>
     </entry>
   </codelist>
-  <codelist name="che:CHE_CI_projectTypeCode">
+  <codelist name="che:CHE_CI_projectTypeCode" alias="projectType">
     <entry>
       <code>research</code>
       <label>Recherche</label>
@@ -358,7 +358,7 @@
       <description/>
     </entry>
   </codelist>
-  <codelist name="che:basicGeodataIDTypeCode">
+  <codelist name="che:basicGeodataIDTypeCode" alias="basicGeodataIDType">
     <entry>
       <code>communal</code>
       <label>Communal</label>
@@ -379,7 +379,7 @@
       <label>Autre</label>
     </entry>
   </codelist>
-  <codelist name="che:CHE_MD_modelTypeCode">
+  <codelist name="che:CHE_MD_modelTypeCode" alias="modelType">
     <entry>
       <code>FeatureDescription</code>
       <label>Description des objets</label>
