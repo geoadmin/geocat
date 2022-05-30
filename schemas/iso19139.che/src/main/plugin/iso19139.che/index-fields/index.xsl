@@ -42,7 +42,7 @@
                 exclude-result-prefixes="#all"
                 version="2.0">
 
-  <xsl:import href="../../iso19139/fn.xsl"/>
+  <xsl:import href="../../iso19139/index-fields/fn.xsl"/>
   <xsl:import href="common/inspire-constant.xsl"/>
   <xsl:import href="common/index-utils.xsl"/>
 
@@ -230,6 +230,7 @@
       <!-- Indexing metadata contact -->
       <xsl:apply-templates mode="index-contact" select="gmd:contact">
         <xsl:with-param name="fieldSuffix" select="''"/>
+        <xsl:with-param name="languages" select="$allLanguages"/>
       </xsl:apply-templates>
 
       <!-- Indexing all codelists.
@@ -353,6 +354,7 @@
         <xsl:apply-templates mode="index-contact"
                              select="gmd:pointOfContact">
           <xsl:with-param name="fieldSuffix" select="'ForResource'"/>
+          <xsl:with-param name="languages" select="$allLanguages"/>
         </xsl:apply-templates>
 
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceCredit', gmd:credit, $allLanguages)"/>
@@ -934,6 +936,7 @@
           <xsl:apply-templates mode="index-contact"
                                select="gmd:distributorContact">
             <xsl:with-param name="fieldSuffix" select="'ForDistribution'"/>
+            <xsl:with-param name="languages" select="$allLanguages"/>
           </xsl:apply-templates>
         </xsl:for-each>
 
@@ -1049,6 +1052,7 @@
 
   <xsl:template mode="index-contact" match="*[che:CHE_CI_ResponsibleParty]">
     <xsl:param name="fieldSuffix" select="''" as="xs:string"/>
+    <xsl:param name="languages" as="node()?"/>
 
     <!-- Select the first child which should be a CI_ResponsibleParty.
     Some records contains more than one CI_ResponsibleParty which is
@@ -1075,19 +1079,16 @@
     <xsl:variable name="address" select="string-join(*[1]/gmd:contactInfo/*/gmd:address/*/(
                                         gmd:deliveryPoint|gmd:postalCode|gmd:city|
                                         gmd:administrativeArea|gmd:country)/gco:CharacterString/text(), ', ')"/>
+    <xsl:variable name="roleField" select="concat(replace($role, '[^a-zA-Z0-9-]', ''), 'Org', $fieldSuffix)"/>
+    <xsl:variable name="orgField" select="concat('Org', $fieldSuffix)"/>
     <xsl:if test="normalize-space($organisationName) != ''">
-      <xsl:element name="Org{$fieldSuffix}">
-        <xsl:value-of select="$organisationName"/>
-      </xsl:element>
-      <xsl:element name="{replace($role, '[^a-zA-Z0-9-]', '')}Org{$fieldSuffix}">
-        <xsl:value-of select="$organisationName"/>
-      </xsl:element>
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field($orgField, *[1]/gmd:organisationName[1], $languages)"/>,
+        <xsl:copy-of select="gn-fn-index:add-multilingual-field($roleField, *[1]/gmd:organisationName[1], $languages)"/>,
     </xsl:if>
     <xsl:element name="contact{$fieldSuffix}">
       <!-- TODO: Can be multilingual -->
       <xsl:attribute name="type" select="'object'"/>{
-      "organisation":"<xsl:value-of
-        select="gn-fn-index:json-escape($organisationName)"/>",
+      "organisation": <xsl:value-of select="gn-fn-index:add-multilingual-field('organisation', *[1]/gmd:organisationName[1], $languages)"/>,
       "role":"<xsl:value-of select="$role"/>",
       "email":"<xsl:value-of select="gn-fn-index:json-escape($email[1])"/>",
       "website":"<xsl:value-of select="$website"/>",

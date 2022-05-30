@@ -164,7 +164,7 @@
       var finalParams = angular.extend(params, hiddenParams);
       $scope.finalParams = finalParams;
       var esParams = gnESService.generateEsRequest(finalParams, $scope.searchObj.state,
-        $scope.searchObj.configId, $scope.searchObj.filters);
+        $scope.searchObj.configId, $scope.searchObj.filters, $scope.lang);
 
       function buildSearchKey(esParams) {
         var param = angular.copy(esParams, {});
@@ -547,7 +547,7 @@
         facetConfigs[key] = $scope.facetConfig[key];
       }
       var request = gnESService.generateEsRequest($scope.finalParams, $scope.searchObj.state,
-        $scope.searchObj.configId, $scope.searchObj.filters);
+        $scope.searchObj.configId, $scope.searchObj.filters, $scope.lang);
       return gnESClient.getTermsParamsWithNewSizeOrFilter(
         request.query,
         facet.path,
@@ -566,7 +566,7 @@
         facetConfigs[key] = $scope.facetConfig[key];
       }
       var request = gnESService.generateEsRequest($scope.finalParams, $scope.searchObj.state,
-        $scope.searchObj.configId, $scope.searchObj.filters)
+        $scope.searchObj.configId, $scope.searchObj.filters, $scope.lang)
       return gnESClient.getTermsParamsWithNewSizeOrFilter(
         request.query,
         facet.path,

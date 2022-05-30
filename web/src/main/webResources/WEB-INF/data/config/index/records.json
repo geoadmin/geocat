@@ -1048,6 +1048,34 @@
         }
       },
       {
+        "org": {
+          "match": "*Org*",
+          "mapping": {
+            "type": "object",
+            "properties": {
+              "default": {
+                "type": "keyword"
+              },
+              "langger": {
+                "type": "keyword"
+              },
+              "langfre": {
+                "type": "keyword"
+              },
+              "langeng": {
+                "type": "keyword"
+              },
+              "langroh": {
+                "type": "keyword"
+              },
+              "langita": {
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      {
         "textField": {
           "match": "*Object",
           "mapping": {
@@ -1191,14 +1219,6 @@
         }
       },
       {
-        "org": {
-          "match": "*Org*",
-          "mapping": {
-            "type": "keyword"
-          }
-        }
-      },
-      {
         "tree": {
           "match": "th_*_tree",
           "mapping": {
@@ -1293,6 +1313,9 @@
             "properties": {
               "org": {
                 "type": "keyword"
+              },
+              "organisation": {
+              "type": "object"
               },
               "role": {
                 "type": "keyword"

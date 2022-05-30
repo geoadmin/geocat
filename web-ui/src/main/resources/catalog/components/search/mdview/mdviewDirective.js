@@ -348,13 +348,15 @@
           // Group by 'default', 'role', 'org-role'
           mode: '@gnMode',
           // 'icon' or 'list' (default)
-          layout: '@layout'
+          layout: '@layout',
+          lang: '@'
         },
         link: function(scope, element, attrs, controller) {
           if (['default', 'role', 'org-role'].indexOf(scope.mode) == -1) {
             scope.mode = 'default';
           }
 
+          scope.lang = scope.$root.$$childTail.lang
           scope.calculateContacts = function() {
             if (scope.mode != 'default') {
               var groupByOrgAndMailOrName = function(resources) {
