@@ -327,7 +327,7 @@ goog.require('gn_alert');
                 'collapsed': true
               }
             },
-            'OrgForResourceObject': {
+            'OrgForResource': {
               'terms': {
                 'field': 'OrgForResourceObject.default',
                 'include': '.*',
