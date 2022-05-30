@@ -331,7 +331,7 @@ goog.require('gn_alert');
               'terms': {
                 'field': 'OrgForResourceObject.default',
                 'include': '.*',
-                'script': 'if (doc.containsKey(\'OrgForResourceObject.langLANG_FOR_FACET\'))  {return doc[\'OrgForResourceObject.langLANG_FOR_FACET\'].value} else {return doc[\'OrgForResourceObject.default\'].value}',
+                'script': 'if (doc[\'OrgForResourceObject.langLANG_FOR_FACET\'].size() != 0) {return doc[\'OrgForResourceObject.langLANG_FOR_FACET\'].value} else {return doc[\'OrgForResourceObject.default\'].value}',
                 'size': 15
               },
               'meta': {
