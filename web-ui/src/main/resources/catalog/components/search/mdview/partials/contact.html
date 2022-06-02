@@ -9,7 +9,7 @@
       <div gn-popover-anchor
            class="row">
         <div class="col-md-4"
-             data-gn-circle-letter-icon="c.organisation['lang'+lang]"
+             data-gn-circle-letter-icon="c.organisation"
              data-org-key="c.email | getMailDomain"/>
 
         <div class="col-md-8">
@@ -18,10 +18,10 @@
           </div>
           <div class="gn-contact-card-org">
           <span data-ng-if="::c.website">
-            <a data-ng-href="{{::c.website}}">{{c.organisation['lang'+lang]}}</a>
+            <a data-ng-href="{{::c.website}}">{{c.organisation}}</a>
           </span>
             <span data-ng-if="::!c.website">
-            {{c.organisation['lang'+lang]}}
+            {{c.organisation}}
           </span>
           </div>
         </div>
@@ -39,8 +39,8 @@
         </address>
 
         <div data-gn-search-filter-link="OrgForResource"
-             data-filter="c.organisation['lang'+lang]"
-             data-label="focusOnFrom">{{c.organisation['lang'+lang]}}</div>
+             data-filter="c.organisation"
+             data-label="focusOnFrom">{{c.organisation}}</div>
       </div>
     </li>
 
@@ -60,15 +60,15 @@
           <div class="col-md-12" data-ng-repeat="c in cnts | orderBy:'organisation'">
             <div class="row">
               <div class="col-md-4"
-                   data-gn-circle-letter-icon="c.organisation['lang'+lang]"
+                   data-gn-circle-letter-icon="c.organisation"
                    data-org-key="c.email | getMailDomain"/>
               <div class="col-md-8">
                 <div class="gn-contact-card-org-group">
                   <span data-ng-if="::c.website">
-                    <a data-ng-href="{{::c.website}}">{{c.organisation['lang'+lang]}}</a>
+                    <a data-ng-href="{{::c.website}}">{{c.organisation}}</a>
                   </span>
                   <span data-ng-if="::!c.website">
-                    {{c.organisation['lang'+lang]}}
+                    {{c.organisation}}
                   </span>
                 </div>
               </div>
@@ -91,8 +91,8 @@
           </address>
 
           <div data-gn-search-filter-link="OrgForResource"
-               data-filter="c.organisation['lang'+lang]"
-               data-label="focusOnFrom">{{c.organisation['lang'+lang]}}</div>
+               data-filter="c.organisation"
+               data-label="focusOnFrom">{{c.organisation}}</div>
 
           <hr data-ng-if="!$last"/>
         </div>
@@ -115,10 +115,10 @@
         <div class="col-md-8" ng-repeat="c in contactByOrgRole">
           <div class="gn-contact-card-org-group">
             <span data-ng-if="::c.website">
-              <a data-ng-href="{{::c.website}}">{{c.organisation['lang'+lang]}}</a>
+              <a data-ng-href="{{::c.website}}">{{c.organisation}}</a>
             </span>
             <span data-ng-if="::!c.website">
-              {{c.organisation['lang'+lang]}}
+              {{c.organisation}}
             </span>
           </div>
 
@@ -142,8 +142,8 @@
           </address>
 
           <div data-gn-search-filter-link="OrgForResource"
-               data-filter="c.organisation['lang'+lang]"
-               data-label="focusOnFrom">{{c.organisation['lang'+lang]}}</div>
+               data-filter="c.organisation"
+               data-label="focusOnFrom">{{c.organisation}}</div>
 
           <hr data-ng-if="!$last"/>
         </div>
@@ -163,10 +163,10 @@
       <div class="col-md-8">
         <address>
           <strong data-ng-if="::c.website">
-            <a data-ng-href="{{::c.website}}">{{c.organisation['lang'+lang]}}</a><br/>
+            <a data-ng-href="{{::c.website}}">{{c.organisation}}</a><br/>
           </strong>
           <strong data-ng-if="::!c.website">
-            {{c.organisation['lang'+lang]}}<br/>
+            {{c.organisation}}<br/>
           </strong>
 
           <div data-gn-metadata-individual="c"/>
@@ -201,10 +201,10 @@
       <div class="col-md-8">
         <address>
           <strong data-ng-if="::c.website">
-            <a data-ng-href="{{::c.website}}">{{c.organisation['lang'+lang]}}</a><br/>
+            <a data-ng-href="{{::c.website}}">{{c.organisation}}</a><br/>
           </strong>
           <strong data-ng-if="::!c.website">
-            {{c.organisation['lang'+lang]}}<br/>
+            {{c.organisation}}<br/>
           </strong>
 
           <span data-ng-repeat="c in contact track by $index">

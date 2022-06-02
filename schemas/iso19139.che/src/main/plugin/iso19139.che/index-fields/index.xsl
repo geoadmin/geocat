@@ -1088,7 +1088,7 @@
     <xsl:element name="contact{$fieldSuffix}">
       <!-- TODO: Can be multilingual -->
       <xsl:attribute name="type" select="'object'"/>{
-      "organisation": <xsl:value-of select="gn-fn-index:add-multilingual-field('organisation', *[1]/gmd:organisationName[1], $languages)"/>,
+      "organisationObject": <xsl:value-of select="gn-fn-index:add-multilingual-field('organisation', *[1]/gmd:organisationName[1], $languages)"/>,
       "role":"<xsl:value-of select="$role"/>",
       "email":"<xsl:value-of select="gn-fn-index:json-escape($email[1])"/>",
       "website":"<xsl:value-of select="$website"/>",
