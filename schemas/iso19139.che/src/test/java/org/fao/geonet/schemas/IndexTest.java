@@ -121,6 +121,6 @@ public class IndexTest {
         assertTrue(test.contains("\"langger\":\"Bundesamt für Kommunikation\""));
         assertTrue(test.contains("\"default\":\"Bundesamt für Kommunikation\""));
         assertTrue(test.contains("\"langfre\":\"Office fédéral de la communication\""));
-        JSONObject valid = new JSONObject(test);
+        //JSONObject valid = new JSONObject(test);
     }
 }
