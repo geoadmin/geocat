@@ -655,8 +655,8 @@ public class ISO19139cheSchemaPlugin
     }
 
     @Override
-    public <L, M> RawLinkPatternStreamer<L, M> createLinkStreamer(ILinkBuilder<L, M> linkbuilder) {
-        RawLinkPatternStreamer patternStreamer = new RawLinkPatternStreamer(linkbuilder);
+    public <L, M> RawLinkPatternStreamer<L, M> createLinkStreamer(ILinkBuilder<L, M> linkbuilder, String excludePattern) {
+        RawLinkPatternStreamer patternStreamer = new RawLinkPatternStreamer(linkbuilder, excludePattern);
         patternStreamer.setNamespaces(ISO19139SchemaPlugin.allNamespaces.asList());
         patternStreamer.setRawTextXPath(".//*[name() = 'gco:CharacterString' or name() = 'gmd:URL' or name() = 'gmd:LocalisedCharacterString' or name() = 'che:LocalisedURL']");
         // TODO: che:URL and multilingual text
@@ -689,4 +689,72 @@ public class ISO19139cheSchemaPlugin
     public boolean isInitialised() {
         return subtemplatesByLocalXLinksReplacer!=null;
     }
+
+    @Override
+    public Set<AssociatedResource> getAssociatedSources(Element metadata) {
+        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//gmd:source");
+        return associatedResources;
+    }
+
+    private Set<AssociatedResource> collectAssociatedResources(Element metadata, String XPATH) {
+        Set<AssociatedResource> associatedResources = new HashSet<>();
+        try {
+            final List<?> parentMetadata = Xml
+                .selectNodes(
+                    metadata,
+                    XPATH,
+                    allNamespaces.asList());
+            for (Object o : parentMetadata) {
+                Element sib = (Element) o;
+                AssociatedResource resource = elementAsAssociatedResource(sib);
+                associatedResources.add(resource);
+            }
+        } catch (JDOMException e) {
+            e.printStackTrace();
+        }
+        return associatedResources;
+    }
+
+    private AssociatedResource elementAsAssociatedResource(Element ref) {
+        String sibUuid = ref.getAttributeValue("uuidref");
+        if (StringUtils.isEmpty(sibUuid)) {
+            sibUuid = ref.getTextNormalize();
+        }
+        String title = ref.getAttributeValue("title", XLINK);
+        String url = ref.getAttributeValue("href", XLINK);
+        return new AssociatedResource(sibUuid, "", "", url, title);
+    }
+
+    @Override
+    public Set<AssociatedResource> getAssociatedFeatureCatalogues(Element metadata) {
+        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//gmd:featureCatalogueCitation");
+        return associatedResources;
+    }
+
+    @Override
+    public Set<AssociatedResource> getAssociatedDatasets(Element metadata) {
+        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//srv:operatesOn");
+        return associatedResources;
+    }
+
+    @Override
+    public Set<AssociatedResource> getAssociatedParents(Element metadata) {
+        Set<AssociatedResource> associatedResources = new HashSet<>();
+
+        Element parentIdentifier = metadata.getChild("parentIdentifier", GMD);
+        if (parentIdentifier != null) {
+            Element characterString = parentIdentifier.getChild("CharacterString", GCO);
+            if (characterString != null) {
+                associatedResources.add(new AssociatedResource(characterString.getText(), "", ""));
+            }
+            Element anchor = parentIdentifier.getChild("Anchor", GMX);
+            if (anchor != null) {
+                associatedResources.add(elementAsAssociatedResource(anchor));
+            }
+        }
+        // Parent relation is also frequently encoded using
+        // aggregation. See parentAssociatedResourceType in ISO19115-3
+        return associatedResources;
+    }
+
 }
