@@ -237,19 +237,18 @@
       }
     };
 
-    this.addFacets = function(esParams, type, lang) {
+    this.addFacets = function(esParams, type) {
       var esFacet = this, aggs = typeof type === 'string' ?
         angular.copy(this.configs[type].facets, {}) :
         type;
 
       esParams.aggregations = {};
       angular.forEach(aggs, function(config, facet) {
-        facetConfig = JSON.parse(JSON.stringify(config).replaceAll('LANG_FOR_FACET', lang));
         if (config.hasOwnProperty('gnBuildFilterForRange')) {
           esParams.aggregations[facet] =
-            esFacet.gnBuildFilterForRange(facetConfig);
+            esFacet.gnBuildFilterForRange(config);
         } else {
-          esParams.aggregations[facet] = facetConfig;
+          esParams.aggregations[facet] = config;
         }
       });
     };

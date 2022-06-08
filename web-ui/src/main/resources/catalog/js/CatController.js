@@ -329,9 +329,8 @@ goog.require('gn_alert');
             },
             'OrgForResource': {
               'terms': {
-                'field': 'OrgForResourceObject.default',
+                'field': 'OrgForResource',
                 'include': '.*',
-                'script': 'if (doc[\'OrgForResourceObject.langLANG_FOR_FACET\'].size() != 0) {return doc[\'OrgForResourceObject.langLANG_FOR_FACET\'].value} else {return doc[\'OrgForResourceObject.default\'].value}',
                 'size': 15
               },
               'meta': {
@@ -1332,7 +1331,6 @@ goog.require('gn_alert');
         }
         );
 
-
         // Retrieve user information if catalog is online
         // append a random number to avoid caching in IE11
         var userLogin = catInfo.then(function(value) {
@@ -1369,7 +1367,6 @@ goog.require('gn_alert');
            });
         });
 
-
         // Retrieve main search information
         var searchInfo = userLogin.then(function(value) {
           // Check index status.
@@ -1391,16 +1388,14 @@ goog.require('gn_alert');
               if (gnGlobalSettings.gnCfg.mods.search.filters) {
                 query.bool.filter = gnGlobalSettings.gnCfg.mods.search.filters;
               }
-              lang = $scope.lang;
-              facetConfig = JSON.parse(JSON.stringify(gnGlobalSettings.gnCfg.mods.home.facetConfig).replaceAll('LANG_FOR_FACET', lang));
               return $http.post('../api/search/records/_search',
                 {size: 0,
                     track_total_hits: true,
                     query: query,
-                    aggs: facetConfig}).
+                    aggs: gnGlobalSettings.gnCfg.mods.home.facetConfig}).
               then(function(r) {
                 $scope.searchInfo = r.data;
-                var keys = Object.keys(facetConfig);
+                var keys = Object.keys(gnGlobalSettings.gnCfg.mods.home.facetConfig);
                     selectedFacet = keys[0];
                 for (var i = 0; i < keys.length; i ++) {
                   if ($scope.searchInfo.aggregations[keys[i]].buckets.length > 0) {
