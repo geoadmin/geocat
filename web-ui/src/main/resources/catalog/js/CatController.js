@@ -329,7 +329,7 @@ goog.require('gn_alert');
             },
             'OrgForResource': {
               'terms': {
-                'field': 'OrgForResource',
+                'field': 'OrgForResourceObject',
                 'include': '.*',
                 'size': 15
               },

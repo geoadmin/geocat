@@ -243,12 +243,19 @@
         type;
 
       esParams.aggregations = {};
-      angular.forEach(aggs, function(config, facet) {
+      angular.forEach(aggs, function(config, facetName) {
         if (config.hasOwnProperty('gnBuildFilterForRange')) {
-          esParams.aggregations[facet] =
+          esParams.aggregations[facetName] =
             esFacet.gnBuildFilterForRange(config);
         } else {
-          esParams.aggregations[facet] = config;
+          // multilingual term
+          // use searchLangConfig
+          var searchLang = gnGlobalSettings.iso3lang;
+          if (config.terms && config.terms.field.endsWith('Object')) {
+            config.terms.field += '.lang' + searchLang;
+            facetName = config.terms.field;
+          }
+          esParams.aggregations[facetName] = config;
         }
       });
     };
