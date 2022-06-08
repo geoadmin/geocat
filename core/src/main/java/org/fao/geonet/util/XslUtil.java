@@ -1353,6 +1353,20 @@ public final class XslUtil {
         return status == -1 ? false : status / 100 == 2;
     }
 
+    // GEOCAT
+    public static boolean findAndValidateURLs(final String textContent) throws ExecutionException {
+        Pattern p = Pattern.compile("(http|ftp|https):\\/\\/([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:\\/~+#-]*[\\w@?^=%&\\/~+#-])?");
+        Matcher m = p.matcher(textContent);
+        boolean result = true;
+
+        while (m.find()) {
+            result = result && validateURL(m.group());
+        }
+
+        return result;
+    }
+    // END GEOCAT
+
     /**
      * Utility method to retrieve the thesaurus dir from xsl processes.
      * <p>
