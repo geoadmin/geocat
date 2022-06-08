@@ -425,7 +425,7 @@
           };
 
           this.getType = function(resource, type) {
-            resource.locTitle = $filter('gnLocalized')(resource.name) || resource.name;
+            resource.locTitle = $filter('gnLocalized')(resource.name) || resource.name || '';
             resource.locDescription = $filter('gnLocalized')(resource.description) || resource.description;
             resource.locUrl = $filter('gnLocalized')(resource.url) || resource.url;
             var protocolOrType = angular.isDefined(resource.protocol)
