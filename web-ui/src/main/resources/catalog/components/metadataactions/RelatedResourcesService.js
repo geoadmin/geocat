@@ -438,10 +438,12 @@
                 + (angular.isDefined(resource.serviceType) ? resource.serviceType : ''))
               : '';
 
-            // Case for links
-            if (resource.locUrl.indexOf('shop') !== -1) {
+            // Case for links$
+            // GEOCAT
+            if (resource.locUrl && resource.locUrl.indexOf('shop') !== -1) {
               return 'CH:GEOSHOP';
             }
+            // END GEOCAT
             if (angular.isString(protocolOrType)) {
               if (resource && resource.function === 'legend') {
                 return 'LEGEND';
