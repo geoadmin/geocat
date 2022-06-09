@@ -348,9 +348,9 @@ goog.require('gn_alert');
                 'collapsed': true
               }
             },
-            'tag.default': {
+            'tag': {
               'terms': {
-                'field': 'tag.default',
+                'field': 'tag',
                 'include': '.*',
                 'size': 10
               },
