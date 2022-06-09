@@ -251,9 +251,11 @@
           // multilingual term
           // use searchLangConfig
           var searchLang = gnGlobalSettings.iso3lang;
-          if (config.terms && config.terms.field.endsWith('Object')) {
-            config.terms.field += '.lang' + searchLang;
-            facetName = config.terms.field;
+          if (config.terms) {
+            if (config.terms.field.endsWith('Object') || config.terms.field === 'tag') {
+              config.terms.field += '.lang' + searchLang;
+              facetName = config.terms.field;
+            }
           }
           esParams.aggregations[facetName] = config;
         }

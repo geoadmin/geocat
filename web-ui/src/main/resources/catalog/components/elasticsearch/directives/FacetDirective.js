@@ -212,7 +212,7 @@
    */
   module.filter('facetKeyTranslator', ['$translate', function($translate) {
     return function(input) {
-      return $translate.instant(input.replace(/(.key|.default|Object.lang[a-z]{3})$/, ''));
+      return $translate.instant(input.replace(/(.key|.default|Object.lang[a-z]{3}|.lang[a-z]{3})$/, ''));
     };
   }]);
 
