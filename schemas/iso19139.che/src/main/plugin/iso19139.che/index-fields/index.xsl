@@ -1087,20 +1087,41 @@
         <xsl:copy-of select="gn-fn-index:add-multilingual-field($orgField, *[1]/gmd:organisationName[1], $languages)"/>,
         <xsl:copy-of select="gn-fn-index:add-multilingual-field($roleField, *[1]/gmd:organisationName[1], $languages)"/>,
     </xsl:if>
-    <xsl:element name="contact{$fieldSuffix}">
-      <!-- TODO: Can be multilingual -->
-      <xsl:attribute name="type" select="'object'"/>{
-      "organisationObject": <xsl:value-of select="gn-fn-index:add-multilingual-field('organisation', *[1]/gmd:organisationName[1], $languages)"/>,
-      "role":"<xsl:value-of select="$role"/>",
-      "email":"<xsl:value-of select="gn-fn-index:json-escape($email[1])"/>",
-      "website":"<xsl:value-of select="$website"/>",
-      "logo":"<xsl:value-of select="$logo"/>",
-      "individual":"<xsl:value-of select="gn-fn-index:json-escape($individualName)"/>",
-      "position":"<xsl:value-of select="gn-fn-index:json-escape($positionName)"/>",
-      "phone":"<xsl:value-of select="gn-fn-index:json-escape($phone[1])"/>",
-      "address":"<xsl:value-of select="gn-fn-index:json-escape($address)"/>"
-      }
-    </xsl:element>
+
+    <xsl:variable name="orgObject" select="gn-fn-index:add-multilingual-field('organisation', *[1]/gmd:organisationName[1], $languages)"/>
+
+   <xsl:choose>
+    <xsl:when test="string-length($orgObject) > 0">
+      <xsl:element name="contact{$fieldSuffix}">
+        <xsl:attribute name="type" select="'object'"/>{
+          "organisationObject": <xsl:value-of select="$orgObject"/>,
+          "role":"<xsl:value-of select="$role"/>",
+          "email":"<xsl:value-of select="gn-fn-index:json-escape($email[1])"/>",
+          "website":"<xsl:value-of select="$website"/>",
+          "logo":"<xsl:value-of select="$logo"/>",
+          "individual":"<xsl:value-of select="gn-fn-index:json-escape($individualName)"/>",
+          "position":"<xsl:value-of select="gn-fn-index:json-escape($positionName)"/>",
+          "phone":"<xsl:value-of select="gn-fn-index:json-escape($phone[1])"/>",
+          "address":"<xsl:value-of select="gn-fn-index:json-escape($address)"/>"
+        }
+      </xsl:element>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:element name="contact{$fieldSuffix}">
+        <xsl:attribute name="type" select="'object'"/>{
+          "role":"<xsl:value-of select="$role"/>",
+          "email":"<xsl:value-of select="gn-fn-index:json-escape($email[1])"/>",
+          "website":"<xsl:value-of select="$website"/>",
+          "logo":"<xsl:value-of select="$logo"/>",
+          "individual":"<xsl:value-of select="gn-fn-index:json-escape($individualName)"/>",
+          "position":"<xsl:value-of select="gn-fn-index:json-escape($positionName)"/>",
+          "phone":"<xsl:value-of select="gn-fn-index:json-escape($phone[1])"/>",
+          "address":"<xsl:value-of select="gn-fn-index:json-escape($address)"/>"
+        }
+      </xsl:element>
+    </xsl:otherwise>
+  </xsl:choose>
+
   </xsl:template>
 
 
