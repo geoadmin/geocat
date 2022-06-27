@@ -93,7 +93,7 @@
             interested for having metadata in a specific
             ISO profil.
         -->
-    <param name="preferredSchema" value="iso19139"/>
+    <param name="preferredSchema" value="iso19139.che"/>
     <param name="jzkitConfig" value="JZkitApplicationContext.xml"/>
 
     <!-- The maximum number of writes in a transaction on the spatial index
