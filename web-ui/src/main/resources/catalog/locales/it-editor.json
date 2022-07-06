@@ -133,6 +133,7 @@
     "generateUUID": "Genera UUID per i metadati inseriti",
     "geopublisher": "Pubblica come WMS, WFS, WCS",
     "gmd:CI_ResponsibleParty": "Organizzazioni e contatti",
+    "che:CHE_CI_ResponsibleParty": "Organizzazioni e contatti",
     "cit:CI_Responsibility": "Organizzazioni e contatti (ISO19115-3)",
     "mdq:DQ_AbsoluteExternalPositionalAccuracy": "External position accuracy",
     "mdq:DQ_DomainConsistency": "Domain consistency",
