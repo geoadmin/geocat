@@ -723,6 +723,39 @@ goog.require('gn_alert');
             'sortOrder': 'desc'
           }],
           'sortBy': 'relevance',
+          'facetConfig': {
+            'valid': {
+              'terms': {
+                'field': 'valid',
+                'size': 10
+              }
+            },
+            'groupOwner': {
+              'terms': {
+                'field': 'groupOwner',
+                'size': 10
+              }
+            },
+            'recordOwner': {
+              'terms': {
+                'field': 'recordOwner',
+                'size': 10
+              }
+            },
+            'groupPublished': {
+              'terms': {
+                'field': 'groupPublished',
+                'size': 10
+              }
+            },
+            'isHarvested': {
+              'terms': {
+                'field': 'isHarvested',
+                'size': 2
+              }
+            }
+          },
+
           // Add some fuzziness when search on directory entries
           // but boost exact match.
           'queryBase': 'any.${searchLang}:(${any}) any.default:(${any}) resourceTitleObject.${searchLang}:"${any}"^10 resourceTitleObject.${searchLang}:(${any})^5 resourceTitleObject.${searchLang}:(${any}~2)'

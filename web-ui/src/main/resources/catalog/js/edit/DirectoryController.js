@@ -100,6 +100,8 @@
 
       var directorySearchSettings = gnGlobalSettings.gnCfg.mods.directory || {};
 
+      $scope.facetConfig = directorySearchSettings.facetConfig;
+
       $scope.defaultSearchObj = {
         selectionBucket: 'd101',
         configId: 'directory',
