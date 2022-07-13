@@ -544,7 +544,22 @@
       for (var i = 0; i < facet.path.length; i++) {
         if ((i + 1) % 2 === 0) continue;
         var key = facet.path[i];
-        facetConfigs[key] = $scope.facetConfig[key];
+        var keyTokens = key.split('.');
+        var isObject = keyTokens.length > 1;
+        if (isObject) {
+          var fieldName = keyTokens[0];
+          if (fieldName === 'tag') {
+            facetConfigs[key] = $scope.facetConfig[fieldName];
+            facetConfigs[key].terms.field = key
+          } else if (fieldName.endsWith('Object')) {
+            var fieldNameWoObject = fieldName.replace(/Object/, '')
+            facetConfigs[key] = $scope.facetConfig[fieldNameWoObject];
+            facetConfigs[key].terms.field = key
+          }
+        }
+        if (!facetConfigs[key]) {
+          facetConfigs[key] = $scope.facetConfig[key];
+        }
       }
       var request = gnESService.generateEsRequest($scope.finalParams, $scope.searchObj.state,
         $scope.searchObj.configId, $scope.searchObj.filters);
