@@ -367,7 +367,8 @@
               "cl_topic.key": {
                 terms: {
                   field: "cl_topic.key",
-                  "order" : { "_key" : "asc" }
+                  order : { "_key" : "asc" },
+                  size: 40
                 },
                 meta: {
                   orderByTranslation: true,
@@ -380,7 +381,7 @@
                 terms: {
                   field: "tag.default",
                   include: ".*",
-                  size: 10
+                  size: 50
                 },
                 meta: {
                   caseInsensitiveInclude: true,
