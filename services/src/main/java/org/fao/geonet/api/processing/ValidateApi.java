@@ -195,7 +195,7 @@ public class ValidateApi {
                         } else {
 
                             Pair<Element, String> errorReport = validator.doValidate(userSession, record.getDataInfo().getSchemaId(), Integer.toString(record.getId()), xmlSerializer.select(serviceContext, String.valueOf(record.getId())), serviceContext.getLanguage(), false);
-                            boolean isValid = errorReport.one().getDescendants(ReportFinder).hasNext();
+                            boolean isValid = !errorReport.one().getDescendants(ReportFinder).hasNext();
                             if (isValid) {
                                 report.addMetadataInfos(record, "Is valid");
                                 new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "1").publish(applicationContext);
