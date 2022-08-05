@@ -195,7 +195,7 @@ public class ValidateApi {
                         } else {
 
                             Pair<Element, String> errorReport = validator.doValidate(userSession, record.getDataInfo().getSchemaId(), Integer.toString(record.getId()), xmlSerializer.select(serviceContext, String.valueOf(record.getId())), serviceContext.getLanguage(), false);
-                            boolean isValid = !errorReport.one().getDescendants(ReportFinder).hasNext();
+                            boolean isValid = !errorReport.one().getDescendants(ErrorFinder).hasNext();
                             if (isValid) {
                                 report.addMetadataInfos(record, "Is valid");
                                 new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "1").publish(applicationContext);
@@ -368,15 +368,15 @@ public class ValidateApi {
         return mAnalyseProcess;
     }
 
-    private static final Filter ReportFinder = new Filter() {
-        private static final long serialVersionUID = 1L;
-
+    public static final Filter ErrorFinder = new Filter() {
         @Override
         public boolean matches(Object obj) {
             if (obj instanceof Element) {
                 Element element = (Element) obj;
                 String name = element.getName();
-                if (name.equals("report") || name.equals("xsderrors")) {
+                if (name.equals("error")) {
+                    return true;
+                } else if (name.equals("failed-assert")) {
                     return true;
                 }
             }
