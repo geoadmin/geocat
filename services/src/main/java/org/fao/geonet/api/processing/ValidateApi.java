@@ -38,16 +38,20 @@ import org.fao.geonet.api.processing.report.registry.IProcessingReportRegistry;
 import org.fao.geonet.api.records.editing.InspireValidatorUtils;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.events.history.RecordValidationTriggeredEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
+import org.jdom.Element;
+import org.jdom.filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -103,6 +107,8 @@ public class ValidateApi {
     IMetadataUtils metadataUtils;
     @Autowired
     MBeanExporter mBeanExporter;
+    @Autowired
+    protected XmlSerializer xmlSerializer;
 
     private final ArrayDeque<SelfNaming> mAnalyseProcesses = new ArrayDeque<>(NUMBER_OF_SUBSEQUENT_PROCESS_MBEAN_TO_KEEP);
 
@@ -187,7 +193,9 @@ public class ValidateApi {
                         if (!accessMan.canEdit(serviceContext, String.valueOf(record.getId()))) {
                             report.addNotEditableMetadataId(record.getId());
                         } else {
-                            boolean isValid = validator.doValidate(record, serviceContext.getLanguage());
+
+                            Pair<Element, String> errorReport = validator.doValidate(userSession, record.getDataInfo().getSchemaId(), Integer.toString(record.getId()), xmlSerializer.select(serviceContext, String.valueOf(record.getId())), serviceContext.getLanguage(), false);
+                            boolean isValid = !errorReport.one().getDescendants(ErrorFinder).hasNext();
                             if (isValid) {
                                 report.addMetadataInfos(record, "Is valid");
                                 new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "1").publish(applicationContext);
@@ -359,4 +367,20 @@ public class ValidateApi {
         mAnalyseProcesses.addFirst(mAnalyseProcess);
         return mAnalyseProcess;
     }
+
+    public static final Filter ErrorFinder = new Filter() {
+        @Override
+        public boolean matches(Object obj) {
+            if (obj instanceof Element) {
+                Element element = (Element) obj;
+                String name = element.getName();
+                if (name.equals("error")) {
+                    return true;
+                } else if (name.equals("failed-assert")) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
 }
