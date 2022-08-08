@@ -623,10 +623,15 @@
 
 
         <xsl:for-each select="gmd:resourceConstraints/*">
-          <xsl:variable name="fieldPrefix" select="local-name()"/>
+          <xsl:variable name="fieldPrefix"
+                        select="if (@gco:isoType)
+                              then substring-after(@gco:isoType, ':')
+                              else local-name()"/>
+
           <xsl:for-each select="gmd:otherConstraints">
             <xsl:copy-of select="gn-fn-index:add-multilingual-field(concat($fieldPrefix, 'OtherConstraints'), ., $allLanguages)"/>
           </xsl:for-each>
+
           <xsl:for-each select="gmd:useLimitation">
             <xsl:copy-of select="gn-fn-index:add-multilingual-field(concat($fieldPrefix, 'UseLimitation'), ., $allLanguages)"/>
           </xsl:for-each>
