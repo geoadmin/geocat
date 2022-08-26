@@ -617,25 +617,4 @@
       <xsl:with-param name="listOfValues" select="$helper"/>
     </xsl:call-template>
   </xsl:template>
-
-
-  <xsl:template mode="mode-iso19139"
-                match="gmd:topicCategory[1]"
-                priority="2100">
-
-    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
-    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
-    <xsl:variable name="labelConfig" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
-
-
-    <xsl:variable name="elementName" select="name()"/>
-
-    <xsl:variable name="topicCategories">
-      <xsl:value-of select="string-join(
-                            ../*[name() = $elementName]/gmd:MD_TopicCategoryCode/text(),
-                            ',')"/>
-    </xsl:variable>
-
-  </xsl:template>
-
 </xsl:stylesheet>
