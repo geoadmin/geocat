@@ -5,7 +5,7 @@
   <techInfo>Informazione tecnica</techInfo>
   <contactInfo>Informazione di contatto</contactInfo>
   <temporalRef>Informatione temporale</temporalRef>
-  <constraintInfo>Informazione sulle restrizioni d'accesso</constraintInfo>
+  <constraintInfo>Vincoli legali</constraintInfo>
 
   <!-- New strings added for the AngularJS editor -->
   <!-- View and tabs -->
