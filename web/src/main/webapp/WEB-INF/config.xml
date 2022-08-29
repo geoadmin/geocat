@@ -145,6 +145,24 @@
       <output file="true"/>
     </service>
 
+    <!--Geocat specific services-->
+    <service name="admin.unpublish.invalid.metadata">
+      <class name=".kernel.unpublish.UnpublishInvalidMetadataJobService" />
+    </service>
+
+    <service name="admin.unpublish.report.xml"  contentType="text/xml; charset=UTF-8">
+      <class name=".kernel.unpublish.UnpublishInvalidMetadataReport"/>
+    </service>
+    <service name="admin.unpublish.report.csv">
+      <class name=".kernel.unpublish.UnpublishInvalidMetadataReport"/>
+      <output sheet="../xslt/geocat/unpublish-report.xsl" contentType="text/csv; charset=UTF-8"/>
+    </service>
+    <service name="admin.unpublish.report.html">
+      <class name=".kernel.unpublish.UnpublishInvalidMetadataReport"/>
+      <output sheet="../xslt/geocat/unpublish-report-html.xsl" contentType="text/html; charset=UTF-8"/>
+    </service>
+    <!--End geocat specific services-->
+
   </services>
 
   <include>config/config-service-search.xml</include>
