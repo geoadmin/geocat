@@ -304,7 +304,15 @@
               }
             }
           }).
-          otherwise({
+          when('/geocat', {
+            templateUrl: tplFolder + 'geocat.html',
+            resolve: {
+              permission: function() {
+                authorizationService.$get[0]().check('Administrator');
+              }
+            }
+          }).
+      otherwise({
             redirectTo: '/home'
           });
     }]);
