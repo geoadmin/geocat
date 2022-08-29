@@ -30,6 +30,20 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.io.Files;
 import com.neovisionaries.i18n.LanguageCode;
+
+import net.sf.saxon.Configuration;
+import net.sf.saxon.om.DocumentInfo;
+import net.sf.saxon.om.SingletonIterator;
+import net.sf.saxon.om.UnfailingIterator;
+import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
+import org.fao.geonet.api.records.attachments.Store;
+import org.fao.geonet.domain.MetadataResourceContainer;
+import org.fao.geonet.exceptions.JeevesException;
+import org.jdom.input.SAXBuilder;
+import org.json.XML;
+import org.jsoup.Jsoup;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.MultiPolygon;
 import jeeves.component.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -111,7 +125,9 @@ import org.xml.sax.SAXException;
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.stream.StreamSource;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -1657,4 +1673,38 @@ public final class XslUtil {
         });
         return listOfLinks;
     }
+
+    // Geocat specific
+    public static UnfailingIterator parse(Configuration configuration, String string, boolean printError)
+        throws Exception {
+        String resultString = "<div>" + string + "</div>";
+
+        try {
+            javax.xml.transform.Source xmlSource = new StreamSource(new ByteArrayInputStream(resultString.getBytes("UTF-8")));
+            DocumentInfo doc = configuration.buildDocument(xmlSource);
+            return SingletonIterator.makeIterator(doc);
+        } catch (Exception e) {
+            org.jdom.Element error = JeevesException.toElement(e);
+            Log.warning(Log.SERVICE, e.getMessage() + XML.toString(error));
+            return null;
+        }
+    }
+
+    public static UnfailingIterator parse(net.sf.saxon.om.NodeInfo text)
+        throws Exception {
+        String resultString = "<div>" + text.getStringValue() + "</div>";
+
+        try {
+            javax.xml.transform.Source xmlSource = new StreamSource(new ByteArrayInputStream(resultString.getBytes("UTF-8")));
+            DocumentInfo doc = text.getConfiguration().buildDocument(xmlSource);
+            return SingletonIterator.makeIterator(doc);
+        } catch (Exception e) {
+            org.jdom.Element error = JeevesException.toElement(e);
+            Log.warning(Log.SERVICE, e.getMessage() + XML.toString(error));
+            return null;
+        }
+    }
+
+    // End geocat
+
 }
