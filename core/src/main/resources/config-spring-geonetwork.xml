@@ -184,6 +184,7 @@
         <ref bean="indexingTaskTrigger"/>
         <ref bean="watchListNotificationTaskTrigger"/>
         <ref bean="backupMetadataCronTrigger" />
+        <ref bean="unpublishMetadataCronTrigger" />
       </list>
     </property>
     <property name="quartzProperties">
@@ -237,6 +238,18 @@
     </property>
   </bean>
 
+  <!-- Specific Geocat for unpublish metadata task -->
+  <bean id="unpublishMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <property name="jobDetail">
+      <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="org.fao.geonet.kernel.unpublish.UnpublishInvalidMetadataJob"/>
+        <property name="name" value="unpublishInvalidMetadata" />
+        <property name="group" value="gnBackgroundTasks" />
+      </bean>
+    </property>
+    <property name="cronExpression" value="0 30 21 ? * *" />
+  </bean>
+  <!--End geocat-->
 
   <!-- Resource Storage -->
   <!-- geonetwork.store.type can be supplied

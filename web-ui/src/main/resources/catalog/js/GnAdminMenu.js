@@ -100,6 +100,15 @@
       // TODO : add other role menu
     };
 
+    // GeoCat specific
+    menu.Administrator.push({
+      name: 'Geocat',
+      route: '#geocat',
+      classes: 'btn-danger',
+      icon: 'fa-plus'
+    });
+    // /Geocat specific
+
     return menu;
   });
 })();

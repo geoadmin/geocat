@@ -249,6 +249,16 @@
                            access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/getSLD/.*" access="permitAll"/>
 
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/md.viewer(\?debug)?"
+                           access="permitAll"/>
+
+        <!--Geocat-->
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.unpublish.invalid.metadata!?.*" access="hasAuthority('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.unpublish.report.xml!?.*" access="hasAuthority('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.unpublish.report.csv!?.*" access="hasAuthority('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.unpublish.report.html!?.*" access="hasAuthority('Administrator')"/>
+        <!--Geocat-->
+
         <sec:intercept-url pattern="/.*" access="denyAll"/>
       </sec:filter-security-metadata-source>
     </property>
