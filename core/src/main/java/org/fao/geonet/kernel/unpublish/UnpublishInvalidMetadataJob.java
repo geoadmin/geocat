@@ -339,7 +339,7 @@ public class UnpublishInvalidMetadataJob extends QuartzJobBean {
 
             indexMetadataWithNonEvaluatedOrIncoherentValidationStatus(serviceContext, dataManager);
 
-            checkUrl();
+            //checkUrl();
 
         } finally {
             running.set(false);
