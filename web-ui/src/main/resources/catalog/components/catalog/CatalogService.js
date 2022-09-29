@@ -692,7 +692,10 @@
             Object.keys(field).forEach(function (th) {
               this.translateMultilingualObjects(field[th].keywords);
             }.bind(this))
-          } else if (fieldName.match(/th_.*(?<!_tree|Number)$/) != null) {
+          } else if (
+            fieldName.match(/th_.*$/) !== null &&
+            fieldName.match(/.*(_tree|Number)$/) === null
+          ) {
             this.translateMultilingualObjects(field);
           } else if (typeof field === 'object') {
             this.translateMultingualFields(field);
