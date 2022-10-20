@@ -22,6 +22,9 @@
     </gmd:metadataStandardVersion>
   </xsl:template>
 
+  <!-- Remove all non ISO19139 enumeration value. -->
+  <xsl:template match="gmd:topicCategory[contains(*, '_')]" priority="2"/>
+
   <!-- All profil specific elements should be bypassed -->
   <xsl:template match="che:*[not(@gco:isoType)]" priority="2"/>
 
