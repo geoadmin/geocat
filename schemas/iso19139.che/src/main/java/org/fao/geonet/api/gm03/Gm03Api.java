@@ -141,7 +141,9 @@ public class Gm03Api  {
         Document domOut = toGm03.convert(domIn);
 
         DOMBuilder builder = new DOMBuilder();
-        return builder.build(domOut).getRootElement();
+        Element rootElement = builder.build(domOut).getRootElement();
+        rootElement.detach();
+        return rootElement;
     }
 
 
