@@ -79,16 +79,7 @@ public class XFrameOptionsFilter implements Filter {
                     "XFrameOptions filter url parameter is missing for mode ALLOW-FROM. Setting mode to DENY.");
                 mode = MODE_DENY;
             } else {
-                try {
-                    URL urlValue = new URL(url);
-                    domain = urlValue.getHost() +
-                            ((urlValue.getPort() == -1) ? "" : ":" + urlValue.getPort());
-
-                } catch (MalformedURLException ex) {
-                    Log.info(Geonet.GEONETWORK, String.format(
-                            "XFrameOptions filter url parameter (%s) is not valid for mode ALLOW-FROM. Setting mode to DENY.", url));
-                    mode = MODE_DENY;
-                }
+                domain = url;
             }
         }
 
