@@ -158,7 +158,7 @@
     </init-param>
     <init-param>
       <param-name>url</param-name>
-      <param-value>'*.admin.ch' '*.cartoriviera.ch' '*.vsgis.ch'</param-value>
+      <param-value>https://*.admin.ch https://*.cartoriviera.ch https://*.vsgis.ch</param-value>
     </init-param>
   </filter>
   <filter-mapping>
