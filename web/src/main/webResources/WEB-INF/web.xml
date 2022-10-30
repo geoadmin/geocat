@@ -164,13 +164,12 @@
     -->
     <init-param>
       <param-name>mode</param-name>
-      <param-value>SAMEORIGIN</param-value>
+      <param-value>ALLOW-FROM</param-value>
     </init-param>
-    <!-- Allowed url. Used in ALLOW-FROM mode only -->
-    <!--<init-param>
+    <init-param>
       <param-name>url</param-name>
-      <param-value>http://localhost:8888/</param-value>
-    </init-param>-->
+      <param-value>https://*.admin.ch https://*.cartoriviera.ch https://*.vsgis.ch</param-value>
+    </init-param>
   </filter>
   <filter-mapping>
     <filter-name>XFrameOptionsFilter</filter-name>
