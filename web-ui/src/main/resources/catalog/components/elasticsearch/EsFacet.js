@@ -162,7 +162,9 @@
           'creat*',
           'group*',
           'resource*',
-          'owner*'
+          'owner*',
+          'valid',
+          'isTemplate'
         ]},
         track_total_hits: true
       },
