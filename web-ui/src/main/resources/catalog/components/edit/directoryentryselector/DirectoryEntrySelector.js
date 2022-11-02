@@ -120,14 +120,12 @@
                   };
 
                   if (scope.$eval(scope.showValidOnly)) {
-                    scope.searchObj.valid = 1;
+                    scope.searchObj.params.valid = "1";
                   }
-
                   scope.modelOptions = angular.copy(
                  gnGlobalSettings.modelOptions);
                 },
                 post: function postLink(scope, iElement, iAttrs) {
-
 
                   var insertModes = iAttrs.insertModes;
 
