@@ -6,9 +6,7 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 exclude-result-prefixes="#all"
@@ -19,14 +17,204 @@
   <xsl:variable name="uuid"
                 select="/che:CHE_MD_Metadata//gmd:fileIdentifier/gco:CharacterString"/>
 
+
+  <xsl:variable name="ithemeTopiccatMap">
+    <entry>
+      <theme>Geographical names</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/gn</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/3</itheme>
+      <topiccat>location</topiccat>
+    </entry>
+    <entry>
+      <theme>Administrative units</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/au</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/4</itheme>
+      <topiccat>boundaries</topiccat>
+    </entry>
+    <entry>
+      <theme>Addresses</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/ad</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/5</itheme>
+      <topiccat>location</topiccat>
+    </entry>
+    <entry>
+      <theme>Cadastral parcels</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/cp</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/6</itheme>
+      <topiccat>planningCadastre</topiccat>
+    </entry>
+    <entry>
+      <theme>Transport networks</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/tn</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/7</itheme>
+      <topiccat>transportation</topiccat>
+    </entry>
+    <entry>
+      <theme>Hydrography</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/hy</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/8</itheme>
+      <topiccat>inlandWaters</topiccat>
+    </entry>
+    <entry>
+      <theme>Protected sites</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/ps</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/9</itheme>
+      <topiccat>environment</topiccat>
+    </entry>
+    <entry>
+      <theme>Elevation</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/el</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/10</itheme>
+      <topiccat>elevation</topiccat>
+    </entry>
+    <entry>
+      <theme>Land cover</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/lc</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/11</itheme>
+      <topiccat>imageryBaseMapsEarthCover</topiccat>
+    </entry>
+    <entry>
+      <theme>Orthoimagery</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/oi</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/12</itheme>
+      <topiccat>imageryBaseMapsEarthCover</topiccat>
+    </entry>
+    <entry>
+      <theme>Geology</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/ge</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/13</itheme>
+      <topiccat>geoscientificInformation</topiccat>
+    </entry>
+    <entry>
+      <theme>Statistical units</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/su</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/14</itheme>
+      <topiccat>boundaries</topiccat>
+    </entry>
+    <entry>
+      <theme>Buildings</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/bu</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/15</itheme>
+      <topiccat>structure</topiccat>
+    </entry>
+    <entry>
+      <theme>Soil</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/so</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/16</itheme>
+      <topiccat>geoscientificInformation</topiccat>
+    </entry>
+    <entry>
+      <theme>Land use</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/lu</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/17</itheme>
+      <topiccat>planningCadastre</topiccat>
+    </entry>
+    <entry>
+      <theme>Human health and safety</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/hh</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/18</itheme>
+      <topiccat>health</topiccat>
+    </entry>
+    <entry>
+      <theme>Utility and governmental services</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/us</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/19</itheme>
+      <topiccat>utilitiesCommunication</topiccat>
+    </entry>
+    <entry>
+      <theme>Environmental monitoring facilities</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/ef</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/20</itheme>
+      <topiccat>structure</topiccat>
+    </entry>
+    <entry>
+      <theme>Production and industrial facilities</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/pf</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/21</itheme>
+      <topiccat>structure</topiccat>
+    </entry>
+    <entry>
+      <theme>Agricultural and aquaculture facilities</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/af</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/22</itheme>
+      <topiccat>farming</topiccat>
+    </entry>
+    <entry>
+      <theme>Population distribution — demography</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/pd</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/23</itheme>
+      <topiccat>society</topiccat>
+    </entry>
+    <entry>
+      <theme>Area management/restriction/regulation zones and reporting units</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/am</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/24</itheme>
+      <topiccat>planningCadastre</topiccat>
+    </entry>
+    <entry>
+      <theme>Natural risk zones</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/nz</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/25</itheme>
+      <topiccat>geoscientificInformation</topiccat>
+    </entry>
+    <entry>
+      <theme>Atmospheric conditions</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/ac</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/26</itheme>
+      <topiccat>climatologyMeteorologyAtmosphere</topiccat>
+    </entry>
+    <entry>
+      <theme>Meteorological geographical features</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/mf</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/27</itheme>
+      <topiccat>climatologyMeteorologyAtmosphere</topiccat>
+    </entry>
+    <entry>
+      <theme>Oceanographic geographical features</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/of</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/28</itheme>
+      <topiccat>oceans</topiccat>
+    </entry>
+    <entry>
+      <theme>Sea regions</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/sr</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/29</itheme>
+      <topiccat>oceans</topiccat>
+    </entry>
+    <entry>
+      <theme>Bio-geographical regions</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/br</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/30</itheme>
+      <topiccat>biota</topiccat>
+    </entry>
+    <entry>
+      <theme>Habitats and biotopes</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/hb</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/31</itheme>
+      <topiccat>biota</topiccat>
+    </entry>
+    <entry>
+      <theme>Species distribution</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/sd</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/32</itheme>
+      <topiccat>biota</topiccat>
+    </entry>
+    <entry>
+      <theme>Energy resources</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/er</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/33</itheme>
+      <topiccat>economy</topiccat>
+    </entry>
+    <entry>
+      <theme>Mineral resources</theme>
+      <newitheme>http://inspire.ec.europa.eu/theme/mr</newitheme>
+      <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/34</itheme>
+      <topiccat>economy</topiccat>
+    </entry>
+  </xsl:variable>
+
   <xsl:variable name="hasSpatialScope"
                 select="count(/che:CHE_MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:thesaurusName/*/gmd:title/*/text() = 'Spatial scope']) > 0"/>
-
-  <xsl:param name="thesauriDir"
-             select="'/data/dev/gn/mongeosource/web/src/main/webapp/WEB-INF/data/config/codelist'"/>
-
-  <xsl:variable name="inspire-themes"
-                select="document(concat('file:///', $thesauriDir, '/external/thesauri/theme/httpinspireeceuropaeutheme-theme.rdf'))//skos:Concept"/>
 
   <xsl:variable name="hasQualitySection"
                 select="count(/che:CHE_MD_Metadata/gmd:dataQualityInfo) > 0"/>
@@ -86,8 +274,9 @@
       <xsl:if test="not(gmd:hierarchyLevel)">
         <xsl:message select="concat('INSPIRE|', $uuid, '|Metadata|Add hierarchy level.')"/>
         <gmd:hierarchyLevel>
-          <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
-                            codeListValue="{if ($isService) then 'service' else 'dataset'}"/>
+          <gmd:MD_ScopeCode
+            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+            codeListValue="{if ($isService) then 'service' else 'dataset'}"/>
         </gmd:hierarchyLevel>
       </xsl:if>
 
@@ -187,6 +376,26 @@
       <xsl:apply-templates select="gmd:resourceFormat"/>
       <xsl:apply-templates select="gmd:descriptiveKeywords"/>
 
+
+      <xsl:variable name="hasInspireKeywords"
+                    select="count(gmd:descriptiveKeywords[
+                              contains(@xlink:href,
+                              'thesaurus=external.theme.httpinspireeceuropaeutheme-theme')]) > 0"/>
+
+      <xsl:if test="not($hasInspireKeywords)">
+        <xsl:message
+          select="concat('INSPIRE|', $uuid, '|Identification|Add INSPIRE themes based on topic category.')"/>
+
+        <xsl:variable name="topics"
+                      select="gmd:topicCategory/*/text()"/>
+        <xsl:variable name="listOfId"
+                      select="string-join($ithemeTopiccatMap//entry[topiccat = $topics]/newitheme/encode-for-uri(.), ',')"/>
+
+        <gmd:descriptiveKeywords
+          xlink:href="local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=external.theme.httpinspireeceuropaeutheme-theme&amp;id={$listOfId}&amp;lang={$threeLettersLanguageCodeList}"/>
+
+      </xsl:if>
+
       <xsl:variable name="hasClassificationOfService"
                     select="count(gmd:descriptiveKeywords[contains(@xlink:href, 'httpinspireeceuropaeumetadatacodelistSpatialDataServiceCategory')]) > 0"/>
       <xsl:if test="$isService and not($hasClassificationOfService)">
@@ -194,7 +403,7 @@
                       select="srv:serviceType/gco:LocalName"/>
         <!-- TODO: Can't add keyword with XLink and Anchor -->
         <xsl:message
-          select="concat('INSPIRE|', $uuid, '|Service: Add missing service classification based on service type ', $serviceType, '.')"/>
+          select="concat('INSPIRE|', $uuid, '|Service| Add missing service classification based on service type ', $serviceType, '.')"/>
 
         <xsl:variable name="serviceTypeMapping" as="node()*">
           <entry key="download"
@@ -226,13 +435,16 @@
       <xsl:if test="not($hasSpatialScope)">
         <xsl:choose>
           <xsl:when test="$basicGeodataIDType = 'federal'">
-            <gmd:descriptiveKeywords xlink:href="local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope&amp;id=http%3A%2F%2Finspire.ec.europa.eu%2Fmetadata-codelist%2FSpatialScope%2Fnational&amp;lang={$threeLettersLanguageCodeList}"/>
+            <gmd:descriptiveKeywords
+              xlink:href="local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope&amp;id=http%3A%2F%2Finspire.ec.europa.eu%2Fmetadata-codelist%2FSpatialScope%2Fnational&amp;lang={$threeLettersLanguageCodeList}"/>
           </xsl:when>
           <xsl:when test="$basicGeodataIDType = 'cantonal'">
-            <gmd:descriptiveKeywords xlink:href="local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope&amp;id=http%3A%2F%2Finspire.ec.europa.eu%2Fmetadata-codelist%2FSpatialScope%2Fregional&amp;lang={$threeLettersLanguageCodeList}"/>
+            <gmd:descriptiveKeywords
+              xlink:href="local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope&amp;id=http%3A%2F%2Finspire.ec.europa.eu%2Fmetadata-codelist%2FSpatialScope%2Fregional&amp;lang={$threeLettersLanguageCodeList}"/>
           </xsl:when>
           <xsl:when test="$basicGeodataIDType = 'communal'">
-            <gmd:descriptiveKeywords xlink:href="local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope&amp;id=http%3A%2F%2Finspire.ec.europa.eu%2Fmetadata-codelist%2FSpatialScope%2Flocal&amp;lang={$threeLettersLanguageCodeList}"/>
+            <gmd:descriptiveKeywords
+              xlink:href="local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope&amp;id=http%3A%2F%2Finspire.ec.europa.eu%2Fmetadata-codelist%2FSpatialScope%2Flocal&amp;lang={$threeLettersLanguageCodeList}"/>
           </xsl:when>
         </xsl:choose>
       </xsl:if>
@@ -248,23 +460,31 @@
         <gmd:resourceConstraints>
           <gmd:MD_LegalConstraints>
             <gmd:accessConstraints>
-              <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
-                                      codeListValue="otherRestrictions"/>
+              <gmd:MD_RestrictionCode
+                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                codeListValue="otherRestrictions"/>
             </gmd:accessConstraints>
             <gmd:otherConstraints xsi:type="gmd:PT_FreeText_PropertyType">
-              <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations">No limitations to public access</gmx:Anchor>
+              <gmx:Anchor
+                xlink:href="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations">No
+                limitations to public access
+              </gmx:Anchor>
               <gmd:PT_FreeText>
                 <gmd:textGroup>
-                  <gmd:LocalisedCharacterString locale="#DE">No limitations to public access</gmd:LocalisedCharacterString>
+                  <gmd:LocalisedCharacterString locale="#DE">No limitations to public access
+                  </gmd:LocalisedCharacterString>
                 </gmd:textGroup>
                 <gmd:textGroup>
-                  <gmd:LocalisedCharacterString locale="#FR">No limitations to public access</gmd:LocalisedCharacterString>
+                  <gmd:LocalisedCharacterString locale="#FR">No limitations to public access
+                  </gmd:LocalisedCharacterString>
                 </gmd:textGroup>
                 <gmd:textGroup>
-                  <gmd:LocalisedCharacterString locale="#IT">No limitations to public access</gmd:LocalisedCharacterString>
+                  <gmd:LocalisedCharacterString locale="#IT">No limitations to public access
+                  </gmd:LocalisedCharacterString>
                 </gmd:textGroup>
                 <gmd:textGroup>
-                  <gmd:LocalisedCharacterString locale="#EN">No limitations to public access</gmd:LocalisedCharacterString>
+                  <gmd:LocalisedCharacterString locale="#EN">No limitations to public access
+                  </gmd:LocalisedCharacterString>
                 </gmd:textGroup>
               </gmd:PT_FreeText>
             </gmd:otherConstraints>
@@ -278,29 +498,36 @@
         <gmd:resourceConstraints>
           <gmd:MD_LegalConstraints>
             <gmd:useConstraints>
-              <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
-                                      codeListValue="otherRestrictions"/>
+              <gmd:MD_RestrictionCode
+                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                codeListValue="otherRestrictions"/>
             </gmd:useConstraints>
             <gmd:otherConstraints xsi:type="gmd:PT_FreeText_PropertyType">
-              <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/ConditionsApplyingToAccessAndUse/noConditionsApply">No conditions to access and use</gmx:Anchor>
+              <gmx:Anchor
+                xlink:href="http://inspire.ec.europa.eu/metadata-codelist/ConditionsApplyingToAccessAndUse/noConditionsApply">
+                No conditions to access and use
+              </gmx:Anchor>
               <gmd:PT_FreeText>
                 <gmd:textGroup>
-                  <gmd:LocalisedCharacterString locale="#DE">No conditions to access and use</gmd:LocalisedCharacterString>
+                  <gmd:LocalisedCharacterString locale="#DE">No conditions to access and use
+                  </gmd:LocalisedCharacterString>
                 </gmd:textGroup>
                 <gmd:textGroup>
-                  <gmd:LocalisedCharacterString locale="#FR">No conditions to access and use</gmd:LocalisedCharacterString>
+                  <gmd:LocalisedCharacterString locale="#FR">No conditions to access and use
+                  </gmd:LocalisedCharacterString>
                 </gmd:textGroup>
                 <gmd:textGroup>
-                  <gmd:LocalisedCharacterString locale="#IT">No conditions to access and use</gmd:LocalisedCharacterString>
+                  <gmd:LocalisedCharacterString locale="#IT">No conditions to access and use
+                  </gmd:LocalisedCharacterString>
                 </gmd:textGroup>
                 <gmd:textGroup>
-                  <gmd:LocalisedCharacterString locale="#EN">No conditions to access and use</gmd:LocalisedCharacterString>
+                  <gmd:LocalisedCharacterString locale="#EN">No conditions to access and use
+                  </gmd:LocalisedCharacterString>
                 </gmd:textGroup>
               </gmd:PT_FreeText>
             </gmd:otherConstraints>
           </gmd:MD_LegalConstraints>
         </gmd:resourceConstraints>
-
       </xsl:if>
 
       <xsl:apply-templates select="gmd:aggregationInfo"/>
@@ -333,10 +560,30 @@
     </xsl:copy>
   </xsl:template>
 
+
+  <xsl:template match="gmd:distributionInfo/*[not(gmd:distributionFormat)]">
+    <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      <xsl:apply-templates select="gmd:distributionFormat"/>
+      <xsl:for-each select="gmd:distributor//gmd:distributorFormat">
+        <xsl:message
+          select="concat('INSPIRE|', $uuid, '|Distribution|Move distribution format from distributor to distributionInfo.')"/>
+        <gmd:distributionFormat>
+          <xsl:copy-of select="@*"/>
+        </gmd:distributionFormat>
+      </xsl:for-each>
+      <xsl:apply-templates select="gmd:distributor"/>
+      <xsl:apply-templates select="gmd:transferOptions"/>
+    </xsl:copy>
+  </xsl:template>
+  <xsl:template match="gmd:distributionInfo/*/gmd:distributor/*/gmd:distributorFormat"/>
+
+
   <xsl:template match="gmd:resourceConstraints[string-join((.//*|//@*), '') = '']">
     <xsl:message
-      select="concat('AAAINSPIRE|', $uuid, '|Identification|Removing empty resource constraints.')"/>
+      select="concat('INSPIRE|', $uuid, '|Identification|Removing empty resource constraints.')"/>
   </xsl:template>
+
 
   <xsl:template match="gmd:identificationInfo/*/gmd:citation/*[
                                 not(gmd:identifier)
@@ -358,7 +605,7 @@
                 <xsl:when test="$basicgeodataId != ''">
                   <xsl:message
                     select="concat('INSPIRE|', $uuid, '|Identification|Resource identifier: copy basic geodata id ', $basicgeodataId , ' as identifier.')"/>
-                  <xsl:value-of select="$basicgeodataId"/>
+                  <xsl:value-of select="concat('basicGeodataID:', $basicgeodataId)"/>
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:message
