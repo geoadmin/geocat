@@ -242,9 +242,9 @@
       <!-- Resource / Access constraint / Limitation on public access AND condition to access and use TODO -->
       <xsl:apply-templates select="gmd:resourceConstraints"/>
 
-      <xsl:if test="not($isService) and not(gmd:resourceConstraints)">
+      <xsl:if test="not(gmd:resourceConstraints[*/gmd:accessConstraints])">
         <xsl:message
-          select="concat('INSPIRE|', $uuid, '|Identification|Adding default resource constraints.')"/>
+          select="concat('INSPIRE|', $uuid, '|Identification|Adding default access resource constraints.')"/>
         <gmd:resourceConstraints>
           <gmd:MD_LegalConstraints>
             <gmd:accessConstraints>
@@ -270,6 +270,11 @@
             </gmd:otherConstraints>
           </gmd:MD_LegalConstraints>
         </gmd:resourceConstraints>
+      </xsl:if>
+
+      <xsl:if test="not(gmd:resourceConstraints[*/gmd:useConstraints])">
+        <xsl:message
+          select="concat('INSPIRE|', $uuid, '|Identification|Adding default use access resource constraints.')"/>
         <gmd:resourceConstraints>
           <gmd:MD_LegalConstraints>
             <gmd:useConstraints>
@@ -532,15 +537,15 @@
   </xsl:template>
 
   <xsl:template match="srv:serviceType/gco:LocalName[. = 'OGC:CSW']">
-    <xsl:message select="concat('INSPIRE|', $uuid, '|Service| Replace OGC:CSW by discovery.')"/>
+    <xsl:message select="concat('INSPIRE|', $uuid, '|Service|Replace OGC:CSW by discovery.')"/>
     <gco:LocalName>discovery</gco:LocalName>
   </xsl:template>
   <xsl:template match="srv:serviceType/gco:LocalName[. = 'OGC:WFS']">
-    <xsl:message select="concat('INSPIRE|', $uuid, '|Service| Replace OGC:WFS by download.')"/>
+    <xsl:message select="concat('INSPIRE|', $uuid, '|Service|Replace OGC:WFS by download.')"/>
     <gco:LocalName>download</gco:LocalName>
   </xsl:template>
   <xsl:template match="srv:serviceType/gco:LocalName[. = ('OGC:WMS', 'OGC:WMTS', 'OGC:WMTS (Web Map Tile Service)')]">
-    <xsl:message select="concat('INSPIRE|', $uuid, '|Service: Replace OGC:WMT?S by view.')"/>
+    <xsl:message select="concat('INSPIRE|', $uuid, '|Service|Replace OGC:WMT?S by view.')"/>
     <gco:LocalName>view</gco:LocalName>
   </xsl:template>
 
