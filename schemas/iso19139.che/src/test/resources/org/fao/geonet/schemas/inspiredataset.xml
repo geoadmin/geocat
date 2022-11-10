@@ -729,7 +729,7 @@
           </gmd:thesaurusName>
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
-      <gmd:descriptiveKeywords xlink:href="local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=external.theme.inspire-theme&amp;id=http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F25&amp;lang=fre,ger,ita,eng,roh">
+      <gmd:descriptiveKeywords xlink:href="local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=external.theme.httpinspireeceuropaeutheme-theme&amp;id=http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F25&amp;lang=fre,ger,ita,eng,roh">
         <gmd:MD_Keywords>
           <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>Zones à risque naturel</gco:CharacterString>

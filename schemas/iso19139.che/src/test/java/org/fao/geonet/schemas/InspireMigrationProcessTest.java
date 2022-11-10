@@ -202,6 +202,8 @@ public class InspireMigrationProcessTest {
                 "count(//gmd:resourceConstraints[.//*/@codeListValue='restricted'])",
                 equalTo("1")).withNamespaceContext(ALL_NS)
         );
+
+
     }
 
 
@@ -222,7 +224,7 @@ public class InspireMigrationProcessTest {
         assertThat(
             outputString, hasXPath(
                 "//gmd:identificationInfo/*/gmd:citation/*/gmd:identifier/*/gmd:code/*/text()",
-                equalTo("166.1")).withNamespaceContext(ALL_NS)
+                equalTo("basicGeodataID:166.1")).withNamespaceContext(ALL_NS)
         );
 
 
@@ -245,6 +247,14 @@ public class InspireMigrationProcessTest {
             outputString, hasXPath(
                 "count(//gmd:resourceConstraints)",
                 equalTo("2")).withNamespaceContext(ALL_NS)
+        );
+
+
+        // Dataset / No INSPIRE theme
+        assertThat(
+            outputString, hasXPath(
+                "//gmd:descriptiveKeywords[contains(@xlink:href, 'httpinspireeceuropaeutheme')]/@xlink:href",
+                equalTo("local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&thesaurus=external.theme.httpinspireeceuropaeutheme-theme&id=http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fge,http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fso,http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fnz&lang=fre")).withNamespaceContext(ALL_NS)
         );
     }
 
@@ -278,7 +288,7 @@ public class InspireMigrationProcessTest {
         assertThat(
             outputString, hasXPath(
                 "//gmd:descriptiveKeywords[contains(@xlink:href, 'httpinspireeceuropaeumetadatacodelistSpatialDataServiceCategory')]/@xlink:href",
-                equalTo("local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&thesaurus=external.theme.httpinspireeceuropaeumetadatacodelistSpatialDataServiceCategory-SpatialDataServiceCategory&id=http%3A%2F%2Finspire.ec.europa.eu%2Fmetadata-codelist%2FSpatialDataServiceCategory%2FinfoProductAccessService&lang=ger,fre,eng,ita")).withNamespaceContext(ALL_NS)
+                equalTo("local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&thesaurus=external.theme.httpinspireeceuropaeumetadatacodelistSpatialDataServiceCategory-SpatialDataServiceCategory&id=http%3A%2F%2Finspire.ec.europa.eu%2Fmetadata-codelist%2FSpatialDataServiceCategory%2FinfoProductAccessService&lang=ger,fre,eng,ita&transformation=to-iso19139-keyword-with-anchor")).withNamespaceContext(ALL_NS)
         );
     }
 }

@@ -423,7 +423,7 @@
         </xsl:variable>
 
         <gmd:descriptiveKeywords
-          xlink:href="local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=external.theme.httpinspireeceuropaeumetadatacodelistSpatialDataServiceCategory-SpatialDataServiceCategory&amp;id={$serviceTypeMapping[@key = $serviceType]/@value}&amp;lang={$threeLettersLanguageCodeList}"/>
+          xlink:href="local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=external.theme.httpinspireeceuropaeumetadatacodelistSpatialDataServiceCategory-SpatialDataServiceCategory&amp;id={$serviceTypeMapping[@key = $serviceType]/@value}&amp;lang={$threeLettersLanguageCodeList}&amp;transformation=to-iso19139-keyword-with-anchor"/>
       </xsl:if>
 
 
@@ -766,7 +766,7 @@
             <gmd:level>
               <gmd:MD_ScopeCode
                 codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
-                codeListValue="dataset"/>
+                codeListValue="{if ($isService) then 'service' else 'dataset'}"/>
             </gmd:level>
           </gmd:DQ_Scope>
         </gmd:scope>
@@ -775,7 +775,6 @@
           <gmd:LI_Lineage>
             <gmd:statement xsi:type="gmd:PT_FreeText_PropertyType">
               <gco:CharacterString>-</gco:CharacterString>
-              <!-- TODO: Multilingual content -->
             </gmd:statement>
           </gmd:LI_Lineage>
         </gmd:lineage>

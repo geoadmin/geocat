@@ -13,6 +13,9 @@
   <gmd:fileIdentifier>
     <gco:CharacterString>norid-02a0e24c-4269-48a4-9501-564d66be075c</gco:CharacterString>
   </gmd:fileIdentifier>
+  <gmd:language>
+    <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre"/>
+  </gmd:language>
   <gmd:identificationInfo>
     <che:CHE_MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
       <gmd:citation>
@@ -52,6 +55,12 @@
           </gmd:date>
         </gmd:CI_Citation>
       </gmd:citation>
+      <gmd:topicCategory>
+        <gmd:MD_TopicCategoryCode>geoscientificInformation</gmd:MD_TopicCategoryCode>
+      </gmd:topicCategory>
+      <gmd:topicCategory>
+        <gmd:MD_TopicCategoryCode>geoscientificInformation_NaturalHazards</gmd:MD_TopicCategoryCode>
+      </gmd:topicCategory>
       <che:basicGeodataID>
         <gco:CharacterString>166.1</gco:CharacterString>
       </che:basicGeodataID>
