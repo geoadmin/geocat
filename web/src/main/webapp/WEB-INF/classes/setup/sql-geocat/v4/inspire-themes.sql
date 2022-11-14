@@ -126,7 +126,7 @@ SET data = replace(data, 'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%
 WHERE data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F1%';
 
 UPDATE metadata
-SET data = replace(data, 'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F1',
+SET data = replace(data, 'http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F2',
                    'http%3A%2F%2Finspire.ec.europa.eu%2Ftheme%2Fgg')
 WHERE data LIKE '%http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F2%';
 
