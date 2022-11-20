@@ -38,7 +38,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @ContextConfiguration(inheritLocations = true,
     locations = {"classpath:services-repository-test-context.xml", "classpath:services-web-test-context.xml"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@TestPropertySource("classpath:config.properties")
+@TestPropertySource("classpath:WEB-INF/config.properties")
 public abstract class AbstractServiceIntegrationTest extends AbstractCoreIntegrationTest {
     public static final String API_JSON_EXPECTED_ENCODING = "application/json";
     public static final String API_XML_EXPECTED_ENCODING = "application/xml";
