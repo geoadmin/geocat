@@ -62,6 +62,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -557,6 +560,13 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         createServiceContext();
         User user = new User().setId(TEST_OWNER);
         HttpSession session = loginAs(user);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
+            user, null, Collections.singletonList(new GrantedAuthority() {
+            @Override
+            public String getAuthority() {
+                return "Editor";
+            }
+        })));
 
         MockHttpServletRequest request = new MockHttpServletRequest(session.getServletContext());
         request.setRequestURI("/_portal_/api/records");
