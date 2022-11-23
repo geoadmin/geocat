@@ -94,6 +94,7 @@
           <clusterName>test</clusterName>
           <transportPort>9300</transportPort>
           <httpPort>9200</httpPort>
+          <pathInitScript>${project.basedir}/../es/itest-es-setup.script</pathInitScript>
         </configuration>
         <executions>
           <execution>
