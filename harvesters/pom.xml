@@ -84,7 +84,7 @@
   </dependencies>
   <build>
     <plugins>
-      <!--<plugin>
+      <plugin>
         <groupId>com.github.alexcojocaru</groupId>
         <artifactId>elasticsearch-maven-plugin</artifactId>
         <version>6.0</version>
@@ -111,7 +111,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>-->
+      </plugin>
     </plugins>
   </build>
   <profiles>
