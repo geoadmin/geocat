@@ -8,6 +8,33 @@
 
 @panel-heading-height: 2.8em;
 
+//GEOCAT
+.gcat-header {
+  position: relative;
+  margin: 20px 0px 4px;
+
+  // compensate for logos alignment
+  @media (max-width: @screen-md-max) {
+    margin-left: -50px;
+    margin-right: -60px;
+  }
+  .gcat-logo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0px 16px;
+    & > div {
+      flex-shrink: 1;
+      // max-width: 60%;
+      min-width: 100px;
+      img {
+        max-width: 100%;
+      }
+    }
+  }
+}
+//GEOCAT
+
 .gn-facet {
   @facet-hover: darken(@text-color, 50%);
 
