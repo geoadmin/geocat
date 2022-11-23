@@ -29,6 +29,19 @@
     <constructor-arg name="className" value="org.fao.geonet.kernel.metadata.DefaultStatusActions"/>
   </bean>
 
+  <bean id="roleHierarchy"
+        class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+    <property name="hierarchy">
+      <value>
+        Administrator > UserAdmin
+        UserAdmin > Reviewer
+        Reviewer > Editor
+        Editor > RegisteredUser
+        RegisteredUser > Guest
+      </value>
+    </property>
+  </bean>
+
   <mvc:annotation-driven content-negotiation-manager="cnManager">
     <mvc:message-converters>
       <bean class = "org.springframework.http.converter.StringHttpMessageConverter">
