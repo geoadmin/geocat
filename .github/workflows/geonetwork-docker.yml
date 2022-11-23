@@ -31,6 +31,12 @@ jobs:
     - name: "Update maven dependencies"
       run: mvn -Pdocker de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
 
+    - name: Increase system limits
+      run: sudo sysctl -w vm.max_map_count=262144
+
+    - name: run tests
+      run:  mvn clean verify -Pit
+
     - name: "Installing"
       run: mvn -B clean -DskipTests install -Ddb.username=db_username -Ddb.name=db_name -Ddb.type=postgres-postgis -Ddb.host=db_host -Ddb.password=db_password -Ddb.pool.maxActive=50 -Ddb.port=5432
 
