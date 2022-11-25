@@ -111,7 +111,7 @@ public class GeonetTestFixture {
                                 !entry.toString().contains("resources");
                         }
                     });
-
+                    IO.copyDirectoryOrFile(webappDir.resolve("../../test/resources/records.json"), templateDataDirectory.resolve("config/index"), true);
 
                     Path schemaPluginsDir = templateDataDirectory.resolve("config/schema_plugins");
                     deploySchema(webappDir, schemaPluginsDir);

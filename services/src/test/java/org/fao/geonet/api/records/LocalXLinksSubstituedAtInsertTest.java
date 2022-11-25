@@ -124,7 +124,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     private EsRestClient esRestClient;
 
     @Value("${es.index.records:gn-records}")
-    private String defaultIndex = "records";
+    private String defaultIndex;
 
     private ServiceContext context;
 

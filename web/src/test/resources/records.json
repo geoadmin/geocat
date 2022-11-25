@@ -1,9 +1,9 @@
 {
   "settings": {
     "index": {
-      "max_result_window": ${es.index.max_result_window.limit},
+      "max_result_window": 15000,
       "query.default_field": "any.default",
-      "mapping.total_fields.limit": ${es.index.mapping.total_fields.limit},
+      "mapping.total_fields.limit": 4000,
       "analysis": {
         "analyzer": {
           "trigram": {
@@ -1102,7 +1102,7 @@
             "properties": {
               "default": {
                 "type": "text",
-                "analyzer": "${es.index.analyzer.default}",
+                "analyzer": "standard",
                 "copy_to": [
                   "any.default",
                   "anytext"
@@ -1189,7 +1189,7 @@
               },
               "langroh": {
                 "type": "text",
-                "analyzer": "${es.index.analyzer.default}",
+                "analyzer": "standard",
                 "copy_to": [
                   "any.langroh"
                 ],
@@ -1448,11 +1448,11 @@
         "properties": {
           "default": {
             "type": "text",
-            "analyzer": "${es.index.analyzer.default}"
+            "analyzer": "standard"
           },
           "common": {
             "type": "text",
-            "analyzer": "${es.index.analyzer.default}"
+            "analyzer": "standard"
           },
           "langeng": {
             "type": "text",
@@ -1476,7 +1476,7 @@
           },
           "langroh": {
             "type": "text",
-            "analyzer": "${es.index.analyzer.default}"
+            "analyzer": "standard"
           }
         }
       },
