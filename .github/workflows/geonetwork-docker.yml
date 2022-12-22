@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-    - geocat-4.0.x-for-eks_from_core
+    - geocat-4.2.x
 
 jobs:
   build:
