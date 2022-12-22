@@ -1285,7 +1285,6 @@ public class BaseMetadataManager implements IMetadataManager {
     }
     SearchResponse searcherForReferencingMetadata(ServiceContext context, AbstractMetadata metadata) throws Exception {
         StringBuilder query = new StringBuilder(String.format("xlink:*%s*", metadata.getUuid()));
-        query.append(String.format(" AND (%s:y OR %s:n)", IS_TEMPLATE, IS_TEMPLATE).toString());
         return this.searchManager.query(query.toString(), null, 0, 0);
     }
 
