@@ -43,7 +43,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
-import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -110,8 +109,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     protected UserGroupRepository _userGroupRepo;
     @Autowired
     protected GroupRepository _groupRepo;
-    @Autowired
-    EsSearchManager esSearchManager;
 
     protected static Element createServiceConfigParam(String name, String value) {
         return new Element("param")
@@ -144,7 +141,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     @Before
     public final void setup() throws Exception {
         testFixture.setup(this);
-        esSearchManager.commitInterval = 1;
     }
 
     @After

@@ -174,7 +174,7 @@ public class EsSearchManager implements ISearchManager {
     @Autowired
     public EsRestClient client;
 
-    public int commitInterval = 200;
+    private int commitInterval = 200;
 
     // public for test, to be private or protected
     public Map<String, String> listOfDocumentsToIndex =

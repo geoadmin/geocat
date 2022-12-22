@@ -146,7 +146,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
             false,
             NO,
             false,
-            false);
+            true);
 
         return dbInsertedMetadata;
     }
