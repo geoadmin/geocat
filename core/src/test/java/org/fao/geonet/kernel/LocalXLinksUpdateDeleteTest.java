@@ -57,6 +57,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
     public void setUp() throws Exception {
         this.context = createServiceContext();
         settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
+        resetAndGetMockInvoker();
     }
 
     @Test

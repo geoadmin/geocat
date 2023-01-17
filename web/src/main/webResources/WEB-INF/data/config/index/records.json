@@ -1061,32 +1061,32 @@
             "type": "object",
             "properties": {
               "default": {
-                "type": "text",
+                "type": "keyword",
                 "analyzer": "rebuilt_keyword",
                 "search_analyzer": "rebuilt_keyword"
               },
               "langger": {
-                "type": "text",
+                "type": "keyword",
                 "analyzer": "rebuilt_keyword",
                 "search_analyzer": "rebuilt_keyword"
               },
               "langfre": {
-                "type": "text",
+                "type": "keyword",
                 "analyzer": "rebuilt_keyword",
                 "search_analyzer": "rebuilt_keyword"
               },
               "langeng": {
-                "type": "text",
+                "type": "keyword",
                 "analyzer": "rebuilt_keyword",
                 "search_analyzer": "rebuilt_keyword"
               },
               "langroh": {
-                "type": "text",
+                "type": "keyword",
                 "analyzer": "rebuilt_keyword",
                 "search_analyzer": "rebuilt_keyword"
               },
               "langita": {
-                "type": "text",
+                "type": "keyword",
                 "analyzer": "rebuilt_keyword",
                 "search_analyzer": "rebuilt_keyword"
               }
