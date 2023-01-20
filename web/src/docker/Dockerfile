@@ -4,7 +4,7 @@ ADD ./server.xml /usr/local/tomcat/conf/
 
 # Install aws cli tool for S3 sync of MD
 RUN apt update && \
-    apt install -y python-pip augeas-tools augeas-lenses && \
+    apt install -y python3-pip augeas-tools augeas-lenses && \
     pip install awscli && \
     rm -rf /var/lib/apt/lists/*
 
