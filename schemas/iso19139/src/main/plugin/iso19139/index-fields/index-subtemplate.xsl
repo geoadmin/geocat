@@ -95,9 +95,10 @@
 
     <any type="object">{"common": "<xsl:value-of
       select="gn-fn-index:json-escape(normalize-space(.))"/>"}</any>
-    
+
     <xsl:copy-of select="gn-fn-index:add-multilingual-field('contactIndividualName', gmd:individualName, $allLanguages)"/>
     <xsl:copy-of select="gn-fn-index:add-multilingual-field('contactOrg', gmd:organisationName, $allLanguages)"/>
+    <xsl:copy-of select="gn-fn-index:add-multilingual-field('contactOrgAna', gmd:organisationName, $allLanguages)"/>
     <xsl:copy-of select="gn-fn-index:add-multilingual-field('contactEmail', gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress, $allLanguages)"/>
     <xsl:call-template name="subtemplate-common-fields"/>
   </xsl:template>

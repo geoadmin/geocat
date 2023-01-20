@@ -61,7 +61,7 @@ public class ContactReplacer extends AbstractReplacer {
 
         query.append(" +root:\"gmd:CI_ResponsibleParty\"");
         query.append(String.format(" +contactIndividualNameObject.\\*:\"%s\"", individualName));
-        query.append(String.format(" +contactOrgObject.\\*:\"%s\"", organisationName));
+        query.append(String.format(" +contactOrgAnaObject.\\*:\"%s\"", organisationName));
         query.append(String.format(" +contactEmailObject.\\*:\"%s\"", email));
         return 4;
     }

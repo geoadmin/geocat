@@ -290,7 +290,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void metaDataInFrenchButKindOfGermanTranslationAvailable() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage(
-                "||contact-found no match for query: +isTemplate:s +valid:1 +root:\"gmd:CI_ResponsibleParty\" +contactIndividualNameObject.\\*:\"\" +contactOrgObject.\\*:\"csc\" +contactEmailObject.\\*:");
+                "||contact-found no match for query: +isTemplate:s +valid:1 +root:\"gmd:CI_ResponsibleParty\" +contactIndividualNameObject.\\*:\"\" +contactOrgAnaObject.\\*:\"csc\" +contactEmailObject.\\*:");
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
         AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
@@ -324,7 +324,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage(
                 "||format-found no match for query: +isTemplate:s +valid:1 +formatName:\"ShapeFile\" +formatVersion:\"Grass Version 6.1\" +root:\"gmd:MD_Format\"" +
-                "||contact-found no match for query: +isTemplate:s +valid:1 +root:\"gmd:CI_ResponsibleParty\" +contactIndividualNameObject.\\*:\"babar\" +contactOrgObject.\\*:\"csc\" +contactEmailObject.\\*:\"info@csc.org\"");
+                "||contact-found no match for query: +isTemplate:s +valid:1 +root:\"gmd:CI_ResponsibleParty\" +contactIndividualNameObject.\\*:\"babar\" +contactOrgAnaObject.\\*:\"csc\" +contactEmailObject.\\*:\"info@csc.org\"");
         AbstractMetadata decoyExtentInsertedAsMetadata  = insertSubtemplate(EXTENT_RESOURCE,
                 element -> Xml.selectElement(element,
                                 "gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal")
@@ -353,7 +353,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void insertMetadataCantReplaceContactNoMatch() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage(
-                        "||contact-found no match for query: +isTemplate:s +valid:1 +root:\"gmd:CI_ResponsibleParty\" +contactIndividualNameObject.\\*:\"babar\" +contactOrgObject.\\*:\"csc\" +contactEmailObject.\\*:\"info@csc.org\"");
+                        "||contact-found no match for query: +isTemplate:s +valid:1 +root:\"gmd:CI_ResponsibleParty\" +contactIndividualNameObject.\\*:\"babar\" +contactOrgAnaObject.\\*:\"csc\" +contactEmailObject.\\*:\"info@csc.org\"");
         AbstractMetadata contact = insertSubtemplate(CONTACT_RESOURCE,
                 element -> {Xml.selectElement(element,
                         "gmd:individualName/gco:CharacterString")
@@ -461,7 +461,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     public void contactOrgWithSpacesNoMatch() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage(
-                "||contact-found no match for query: +isTemplate:s +valid:1 +root:\"gmd:CI_ResponsibleParty\" +contactIndividualNameObject.\\*:\"babar\" +contactOrgObject.\\*:\"générale d'électricité\" +contactEmailObject.\\*:\"info@csc.org\"");
+                "||contact-found no match for query: +isTemplate:s +valid:1 +root:\"gmd:CI_ResponsibleParty\" +contactIndividualNameObject.\\*:\"babar\" +contactOrgAnaObject.\\*:\"générale d'électricité\" +contactEmailObject.\\*:\"info@csc.org\"");
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
         insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,

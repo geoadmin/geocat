@@ -1055,40 +1055,68 @@
         }
       },
       {
+        "orgAna": {
+          "match": "*OrgAna*",
+          "mapping": {
+          "type": "object",
+          "properties": {
+            "default": {
+              "type": "text",
+              "analyzer": "rebuilt_keyword",
+              "search_analyzer": "rebuilt_keyword"
+            },
+            "langger": {
+              "type": "text",
+              "analyzer": "rebuilt_keyword",
+              "search_analyzer": "rebuilt_keyword"
+            },
+            "langfre": {
+              "type": "text",
+              "analyzer": "rebuilt_keyword",
+              "search_analyzer": "rebuilt_keyword"
+            },
+            "langeng": {
+              "type": "text",
+              "analyzer": "rebuilt_keyword",
+              "search_analyzer": "rebuilt_keyword"
+            },
+            "langroh": {
+              "type": "text",
+              "analyzer": "rebuilt_keyword",
+              "search_analyzer": "rebuilt_keyword"
+            },
+            "langita": {
+              "type": "text",
+              "analyzer": "rebuilt_keyword",
+              "search_analyzer": "rebuilt_keyword"
+            }
+          }
+        }
+        }
+      },
+      {
         "org": {
           "match": "*Org*",
           "mapping": {
             "type": "object",
             "properties": {
               "default": {
-                "type": "keyword",
-                "analyzer": "rebuilt_keyword",
-                "search_analyzer": "rebuilt_keyword"
+                "type": "keyword"
               },
               "langger": {
-                "type": "keyword",
-                "analyzer": "rebuilt_keyword",
-                "search_analyzer": "rebuilt_keyword"
+                "type": "keyword"
               },
               "langfre": {
-                "type": "keyword",
-                "analyzer": "rebuilt_keyword",
-                "search_analyzer": "rebuilt_keyword"
+                "type": "keyword"
               },
               "langeng": {
-                "type": "keyword",
-                "analyzer": "rebuilt_keyword",
-                "search_analyzer": "rebuilt_keyword"
+                "type": "keyword"
               },
               "langroh": {
-                "type": "keyword",
-                "analyzer": "rebuilt_keyword",
-                "search_analyzer": "rebuilt_keyword"
+                "type": "keyword"
               },
               "langita": {
-                "type": "keyword",
-                "analyzer": "rebuilt_keyword",
-                "search_analyzer": "rebuilt_keyword"
+                "type": "keyword"
               }
             }
           }
