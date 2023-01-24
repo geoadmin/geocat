@@ -758,7 +758,7 @@ goog.require('gn_alert');
 
           // Add some fuzziness when search on directory entries
           // but boost exact match.
-          'queryBase': 'any.${searchLang}:(${any}) OR any.default:(${any}) OR resourceTitleObject.${searchLang}:"${any}"^10 OR resourceTitleObject.${searchLang}:(${any}~2 OR resourceTitleObject.${searchLang}:(${any}*))'
+          'queryBase': 'any.${searchLang}:(${any}) OR any.default:(${any}) OR resourceTitleObject.${searchLang}:"${any}"^10 OR resourceTitleObject.${searchLang}:(${any}~2) OR resourceTitleObject.${searchLang}:(${any}*)'
         },
         'admin': {
           'enabled': true,
