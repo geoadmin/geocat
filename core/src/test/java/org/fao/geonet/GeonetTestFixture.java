@@ -112,6 +112,7 @@ public class GeonetTestFixture {
                         }
                     });
 
+
                     Path schemaPluginsDir = templateDataDirectory.resolve("config/schema_plugins");
                     deploySchema(webappDir, schemaPluginsDir);
 
