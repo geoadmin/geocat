@@ -68,7 +68,7 @@ public class MailSender extends Thread {
             _mail.setSslSmtpPort(port + "");
         }
 
-        _mail.addTo(to, username);
+        _mail.addTo(to, to);
         _mail.setSubject(subject);
         if ((message == null) || (message.length() == 0)) {
             throw new EmailException("Invalid message supplied");
