@@ -30,7 +30,7 @@
   <mdContactInfo>Metadata contact</mdContactInfo>
   <refDate>Reference date</refDate>
   <temporalRef>Temporal information</temporalRef>
-  <constraintInfo>Access constraint information</constraintInfo>
+  <constraintInfo>legal constraints</constraintInfo>
   <xml_iso19139>Save this metadata as an ISO19139 XML file</xml_iso19139>
   <xml_iso19139Tooai_dc>Save this metadata as an OAI Dublin Core XML file</xml_iso19139Tooai_dc>
 
