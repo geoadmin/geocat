@@ -250,7 +250,7 @@
   "IndexReadOnlyHealthCheck": "Index is in readonly mode",
   "summary": "Summary",
   "metadataRecords": "Metadata records",
-  "accessAndUseConstraints": "Access and use constraints",
+  "accessAndUseConstraints": "Vincoli legali",
   "results": "Risultati",
   "format-zip": "Codice postale",
   "facet-geometry": "Spatial filter",

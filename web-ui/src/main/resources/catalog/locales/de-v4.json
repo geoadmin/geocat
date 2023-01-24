@@ -250,7 +250,7 @@
   "IndexReadOnlyHealthCheck": "Der Index befindet sich im schreibgeschützten Modus",
   "summary": "Zusammenfassung",
   "metadataRecords": "Metadata records",
-  "accessAndUseConstraints": "Access and use constraints",
+  "accessAndUseConstraints": "rechtliche Einschränkungen",
   "results": "Resultate",
   "format-zip": "ZIP",
   "facet-geometry": "Spatial filter",
