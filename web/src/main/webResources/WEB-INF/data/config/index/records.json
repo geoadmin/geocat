@@ -1190,14 +1190,6 @@
         }
       },
       {
-        "org": {
-          "match": "*Org*",
-          "mapping": {
-            "type": "keyword"
-          }
-        }
-      },
-      {
         "tree": {
           "match": "th_*_tree",
           "mapping": {
@@ -1292,6 +1284,9 @@
             "properties": {
               "org": {
                 "type": "keyword"
+              },
+              "organisation": {
+              "type": "object"
               },
               "role": {
                 "type": "keyword"
