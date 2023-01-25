@@ -9,6 +9,8 @@
   "indexSelectedRecordConfirm": "Do you really want to index the {{selectedCount}} selected record(s) ?",
   "index": "Index",
   "geodataType": "Geodaten",
+  "facet-cl_geodataType": "Geodaten",
+  "facet-resolutionDistance": "Resolution",
   "basicGeodata": "Geobasisdaten",
   "oereb": "OEREB",
   "oerebRegister": "OEREB Register",
