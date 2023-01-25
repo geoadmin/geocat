@@ -9,6 +9,8 @@
   "indexSelectedRecordConfirm": "Confermare l’indicizzazione del/i [[selectedCount]] record selezionato/i",
   "index": "Indice",
   "geodataType": "Geodati",
+  "facet-cl_geodataType": "Geodati",
+  "facet-resolutionDistance": "Resolution",
   "basicGeodata": "Geodati di base11.\tGeodati di base",
   "oereb": "CRDPP",
   "oerebRegister": "Registro CRDPP",
