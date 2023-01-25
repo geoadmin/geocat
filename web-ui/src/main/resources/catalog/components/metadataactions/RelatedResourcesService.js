@@ -438,7 +438,7 @@
                 + (angular.isDefined(resource.serviceType) ? resource.serviceType : ''))
               : '';
 
-            // Case for links$
+            // Case for links
             // GEOCAT
             if (resource.locUrl && resource.locUrl.indexOf('shop') !== -1) {
               return 'CH:GEOSHOP';
