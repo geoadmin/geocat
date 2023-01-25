@@ -14,7 +14,6 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,7 +32,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 
-@Ignore
 public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMockedSingletons {
 
     private static final int TEST_OWNER = 42;
@@ -59,6 +57,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
     public void setUp() throws Exception {
         this.context = createServiceContext();
         settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
+        resetAndGetMockInvoker();
     }
 
     @Test
@@ -148,7 +147,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
             false,
             NO,
             false,
-            false);
+            true);
 
         return dbInsertedMetadata;
     }
