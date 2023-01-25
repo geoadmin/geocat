@@ -347,18 +347,48 @@
               "cl_hierarchyLevel.key": {
                 terms: {
                   field: "cl_hierarchyLevel.key",
-                  exclude: "+.*"
-                },
-                aggs: {
-                  format: {
-                    terms: {
-                      field: "format"
-                    }
-                  }
+                  include: "dataset|service.*|basic.*",
+                  order : { "_key" : "asc" }
+                // },
+                // aggs: {
+                //   format: {
+                //     terms: {
+                //       field: "format"
+                //     }
+                //   }
                 }
               },
 
-
+              "cl_geodataType.key": {
+                terms: {
+                  field:  cl_geodataType.key
+                }
+              },
+              "cl_topic.key": {
+                terms: {
+                  field: "cl_topic.key",
+                  "order" : { "_key" : "asc" }
+                }
+              },
+              "tag.default": {
+                terms: {
+                  field: "tag.default",
+                  include: ".*",
+                  size: 10
+                },
+                meta: {
+                  caseInsensitiveInclude: true,
+                  collapsed: true
+                }
+              },
+              format: {
+                terms: {
+                  field: "format"
+                },
+                meta: {
+                  collapsed: true
+                }
+              },
               // Use .default for not multilingual catalogue with one language only UI.
               // 'cl_spatialRepresentationType.default': {
               //   'terms': {
@@ -368,12 +398,15 @@
               // },
               // Use .key for codelist for multilingual catalogue.
               // The codelist translation needs to be loaded in the client app. See GnSearchModule.js
-              "cl_spatialRepresentationType.key": {
-                terms: {
-                  field: "cl_spatialRepresentationType.key",
-                  size: 10
-                }
-              },
+              // "cl_spatialRepresentationType.key": {
+              //   terms: {
+              //     field: "cl_spatialRepresentationType.key",
+              //     size: 10
+              //   },
+              //   meta: {
+              //     collapsed: true
+              //   }
+              // },
               // 02/23, geocat going to 4.2.3
               // format: {
               //   terms: {
@@ -383,44 +416,44 @@
               //     collapsed: true
               //   }
               // },
-              availableInServices: {
-                filters: {
-                  //"other_bucket_key": "others",
-                  // But does not support to click on it
-                  filters: {
-                    availableInViewService: {
-                      query_string: {
-                        query: "+linkProtocol:/OGC:WMS.*/"
-                      }
-                    },
-                    availableInDownloadService: {
-                      query_string: {
-                        query: "+linkProtocol:/OGC:WFS.*/"
-                      }
-                    }
-                  }
-                },
-                meta: {
-                  decorator: {
-                    type: "icon",
-                    prefix: "fa fa-fw ",
-                    map: {
-                      availableInViewService: "fa-globe",
-                      availableInDownloadService: "fa-download"
-                    }
-                  }
-                }
-              },
-              // GEMET configuration for non multilingual catalog
-              "th_gemet_tree.default": {
-                terms: {
-                  field: "th_gemet_tree.default",
-                  size: 100,
-                  order: { _key: "asc" },
-                  include: "[^^]+^?[^^]+"
-                  // Limit to 2 levels
-                }
-              },
+              // availableInServices: {
+              //   filters: {
+              //     //"other_bucket_key": "others",
+              //     // But does not support to click on it
+              //     filters: {
+              //       availableInViewService: {
+              //         query_string: {
+              //           query: "+linkProtocol:/OGC:WMS.*/"
+              //         }
+              //       },
+              //       availableInDownloadService: {
+              //         query_string: {
+              //           query: "+linkProtocol:/OGC:WFS.*/"
+              //         }
+              //       }
+              //     }
+              //   },
+              //   meta: {
+              //     decorator: {
+              //       type: "icon",
+              //       prefix: "fa fa-fw ",
+              //       map: {
+              //         availableInViewService: "fa-globe",
+              //         availableInDownloadService: "fa-download"
+              //       }
+              //     }
+              //   }
+              // },
+              // // GEMET configuration for non multilingual catalog
+              // "th_gemet_tree.default": {
+              //   terms: {
+              //     field: "th_gemet_tree.default",
+              //     size: 100,
+              //     order: { _key: "asc" },
+              //     include: "[^^]+^?[^^]+"
+              //     // Limit to 2 levels
+              //   }
+              // },
               // GEMET configuration for multilingual catalog
               // The key is translated on client side by loading
               // required concepts
@@ -449,47 +482,47 @@
               //   }
               // },
 
-              "th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset_tree.default":
-                {
-                  terms: {
-                    field:
-                      "th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset_tree.default",
-                    size: 100,
-                    order: { _key: "asc" }
-                  }
-                },
-              "th_httpinspireeceuropaeutheme-theme_tree.key": {
-                terms: {
-                  field: "th_httpinspireeceuropaeutheme-theme_tree.key",
-                  size: 34
-                  // "order" : { "_key" : "asc" }
-                },
-                meta: {
-                  decorator: {
-                    type: "icon",
-                    prefix: "fa fa-fw gn-icon iti-",
-                    expression: "http://inspire.ec.europa.eu/theme/(.*)"
-                  }
-                }
-              },
-              tag: {
-                terms: {
-                  field: "tag.${aggLang}",
-                  include: ".*",
-                  size: 10
-                },
-                meta: {
-                  caseInsensitiveInclude: true
-                }
-              },
-              "th_regions_tree.default": {
-                terms: {
-                  field: "th_regions_tree.default",
-                  size: 100,
-                  order: { _key: "asc" }
-                  //"include": "EEA.*"
-                }
-              },
+              // "th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset_tree.default":
+              //   {
+              //     terms: {
+              //       field:
+              //         "th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset_tree.default",
+              //       size: 100,
+              //       order: { _key: "asc" }
+              //     }
+              //   },
+              // "th_httpinspireeceuropaeutheme-theme_tree.key": {
+              //   terms: {
+              //     field: "th_httpinspireeceuropaeutheme-theme_tree.key",
+              //     size: 34
+              //     // "order" : { "_key" : "asc" }
+              //   },
+              //   meta: {
+              //     decorator: {
+              //       type: "icon",
+              //       prefix: "fa fa-fw gn-icon iti-",
+              //       expression: "http://inspire.ec.europa.eu/theme/(.*)"
+              //     }
+              //   }
+              // },
+              // tag: {
+              //   terms: {
+              //     field: "tag.${aggLang}",
+              //     include: ".*",
+              //     size: 10
+              //   },
+              //   meta: {
+              //     caseInsensitiveInclude: true
+              //   }
+              // },
+              // "th_regions_tree.default": {
+              //   terms: {
+              //     field: "th_regions_tree.default",
+              //     size: 100,
+              //     order: { _key: "asc" }
+              //     //"include": "EEA.*"
+              //   }
+              // },
               // "resolutionScaleDenominator": {
               //   "terms": {
               //     "field": "resolutionScaleDenominator",
@@ -505,6 +538,15 @@
                   interval: 10000,
                   keyed: true,
                   min_doc_count: 1
+                },
+                meta: {
+                  collapsed: true
+                }
+              },
+              resolutionDistance: {
+                terms: {
+                  field: "resolutionDistance",
+                  include: ".* (m|km)"
                 },
                 meta: {
                   collapsed: true
