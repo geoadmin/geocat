@@ -1925,6 +1925,12 @@
       },
       "userSavedCount": {
         "type": "long"
+      },
+      "resourceEdition": {
+        "type": "text"
+      },
+      "standardVersion": {
+        "type": "text"
       }
     }
   }
