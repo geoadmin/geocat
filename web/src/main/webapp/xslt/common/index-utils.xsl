@@ -555,7 +555,7 @@
     <xsl:param name="end" as="node()?"/>
 
     <xsl:variable name="rangeStartDetails">
-      <xsl:if test="$start castable as xs:date or $start castable as xs:dateTime">
+      <xsl:if test="$start castable as xs:date or $start castable as xs:dateTime and string-length(substring-before($start, '-'))=4">
         <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $start, '&quot;')"/></value>
       </xsl:if>
       <xsl:for-each select="$start/@*[. != '']">
@@ -563,7 +563,7 @@
       </xsl:for-each>
     </xsl:variable>
     <xsl:variable name="rangeEndDetails">
-      <xsl:if test="$end castable as xs:date or $end castable as xs:dateTime">
+      <xsl:if test="$end castable as xs:date or $end castable as xs:dateTime and string-length(substring-before($end, '-'))=4">
         <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $end, '&quot;')"/></value>
       </xsl:if>
       <xsl:for-each select="$end/@*[. != '']">
