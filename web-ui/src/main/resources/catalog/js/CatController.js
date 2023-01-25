@@ -24,6 +24,12 @@
 (function() {
   goog.provide('gn_cat_controller');
 
+
+
+
+
+
+
 goog.require('gn_admin_menu');
 goog.require('gn_external_viewer');
 goog.require('gn_history');
@@ -32,8 +38,12 @@ goog.require('gn_search_manager');
 goog.require('gn_session_service');
 goog.require('gn_alert');
 
+
   var module = angular.module('gn_cat_controller',
-      ['gn_search_manager', 'gn_session_service', 'gn_admin_menu', 'gn_saved_selections', 'gn_external_viewer', 'gn_history', 'gn_alert']);
+      ['gn_search_manager', 'gn_session_service',
+        'gn_admin_menu', 'gn_saved_selections',
+        'gn_external_viewer', 'gn_history', 'gn_alert']);
+
 
   module.constant('gnSearchSettings', {});
   module.constant('gnViewerSettings', {});
@@ -135,6 +145,10 @@ goog.require('gn_alert');
           'paginationInfo': {
             'hitsPerPage': 30
           },
+          // Full text on all fields
+          // 'queryBase': '${any}',
+          // Full text but more boost on title match
+          // * Search in languages depending on the strategy selected
           'queryBase': 'any.${searchLang}:(${any}) OR any.common:(${any}) OR resourceTitleObject.${searchLang}:(${any})^2 OR resourceTitleObject.\\*:\"${any}\"^6',
           'queryBaseOptions': {
             'default_operator': 'AND'
@@ -170,6 +184,38 @@ goog.require('gn_alert');
           'languageWhitelist': [],
           // Score query may depend on where we are in the app?
           'scoreConfig': {
+            // Score experiments:
+            // a)Score down old records
+            // {
+            //   "gauss": {
+            //     "dateStamp": {
+            //       "scale":  "200d"
+            //     }
+            //   }
+            // }
+            // b)Promote grids!
+            // "boost": "5",
+            // "functions": [
+            //   {
+            //     "filter": { "match": { "cl_spatialRepresentationType.key": "vector" } },
+            //     "random_score": {},
+            //     "weight": 23
+            //   },
+            //   {
+            //     "filter": { "match": { "cl_spatialRepresentationType.key": "grid" } },
+            //     "weight": 42
+            //   }
+            // ],
+            // "max_boost": 42,
+            // "score_mode": "max",
+            // "boost_mode": "multiply",
+            // "min_score" : 42
+            // "script_score" : {
+            //   "script" : {
+            //     "source": "_score"
+            //     // "source": "Math.log(2 + doc['rating'].value)"
+            //   }
+            // }
             "boost": "5",
             "functions": [
               // Boost down member of a series
@@ -186,6 +232,11 @@ goog.require('gn_alert');
                 "filter": { "match": { "cl_status.key": "superseded" } },
                 "weight": 0.3
               },
+              // {
+              //   "filter": { "match": { "cl_resourceScope": "service" } },
+              //   "weight": 0.8
+              // },
+              // Start boosting down records more than 3 months old
               {
                 "gauss": {
                   "dateStamp": {
@@ -210,12 +261,27 @@ goog.require('gn_alert');
                       "resourceAbstractObject.${searchLang}^.5",
                       "tag",
                       "resourceIdentifier"
+                      // "anytext",
+                      // "anytext._2gram",
+                      // "anytext._3gram"
                     ]
                   }
                 }]
               }
             },
             '_source': ['resourceTitleObject'],
+            // Fuzzy autocomplete
+            // {
+            //   query: {
+            //     // match_phrase_prefix: match
+            //     "multi_match" : {
+            //       "query" : query,
+            //         // "type":       "phrase_prefix",
+            //         "fields" : [ field + "^3", "tag" ]
+            //     }
+            //   },
+            //   _source: [field]
+            // }
             "from": 0,
             "size": 20
           },
@@ -280,6 +346,15 @@ goog.require('gn_alert');
                 'collapsed': true
               }
             },
+            // Use .default for not multilingual catalogue with one language only UI.
+            // 'cl_spatialRepresentationType.default': {
+            //   'terms': {
+            //     'field': 'cl_spatialRepresentationType.default',
+            //     'size': 10
+            //   }
+            // },
+            // Use .key for codelist for multilingual catalogue.
+            // The codelist translation needs to be loaded in the client app. See GnSearchModule.js
             'cl_spatialRepresentationType.key': {
               'terms': {
                 'field': 'cl_spatialRepresentationType.key',
@@ -297,6 +372,91 @@ goog.require('gn_alert');
                 'collapsed': true
               }
             },
+            // 'availableInServices': {
+            //   'filters': {
+            //     //"other_bucket_key": "others",
+            //     // But does not support to click on it
+            //     'filters': {
+            //       'availableInViewService': {
+            //         'query_string': {
+            //           'query': '+linkProtocol:/OGC:WMS.*/'
+            //         }
+            //       },
+            //       'availableInDownloadService': {
+            //         'query_string': {
+            //           'query': '+linkProtocol:/OGC:WFS.*/'
+            //         }
+            //       }
+            //     }
+            //   }
+            // },
+            // GEMET configuration for non multilingual catalog
+            // 'th_gemet_tree.default': {
+            //   'terms': {
+            //     'field': 'th_gemet_tree.default',
+            //     'size': 100,
+            //     "order" : { "_key" : "asc" },
+            //     "include": "[^\^]+^?[^\^]+"
+            //     // Limit to 2 levels
+            //   }
+            // },
+            // (Experimental) A tree field which contains a URI
+            // eg. http://www.ifremer.fr/thesaurus/sextant/theme#52
+            // but with a translation which contains a hierarchy with a custom separator
+            // /Regulation and Management/Technical and Management Zonations/Sensitive Zones
+            // 'th_sextant-theme_tree.key': {
+            //   'terms': {
+            //     'field': 'th_sextant-theme_tree.key',
+            //     'size': 100,
+            //     "order" : { "_key" : "asc" }
+            //   },
+            //   'meta': {
+            //     'translateOnLoad': true,
+            //     'treeKeySeparator': '/'
+            //   }
+            // },
+
+//            'th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset_tree.default': {
+//              'terms': {
+//                'field': 'th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset_tree.default',
+//                'size': 100,
+//                "order" : { "_key" : "asc" }
+//              }
+//            },
+//            'th_httpinspireeceuropaeutheme-theme_tree.key': {
+//              'terms': {
+//                'field': 'th_httpinspireeceuropaeutheme-theme_tree.key',
+//                'size': 34
+//                // "order" : { "_key" : "asc" }
+//              }
+//            },
+//            'tag.default': {
+//              'terms': {
+//                'field': 'tag.default',
+//                'include': '.*',
+//                'size': 10
+//              },
+//              'meta': {
+//                'caseInsensitiveInclude': true
+//              }
+//            },
+//            'th_regions_tree.default': {
+//              'terms': {
+//                'field': 'th_regions_tree.default',
+//                'size': 100,
+//                "order" : { "_key" : "asc" }
+//                //"include": "EEA.*"
+//              }
+//            },
+            // "resolutionScaleDenominator": {
+            //   "terms": {
+            //     "field": "resolutionScaleDenominator",
+            //     "size": 20,
+            //     "order": {
+            //       "_key": "asc"
+            //     }
+            //   }
+            // },
             "resolutionScaleDenominator": {
               "histogram": {
                 "field": "resolutionScaleDenominator",
@@ -317,6 +477,20 @@ goog.require('gn_alert');
                 'collapsed': true
               }
             },
+            // "serviceType": {
+            //   'collapsed': true,
+            //   "terms": {
+            //     "field": "serviceType",
+            //     "size": 10
+            //   }
+            // },
+            // "resourceTemporalDateRange": {
+            //   "date_histogram": {
+            //     "field": "resourceTemporalDateRange",
+            //     "fixed_interval": "1900d",
+            //     "min_doc_count": 1
+            //   }
+            // },
             "creationYearForResource": {
               "histogram": {
                 "field": "creationYearForResource",
@@ -328,6 +502,15 @@ goog.require('gn_alert');
                 'collapsed': true
               }
             },
+            // "creationYearForResource": {
+            //   "terms": {
+            //     "field": "creationYearForResource",
+            //     "size": 10,
+            //     "order": {
+            //       "_key": "desc"
+            //     }
+            //   }
+            // },
             'OrgForResource': {
               'terms': {
                 'field': 'OrgForResourceObject',
@@ -335,6 +518,10 @@ goog.require('gn_alert');
                 'size': 15
               },
               'meta': {
+                // Always display filter even no more elements
+                // This can be used when all facet values are loaded
+                // with a large size and you want to provide filtering.
+                // 'displayFilter': true,
                 'caseInsensitiveInclude': true
               }
             },
@@ -346,9 +533,52 @@ goog.require('gn_alert');
               "meta": {
                 "collapsed": true
               }
+            // },
+            // Don't forget to enable Vega to use interactive graphic facets.
+            // See isVegaEnabled property.
+            // 'cl_status.key': {
+            //   'terms': {
+            //     'field': 'cl_status.key',
+            //     'size': 10
+            //   },
+            //   'meta': {
+            //     // 'vega': 'bar'
+            //     'vega': 'arc'
+            //   }
+            // },
+            //
+            // 'resourceTemporalDateRange': {
+            //   'gnBuildFilterForRange': {
+            //     field: "resourceTemporalDateRange",
+            //     buckets: 2021 - 1970,
+            //     dateFormat: 'YYYY',
+            //     dateSelectMode: 'years',
+            //     vegaDateFormat: '%Y',
+            //     from: 1970,
+            //     to: 2021,
+            //     mark: 'area'
+            //   },
+            //   'meta': {
+            //     'vega': 'timeline'
+            //   }
+            // },
+            // 'dateStamp' : {
+            //   'auto_date_histogram' : {
+            //     'field' : 'dateStamp',
+            //     'buckets': 50
+            //   },
+            //   "meta": {
+            //     'userHasRole': 'isReviewerOrMore',
+            //     'collapsed': true
+            //   }
             }
           },
           'filters': null,
+          // 'filters': [{
+          //     "query_string": {
+          //       "query": "-resourceType:service"
+          //     }
+          //   }],
           'sortbyValues': [{
             'sortBy': 'relevance',
             'sortOrder': ''
@@ -374,6 +604,12 @@ goog.require('gn_alert');
                 'search/resultsview/partials/viewtemplates/grid.html',
             'tooltip': 'Grid',
             'icon': 'fa-th'
+          // geocat.ch : Only grid mode view for search results
+          // },{
+          //   'tplUrl': '../../catalog/components/' +
+          //     'search/resultsview/partials/viewtemplates/list.html',
+          //   'tooltip': 'List',
+          //   'icon': 'fa-bars'
           }],
           'resultTemplate': '../../catalog/components/' +
               'search/resultsview/partials/viewtemplates/grid.html',
@@ -381,6 +617,22 @@ goog.require('gn_alert');
           'formatter': {
             'list': [{
               'label': 'defaultView',
+              // Conditional views can be used to configure custom
+              // formatter to use depending on metadata properties.
+              // 'views': [{
+              //   'if': {'standardName': 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product'},
+              //   'url' : '/formatters/xsl-view?root=div&view=advanced'
+              // }, {
+              //   'if': {
+              //     'standardName': [
+              //       'ISO 19115:2003/19139 - EMODNET - BATHYMETRY',
+              //       'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY']
+              //   },
+              //   'url' : '/formatters/xsl-view?root=div&view=emodnetHydrography'
+              // }, {
+              //   'if': {'documentStandard': 'iso19115-3.2018'},
+              //   'url' : '/dada'
+              // }],
               'url' : ''
             }, {
               'label': 'full',
@@ -594,6 +846,13 @@ goog.require('gn_alert');
                 'size': 20,
                 'include': 'dataset|service.*|basic.*',
                 "order" : { "_key" : "asc" }
+                // },
+                // 'aggs': {
+                //   'format': {
+                //     'terms': {
+                //       'field': 'format'
+                //     }
+                //   }
               }
             },
             'mdStatus': {
@@ -1365,6 +1624,7 @@ goog.require('gn_alert');
         }
         );
 
+
         // Retrieve user information if catalog is online
         // append a random number to avoid caching in IE11
         var userLogin = catInfo.then(function(value) {
@@ -1400,6 +1660,7 @@ goog.require('gn_alert');
               }
            });
         });
+
 
         // Retrieve main search information
         var searchInfo = userLogin.then(function(value) {
