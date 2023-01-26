@@ -169,4 +169,9 @@
 
 
   <xsl:variable name="metadataUserFeedbackEnabled" select="$envSystem/localrating/enable = 'advanced'" />
+
+  <xsl:variable name="isDev" select="contains($env/system/site/name, '[dev]')" />
+  <xsl:variable name="isInt" select="contains($env/system/site/name, '[int]')" />
+  <xsl:variable name="isProd" select="not($isDev) and not($isInt)" />
+
 </xsl:stylesheet>
