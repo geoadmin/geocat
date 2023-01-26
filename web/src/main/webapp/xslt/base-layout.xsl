@@ -46,7 +46,7 @@
         <xsl:variable name="nodeName"
                       select="util:getNodeName('', $lang, true())"/>
 
-        <xsl:variable name="htmlHeadTitle"
+        <xsl:variable name="gaHtmlHeadTitle"
                       select="if ($discoveryServiceRecordUuid != '')
                               then util:getIndexField(
                                         $lang,
@@ -58,7 +58,7 @@
                               else $nodeName"/>
 
 
-        <xsl:variable name="htmlHeadDescription"
+        <xsl:variable name="gaHtmlHeadDescription"
                       select="if ($discoveryServiceRecordUuid != '')
                               then util:getIndexField(
                                         $lang,
@@ -69,12 +69,15 @@
                               then substring-after($nodeName, '|')
                               else $nodeName"/>
 
-        <title><xsl:value-of select="$htmlHeadTitle"/></title>
+        <xsl:variable name="actualHtmlHeadDescription" select="if ($isProd) then $gaHtmlHeadDescription else ''"/>
+        <xsl:variable name="actualHtmlHeadTitle" select="if ($isProd) then $gaHtmlHeadTitle else util:getNodeName('', $lang, true())"/>
+
+        <title><xsl:value-of select="$actualHtmlHeadTitle"/></title>
         <meta charset="utf-8"/>
         <meta name="viewport" content="initial-scale=1.0"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
 
-        <meta name="description" content="{$htmlHeadDescription}"/>
+        <meta name="description" content="{$actualHtmlHeadDescription}"/>
         <meta name="keywords" content=""/>
 
 
@@ -86,6 +89,7 @@
               title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
 
         <xsl:call-template name="css-load"/>
+        <xsl:call-template name="ga4-load-head"/>
       </head>
 
 
@@ -94,6 +98,8 @@
       and a facet search to get main site information.
       -->
       <body data-ng-controller="GnCatController" data-ng-class="[isHeaderFixed ? 'gn-header-fixed' : 'gn-header-relative', isLogoInHeader ? 'gn-logo-in-header' : 'gn-logo-in-navbar', isFooterEnabled ? 'gn-show-footer' : 'gn-hide-footer']">
+
+        <xsl:call-template name="ga4-load-body"/>
 
         <div data-gn-alert-manager=""></div>
 
