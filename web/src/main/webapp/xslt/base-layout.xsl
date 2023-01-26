@@ -60,6 +60,7 @@
               title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
 
         <xsl:call-template name="css-load"/>
+        <xsl:call-template name="ga4-load-head"/>
       </head>
 
 
@@ -68,6 +69,8 @@
       and a facet search to get main site information.
       -->
       <body data-ng-controller="GnCatController" data-ng-class="[isHeaderFixed ? 'gn-header-fixed' : 'gn-header-relative', isLogoInHeader ? 'gn-logo-in-header' : 'gn-logo-in-navbar', isFooterEnabled ? 'gn-show-footer' : 'gn-hide-footer']">
+
+        <xsl:call-template name="ga4-load-body"/>
 
         <div data-gn-alert-manager=""></div>
 
