@@ -60,6 +60,7 @@
               title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
 
         <xsl:call-template name="css-load"/>
+        <xsl:call-template name="ga4-load"/>
       </head>
 
 
