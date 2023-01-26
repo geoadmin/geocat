@@ -90,10 +90,12 @@
               title="{$title}"/>
 
         <xsl:call-template name="css-load-nojs"/>
+        <xsl:call-template name="ga4-load-head"/>
 
       </head>
 
       <body class="gn-nojs {$cssClass}">
+        <xsl:call-template name="ga4-load-body"/>
         <div class="gn-full">
           <xsl:call-template name="header"/>
           <div class="container" role="main">
