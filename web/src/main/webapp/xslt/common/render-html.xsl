@@ -90,7 +90,7 @@
               title="{$title}"/>
 
         <xsl:call-template name="css-load-nojs"/>
-        <xsl:call-template name="ga4-load"/>
+        <xsl:call-template name="ga4-load-head"/>
 
       </head>
 
