@@ -26,6 +26,7 @@
        default-lazy-init="true"
        xmlns="http://www.springframework.org/schema/beans"
        xmlns:sec="http://www.springframework.org/schema/security"
+       xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="
 		http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -44,6 +45,9 @@
 
   <context:component-scan base-package="org.fao.geonet"/>
 
+  <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
+        p:targetObject="#{@systemProperties}" p:targetMethod="setProperty"
+        p:arguments="#{{'mail.smtp.ssl.protocols','TLSv1.2'}}"/>
 
   <bean id="configPath" class="java.lang.String">
     <constructor-arg index="0" value="/WEB-INF/"/>
