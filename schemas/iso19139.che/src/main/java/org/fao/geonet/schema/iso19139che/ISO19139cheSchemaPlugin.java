@@ -12,13 +12,6 @@ import org.fao.geonet.kernel.schema.LinkAwareSchemaPlugin;
 import org.fao.geonet.kernel.schema.LinkPatternStreamer.ILinkBuilder;
 import org.fao.geonet.kernel.schema.LinkPatternStreamer.RawLinkPatternStreamer;
 import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
-import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
-import org.fao.geonet.kernel.schema.subtemplate.KeywordReplacer;
-import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
-import org.fao.geonet.kernel.schema.subtemplate.SubtemplateAwareSchemaPlugin;
-import org.fao.geonet.kernel.schema.subtemplate.SubtemplatesByLocalXLinksReplacer;
-import org.fao.geonet.schema.iso19139.ExtentReplacer;
-import org.fao.geonet.schema.iso19139.FormatReplacer;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.utils.Log;
@@ -51,7 +44,6 @@ public class ISO19139cheSchemaPlugin
     MultilingualSchemaPlugin,
     ExportablePlugin,
     ISOPlugin,
-    SubtemplateAwareSchemaPlugin,
     LinkAwareSchemaPlugin {
     public static final String IDENTIFIER = "iso19139.che";
 
@@ -69,8 +61,6 @@ public class ISO19139cheSchemaPlugin
 
     @Value("${es.index.records:gn-records}")
     private String defaultIndex = "records";
-
-    private SubtemplatesByLocalXLinksReplacer subtemplatesByLocalXLinksReplacer;
 
     static {
         allNamespaces = ImmutableSet.<Namespace>builder()
@@ -661,33 +651,6 @@ public class ISO19139cheSchemaPlugin
         patternStreamer.setRawTextXPath(".//*[name() = 'gco:CharacterString' or name() = 'gmd:URL' or name() = 'gmd:LocalisedCharacterString' or name() = 'che:LocalisedURL']");
         // TODO: che:URL and multilingual text
         return patternStreamer;
-    }
-
-    @Override
-    public Element replaceSubtemplatesByLocalXLinks(Element dataXml, String templatesToOperateOn) {
-        return subtemplatesByLocalXLinksReplacer.replaceSubtemplatesByLocalXLinks(
-                dataXml,
-                templatesToOperateOn);
-    }
-
-    @Override
-    public void init(ManagersProxy managersProxy, ConstantsProxy constantsProxy) {
-        List<Namespace> namespaces = new ArrayList<>(allNamespaces);
-        subtemplatesByLocalXLinksReplacer = new SubtemplatesByLocalXLinksReplacer(namespaces, managersProxy, esRestClient, defaultIndex) {
-            @Override
-            public List<String> getLocalesAsHrefParam(Element dataXml) {
-                return ISO19139SchemaPlugin.getLanguages(dataXml);
-            }
-        };
-        subtemplatesByLocalXLinksReplacer.addReplacer(new ContactReplacer(namespaces, managersProxy, constantsProxy));
-        subtemplatesByLocalXLinksReplacer.addReplacer(new FormatReplacer(namespaces, managersProxy, constantsProxy));
-        subtemplatesByLocalXLinksReplacer.addReplacer(new ExtentReplacer(namespaces, managersProxy, constantsProxy));
-        subtemplatesByLocalXLinksReplacer.addReplacer(new KeywordReplacer(managersProxy));
-    }
-
-    @Override
-    public boolean isInitialised() {
-        return subtemplatesByLocalXLinksReplacer!=null;
     }
 
     @Override
