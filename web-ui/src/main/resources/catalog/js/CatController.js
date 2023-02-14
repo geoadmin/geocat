@@ -639,21 +639,22 @@
                   "search/resultsview/partials/viewtemplates/grid.html",
                 tooltip: "Grid",
                 icon: "fa-th"
-              },
-              {
-                tplUrl:
-                  "../../catalog/components/" +
-                  "search/resultsview/partials/viewtemplates/list.html",
-                tooltip: "List",
-                icon: "fa-bars"
-              },
-              {
-                tplUrl:
-                  "../../catalog/components/" +
-                  "search/resultsview/partials/viewtemplates/table.html",
-                tooltip: "Table",
-                icon: "fa-table"
               }
+              // geocat.ch : Only grid mode view for search results,
+              // {
+              //   tplUrl:
+              //     "../../catalog/components/" +
+              //     "search/resultsview/partials/viewtemplates/list.html",
+              //   tooltip: "List",
+              //   icon: "fa-bars"
+              // },
+              // {
+              //   tplUrl:
+              //     "../../catalog/components/" +
+              //     "search/resultsview/partials/viewtemplates/table.html",
+              //   tooltip: "Table",
+              //   icon: "fa-table"
+              // }
             ],
             resultTemplate:
               "../../catalog/components/" +
