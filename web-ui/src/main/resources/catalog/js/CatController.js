@@ -359,11 +359,11 @@
                 }
               },
 
-              "cl_geodataType.key": {
-                terms: {
-                  field:  cl_geodataType.key
-                }
-              },
+              // "cl_geodataType.key": {
+              //   terms: {
+              //     field:  cl_geodataType.key
+              //   }
+              // },
               "cl_topic.key": {
                 terms: {
                   field: "cl_topic.key",
