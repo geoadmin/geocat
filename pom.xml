@@ -1207,6 +1207,11 @@
   <!--     Dependencies to be inherited by all modules.            -->
   <!-- =========================================================== -->
   <dependencies>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-web</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency>
     <!-- This find bugs jars allows annotations like @Nullable and @Nonnull see the jsr305 -->
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
