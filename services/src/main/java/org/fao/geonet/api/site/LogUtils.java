@@ -71,9 +71,6 @@ public class LogUtils {
         Optional<Setting> settingOpt = repository.findById(Settings.SYSTEM_SERVER_LOG);
         Setting setting = null;
 
-        if (settingOpt.isPresent()) {
-            setting = settingOpt.get();
-        }
 
         // get log config from db settings
         String log4jProp = setting != null ? setting.getValue() : DEFAULT_LOG_FILE;
