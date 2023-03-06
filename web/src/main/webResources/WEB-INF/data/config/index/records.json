@@ -1023,6 +1023,7 @@
     }
   },
   "mappings": {
+    "dynamic_date_formats": ["date_optional_time"],
     "dynamic_templates": [
       {
         "numbers": {
