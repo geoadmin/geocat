@@ -1020,9 +1020,11 @@
           <linkUrl>
             <xsl:value-of select="gmd:linkage/gmd:URL"/>
           </linkUrl>
-          <linkProtocol>
-            <xsl:value-of select="$protocol"/>
-          </linkProtocol>
+          <xsl:if test="normalize-space($protocol) != ''">
+            <linkProtocol>
+              <xsl:value-of select="$protocol"/>
+            </linkProtocol>
+          </xsl:if>
           <xsl:element name="linkUrlProtocol{replace($protocol[1], '[^a-zA-Z0-9]', '')}">
             <xsl:value-of select="gmd:linkage/gmd:URL"/>
           </xsl:element>
