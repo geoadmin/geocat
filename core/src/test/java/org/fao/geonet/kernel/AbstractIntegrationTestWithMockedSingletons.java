@@ -7,9 +7,9 @@ import static org.mockito.Mockito.reset;
 
 public abstract class AbstractIntegrationTestWithMockedSingletons extends AbstractCoreIntegrationTest {
 
-    private static SpringLocalServiceInvoker mockInvoker;
+    private SpringLocalServiceInvoker mockInvoker;
 
-    public SpringLocalServiceInvoker resetAndGetMockInvoker() {
+    public synchronized SpringLocalServiceInvoker resetAndGetMockInvoker() {
         if (mockInvoker == null) {
             mockInvoker = mock(SpringLocalServiceInvoker.class);
             _applicationContext.getBeanFactory().registerSingleton(SpringLocalServiceInvoker.class.getCanonicalName(), mockInvoker);
