@@ -43,6 +43,18 @@
   <xsl:include href="../iso19139/layout/utility-fn.xsl"/>
   <xsl:include href="update-sub-template-fixed-info.xsl"/>
 
+  <xsl:template name="trim">
+    <xsl:param name="str"/>
+    <xsl:choose>
+      <xsl:when test="string-length($str) &gt; 0 and substring($str, 1, 1) = ' '">
+        <xsl:call-template name="trim"><xsl:with-param name="str"><xsl:value-of select="substring($str, 2)"/></xsl:with-param></xsl:call-template></xsl:when>
+      <xsl:when test="string-length($str) &gt; 0 and substring($str, string-length($str)) = ' '">
+        <xsl:call-template name="trim"><xsl:with-param name="str"><xsl:value-of select="substring($str, 1, string-length($str)-1)"/></xsl:with-param></xsl:call-template></xsl:when>
+      <xsl:otherwise><xsl:value-of select="$str"/></xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+
   <xsl:variable name="serviceUrl" select="/root/env/siteURL"/>
   <xsl:variable name="node" select="/root/env/node"/>
 
@@ -428,9 +440,12 @@
                     select="count(gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
                                             @locale = concat('#', $mainLanguageId)]) = 1"/>
 
-      <xsl:variable name="valueInPtFreeTextForMainLanguage"
-                    select="normalize-space((gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
-                                            @locale = concat('#', $mainLanguageId)])[1])"/>
+      <xsl:variable name="valueInPtFreeTextForMainLanguage">
+        <xsl:call-template name="trim">
+          <xsl:with-param name="str" select="(gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
+                                            @locale = concat('#', $mainLanguageId)])[1]"/>
+        </xsl:call-template>
+      </xsl:variable>
 
       <!-- Add nileason if text is empty -->
       <xsl:variable name="isEmpty"
