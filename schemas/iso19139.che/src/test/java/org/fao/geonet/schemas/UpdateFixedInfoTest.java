@@ -49,6 +49,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.eq;
 
@@ -271,6 +272,17 @@ public class UpdateFixedInfoTest {
                         .setValue("local://srv/api/registries/entries/4cb273e2-e26a-4e66-bb55-5dd09e39449b?lang=ger&process=gmd:role/gmd:CI_RoleCode/@codeListValue~partner"));
 
         assertProcessedEqualsToExpected(input, expected);
+    }
+
+    @Test
+    public void carriageReturnAreNotDiscardedWhenCopiedInDefault() throws Exception {
+        Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeText.xml").toURI()));
+        ((List<Element>) Xml.selectNodes(input, ".//gmd:LocalisedCharacterString", ALL_NAMESPACES))
+            .stream().forEach(x -> x.setText("   1 11\n2  22   "));
+
+        String copiedAsDefault = ((Element) Xml.selectNodes((Xml.transform(input, PATH_TO_XSL)), ".//gco:CharacterString[contains(text(),'11')]", ALL_NAMESPACES).get(0)).getText();
+
+        assertEquals("1 11\n2  22", copiedAsDefault);
     }
 
     private void assertProcessedEqualsToExpected(Element input, Element preparingExpected) throws Exception {
