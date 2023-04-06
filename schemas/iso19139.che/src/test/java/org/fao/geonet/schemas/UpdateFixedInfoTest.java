@@ -278,11 +278,11 @@ public class UpdateFixedInfoTest {
     public void carriageReturnAreNotDiscardedWhenCopiedInDefault() throws Exception {
         Element input = Xml.loadFile(Paths.get(UpdateFixedInfoTest.class.getClassLoader().getResource("ufi/PT_FreeText.xml").toURI()));
         ((List<Element>) Xml.selectNodes(input, ".//gmd:LocalisedCharacterString", ALL_NAMESPACES))
-            .stream().forEach(x -> x.setText("   111\n222   "));
+            .stream().forEach(x -> x.setText("   1 11\n2  22   "));
 
-        String copiedAsDefault = ((Element) Xml.selectNodes((Xml.transform(input, PATH_TO_XSL)), ".//gco:CharacterString[contains(text(),'111')]", ALL_NAMESPACES).get(0)).getText();
+        String copiedAsDefault = ((Element) Xml.selectNodes((Xml.transform(input, PATH_TO_XSL)), ".//gco:CharacterString[contains(text(),'11')]", ALL_NAMESPACES).get(0)).getText();
 
-        assertEquals("111\n222", copiedAsDefault);
+        assertEquals("1 11\n2  22", copiedAsDefault);
     }
 
     private void assertProcessedEqualsToExpected(Element input, Element preparingExpected) throws Exception {
