@@ -570,10 +570,7 @@
            */
           getBboxFeatureFromMd: function (md, proj) {
             var feat = new ol.Feature();
-            var wkts = md.shape || md.geom;
-            if (!angular.isArray(wkts)) {
-              wkts = [wkts];
-            }
+            var wkts = md.geom;
             var projExtent = proj.getExtent();
             if (wkts && wkts.length) {
               var geometry;
