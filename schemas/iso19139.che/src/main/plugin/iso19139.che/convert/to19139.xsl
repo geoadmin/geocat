@@ -9,6 +9,10 @@
                 exclude-result-prefixes="#all">
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
 
+  <xsl:variable name="langId"
+                select="/che:CHE_MD_Metadata/gmd:language/*/@codeListValue"/>
+
+
   <!-- Some default values -->
   <xsl:template match="gmd:metadataStandardName">
     <gmd:metadataStandardName>
@@ -21,6 +25,26 @@
       <gco:CharacterString/>
     </gmd:metadataStandardVersion>
   </xsl:template>
+
+  <xsl:template match="che:*[not(@gco:isoType)]" priority="100"/>
+
+  <xsl:template match="@xsi:type[.='che:PT_FreeURL_PropertyType']" priority="2">
+    <xsl:apply-templates mode="url" select=".."/>
+  </xsl:template>
+
+  <xsl:template match="gmd:linkage">
+    <gmd:linkage>
+      <gmd:URL>
+        <xsl:value-of select="(che:LocalisedURL
+                      |*/che:URLGroup/che:LocalisedURL[@locale = $langId]
+                      |gmd:URL
+                      |*/che:URLGroup/che:LocalisedURL[. != ''])[1]"/>
+      </gmd:URL>
+    </gmd:linkage>
+  </xsl:template>
+
+  <!-- Remove all non ISO19139 enumeration value. -->
+  <xsl:template match="gmd:topicCategory[contains(*, '_')]" priority="2"/>
 
   <!-- All profil specific elements should be bypassed -->
   <xsl:template match="che:*[not(@gco:isoType)]" priority="2"/>

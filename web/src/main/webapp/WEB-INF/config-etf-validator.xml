@@ -73,6 +73,9 @@
     <entry key="iso19139::TG version 2.0 - Data sets and series"
            value="gmd:hierarchyLevel[*/@codeListValue = 'dataset' or */@codeListValue = 'series']"/>
     <entry key="iso19139::TG version 2.0 - Network services" value=".//srv:SV_ServiceIdentification"/>
+    <entry key="iso19139.che::TG version 2.0 - Data sets and series"
+           value="gmd:hierarchyLevel[*/@codeListValue = 'dataset' or */@codeListValue = 'series']"/>
+    <entry key="iso19139.che::TG version 2.0 - Network services" value="gmd:hierarchyLevel[*/@codeListValue = 'service']"/>
     <entry key="iso19115-3.2018::TG version 2.0 - Data sets and series"
            value="mdb:metadataScope[*/mdb:resourceScope/*/@codeListValue = 'dataset' or */mdb:resourceScope/*/@codeListValue = 'series']"/>
     <entry key="iso19115-3.2018::TG version 2.0 - Network services" value=".//srv:SV_ServiceIdentification"/>
@@ -91,7 +94,7 @@
   -->
   <util:map id="validatorAdditionalConfig">
     <entry key="defaultTestSuite" value="TG version 2.0 - Data sets and series"/>
-    <entry key="maxNumberOfEtfChecks" value="20"/>
+    <entry key="maxNumberOfEtfChecks" value="40"/>
     <entry key="intervalBetweenEtfChecks" value="5000"/>
   </util:map>
 
