@@ -1,0 +1,987 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <skos:ConceptScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory">
+    <dc:title xmlns:dc="http://purl.org/dc/elements/1.1/">Classification of spatial data services</dc:title>
+    <dc:description xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="en">The keywords are based on the geographic services taxonomy of EN ISO 19119. This taxonomy is organised in categories, the subcategories defining the value domain of the classification of spatial data services.</dc:description>
+    <dc:description xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="de">Grundlage der Schlüsselwörter ist die Taxonomie für geografische Dienste in EN ISO 19119. Diese Taxonomie ist unterteilt in Klassen, zu deren Unterklassen der erlaubte Wertebereich der zugehörigen Geodatendienste angegeben wird.</dc:description>
+    <dc:description xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="fr">Les mots clés sont fondés sur la taxonomie des services géographiques de la norme EN ISO 19119. Cette taxonomie est organisée en catégories, elles-mêmes divisées en sous-catégories qui déterminent le domaine de valeur de la classification des services de données géographiques.</dc:description>
+    <dc:description xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="it">Le parole chiave sono basate sulla tassonomia dei servizi geografici della norma EN ISO 19119. Questa tassonomia C( organizzata in categorie, a loro volta divise in sottocategorie che determinano il dominio di valore della classificazione dei servizi di dati territoriali.</dc:description>
+    <dcterms:issued xmlns:dcterms="http://purl.org/dc/terms/">2008-12-03</dcterms:issued>
+    <dcterms:modified xmlns:dcterms="http://purl.org/dc/terms/">2008-12-03</dcterms:modified>
+    <skos:hasTopConcept rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+    <skos:hasTopConcept rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+    <skos:hasTopConcept rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/taskManagementService" />
+    <skos:hasTopConcept rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:hasTopConcept rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:hasTopConcept rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProcessingService" />
+    <skos:hasTopConcept rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataProcessingService" />
+    <skos:hasTopConcept rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+  </skos:ConceptScheme>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService">
+    <skos:prefLabel xml:lang="en">Geographic human interaction services</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Geografische Dienste für Anwender</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Services géographiques avec interaction humaine</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Servizi geografici con interazione umana</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanCatalogueViewer" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicViewer" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicSpreadsheetViewer" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanServiceEditor" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanChainDefinitionEditor" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanWorkflowEnactmentManager" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicFeatureEditor" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicSymbolEditor" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanFeatureGeneralizationEditor" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicDataStructureViewer" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanCatalogueViewer">
+    <skos:prefLabel xml:lang="en">Catalogue viewer</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Client service that allows a user to interact with a catalogue to locate, browse, and manage metadata about geographic data or geographic services.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Katalogdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Als Dienst bereitgestellte Anwendung, die es dem Nutzer ermöglicht, Metadaten zu Geodatensätzen oder Geodatendiensten in einem Katalog aufzufinden, sie zu betrachten und zu bearbeiten.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Visualiseur de catalogue</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service client permettant l’interaction de l’utilisateur avec un catalogue afin de localiser, parcourir et gérer des métadonnées concernant des données ou des services géographiques.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Visualizzatore del catalogo</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio client che consente all'utente di interagire con un catalogo al fine di localizzare, passare in rassegna e gestire i metadati concernenti dati o servizi geografici.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicViewer">
+    <skos:prefLabel xml:lang="en">Geographic viewer</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Client service that allows a user to view one or more feature collections or coverages.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für geografische Visualisierung</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Als Dienst bereitgestellte Anwendung, die es dem Nutzer ermöglicht, eine oder mehrere Objektgruppen oder Rasterdaten zu betrachten.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de visualisation géographique</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service client permettant à l’utilisateur de visualiser une ou plusieurs compilations d’éléments ou couvertures.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Visualizzatore geografico</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio client che consente all'utente di visualizzare una o più collezioni di elementi o coperture.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicSpreadsheetViewer">
+    <skos:prefLabel xml:lang="en">Geographic spreadsheet viewer</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Client service that allows a user to interact with multiple data objects and to request calculations similar to an arithmetic spreadsheet but extended to geographic data.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für geografische Tabellenkalkulation</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Als Dienst bereitgestellte Anwendung, die es dem Nutzer ermöglicht, mehrere Datenobjekte auszuwählen und damit Berechnungen durchzuführen, ähnlich einer Tabellenkalkulation, aber erweitert auf Geodaten.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de visualisation de feuilles de calcul géographiques</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service client permettant l’interaction de l’utilisateur avec plusieurs objets de données; l’utilisateur peut également demander des calculs analogues à ceux d’une feuille de calcul arithmétique, mais étendus à des données géographiques.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Visualizzatore di fogli elettronici geografici</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio client, esteso ai dati geografici, che consente all'utente di interagire con vari oggetti di dati e richiedere calcoli analoghi a quelli di un foglio di calcolo.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanServiceEditor">
+    <skos:prefLabel xml:lang="en">Service editor</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Client service that allows a user to control geographic processing services.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Editor für Verarbeitungsdienste</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Als Dienst bereitgestellte Anwendung, die es dem Nutzer ermöglicht, geografische Verarbeitungsdienste zu steuern.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Éditeur de services</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service client permettant à l’utilisateur de contrôler les services de traitement géographique.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Editor di servizi</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio client che consente all'utente di controllare i servizi di trattamento geografico.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanChainDefinitionEditor">
+    <skos:prefLabel xml:lang="en">Chain definition editor</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Provides user interaction with a chain definition service.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Editor für die Definition von Bearbeitungsketten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Ermöglicht dem Nutzer die interaktive Arbeit mit einem Dienst für die Definition von Bearbeitungsketten.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Éditeur pour la définition de chaînes</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant l’interaction de l’utilisateur avec un service de définition de chaînes.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Editor per la definizione di catene</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Consente all'utente di interagire con un servizio di definizione di catene.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanWorkflowEnactmentManager">
+    <skos:prefLabel xml:lang="en">Workflow enactment manager</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Provides user interaction with a workflow enactment service.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Aufrufprogramm für Bearbeitungsketten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Ermöglicht dem Nutzer die interaktive Arbeit mit einem Dienst zur Ausführung von Bearbeitungsketten.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Gestionnaire de contrôle de processus</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant l’interaction de l’utilisateur avec un service de contrôle de processus.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Gestore di esecuzione del workflow</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Consente all'utente di interagire con un servizio di esecuzione del workflow.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicFeatureEditor">
+    <skos:prefLabel xml:lang="en">Geographic feature editor</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Geographic viewer that allows a user to interact with feature data.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Editor für geografische Objekte</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Als Dienst bereitgestellte Anwendung, die es dem Nutzer ermöglicht, Daten geografischer Objekte zu bearbeiten.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Éditeur d’éléments géographiques</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Visualiseur géographique permettant l’interaction de l’utilisateur avec les données relatives aux éléments géographiques.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Editor di elementi geografici (geographic feature)</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Visualizzatore geografico che consente all'utente di interagire con i dati relativi agli elementi geografici.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicSymbolEditor">
+    <skos:prefLabel xml:lang="en">Geographic symbol editor</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Client service that allows a human to select and manage symbol libraries.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Editor für geografische Symbole</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Als Dienst bereitgestellte Anwendung, die es dem Nutzer ermöglicht, Symbolbibliotheken auszuwählen und zu verwalten.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Éditeur de symboles géographiques</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service client permettant à un utilisateur humain de sélectionner et de gérer des bibliothèques de symboles.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Editor di simboli geografici</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio client che consente a un utente umano di selezionare e gestire biblioteche di simboli.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanFeatureGeneralizationEditor">
+    <skos:prefLabel xml:lang="en">Feature generalisation editor</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Client service that allows a user to modify the cartographic characteristics of a feature or feature collection by simplifying its visualisation, while maintaining its salient elements – the spatial equivalent of simplification.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Editor für die Objektgeneralisierung</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Als Dienst bereitgestellte Anwendung, die es dem Nutzer ermöglicht, die kartografische Darstellung eines Objekts oder einer Objektgruppe unter Beibehaltung ihrer wesentlichen Elemente zu vereinfachen.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Éditeur de généralisation d’éléments</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service client permettant à l’utilisateur de modifier les caractéristiques cartographiques d’un élément ou d’une compilation d’éléments en simplifiant leur visualisation, tout en conservant les éléments essentiels, ce qui correspond à l’équivalent spatial de la simplification.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Editor di generalizzazione di elementi (feature)</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio client che consente all'utente di modificare le caratteristiche cartografiche di un elemento o di una collezione di elementi semplificandone la visualizzazione, ma mantenendone le componenti essenziali — si tratta dell'equivalente spaziale della semplificazione.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicDataStructureViewer">
+    <skos:prefLabel xml:lang="en">Geographic data-structure viewer</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Client service that allows a user to access part of data set to see its internal structure.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Betrachter für geografische Datenstrukturen</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Als Dienst bereitgestellte Anwendung, die es dem Nutzer ermöglicht, die innere Struktur (von Teilen) eines Datensatzes zu betrachten.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Visualiseur de la structure des données géographiques</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service client permettant à l’utilisateur d’accéder à une partie de série de données pour en voir la structure interne.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Visualizzatore della struttura dei dati geografici</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio client che consente all'utente di accedere a una parte del set di dati per vederne la struttura interna.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService">
+    <skos:prefLabel xml:lang="en">Geographic model/information management service</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Geografische Dienste für die Verwaltung von Daten und Datenmodellen</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Services de gestion des modèles/informations géographiques</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Servizio di gestione dei modelli/informazioni geografiche</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoFeatureAccessService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoMapAccessService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoCoverageAccessService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoSensorDescriptionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoProductAccessService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoFeatureTypeService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoCatalogueService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoRegistryService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoGazetteerService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoOrderHandlingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoStandingOrderService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoFeatureAccessService">
+    <skos:prefLabel xml:lang="en">Feature access service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that provides a client access to and management of a feature store.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für den Zugriff auf Objekte</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der es einer Anwendung ermöglicht, auf einen Datenspeicher mit geografischen Objekten zuzugreifen und diesen zu verwalten.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service d’accès aux éléments</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant au client d’accéder à un magasin d’éléments et de le gérer.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di accesso a elementi (feature)</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente al cliente di accedere e di gestire una raccolta di elementi.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoMapAccessService">
+    <skos:prefLabel xml:lang="en">Map access service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that provides a client access to a geographic graphics, i.e. pictures of geographic data.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für den Zugriff auf grafische Darstellungen</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der es einer Anwendung ermöglicht, auf grafische Darstellungen von geografischen Daten zuzugreifen.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service d’accès aux cartes</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant au client d’accéder à des graphiques géographiques, c’est-à-dire à des représentations de données géographiques.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di accesso a mappe (map)</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente al cliente di accedere a grafici geografici, ossia rappresentazioni di dati geografici.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoCoverageAccessService">
+    <skos:prefLabel xml:lang="en">Coverage access service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that provides a client access to and management of a coverage store.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für den Zugriff auf Rasterdaten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der es einer Anwendung ermöglicht, auf einen Datenspeicher mit Rasterdaten zuzugreifen und diesen zu verwalten.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service d’accès aux couvertures</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant au client d’accéder à un magasin de couvertures et de le gérer.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di accesso a coperture (coverage)</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente al cliente di accedere e di gestire una raccolta di coperture (coverage).</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoSensorDescriptionService">
+    <skos:prefLabel xml:lang="en">Sensor description service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that provides the description of a coverage sensor, including sensor location and orientation, as well as the sensor’s geometric, dynamic, and radiometric characteristics for geo-processing purposes.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für die Beschreibung von Sensoren</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der die Beschreibung eines Rasterdatensensors für Zwecke der Geodatenverarbeitung bereitstellt. Zur Beschreibung gehören Standort und Orientierung des Sensors sowie seine geometrischen, dynamischen und radiometrischen Eigenschaften.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de description des capteurs</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service fournissant la description des capteurs de couvertures à des fins de géotraitement. La description comprend notamment la position et l’orientation des capteurs ainsi que leurs caractéristiques géométriques, dynamiques et radiométriques.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di descrizione dei sensori</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che fornisce la descrizione di un sensore comprendente la posizione e l'orientamento nonché le caratteristiche geometriche, dinamiche e radiometriche dello stesso ai fini del processamento dei dati territoriali.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoProductAccessService">
+    <skos:prefLabel xml:lang="en">Product access service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that provides access to and management of a geographic product store.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für den Zugriff auf Produkte</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der es ermöglicht, auf einen Datenspeicher mit geografischen Produkten zuzugreifen und diesen zu verwalten.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service d’accès aux produits</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant d’accéder à un magasin de produits géographiques et de le gérer.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di accesso ai prodotti</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente al cliente di accedere e gestire una raccolta di prodotti geografici.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoFeatureTypeService">
+    <skos:prefLabel xml:lang="en">Feature type service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that provides a client to access to and management of a store of feature type definitions.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für den Zugriff auf Objektarten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der es einer Anwendung ermöglicht, auf einen Datenspeicher mit Definitionen von Objektarten zuzugreifen und diesen zu verwalten.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de types d’éléments</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant au client d’accéder à un magasin de définitions de types d’éléments et de le gérer.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di tipi di elementi (feature type)</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente al cliente di accedere e gestire una raccolta di definizioni di tipi di elementi.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoCatalogueService">
+    <skos:prefLabel xml:lang="en">Catalogue service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that provides discovery and management services on a store of metadata about instances.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Katalogdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst für die Suche in einer Sammlung von Metadaten über Instanzen und ihre Verwaltung.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de catalogue</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de rechercher des métadonnées dans un magasin de métadonnées sur les ressources d’information, et de le gérer.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di catalogo</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di ricercare e gestire servizi relativi a una raccolta di metadati sulle istanze.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoRegistryService">
+    <skos:prefLabel xml:lang="en">Registry Service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that provides access to store of metadata about types.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Registerdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst für die Suche in einer Sammlung von Metadaten über Datentypen und ihre Verwaltung.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de registre</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant d’accéder à un magasin de métadonnées sur les catégories de ressources d’information.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di registro</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di accedere a una raccolta di metadati sulle categorie di risorse di informazione (type).</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoGazetteerService">
+    <skos:prefLabel xml:lang="en">Gazetteer service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that provides access to a directory of instances of a class or classes of real-world phenomena containing some information regarding position.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Gazetteerdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der real existierenden Objekten aus einem Verzeichnis der Instanzen einer oder mehrerer Klassen Positionsangaben zuordnet.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service toponymique</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant d’accéder à un répertoire d’occurrences d’une ou plusieurs catégories de phénomènes du monde réel contenant des informations ayant trait à la position.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio toponimico</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di accedere a un repertorio di occorrenze di una o più categorie di fenomeni del mondo reale contenente informazioni riguardanti la posizione.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoOrderHandlingService">
+    <skos:prefLabel xml:lang="en">Order handling service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that provides a client with the ability to order products from a provider.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Auftragsdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der es einer Anwendung ermöglicht, bei einem Anbieter Produkte zu bestellen.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de gestion des commandes</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant aux clients de commander des produits auprès d’un fournisseur.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di gestione degli ordini</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente ai clienti di ordinare dei prodotti da un fornitore.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoStandingOrderService">
+    <skos:prefLabel xml:lang="en">Standing order service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Order handling service that allows a user to request that a product over a geographic area be disseminated when it becomes available.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dauerauftragsdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der es einem Nutzer ermöglicht, ein Produkt über ein geografisches Gebiet zu bestellen, das nach Erscheinen ausgeliefert wird.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de commande en attente</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service de gestion des commandes permettant à l’utilisateur de demander qu’un produit couvrant une zone géographique déterminée soit diffusé lorsqu’il devient disponible.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di ordini permanenti</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio di gestione degli ordini che consente all'utente di richiedere che un prodotto che copre una determinata area geografica sia diffuso non appena disponibile.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/taskManagementService">
+    <skos:prefLabel xml:lang="en">Geographic workflow/task management services</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Geografische Dienste für die Verwaltung von Bearbeitungsketten und Aufgaben</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Services de gestion du processus/des tâches géographiques</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Servizi di gestione di workflow/compiti geografici</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/chainDefinitionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/workflowEnactmentService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/subscriptionService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/chainDefinitionService">
+    <skos:prefLabel xml:lang="en">Chain definition service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service to define a chain and to enable it to be executed by the workflow enactment service.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für die Definition von Bearbeitungsketten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst für die Definition von Bearbeitungsketten und für die Veranlassung ihrer Ausführung durch den folgenden Dienst (302).</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de définition de chaîne</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de définir une chaîne et de la faire exécuter par le service de contrôle de processus.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di definizione di catene</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di definire una catena e di farla eseguire dal servizio di esecuzione del workflow.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/taskManagementService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/workflowEnactmentService">
+    <skos:prefLabel xml:lang="en">Workflow enactment service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">The workflow enactment service interprets a chain and controls the instantiation of services and sequencing of activities.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für die Ausführung von Bearbeitungsketten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dieser Dienst interpretiert eine Bearbeitungskette und steuert die Instanzenbildung von Diensten sowie den Ablauf der Bearbeitungsschritte.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de contrôle de processus</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Le service de contrôle de processus interprète une chaîne et contrôle l’exécution des services et le séquençage des activités.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di esecuzione del workflow</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Il servizio di esecuzione del worfklow interpreta una catena e controlla le istanze dei servizi e la sequenzialità delle attività.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/taskManagementService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/subscriptionService">
+    <skos:prefLabel xml:lang="en">Subscription service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service to allow clients to register for notification about events.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Abonnementdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der es Anwendungen ermöglicht, über Ereignisse benachrichtigt zu werden.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service d’abonnement</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant aux clients de s’abonner afin d’être informés des événements.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di abbonamento</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente al cliente di abbonarsi per essere informato sugli eventi.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/taskManagementService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService">
+    <skos:prefLabel xml:lang="en">Geographic processing services – spatial</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Geografische Verarbeitungsdienste — raumbezogen</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Services de traitement géographique — aspects spatiaux</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Servizi di trattamento geografico — aspetti territoriali</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialCoordinateConversionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialCoordinateTransformationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialCoverageVectorConversionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialImageCoordinateConversionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialRectificationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialOrthorectificationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialSensorGeometryModelAdjustmentService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialImageGeometryModelConversionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialSubsettingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialSamplingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialTilingChangeService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialDimensionMeasurementService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialFeatureManipulationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialFeatureMatchingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialFeatureGeneralizationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialRouteDeterminationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialPositioningService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProximityAnalysisService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialCoordinateConversionService">
+    <skos:prefLabel xml:lang="en">Coordinate conversion service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service to change coordinates from one coordinate system to another coordinate system that is related to the same datum.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für die Konversion von Koordinaten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der Koordinaten aus einem Bezugssystem in die eines anderen mit gleichem Datum umrechnet.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de conversion des coordonnées</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de modifier les coordonnées d’un système de coordonnées en coordonnées d’un autre système fondé sur le même datum géodésique.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di conversione delle coordinate</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di convertire le coordinate da un sistema di coordinate a un altro nell'ambito dello stesso dato geodetico.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialCoordinateTransformationService">
+    <skos:prefLabel xml:lang="en">Coordinate transformation service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service to change coordinates from a coordinate reference system based on one datum to a coordinate reference system based on a second datum.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für die Transformation von Koordinaten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der Koordinaten aus einem Bezugssystem in die eines anderen mit abweichendem Datum umrechnet.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de transformation des coordonnées</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de modifier les coordonnées d’un système de référence fondé sur un datum géodésique en coordonnées d’un système de référence fondé sur un autre datum.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di trasformazione delle coordinate</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di trasformare le coordinate da un sistema di riferimento basato su un dato a un altro sistema basato su un dato differente.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialCoverageVectorConversionService">
+    <skos:prefLabel xml:lang="en">Coverage/vector conversion service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service to change the spatial representation from a coverage schema to a vector schema, or vice versa.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für die Umwandlung zwischen Raster- und Vektordaten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der bei der räumlichen Abbildung von Daten vom Raster- zum Vektorschema oder umgekehrt übergeht.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de conversion couverture/vecteur</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de modifier la représentation spatiale pour passer d’un schéma de couverture à un schéma vectoriel, ou vice versa.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di conversione di raster/vettoriale</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di modificare la rappresentazione spaziale da uno schema di tipo raster a uno schema di tipo vettoriale, o viceversa.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialImageCoordinateConversionService">
+    <skos:prefLabel xml:lang="en">Image coordinate conversion service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">A coordinate transformation or coordinate conversion service to change the coordinate reference system for an image.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für die Konversion von Bildkoordinaten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Koordinatentransformations- oder Koordinatenkonversionsdienst für den Wechsel des Bezugssystems von Bilddaten.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de conversion des coordonnées des images</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service de transformation ou de conversion des coordonnées permettant de modifier le système de référence des coordonnées pour une image.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di conversione delle coordinate delle immagini</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio di trasformazione o di conversione delle coordinate che consente di modificare il sistema di riferimento delle coordinate per un'immagine.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialRectificationService">
+    <skos:prefLabel xml:lang="en">Rectification service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service for transforming an image into a perpendicular parallel projection and therefore a constant scale.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Entzerrungsdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst für die Transformation von Bilddaten in eine rechtwinklige Parallelprojektion und damit in einen einheitlichen Maßstab.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de rectification</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de transformer une image en une projection parallèle perpendiculaire, et donc à une échelle constante.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di rettifica</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di trasformare un'immagine in una proiezione ortogonale e dunque a una scala costante.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialOrthorectificationService">
+    <skos:prefLabel xml:lang="en">Orthorectification service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">A rectification service that removes image tilt and displacement due to terrain elevation.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Ortho-Entzerrungsdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Entzerrungsdienst, der eine durch unterschiedliche Geländehöhe bedingte Schieflage des Bildes und Verschiebungen entfernt.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service d’orthorectification</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service de rectification qui élimine l’inclinaison et le décalage de l’image dû au relief du terrain.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di ortorettifica</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio di rettifica che elimina l'inclinazione e lo spostamento dell'immagine dovuti all'elevazione del terreno.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialSensorGeometryModelAdjustmentService">
+    <skos:prefLabel xml:lang="en">Sensor geometry model adjustment service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that adjusts sensor geometry models to improve the match of the image with other images and/or known ground positions.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für die Justierung von Geometriemodellen von Sensoren</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dieser Dienst justiert Geometriemodelle von Sensoren, um die Bilddaten an andere Bilder und/oder bekannte Bezugspunkte am Boden anzupassen.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service d’ajustement des modèles géométriques des capteurs</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant d’ajuster les modèles géométriques des capteurs pour améliorer la concordance de l’image avec d’autres images et/ou positions au sol connues.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di adeguamento dei modelli geometrici dei sensori</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che adegua i modelli geometrici dei sensori per migliorare la corrispondenza dell'immagine con altre immagini e/o posizioni al suolo note.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialImageGeometryModelConversionService">
+    <skos:prefLabel xml:lang="en">Image geometry model conversion service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that converts sensor geometry models into a different but equivalent sensor geometry model.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für die Konversion von Geometriemodellen</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dieser Dienst rechnet das Geometriemodell eines Sensors in ein anderes, äquivalentes Geometriemodell um.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de conversion des modèles géométriques des images</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de convertir les modèles géométriques des capteurs en un modèle géométrique différent, mais équivalent.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di conversione dei modelli geometrici delle immagini</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che converte i modelli geometrici dei sensori in un modello geometrico diverso ma equivalente.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialSubsettingService">
+    <skos:prefLabel xml:lang="en">Subsetting service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that extracts data from an input in a continuous spatial region either by geographic location or by grid coordinates.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Geografischer Ausschneidedienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der aus Eingabedaten anhand von Ortsangaben oder Gitterkoordinaten ein zusammenhängendes Gebiet ausschneidet.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de définition de sous-ensembles</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant d’extraire des données d’un ensemble spatial continu, sur la base soit de la position géographique, soit des coordonnées de la grille.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di definizione dei sottoinsiemi</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che estrae da un input all'interno di una regione spaziale continua, in base alla posizione geografica o alle coordinate della griglia.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialSamplingService">
+    <skos:prefLabel xml:lang="en">Sampling service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that extracts data from an input using a consistent sampling scheme either by geographic location or by grid coordinates.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Raumbezogener Auswahldienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der aus Eingabedaten anhand von Ortsangaben oder Gitterkoordinaten nach einem konsistenten Schema bestimmte Daten auswählt.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service d’échantillonnage</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant d’extraire des données au moyen d’un système d’échantillonnage cohérent, sur la base soit de la position géographique, soit des coordonnées de la grille.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di campionamento</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che estrae dei dati da un input mediante un sistema di campionamento coerente, in base alla posizione geografica o alle coordinate della griglia.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialTilingChangeService">
+    <skos:prefLabel xml:lang="en">Tiling change service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that changes the tiling of geographic data.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Kachelungsdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dieser Dienst ändert die Kachelung von Geodaten.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de modification du dallage</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de modifier le dallage des données géographiques.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di modifica della mosaicatura (tiling)</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che modifica la mosaicatura dei dati geografici.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialDimensionMeasurementService">
+    <skos:prefLabel xml:lang="en">Dimension measurement service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service to compute dimensions of objects visible in an image or other geodata.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Messungsdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der die Abmessungen von Objekten in Bilddaten oder anderen Geodaten berechnet.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de mesure des dimensions</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service qui calcule les dimensions des objets visibles sur une image ou sur d’autres données géographiques.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di misura delle dimensioni</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che calcola le dimensioni degli oggetti visibili in un'immagine o in altri dati geografici.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialFeatureManipulationService">
+    <skos:prefLabel xml:lang="en">Feature manipulation services</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Register one feature to another, an image, or another data set or coordinate set; correcting for relative translation shifts, rotational differences, scale differences, and perspective differences. Verify that all features in the Feature Collection are topologically consistent according to the topology rules of the Feature Collection, and identifies and/or corrects any inconsistencies that are discovered.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Objektbearbeitungsdienste</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Zuordnung eines Objektes zu einem anderen Objekt, zu einem Bild, zu einem anderen Daten- oder Koordinatensatz; Korrektur von relativen Verschiebungen sowie von Unterschieden im Drehwinkel, im Maßstab und in der Perspektive. Überprüfung, ob alle Objekte in der Objektgruppe mit den Topologieregeln der Gruppe übereinstimmen; dieser Dienst identifiziert und/oder korrigiert alle entdeckten unlogischen Sachverhalte.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Services de manipulation des éléments géographiques</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ces services permettent de caler un élément sur un autre, sur une image, ou sur une autre série de données ou de coordonnées, de corriger les décalages relatifs, les différences de rotation, les différences d’échelle et les différences de perspective, de vérifier que tous les éléments figurant dans la compilation d’éléments sont topologiquement cohérents au regard des règles de topologie de la compilation d’éléments, et de recenser et/ou corriger les éventuelles incohérences décelées.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizi di manipolazione degli elementi geografici</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizi che consentono di registrare un elemento con un altro, un'immagine, o un'altra serie di dati o di coordinate, correggendo le relative traslazioni, le differenze di rotazione, le differenze di scala e le differenze di prospettiva. Questi servizi consentono inoltre di verificare che tutti gli elementi che figurano nella collezione di elementi (Feature Collection) siano topologicamente coerenti rispetto alle regole topologiche della collezione di elementi e individuano e/o correggono le eventuali incoerenze individuate.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialFeatureMatchingService">
+    <skos:prefLabel xml:lang="en">Feature matching service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that determines which features and portions of features represent the same real world entity from multiple data sources, e.g., edge matching and limited conflation.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Vergleichsdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dieser Dienst ermittelt z. B. durch Kantenabgleich und begrenzte Verschmelzung, welche Objekte und Objektteile aus verschiedenen Datenquellen dasselbe reale Objekt darstellen.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service d’appariement d’éléments</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service qui détermine quels éléments et parties d’éléments provenant de diverses sources de données représentent la même entité du monde réel, par exemple, appariement des contours et conflation limitée.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di corrispondenza di elementi</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che determina quali elementi e parti di elementi provenienti da varie fonti di dati rappresentano la stessa entità del mondo reale, ad esempio, corrispondenza di confini (edge matching) e fusione limitata (limited conflation).</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialFeatureGeneralizationService">
+    <skos:prefLabel xml:lang="en">Feature generalisation service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that reduces spatial variation in a feature collection to increase the effectiveness of communication by counteracting the undesirable effects of data reduction.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Generalisierungsdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der den räumlichen Detaillierungsgrad einer Objektgruppe vermindert, um Sachverhalte klarer darzustellen, ohne auf wesentliche Bestandteile zu verzichten.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de généralisation d’éléments</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service qui réduit la variation spatiale dans une compilation d’éléments afin de renforcer l’efficacité de la communication en remédiant aux effets indésirables de la réduction de données.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di generalizzazione di elementi</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che riduce la variazione spaziale in una collezione di elementi al fine di rafforzare l'efficacia della comunicazione rimediando agli effetti indesiderati della riduzione dei dati.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialRouteDeterminationService">
+    <skos:prefLabel xml:lang="en">Route determination service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service to determine the optimal path between two specified points based on the input parameters and properties contained in the Feature Collection.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Routensuchdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dieser Dienst bestimmt die für gegebene Eingabeparameter und Eigenschaften der Objektgruppe optimale Verbindung zwischen zwei vorgegebenen Punkten.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de détermination d’itinéraire</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service qui, sur la base des paramètres d’entrée et des propriétés contenus dans la compilation d’éléments, détermine le trajet optimal entre deux points donnés.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di determinazione dell'itinerario</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che determina il percorso ottimale tra due punti specifici sulla base dei parametri di input e delle proprietà contenuti nella collezione di elementi.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialPositioningService">
+    <skos:prefLabel xml:lang="en">Positioning service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service provided by a position-providing device to use, obtain and unambiguously interpret position information, and determines whether the results meet the requirements of the use.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Positionierungsdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Von einem positionsgebenden Gerät bereitgestellter Dienst für die Nutzung, Ermittlung und eindeutige Interpretation von Positionsangaben sowie für die Prüfung, ob die erhaltenen Angaben den Nutzungsanforderungen genügen.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de positionnement</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service fourni par un appareil de géopositionnement, permettant d’utiliser, d’obtenir et d’interpréter sans équivoque les informations concernant la position, ainsi que de déterminer si les résultats répondent aux exigences de l’utilisation.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di posizionamento</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio fornito da un dispositivo di posizionamento che consente di utilizzare, ottenere e interpretare in modo univoco le informazioni concernenti la posizione, nonché di determinare se i risultati soddisfano i requisiti dell'utilizzo.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProximityAnalysisService">
+    <skos:prefLabel xml:lang="en">Proximity analysis service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Given a position or geographic feature, finds all objects with a given set of attributes that are located within a user-specified distance of the position or feature.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Analysedienst für räumliche Nachbarschaftsbeziehungen</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dieser Dienst ermittelt zu einer gegebenen Position oder einem gegebenen geografischen Objekt alle Objekte mit gegebenen Eigenschaften, die innerhalb einer vom Nutzer festgelegten Entfernung liegen.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service d’analyse de proximité</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce service trouve, pour une position ou un élément géographique donné, tous les éléments ayant une série d’attributs spécifique qui sont situés à une distance définie par l’utilisateur par rapport à la position ou à l’élément.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di analisi di prossimità</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Data una posizione o un elemento geografico, questo servizio trova tutti gli oggetti che hanno una serie di attributi specifici, ubicati entro una distanza specificata dall'utente rispetto alla posizione o all'elemento.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService">
+    <skos:prefLabel xml:lang="en">Geographic processing services – thematic</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Geografische Verarbeitungsdienste – themenbezogen</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Services de traitement géographique — aspects thématiques</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Servizi di trattamento geografico — aspetti tematici</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicGoparameterCalculationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicClassificationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicFeatureGeneralizationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicSubsettingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicSpatialCountingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicChangeDetectionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicGeographicInformationExtractionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicImageProcessingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicReducedResolutionGenerationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicImageManipulationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicImageUnderstandingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicImageSynthesisService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicMultibandImageManipulationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicObjectDetectionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicGeoparsingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicGeocodingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicGoparameterCalculationService">
+    <skos:prefLabel xml:lang="en">Geoparameter calculation service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service to derive application-oriented quantitative results that are not available from the raw data itself.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Berechnungsdienst für Geoparameter</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst zur Berechnung von anwendungsspezifischen Datenwerten, die in den Rohdaten nicht enthalten sind.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de calcul des géoparamètres</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service qui dérive des résultats quantitatifs, axés sur les applications, qui ne peuvent pas être obtenus à partir des seules données brutes.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di calcolo dei geoparametri</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che deriva risultati quantitativi, orientati alle applicazioni, che non possono essere ottenuti direttamente dai dati grezzi.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicClassificationService">
+    <skos:prefLabel xml:lang="en">Thematic classification service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service to classify regions of geographic data based on thematic attributes.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für die thematische Klassifizierung</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dieser Dienst klassifiziert Gebiete geografischer Daten anhand thematischer Attribute.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de classification thématique</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service qui classe des zones de données géographiques sur la base des attributs thématiques.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di classificazione tematica</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di classificare delle aree di dati geografici in base ad attributi tematici.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicFeatureGeneralizationService">
+    <skos:prefLabel xml:lang="en">Feature generalisation service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that generalises feature types in a feature collection to increase the effectiveness of communication by counteracting the undesirable effects of data reduction.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Generalisierungsdienst für Objektarten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der die Objektarten in einer Objektgruppe vermindert, um Sachverhalte klarer darzustellen, ohne auf wesentliche Bestandteile zu verzichten.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de généralisation d’éléments</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service qui généralise les types d’éléments contenus dans une compilation d’éléments afin de renforcer l’efficacité de la communication en remédiant aux effets indésirables de la réduction de données.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di generalizzazione di elementi</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che generalizza i tipi di elementi contenuti in una collezione di elementi al fine di rafforzare l'efficacia della comunicazione rimediando agli effetti indesiderati della riduzione dei dati.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicSubsettingService">
+    <skos:prefLabel xml:lang="en">Subsetting service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that extracts data from an input based on parameter values.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Themenbezogener Ausschneidedienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der je nach vorgegebenen Parametern Daten aus einer Eingabemenge auswählt.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de définition de sous-ensembles</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant d’extraire des données sur la base des paramètres d’entrée.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di definizione dei sottoinsiemi</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che estrae dei dati da un input sulla base di valori di parametro.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicSpatialCountingService">
+    <skos:prefLabel xml:lang="en">Spatial counting service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that counts geographic features.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Zähldienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dieser Dienst zählt geografische Objekte.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de comptage géographique</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de compter les éléments géographiques.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di conteggio territoriale</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che conta gli elementi geografici.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicChangeDetectionService">
+    <skos:prefLabel xml:lang="en">Change detection service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service to find differences between two data sets that represent the same geographical area at different times.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Erkennungsdienst für Veränderungen</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dieser Dienst ermittelt Unterschiede zwischen zwei Datensätzen, die dasselbe geografische Gebiet zu verschiedenen Zeitpunkten beschreiben.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de détection des changements</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de déceler les différences entre deux séries de données qui représentent la même zone géographique à des moments différents.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di rilevazione dei cambiamenti</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di rilevare le differenze tra due serie di dati che rappresentano la stessa area geografica in momenti diversi.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicGeographicInformationExtractionService">
+    <skos:prefLabel xml:lang="en">Geographic information extraction services</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Services supporting the extraction of feature and terrain information from remotely sensed and scanned images.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Auszugsdienst für geografische Informationen</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dieser Dienst unterstützt die Berechnung von Objekt- und Geländeinformationen aus Bilddaten der Fernerkundung.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Services d’extraction d’informations géographiques</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Services permettant l’extraction d’informations sur les éléments et le terrain à partir d’images de télédétection et d’images scannées.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di estrazione di informazioni geografiche</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizi che consentono l'estrazione di informazioni topografiche e sugli elementi a partire da immagini satellitari e scannerizzate.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicImageProcessingService">
+    <skos:prefLabel xml:lang="en">Image processing service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service to change the values of thematic attributes of an image using a mathematical function.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Themenbezogener Bildverarbeitungsdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der die Werte themenbezogener Bildeigenschaften über eine mathematische Funktion verändert.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de traitement d’images</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de modifier les valeurs des attributs thématiques d’une image au moyen d’une fonction mathématique.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di trattamento delle immagini</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di modificare i valori degli attributi tematici di un'immagine mediante una funzione matematica</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicReducedResolutionGenerationService">
+    <skos:prefLabel xml:lang="en">Reduced resolution generation service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that reduces the resolution of an image.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Auflösungsreduzierungsdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der die Auflösung eines Bildes verringert.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de réduction de la résolution</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de réduire la résolution d’une image.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di riduzione della risoluzione</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che riduce la risoluzione di un'immagine.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicImageManipulationService">
+    <skos:prefLabel xml:lang="en">Image Manipulation Services</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Services for manipulating data values in images: changing colour and contrast values, applying various filters, manipulating image resolution, noise removal, "striping", systematic-radiometric corrections, atmospheric attenuation, changes in scene illumination, etc.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Bildbearbeitungsdienste</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienste, mit denen sich die Datenwerte von Bildern bearbeiten lassen: Änderung von Farben und Kontrast, Anwendung von Filtern, Änderung der Auflösung, Entrauschen, Streifenbildung, systematische radiometrische Korrekturen, atmosphärische Abschwächung, Änderung der Helligkeit usw.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Services de manipulation d’images</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Services permettant de manipuler les valeurs des données dans les images: modification des valeurs de couleur et de contraste, application de différents filtres, manipulation de la résolution de l’image, réduction du bruit, réduction des stries, corrections radiométriques, atténuation atmosphérique, changement d’illumination de la scène, etc.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizi di manipolazione delle immagini</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizi che consentono di manipolare i valori dei dati nelle immagini: modifica dei valori del colore e del contrasto, applicazione di vari filtri, manipolazione della risoluzione dell'immagine, riduzione del rumore, striping, correzioni radiometriche sistematiche, attenuazioni atmosferiche, modifiche dell'illuminazione della scena ecc.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicImageUnderstandingService">
+    <skos:prefLabel xml:lang="en">Image understanding services</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Services that provide automated image change detection, registered image differencing, significance-of-difference analysis and display, and area-based and model-based differencing.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Interpretationsdienste für Bilder</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienste für die automatisierte Erkennung von Bildveränderungen, für Differenzverfahren zwischen zugeordneten Bildern, die Analyse und Darstellung der Bedeutung von Differenzen sowie für die flächen- und modellbasierte Differenzbildung.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Services de compréhension d’images</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Services permettant la détection automatisée des changements d’images, la différenciation des images rectifiées, l’analyse et l’affichage de l’importance des différences, et la différenciation par zone et par modèle.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizi di comprensione di immagini</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizi che consentono la rilevazione automatica dei cambiamenti di immagine, la differenziazione delle immagini rettificate, l'analisi e la visualizzazione della significatività delle differenze e la differenziazione per area e per modello.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicImageSynthesisService">
+    <skos:prefLabel xml:lang="en">Image synthesis services</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Services for creating or transforming images using computer-based spatial models, perspective transformations, and manipulations of image characteristics to improve visibility, sharpen resolution, and/or reduce the effects of cloud cover or haze.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Bildsynthesedienste</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienste zur Erzeugung oder Umformung von Bildern unter Nutzung von computergestützten räumlichen Modellen, Perspektiv-Transformationen und Methoden der Bildbearbeitung, um die Sichtbarkeit zu verbessern, die Auflösung zu schärfen und/oder die Wirkung von Wolkenbedeckung oder Dunst zu verringern.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Services de synthèse d’images</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Services permettant de créer ou de transformer des images au moyen de modèles spatiaux informatisés, de transformations de perspective, et de manipulations de caractéristiques de l’image en vue d’améliorer la visibilité et la résolution et/ou de réduire les effets de la couverture nuageuse ou de la brume.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizi di sintesi di immagini</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizi che consentono di creare o trasformare delle immagini utilizzando modelli spaziali informatici, effettuare delle trasformazioni di prospettiva, manipolare le caratteristiche delle immagini al fine di migliorare la visibilità e la risoluzione e/o ridurre gli effetti della nuvolosità e della foschia.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicMultibandImageManipulationService">
+    <skos:prefLabel xml:lang="en">Multiband image manipulation</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Services that modify an image using the multiple bands of the image.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Multiband-Bildbearbeitungsdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst für die Bildbearbeitung unter Nutzung der verschiedenen in den Bilddaten enthaltenen Frequenzbänder.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Manipulation d’images multibandes</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Services permettant de modifier une image en utilisant les différentes bandes spectrales de l’image.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Manipolazione di immagini multibanda</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che modifica un'immagine utilizzando le varie bande dell'immagine.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicObjectDetectionService">
+    <skos:prefLabel xml:lang="en">Object detection service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service to detect real-world objects in an image.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Objekterkennungsdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst zur Erkennung realer Objekte in einem Bild.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de détection d’objets</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de détecter les objets du monde réel dans une image.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di rilevazione di oggetti</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di rilevare gli oggetti del mondo reale in un'immagine.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicGeoparsingService">
+    <skos:prefLabel xml:lang="en">Geoparsing service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service to scan text documents for location-based references, such as a place names, addresses, postal codes, etc., in preparation for passage to a geocoding service.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Geoparserdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Um die Übergabe an einen Geocodierungsdienst vorzubereiten, können Textdokumente mit diesem Dienst nach Ortsangaben wie Ortsnamen, Adressen, Postleitzahlen usw. durchsucht werden.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service d’analyse géosémantique</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de rechercher dans les documents textuels les références à des lieux, comme les toponymes, les adresses, les codes postaux, etc., dans la perspective d’un service de géocodage.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di analisi sintattica (geoparsing)</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di cercare nei documenti testuali i riferimenti a dei luoghi, come i toponimi, gli indirizzi, i codici postali eccetera in preparazione al passaggio a un servizio di geocodifica.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicGeocodingService">
+    <skos:prefLabel xml:lang="en">Geocoding service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service to augment location-based text references with geographic coordinates (or some other spatial reference).</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Geocodierungsdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, mit dem Ortsangaben in Texten durch geografische Koordinaten (oder einen anderen Raumbezug) ergänzt werden können.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de géocodage</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant, dans les textes, de compléter les références à des lieux en indiquant les coordonnées géographiques (ou une autre référence spatiale).</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di geocodifica</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di arricchire i riferimenti geotestuali con le coordinate geografiche (o altri riferimenti spaziali).</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProcessingService">
+    <skos:prefLabel xml:lang="en">Geographic processing services – temporal</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Geografische Verarbeitungsdienste — zeitbezogen</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Services de traitement géographique — aspects temporels</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Servizi di processamento geografico — aspetti temporali</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalReferenceSystemTransformationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalSubsettingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalSamplingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProximityAnalysisService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalReferenceSystemTransformationService">
+    <skos:prefLabel xml:lang="en">Temporal reference system transformation service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service to change the values of temporal instances from one temporal reference system to another temporal reference system.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Transformationsdienst für den Zeitbezug</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Mit diesem Dienst können Zeitangaben aus einem Zeitbezugssystem in ein anderes umgerechnet werden.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de transformation du système de référence temporel</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de modifier les valeurs des occurrences temporelles d’un système de référence temporelle à un autre système de référence temporelle.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di trasformazione del sistema di riferimento temporale</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di modificare i valori delle occorrenze temporali da un sistema di riferimento temporale a un altro.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalSubsettingService">
+    <skos:prefLabel xml:lang="en">Subsetting service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that extracts data from an input in a continuous interval based on temporal position values.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Zeitbezogener Ausschneidedienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der aus Eingabedaten Daten auswählt, die in einem zusammenhängenden Zeitintervall mit vorgegebenem Anfangs- und Endzeitpunkt liegen.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de définition de sous-ensembles</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant d’extraire des données dans un intervalle continu sur la base de valeurs de position temporelle.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di definizione dei sottoinsiemi</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che estrae dati da un input in un intervallo continuo sulla base di valori di posizione temporale.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalSamplingService">
+    <skos:prefLabel xml:lang="en">Sampling service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that extracts data from an input using a consistent sampling scheme based on temporal position values.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Zeitbezogener Auswahldienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der aus Eingabedaten anhand von Zeitangaben nach einem konsistenten Schema bestimmte Daten auswählt.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service d’échantillonnage</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant d’extraire des données au moyen d’un système d’échantillonnage cohérent sur la base des valeurs de position temporelle.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di campionamento</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che estrae dati da un input usando un sistema di campionamento coerente basato su valori di posizione temporale.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProximityAnalysisService">
+    <skos:prefLabel xml:lang="en">Temporal proximity analysis service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Given a temporal interval or event, find all objects with a given set of attributes that are located within a user-specified interval from the interval or event.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Analysedienst für zeitbezogene Nachbarschaftsbeziehungen</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dieser Dienst ermittelt zu einem gegebenen Zeitraum oder Ereignis alle Objekte mit gegebenen Eigenschaften, deren zeitlicher Abstand vom Bezugszeitraum oder Bezugsereignis einen vom Nutzer festgelegten Wert nicht überschreitet.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service d’analyse de proximité</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Ce service trouve, pour un intervalle temporel ou un événement donné, tous les objets ayant une série d’attributs spécifique qui sont situés dans un intervalle défini par l’utilisateur par rapport à l’intervalle ou à l’élément.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di analisi di prossimità temporale</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Dato un intervallo temporale o un evento determinati, questo servizio trova tutti gli oggetti che hanno una serie di attributi specifici, ubicati in un intervallo stabilito dall'utente rispetto all'intervallo o all'evento.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataProcessingService">
+    <skos:prefLabel xml:lang="en">Geographic processing services – metadata</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Geografische Verarbeitungsdienste — Metadaten</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Services de traitement géographique — métadonnées</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Servizi di processamento geografico — metadati</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataStatisticalCalculationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataGeographicAnnotationService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataStatisticalCalculationService">
+    <skos:prefLabel xml:lang="en">Statistical calculation service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service to calculate the statistics of a data set.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für statistische Berechnungen</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dieser Dienst berechnet statistische Daten aus einem Datensatz.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de calcul statistique</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de calculer les statistiques d’un ensemble de données.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di calcolo statistico</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di calcolare le statistiche di un insieme di dati.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataGeographicAnnotationService">
+    <skos:prefLabel xml:lang="en">Geographic annotation services</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Services to add ancillary information to an image or a feature in a feature collection.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Ergänzungsdienst für Geodaten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, mit dem sich Bildern oder Objekten einer Objektgruppe ergänzende Informationen hinzufügen lassen.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Services d’annotation géographique</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Services permettant d’ajouter des informations complémentaires à une image ou un élément dans une compilation d’éléments.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizi di annotazione geografica</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di aggiungere informazioni complementari a un'immagine o un elemento in una collezione di elementi.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataProcessingService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService">
+    <skos:prefLabel xml:lang="en">Geographic communication services</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Geografische Nachrichtenübermittlungsdienste</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Services de communication géographique</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Servizi di comunicazione geografica</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comEncodingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comTransferService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comGeographicCompressionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comGeographicFormatConversionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comMessagingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comRemoteFileAndExecutableManagement" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comEncodingService">
+    <skos:prefLabel xml:lang="en">Encoding service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that provides implementation of an encoding rule and provides an interface to encoding and decoding functionality.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Codierungsdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der nach einer Verschlüsselungsvorschrift arbeitet und eine Schnittstelle zur Verschlüsselung (Codierung) und Entschlüsselung (Decodierung) besitzt.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service d’encodage</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant la mise en œuvre d’une règle d’encodage et servant d’interface pour la fonctionnalité d’encodage et de décodage.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di codifica</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente l'attuazione di una regola di codificazione e che funge da interfaccia per la funzione di codifica e decodifica.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comTransferService">
+    <skos:prefLabel xml:lang="en">Transfer service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that provides implementation of one or more transfer protocols, which allows data transfer between distributed information systems over offline or online communication media.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Übertragungsdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der nach einem oder mehreren Übertragungsprotokollen arbeitet und damit die Datenübertragung zwischen verteilten Informationssystemen über Online- oder Offline-Medien ermöglicht.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de transfert</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant la mise en œuvre d’un ou plusieurs protocoles de transfert, ce qui permet le transfert de données entre des systèmes d’information distribués via des moyens de communication hors ligne ou en ligne.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di trasferimento</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di attuare uno o più protocolli di trasferimento, permettendo il trasferimento di dati tra sistemi di informazione distribuiti mediante mezzi di comunicazione off-line o on-line.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comGeographicCompressionService">
+    <skos:prefLabel xml:lang="en">Geographic compression service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that converts spatial portions of a feature collection to and from compressed form.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Kompressionsdienst für Geodaten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der Daten zu räumlich abgegrenzten Teilen einer Objektgruppe in eine komprimierte Form oder komprimierte Daten zurück in die Ausgangsform wandelt.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de compression géographique</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de convertir les parties spatiales d’une compilation d’éléments pour les faire passer de la forme non compressée à la forme compressée, et vice versa.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di compressione geografica</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di convertire le parti spaziali di una collezione di elementi da e in forma compressa.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comGeographicFormatConversionService">
+    <skos:prefLabel xml:lang="en">Geographic format conversion service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that converts from one geographic data format to another.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Umformatierungsdienst für Geodaten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der das Format von Geodaten ändert.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de conversion de format géographique</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de passer d’un format de données géographiques à un autre.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di conversione di formato geografico</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di passare da un formato di dati geografici a un altro.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comMessagingService">
+    <skos:prefLabel xml:lang="en">Messaging service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that allows multiple users to simultaneously view, comment about, and request edits of feature collections.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Nachrichtenübermittlungsdienst</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienst, der es verschiedenen Nutzern ermöglicht, gleichzeitig Objektgruppen zu betrachten und zu kommentieren sowie Änderungsanträge zu stellen.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de messagerie</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant simultanément à plusieurs utilisateurs de visualiser et de commenter des compilations d’éléments et d’en demander des révisions.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di messaggeria</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente simultaneamente a più utenti di visualizzare e commentare collezioni di elementi e di chiederne la revisione.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comRemoteFileAndExecutableManagement">
+    <skos:prefLabel xml:lang="en">Remote file and executable management</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that provides access to secondary storage of geographic features as if it were local to the client.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienst für den Zugriff auf externe Daten und Programme</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Mit diesem Dienst kann auf externe Speichermedien für geografische Objekte und Programme zugegriffen werden, als ob diese lokal verfügbar wären.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Gestion des fichiers éloignés et des fichiers exécutables</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant d’accéder à un stockage distant des éléments géographiques comme s’il s’agissait de ressources locales.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Gestione di file remoti e di file eseguibili</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di accedere a uno stoccaggio secondario di elementi geografici come se si trattasse di risorse locali.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+  </skos:Concept>
+</rdf:RDF>
+
