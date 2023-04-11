@@ -43,7 +43,14 @@
     <for name="gco:Integer" use="number"/>
     <for name="gco:Real" use="number"/>
     <for name="gco:Boolean" use="checkbox"/>
-
+    <for name="gco:Boolean"
+         xpath="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass"
+         use="data-gn-checkbox-with-nilreason">
+      <directiveAttributes
+        data-tag-name="gmd:pass"
+        data-nilreason="eval#@gco:nilReason"
+        data-labels='{"true": "conformant", "false": "notConformant", "unknown": "notEvaluated"}'/>
+    </for>
 
     <for name="gco:Date" use="data-gn-date-picker"/>
     <for name="gco:DateTime" use="data-gn-date-picker"/>
@@ -472,6 +479,9 @@
         <thesaurus key="external.none.allThesaurus"
                    transformations="to-iso19139-keyword-as-xlink"
                    />
+        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialDataServiceCategory-SpatialDataServiceCategory"
+                   transformations="to-iso19139-keyword-as-xlink-with-anchor"
+                   />
       </thesaurusList>
     </view>
     <view name="advanced">
@@ -571,6 +581,9 @@
         <thesaurus key="external.none.allThesaurus"
                    transformations="to-iso19139-keyword-as-xlink"
                    />
+        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialDataServiceCategory-SpatialDataServiceCategory"
+                   transformations="to-iso19139-keyword-as-xlink-with-anchor"
+        />
       </thesaurusList>
     </view>
     <view name="bgdi">
