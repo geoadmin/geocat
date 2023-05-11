@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-    - geocat_v4.2.3_report_custom_*
+    - geocat_v4.2.3_*
 
 jobs:
   build:
@@ -46,10 +46,10 @@ jobs:
       run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
 
     - name: "Building docker image"
-      run: mvn -pl web -Pdocker docker:build -DdockerImageName=docker.pkg.github.com/geoadmin/geocat/geocat:${{ steps.version.outputs.VERSION }}-${{ github.run_number }}
+      run: mvn -pl web -Pdocker docker:build -DdockerImageName=docker.pkg.github.com/geoadmin/geocat/geocat_mgdi:${{ steps.version.outputs.VERSION }}-${{ github.run_number }}
 
     - name: "Login to docker.pkg.github.com"
       run: docker login -u $GITHUB_ACTOR -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
 
     - name: "Push to GitHub Packages"
-      run: docker push docker.pkg.github.com/geoadmin/geocat/geocat:${{ steps.version.outputs.VERSION }}-${{ github.run_number }}
+      run: docker push docker.pkg.github.com/geoadmin/geocat/geocat_mgdi:${{ steps.version.outputs.VERSION }}-${{ github.run_number }}
