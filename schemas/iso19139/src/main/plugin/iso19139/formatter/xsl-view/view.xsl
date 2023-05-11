@@ -38,6 +38,7 @@
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
                 xmlns:xslUtils="java:org.fao.geonet.util.XslUtil"
                 xmlns:saxon="http://saxon.sf.net/"
+                xmlns:exslt="http://exslt.org/common"
                 version="2.0"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
@@ -968,6 +969,11 @@
   <xsl:template mode="render-field"
                 match="gmd:topicCategory[1]|gmd:obligation[1]|gmd:pointInPixel[1]"
                 priority="100">
+    <xsl:variable name="translated_cat">
+      <xsl:for-each select="parent::node()/(gmd:topicCategory|gmd:obligation|gmd:pointInPixel)">
+        <xsl:apply-templates mode="render-value" select="*"/>
+      </xsl:for-each>
+    </xsl:variable>
     <dl class="gn-date">
       <dt>
         <xsl:call-template name="render-field-label">
@@ -976,10 +982,10 @@
       </dt>
       <dd>
         <ul>
-          <xsl:for-each select="parent::node()/(gmd:topicCategory|gmd:obligation|gmd:pointInPixel)">
+          <xsl:for-each select="exslt:node-set($translated_cat)/span">
+            <xsl:sort data-type="text" order="ascending" select="text()"/>
             <li>
-              <xsl:apply-templates mode="render-value"
-                                   select="*"/>
+              <xsl:copy-of select="."/>
             </li>
           </xsl:for-each>
         </ul>
