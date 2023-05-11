@@ -52,6 +52,27 @@
   <xsl:variable name="lang2chars" select="/root/gui/lang2chars"/>
   <xsl:variable name="requestParameters" select="/root/request"/>
 
+  <!-- site description used in head meta tag for SEO purpose -->
+  <xsl:variable name="description">
+    <xsl:choose>
+      <xsl:when test="$lang2chars = 'en'">
+        Description in english
+      </xsl:when>
+      <xsl:when test="$lang2chars = 'de'">
+        Description in german
+      </xsl:when>
+      <xsl:when test="$lang2chars = 'fr'">
+        Description in french
+      </xsl:when>
+      <xsl:when test="$lang2chars = 'it'">
+        Description in italian
+      </xsl:when>
+      <xsl:otherwise>
+        Description in english
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
   <!-- XSL using this variable should be refactored to not rely on the
   old i18n files. FIXME eg. metadata-fop.xsl -->
   <xsl:variable name="oldGuiStrings" select="/root/gui/strings"/>

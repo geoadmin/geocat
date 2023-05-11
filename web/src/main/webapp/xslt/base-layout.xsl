@@ -48,7 +48,7 @@
         <meta name="viewport" content="initial-scale=1.0"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
 
-        <meta name="description" content=""/>
+        <meta name="description" content="{$description}"/>
         <meta name="keywords" content=""/>
 
 
