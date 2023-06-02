@@ -1811,40 +1811,32 @@
               });
           },
 
-          buildMapGeoAdminBaseLayer: function(layer) {
-            var resolutions = [
-              4000, 3750, 3500, 3250, 3000, 2750, 2500, 2250, 2000, 1750, 1500, 1250,
-              1000, 750, 650, 500, 250, 100, 50, 20, 10, 5, 2.5, 2, 1.5, 1, 0.5
-            ];
-
-            var matrixIds = [];
-            for (var i = 0; i < resolutions.length; i++) {
-              matrixIds.push(i);
-            }
-
-            var tileGrid = new ol.tilegrid.WMTS({
-              origin: [420000, 350000],
-              resolutions: resolutions,
-              matrixIds: matrixIds
-            });
-
-            var defaultUrl = 'https://wmts{5-9}.geo.admin.ch/1.0.0/{Layer}/default/' +
-              'current/21781/' +
-              '{TileMatrix}/{TileRow}/{TileCol}.jpeg';
-
+          buildMapGeoAdminBaseLayerRelief: function (layer) {
+            var defaultUrl =
+              "https://world.vectortiles.geo.admin.ch/mbtiles/org.openmaptiles-relief.vt/{z}/{x}/{y}.jpg";
             return new ol.layer.Tile({
-              source: new ol.source.WMTS(({
-                crossOrigin: 'anonymous',
+              source: new ol.source.XYZ({
                 url: defaultUrl,
-                tileGrid: tileGrid,
-                layer: layer || 'ch.swisstopo.pixelkarte-farbe',
-                requestEncoding: 'REST',
-                projection: 'EPSG:21781'
-              })),
-              title: layer + ' (map.geo.admin.ch)',
-              extent: [434250, 37801.909073720046, 894750, 337801.90907372005],
-              useInterimTilesOnError: false,
-              url: defaultUrl
+                projection: "EPSG:3857"
+              })
+            });
+          },
+
+          buildMapGeoAdminBaseLayer: function (layer) {
+            var defaultUrl =
+              "https://world.vectortiles.geo.admin.ch/mbtiles/org.openstreetmap-openmaptiles.vt/{z}/{x}/{y}.pbf";
+
+            return new ol.layer.VectorTile({
+              source: new ol.source.VectorTile({
+                url: defaultUrl,
+                format: new ol.format.MVT(),
+                projection: "EPSG:3857",
+                extent: [
+                  -20037508.342789244, -20037471.205137063, 20037508.342789244,
+                  20037471.205137063
+                ]
+              }),
+              opacity: 0.5
             });
           },
 
@@ -2337,8 +2329,10 @@
                 });
                 break;
 
-              case 'map.geo.admin.ch':
-                return this.buildMapGeoAdminBaseLayer(opt.name)
+              case "contour":
+                return this.buildMapGeoAdminBaseLayer(opt.name);
+              case "relief":
+                return this.buildMapGeoAdminBaseLayerRelief(opt.name);
             }
           },
 

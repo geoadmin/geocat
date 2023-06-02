@@ -839,7 +839,7 @@
               wms: [],
               wmts: []
             },
-            projection: "EPSG:21781",
+            projection: "EPSG:3857",
             projectionList: [
               {
                 code: "urn:ogc:def:crs:EPSG:6.6:4326",

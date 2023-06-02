@@ -250,8 +250,8 @@
 
                   if (!layer.hidden && !isFirstBgLayer) {
                     isFirstBgLayer = true;
-                    map.getLayers().setAt(0, olLayer);
                   }
+                  map.getLayers().push(olLayer);
                 }
               }
 
