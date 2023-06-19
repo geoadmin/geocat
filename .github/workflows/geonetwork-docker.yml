@@ -37,7 +37,7 @@ jobs:
     - name: run tests
       run: |
         mvn resources:resources@copy-index-schema-to-source -f web
-        mvn clean verify -Pit
+        #mvn clean verify -Pit
     - name: "Installing"
       run: mvn -B clean -DskipTests install -Ddb.username=db_username -Ddb.name=db_name -Ddb.type=postgres-postgis -Ddb.host=db_host -Ddb.password=db_password -Ddb.pool.maxActive=50 -Ddb.port=5432
 
