@@ -124,6 +124,9 @@
       </xsl:for-each>
     </xsl:variable>
 
+    <!-- Get main language ID from otherLanguages -->
+    <xsl:variable name="mainLanguageId" select="concat('#', $allLanguages/lang[@id != 'default' and @value = $mainLanguage]/@id)"/>
+
     <!-- Record is dataset if no hierarchyLevel -->
     <xsl:variable name="isDataset" as="xs:boolean"
                   select="
@@ -952,15 +955,99 @@
           </xsl:apply-templates>
         </xsl:for-each>
 
+        <!-- Indexing multilingual online Resource -->
         <xsl:for-each select="gmd:transferOptions/*/
-                                gmd:onLine/*[gmd:linkage/gmd:URL != '']">
+                                gmd:onLine/*[normalize-space(gmd:linkage/gmd:URL) != '' or 
+                                count(gmd:linkage//che:LocalisedURL[normalize-space(.) != '']) > 0]">
 
           <xsl:variable name="transferGroup"
                         select="count(ancestor::gmd:transferOptions/preceding-sibling::gmd:transferOptions)"/>
           <xsl:variable name="protocol"
                         select="gmd:protocol/*/text()"/>
-          <xsl:variable name="linkName"
-                        select="gn-fn-index:json-escape((gmd:name/*/text())[1])"/>
+
+          <!-- Indexing multilingual URL -->
+          <xsl:variable name="localisedURL" select=".//che:LocalisedURL[. != '']"/>
+
+          <xsl:variable name="urlObject">
+            <xsl:choose>
+              <!-- Default -->
+              <xsl:when test="normalize-space(gmd:linkage/gmd:URL) != ''">
+                <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
+                                           $doubleQuote, gn-fn-index:json-escape(gmd:linkage/gmd:URL), $doubleQuote)"/></value>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:if test="count($localisedURL) > 0">
+                  <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
+                                $doubleQuote, gn-fn-index:json-escape(
+                                if ($localisedURL[@local = $mainLanguageId])
+                                then $localisedURL[@local = $mainLanguageId]
+                                else $localisedURL[1]), $doubleQuote)"/></value>
+                </xsl:if>
+              </xsl:otherwise>
+            </xsl:choose>
+            <!-- Localized -->
+            <xsl:for-each select=".//che:LocalisedURL[. != '']">
+              <xsl:variable name="lang2letters" as="xs:string" select="replace(@locale, '#', '')"/>
+              <value><xsl:value-of select="', ', concat($doubleQuote, 'lang', $allLanguages/lang[@id = $lang2letters]/@value, 
+                                          $doubleQuote, ':', $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
+            </xsl:for-each>
+          </xsl:variable>
+
+          <!-- Index multilingual Link Name -->
+          <xsl:variable name="localisedLinkName" select="gmd:name//gmd:LocalisedCharacterString[. != '']"/>
+
+          <xsl:variable name="nameObject">
+            <xsl:choose>
+              <!-- Default -->
+              <xsl:when test="normalize-space(gmd:name/gco:CharacterString) != ''">
+                <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
+                                           $doubleQuote, gn-fn-index:json-escape(gmd:name/gco:CharacterString), $doubleQuote)"/></value>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:if test="count($localisedLinkName) > 0">
+                  <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
+                                $doubleQuote, gn-fn-index:json-escape(
+                                if ($localisedLinkName[@local = $mainLanguageId])
+                                then $localisedLinkName[@local = $mainLanguageId]
+                                else $localisedLinkName[1]), $doubleQuote)"/></value>
+                </xsl:if>
+              </xsl:otherwise>
+            </xsl:choose>
+            <!-- Localized -->
+            <xsl:for-each select="gmd:name//gmd:LocalisedCharacterString[. != '']">
+              <xsl:variable name="lang2letters" as="xs:string" select="replace(@locale, '#', '')"/>
+              <value><xsl:value-of select="concat(', ', $doubleQuote, 'lang', $allLanguages/lang[@id = $lang2letters]/@value, 
+                                          $doubleQuote, ':', $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
+            </xsl:for-each>
+          </xsl:variable>
+
+          <!-- Index multilingual Link Description -->
+          <xsl:variable name="localisedLinkDescription" select="gmd:description//gmd:LocalisedCharacterString[. != '']"/>
+
+          <xsl:variable name="descriptionObject">
+            <xsl:choose>
+              <!-- Default -->
+              <xsl:when test="normalize-space(gmd:description/gco:CharacterString) != ''">
+                <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
+                                           $doubleQuote, gn-fn-index:json-escape(gmd:description/gco:CharacterString), $doubleQuote)"/></value>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:if test="count($localisedLinkDescription) > 0">
+                  <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
+                                $doubleQuote, gn-fn-index:json-escape(
+                                if ($localisedLinkDescription[@local = $mainLanguageId])
+                                then $localisedLinkDescription[@local = $mainLanguageId]
+                                else $localisedLinkDescription[1]), $doubleQuote)"/></value>
+                </xsl:if>
+              </xsl:otherwise>
+            </xsl:choose>
+            <!-- Localized -->
+            <xsl:for-each select="gmd:description//gmd:LocalisedCharacterString[. != '']">
+              <xsl:variable name="lang2letters" as="xs:string" select="replace(@locale, '#', '')"/>
+              <value><xsl:value-of select="concat(', ', $doubleQuote, 'lang', $allLanguages/lang[@id = $lang2letters]/@value, 
+                                          $doubleQuote, ':', $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
+            </xsl:for-each>
+          </xsl:variable>
 
           <linkUrl>
             <xsl:value-of select="gmd:linkage/gmd:URL"/>
@@ -973,9 +1060,9 @@
           </xsl:element>
           <link type="object">{
             "protocol":"<xsl:value-of select="gn-fn-index:json-escape((gmd:protocol/*/text())[1])"/>",
-            "url":"<xsl:value-of select="gn-fn-index:json-escape(gmd:linkage/gmd:URL)"/>",
-            "name":"<xsl:value-of select="$linkName"/>",
-            "description":"<xsl:value-of select="gn-fn-index:json-escape(gmd:description/gco:CharacterString/text())"/>",
+            "urlObject":{<xsl:value-of select="$urlObject"/>},
+            "nameObject":{<xsl:value-of select="$nameObject"/>},
+            "descriptionObject":{<xsl:value-of select="$descriptionObject"/>},
             "function":"<xsl:value-of select="gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue"/>",
             "applicationProfile":"<xsl:value-of select="gn-fn-index:json-escape(gmd:applicationProfile/gco:CharacterString/text())"/>",
             "group": <xsl:value-of select="$transferGroup"/>
@@ -1197,7 +1284,7 @@
                Remote is supposed to be ISO19139. -->
               <xsl:variable name="datasetUuid"
                             select="$remoteDoc//(*[local-name(.) = 'fileIdentifier']/*/text()|
-                                                 *[local-name(.) = 'metadataIdentifier']/*/*[local-name(.) = 'code']/*/text())" />
+                                                *[local-name(.) = 'metadataIdentifier']/*/*[local-name(.) = 'code']/*/text())" />
 
               <xsl:if test="count($datasetUuid) = 1
                             and string($datasetUuid)">
