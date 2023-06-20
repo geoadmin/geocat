@@ -104,11 +104,11 @@
             showMosaic: true,
             showMaps: true,
             facetConfig: {
-              "groupOwner": {
+              groupOwner: {
                 terms: {
                   field: "groupOwner",
                   size: 80,
-                  order : { "_key" : "asc" }
+                  order: { _key: "asc" }
                 },
                 meta: {
                   orderByTranslation: true
@@ -335,7 +335,7 @@
                   field: "groupOwner",
                   size: 80,
                   include: ".*",
-                  order : { "_key" : "asc" }
+                  order: { _key: "asc" }
                 },
                 meta: {
                   orderByTranslation: true,
@@ -348,14 +348,14 @@
                 terms: {
                   field: "cl_hierarchyLevel.key",
                   include: "dataset|service.*|basic.*",
-                  order : { "_key" : "asc" }
-                // },
-                // aggs: {
-                //   format: {
-                //     terms: {
-                //       field: "format"
-                //     }
-                //   }
+                  order: { _key: "asc" }
+                  // },
+                  // aggs: {
+                  //   format: {
+                  //     terms: {
+                  //       field: "format"
+                  //     }
+                  //   }
                 }
               },
 
@@ -367,7 +367,7 @@
               "cl_topic.key": {
                 terms: {
                   field: "cl_topic.key",
-                  order : { "_key" : "asc" },
+                  order: { _key: "asc" },
                   size: 40
                 },
                 meta: {
@@ -768,11 +768,13 @@
                 // 'url' : '/formatters/xml?attachment=false',
                 url: "/formatters/xml",
                 class: "fa-file-code-o"
-              }, {
+              },
+              {
                 label: "exportXMLISO19139",
-                url : "/formatters/iso19139?output=xml",
+                url: "/formatters/iso19139?output=xml",
                 class: "fa-file-code-o"
-              }, {
+              },
+              {
                 label: "exportGM03",
                 url: "/formatters/gm03",
                 class: "fa-file-code-o"
@@ -848,7 +850,8 @@
               {
                 code: "EPSG:3857",
                 label: "Google mercator (EPSG:3857)"
-              }, {
+              },
+              {
                 code: "EPSG:21781",
                 label: "Swiss LV03(EPSG:21781)"
               }
@@ -953,8 +956,7 @@
                 },
                 {
                   types: "onlines",
-                  filter:
-                    "-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*",
+                  filter: "-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*",
                   title: "links"
                 }
               ]
@@ -1014,7 +1016,7 @@
                   field: "groupOwner",
                   size: 80,
                   include: ".*",
-                  order : { "_key" : "asc" }
+                  order: { _key: "asc" }
                 },
                 meta: {
                   orderByTranslation: true,
@@ -1028,7 +1030,7 @@
                   field: "cl_hierarchyLevel.key",
                   size: 20,
                   include: "dataset|service.*|basic.*",
-                  order : { "_key" : "asc" }
+                  order: { _key: "asc" }
                 }
               },
               mdStatus: {
@@ -1107,7 +1109,7 @@
               groupPublishedId: {
                 terms: {
                   field: "groupPublishedId",
-                  size: 10,
+                  size: 10
                 },
                 meta: {
                   collapsed: true
@@ -1161,7 +1163,7 @@
                   size: 15
                 },
                 meta: {
-                  "collapsed": true
+                  collapsed: true
                 }
               }
             }
