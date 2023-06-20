@@ -102,10 +102,10 @@
 
     // GeoCat specific
     menu.Administrator.push({
-      name: 'Geocat',
-      route: '#geocat',
-      classes: 'btn-danger',
-      icon: 'fa-plus'
+      name: "Geocat",
+      route: "#geocat",
+      classes: "btn-danger",
+      icon: "fa-plus"
     });
     // /Geocat specific
 

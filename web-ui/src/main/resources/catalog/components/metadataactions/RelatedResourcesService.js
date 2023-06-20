@@ -370,7 +370,7 @@
           action: openMd
         },
         // GEOCAT
-        "CH:GEOSHOP" : {
+        "CH:GEOSHOP": {
           iconClass: "fa-download",
           label: "download",
           action: openLink
@@ -467,7 +467,9 @@
           ? $filter("gnLocalized")(resource.name)
           : (angular.isObject(resource.title)
               ? $filter("gnLocalized")(resource.title)
-              : resource.title) || resource.name || '';
+              : resource.title) ||
+            resource.name ||
+            "";
         resource.locDescription = angular.isObject(resource.description)
           ? $filter("gnLocalized")(resource.description)
           : resource.description;
