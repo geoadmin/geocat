@@ -254,9 +254,7 @@
     <entry key="gnui">
       <util:list>
         <value>json/gnui</value>
-
-        <!-- TODO srt, "...codelists/+gmd:MD_ScopeCod...", '/' not better than '/+'  ? -->
-        <value>standards/iso19139/codelists/+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:DS_InitiativeTypeCode+gmd:MD_SpatialRepresentationTypeCode</value>
+        <value>standards/iso19139/codelists/gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:DS_InitiativeTypeCode+gmd:MD_SpatialRepresentationTypeCode</value>
         <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode</value>
         <value>db/MetadataCategory+Operation+Group+StatusValue+Source+Translations</value>
       </util:list>
