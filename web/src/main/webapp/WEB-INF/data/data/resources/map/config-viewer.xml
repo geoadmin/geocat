@@ -14,12 +14,19 @@
                        opacity="1">
       <ows:Title>map.geo.admin.ch</ows:Title>
     </ows-context:Layer>
-
+    <ows-context:Layer name="{type=world,name=world}"
+                       group="Background layers"
+                       hidden="false"
+                       opacity="0.5">
+    <ows:Title>map.geo.admin.ch</ows:Title>
+    </ows-context:Layer>
     <ows-context:Layer name="{type=contour,name=contour}"
                        group="Background layers"
                        hidden="false"
                        opacity="0.5">
       <ows:Title>map.geo.admin.ch</ows:Title>
+
+
     </ows-context:Layer>
 
 

@@ -153,6 +153,7 @@
           </xsl:when>
           <xsl:otherwise>
             <script src="{$uiResourcesPath}lib/openlayers/ol.js?v={$buildNumber}"></script>
+            <script src="{$uiResourcesPath}lib/openlayers/olms.js?v={$buildNumber}"></script>
           </xsl:otherwise>
         </xsl:choose>
 

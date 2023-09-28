@@ -1811,33 +1811,45 @@
               });
           },
 
-          buildMapGeoAdminBaseLayerRelief: function (layer) {
-            var defaultUrl =
-              "https://world.vectortiles.geo.admin.ch/mbtiles/org.openmaptiles-relief.vt/{z}/{x}/{y}.jpg";
-            return new ol.layer.Tile({
-              source: new ol.source.XYZ({
-                url: defaultUrl,
-                projection: "EPSG:3857"
-              })
+          buildMapGeoAdminBaseLayerWorld: function (layer) {
+            layer = new ol.layer.VectorTile({
+              opacity: 1,
+              declutter: true
             });
+            olms.applyStyle(
+              layer,
+              "https://vectortiles.geo.admin.ch/styles/ch.swisstopo.leichte-basiskarte_world.vt/style.json",
+              "openmaptiles"
+            );
+            return layer;
+          },
+
+          buildMapGeoAdminBaseLayerRelief: function (layer) {
+            layer = new ol.layer.VectorTile({
+              opacity: 1
+            });
+            olms.applyStyle(
+              layer,
+              "https://vectortiles.geo.admin.ch/styles/ch.swisstopo.leichte-basiskarte_world.vt/style.json",
+              "terrain_v1.0.0"
+            );
+            return layer;
           },
 
           buildMapGeoAdminBaseLayer: function (layer) {
             var defaultUrl =
               "https://world.vectortiles.geo.admin.ch/mbtiles/org.openstreetmap-openmaptiles.vt/{z}/{x}/{y}.pbf";
 
-            return new ol.layer.VectorTile({
-              source: new ol.source.VectorTile({
-                url: defaultUrl,
-                format: new ol.format.MVT(),
-                projection: "EPSG:3857",
-                extent: [
-                  -20037508.342789244, -20037471.205137063, 20037508.342789244,
-                  20037471.205137063
-                ]
-              }),
+            layer = new ol.layer.VectorTile({
+              declutter: true,
               opacity: 0.5
             });
+            olms.applyStyle(
+              layer,
+              "https://vectortiles.geo.admin.ch/styles/ch.swisstopo.leichte-basiskarte_world.vt/style.json",
+              "leichtebasiskarte_v3.0.0"
+            );
+            return layer;
           },
 
           /**
@@ -2333,6 +2345,8 @@
                 return this.buildMapGeoAdminBaseLayer(opt.name);
               case "relief":
                 return this.buildMapGeoAdminBaseLayerRelief(opt.name);
+              case "world":
+                return this.buildMapGeoAdminBaseLayerWorld(opt.name);
             }
           },
 

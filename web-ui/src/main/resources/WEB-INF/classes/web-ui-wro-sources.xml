@@ -64,6 +64,8 @@
     <jsSource webappPath="/catalog/lib/style/bootstrap/dist/js/bootstrap.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/proj4js-compressed.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/openlayers/ol.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/openlayers/olms.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/openlayers/" minimize="false"/>
     <jsSource webappPath="/catalog/lib/d3.v3.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/nv.d3.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/jsonix/jsonix/Jsonix-min.js" minimize="false"/>
@@ -136,6 +138,7 @@
     <!-- FIXME in non debug mode, 3D mode does not work when WMS layer is displayed.
          No errors, only block tile loading-->
     <jsSource webappPath="/catalog/lib/openlayers/ol.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/openlayers/olms.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/olcesium/olcesium.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/d3.v3.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/nv.d3.min.js" minimize="false"/>
