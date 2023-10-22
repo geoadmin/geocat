@@ -107,7 +107,7 @@
     <filter-name>cors</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-  
+
   <!-- url rewrite filter -->
   <filter>
     <filter-name>UrlRewriteFilter</filter-name>
@@ -168,7 +168,7 @@
     </init-param>
     <init-param>
       <param-name>url</param-name>
-      <param-value>https://*.admin.ch https://*.cartoriviera.ch https://*.vsgis.ch</param-value>
+      <param-value>https://*.admin.ch https://*.cartoriviera.ch https://*.vsgis.ch http://ext.fr.ch  http://mapplus.vdf.loc http://mapplus01.vdf.loc</param-value>
     </init-param>
   </filter>
   <filter-mapping>
@@ -182,7 +182,7 @@
     <filter-name>resources</filter-name>
     <filter-class>org.fao.geonet.resources.ResourceFilter</filter-class>
   </filter>
-  
+
   <filter>
     <!--
         WebResourceOptimizer is a WRO4J Filter (https://code.google.com/p/wro4j/wiki/Introduction)
