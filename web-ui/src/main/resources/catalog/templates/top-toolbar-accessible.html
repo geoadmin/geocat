@@ -75,8 +75,8 @@
           data-gn-active-tb-item="{{isExternalViewerEnabled ? externalViewerUrl : gnCfg.mods.map.appUrl}}"
           title="{{'map' | translate}}"
         >
-          <span class="fa fa-fw fa-globe hidden-sm"></span>
-          <span translate>makeYourMap</span>
+          <span class="fa fa-fw fa-globe"></span>
+          <span class="hidden-sm" translate>makeYourMap</span>
           <span data-gnv-layer-indicator="viewer" />
         </a>
       </li>
@@ -201,6 +201,22 @@
         >
           <i class="fa fa-question-circle"></i>
           <span class="hidden-sm" translate>documentation</span>
+        </a>
+      </li>
+      <li class="gn-menuitem-xs" data-ng-show="!authenticated || !user.isEditorOrMore()">
+        <a
+          href="https://www.geocat.ch/datahub/search/"
+          target="_blank"
+          title="{{'testGeocatLinkTooltip' | translate}}"
+        >
+          <span
+            style="color: #ffaf5e; font-size: small"
+            onmouseover="this.style.color='black'"
+            onmouseout="this.style.color='#ffaf5e'"
+            translate
+          >
+            testGeocatLink
+          </span>
         </a>
       </li>
       <!-- end Geocat specific -->
