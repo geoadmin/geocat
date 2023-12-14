@@ -362,6 +362,7 @@
   <bean class="org.fao.geonet.security.web.csrf.CookieCsrfTokenRepository"
         id="csrfTokenRepository">
     <property name="cookieHttpOnly" value="false"/>
+    <property name="cookiePath" value="/"/>
   </bean>
 
   <!-- RequestMatcher to exclude CSRF token from CSW requests -->
