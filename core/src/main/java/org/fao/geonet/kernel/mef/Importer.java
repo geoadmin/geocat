@@ -519,6 +519,8 @@ public class Importer {
                     if (Log.isDebugEnabled(Geonet.MEF)) {
                         Log.debug(Geonet.MEF, "Deleting existing metadata with UUID : " + uuid);
                     }
+                    Store store = context.getBean("resourceStore", Store.class);
+                    store.delResources(context, uuid, true);
                     metadataManager.deleteMetadata(context, dm.getMetadataId(uuid));
                     metadataManager.flush();
                 }
