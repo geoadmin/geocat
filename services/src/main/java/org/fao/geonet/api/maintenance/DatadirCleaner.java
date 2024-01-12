@@ -3,6 +3,7 @@ package org.fao.geonet.api.maintenance;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -77,6 +79,7 @@ public class DatadirCleaner {
         }
         if (orphanedPath) {
             String toLog = path.toAbsolutePath().toString();
+            FileUtils.deleteQuietly(path.toFile().getAbsoluteFile());
             toReturn.add(toLog);
             toReturn.add(String.format("SQL# select count(*) from metadata where id = %s", path.getFileName().toString()));
         }
