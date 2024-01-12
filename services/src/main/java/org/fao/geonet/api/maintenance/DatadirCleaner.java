@@ -17,9 +17,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 @RequestMapping(value = {"/{portal}/api/maintenance"})
@@ -32,8 +35,7 @@ public class DatadirCleaner {
     @Autowired
     IMetadataUtils metadataUtils;
 
-    private BufferedWriter orphanedDataFile;
-    private Path orphanedDataFilePath;
+    private final AtomicInteger counter = new AtomicInteger();
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Clean data dir")
     @RequestMapping(
@@ -49,27 +51,30 @@ public class DatadirCleaner {
 
     public ObjectNode cleanFile() throws IOException {
         Path rootPath = geonetworkDataDirectory.getMetadataDataDir();
-        orphanedDataFilePath = rootPath.resolve("orphanedDataFiles.txt");
-        try(BufferedWriter bw = Files.newBufferedWriter(orphanedDataFilePath, StandardOpenOption.WRITE)) {
-            orphanedDataFile = bw;
+        Path orphanedDataFilePath = rootPath.resolve("orphanedDataFiles.txt");
+        counter.set(0);
+        try(PrintWriter pw = new PrintWriter(Files.newBufferedWriter(orphanedDataFilePath))) {
             listFilesEatingException(rootPath) //
                 .flatMap(this::listFilesEatingException)
-                .filter(this::isOrphanedPath)
-                .forEach(this::deleteAndLogToFile);
-
-            ObjectNode status = new ObjectMapper().createObjectNode();
-            status.put("status", "Cleaned the orphaned data: see details in " + orphanedDataFilePath.toString());
-            return status;
+                .flatMap(this::processPath)
+                .forEach(pw::println);
         }
+        ObjectNode status = new ObjectMapper().createObjectNode()
+            .put("status", "Cleaned the orphaned data: see details in " + orphanedDataFilePath.toString());
+        return status;
     }
 
-    private void deleteAndLogToFile(Path path) {
-        try {
-            orphanedDataFile.append(path.toAbsolutePath().toString());
-            orphanedDataFile.newLine();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    private Stream<String> processPath(Path path) {
+        List<String> toReturn = new ArrayList<>();
+        int i = counter.incrementAndGet();
+        if (i % 3 == 0) {
+            toReturn.add(String.format("got %d", i));
         }
+        if (isOrphanedPath(path)) {
+            String toLog = path.toAbsolutePath().toString();
+            toReturn.add(toLog);
+        }
+        return toReturn.stream();
     }
 
     private boolean isOrphanedPath(Path path) {
