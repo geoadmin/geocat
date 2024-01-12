@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -37,6 +36,8 @@ public class DatadirCleaner {
 
     private final AtomicInteger counter = new AtomicInteger();
 
+    PrintWriter pwToFlush;
+
     @io.swagger.v3.oas.annotations.Operation(summary = "Clean data dir")
     @RequestMapping(
         path = "/cleanDatadir",
@@ -54,9 +55,10 @@ public class DatadirCleaner {
         Path orphanedDataFilePath = rootPath.resolve("orphanedDataFiles.txt");
         counter.set(0);
         try(PrintWriter pw = new PrintWriter(Files.newBufferedWriter(orphanedDataFilePath))) {
+            pwToFlush = pw;
             listFilesEatingException(rootPath) //
-                .flatMap(this::listFilesEatingException)
-                .flatMap(this::processPath)
+                .flatMap(this::listFilesEatingException) //
+                .flatMap(this::processPath) //
                 .forEach(pw::println);
         }
         ObjectNode status = new ObjectMapper().createObjectNode()
@@ -67,12 +69,20 @@ public class DatadirCleaner {
     private Stream<String> processPath(Path path) {
         List<String> toReturn = new ArrayList<>();
         int i = counter.incrementAndGet();
-        if (i % 3 == 0) {
-            toReturn.add(String.format("got %d", i));
+        boolean orphanedPath = false;
+        try {
+            orphanedPath = isOrphanedPath(path);
+        } catch (RuntimeException e) {
+            toReturn.add(String.format("ERROR# %s", path.toString()));
         }
-        if (isOrphanedPath(path)) {
+        if (orphanedPath) {
             String toLog = path.toAbsolutePath().toString();
             toReturn.add(toLog);
+            toReturn.add(String.format("SQL# select count(*) from metadata where id = %s", path.getFileName().toString()));
+        }
+        if (i % 100 == 0) {
+            toReturn.add(String.format("got %d", i));
+            pwToFlush.flush();
         }
         return toReturn.stream();
     }
