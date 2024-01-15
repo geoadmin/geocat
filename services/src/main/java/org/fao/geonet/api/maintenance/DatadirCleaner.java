@@ -63,8 +63,8 @@ public class DatadirCleaner {
                 .flatMap(this::processPath) //
                 .forEach(pw::println);
         }
-        ObjectNode status = new ObjectMapper().createObjectNode()
-            .put("status", "Cleaned the orphaned data: see details in " + orphanedDataFilePath.toString());
+        ObjectNode status = new ObjectMapper().createObjectNode();
+        status.put("status", "Cleaned the orphaned data: see details in " + orphanedDataFilePath);
         return status;
     }
 
@@ -75,16 +75,16 @@ public class DatadirCleaner {
         try {
             orphanedPath = isOrphanedPath(path);
         } catch (RuntimeException e) {
-            toReturn.add(String.format("ERROR# %s", path.toString()));
+            toReturn.add("ERROR# %s" + path);
         }
         if (orphanedPath) {
             String toLog = path.toAbsolutePath().toString();
             FileUtils.deleteQuietly(path.toFile().getAbsoluteFile());
             toReturn.add(toLog);
-            toReturn.add(String.format("SQL# select count(*) from metadata where id = %s", path.getFileName().toString()));
+            toReturn.add("SQL# select count(*) from metadata where id = " + path.getFileName());
         }
         if (i % 100 == 0) {
-            toReturn.add(String.format("got %d", i));
+            toReturn.add(String.format("Processed %d paths", i));
             pwToFlush.flush();
         }
         return toReturn.stream();
