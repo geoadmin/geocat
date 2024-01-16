@@ -841,7 +841,7 @@
               wms: [],
               wmts: []
             },
-            projection: "EPSG:21781",
+            projection: "EPSG:3857",
             projectionList: [
               {
                 code: "urn:ogc:def:crs:EPSG:6.6:4326",
@@ -853,16 +853,37 @@
               },
               {
                 code: "EPSG:21781",
-                label: "Swiss LV03(EPSG:21781)"
+                label: "Swiss LV03 (EPSG:21781)"
+              },
+              {
+                code: "EPSG:2056",
+                label: "Swiss LV95 (EPSG:2056)"
               }
             ],
             switcherProjectionList: [
               {
                 code: "EPSG:3857",
-                label: "Google mercator (EPSG:3857)",
+                label: "Google mercator (EPSG:3857)"
+              },
+              {
                 code: "EPSG:21781",
-                def: "+proj=somerc +lat_0=46.95240555555556 +lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.4,15.1,405.3,0,0,0,0 +units=m +no_defs",
-                label: "Swiss LV03(EPSG:21781)"
+                label: "CH1903 / LV03",
+                def: "+proj=somerc +lat_0=46.9524055555556 +lon_0=7.43958333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel +towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs +type=crs",
+                extent: [
+                  485071.57525302575, 74284.81278939791, 837119.8047146694,
+                  299941.78643935296
+                ],
+                worldExtent: [5.96, 45.82, 10.49, 47.81]
+              },
+              {
+                label: "CH1903+ / LV95",
+                code: "EPSG:2056",
+                extent: [
+                  2485071.5752530256, 1074284.812789398, 2837119.8047146695,
+                  1299941.786439353
+                ],
+                worldExtent: [5.96, 45.82, 10.49, 47.81],
+                def: "+proj=somerc +lat_0=46.9524055555556 +lon_0=7.43958333333333 +k_0=1 +x_0=2600000 +y_0=1200000 +ellps=bessel +towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs +type=crs"
               }
             ],
             disabledTools: {
