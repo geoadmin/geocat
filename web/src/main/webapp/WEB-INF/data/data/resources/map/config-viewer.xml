@@ -2,19 +2,30 @@
                         xmlns:ows="http://www.opengis.net/ows"
                         version="0.3.1" id="ows-context-ex-1-v3">
   <ows-context:General>
-    <ows:BoundingBox crs="EPSG:21781">
-      <ows:LowerCorner>426340.7642533947 -31175.881660288083</ows:LowerCorner>
-      <ows:UpperCorner>897081.2598204871 439564.6139068043</ows:UpperCorner>
+    <ows:BoundingBox crs="EPSG:3857">
+      <ows:LowerCorner>500000 5600000</ows:LowerCorner>
+      <ows:UpperCorner>1390000 6150000</ows:UpperCorner>
     </ows:BoundingBox>
   </ows-context:General>
   <ows-context:ResourceList>
 
-    <ows-context:Layer name="{type=map.geo.admin.ch,name=ch.swisstopo.pixelkarte-farbe}"
+    <ows-context:Layer queryable="false"
+                       name="{type=wmts,name=ch.swisstopo.pixelkarte-grau}"
+                       hidden="false" opacity="1" group="Background layers">
+      <ows:Title xmlns:ows="http://www.opengis.net/ows">Swiss National Map (grey)</ows:Title>
+      <ows-context:Server service="urn:ogc:serviceType:WMS">
+        <ows-context:OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+                                    xlink:href="https://wmts.geo.admin.ch/EPSG/3857/1.0.0/WMTSCapabilities.xml"/>
+      </ows-context:Server>
+      <ows-context:StyleList/>
+    </ows-context:Layer>
+
+    <!-- <ows-context:Layer name="{type=map.geo.admin.ch,name=ch.swisstopo.pixelkarte-farbe}"
                        group="Background layers"
                        hidden="false"
                        opacity="1">
       <ows:Title>map.geo.admin.ch</ows:Title>
-    </ows-context:Layer>
+    </ows-context:Layer> -->
 
     <ows-context:Layer name="{type=osm}"
                        group="Background layers"
