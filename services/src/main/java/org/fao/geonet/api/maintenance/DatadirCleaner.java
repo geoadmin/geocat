@@ -2,6 +2,7 @@ package org.fao.geonet.api.maintenance;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -46,14 +47,14 @@ public class DatadirCleaner {
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasAuthority('UserAdmin')")
     @ResponseBody
-    public synchronized ObjectNode cleanDataDir(@PathVariable(value = "portal") final String portal) throws IOException {
+    public synchronized ObjectNode cleanDataDir( @Parameter(description = "portal", required = true, hidden = true) @PathVariable(value = "portal") final String portal) throws IOException {
         processedPathCounter.set(0);
         notDeletedPathCounter.set(0);
         final Path orphanedDataFilePath = cleanFile();
         return new ObjectMapper().createObjectNode() //
             .put("status", format("Cleaned the orphaned data: see details in %s.", orphanedDataFilePath)) //
             .put("pathsCounters", format("Kept %d paths out of %d.", notDeletedPathCounter.get(), processedPathCounter.get()))
-            .put("warning", format("Although the portal %s was defined, it clears orphaned data without knowledge of the portal,", portal));
+            .put("warning", format("Although the portal %s was defined, it clears orphaned data without knowledge of the portal.", portal));
     }
 
     public Path cleanFile() throws IOException {
@@ -95,6 +96,9 @@ public class DatadirCleaner {
     }
 
     private Stream<Path> listFiles(final Path path) {
+        if (!Files.isDirectory(path)) {
+            return Stream.of();
+        }
         try {
             return Files.list(path);
         } catch (IOException e) {
