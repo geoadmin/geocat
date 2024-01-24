@@ -840,8 +840,11 @@ element name="che:language">
       <option value="OGC:WMTS">OGC-WMTS Web Map Tile Service</option>
       <option value="OGC:WMC">OGC-WMC Web Map Context</option>
       <option value="ESRI:REST">ArcGIS REST Services</option>
-      <option value="CHTOPO:specialised-geoportal">Specialised Geoportal</option>
+      <option value="CHTOPO:specialised-geoportal">Géoportail spécialisé</option>
       <option value="MAP:Preview">map.geo.admin.ch preview</option>
+      <option value="OPENDATA:SWISS">Permalien opendata.swiss</option>
+      <option value="WWW:DOWNLOAD-APP">Download-APP (geoshop)</option>
+      <option value="Linked:data">Linked:data	</option>
     </helper>
   </element>
 

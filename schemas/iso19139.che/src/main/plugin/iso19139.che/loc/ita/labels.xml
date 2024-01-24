@@ -724,15 +724,18 @@
     <description>Protocollo di connessione utilizzato</description>
     <helper>
       <option value="WWW:LINK">Web address (URL)</option>
-      <option value="WWW:DOWNLOAD-URL">File for download (URL)</option>
+      <option value="WWW:DOWNLOAD-URL">File per il download (URL)</option>
       <option value="OGC:WMS">OGC-WMS Web Map Service</option>
       <option value="OGC:WFS">OGC-WFS Web Feature Service</option>
       <option value="OGC:WCS">OGC-WCS Web Coverage Service</option>
       <option value="OGC:WMTS">OGC-WMTS Web Map Tile Service</option>
       <option value="OGC:WMC">OGC-WMC Web Map Context</option>
       <option value="ESRI:REST">ArcGIS REST Services</option>
-      <option value="CHTOPO:specialised-geoportal">Specialised Geoportal</option>
+      <option value="CHTOPO:specialised-geoportal">Geoportale specializzato</option>
       <option value="MAP:Preview">map.geo.admin.ch preview</option>
+      <option value="OPENDATA:SWISS">Permalink opendata.swiss</option>
+      <option value="WWW:DOWNLOAD-APP">Download-APP (geoshop)</option>
+      <option value="Linked:data">Linked:data	</option>
     </helper>
   </element>
 
