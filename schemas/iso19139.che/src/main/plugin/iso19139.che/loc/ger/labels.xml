@@ -716,8 +716,8 @@
     <label>Protokoll</label>
     <description>Zu verwendendes Verbindungsprotokoll</description>
     <helper sort="true">
-      <option value="WWW:LINK">Webaddresse (URL)</option>
-      <option value="WWW:DOWNLOAD-URL">Datei zum download (URL)</option>
+      <option value="WWW:LINK">Webadresse (URL)</option>
+      <option value="WWW:DOWNLOAD-URL">Datei zum Download (URL)</option>
       <option value="OGC:WMS">OGC-WMS Web Map Service</option>
       <option value="OGC:WFS">OGC-WFS Web Feature Service</option>
       <option value="OGC:WCS">OGC-WCS Web Coverage Service</option>
@@ -726,6 +726,9 @@
       <option value="ESRI:REST">ArcGIS REST Services</option>
       <option value="CHTOPO:specialised-geoportal">Spezialisiertes Geoportal</option>
       <option value="MAP:Preview">map.geo.admin.ch preview</option>
+      <option value="OPENDATA:SWISS">Permalink opendata.swiss</option>
+      <option value="WWW:DOWNLOAD-APP">Download-APP (geoshop)</option>
+      <option value="Linked:data">Linked:data	</option>
     </helper>
   </element>
 

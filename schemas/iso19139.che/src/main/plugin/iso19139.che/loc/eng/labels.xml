@@ -625,6 +625,9 @@
       <option value="ESRI:REST">ArcGIS REST Services</option>
       <option value="CHTOPO:specialised-geoportal">Specialised Geoportal</option>
       <option value="MAP:Preview">map.geo.admin.ch preview</option>
+      <option value="OPENDATA:SWISS">Permalink opendata.swiss</option>
+      <option value="WWW:DOWNLOAD-APP">Download-APP (geoshop)</option>
+      <option value="Linked:data">Linked:data	</option>
     </helper>
   </element>
 
