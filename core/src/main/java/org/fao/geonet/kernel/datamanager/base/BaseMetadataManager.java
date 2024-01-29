@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -33,11 +34,13 @@ import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.action.search.SearchResponse;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.GNException;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.*;
@@ -45,7 +48,6 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -104,8 +106,6 @@ public class BaseMetadataManager implements IMetadataManager {
     @Autowired
     private GroupRepository groupRepository;
     @Autowired
-    private MetadataStatusRepository metadataStatusRepository;
-    @Autowired
     private MetadataValidationRepository metadataValidationRepository;
     @Autowired
     private MetadataRepository metadataRepository;
@@ -141,6 +141,10 @@ public class BaseMetadataManager implements IMetadataManager {
 
     @Autowired
     private ApplicationContext _applicationContext;
+
+    @VisibleForTesting
+    public int maxMdsReferencingSubTemplate = 10000;
+
     @PersistenceContext
     private EntityManager _entityManager;
 
@@ -747,6 +751,9 @@ public class BaseMetadataManager implements IMetadataManager {
                     getSearchManager().delete(String.format("+uuid:\"%s\"", uuidBeforeUfo));
                 }
                 metadataIndexer.indexMetadata(metadataId, true, indexingMode);
+                if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
+                    indexMdsReferencingSubTemplate(context, metadata);
+                }
             }
         }
 
@@ -1314,4 +1321,26 @@ public class BaseMetadataManager implements IMetadataManager {
         return this.searchManager.query(query.toString(), null, 0, 0).getHits().getTotalHits().value > 0;
     }
 
+    private void indexMdsReferencingSubTemplate(ServiceContext context, AbstractMetadata subTemplate) throws Exception {
+        StringBuilder query = new StringBuilder(String.format("xlink:*%s*", subTemplate.getUuid()));
+        SearchResponse response = this.searchManager.query(query.toString(), null, 0, maxMdsReferencingSubTemplate);
+        if (response.getHits().getTotalHits().value > maxMdsReferencingSubTemplate) {
+            throw new GNException("Not implemented");
+        }
+        ArrayList<String> toIndex = new ArrayList<>();
+        response.getHits().forEach(consumer -> {
+            String consumerUuid = consumer.getId();
+            try {
+                String consumerId = this.metadataUtils.getMetadataId(consumerUuid);
+                if (consumerId != null) {
+                    toIndex.add(consumerId);
+                }
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        metadataIndexer.batchIndexInThreadPool(context, toIndex);
+    }
 }
