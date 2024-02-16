@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-    - geocat_v4.2.3_report_custom
+    - geocat_v4.2.3_report_custom*
 
 jobs:
   build:
