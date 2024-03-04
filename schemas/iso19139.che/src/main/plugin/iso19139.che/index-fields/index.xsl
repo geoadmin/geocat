@@ -125,7 +125,7 @@
     </xsl:variable>
 
     <!-- Get main language ID from otherLanguages -->
-    <xsl:variable name="mainLanguageId" select="concat('#', $allLanguages/lang[@id != 'default' and @value = $mainLanguage]/@id)"/>
+    <xsl:variable name="mainLanguageId" as="xs:string?" select="concat('#', $allLanguages/lang[@id != 'default' and @value = $mainLanguage]/@id)"/>
 
     <!-- Record is dataset if no hierarchyLevel -->
     <xsl:variable name="isDataset" as="xs:boolean"
@@ -234,6 +234,7 @@
       <xsl:apply-templates mode="index-contact" select="gmd:contact">
         <xsl:with-param name="fieldSuffix" select="''"/>
         <xsl:with-param name="languages" select="$allLanguages"/>
+        <xsl:with-param name="mainLanguage" select="$mainLanguageId"/>
       </xsl:apply-templates>
 
       <!-- Indexing all codelists.
@@ -1152,6 +1153,7 @@
   <xsl:template mode="index-contact" match="*[che:CHE_CI_ResponsibleParty]">
     <xsl:param name="fieldSuffix" select="''" as="xs:string"/>
     <xsl:param name="languages" as="node()?"/>
+    <xsl:param name="mainLanguage" as="xs:string?"/>
 
     <!-- Select the first child which should be a CI_ResponsibleParty.
     Some records contains more than one CI_ResponsibleParty which is
@@ -1166,7 +1168,34 @@
                   select="replace(*[1]/gmd:role/*/@codeListValue, ' ', '')"
                   as="xs:string?"/>
     <xsl:variable name="logo" select=".//gmx:FileName/@src"/>
-    <xsl:variable name="website" select=".//gmd:onlineResource/*/gmd:linkage/gmd:URL"/>
+
+    <!-- Indexing multilingual URL for contact website-->
+    <xsl:variable name="websiteLocalisedURL" select=".//gmd:onlineResource/*/gmd:linkage//che:LocalisedURL[normalize-space(.) != '']"/>
+    <xsl:variable name="websiteObject">
+      <xsl:choose>
+        <!-- Default -->
+        <xsl:when test="normalize-space(.//gmd:onlineResource/*/gmd:linkage/gmd:URL) != ''">
+          <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
+                                      $doubleQuote, gn-fn-index:json-escape(.//gmd:onlineResource/*/gmd:linkage/gmd:URL), $doubleQuote)"/></value>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:if test="count($websiteLocalisedURL) > 0">
+            <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
+                          $doubleQuote, gn-fn-index:json-escape(
+                          if ($websiteLocalisedURL[@local = $mainLanguage])
+                          then $websiteLocalisedURL[@local = $mainLanguage]
+                          else $websiteLocalisedURL[1]), $doubleQuote)"/></value>
+          </xsl:if>
+        </xsl:otherwise>
+      </xsl:choose>
+      <!-- Localized -->
+      <xsl:for-each select=".//gmd:onlineResource/*/gmd:linkage//che:LocalisedURL[normalize-space(.) != '']">
+        <xsl:variable name="lang2letters" as="xs:string" select="replace(@locale, '#', '')"/>
+        <value><xsl:value-of select="', ', concat($doubleQuote, 'lang', $languages/lang[@id = $lang2letters]/@value, 
+                                    $doubleQuote, ':', $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
+      </xsl:for-each>
+    </xsl:variable>
+
     <xsl:variable name="email"
                   select="*[1]/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString"/>
     <xsl:variable name="phone"
@@ -1194,7 +1223,7 @@
           "organisationObject": <xsl:value-of select="$orgObject"/>,
           "role":"<xsl:value-of select="$role"/>",
           "email":"<xsl:value-of select="gn-fn-index:json-escape($email[1])"/>",
-          "website":"<xsl:value-of select="$website"/>",
+          "websiteObject":{<xsl:value-of select="$websiteObject"/>},
           "logo":"<xsl:value-of select="$logo"/>",
           "individual":"<xsl:value-of select="gn-fn-index:json-escape($individualName)"/>",
           "position":"<xsl:value-of select="gn-fn-index:json-escape($positionName)"/>",
@@ -1208,7 +1237,7 @@
         <xsl:attribute name="type" select="'object'"/>{
           "role":"<xsl:value-of select="$role"/>",
           "email":"<xsl:value-of select="gn-fn-index:json-escape($email[1])"/>",
-          "website":"<xsl:value-of select="$website"/>",
+          "websiteObject":{<xsl:value-of select="$websiteObject"/>},
           "logo":"<xsl:value-of select="$logo"/>",
           "individual":"<xsl:value-of select="gn-fn-index:json-escape($individualName)"/>",
           "position":"<xsl:value-of select="gn-fn-index:json-escape($positionName)"/>",
