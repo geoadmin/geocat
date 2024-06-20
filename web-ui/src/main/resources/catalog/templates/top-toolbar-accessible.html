@@ -203,7 +203,7 @@
           <span class="hidden-sm" translate>documentation</span>
         </a>
       </li>
-      <li class="gn-menuitem-xs" data-ng-show="!authenticated || !user.isEditorOrMore()">
+      <li class="gn-menuitem-xs" data-ng-show="(!authenticated || !user.isEditorOrMore()) && service !== 'catalog.signin' && service !== 'new.account'">
         <a
           href="https://www.geocat.ch/datahub/search/"
           target="_blank"
