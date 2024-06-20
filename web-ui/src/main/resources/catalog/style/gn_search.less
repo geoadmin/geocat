@@ -19,9 +19,10 @@
     margin-right: -60px;
   }
   .gcat-logo {
+    height: 100px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     padding: 0px 16px;
     & > div {
       flex-shrink: 1;
@@ -30,6 +31,10 @@
       img {
         max-width: 100%;
       }
+    }
+
+    @media (min-width: @screen-sm-max) {
+      height: 168px;
     }
   }
 }
