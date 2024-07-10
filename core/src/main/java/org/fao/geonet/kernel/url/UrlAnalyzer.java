@@ -118,8 +118,22 @@ public class UrlAnalyzer {
                 .findAll(metadatalinksTargetting(link))
                 .stream()
                 .filter(metadatalink -> isReferencingAnUnknownMetadata((MetadataLink)metadatalink))
-                .forEach(metadataLinkRepository::delete);
+                .forEach(this::clearLink);
         entityManager.flush();
+    }
+
+    public void deleteLink(Integer id) {
+        Link link = linkRepository.findById(id).get();
+        if (metadataLinkRepository.findAll(metadatalinksTargetting(link)).size() > 0) {
+            return;
+        }
+        linkRepository.delete(link);
+        entityManager.flush();
+    }
+
+    private void clearLink(MetadataLink metadataLink) {
+        metadataLink.getLink().getRecords().remove(metadataLink);
+        metadataLinkRepository.delete(metadataLink);
     }
 
     public void deleteAll() {
