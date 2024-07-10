@@ -146,4 +146,16 @@ public class LinkSpecs {
             }
         };
     }
+
+    public static Specification<Link> filterOnRecords(Integer[] mdIds) {
+
+        return new Specification<Link>() {
+            @Override
+            public Predicate toPredicate(Root<Link> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                query.distinct(true);
+                Join<Link, MetadataLink> metadataJoin = (Join<Link, MetadataLink>) root.fetch(Link_.records, JoinType.LEFT);
+                return cb.and(metadataJoin.get(MetadataLink_.metadataId).in(mdIds));
+            }
+        };
+    }
 }

@@ -7,6 +7,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.url.UrlAnalyzer;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.specification.LinkSpecs;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.context.ApplicationContext;
@@ -143,29 +144,18 @@ public class MAnalyseProcess implements SelfNaming {
                 e.printStackTrace();
             }
         }
-        if (testLink) {
-            testLink(null);
-        }
+        if (!testLink || ids.size() == 0) {
+            return;
     }
 
+        List<Link> links = linkRepository.findAll(LinkSpecs.filterOnRecords(ids.toArray(new Integer[0])));
 
-    public void testLink(List<String> links) throws JDOMException, IOException {
-        List<Link> linkList;
-        if (links == null) {
-            linkList = linkRepository.findAll();
-        } else {
-            linkList = linkRepository.findAllByUrlIn(links);
-        }
-        urlToCheckCount = linkList.size();
         runInNewTransaction("manalyseprocess-testlink", new TransactionTask<Object>() {
             @Override
             public Object doInTransaction(TransactionStatus transaction) throws Throwable {
                 testLinkDate = System.currentTimeMillis();
-                urlToCheckCount = linkList.size();
-                linkList
-                    .parallelStream()
-                    .peek(urlAnalyser::testLink)
-                    .forEach(x -> urlChecked.getAndIncrement());
+                urlToCheckCount = links.size();
+                links.parallelStream().peek(urlAnalyser::testLink).forEach(x -> urlChecked.getAndIncrement());
                 return null;
             }
         });

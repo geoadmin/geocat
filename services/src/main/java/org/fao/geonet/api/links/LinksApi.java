@@ -371,7 +371,7 @@ public class LinksApi {
             String[] url
     ) throws IOException, JDOMException {
         MAnalyseProcess registredMAnalyseProcess = getRegistredMAnalyseProcess();
-        registredMAnalyseProcess.testLink(Lists.newArrayList(url));
+        //registredMAnalyseProcess.testLink(Lists.newArrayList(url));
     }
 
 
