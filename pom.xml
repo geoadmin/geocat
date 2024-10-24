@@ -4,11 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>hnap-experiment</groupId>
+  <groupId>swiss-experiment</groupId>
 
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>3.10-SNAPSHOT</version>
+  <version>4.4.6-0</version>
 
   <name>GeoNetwork ${customer} Distribution</name>
   <description>
@@ -16,9 +16,9 @@
   </description>
 
   <properties>
-    <customer>Canada Municipality</customer>
-    <customer.bundle>experiment-hnap</customer.bundle>
-    <jetty.version>9.4.27.v20200227</jetty.version>
+    <customer>custom</customer>
+    <customer.bundle>swiss-custom</customer.bundle>
+    <jetty.version>jetty-9.4.56.v20240826</jetty.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -54,12 +54,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
+          <version>3.8.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -69,17 +69,19 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
-            <version>3.2.0</version>
+	    <version>3.2.0</version>
+            <--! higher than 4.4.6 -->
           </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
           <version>3.3.0</version>
+            <--! higher than 4.4.6 -->
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.1.2</version>
+          <version>3.7.0</version>
         </plugin>
         <plugin>
           <groupId>org.eclipse.jetty</groupId>
@@ -89,14 +91,13 @@
       </plugins>
     </pluginManagement>
 
-     <!-- Default compiler configuration to Java 8 -->
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>1.11</source>
+          <target>1.11</target>
           <debug>true</debug>
           <encoding>UTF-8</encoding>
           <fork>${fork.javac}</fork>
@@ -107,9 +108,8 @@
   </build>
 
   <modules>
-   <module>geonetwork</module>
-   <module>iso19139.ca.HNAP</module>
-   <module>web</module>
+   <module>core-geonetwork</module>
+   <!-- <module>web</module> -->
    <module>release</module>
   </modules>
 
