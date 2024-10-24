@@ -1,0 +1,116 @@
+<!-- https://raw.githubusercontent.com/GeoCat/experiment-hnap/refs/heads/master/pom.xml -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>hnap-experiment</groupId>
+
+  <artifactId>geonetwork</artifactId>
+  <packaging>pom</packaging>
+  <version>3.10-SNAPSHOT</version>
+
+  <name>GeoNetwork ${customer} Distribution</name>
+  <description>
+    GeoNetwork distribution with custom skin for ${customer}.
+  </description>
+
+  <properties>
+    <customer>Canada Municipality</customer>
+    <customer.bundle>experiment-hnap</customer.bundle>
+    <jetty.version>9.4.27.v20200227</jetty.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <repositories>
+      <repository>
+        <id>osgeo</id>
+        <name>OSGeo releases repository</name>
+        <url>https://repo.osgeo.org/repository/release/</url>
+        <snapshots><enabled>false</enabled></snapshots>
+      </repository>
+       <repository>
+         <id>osgeo-snapshots</id>
+         <name>OSGeo Nexus Snapshot Repository</name>
+         <url>https://repo.osgeo.org/repository/snapshot/</url>
+         <snapshots><enabled>true</enabled></snapshots>
+         <releases><enabled>false</enabled></releases>
+      </repository>
+  </repositories>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.3.0</version>
+        </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.2.0</version>
+          </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.3.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.1.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-maven-plugin</artifactId>
+          <version>${jetty.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+     <!-- Default compiler configuration to Java 8 -->
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <debug>true</debug>
+          <encoding>UTF-8</encoding>
+          <fork>${fork.javac}</fork>
+          <maxmem>${javac.maxHeapSize}</maxmem>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <modules>
+   <module>geonetwork</module>
+   <module>iso19139.ca.HNAP</module>
+   <module>web</module>
+   <module>release</module>
+  </modules>
+
+</project>
