@@ -1,1 +1,0 @@
-zip.workerScriptsPath = "../../catalog/lib/zip/";

@@ -1,7 +1,0 @@
-set /augeas/load/xml/lens "Xml.lns"
-set /augeas/load/xml/incl "/usr/local/tomcat/conf/server.xml"
-load
-set /files/usr/local/tomcat/conf/server.xml/Server/Service/Connector[#attribute/port = '8080']/#attribute/compression 'on'
-set /files/usr/local/tomcat/conf/server.xml/Server/Service/Connector[#attribute/port = '8080']/#attribute/compressibleMimeType 'text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json'
-save
-

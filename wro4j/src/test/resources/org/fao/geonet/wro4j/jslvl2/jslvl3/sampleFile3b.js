@@ -1,1 +1,0 @@
-goog.provide('3b');

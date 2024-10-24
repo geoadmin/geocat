@@ -1,7 +1,0 @@
-{
-  "@class" : "org.apereo.cas.services.RegexRegisteredService",
-  "serviceId" : "^http://.*$",
-  "name" : "geonetwork",
-  "id" : 1001,
-  "evaluationOrder" : 10
-}

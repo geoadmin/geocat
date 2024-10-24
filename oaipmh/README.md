@@ -1,1 +1,0 @@
-The oaipmh module contains classes for providing a oaipmh end point and for writing oaipmh clients.
