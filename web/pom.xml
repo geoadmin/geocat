@@ -27,7 +27,7 @@
     <!-- war includes prebuilt geonetwork jars -->
     <dependency>
       <groupId>org.geonetwork-opensource</groupId>
-      <artifactId>web-app</artifactId>
+      <artifactId>gn-web-app</artifactId>
       <version>${project.version}</version>
       <type>war</type>
       <scope>runtime</scope>
@@ -45,7 +45,7 @@
           <overlays>
             <overlay>
               <groupId>org.geonetwork-opensource</groupId>
-              <artifactId>web-app</artifactId>
+              <artifactId>gn-web-app</artifactId>
             </overlay>
           </overlays>
         </configuration>

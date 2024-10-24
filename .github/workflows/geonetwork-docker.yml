@@ -30,12 +30,7 @@ jobs:
 
     - name: "Build docker container" 
       run: |
-        cd core-geonetwork 
         mvn clean install -DskipTests -Denforcer.skip
-        cd ..
-        mvn install:install-file -Dfile=core-geonetwork/web/target/geonetwork.war -DgroupId=org.geonetwork-opensource -DartifactId=web-app -Dversion=4.4.6-0 -Dpackaging=war
-        mvn clean install -DskipTests -Denforcer.skip -pl web
-        mvn clean install -DskipTests -Denforcer.skip -pl release 
         cd release/target/docker/
         docker build . -t docker.pkg.github.com/geoadmin/geocat/gn-with-swiss-overlay:${{ steps.version.outputs.VERSION }}-${{ github.run_number }}
 
