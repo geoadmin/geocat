@@ -1,0 +1,49 @@
+<assembly>
+  <id>geonetwork</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <fileSets>
+    <!-- plugin folder -->
+    <fileSet>
+      <directory>../web/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+         <include>*.war</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+  <files>
+    <file>
+      <source>toto.txt</source>
+      <outputDirectory></outputDirectory>
+      <destName>toto.txt</destName>
+    </file>
+  </files>
+  <!--
+  <dependencySets>
+    <dependencySet>
+      <includes>
+        <include>*:web:war</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>-->
+  <!--moduleSets>
+    <moduleSet>
+      <useAllReactorProjects>true</useAllReactorProjects>
+      <includes>
+        <include>hnap-experiment:web</include>
+      </includes>
+      <sources>
+        <includeModuleDirectory>false</includeModuleDirectory>
+        <fileSets>
+          <fileSet>
+            <outputDirectory>sources/${module.artifactId}</outputDirectory>
+          </fileSet>
+        </fileSets>
+      </sources>
+    </moduleSet>
+  </moduleSets-->
+</assembly>
+

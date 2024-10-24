@@ -1,0 +1,78 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>swiss-experiment</groupId>
+    <artifactId>geonetwork</artifactId>
+    <version>4.4.6-0</version>
+  </parent>
+  
+  <artifactId>web</artifactId>
+  <packaging>war</packaging>
+
+  <name>GeoNetwork Web Application for ${customer}</name>
+  <description>
+    Web application using maven war overlay functionality to reuse
+    geonetwork war and hnap schema plugin for ${customer}.
+  </description>
+ 
+  <properties>
+    <build.webapp.resources>${project.build.directory}/webapp</build.webapp.resources>
+    <jetty.env>jetty-env.xml</jetty.env>
+  </properties>
+ 
+  <dependencies>
+    <!-- war includes prebuilt geonetwork jars -->
+    <dependency>
+      <groupId>org.geonetwork-opensource</groupId>
+      <artifactId>web-app</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+    
+  <build>
+    <finalName>geonetwork</finalName>
+    <plugins>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <overlays>
+            <overlay>
+              <groupId>org.geonetwork-opensource</groupId>
+              <artifactId>web-app</artifactId>
+            </overlay>
+          </overlays>
+        </configuration>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>${jetty.version}</version>
+        <configuration>
+          <contextXml>${basedir}/jetty-context.xml</contextXml>
+          <webApp>
+            <contextPath>/geonetwork</contextPath>
+            <jettyEnvXml>${jetty.env}</jettyEnvXml>
+          </webApp>
+        </configuration>
+        <!--<dependencies>
+          <dependency>
+              <groupId>com.h2database</groupId>
+              <artifactId>h2</artifactId>
+              <version>1.3.174</version>
+          </dependency>
+        </dependencies>-->
+      </plugin>
+    </plugins>
+ 
+  </build>
+
+</project>
+

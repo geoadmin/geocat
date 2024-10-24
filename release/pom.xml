@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>swiss-experiment</groupId>
+    <artifactId>geonetwork</artifactId>
+    <version>4.4.6-0</version>
+  </parent>
+
+  <artifactId>release</artifactId>
+  <packaging>pom</packaging>
+
+  <name>GeoNetwork ${project.version} ${customer} Release</name>
+  <description>
+     Release packaging including installation notes and appropriate open source licenses.
+  </description>
+
+  <dependencies>
+    <!-- war includes prebuilt geonetwork jars -->
+    <dependency>
+      <groupId>swiss-experiment</groupId>
+      <artifactId>web</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.3.1</version>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+		<outputDirectory>${basedir}/target/docker</outputDirectory>
+              <resources>          
+                <resource>
+                  <directory>docker</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>              
+            </configuration>            
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>bundle</id>
+            <phase>package</phase>
+            <goals><goal>single</goal></goals>
+            <configuration>
+              <recompressZippedFiles>false</recompressZippedFiles>
+              <descriptors>
+                <descriptor>src/assembly/bundle.xml</descriptor>
+              </descriptors>
+              <appendAssemblyId>false</appendAssemblyId>
+	      <outputDirectory>${project.build.directory}/docker</outputDirectory>
+              <finalName>geonetwork-${project.version}-${customer.bundle}</finalName>
+            </configuration>
+          </execution>
+        </executions>
+     </plugin>
+    </plugins>
+  </build>
+
+</project>
+

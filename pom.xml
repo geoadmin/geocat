@@ -70,13 +70,13 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
 	    <version>3.2.0</version>
-            <--! higher than 4.4.6 -->
+            <!-- higher than 4.4.6 -->
           </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
           <version>3.3.0</version>
-            <--! higher than 4.4.6 -->
+            <!-- higher than 4.4.6 -->
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -109,7 +109,7 @@
 
   <modules>
    <module>core-geonetwork</module>
-   <!-- <module>web</module> -->
+   <module>web</module>
    <module>release</module>
   </modules>
 
