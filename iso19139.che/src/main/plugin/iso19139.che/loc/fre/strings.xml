@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <understandResource>Information about the dataset</understandResource>
+  <relatedResources>Related services and linked data</relatedResources>
+  <techInfo>Technical information</techInfo>
+  <contactInfo>Contact information</contactInfo>
+  <temporalRef>Temporal information</temporalRef>
+  <constraintInfo>Contraintes légales</constraintInfo>
+
+  <!-- New strings added for the AngularJS editor -->
+  <!-- View and tabs -->
+  <advanced>Complète</advanced>
+  <default>Simple</default>
+  <simple>Simple</simple>
+  <inspire>INSPIRE</inspire>
+  <bgdi>BGDI</bgdi>
+  <resource>Ressource</resource>
+  <xml>XML</xml>
+  <metadata>Métadonnées</metadata>
+  <identificationInfo>Identification</identificationInfo>
+  <distributionInfo>Distribution</distributionInfo>
+  <dataQualityInfo>Qualité</dataQualityInfo>
+  <spatialRepresentationInfo>Information spatiale</spatialRepresentationInfo>
+  <referenceSystemInfo>Système de réf.</referenceSystemInfo>
+  <contentInfo>Contenu</contentInfo>
+  <portrayalCatalogueInfo>Représentation</portrayalCatalogueInfo>
+  <metadataConstraints>Md. contraintes</metadataConstraints>
+  <metadataMaintenance>Md. maintenance</metadataMaintenance>
+  <applicationSchemaInfo>Schéma d'app.</applicationSchemaInfo>
+  <metadataExtensionInfo>Extension</metadataExtensionInfo>
+  <legislationInformation>Info sur la législation</legislationInformation>
+  <rsIdentifier>Référentiel de coordonnées</rsIdentifier>
+  <spatialResolution>Échelle (min ou max)</spatialResolution>
+  <geometricObjectType>Type de géométrie</geometricObjectType>
+
+  <!-- XSD error translation -->
+  <invalidElement>Élément invalide. Contenu invalide pour l'élément :</invalidElement>
+  <onElementOf>Un des éléments suivants</onElementOf>
+  <isExpected>est attendu.</isExpected>
+  <isNotComplete>est incomplet.</isNotComplete>
+  <elementLocated>L'élément parent est</elementLocated>
+  <missingElement>Élément manquant. Le contenu de l'élément</missingElement>
+  <invalidValue>Valeur manquante ou invalide.</invalidValue>
+  <notValidFor>n'est pas une valeur valide pour </notValidFor>
+  <xsdErrorIs>L'erreur est :</xsdErrorIs>
+  <inElement>dont le parent est</inElement>
+  <enum1>La valeur</enum1>
+  <enum2>n'est pas valide pour le champ</enum2>
+  <enum3>Les valeurs possibles sont :</enum3>
+
+</strings>
