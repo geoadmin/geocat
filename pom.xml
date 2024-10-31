@@ -18,7 +18,7 @@
   <properties>
     <customer>custom</customer>
     <customer.bundle>swiss-custom</customer.bundle>
-    <jetty.version>jetty-9.4.56.v20240826</jetty.version>
+    <jetty.version>9.4.27.v20200227</jetty.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
