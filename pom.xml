@@ -110,6 +110,7 @@
    <module>core-geonetwork</module>
    <module>web</module>
    <module>release</module>
+   <module>iso19139.che</module>
   </modules>
 
 </project>

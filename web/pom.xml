@@ -61,6 +61,31 @@
       </plugin>
 
       <plugin>
+        <groupId>org.geonetwork-opensource.schemas</groupId>
+        <artifactId>gn-schema-iso19139.che</artifactId>
+        <executions>
+          <execution>
+            <id>copy-schemas</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <includeEmptyDirs>true</includeEmptyDirs>
+              <overwrite>true</overwrite>
+              <outputDirectory>${build.webapp.resources}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/../iso19139.che/src/main/plugin</directory>
+                  <targetPath>WEB-INF/data/config/schema_plugins</targetPath>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
         <version>${jetty.version}</version>
