@@ -8,7 +8,7 @@
     <artifactId>geonetwork</artifactId>
     <version>4.4.6-0</version>
   </parent>
-  
+
   <artifactId>web</artifactId>
   <packaging>war</packaging>
 
@@ -17,12 +17,12 @@
     Web application using maven war overlay functionality to reuse
     geonetwork war and hnap schema plugin for ${customer}.
   </description>
- 
+
   <properties>
     <build.webapp.resources>${project.build.directory}/webapp</build.webapp.resources>
     <jetty.env>jetty-env.xml</jetty.env>
   </properties>
- 
+
   <dependencies>
     <!-- war includes prebuilt geonetwork jars -->
     <dependency>
@@ -32,12 +32,21 @@
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
+
+    <!-- used to compile, already included in war -->
+    <dependency>
+      <groupId>org.geonetwork-opensource</groupId>
+      <artifactId>gn-web-app</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <classifier>classes</classifier>
+    </dependency>
   </dependencies>
-    
+
   <build>
     <finalName>geonetwork</finalName>
     <plugins>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
@@ -50,7 +59,7 @@
           </overlays>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
@@ -71,7 +80,7 @@
         </dependencies>-->
       </plugin>
     </plugins>
- 
+
   </build>
 
 </project>
