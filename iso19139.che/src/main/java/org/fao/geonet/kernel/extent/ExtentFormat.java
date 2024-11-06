@@ -15,10 +15,10 @@ import org.jdom.Namespace;
 import org.locationtech.jts.geom.*;
 import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 import org.locationtech.jts.io.WKTWriter;
-import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.geometry.BoundingBox;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.operation.MathTransform;
+import org.geotools.api.feature.simple.SimpleFeature;
+import org.geotools.api.geometry.BoundingBox;
+import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
+import org.geotools.api.referencing.operation.MathTransform;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

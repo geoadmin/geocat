@@ -1,15 +1,15 @@
 package org.fao.geonet.kernel.extent;
 
 import org.fao.geonet.utils.Log;
-import org.geotools.data.DataStore;
-import org.geotools.data.FeatureStore;
+import org.geotools.api.data.DataStore;
+import org.geotools.api.data.FeatureStore;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.util.logging.Logging;
 import org.jdom.Namespace;
 import org.locationtech.jts.geom.Geometry;
-import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.feature.simple.SimpleFeatureType;
+import org.geotools.api.feature.simple.SimpleFeature;
+import org.geotools.api.feature.simple.SimpleFeatureType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;

@@ -1,19 +1,19 @@
 package org.fao.geonet.kernel.extent;
 
-import org.geotools.data.DataStore;
-import org.geotools.data.FeatureSource;
-import org.geotools.data.Query;
+import org.geotools.api.data.DataStore;
+import org.geotools.api.data.FeatureSource;
+import org.geotools.api.data.Query;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.factory.GeoTools;
-import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.filter.Filter;
-import org.opengis.filter.FilterFactory2;
-import org.opengis.filter.expression.Literal;
-import org.opengis.filter.expression.PropertyName;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.geotools.api.feature.simple.SimpleFeature;
+import org.geotools.api.feature.simple.SimpleFeatureType;
+import org.geotools.api.filter.Filter;
+import org.geotools.api.filter.FilterFactory;
+import org.geotools.api.filter.expression.Literal;
+import org.geotools.api.filter.expression.PropertyName;
+import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -108,7 +108,7 @@ public final class FeatureType {
     }
     public Filter createFilter(String id)
     {
-        final FilterFactory2 factory = CommonFactoryFinder.getFilterFactory2(GeoTools.getDefaultHints());
+        final FilterFactory factory = CommonFactoryFinder.getFilterFactory(GeoTools.getDefaultHints());
         final Literal literal = factory.literal(id);
         final PropertyName property = factory.property(idColumn);
         final Filter filter = factory.equals(property, literal);

@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.extent;
 
-import org.geotools.data.DataStore;
+import org.geotools.api.data.DataStore;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;

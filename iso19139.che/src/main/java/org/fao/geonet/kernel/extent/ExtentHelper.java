@@ -6,8 +6,8 @@ import org.fao.geonet.GeocatLangUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.utils.Xml;
-import org.geotools.data.FeatureStore;
-import org.geotools.data.Query;
+import org.geotools.api.data.FeatureStore;
+import org.geotools.api.data.Query;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.filter.SortByImpl;
@@ -19,16 +19,16 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Text;
 import org.locationtech.jts.geom.*;
-import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.filter.FilterFactory2;
-import org.opengis.filter.sort.SortBy;
-import org.opengis.filter.sort.SortOrder;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.NoSuchAuthorityCodeException;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.operation.MathTransform;
-import org.opengis.referencing.operation.TransformException;
+import org.geotools.api.feature.simple.SimpleFeature;
+import org.geotools.api.feature.simple.SimpleFeatureType;
+import org.geotools.api.filter.FilterFactory;
+import org.geotools.api.filter.sort.SortBy;
+import org.geotools.api.filter.sort.SortOrder;
+import org.geotools.api.referencing.FactoryException;
+import org.geotools.api.referencing.NoSuchAuthorityCodeException;
+import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
+import org.geotools.api.referencing.operation.MathTransform;
+import org.geotools.api.referencing.operation.TransformException;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -148,7 +148,7 @@ public class ExtentHelper
             throws IOException
     {
         final Query query = featureType.createQuery(new String[] { featureType.idColumn });
-        final FilterFactory2 filterFactory = CommonFactoryFinder.getFilterFactory2(GeoTools.getDefaultHints());
+        final FilterFactory filterFactory = CommonFactoryFinder.getFilterFactory(GeoTools.getDefaultHints());
         final SortBy[] sortBy = { new SortByImpl(filterFactory.property(featureType.idColumn), SortOrder.ASCENDING) };
         query.setSortBy(sortBy);
         final FeatureIterator<SimpleFeature> features = store.getFeatures(query).features();
