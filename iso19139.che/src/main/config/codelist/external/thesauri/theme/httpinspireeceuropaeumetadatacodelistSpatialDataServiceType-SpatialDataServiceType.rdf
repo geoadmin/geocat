@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <skos:ConceptScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType">
+    <dc:title xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="en">Spatial data service type</dc:title>
+    <dc:title xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="de">Art des Geodatendienstes</dc:title>
+    <dc:title xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="fr">Type de service de données géographiques</dc:title>
+    <dc:title xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="it">Tipo di servizio di dati territoriali</dc:title>
+    <dcterms:issued xmlns:dcterms="http://purl.org/dc/terms/">2022-10-21T09:19:39</dcterms:issued>
+    <dcterms:modified xmlns:dcterms="http://purl.org/dc/terms/">2022-10-21T09:19:39</dcterms:modified>
+  </skos:ConceptScheme>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType/discovery">
+    <skos:prefLabel xml:lang="en">Discovery Service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Services making it possible to search for spatial data sets and services on the basis of the content of the corresponding metadata and to display the content of the metadata.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Suchdienste</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienste, die es ermöglichen, auf Grundlage des Inhalts entsprechender Metadaten nach Geodatensätzen und -diensten zu suchen und den Inhalt der Metadaten anzuzeigen.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de recherche</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Services permettant de rechercher des séries et services de données géographiques sur la base du contenu des métadonnées correspondantes et d’afficher le contenu des métadonnées.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di ricerca</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizi di ricerca che consentono di ricercare set di dati territoriali e i servizi a essi relativi in base al contenuto dei metadati corrispondenti e di visualizzare il contenuto dei metadati.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType/view">
+    <skos:prefLabel xml:lang="en">View Service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that makes it possible, as a minimum, to display, navigate, zoom in and out, pan or overlay viewable spatial data sets and to display legend information and any relevant content of metadata.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Darstellungsdienste</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienste, die es mindestens ermöglichen, darstellbare Geodatensätze anzuzeigen, in ihnen zu navigieren, sie zu vergrößern/verkleinern, zu verschieben, Daten zu überlagern sowie Informationen aus Legenden und sonstige relevante Inhalte von Metadaten anzuzeigen.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de consultation</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant au moins de visualiser, de naviguer, de zoomer en avant et en arrière, de déplacer à l’écran, ou de superposer des séries de données géographiques qui peuvent être consultées et d’afficher les légendes ainsi que tout contenu pertinent de métadonnées.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di consultazione</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di eseguire almeno le seguenti operazioni: visualizzazione, navigazione, variazione della scala di visualizzazione (zoom in e zoom out), variazione della porzione di territorio inquadrata (pan), sovrapposizione dei set di dati territoriali consultabili e visualizzazione delle informazioni contenute nelle legende e qualsiasi contenuto pertinente dei metadati.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType/download">
+    <skos:prefLabel xml:lang="en">Download Service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that enables copies of spatial data sets, or parts of such sets, to be downloaded and, where practicable, accessed directly.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Download-Dienste</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienste, mit denen Kopien von vollständigen Geodatensätzen oder Teilen solcher Sätze heruntergeladen werden können oder die gegebenenfalls den direkten Zugriff darauf ermöglichen.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de téléchargement</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de télécharger des copies de séries de données géographiques, ou de parties de ces séries, et lorsque cela est réalisable, d’y avoir accès directement.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di scaricamento</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che permette di scaricare copie di set di dati territoriali o di una parte di essi e, ove possibile, di accedervi direttamente.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType/transformation">
+    <skos:prefLabel xml:lang="en">Transformation Service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that enables spatial data sets to be transformed with a view to achieving interoperability.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Transformationsdienste</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienste zur Umwandlung von Geodatensätzen, um Interoperabilität zu erreichen.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service de transformation</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de transformer des séries de données géographiques en vue d’assurer l’interopérabilité.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di conversione</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio di conversione che consente di trasformare i set di dati territoriali, onde conseguire l'interoperabilità.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType/invoke">
+    <skos:prefLabel xml:lang="en">Invoke Spatial Data Service</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Service that allows defining both the data inputs and data outputs expected by the spatial service and a workflow or service chain combining multiple services. It also allows defining the external web service interface of the workflow or service chain.</skos:scopeNote>
+    <skos:prefLabel xml:lang="de">Dienste zum Abrufen von Geodatendiensten</skos:prefLabel>
+    <skos:scopeNote xml:lang="de">Dienste, über die von einem Geodatendienst erwartete Datenein- und Datenausgaben sowie eine Bearbeitungs- oder Dienstleistungskette zur Zusammenfassung mehrerer Dienste festgelegt werden können. Sie ermöglichen auch die Festlegung einer externen Webdienstschnittstelle für die Bearbeitungs- oder Dienstleistungskette.</skos:scopeNote>
+    <skos:prefLabel xml:lang="fr">Service d’appel de services de données géographiques</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Service permettant de définir à la fois les données d’entrée et de sortie demandées par le service de données géographiques et un processus ou une chaîne de services combinant plusieurs services. Il permet aussi de définir une interface externe du service internet pour le processus ou la chaîne de services.</skos:scopeNote>
+    <skos:prefLabel xml:lang="it">Servizio di richiesta dei servizi di dati territoriali</skos:prefLabel>
+    <skos:scopeNote xml:lang="it">Servizio che consente di definire i dati in entrata (input) e in uscita (output) richiesti dal servizio di dati territoriali e un workflow o una catena di servizi che combina più servizi. Consente inoltre di definire un'interfaccia esterna del servizio web per il workflow o la catena di servizi.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType/other">
+    <skos:prefLabel xml:lang="en">Other Service</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Sonstige Dienste</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Autre service</skos:prefLabel>
+    <skos:prefLabel xml:lang="it">Altri servizi</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType" />
+  </skos:Concept>
+</rdf:RDF>
+
