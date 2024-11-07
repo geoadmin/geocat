@@ -6,6 +6,7 @@
     <artifactId>gn-schemas</artifactId>
     <groupId>org.geonetwork-opensource.schemas</groupId>
     <version>4.4.6-0</version>
+    <relativePath>../core-geonetwork/schemas</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
