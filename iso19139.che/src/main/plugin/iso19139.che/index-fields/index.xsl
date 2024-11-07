@@ -958,7 +958,7 @@
 
         <!-- Indexing multilingual online Resource -->
         <xsl:for-each select="gmd:transferOptions/*/
-                                gmd:onLine/*[normalize-space(gmd:linkage/gmd:URL) != '' or 
+                                gmd:onLine/*[normalize-space(gmd:linkage/gmd:URL) != '' or
                                 count(gmd:linkage//che:LocalisedURL[normalize-space(.) != '']) > 0]">
 
           <xsl:variable name="transferGroup"
@@ -989,7 +989,7 @@
             <!-- Localized -->
             <xsl:for-each select=".//che:LocalisedURL[. != '']">
               <xsl:variable name="lang2letters" as="xs:string" select="replace(@locale, '#', '')"/>
-              <value><xsl:value-of select="', ', concat($doubleQuote, 'lang', $allLanguages/lang[@id = $lang2letters]/@value, 
+              <value><xsl:value-of select="', ', concat($doubleQuote, 'lang', $allLanguages/lang[@id = $lang2letters]/@value,
                                           $doubleQuote, ':', $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
             </xsl:for-each>
           </xsl:variable>
@@ -1017,7 +1017,7 @@
             <!-- Localized -->
             <xsl:for-each select="gmd:name//gmd:LocalisedCharacterString[. != '']">
               <xsl:variable name="lang2letters" as="xs:string" select="replace(@locale, '#', '')"/>
-              <value><xsl:value-of select="concat(', ', $doubleQuote, 'lang', $allLanguages/lang[@id = $lang2letters]/@value, 
+              <value><xsl:value-of select="concat(', ', $doubleQuote, 'lang', $allLanguages/lang[@id = $lang2letters]/@value,
                                           $doubleQuote, ':', $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
             </xsl:for-each>
           </xsl:variable>
@@ -1045,7 +1045,7 @@
             <!-- Localized -->
             <xsl:for-each select="gmd:description//gmd:LocalisedCharacterString[. != '']">
               <xsl:variable name="lang2letters" as="xs:string" select="replace(@locale, '#', '')"/>
-              <value><xsl:value-of select="concat(', ', $doubleQuote, 'lang', $allLanguages/lang[@id = $lang2letters]/@value, 
+              <value><xsl:value-of select="concat(', ', $doubleQuote, 'lang', $allLanguages/lang[@id = $lang2letters]/@value,
                                           $doubleQuote, ':', $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
             </xsl:for-each>
           </xsl:variable>
@@ -1130,17 +1130,6 @@
         </xsl:if>
       </xsl:for-each>
 
-
-      <xsl:variable name="indexingTimeRecordLink"
-                    select="util:getSettingValue('system/index/indexingTimeRecordLink')" />
-      <xsl:if test="$indexingTimeRecordLink = 'true'">
-        <xsl:variable name="recordsLinks"
-                      select="util:getTargetAssociatedResourcesAsNode(
-                                        $identifier,
-                                        gmd:parentIdentifier/*[text() != '']/text())"/>
-        <xsl:copy-of select="$recordsLinks//recordLink"/>
-      </xsl:if>
-
       <!-- Index more fields in this element -->
       <xsl:apply-templates mode="index-extra-fields" select="."/>
     </doc>
@@ -1191,7 +1180,7 @@
       <!-- Localized -->
       <xsl:for-each select=".//gmd:onlineResource/*/gmd:linkage//che:LocalisedURL[normalize-space(.) != '']">
         <xsl:variable name="lang2letters" as="xs:string" select="replace(@locale, '#', '')"/>
-        <value><xsl:value-of select="', ', concat($doubleQuote, 'lang', $languages/lang[@id = $lang2letters]/@value, 
+        <value><xsl:value-of select="', ', concat($doubleQuote, 'lang', $languages/lang[@id = $lang2letters]/@value,
                                     $doubleQuote, ':', $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
       </xsl:for-each>
     </xsl:variable>
