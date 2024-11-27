@@ -400,7 +400,7 @@
               </xsl:if>
             </xsl:if>
             <xsl:if test="normalize-space(../../gmd:fileDescription) != ''">,
-              "text": <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
+              "nameObject": <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../gmd:fileDescription, $allLanguages, true())"/>
             </xsl:if>
           }</overview>
         </xsl:for-each>
@@ -1036,58 +1036,8 @@
           <!-- Index multilingual Link Name -->
           <xsl:variable name="localisedLinkName" select="gmd:name//gmd:LocalisedCharacterString[. != '']"/>
 
-          <xsl:variable name="nameObject">
-            <xsl:choose>
-              <!-- Default -->
-              <xsl:when test="normalize-space(gmd:name/gco:CharacterString) != ''">
-                <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
-                                           $doubleQuote, gn-fn-index:json-escape(gmd:name/gco:CharacterString), $doubleQuote)"/></value>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:if test="count($localisedLinkName) > 0">
-                  <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
-                                $doubleQuote, gn-fn-index:json-escape(
-                                if ($localisedLinkName[@local = $mainLanguageId])
-                                then $localisedLinkName[@local = $mainLanguageId]
-                                else $localisedLinkName[1]), $doubleQuote)"/></value>
-                </xsl:if>
-              </xsl:otherwise>
-            </xsl:choose>
-            <!-- Localized -->
-            <xsl:for-each select="gmd:name//gmd:LocalisedCharacterString[. != '']">
-              <xsl:variable name="lang2letters" as="xs:string" select="replace(@locale, '#', '')"/>
-              <value><xsl:value-of select="concat(', ', $doubleQuote, 'lang', $allLanguages/lang[@id = $lang2letters]/@value,
-                                          $doubleQuote, ':', $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
-            </xsl:for-each>
-          </xsl:variable>
-
           <!-- Index multilingual Link Description -->
           <xsl:variable name="localisedLinkDescription" select="gmd:description//gmd:LocalisedCharacterString[. != '']"/>
-
-          <xsl:variable name="descriptionObject">
-            <xsl:choose>
-              <!-- Default -->
-              <xsl:when test="normalize-space(gmd:description/gco:CharacterString) != ''">
-                <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
-                                           $doubleQuote, gn-fn-index:json-escape(gmd:description/gco:CharacterString), $doubleQuote)"/></value>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:if test="count($localisedLinkDescription) > 0">
-                  <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
-                                $doubleQuote, gn-fn-index:json-escape(
-                                if ($localisedLinkDescription[@local = $mainLanguageId])
-                                then $localisedLinkDescription[@local = $mainLanguageId]
-                                else $localisedLinkDescription[1]), $doubleQuote)"/></value>
-                </xsl:if>
-              </xsl:otherwise>
-            </xsl:choose>
-            <!-- Localized -->
-            <xsl:for-each select="gmd:description//gmd:LocalisedCharacterString[. != '']">
-              <xsl:variable name="lang2letters" as="xs:string" select="replace(@locale, '#', '')"/>
-              <value><xsl:value-of select="concat(', ', $doubleQuote, 'lang', $allLanguages/lang[@id = $lang2letters]/@value,
-                                          $doubleQuote, ':', $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
-            </xsl:for-each>
-          </xsl:variable>
 
           <linkUrl>
             <xsl:value-of select="gmd:linkage/gmd:URL"/>
@@ -1101,8 +1051,17 @@
           <link type="object">{
             "protocol":"<xsl:value-of select="gn-fn-index:json-escape((gmd:protocol/*/text())[1])"/>",
             "urlObject":{<xsl:value-of select="$urlObject"/>},
-            "nameObject":{<xsl:value-of select="$nameObject"/>},
-            "descriptionObject":{<xsl:value-of select="$descriptionObject"/>},
+            <xsl:if test="normalize-space(gmd:name) != ''">
+            "nameObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
+                                'name', gmd:name, $allLanguages, true())"/>,
+            </xsl:if>
+            <xsl:if test="normalize-space(gmd:description) != ''">
+            "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
+                                'description', gmd:description, $allLanguages, true())"/>,
+            </xsl:if>
+            <xsl:if test="../@gco:nilReason">
+              "nilReason": "<xsl:value-of select="../@gco:nilReason"/>",
+            </xsl:if>
             "function":"<xsl:value-of select="gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue"/>",
             "applicationProfile":"<xsl:value-of select="gn-fn-index:json-escape(gmd:applicationProfile/gco:CharacterString/text())"/>",
             "group": <xsl:value-of select="$transferGroup"/>
@@ -1188,8 +1147,8 @@
     not valid and they will be ignored.
      Same for organisationName eg. de:b86a8604-bf78-480f-a5a8-8edff5586679 -->
     <xsl:variable name="organisationName"
-                  select="*[1]/gmd:organisationName[1]/(gco:CharacterString|gmx:Anchor)"
-                  as="xs:string*"/>
+                  select="*[1]/gmd:organisationName[1]"
+                  as="node()?"/>
     <xsl:variable name="uuid" select="@uuid"/>
 
     <xsl:variable name="role"
@@ -1235,8 +1194,11 @@
     <xsl:variable name="address" select="string-join(*[1]/gmd:contactInfo/*/gmd:address/*/(
                                         gmd:deliveryPoint|gmd:postalCode|gmd:city|
                                         gmd:administrativeArea|gmd:country)/gco:CharacterString/text(), ', ')"/>
-    <xsl:variable name="roleField" select="concat(replace($role, '[^a-zA-Z0-9-]', ''), 'Org', $fieldSuffix)"/>
-    <xsl:variable name="orgField" select="concat('Org', $fieldSuffix)"/>
+    <xsl:variable name="roleField"
+                  select="concat(replace($role, '[^a-zA-Z0-9-]', ''),
+                                 'Org', $fieldSuffix)"/>
+    <xsl:variable name="orgField"
+                  select="concat('Org', $fieldSuffix)"/>
     <xsl:if test="normalize-space($organisationName) != ''">
         <xsl:copy-of select="gn-fn-index:add-multilingual-field($orgField, *[1]/gmd:organisationName[1], $languages)"/>,
         <xsl:copy-of select="gn-fn-index:add-multilingual-field($roleField, *[1]/gmd:organisationName[1], $languages)"/>,
