@@ -530,7 +530,7 @@
     WARNING: INSPIRE view is not compatible with ISO19139:2005 schema.
     You have to use the default ISO19139:2007 schema.
     -->
-    <view name="inspire" upAndDownControlHidden="true" displayIfServiceInfo="'false'='true'">
+    <view name="inspire" upAndDownControlHidden="true" displayIfServiceInfo="'true'='true'">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
 
