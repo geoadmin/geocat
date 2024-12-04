@@ -24,5 +24,5 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="2.0" exclude-result-prefixes="#all">
-  <xsl:import href="../../iso19139/process/add-resource-id.xsl"/>
+  <xsl:import href="../../iso19139/process/collection-merge-utility.xsl"/>
 </xsl:stylesheet>
