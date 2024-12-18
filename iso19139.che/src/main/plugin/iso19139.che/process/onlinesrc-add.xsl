@@ -25,13 +25,23 @@
 <!--
 Processing to insert or update an online resource element.
 Insert is made in first transferOptions found.
+
+Note: It assumes that it will be adding new items in
+      the first /gmd:distributionInfo
+      and first /gmd:MD_Distribution
+      and first /gmd:transferOptions
 -->
 <xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:digestUtils="java:org.apache.commons.codec.digest.DigestUtils"
+                xmlns:exslt="http://exslt.org/common"
                 xmlns:java="java:org.fao.geonet.util.XslUtil"
-                version="2.0" xmlns:che="http://www.geocat.ch/2008/che">
+                xmlns:che="http://www.geocat.ch/2008/che"
+                exclude-result-prefixes="#all"
+                version="2.0">
 
   <!-- Main properties for the link.
   Name and description may be multilingual eg. ENG#English name|FRE#Le français
@@ -42,6 +52,8 @@ Insert is made in first transferOptions found.
   <xsl:param name="desc"/>
   <xsl:param name="function"/>
   <xsl:param name="applicationProfile"/>
+  <xsl:param name="mimeType"/>
+  <xsl:param name="mimeTypeStrategy" select="'protocol'"/>
 
   <!-- Add an optional uuidref attribute to the onLine element created. -->
   <xsl:param name="uuidref"/>
@@ -51,32 +63,39 @@ Insert is made in first transferOptions found.
   in this one. -->
   <xsl:param name="extra_metadata_uuid"/>
 
-  <!-- Target element to update. The key is based on the concatenation
-  of URL+Protocol+Name -->
-  <xsl:param name="updateKey"/>
+  <!-- Target element to update.
+      updateKey is used to identify the resource name to be updated - it is for backwards compatibility.  Will not be used if resourceHash is set.
+                The key is based on the concatenation of URL+Protocol+Name
+      resourceHash is hash value of the object to be removed which will ensure the correct value is removed. It will override the usage of updateKey
+      resourceIdx is the index location of the object to be removed - can be used when duplicate entries exists to ensure the correct one is removed.
+  -->
 
-  <!-- The default language is also added as gmd:locale
-  for multilingual metadata records. -->
-  <xsl:variable name="mainLanguage"
-                select="/*/gmd:language/gco:CharacterString/text()|
-                        /*/gmd:language/gmd:LanguageCode/@codeListValue"/>
+  <xsl:param name="updateKey" select="''"/>
+  <xsl:param name="resourceHash" select="''"/>
+  <xsl:param name="resourceIdx" select="''"/>
 
-  <xsl:variable name="mainLanguageId"
-                select="concat('#', upper-case(java:twoCharLangCode($mainLanguage)))"/>
-
-  <xsl:variable name="isMultilingual"
-                select="count(/*/gmd:locale[*/gmd:languageCode/*/@codeListValue != $mainLanguage]) > 0"/>
+  <xsl:variable name="update_flag">
+    <xsl:value-of select="boolean($updateKey != '' or $resourceHash != '' or $resourceIdx != '')"/>
+  </xsl:variable>
 
   <xsl:variable name="mainLang">
     <xsl:value-of
-            select="(gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata'])/gmd:language/gmd:LanguageCode/@codeListValue"/>
+      select="(gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata'])/gmd:language/gmd:LanguageCode/@codeListValue"/>
   </xsl:variable>
 
-  <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
+  <xsl:variable name="isMultilingual"
+                select="count(/*/gmd:locale[*/gmd:languageCode/*/@codeListValue != $mainLang]) > 0"/>
+
+  <xsl:variable name="mainLanguageId"
+                select="concat('#', upper-case(java:twoCharLangCode($mainLang)))"/>
+
+  <!-- Add new gmd:onLine and consider cases where parent elements don't exist -->
+  <!--  <gmd:distributionInfo> does not exist-->
+  <xsl:template match="gmd:MD_Metadata[not(gmd:distributionInfo) and $update_flag = false()]|*[@gco:isoType='gmd:MD_Metadata' and not(gmd:distributionInfo) and $update_flag = false()]">
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
       <xsl:apply-templates
-              select="gmd:fileIdentifier|
+        select="gmd:fileIdentifier|
                 gmd:language|
                 gmd:characterSet|
                 gmd:parentIdentifier|
@@ -96,43 +115,17 @@ Insert is made in first transferOptions found.
 
       <gmd:distributionInfo>
         <gmd:MD_Distribution>
-          <xsl:apply-templates
-                  select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"/>
-          <xsl:apply-templates
-                  select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor"/>
           <gmd:transferOptions>
             <gmd:MD_DigitalTransferOptions>
-              <xsl:apply-templates
-                      select="gmd:distributionInfo/gmd:MD_Distribution/
-                          gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:unitsOfDistribution"/>
-              <xsl:apply-templates
-                      select="gmd:distributionInfo/gmd:MD_Distribution/
-                          gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:transferSize"/>
-              <xsl:apply-templates
-                      select="gmd:distributionInfo/gmd:MD_Distribution/
-                          gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:onLine"/>
-
-
-              <xsl:if test="$updateKey = ''">
-                <xsl:call-template name="createOnlineSrc"/>
-              </xsl:if>
-
-              <xsl:apply-templates
-                      select="gmd:distributionInfo/gmd:MD_Distribution/
-                          gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:offLine"/>
+              <xsl:call-template name="createOnlineSrc"/>
             </gmd:MD_DigitalTransferOptions>
           </gmd:transferOptions>
-
-
-          <xsl:apply-templates
-                  select="gmd:distributionInfo/gmd:MD_Distribution/
-                      gmd:transferOptions[position() > 1]"/>
-
         </gmd:MD_Distribution>
       </gmd:distributionInfo>
 
+
       <xsl:apply-templates
-              select="gmd:dataQualityInfo|
+        select="gmd:dataQualityInfo|
                 gmd:portrayalCatalogueInfo|
                 gmd:metadataConstraints|
                 gmd:applicationSchemaInfo|
@@ -145,29 +138,87 @@ Insert is made in first transferOptions found.
     </xsl:copy>
   </xsl:template>
 
-
-  <!-- Updating the link matching the update key. -->
-  <xsl:template match="gmd:onLine[
-                        normalize-space($updateKey) = concat(
-                        (if ($isMultilingual)
-                        then gmd:CI_OnlineResource/gmd:linkage/che:PT_FreeURL/che:URLGroup/che:LocalisedURL[@locale = $mainLanguageId]
-                        else gmd:CI_OnlineResource/gmd:linkage/gmd:URL),
-                        gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString,
-                        gmd:CI_OnlineResource/gmd:name/gco:CharacterString)
-                       ]">
-    <xsl:call-template name="createOnlineSrc"/>
+  <!--  <gmd:MD_Distribution> does not exist-->
+  <xsl:template match="*/gmd:distributionInfo[not(gmd:MD_Distribution) and $update_flag = false() and position() = 1]">
+    <xsl:copy>
+      <xsl:apply-templates select="node()|@*"/>
+      <gmd:MD_Distribution>
+        <gmd:transferOptions>
+          <gmd:MD_DigitalTransferOptions>
+            <xsl:call-template name="createOnlineSrc"/>
+          </gmd:MD_DigitalTransferOptions>
+        </gmd:transferOptions>
+      </gmd:MD_Distribution>
+    </xsl:copy>
   </xsl:template>
-<!-- TMP TO REMOVE when gco:characterString is added in multilingual elements
-  <xsl:template match="gmd:onLine[
-                        normalize-space($updateKey) = concat(
-                        gmd:CI_OnlineResource/gmd:linkage/che:PT_FreeURL/che:URLGroup/che:LocalisedURL[@locale = '#DE'],
-                        gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString,
-                        gmd:CI_OnlineResource/gmd:name/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE')
-                        ]">
-    <xsl:call-template name="createOnlineSrc"/>
-  </xsl:template>
--->
 
+  <!--  <gmd:transferOptions> does not exist-->
+  <xsl:template match="*/gmd:distributionInfo[1]/gmd:MD_Distribution[not(gmd:transferOptions) and $update_flag = false() and position() = 1]">
+    <xsl:copy>
+      <xsl:apply-templates select="node()|@*"/>
+      <gmd:transferOptions>
+        <gmd:MD_DigitalTransferOptions>
+          <xsl:call-template name="createOnlineSrc"/>
+        </gmd:MD_DigitalTransferOptions>
+      </gmd:transferOptions>
+    </xsl:copy>
+  </xsl:template>
+
+  <!--  <gmd:MD_DigitalTransferOptions> does not exist-->
+  <xsl:template match="*/gmd:distributionInfo[1]/gmd:MD_Distribution[1]/gmd:transferOptions[not(gmd:MD_DigitalTransferOptions) and $update_flag = false() and position() = 1]">
+    <xsl:copy>
+      <xsl:apply-templates select="node()|@*"/>
+      <gmd:MD_DigitalTransferOptions>
+        <xsl:call-template name="createOnlineSrc"/>
+      </gmd:MD_DigitalTransferOptions>
+    </xsl:copy>
+  </xsl:template>
+
+  <!--  Add new gmd:gmd:onLine-->
+  <xsl:template match="*/gmd:distributionInfo[1]/gmd:MD_Distribution[1]/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions[$update_flag = false() and position() = 1]">
+    <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+      <xsl:apply-templates
+        select="gmd:unitsOfDistribution|
+                gmd:transferSize|
+                gmd:onLine"/>
+
+      <xsl:call-template name="createOnlineSrc"/>
+
+      <xsl:apply-templates select="gmd:offLine"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <!-- End of inserting gmd:onLine -->
+
+
+  <!-- Updating the gmd:onLine based on update parameters -->
+  <!-- Note: first part of the match needs to match the xsl:for-each select from extract-relations.xsl in order to get the position() to match -->
+  <!-- The unique identifier is marked with resourceIdx which is the position index and resourceHash which is hash code of the current node (combination of url, resource name, and description) -->
+  <!-- Template to match all gmd:onLine elements -->
+  <xsl:template match="//gmd:MD_DigitalTransferOptions/gmd:onLine" priority="2">
+    <!-- Calculate the global position of the current gmd:onLine element -->
+    <xsl:variable name="position" select="count(//gmd:MD_DigitalTransferOptions/gmd:onLine[current() >> .]) + 1" />
+
+    <xsl:choose>
+      <xsl:when test="gmd:CI_OnlineResource[gmd:linkage/gmd:URL != ''] and
+                      ($resourceIdx = '' or $position = xs:integer($resourceIdx)) and
+                      ($resourceHash != '' or ($updateKey != '' and normalize-space($updateKey) = concat(
+                          (if ($isMultilingual)
+                          then gmd:CI_OnlineResource/gmd:linkage/che:PT_FreeURL/che:URLGroup/che:LocalisedURL[@locale = $mainLanguageId]
+                          else gmd:CI_OnlineResource/gmd:linkage/gmd:URL),
+                          gmd:CI_OnlineResource/gmd:protocol/*,
+                          gmd:CI_OnlineResource/gmd:name/gco:CharacterString)))
+                     and ($resourceHash = '' or digestUtils:md5Hex(normalize-space(.)) = $resourceHash)">
+        <xsl:call-template name="createOnlineSrc"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy>
+          <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
   <xsl:template name="createOnlineSrc">
     <!-- Add all online source from the target metadata to the
@@ -186,18 +237,17 @@ Insert is made in first transferOptions found.
     <xsl:variable name="separator" select="'\|'"/>
     <xsl:variable name="useOnlyPTFreeText">
       <xsl:value-of
-              select="count(//*[gmd:PT_FreeText and not(gco:CharacterString)]) > 0"/>
+        select="count(//*[gmd:PT_FreeText and not(gco:CharacterString)]) > 0"/>
     </xsl:variable>
 
 
     <xsl:if test="$url">
       <!-- In case the protocol is an OGC protocol
-      the name parameter may contains a list of layers
+      the name parameter may contain a list of layers
       separated by comma.
       In that case on one online element is added per
       layer/featureType.
       -->
-
       <xsl:choose>
         <xsl:when test="starts-with($protocol, 'OGC:') and $name != ''">
           <xsl:for-each select="tokenize($name, ',')">
@@ -211,7 +261,7 @@ Insert is made in first transferOptions found.
                   <xsl:choose>
                     <!--Multilingual-->
                     <xsl:when test="contains($url, '#')">
-                      <xsl:attribute name="xsi:type">che:PT_FreeURL_PropertyType</xsl:attribute>
+                      <xsl:attribute name="xs:type">che:PT_FreeURL_PropertyType</xsl:attribute>
 
                       <xsl:for-each select="tokenize($url, $separator)">
                         <xsl:variable name="urlLang"
@@ -254,9 +304,7 @@ Insert is made in first transferOptions found.
                   </xsl:choose>
                 </gmd:linkage>
                 <gmd:protocol>
-                  <gco:CharacterString>
-                    <xsl:value-of select="$protocol"/>
-                  </gco:CharacterString>
+                  <xsl:call-template name="setProtocol"/>
                 </gmd:protocol>
 
                 <xsl:if test="$applicationProfile != ''">
@@ -269,7 +317,7 @@ Insert is made in first transferOptions found.
                           <xsl:variable name="nameValue"
                                         select="substring-after(., '#')"></xsl:variable>
                           <xsl:if
-                                  test="$useOnlyPTFreeText = 'false' and $nameLang = $mainLang">
+                            test="$useOnlyPTFreeText = 'false' and $nameLang = $mainLang">
                             <gco:CharacterString>
                               <xsl:value-of select="$nameValue"/>
                             </gco:CharacterString>
@@ -284,10 +332,10 @@ Insert is made in first transferOptions found.
                                           select="substring-after(., '#')"></xsl:variable>
 
                             <xsl:if
-                                    test="$useOnlyPTFreeText = 'true' or $nameLang != $mainLang">
+                              test="$useOnlyPTFreeText = 'true' or $nameLang != $mainLang">
                               <gmd:textGroup>
                                 <gmd:LocalisedCharacterString
-                                        locale="{concat('#', $nameLang)}">
+                                  locale="{concat('#', $nameLang)}">
                                   <xsl:value-of select="$nameValue"/>
                                 </gmd:LocalisedCharacterString>
                               </gmd:textGroup>
@@ -305,28 +353,105 @@ Insert is made in first transferOptions found.
                   </gmd:applicationProfile>
                 </xsl:if>
 
-                <xsl:if test=". != ''">
+                <xsl:variable name="curName" select="."></xsl:variable>
+                <xsl:if test="$curName != ''">
                   <gmd:name>
-                    <gco:CharacterString>
-                      <xsl:value-of select="."/>
-                    </gco:CharacterString>
+                    <xsl:choose>
+
+                      <!--Multilingual-->
+                      <xsl:when test="contains($curName, '#')">
+                        <xsl:for-each select="tokenize($curName, $separator)">
+                          <xsl:variable name="nameLang"
+                                        select="substring-before(., '#')"></xsl:variable>
+                          <xsl:variable name="nameValue"
+                                        select="substring-after(., '#')"></xsl:variable>
+                          <xsl:if
+                            test="$useOnlyPTFreeText = 'false' and $nameLang = $mainLang">
+                            <gco:CharacterString>
+                              <xsl:value-of select="$nameValue"/>
+                            </gco:CharacterString>
+                          </xsl:if>
+                        </xsl:for-each>
+
+                        <gmd:PT_FreeText>
+                          <xsl:for-each select="tokenize($curName, $separator)">
+                            <xsl:variable name="nameLang"
+                                          select="substring-before(., '#')"></xsl:variable>
+                            <xsl:variable name="nameValue"
+                                          select="substring-after(., '#')"></xsl:variable>
+
+                            <xsl:if
+                              test="$useOnlyPTFreeText = 'true' or $nameLang != $mainLang">
+                              <gmd:textGroup>
+                                <gmd:LocalisedCharacterString
+                                  locale="{concat('#', $nameLang)}">
+                                  <xsl:value-of select="$nameValue"/>
+                                </gmd:LocalisedCharacterString>
+                              </gmd:textGroup>
+                            </xsl:if>
+
+                          </xsl:for-each>
+                        </gmd:PT_FreeText>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <gco:CharacterString>
+                          <xsl:value-of select="$curName"/>
+                        </gco:CharacterString>
+                      </xsl:otherwise>
+                    </xsl:choose>
                   </gmd:name>
                 </xsl:if>
 
-                <xsl:if test="tokenize($desc, ',')[position() = $pos] != ''">
+                <xsl:variable name="curDesc" select="tokenize($desc, ',')[position() = $pos]"></xsl:variable>
+                <xsl:if test="$curDesc != ''">
                   <gmd:description>
-                    <gco:CharacterString>
-                      <xsl:value-of select="tokenize($desc, ',')[position() = $pos]"/>
-                    </gco:CharacterString>
+                    <xsl:choose>
+                      <xsl:when test="contains($curDesc, '#')">
+                        <xsl:for-each select="tokenize($curDesc, $separator)">
+                          <xsl:variable name="descLang"
+                                        select="substring-before(., '#')"></xsl:variable>
+                          <xsl:variable name="descValue"
+                                        select="substring-after(., '#')"></xsl:variable>
+                          <xsl:if
+                            test="$useOnlyPTFreeText = 'false' and $descLang = $mainLang">
+                            <gco:CharacterString>
+                              <xsl:value-of select="$descValue"/>
+                            </gco:CharacterString>
+                          </xsl:if>
+                        </xsl:for-each>
+
+                        <gmd:PT_FreeText>
+                          <xsl:for-each select="tokenize($desc, $separator)">
+                            <xsl:variable name="descLang"
+                                          select="substring-before(., '#')"></xsl:variable>
+                            <xsl:variable name="descValue"
+                                          select="substring-after(., '#')"></xsl:variable>
+                            <xsl:if
+                              test="$useOnlyPTFreeText = 'true' or $descLang != $mainLang">
+                              <gmd:textGroup>
+                                <gmd:LocalisedCharacterString
+                                  locale="{concat('#', $descLang)}">
+                                  <xsl:value-of select="$descValue"/>
+                                </gmd:LocalisedCharacterString>
+                              </gmd:textGroup>
+                            </xsl:if>
+                          </xsl:for-each>
+                        </gmd:PT_FreeText>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <gco:CharacterString>
+                          <xsl:value-of select="$curDesc"/>
+                        </gco:CharacterString>
+                      </xsl:otherwise>
+                    </xsl:choose>
                   </gmd:description>
                 </xsl:if>
-
 
                 <xsl:if test="$function != ''">
                   <gmd:function>
                     <gmd:CI_OnLineFunctionCode
-                            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode"
-                            codeListValue="{$function}"/>
+                      codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode"
+                      codeListValue="{$function}"/>
                   </gmd:function>
                 </xsl:if>
               </gmd:CI_OnlineResource>
@@ -336,7 +461,6 @@ Insert is made in first transferOptions found.
         <xsl:otherwise>
           <!-- ... the name is simply added in the newly
           created online element. -->
-
           <gmd:onLine>
             <xsl:if test="$uuidref">
               <xsl:attribute name="uuidref" select="$uuidref"/>
@@ -348,7 +472,7 @@ Insert is made in first transferOptions found.
 
                   <!--Multilingual-->
                   <xsl:when test="contains($url, '#')">
-                    <xsl:attribute name="xsi:type">che:PT_FreeURL_PropertyType</xsl:attribute>
+                    <xsl:attribute name="xs:type">che:PT_FreeURL_PropertyType</xsl:attribute>
 
                     <xsl:for-each select="tokenize($url, $separator)">
                       <xsl:variable name="urlLang"
@@ -393,9 +517,7 @@ Insert is made in first transferOptions found.
 
               <xsl:if test="$protocol != ''">
                 <gmd:protocol>
-                  <gco:CharacterString>
-                    <xsl:value-of select="$protocol"/>
-                  </gco:CharacterString>
+                  <xsl:call-template name="setProtocol"/>
                 </gmd:protocol>
               </xsl:if>
 
@@ -409,7 +531,7 @@ Insert is made in first transferOptions found.
                         <xsl:variable name="nameValue"
                                       select="substring-after(., '#')"></xsl:variable>
                         <xsl:if
-                                test="$useOnlyPTFreeText = 'false' and $nameLang = $mainLang">
+                          test="$useOnlyPTFreeText = 'false' and $nameLang = $mainLang">
                           <gco:CharacterString>
                             <xsl:value-of select="$nameValue"/>
                           </gco:CharacterString>
@@ -424,10 +546,10 @@ Insert is made in first transferOptions found.
                                         select="substring-after(., '#')"></xsl:variable>
 
                           <xsl:if
-                                  test="$useOnlyPTFreeText = 'true' or $nameLang != $mainLang">
+                            test="$useOnlyPTFreeText = 'true' or $nameLang != $mainLang">
                             <gmd:textGroup>
                               <gmd:LocalisedCharacterString
-                                      locale="{concat('#', $nameLang)}">
+                                locale="{concat('#', $nameLang)}">
                                 <xsl:value-of select="$nameValue"/>
                               </gmd:LocalisedCharacterString>
                             </gmd:textGroup>
@@ -447,9 +569,7 @@ Insert is made in first transferOptions found.
 
               <xsl:if test="$name != ''">
                 <gmd:name>
-
                   <xsl:choose>
-
                     <!--Multilingual-->
                     <xsl:when test="contains($name, '#')">
                       <xsl:for-each select="tokenize($name, $separator)">
@@ -457,8 +577,9 @@ Insert is made in first transferOptions found.
                                       select="substring-before(., '#')"></xsl:variable>
                         <xsl:variable name="nameValue"
                                       select="substring-after(., '#')"></xsl:variable>
+
                         <xsl:if
-                                test="$useOnlyPTFreeText = 'false' and $nameLang = $mainLang">
+                          test="$useOnlyPTFreeText = 'false' and $nameLang = $mainLang">
                           <gco:CharacterString>
                             <xsl:value-of select="$nameValue"/>
                           </gco:CharacterString>
@@ -473,10 +594,10 @@ Insert is made in first transferOptions found.
                                         select="substring-after(., '#')"></xsl:variable>
 
                           <xsl:if
-                                  test="$useOnlyPTFreeText = 'true' or $nameLang != $mainLang">
+                            test="$useOnlyPTFreeText = 'true' or $nameLang != $mainLang">
                             <gmd:textGroup>
                               <gmd:LocalisedCharacterString
-                                      locale="{concat('#', $nameLang)}">
+                                locale="{concat('#', $nameLang)}">
                                 <xsl:value-of select="$nameValue"/>
                               </gmd:LocalisedCharacterString>
                             </gmd:textGroup>
@@ -504,7 +625,7 @@ Insert is made in first transferOptions found.
                         <xsl:variable name="descValue"
                                       select="substring-after(., '#')"></xsl:variable>
                         <xsl:if
-                                test="$useOnlyPTFreeText = 'false' and $descLang = $mainLang">
+                          test="$useOnlyPTFreeText = 'false' and $descLang = $mainLang">
                           <gco:CharacterString>
                             <xsl:value-of select="$descValue"/>
                           </gco:CharacterString>
@@ -518,10 +639,10 @@ Insert is made in first transferOptions found.
                           <xsl:variable name="descValue"
                                         select="substring-after(., '#')"></xsl:variable>
                           <xsl:if
-                                  test="$useOnlyPTFreeText = 'true' or $descLang != $mainLang">
+                            test="$useOnlyPTFreeText = 'true' or $descLang != $mainLang">
                             <gmd:textGroup>
                               <gmd:LocalisedCharacterString
-                                      locale="{concat('#', $descLang)}">
+                                locale="{concat('#', $descLang)}">
                                 <xsl:value-of select="$descValue"/>
                               </gmd:LocalisedCharacterString>
                             </gmd:textGroup>
@@ -541,8 +662,8 @@ Insert is made in first transferOptions found.
               <xsl:if test="$function != ''">
                 <gmd:function>
                   <gmd:CI_OnLineFunctionCode
-                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode"
-                          codeListValue="{$function}"/>
+                    codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode"
+                    codeListValue="{$function}"/>
                 </gmd:function>
               </xsl:if>
             </gmd:CI_OnlineResource>
@@ -550,6 +671,26 @@ Insert is made in first transferOptions found.
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="setProtocol">
+    <xsl:choose>
+      <xsl:when test="$mimeTypeStrategy = 'mimeType' and $mimeType != ''">
+        <gmx:MimeFileType type="{$mimeType}">
+          <xsl:value-of select="$protocol"/>
+        </gmx:MimeFileType>
+      </xsl:when>
+      <xsl:when test="$mimeTypeStrategy = 'protocol' and $mimeType != ''">
+        <gco:CharacterString>
+          <xsl:value-of select="concat($protocol, ':', $mimeType)"/>
+        </gco:CharacterString>
+      </xsl:when>
+      <xsl:otherwise>
+        <gco:CharacterString>
+          <xsl:value-of select="$protocol"/>
+        </gco:CharacterString>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="extra" priority="2"/>
