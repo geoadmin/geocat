@@ -1,3 +1,3 @@
 [submodule "core-geonetwork"]
 	path = core-geonetwork
-	url = git@github.com:geonetwork/core-geonetwork.git
+	url = git@github.com:sebr72/core-geonetwork.git 
