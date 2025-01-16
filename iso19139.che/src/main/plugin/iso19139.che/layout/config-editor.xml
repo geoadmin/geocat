@@ -452,7 +452,6 @@
       <name>gmd:applicationProfile</name>
       <name>gmd:page</name>
       <name>gmd:date</name>
-      <name>gmd:linkage</name>
       <name>gmd:fileName</name>
       <name>gmd:protocol</name>
       <name>gmd:fileType</name>
