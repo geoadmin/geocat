@@ -335,11 +335,10 @@
       Exclude all thesaurus already used in the metadata:
       -->
 
-      <!-- GEOCAT, rejouter '-external.none.allThesaurus,-external.theme.access_use_conditions' à l'exclusion -->
-      <directiveAttributes data-include="xpath::string-join(*
+      <directiveAttributes data-include="xpath::string-join((*
                           //gmd:thesaurusName/*/gmd:identifier/*/
                             gmd:code/gmx:Anchor/
-                              concat('-', substring-after(text()[. != ''], 'geonetwork.thesaurus.')), ',')"
+                              concat('-', substring-after(text()[. != ''], 'geonetwork.thesaurus.')), '-external.none.allThesaurus,-external.theme.access_use_conditions'), ',')"
         data-allow-free-text-keywords="false"
         data-transformation="to-iso19139-keyword-as-xlink"/>
     </for>
