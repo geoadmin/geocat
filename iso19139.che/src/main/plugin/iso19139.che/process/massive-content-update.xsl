@@ -4,7 +4,8 @@
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                xmlns:che="http://www.geocat.ch/2008/che" version="2.0"
+                xmlns:che="http://www.geocat.ch/2008/che"
+                version="2.0"
                 exclude-result-prefixes="gmd xsl gco srv geonet che">
 
 
@@ -35,6 +36,7 @@
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
+
 
   <!-- METADATA CONTACT updates: che:CHE_MD_Metadata/gmd:contact -->
   <!-- individualName -->
@@ -1268,7 +1270,8 @@
       <xsl:choose>
         <!-- A replacement defined for the field, apply it -->
         <xsl:when
-          test="$replacements/replacements/replacement[field = $fieldId] and string($replacements/replacements/replacement[field = $fieldId]/searchValue)">
+          test="$replacements/replacements/replacement[field = $fieldId]
+                    and string($replacements/replacements/replacement[field = $fieldId]/searchValue)">
 
           <xsl:choose>
             <!-- gmd:URL -->
