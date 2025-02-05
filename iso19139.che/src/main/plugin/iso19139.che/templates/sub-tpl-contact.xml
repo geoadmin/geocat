@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<che:CHE_CI_ResponsibleParty xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:geonet="http://www.fao.org/geonetwork" gco:isoType="gmd:CI_ResponsibleParty" uuid="5d89fee0-b85f-4e49-8169-796e61b9c44e">
+  <gmd:organisationName xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+    <gmd:PT_FreeText>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#EN">-- template "contacts" --</gmd:LocalisedCharacterString>
+      </gmd:textGroup>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#DE">-- Vorlage "Kontakt" --</gmd:LocalisedCharacterString>
+      </gmd:textGroup>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#FR">-- template "contacts" --</gmd:LocalisedCharacterString>
+      </gmd:textGroup>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#IT" />
+      </gmd:textGroup>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#RM" />
+      </gmd:textGroup>
+    </gmd:PT_FreeText>
+  </gmd:organisationName>
+  <gmd:positionName xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+    <gmd:PT_FreeText>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#EN" />
+      </gmd:textGroup>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#DE" />
+      </gmd:textGroup>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#FR" />
+      </gmd:textGroup>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#IT" />
+      </gmd:textGroup>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#RM" />
+      </gmd:textGroup>
+    </gmd:PT_FreeText>
+  </gmd:positionName>
+  <gmd:contactInfo xmlns:gmd="http://www.isotc211.org/2005/gmd">
+    <gmd:CI_Contact>
+      <gmd:phone>
+        <che:CHE_CI_Telephone gco:isoType="gmd:CI_Telephone">
+          <gmd:voice>
+            <gco:CharacterString />
+          </gmd:voice>
+        </che:CHE_CI_Telephone>
+      </gmd:phone>
+      <gmd:address>
+        <che:CHE_CI_Address gco:isoType="gmd:CI_Address">
+          <gmd:city>
+            <gco:CharacterString />
+          </gmd:city>
+          <gmd:postalCode>
+            <gco:CharacterString />
+          </gmd:postalCode>
+          <gmd:country>
+            <gco:CharacterString>CH</gco:CharacterString>
+          </gmd:country>
+          <gmd:electronicMailAddress>
+            <gco:CharacterString />
+          </gmd:electronicMailAddress>
+          <che:streetName>
+            <gco:CharacterString />
+          </che:streetName>
+          <che:streetNumber>
+            <gco:CharacterString />
+          </che:streetNumber>
+        </che:CHE_CI_Address>
+      </gmd:address>
+      <gmd:onlineResource>
+        <gmd:CI_OnlineResource>
+          <gmd:linkage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="che:PT_FreeURL_PropertyType">
+            <che:PT_FreeURL>
+              <che:URLGroup>
+                <che:LocalisedURL locale="#EN" />
+              </che:URLGroup>
+              <che:URLGroup>
+                <che:LocalisedURL locale="#DE" />
+              </che:URLGroup>
+              <che:URLGroup>
+                <che:LocalisedURL locale="#FR" />
+              </che:URLGroup>
+              <che:URLGroup>
+                <che:LocalisedURL locale="#IT" />
+              </che:URLGroup>
+              <che:URLGroup>
+                <che:LocalisedURL locale="#RM" />
+              </che:URLGroup>
+            </che:PT_FreeURL>
+          </gmd:linkage>
+          <gmd:protocol>
+            <gco:CharacterString>WWW:LINK</gco:CharacterString>
+          </gmd:protocol>
+        </gmd:CI_OnlineResource>
+      </gmd:onlineResource>
+    </gmd:CI_Contact>
+  </gmd:contactInfo>
+  <gmd:role xmlns:gmd="http://www.isotc211.org/2005/gmd">
+    <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="pointOfContact" />
+  </gmd:role>
+  <che:individualFirstName>
+    <gco:CharacterString />
+  </che:individualFirstName>
+  <che:individualLastName>
+    <gco:CharacterString />
+  </che:individualLastName>
+  <che:organisationAcronym xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+    <gmd:PT_FreeText xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#EN" />
+      </gmd:textGroup>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#DE" />
+      </gmd:textGroup>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#FR" />
+      </gmd:textGroup>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#IT" />
+      </gmd:textGroup>
+      <gmd:textGroup>
+        <gmd:LocalisedCharacterString locale="#RM" />
+      </gmd:textGroup>
+    </gmd:PT_FreeText>
+  </che:organisationAcronym>
+</che:CHE_CI_ResponsibleParty>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gmd:MD_Format xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:geonet="http://www.fao.org/geonetwork" uuid="14ea7d55-acbb-4507-8ba6-2063d3100561">
+  <gmd:name>
+    <gco:CharacterString>-- Format Template --</gco:CharacterString>
+  </gmd:name>
+  <gmd:version gco:nilReason="unknown">
+    <gco:CharacterString />
+  </gmd:version>
+</gmd:MD_Format>

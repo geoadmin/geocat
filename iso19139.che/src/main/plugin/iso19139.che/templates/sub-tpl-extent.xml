@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:geonet="http://www.fao.org/geonetwork">
+  <gmd:description>
+    <gco:CharacterString>-- Geographic Extend: empty template --</gco:CharacterString>
+  </gmd:description>
+  <gmd:geographicElement>
+    <gmd:EX_GeographicDescription>
+      <gmd:geographicIdentifier>
+        <gmd:MD_Identifier>
+          <gmd:code gco:nilReason="missing" />
+        </gmd:MD_Identifier>
+      </gmd:geographicIdentifier>
+    </gmd:EX_GeographicDescription>
+  </gmd:geographicElement>
+  <gmd:geographicElement>
+    <gmd:EX_GeographicBoundingBox>
+      <gmd:westBoundLongitude>
+        <gco:Decimal>6.804131</gco:Decimal>
+      </gmd:westBoundLongitude>
+      <gmd:eastBoundLongitude>
+        <gco:Decimal>11.015046</gco:Decimal>
+      </gmd:eastBoundLongitude>
+      <gmd:southBoundLatitude>
+        <gco:Decimal>46.273566</gco:Decimal>
+      </gmd:southBoundLatitude>
+      <gmd:northBoundLatitude>
+        <gco:Decimal>47.924764</gco:Decimal>
+      </gmd:northBoundLatitude>
+    </gmd:EX_GeographicBoundingBox>
+  </gmd:geographicElement>
+  <gmd:geographicElement>
+    <gmd:EX_BoundingPolygon>
+      <gmd:polygon>
+        <gml:MultiSurface>
+          <gml:surfaceMember>
+            <Polygon xmlns="http://www.opengis.net/gml/3.2" gml:id="d2103817e81" srsName="urn:x-ogc:def:crs:EPSG:6.6:4326">
+              <exterior>
+                <LinearRing>
+                  <posList>8.322811989643602 47.924763914617884 6.80413091537929 46.273565802311694 11.015045937186638 46.916656927056685 8.322811989643602 47.924763914617884</posList>
+                </LinearRing>
+              </exterior>
+            </Polygon>
+          </gml:surfaceMember>
+        </gml:MultiSurface>
+      </gmd:polygon>
+    </gmd:EX_BoundingPolygon>
+  </gmd:geographicElement>
+</gmd:EX_Extent>
