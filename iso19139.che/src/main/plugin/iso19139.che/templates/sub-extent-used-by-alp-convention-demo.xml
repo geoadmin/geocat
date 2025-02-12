@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gmd:EX_Extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml/3.2" uuid="geocatch-subtpl-extent-custom-15">
+        <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+         <gmd:PT_FreeText>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#EN">Alpine Convention</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#DE">Alpenkonvention</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#FR">Convention des Alpes</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#IT">Convenzione delle alpi</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+          <gmd:LocalisedCharacterString locale="#RM"></gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          </gmd:PT_FreeText>
+        </gmd:description>
+        <gmd:geographicElement>
+          <gmd:EX_GeographicDescription>
+            <gmd:geographicIdentifier>
+              <gmd:MD_Identifier>
+                <gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+                  <gmd:PT_FreeText>
+                  <gmd:textGroup>
+                  <gmd:LocalisedCharacterString locale="#EN">AC</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                  <gmd:LocalisedCharacterString locale="#DE">AK</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                  <gmd:LocalisedCharacterString locale="#FR">CA</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                  <gmd:LocalisedCharacterString locale="#IT">CA</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  <gmd:textGroup>
+                  <gmd:LocalisedCharacterString locale="#RM">null</gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
+                  </gmd:PT_FreeText>
+                </gmd:code>
+              </gmd:MD_Identifier>
+            </gmd:geographicIdentifier>
+          </gmd:EX_GeographicDescription>
+        </gmd:geographicElement>
+        <gmd:geographicElement>
+          <gmd:EX_GeographicBoundingBox>
+            <gmd:westBoundLongitude>
+              <gco:Decimal>6.75599105586694</gco:Decimal>
+            </gmd:westBoundLongitude>
+            <gmd:eastBoundLongitude>
+              <gco:Decimal>10.5418236945627</gco:Decimal>
+            </gmd:eastBoundLongitude>
+            <gmd:southBoundLatitude>
+              <gco:Decimal>45.7887442565203</gco:Decimal>
+            </gmd:southBoundLatitude>
+            <gmd:northBoundLatitude>
+              <gco:Decimal>47.5175655551557</gco:Decimal>
+            </gmd:northBoundLatitude>
+          </gmd:EX_GeographicBoundingBox>
+        </gmd:geographicElement>
+        <gmd:geographicElement>
+          <gmd:EX_BoundingPolygon>
+            <gmd:polygon> <gml:MultiSurface gml:id="_ms151936099836" ><gml:surfaceMember><gml:Polygon gml:id="_p156032327050"><gml:exterior><gml:LinearRing><gml:posList srsDimension="2">6.777075 45.827119 6.755991 47.517566 10.541824 47.477984 10.446252 45.788744 6.777075 45.827119</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon></gml:surfaceMember></gml:MultiSurface></gmd:polygon>
+          </gmd:EX_BoundingPolygon>
+        </gmd:geographicElement>
+      </gmd:EX_Extent>
