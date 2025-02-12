@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <!--
   ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
@@ -23,15 +21,18 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gco="http://www.isotc211.org/2005/gco"
-                xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                xmlns:che="http://www.geocat.ch/2008/che"
-                version="1.0">
+<!--
+	Describes conversions to other schemas
 
-  <xsl:template match="che:CHE_MD_Metadata|gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']|*[@gco:isoType='che:CHE_MD_Metadata']">
-    <uuid>
-      <xsl:value-of select="gmd:fileIdentifier/gco:CharacterString"/>
-    </uuid>
-  </xsl:template>
+		 The name is the name of the converter - used as a service name if a
+		 service is provided to convert records from search results or show (this
+		 name should be unique in GeoNetwork so prefixing with xml_<schema_name>
+		 is a good idea.
 
-</xsl:stylesheet>
+     The xslt attribute is the name of an xslt that does the conversion
+		 in the convert dir of the schema
+-->
+<conversions>
+  <converter name="xml_iso19139che" nsUri="http://www.geocat.ch/2008/che"
+             schemaLocation="/www.geocat.ch/geonetwork/xml/schemas/iso19139.che/schema/che/che.xsd" xslt=""/> <!-- built in -->
+</conversions>

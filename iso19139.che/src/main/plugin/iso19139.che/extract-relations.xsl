@@ -46,7 +46,7 @@
 
     <xsl:variable name="mainLanguage">
       <xsl:call-template name="langId_from_gmdlanguage19139">
-          <xsl:with-param name="gmdlanguage" select="ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata']/gmd:language"/>
+          <xsl:with-param name="gmdlanguage" select="ancestor::metadata/*[@gco:isoType='che:CHE_MD_Metadata' or name()='che:CHE_MD_Metadata']/gmd:language"/>
       </xsl:call-template>
     </xsl:variable>
 
@@ -56,7 +56,7 @@
                     select="substring-after(@locale, '#')"/>
 
       <value lang="{if (@locale)
-                  then ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata']/gmd:locale/*[@id = $localeId]/gmd:languageCode/*/@codeListValue
+                  then ancestor::metadata/*[@gco:isoType='che:CHE_MD_Metadata' or name()='che:CHE_MD_Metadata']/gmd:locale/*[@id = $localeId]/gmd:languageCode/*/@codeListValue
                   else if ($mainLanguage) then $mainLanguage else $lang}">
         <xsl:copy-of select="@xlink:href"/>
         <xsl:value-of select="."/>
@@ -69,7 +69,7 @@
   <xsl:template mode="get-iso19139-localized-url" match="*">
 
     <xsl:variable name="metadata"
-                  select="ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata']"/>
+                  select="ancestor::metadata/*[@gco:isoType='che:CHE_MD_Metadata' or name()='che:CHE_MD_Metadata']"/>
     <xsl:variable name="mainLanguage"
                   select="string($metadata/gmd:language/gco:CharacterString|
                                  $metadata/gmd:language/gmd:LanguageCode/@codeListValue)"/>
@@ -97,7 +97,7 @@
   It could be a document or thumbnails
   -->
   <xsl:template mode="relation"
-                match="metadata[gmd:MD_Metadata or *[contains(@gco:isoType, 'MD_Metadata')]]"
+                match="metadata[che:CHE_MD_Metadata or *[contains(@gco:isoType, 'che:CHE_MD_Metadata')]]"
                 priority="299">
 
     <xsl:variable name="mainLanguage">
