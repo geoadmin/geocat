@@ -195,7 +195,7 @@
       <!-- Geocat specific -->
       <li class="gn-menuitem-xs">
         <a
-          href="https://www.geocat.admin.ch/"
+          href="https://info.geocat.ch/"
           target="_blank"
           title="{{'documentation' | translate}}"
         >
@@ -203,7 +203,10 @@
           <span class="hidden-sm" translate>documentation</span>
         </a>
       </li>
-      <li class="gn-menuitem-xs" data-ng-show="(!authenticated || !user.isEditorOrMore()) && service !== 'catalog.signin' && service !== 'new.account'">
+      <li
+        class="gn-menuitem-xs"
+        data-ng-show="(!authenticated || !user.isEditorOrMore()) && service !== 'catalog.signin' && service !== 'new.account'"
+      >
         <a
           href="https://www.geocat.ch/datahub/search/"
           target="_blank"
