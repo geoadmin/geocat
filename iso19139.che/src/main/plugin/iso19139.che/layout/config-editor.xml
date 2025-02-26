@@ -566,28 +566,28 @@
         <section name="identificationInfo">
           <!-- Metadata ID -->
           <field
-            xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
+            xpath="/che:CHE_MD_DataIdentification/gmd:fileIdentifier"/>
 
           <!-- Metadata title -->
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
 
           <!-- Metadata abstract -->
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract"
-            if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0"/>
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:abstract"
+            if="count(che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification) > 0"/>
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract"
-            if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract"
+            if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
 
 
           <!-- Hierarchy Level -->
-          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:hierarchyLevel" />
 
           <action type="add" btnLabel="hierarchyLevel"
                   name="hierarchyLevel" or="hierarchyLevel"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) = 0"
-                  in="/gmd:MD_Metadata">
+                  if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) = 0"
+                  in="/che:CHE_MD_Metadata">
             <template>
               <snippet>
                 <gmd:hierarchyLevel>
@@ -601,8 +601,8 @@
 
           <action type="add" btnLabel="hierarchyLevel"
                   name="hierarchyLevel" or="hierarchyLevel"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"
-                  in="/gmd:MD_Metadata">
+                  if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"
+                  in="/che:CHE_MD_Metadata">
             <template>
               <snippet>
                 <gmd:hierarchyLevel>
@@ -616,7 +616,7 @@
 
           <!-- Links to resources -->
           <field name="url" templateModeOnly="true" notDisplayedIfMissing="true"
-                 xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions
+                 xpath="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions
             /gmd:MD_DigitalTransferOptions/gmd:onLine"
                  del=".">
             <template>
@@ -631,6 +631,7 @@
                   <gmd:CI_OnlineResource>
                     <gmd:linkage>
                       <gmd:URL>{{resource_url}}</gmd:URL>
+                      <gn:copy select="che:PT_FreeURL"/>
                     </gmd:linkage>
                     <gmd:protocol>
                       <gco:CharacterString>{{resource_protocol}}</gco:CharacterString>
@@ -647,7 +648,7 @@
           </field>
 
           <action type="add" name="url" or="onLine" btnLabel="url"
-                  in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions">
+                  in="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions">
             <template>
               <snippet>
                 <gmd:onLine>
@@ -667,9 +668,9 @@
           <!-- Resource identifier for dataset, service
           and add action to compute it if not defined. -->
           <field name="identifier" templateModeOnly="true" notDisplayedIfMissing="true"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier"
+                 xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier"
                  del="."
-                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+                 if="count(che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification) > 0">
             <template>
               <values>
                 <key label="code" required="true"
@@ -691,7 +692,7 @@
           </field>
 
           <action type="add" name="identifier" or="identifier" btnLabel="identifier"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation">
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation">
             <template>
               <snippet>
                 <gmd:identifier>
@@ -705,21 +706,21 @@
             </template>
           </action>
 
-          <action type="process" process="add-resource-id"
-                  if="(count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) + count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
-            gmd:identifier[ends-with(gmd:MD_Identifier/gmd:code/gco:CharacterString, //gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString)])) = 1"/>
+          <action type="process" process="add-resource-id" btnLabel="launch process add-resource-id"
+                  if="(count(che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification) + count(che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:citation/gmd:CI_Citation/
+            gmd:identifier[ends-with(gmd:MD_Identifier/gmd:code/gco:CharacterString, //che:CHE_MD_Metadata/gmd:fileIdentifier/gco:CharacterString)])) = 1"/>
 
 
           <!-- Resource language -->
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language"
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:language"
           />
 
           <!-- Spatial representation type -->
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialRepresentationType" />
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:spatialRepresentationType" />
           <action type="add" btnLabel="spatialRepresentationType"
                   name="spatialRepresentationType" or="spatialRepresentationType"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification">
             <template>
               <snippet>
                 <gmd:spatialRepresentationType>
@@ -731,8 +732,8 @@
           </action>
 
           <field name="encoding" templateModeOnly="true" notDisplayedIfMissing="true"
-                 xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"
-                 if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) = 0"
+                 xpath="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"
+                 if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) = 0"
                  del=".">
             <template>
               <values>
@@ -767,8 +768,8 @@
           </field>
 
           <action type="add" name="encoding" or="distributionFormat" btnLabel="encoding"
-                  in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) = 0">
+                  in="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution"
+                  if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) = 0">
             <template>
               <snippet>
                 <gmd:distributionFormat>
@@ -789,7 +790,7 @@
           </action>
 
           <field name="rsIdentifier" templateModeOnly="true"
-                 xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier"
+                 xpath="/che:CHE_MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier"
                  del="../..">
             <template>
               <values>
@@ -818,7 +819,7 @@
           <action type="add"
                   btnLabel="addCrs"
                   name="referenceSystemInfo" or="referenceSystemInfo"
-                  in="/gmd:MD_Metadata">
+                  in="/che:CHE_MD_Metadata">
             <template>
               <!-- ETRS89-XYZ -->
               <snippet label="addCrs4936">
@@ -1120,13 +1121,13 @@
 
         <!-- Classification for datasets -->
         <section name="classificationSection"
-                 displayIfRecord="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+                 displayIfRecord="count(che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification) > 0">
           <!-- Topic category -->
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory" />
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:topicCategory" />
           <action type="add" btnLabel="topicCategory"
                   name="topicCategory" or="topicCategory"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification">
             <template>
               <snippet>
                 <gmd:topicCategory>
@@ -1139,20 +1140,20 @@
 
         <!-- Classification for services, serviceType != other -->
         <section name="classificationSection"
-                 displayIfRecord="(count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) +
-                 count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType[gco:LocalName = 'other'])) = 1">
+                 displayIfRecord="(count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) +
+                 count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType[gco:LocalName = 'other'])) = 1">
 
           <!-- Service type -->
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType"/>
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType"/>
 
           <!-- Service couplingType -->
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:couplingType" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:couplingType" />
 
           <!-- Operates on -->
           <section name="operatesOn">
             <field name="operatesOn" templateModeOnly="true" notDisplayedIfMissing="true"
-                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn"
+                   xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn"
                    del=".">
               <template>
                 <values>
@@ -1170,8 +1171,8 @@
             <action type="add"
                     btnLabel="operatesOn"
                     or="operatesOn"
-                    in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                    if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+                    in="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                    if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
               <template>
                 <snippet>
                   <srv:operatesOn xlink:href="" />
@@ -1184,19 +1185,19 @@
 
         <!-- Classification for services, serviceType = other -->
         <section name="classificationSection"
-                 displayIfRecord="(count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) +
-                 count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType[gco:LocalName = 'other'])) > 1">
+                 displayIfRecord="(count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) +
+                 count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType[gco:LocalName = 'other'])) > 1">
 
           <!-- Service type -->
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType"/>
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType"/>
 
           <!-- Service couplingType -->
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:couplingType" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:couplingType" />
 
           <section name="operatesOn">
             <field name="operatesOn" templateModeOnly="true" notDisplayedIfMissing="true"
-                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn"
+                   xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn"
                    del=".">
               <template>
                 <values>
@@ -1214,8 +1215,8 @@
             <action type="add"
                     btnLabel="operatesOn"
                     or="operatesOn"
-                    in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                    if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+                    in="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                    if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
               <template>
                 <snippet>
                   <srv:operatesOn xlink:href="" />
@@ -1229,7 +1230,7 @@
 
           <!-- Keywords: INSPIRE Service taxonomy -->
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
             gmd:descriptiveKeywords
             [gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'INSPIRE Service taxonomy']"></field>
           <!-- FIXME: MUST be provided in template and thesaurus available in the catalog, to be displayed properly -->
@@ -1237,12 +1238,12 @@
           <action type="add" btnLabel="inspireServiceTaxonomy"
                   name="inspireServiceTaxonomy"
                   or="descriptiveKeywords"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/*"
-                  if="(count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/*"
+                  if="(count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
                         gmd:descriptiveKeywords[
                           contains(gmd:MD_Keywords/gmd:thesaurusName/
                                       gmd:CI_Citation/gmd:title/gco:CharacterString,
-                                   'INSPIRE Service taxonomy')]) + count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification)) = 1">
+                                   'INSPIRE Service taxonomy')]) + count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification)) = 1">
             <template>
               <snippet>
                 <gmd:descriptiveKeywords>
@@ -1290,15 +1291,15 @@
 
           <!-- Keywords: INSPIRE Themes -->
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/*/
             gmd:descriptiveKeywords
             [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/*[name() = 'gco:CharacterString' or name() = 'gmx:Anchor']/text(), 'INSPIRE themes')]"/>
           <!-- FIXME: MUST be provided in template and thesaurus available in the catalog, to be displayed properly -->
           <action type="add" btnLabel="inspireTheme"
                   name="inspireTheme"
                   or="descriptiveKeywords"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/*"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/*"
+                  if="count(che:CHE_MD_Metadata/gmd:identificationInfo/*/
                         gmd:descriptiveKeywords[
                           contains(gmd:MD_Keywords/gmd:thesaurusName/
                                       gmd:CI_Citation/gmd:title/*[name() = 'gco:CharacterString' or name() = 'gmx:Anchor']/text(),
@@ -1352,36 +1353,22 @@
 
           <!-- Keywords from other thesaurus than INSPIRE Themes -->
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/*/
             gmd:descriptiveKeywords
             [count(gmd:MD_Keywords/gmd:thesaurusName) > 0 and not(contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/*[name() = 'gco:CharacterString' or name() = 'gmx:Anchor']/text(), 'INSPIRE themes'))]"/>
 
-          <section name="freeTextKeywords">
-            <!-- Keywords without thesaurus information of type theme -->
-            <field
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
-              gmd:descriptiveKeywords[not(gmd:MD_Keywords/gmd:thesaurusName)]"
-              or="descriptiveKeywords"
-              in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"/>
-
-            <field
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
-              gmd:descriptiveKeywords[not(gmd:MD_Keywords/gmd:thesaurusName)]"
-              or="descriptiveKeywords"
-              in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"/>
-          </section>
         </section>
 
         <section name="bboxesSection">
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
             srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/>
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/
             gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/>
 
           <action type="add" name="extent" or="extent" btnLabel="extent"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification">
             <template>
               <snippet>
                 <gmd:extent>
@@ -1409,7 +1396,7 @@
           </action>
 
           <action type="add" name="extent" or="extent"  btnLabel="extent"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification">
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification">
             <template>
               <snippet>
                 <srv:extent>
@@ -1437,7 +1424,7 @@
           </action>
 
           <!--<action type="add" name="rsIdentifier" addDirective="data-gn-crs-selector"
-                  or="referenceSystemInfo" in="/gmd:MD_Metadata">
+                  or="referenceSystemInfo" in="/che:CHE_MD_Metadata">
             <template>
               <snippet>
                 <gmd:referenceSystemInfo>
@@ -1458,8 +1445,8 @@
 
         <section name="temporalSection">
           <field name="temporalRangeSection" templateModeOnly="true" notDisplayedIfMissing="true"
-                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement"
-                   if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+                   xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement"
+                   if="count(che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification) > 0">
               <template>
                 <values>
                   <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree
@@ -1500,8 +1487,8 @@
             </field>
 
           <action type="add" name="extent" or="extent" btnLabel="temporalRangeSection"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement) = 0">
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification"
+                 if="count(che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement) = 0">
             <template>
               <snippet>
                 <gmd:extent>
@@ -1523,8 +1510,8 @@
           </action>
 
           <field name="temporalRangeSection" templateModeOnly="true" notDisplayedIfMissing="true"
-                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement"
-                   if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+                   xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement"
+                   if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
               <template>
                 <values>
                   <!-- Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
@@ -1560,8 +1547,8 @@
             </field>
 
           <action type="add" name="extent" or="extent" btnLabel="temporalRangeSection"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement) = 0">
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                  if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement) = 0">
             <template>
               <snippet>
                 <srv:extent>
@@ -1582,10 +1569,10 @@
             </template>
           </action>
 
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/
             gmd:date"/>
           <action type="add" name="referenceDate" or="date"  btnLabel="referenceDate"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation">
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation">
             <template>
               <snippet>
                 <gmd:date>
@@ -1605,13 +1592,13 @@
           </action>
         </section>
 
-        <section name="qualityAndValiditySection" displayIfRecord="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) = 0">
+        <section name="qualityAndValiditySection" displayIfRecord="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) = 0">
 
           <field name="lineage"
-                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement"/>
+                 xpath="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement"/>
 
           <action type="add" name="lineage" or="statement" btnLabel="lineage"
-                  in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage">
+                  in="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage">
             <template>
               <snippet>
                 <gmd:statement>
@@ -1621,7 +1608,7 @@
             </template>
           </action>
           <action type="add" name="lineage" or="lineage" btnLabel="lineage"
-                  in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality">
+                  in="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality">
             <template>
               <snippet>
                 <gmd:lineage>
@@ -1636,17 +1623,17 @@
           </action>
 
 
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/
                     */gmd:spatialResolution/
                       */gmd:equivalentScale/*/gmd:denominator"
                  del="../../../.."/>
 
 
           <!--
-          if="count(gmd:MD_Metadata/gmd:identificationInfo[*/gmd:spatialRepresentationType/*/@codeListValue = 'vector']) = 1"
+          if="count(che:CHE_MD_Metadata/gmd:identificationInfo[*/gmd:spatialRepresentationType/*/@codeListValue = 'vector']) = 1"
           -->
           <action type="add" btnLabel="spatialResolution" or="spatialResolution"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/*">
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/*">
             <template>
               <snippet>
                 <gmd:spatialResolution>
@@ -1665,16 +1652,16 @@
           </action>
 
 
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
+          <field xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/
                     */gmd:spatialResolution/*/gmd:distance"
                  del="../.."/>
 
 
           <!--
-          if="count(gmd:MD_Metadata/gmd:identificationInfo[*/gmd:spatialRepresentationType/*/@codeListValue = 'grid']) = 1"
+          if="count(che:CHE_MD_Metadata/gmd:identificationInfo[*/gmd:spatialRepresentationType/*/@codeListValue = 'grid']) = 1"
           -->
           <action type="add" btnLabel="spatialDistance" or="spatialResolution"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/*">
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/*">
             <template>
               <snippet>
                 <gmd:spatialResolution>
@@ -1691,13 +1678,13 @@
         </section>
 
         <!-- Conformity - datasets -->
-        <section name="conformity" displayIfRecord="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+        <section name="conformity" displayIfRecord="count(che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification) > 0">
 
           <field name="conformity" templateModeOnly="true"
-                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                 xpath="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                     gmd:report/gmd:DQ_DomainConsistency/gmd:result[count(gmd:DQ_ConformanceResult/gmd:specification/
                       gmd:CI_Citation/gmd:title/gmx:Anchor) > 0]"
-                 if="count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                 if="count(che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                       gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/
                       gmd:CI_Citation/gmd:title[gmx:Anchor]) > 0"
                  del="../..">
@@ -1707,7 +1694,7 @@
                      xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor/text()"
                      tooltip="gmd:pass">
                   <helper name="gmd:title"
-                          context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
+                          context="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
                 </key>
                 <key label="conformity_linkage"
                      xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor/@xlink:href">
@@ -1766,10 +1753,10 @@
           </field>
 
           <field name="conformity" templateModeOnly="true"
-                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                 xpath="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                     gmd:report/gmd:DQ_DomainConsistency/gmd:result[count(gmd:DQ_ConformanceResult/gmd:specification/
                       gmd:CI_Citation/gmd:title/gco:CharacterString) > 0]"
-                 if="count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                 if="count(che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                       gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/
                       gmd:CI_Citation/gmd:title[gco:CharacterString]) > 0"
                  del="../..">
@@ -1779,7 +1766,7 @@
                      xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString"
                      tooltip="gmd:pass">
                   <helper name="gmd:title"
-                          context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
+                          context="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
                 </key>
                 <key label="conformity_date"
                      xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date"
@@ -1838,7 +1825,7 @@
 
           <action type="add" name="conformity" or="report"
                   btnLabel="conformity"
-                  in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality">
+                  in="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality">
             <template>
               <snippet>
                 <gmd:report>
@@ -1882,14 +1869,14 @@
 
         <!-- Conformity - serviceType != other -->
         <!-- For serviceType = other it's available in SDS tab -->
-        <section name="conformity" displayIfRecord="(count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) +
-                 count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType[gco:LocalName = 'other'])) = 1">
+        <section name="conformity" displayIfRecord="(count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) +
+                 count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType[gco:LocalName = 'other'])) = 1">
 
           <field name="conformity" templateModeOnly="true"
-                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                 xpath="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                     gmd:report/gmd:DQ_DomainConsistency/gmd:result[count(gmd:DQ_ConformanceResult/gmd:specification/
                       gmd:CI_Citation/gmd:title/gmx:Anchor) > 0]"
-                 if="count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                 if="count(che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                       gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/
                       gmd:CI_Citation/gmd:title[gmx:Anchor]) > 0"
                  del="../..">
@@ -1899,7 +1886,7 @@
                      xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor/text()"
                      tooltip="gmd:pass">
                   <helper name="gmd:title"
-                          context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
+                          context="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
                 </key>
                 <key label="conformity_linkage"
                      xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor/@xlink:href">
@@ -1959,10 +1946,10 @@
 
 
           <field name="conformity" templateModeOnly="true"
-                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                 xpath="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                     gmd:report/gmd:DQ_DomainConsistency/gmd:result[count(gmd:DQ_ConformanceResult/gmd:specification/
                       gmd:CI_Citation/gmd:title/gco:CharacterString) > 0]"
-                 if="count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                 if="count(che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                       gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/
                       gmd:CI_Citation/gmd:title[gco:CharacterString]) > 0"
                  del="../..">
@@ -1972,7 +1959,7 @@
                      xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString"
                      tooltip="gmd:pass">
                   <helper name="gmd:title"
-                          context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
+                          context="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
                 </key>
                 <key label="conformity_date"
                      xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date"
@@ -2038,7 +2025,7 @@
 
           <action type="add" name="conformity" or="report"
                   btnLabel="conformity"
-                  in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality">
+                  in="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality">
             <template>
               <snippet>
                 <gmd:report>
@@ -2082,14 +2069,14 @@
 
 
         <!-- Restrictions - datasets -->
-        <section name="restrictionsSection" displayIfRecord="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+        <section name="restrictionsSection" displayIfRecord="count(che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification) > 0">
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/
                 gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation"
-            if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0"/>
+            if="count(che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification) > 0"/>
           <action type="add" name="useLimitation" or="resourceConstraints" btnLabel="useLimitation"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification"
+                  if="count(che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification) > 0">
             <template>
               <snippet>
                 <gmd:resourceConstraints>
@@ -2107,13 +2094,13 @@
           <!-- Access constraints for metadata about data.
                Services have their own format, defined in the SDS tab -->
           <field name="accessConstraints"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                 xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/
             gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"
-                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0"/>
+                 if="count(che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification) > 0"/>
 
           <action type="add" name="accessConstraints" or="resourceConstraints"  btnLabel="accessConstraints"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification"
+                  if="count(che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification) > 0">
             <template>
               <snippet>
                 <gmd:resourceConstraints>
@@ -2136,16 +2123,16 @@
 
         <!-- Conformity - serviceType != other -->
         <!-- For serviceType = other it's available in SDS tab -->
-        <section name="restrictionsSection" displayIfRecord="(count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) +
-                 count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType[gco:LocalName = 'other'])) = 1">
+        <section name="restrictionsSection" displayIfRecord="(count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) +
+                 count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType[gco:LocalName = 'other'])) = 1">
 
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
                 gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation"
-            if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
+            if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
           <action type="add" name="useLimitation" or="resourceConstraints" btnLabel="useLimitation"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                  if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
             <template>
               <snippet>
                 <gmd:resourceConstraints>
@@ -2162,13 +2149,13 @@
           <!-- Access constraints for metadata about data.
                Services have their own format, defined in the SDS tab -->
           <field name="accessConstraints"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
+                 xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
             gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"
-                 if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
+                 if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
 
           <action type="add" name="otherConstraints" or="resourceConstraints"  btnLabel="accessConstraints"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                  if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
             <template>
               <snippet>
                 <gmd:resourceConstraints>
@@ -2192,30 +2179,32 @@
 
         <!-- Responsible organisation - datasets -->
         <section name="responsibleOrganisationSection"
-                 displayIfRecord="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+                 displayIfRecord="count(che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification) > 0">
           <field name="pointOfContact" templateModeOnly="true" notDisplayedIfMissing="true"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact"
+                 xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact"
                  del=".">
             <template>
               <values readonlyIf="count(@xlink:href) > 0">
                 <key label="organisationName"
                      tooltip="gmd:organisationName"
-                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                     xpath="che:CHE_CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
                 <key label="electronicMailAddress"
                      tooltip="gmd:electronicMailAddress"
-                     xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+                     xpath="che:CHE_CI_ResponsibleParty/gmd:contactInfo/
                     gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
                      use="email"/>
                 <key label="role"
                      tooltip="gmd:role"
-                     xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
+                     xpath="che:CHE_CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
                   <codelist name="gmd:CI_RoleCode"/>
                 </key>
               </values>
               <snippet>
                 <gmd:pointOfContact>
-                  <gmd:CI_ResponsibleParty>
+                  <che:CHE_CI_ResponsibleParty>
                     <gn:copy select="gmd:individualName"/>
+                    <gn:copy select="che:individualFirstName"/>
+                    <gn:copy select="che:individualLastName"/>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
                       <gn:copy select="gmd:PT_FreeText"/>
@@ -2247,72 +2236,52 @@
                         codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
                         codeListValue="{{role}}"/>
                     </gmd:role>
-                  </gmd:CI_ResponsibleParty>
+                  </che:CHE_CI_ResponsibleParty>
                 </gmd:pointOfContact>
               </snippet>
             </template>
           </field>
 
-          <action type="add" name="pointOfContact" btnClass="fa fa-user-plus"
+          <action type="add" name="pointOfContact" addDirective="data-gn-directory-entry-selector"
                   or="pointOfContact"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
-            <template>
-              <snippet>
-                <gmd:pointOfContact>
-                  <gmd:CI_ResponsibleParty>
-                    <gmd:organisationName gco:nilReason="missing">
-                      <gco:CharacterString/>
-                    </gmd:organisationName>
-                    <gmd:contactInfo>
-                      <gmd:CI_Contact>
-                        <gmd:address>
-                          <gmd:CI_Address>
-                            <gmd:electronicMailAddress gco:nilReason="missing">
-                              <gco:CharacterString/>
-                            </gmd:electronicMailAddress>
-                          </gmd:CI_Address>
-                        </gmd:address>
-                      </gmd:CI_Contact>
-                    </gmd:contactInfo>
-                    <gmd:role>
-                      <gmd:CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
-                                       codeListValue="resourceProvider"/>
-                    </gmd:role>
-                  </gmd:CI_ResponsibleParty>
-                </gmd:pointOfContact>
-              </snippet>
-            </template>
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification">
+            <directiveAttributes
+                    data-template-add-action="true"
+                    data-template-type="contact"
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
           </action>
         </section>
 
         <!-- Responsible organisation - serviceType != other -->
         <!-- For serviceType = other it's available in SDS tab -->
         <section name="responsibleOrganisationSection"
-                 displayIfRecord="(count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) +
-                 count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType[gco:LocalName = 'other'])) = 1">
+                 displayIfRecord="(count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) +
+                 count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType[gco:LocalName = 'other'])) = 1">
           <field name="pointOfContact" templateModeOnly="true" notDisplayedIfMissing="true"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact"
+                 xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact"
                  del=".">
             <template>
               <values readonlyIf="count(@xlink:href) > 0">
                 <key label="organisationName"
                      tooltip="gmd:organisationName"
-                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                     xpath="che:CHE_CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
                 <key label="electronicMailAddress"
                      tooltip="gmd:electronicMailAddress"
-                     xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+                     xpath="che:CHE_CI_ResponsibleParty/gmd:contactInfo/
                     gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
                      use="email"/>
                 <key label="role"
                      tooltip="gmd:role"
-                     xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
+                     xpath="che:CHE_CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
                   <codelist name="gmd:CI_RoleCode"/>
                 </key>
               </values>
               <snippet>
                 <gmd:pointOfContact>
-                  <gmd:CI_ResponsibleParty>
+                  <che:CHE_CI_ResponsibleParty>
                     <gn:copy select="gmd:individualName"/>
+                    <gn:copy select="che:individualFirstName"/>
+                    <gn:copy select="che:individualLastName"/>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
                       <gn:copy select="gmd:PT_FreeText"/>
@@ -2344,7 +2313,7 @@
                         codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
                         codeListValue="{{role}}"/>
                     </gmd:role>
-                  </gmd:CI_ResponsibleParty>
+                  </che:CHE_CI_ResponsibleParty>
                 </gmd:pointOfContact>
               </snippet>
             </template>
@@ -2353,33 +2322,11 @@
 
           <action type="add" name="pointOfContact" btnClass="fa fa-user-plus"
                   or="pointOfContact"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification">
-            <template>
-              <snippet>
-                <gmd:pointOfContact>
-                  <gmd:CI_ResponsibleParty>
-                    <gmd:organisationName gco:nilReason="missing">
-                      <gco:CharacterString/>
-                    </gmd:organisationName>
-                    <gmd:contactInfo>
-                      <gmd:CI_Contact>
-                        <gmd:address>
-                          <gmd:CI_Address>
-                            <gmd:electronicMailAddress gco:nilReason="missing">
-                              <gco:CharacterString/>
-                            </gmd:electronicMailAddress>
-                          </gmd:CI_Address>
-                        </gmd:address>
-                      </gmd:CI_Contact>
-                    </gmd:contactInfo>
-                    <gmd:role>
-                      <gmd:CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
-                                       codeListValue="resourceProvider"/>
-                    </gmd:role>
-                  </gmd:CI_ResponsibleParty>
-                </gmd:pointOfContact>
-              </snippet>
-            </template>
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification">
+            <directiveAttributes
+              data-template-add-action="true"
+              data-template-type="contact"
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
           </action>
 
         </section>
@@ -2388,27 +2335,29 @@
 
           <field name="metadataPointOfContact" templateModeOnly="true"
                  notDisplayedIfMissing="true"
-                 xpath="/gmd:MD_Metadata/gmd:contact" del=".">
+                 xpath="/che:CHE_MD_Metadata/gmd:contact" del=".">
             <template>
               <values readonlyIf="count(@xlink:href) > 0">
                 <key label="organisationName"
                      tooltip="gmd:organisationName"
-                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                     xpath="che:CHE_CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
                 <key label="electronicMailAddress"
                      tooltip="gmd:electronicMailAddress"
-                     xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+                     xpath="che:CHE_CI_ResponsibleParty/gmd:contactInfo/
                   gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
                      use="email"/>
                 <key label="role"
                      tooltip="gmd:role"
-                     xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
+                     xpath="che:CHE_CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
                   <codelist name="gmd:CI_RoleCode"/>
                 </key>
               </values>
               <snippet>
                 <gmd:contact>
-                  <gmd:CI_ResponsibleParty>
+                  <che:CHE_CI_ResponsibleParty>
                     <gn:copy select="gmd:individualName"/>
+                    <gn:copy select="che:individualFirstName"/>
+                    <gn:copy select="che:individualLastName"/>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
                       <gn:copy select="gmd:PT_FreeText"/>
@@ -2440,7 +2389,7 @@
                         codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
                         codeListValue="{{role}}"/>
                     </gmd:role>
-                  </gmd:CI_ResponsibleParty>
+                  </che:CHE_CI_ResponsibleParty>
                 </gmd:contact>
               </snippet>
             </template>
@@ -2448,44 +2397,22 @@
 
           <action type="add" name="metadataPointOfContact" btnClass="fa fa-user-plus"
                   or="contact"
-                  in="/gmd:MD_Metadata">
-            <template>
-              <snippet>
-                <gmd:contact>
-                  <gmd:CI_ResponsibleParty>
-                    <gmd:organisationName gco:nilReason="missing">
-                      <gco:CharacterString/>
-                    </gmd:organisationName>
-                    <gmd:contactInfo>
-                      <gmd:CI_Contact>
-                        <gmd:address>
-                          <gmd:CI_Address>
-                            <gmd:electronicMailAddress gco:nilReason="missing">
-                              <gco:CharacterString/>
-                            </gmd:electronicMailAddress>
-                          </gmd:CI_Address>
-                        </gmd:address>
-                      </gmd:CI_Contact>
-                    </gmd:contactInfo>
-                    <gmd:role>
-                      <gmd:CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
-                                       codeListValue="pointOfContact"/>
-                    </gmd:role>
-                  </gmd:CI_ResponsibleParty>
-                </gmd:contact>
-              </snippet>
-            </template>
+                  in="/che:CHE_MD_Metadata">
+            <directiveAttributes
+                    data-template-add-action="true"
+                    data-template-type="contact"
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
           </action>
 
 
-          <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
+          <field xpath="/che:CHE_MD_Metadata/gmd:dateStamp"/>
 
 
-          <field xpath="/gmd:MD_Metadata/gmd:language" />
+          <field xpath="/che:CHE_MD_Metadata/gmd:language" />
 
           <action type="add" btnLabel="metadataLanguage"
                   name="language" or="language"
-                  in="/gmd:MD_Metadata">
+                  in="/che:CHE_MD_Metadata">
             <template>
               <snippet>
                 <gmd:language>
@@ -2496,39 +2423,39 @@
           </action>
 
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:characterSet"></field>
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/che:CHE_MD_DataIdentification/gmd:characterSet"></field>
         </section>
       </tab>
 
       <tab id="inspire_sds"
            mode="flat"
-           displayIfRecord="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName = 'other'">
+           displayIfRecord="che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName = 'other'">
 
         <section name="inspire_sds_cc1">
 
           <!-- 4.4.1 TG4 : ensure gmd:DQ_DataQuality for service exists -->
           <action type="process"
                   process="sds-add-dataquality"
-                  if="count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service'])=0"/>
+                  if="count(che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service'])=0"/>
 
           <!-- 4.4.1 rec 1 : replace CharacterString with Anchor-->
           <action type="process"
                   process="sds-fix-category"
-                  if="count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString)>0"/>
+                  if="count(che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString)>0"/>
 
           <!-- 4.4.1 category -->
           <field name="sds-category"
-                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
+                 xpath="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
 
           <!-- 4.4.1 pass -->
           <field
-            xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass"/>
+            xpath="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass"/>
 
           <action type="add"
                   name="inspire_add_pass"
                   forceLabel="true"
                   or="pass"
-                  in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult">
+                  in="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult">
             <template>
               <snippet>
                 <gmd:pass>
@@ -2545,7 +2472,7 @@
 
           <field name="sds-accesspoint"
                  templateModeOnly="true"
-                 xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine[gmd:CI_OnlineResource/gmd:description/gmx:Anchor/text() = 'accessPoint']"
+                 xpath="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine[gmd:CI_OnlineResource/gmd:description/gmx:Anchor/text() = 'accessPoint']"
 
                  del=".">
             <template>
@@ -2557,6 +2484,7 @@
                   <gmd:CI_OnlineResource>
                     <gmd:linkage>
                       <gmd:URL>{{linkage}}</gmd:URL>
+                      <gn:copy select="che:PT_FreeURL"/>
                     </gmd:linkage>
                     <gmd:description>
                       <gmx:Anchor
@@ -2580,7 +2508,7 @@
                   name="sds-add-accesspoint"
                   forceLabel="true"
                   or="onLine"
-                  in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions">
+                  in="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions">
             <template>
               <snippet>
                 <gmd:onLine>
@@ -2611,7 +2539,7 @@
 
           <field name="sds-endpoint"
                  templateModeOnly="true"
-                 xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine[gmd:CI_OnlineResource/gmd:description/gmx:Anchor/text() = 'endPoint']"
+                 xpath="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine[gmd:CI_OnlineResource/gmd:description/gmx:Anchor/text() = 'endPoint']"
                  notDisplayedIfMissing="true"
                  del=".">
             <template>
@@ -2646,7 +2574,7 @@
                   name="sds-add-endpoint"
                   forceLabel="true"
                   or="onLine"
-                  in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions">
+                  in="/che:CHE_MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions">
             <template>
               <snippet>
                 <gmd:onLine>
@@ -2680,7 +2608,7 @@
             forceLabel="true"
             name="sds-tech-spec"
             del="../.."
-            xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result">
+            xpath="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result">
             <template>
               <values>
                 <key label="conformity_linkage"
@@ -2689,7 +2617,7 @@
                      xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor/text()"
                      tooltip="gmd:pass">
                   <helper name="gmd:title"
-                          context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
+                          context="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
                 </key>
                 <key label="conformity_date" use="gn-date-picker"
                      xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
@@ -2737,7 +2665,7 @@
                   name="sds-add-tech-spec"
                   forceLabel="true"
                   or="report"
-                  in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']">
+                  in="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']">
 
             <template>
               <snippet>
@@ -2788,7 +2716,7 @@
 
           <section name="sds-section-crs">
             <field
-              xpath="gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gmx:Anchor"
+              xpath="che:CHE_MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gmx:Anchor"
               del="."/>
             <!-- The useXmlSnippet="true" attribute is a workaround to keep backward compatibility since often
             the data-gn-crs-selector directive is used specifying a snippet as below although the developer wanted
@@ -2796,7 +2724,7 @@
             to use the snippet below. The attribute is used in the template render-element-template-field located in form-builder.xsl-->
             <action type="add" name="rsIdentifier" addDirective="data-gn-crs-selector"
                     useXmlSnippet="true"
-                    or="referenceSystemInfo" in="/gmd:MD_Metadata">
+                    or="referenceSystemInfo" in="/che:CHE_MD_Metadata">
               <template>
                 <snippet>
                   <gmd:referenceSystemInfo>
@@ -2823,13 +2751,13 @@
 
             <action type="process"
                     process="sds-add-qualityofservice"
-                    if="(count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service'])>0 and
-                              (count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[text()='availability'])=0 or
-                               count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[text()='performance'])=0 or
-                               count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[text()='capacity'])=0 ))"/>
+                    if="(count(che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service'])>0 and
+                              (count(che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[text()='availability'])=0 or
+                               count(che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[text()='performance'])=0 or
+                               count(che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[text()='capacity'])=0 ))"/>
 
             <field
-              xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ConceptualConsistency"/>
+              xpath="/che:CHE_MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ConceptualConsistency"/>
 
           </section>
 
@@ -2839,11 +2767,11 @@
 
             <!-- fixed values, user should only be able to remove the whole gmd:resourceConstraints element, and not edit it -->
             <field
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints[gmd:MD_LegalConstraints[gmd:accessConstraints]/gmd:otherConstraints/gmx:Anchor]"/>
+              xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints[gmd:MD_LegalConstraints[gmd:accessConstraints]/gmd:otherConstraints/gmx:Anchor]"/>
 
             <!-- editable value, user should be able to edit the characterstring element, or to remove the whole gmd:resourceConstraints element -->
             <field
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints[gmd:MD_LegalConstraints[gmd:accessConstraints]/gmd:otherConstraints[gco:CharacterString]]"
+              xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints[gmd:MD_LegalConstraints[gmd:accessConstraints]/gmd:otherConstraints[gco:CharacterString]]"
               templateModeOnly="true"
               notDisplayedIfMissing="true"
               forceLabel="true"
@@ -2877,9 +2805,9 @@
                     name="sds-addNoConstraints"
                     forceLabel="true"
                     or="resourceConstraints"
-                    in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                    check="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:accessConstraints])"
-                    if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:accessConstraints]) = 0">
+                    in="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                    check="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:accessConstraints])"
+                    if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:accessConstraints]) = 0">
 
               <template>
                 <snippet>
@@ -2907,8 +2835,8 @@
                     name="sds-addUnknownConstraints"
                     forceLabel="true"
                     or="resourceConstraints"
-                    in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                    if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:accessConstraints]) = 0">
+                    in="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                    if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:accessConstraints]) = 0">
               <template>
                 <snippet>
                   <gmd:resourceConstraints>
@@ -2937,8 +2865,8 @@
                     forceLabel="true"
                     name="sds-addConstraints"
                     or="resourceConstraints"
-                    in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                    if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:accessConstraints]) = 0">
+                    in="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                    if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:accessConstraints]) = 0">
               <template>
                 <snippet>
                   <gmd:resourceConstraints>
@@ -2963,11 +2891,11 @@
 
             <!-- fixed values, user should only be able to remove the whole gmd:resourceConstraints element, and not edit it -->
             <field
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints[gmd:MD_LegalConstraints[gmd:useConstraints]/gmd:otherConstraints/gmx:Anchor]"/>
+              xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints[gmd:MD_LegalConstraints[gmd:useConstraints]/gmd:otherConstraints/gmx:Anchor]"/>
 
             <!-- editable value, user should be able to edit the characterstring element, or to remove the whole gmd:resourceConstraints element -->
             <field
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints[gmd:MD_LegalConstraints[gmd:useConstraints]/gmd:otherConstraints[gco:CharacterString]]"
+              xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints[gmd:MD_LegalConstraints[gmd:useConstraints]/gmd:otherConstraints[gco:CharacterString]]"
               templateModeOnly="true"
               notDisplayedIfMissing="true"
               forceLabel="true"
@@ -3001,9 +2929,9 @@
                     name="sds-addNoConstraints"
                     forceLabel="true"
                     or="resourceConstraints"
-                    in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                    check="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:useConstraints])"
-                    if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:useConstraints]) = 0">
+                    in="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                    check="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:useConstraints])"
+                    if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:useConstraints]) = 0">
 
               <template>
                 <snippet>
@@ -3031,8 +2959,8 @@
                     name="sds-addUnknownConstraints"
                     forceLabel="true"
                     or="resourceConstraints"
-                    in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                    if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:useConstraints]) = 0">
+                    in="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                    if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:useConstraints]) = 0">
               <template>
                 <snippet>
                   <gmd:resourceConstraints>
@@ -3062,8 +2990,8 @@
                     forceLabel="true"
                     name="sds-addConstraints"
                     or="resourceConstraints"
-                    in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                    if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:useConstraints]) = 0">
+                    in="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                    if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:useConstraints]) = 0">
               <template>
                 <snippet>
                   <gmd:resourceConstraints>
@@ -3088,21 +3016,23 @@
 
             <field name="pointOfContact"
                    templateModeOnly="true"
-                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']"
+                   xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact[che:CHE_CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']"
                    del=".">
 
               <template>
                 <values readonlyIf="count(@xlink:href) > 0">
                   <key label="organisationName"
-                       xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                       xpath="che:CHE_CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
                   <key label="electronicMailAddress"
-                       xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
+                       xpath="che:CHE_CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
                        use="email"/>
                 </values>
                 <snippet>
                   <gmd:pointOfContact>
-                    <gmd:CI_ResponsibleParty>
+                    <che:CHE_CI_ResponsibleParty>
                       <gn:copy select="gmd:individualName"/>
+                      <gn:copy select="che:individualFirstName"/>
+                      <gn:copy select="che:individualLastName"/>
                       <gmd:organisationName>
                         <gco:CharacterString>{{organisationName}}</gco:CharacterString>
                         <gn:copy select="gmd:PT_FreeText"/>
@@ -3134,7 +3064,7 @@
                           codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode"
                           codeListValue="custodian"/>
                       </gmd:role>
-                    </gmd:CI_ResponsibleParty>
+                    </che:CHE_CI_ResponsibleParty>
                   </gmd:pointOfContact>
                 </snippet>
               </template>
@@ -3144,7 +3074,7 @@
             <action type="add" name="pointOfContact"
                     addDirective="data-gn-directory-entry-selector"
                     or="pointOfContact"
-                    in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification">
+                    in="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification">
               <directiveAttributes
                 data-template-add-action="true"
                 data-template-type="contact"
@@ -3159,14 +3089,14 @@
         <section name="inspire_sds_cc3">
 
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations"/>
+            xpath="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations"/>
 
           <action type="add"
                   forceLabel="true"
                   name="sds-addOperation"
                   or="containsOperations"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+                  in="/che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                  if="count(che:CHE_MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
             <template>
               <snippet>
                 <srv:containsOperations>
@@ -3202,7 +3132,29 @@
         <for name="srv:SV_OperationMetadata"/>
         <for name="srv:parameters"/>
       </flatModeExceptions>
-
+      <thesaurusList>
+        <thesaurus key="external.theme.gemet"
+                   transformations="to-iso19139-keyword-as-xlink"
+        />
+        <thesaurus key="external.theme.inspire-theme"
+                   transformations="to-iso19139-keyword-as-xlink"
+        />
+        <thesaurus key="external.theme.gemet-theme"
+                   transformations="to-iso19139-keyword-as-xlink"
+        />
+        <thesaurus key="external.theme.inspire-service-taxonomy"
+                   transformations="to-iso19139-keyword-as-xlink"
+        />
+        <thesaurus key="local.theme.geocat.ch"
+                   transformations="to-iso19139-keyword-as-xlink"
+        />
+        <thesaurus key="external.none.allThesaurus"
+                   transformations="to-iso19139-keyword-as-xlink"
+        />
+        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialDataServiceCategory-SpatialDataServiceCategory"
+                   transformations="to-iso19139-keyword-as-xlink-with-anchor"
+        />
+      </thesaurusList>
     </view>
 
     <!--
