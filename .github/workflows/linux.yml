@@ -25,7 +25,14 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.jdk }}
-        cache: 'maven'
+    - name: Cache Maven packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          maven-${{ runner.os }}-
+          maven-
     - name: Set up Maven
       uses: stCarolas/setup-maven@v4
       with:
@@ -52,7 +59,14 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: 8
-        cache: 'maven'
+    - name: Cache Maven packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          maven-${{ runner.os }}-
+          maven-
     - name: Set up Maven
       uses: stCarolas/setup-maven@v4
       with:

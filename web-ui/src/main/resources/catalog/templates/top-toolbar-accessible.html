@@ -1,4 +1,40 @@
 <div data-ng-class="fluidHeaderLayout ? 'container-fluid' : 'container'">
+  <div
+    data-ng-init="isBannerEnabled = gnCfg.mods.applicationBanner.enabled"
+    data-ng-show="isBannerEnabled"
+  >
+    <div class="modal-backdrop fade in" style="opacity: 0.6; z-index: 1040"></div>
+    <div
+      class="modal fade in"
+      style="display: block; z-index: 1050"
+      tabindex="-1"
+      role="dialog"
+    >
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header alert-danger" style="border-radius: 5px 5px 0 0">
+            <h4 class="modal-title">
+              <span class="fa fa-warning" style="margin-right: 8px"></span>
+              <span data-translate="">application-banner-title</span>
+            </h4>
+          </div>
+          <div class="modal-body" style="font-size: 20px; padding: 24px">
+            <span data-translate="">application-banner</span>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-danger btn-lg"
+              data-ng-click="isBannerEnabled = false"
+            >
+              <span class="fa fa-check" style="margin-right: 6px"></span>
+              <span data-translate="">close</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="navbar-header">
     <a
       class="hidden-sm hidden-md hidden-lg pull-left gn-logo-link"
