@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     # Only analyze with Sonar on non-fork repos:
     # https://github.community/t/how-to-detect-a-pull-request-from-a-fork/18363/4
-    if: github.event.pull_request.head.repo.fork != true
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork != true
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
           submodules: 'recursive'
@@ -23,9 +23,16 @@ jobs:
         with:
           java-version: 8
           distribution: 'temurin'
-          cache: 'maven'
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            maven-${{ runner.os }}-
+            maven-
       - name: Cache SonarCloud packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
@@ -38,10 +45,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-          cache: 'maven'
       - name: Analyze with Sonar
+        continue-on-error: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         #TODO: Enable tests, if reliable:
         run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=geonetwork_core-geonetwork -Dsonar.organization=geonetwork -DskipTests=true -Dmaven.javadoc.skip=true

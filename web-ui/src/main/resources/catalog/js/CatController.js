@@ -97,6 +97,9 @@
             cookieWarningMoreInfoLink: "",
             cookieWarningRejectLink: ""
           },
+          applicationBanner: {
+            enabled: true
+          },
           home: {
             enabled: true,
             appUrl: "../../{{node}}/{{lang}}/catalog.search#/home",
