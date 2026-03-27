@@ -424,7 +424,7 @@
     <dependency>
       <groupId>jzkit</groupId>
       <artifactId>jzkit-service</artifactId>
-      <version>3.r260.geonetwork.patch.1</version>
+      <version>3.r260.patch</version>
     </dependency>
     <dependency>
       <groupId>jzkit</groupId>
